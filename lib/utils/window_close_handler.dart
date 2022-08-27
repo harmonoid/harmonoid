@@ -90,8 +90,9 @@ abstract class WindowCloseHandler {
       }
       try {
         await Collection.instance.dispose();
-        await Intent.instance.tagger.dispose();
         await Playback.instance.libmpv?.dispose();
+        await Intent.instance.tagger?.dispose();
+        await Intent.instance.client?.dispose();
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());

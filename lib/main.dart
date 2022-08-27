@@ -25,6 +25,7 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/now_playing_visuals.dart';
 import 'package:harmonoid/utils/updater.dart';
+import 'package:harmonoid/utils/tagger_client.dart';
 import 'package:harmonoid/utils/argument_vector_handler.dart';
 import 'package:harmonoid/utils/window_close_handler.dart';
 import 'package:harmonoid/interface/harmonoid.dart';
@@ -72,6 +73,7 @@ Future<void> main(List<String> args) async {
       await AppState.initialize();
       await NowPlayingVisuals.initialize();
       await MPV.initialize();
+      await TaggerClient.ensureInitialized();
       await Intent.initialize(args: args);
       await HotKeys.initialize();
       DiscordRPC.initialize();

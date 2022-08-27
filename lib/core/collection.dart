@@ -7,11 +7,14 @@
 ///
 
 import 'dart:io';
+import 'package:libmpv/libmpv.dart';
 import 'package:path/path.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
-import 'package:media_library/media_library.dart';
+import 'package:media_library/media_library.dart' hide Media;
 import 'package:safe_session_storage/safe_session_storage.dart';
+
+import 'package:harmonoid/utils/tagger_client.dart';
 
 /// Collection
 /// ----------
@@ -35,7 +38,14 @@ class Collection extends MediaLibrary with ChangeNotifier {
     required super.artistsOrderType,
     required super.genresOrderType,
     required super.minimumFileSize,
-  });
+  }) {
+    if (Platform.isWindows) {
+      _tagger = Tagger(verbose: false);
+    }
+    if (Platform.isLinux) {
+      _client = TaggerClient(verbose: false);
+    }
+  }
 
   static Future<void> initialize({
     required List<Directory> collectionDirectories,
@@ -80,38 +90,59 @@ class Collection extends MediaLibrary with ChangeNotifier {
 
   @override
   // ignore: must_call_super
-  Future<void> dispose() {
-    /// Closes the internal [Tagger] instance.
-    return close();
+  Future<void> dispose() async {
+    await _tagger?.dispose();
+    await _client?.dispose();
   }
 
-  /// Overriden [retrievePlatformSpecificMetadataFromUri] to implement metadata retrieval for Android.
+  /// Overriden [parse] to implement platform-specific metadata retrieval.
   /// This is Flutter specific & dependent on native platform-channel method calls.
+  ///
+  /// [waitUntilAlbumArtIsSaved] only works on Android.
+  ///
   @override
-  Future<dynamic> retrievePlatformSpecificMetadataFromUri(
+  Future<dynamic> parse(
     Uri uri,
     Directory coverDirectory, {
-    // Not used by [MediaLibrary], specific to Harmonoid's source code.
     Duration? timeout,
-    // Not used by [MediaLibrary], specific to Harmonoid's source code.
     bool waitUntilAlbumArtIsSaved = false,
   }) async {
-    try {
-      final metadata = await _kPlatformSpecificMetadataRetriever.invokeMethod(
-        'MetadataRetriever',
-        {
-          'uri': uri.toString(),
-          'coverDirectory': coverDirectory.path,
-          'waitUntilAlbumArtIsSaved': waitUntilAlbumArtIsSaved,
-        },
-      ).timeout(timeout ?? const Duration(seconds: 2));
-      return _PlatformSpecificMetadata.fromJson(metadata);
-    } catch (exception, stacktrace) {
-      debugPrint(exception.toString());
-      debugPrint(stacktrace.toString());
-      return _PlatformSpecificMetadata(
-        uri: uri.toString(),
+    if (Platform.isWindows) {
+      assert(_tagger != null);
+      final metadata = await _tagger!.parse(
+        Media(uri.toString()),
+        coverDirectory: coverDirectory,
+        timeout: timeout ?? const Duration(seconds: 2),
       );
+      return Track.fromTagger(metadata);
+    }
+    if (Platform.isLinux) {
+      assert(_client != null);
+      final metadata = await _client!.parse(
+        uri.toString(),
+        coverDirectory: coverDirectory,
+        timeout: timeout ?? const Duration(seconds: 2),
+      );
+      return Track.fromTagger(metadata);
+    }
+    if (Platform.isAndroid) {
+      try {
+        final metadata = await _channel.invokeMethod(
+          'MetadataRetriever',
+          {
+            'uri': uri.toString(),
+            'coverDirectory': coverDirectory.path,
+            'waitUntilAlbumArtIsSaved': waitUntilAlbumArtIsSaved,
+          },
+        ).timeout(timeout ?? const Duration(seconds: 2));
+        return _AndroidMetadata.fromJson(metadata);
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+        return _AndroidMetadata(
+          uri: uri.toString(),
+        );
+      }
     }
   }
 
@@ -123,37 +154,17 @@ class Collection extends MediaLibrary with ChangeNotifier {
         ),
       );
 
-  static int? _parsePlatformSpecificMetadataResponseInteger(dynamic value) {
-    if (value == null) {
-      return null;
-    }
-    if (value is int) {
-      return value;
-    } else if (value is String) {
-      try {
-        try {
-          return int.parse(value);
-        } catch (exception, stacktrace) {
-          debugPrint(exception.toString());
-          debugPrint(stacktrace.toString());
-          return int.parse(value.split('/').first);
-        }
-      } catch (exception, stacktrace) {
-        debugPrint(exception.toString());
-        debugPrint(stacktrace.toString());
-      }
-    }
-    return null;
-  }
+  Tagger? _tagger;
+  TaggerClient? _client;
+  final MethodChannel _channel =
+      const MethodChannel('com.alexmercerind.harmonoid.MetadataRetriever');
 
-  static const MethodChannel _kPlatformSpecificMetadataRetriever =
-      MethodChannel('com.alexmercerind.harmonoid.MetadataRetriever');
   static const String _kUnknownAlbumArtRootBundle =
       'assets/images/default_album_art.png';
   static const String _kUnknownAlbumArtFileName = 'UnknownAlbum.PNG';
 }
 
-class _PlatformSpecificMetadata {
+class _AndroidMetadata {
   final String? trackName;
   final String? trackArtistNames;
   final String? albumName;
@@ -170,7 +181,7 @@ class _PlatformSpecificMetadata {
   final int? bitrate;
   final String? uri;
 
-  const _PlatformSpecificMetadata({
+  const _AndroidMetadata({
     this.trackName,
     this.trackArtistNames,
     this.albumName,
@@ -188,32 +199,31 @@ class _PlatformSpecificMetadata {
     this.uri,
   });
 
-  factory _PlatformSpecificMetadata.fromJson(dynamic map) =>
-      _PlatformSpecificMetadata(
+  factory _AndroidMetadata.fromJson(dynamic map) => _AndroidMetadata(
         trackName: map['trackName'],
         trackArtistNames: map['trackArtistNames'],
         albumName: map['albumName'],
         albumArtistName: map['albumArtistName'],
-        trackNumber: Collection._parsePlatformSpecificMetadataResponseInteger(
+        trackNumber: _parseInteger(
           map['trackNumber'],
         ),
-        albumLength: Collection._parsePlatformSpecificMetadataResponseInteger(
+        albumLength: _parseInteger(
           map['albumLength'],
         ),
-        year: Collection._parsePlatformSpecificMetadataResponseInteger(
+        year: _parseInteger(
           map['year'],
         ),
         genre: map['genre'],
         authorName: map['authorName'],
         writerName: map['writerName'],
-        discNumber: Collection._parsePlatformSpecificMetadataResponseInteger(
+        discNumber: _parseInteger(
           map['discNumber'],
         ),
         mimeType: map['mimeType'],
-        duration: Collection._parsePlatformSpecificMetadataResponseInteger(
+        duration: _parseInteger(
           map['duration'],
         ),
-        bitrate: Collection._parsePlatformSpecificMetadataResponseInteger(
+        bitrate: _parseInteger(
           map['bitrate'],
         ),
         uri: map['uri'],
@@ -239,5 +249,28 @@ class _PlatformSpecificMetadata {
 
   @override
   String toString() =>
-      '$_PlatformSpecificMetadata(trackName: $trackName, trackArtistNames: $trackArtistNames, albumName: $albumName, albumArtistName: $albumArtistName, trackNumber: $trackNumber, albumLength: $albumLength, year: $year, genre: $genre, authorName: $authorName, writerName: $writerName, discNumber: $discNumber, mimeType: $mimeType, duration: $duration, bitrate: $bitrate, uri: $uri)';
+      '$_AndroidMetadata(trackName: $trackName, trackArtistNames: $trackArtistNames, albumName: $albumName, albumArtistName: $albumArtistName, trackNumber: $trackNumber, albumLength: $albumLength, year: $year, genre: $genre, authorName: $authorName, writerName: $writerName, discNumber: $discNumber, mimeType: $mimeType, duration: $duration, bitrate: $bitrate, uri: $uri)';
+
+  static int? _parseInteger(dynamic value) {
+    if (value == null) {
+      return null;
+    }
+    if (value is int) {
+      return value;
+    } else if (value is String) {
+      try {
+        try {
+          return int.parse(value);
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
+          return int.parse(value.split('/').first);
+        }
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+    }
+    return null;
+  }
 }

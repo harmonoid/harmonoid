@@ -18,6 +18,7 @@ import 'package:safe_session_storage/safe_session_storage.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/tagger_client.dart';
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 
@@ -34,7 +35,14 @@ class Intent {
   Intent({
     this.file,
     this.directory,
-  });
+  }) {
+    if (Platform.isWindows) {
+      tagger = Tagger(verbose: false);
+    }
+    if (Platform.isLinux) {
+      client = TaggerClient(verbose: false);
+    }
+  }
 
   /// Initializes the intent & checks for possibly opened [File].
   ///
@@ -124,9 +132,9 @@ class Intent {
         final metadata = <String, dynamic>{
           'uri': file!.uri.toString(),
         };
-        if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+        if (Platform.isWindows) {
           try {
-            metadata.addAll(await tagger.parse(
+            metadata.addAll(await tagger!.parse(
               Media(file!.uri.toString()),
               coverDirectory: Collection.instance.albumArtDirectory,
             ));
@@ -137,9 +145,21 @@ class Intent {
           final track = Track.fromTagger(metadata);
           await Playback.instance.open([track]);
           DesktopNowPlayingController.instance.maximize();
+        } else if (Platform.isLinux) {
+          try {
+            metadata.addAll(await client!.parse(
+              file!.uri.toString(),
+              coverDirectory: Collection.instance.albumArtDirectory,
+            ));
+          } catch (exception, stacktrace) {
+            debugPrint(exception.toString());
+            debugPrint(stacktrace.toString());
+          }
+          final track = Track.fromTagger(metadata);
+          await Playback.instance.open([track]);
+          DesktopNowPlayingController.instance.maximize();
         } else {
-          final _metadata =
-              await Collection.instance.retrievePlatformSpecificMetadataFromUri(
+          final _metadata = await Collection.instance.parse(
             file!.uri,
             Collection.instance.albumArtDirectory,
           );
@@ -159,10 +179,28 @@ class Intent {
             final metadata = <String, dynamic>{
               'uri': file.uri.toString(),
             };
-            if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+            if (Platform.isWindows) {
               try {
-                metadata.addAll(await tagger.parse(
+                metadata.addAll(await tagger!.parse(
                   Media(file.uri.toString()),
+                  coverDirectory: Collection.instance.albumArtDirectory,
+                ));
+              } catch (exception, stacktrace) {
+                debugPrint(exception.toString());
+                debugPrint(stacktrace.toString());
+              }
+              final track = Track.fromTagger(metadata);
+              if (!playing) {
+                await Playback.instance.open([track]);
+                DesktopNowPlayingController.instance.maximize();
+                playing = true;
+              } else {
+                Playback.instance.add([track]);
+              }
+            } else if (Platform.isLinux) {
+              try {
+                metadata.addAll(await client!.parse(
+                  file.uri.toString(),
                   coverDirectory: Collection.instance.albumArtDirectory,
                 ));
               } catch (exception, stacktrace) {
@@ -179,8 +217,7 @@ class Intent {
               }
             } else {
               try {
-                final _metadata = await Collection.instance
-                    .retrievePlatformSpecificMetadataFromUri(
+                final _metadata = await Collection.instance.parse(
                   file.uri,
                   Collection.instance.albumArtDirectory,
                 );
@@ -243,31 +280,25 @@ class Intent {
         uri.isScheme('HTTPS') ||
         uri.isScheme('FTP') ||
         uri.isScheme('RSTP')) {
-      if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-        final metadata = <String, dynamic>{
+      final track = Track.fromTagger(
+        <String, dynamic>{
           'uri': uri.toString(),
-        };
-        metadata.addAll(
-          await tagger.parse(
-            Media(uri.toString()),
-            coverDirectory: Collection.instance.albumArtDirectory,
-          ),
-        );
-        final track = Track.fromTagger(metadata);
-        await Playback.instance.open([track]);
+        },
+      );
+      await Playback.instance.open([track]);
+      if (isDesktop) {
         DesktopNowPlayingController.instance.maximize();
-      } else if (Platform.isAndroid || Platform.isIOS) {
-        // TODO: Missing implementation for Android & iOS.
+      } else if (isMobile) {
         MobileNowPlayingController.instance.show();
       }
     } else if (FS.typeSync_(uri.toFilePath()) == FileSystemEntityType.file) {
       final metadata = <String, dynamic>{
         'uri': uri.toString(),
       };
-      if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      if (Platform.isWindows) {
         try {
           metadata.addAll(
-            await tagger.parse(
+            await tagger!.parse(
               Media(uri.toString()),
               coverDirectory: Collection.instance.albumArtDirectory,
             ),
@@ -283,9 +314,27 @@ class Intent {
         } else if (Platform.isAndroid || Platform.isIOS) {
           MobileNowPlayingController.instance.show();
         }
+      } else if (Platform.isLinux) {
+        try {
+          metadata.addAll(
+            await client!.parse(
+              uri.toString(),
+              coverDirectory: Collection.instance.albumArtDirectory,
+            ),
+          );
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
+        }
+        final track = Track.fromTagger(metadata);
+        await Playback.instance.open([track]);
+        if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+          DesktopNowPlayingController.instance.maximize();
+        } else if (Platform.isAndroid || Platform.isIOS) {
+          MobileNowPlayingController.instance.show();
+        }
       } else {
-        final _metadata =
-            await Collection.instance.retrievePlatformSpecificMetadataFromUri(
+        final _metadata = await Collection.instance.parse(
           uri,
           Collection.instance.albumArtDirectory,
         );
@@ -307,10 +356,32 @@ class Intent {
           final metadata = <String, dynamic>{
             'uri': file.uri.toString(),
           };
-          if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+          if (Platform.isWindows) {
             try {
-              metadata.addAll(await tagger.parse(
+              metadata.addAll(await tagger!.parse(
                 Media(file.uri.toString()),
+                coverDirectory: Collection.instance.albumArtDirectory,
+              ));
+            } catch (exception, stacktrace) {
+              debugPrint(exception.toString());
+              debugPrint(stacktrace.toString());
+            }
+            final track = Track.fromTagger(metadata);
+            if (!playing) {
+              await Playback.instance.open([track]);
+              if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+                DesktopNowPlayingController.instance.maximize();
+              } else if (Platform.isAndroid || Platform.isIOS) {
+                MobileNowPlayingController.instance.show();
+              }
+              playing = true;
+            } else {
+              Playback.instance.add([track]);
+            }
+          } else if (Platform.isLinux) {
+            try {
+              metadata.addAll(await client!.parse(
+                file.uri.toString(),
                 coverDirectory: Collection.instance.albumArtDirectory,
               ));
             } catch (exception, stacktrace) {
@@ -331,8 +402,7 @@ class Intent {
             }
           } else {
             try {
-              final _metadata = await Collection.instance
-                  .retrievePlatformSpecificMetadataFromUri(
+              final _metadata = await Collection.instance.parse(
                 file.uri,
                 Collection.instance.albumArtDirectory,
               );
@@ -370,7 +440,8 @@ class Intent {
 
   /// `libmpv.dart` [Tagger] instance.
   /// Public for disposal upon application termination inside [WindowCloseHandler].
-  final Tagger tagger = Tagger();
+  Tagger? tagger;
+  TaggerClient? client;
 
   /// [MethodChannel] used for retrieving the media [Uri] on Android specifically.
   final MethodChannel _channel =

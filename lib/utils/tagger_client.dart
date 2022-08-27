@@ -10,10 +10,15 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 import 'package:path/path.dart';
+import 'package:flutter/foundation.dart';
 import 'package:synchronized/synchronized.dart';
 
 /// TaggerClient
 /// ------------
+///
+/// **Spoilers:**
+///
+/// Without any second thought, this is a glue.
 ///
 /// **Problem:**
 ///
@@ -42,7 +47,7 @@ class TaggerClient {
   static String? _executable;
 
   /// Custom path to the `libmpv.so` optionally passed by the user.
-  static String? _dynamicLibrary;
+  static String? _dll;
 
   /// Initializes [TaggerClient] class for usage.
   static Future<void> ensureInitialized({
@@ -90,19 +95,56 @@ class TaggerClient {
       );
     }
     _executable ??= executable;
-    _dynamicLibrary ??= dynamicLibrary;
+    _dll ??= dynamicLibrary;
   }
 
-  TaggerClient({this.verbose = false});
-
-  void listener(List<int> buffer) {
-    metadata.complete(
-      Map<String, String>.from(
-        json.decode(
-          utf8.decode(buffer),
-        ),
-      ),
+  TaggerClient({
+    this.verbose = false,
+  }) {
+    assert(
+      _executable != null,
+      '[TaggerClient.ensureInitialized] is not called.',
     );
+    Process.start(
+      _executable!,
+      [
+        if (verbose) '--verbose',
+        if (_dll != null) _dll!,
+      ],
+      runInShell: true,
+    ).then(
+      (process) {
+        this.process.complete(process);
+        process.stdout.listen(stdout);
+      },
+    );
+  }
+
+  void stdout(List<int> buffer) {
+    try {
+      metadata.complete(
+        Map<String, String>.from(
+          json.decode(
+            utf8.decode(buffer),
+          ),
+        ),
+      );
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+      try {
+        metadata.completeError(
+          FormatException(
+            utf8.decode(buffer),
+          ),
+        );
+      } catch (exception, stacktrace) {
+        // Just to prevent any possible dead-locks.
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+        metadata.completeError(FormatException());
+      }
+    }
   }
 
   Future<Map<String, String>> parse(
@@ -113,7 +155,7 @@ class TaggerClient {
     bool bitrate = false,
     Duration timeout = const Duration(seconds: 5),
   }) {
-    return lock.synchronized(
+    return lock.synchronized<Map<String, String>>(
       () async {
         assert(running);
         final process = await this.process.future;
@@ -136,11 +178,19 @@ class TaggerClient {
     process.stdin.writeln('dispose');
   }
 
+  /// Whether background [Process] has been terminated using [dispose].
   bool running = true;
+
+  /// Background `tagger` [Process].
   Completer<Process> process = Completer<Process>();
+
+  /// Used for catching metadata from
   Completer<Map<String, String>> metadata = Completer<Map<String, String>>();
 
+  /// Whether to request `bitrate` & `duration` in metadata response.
   final bool verbose;
+
+  /// Used for ensuring mutual exclusion in [parse].
   final lock = Lock();
 }
 
