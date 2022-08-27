@@ -116,6 +116,7 @@ jobs:
       - run: flutter pub upgrade
       - run: flutter pub get
       - run: flutter build linux --verbose
+      - run: chmod +x build/linux/x64/release/bundle/data/flutter_assets/assets/platform/tagger
 
       - name: Build RPM Package
         run: |
@@ -208,7 +209,7 @@ jobs:
       - run: mkdir "assets/platform"
       - run: rm -r "assets/preloaded_visuals"
       - run: mkdir "assets/preloaded_visuals"
-      
+
       - run: flutter pub upgrade
       - run: flutter pub get
       - run: flutter build apk --verbose --split-per-abi
