@@ -6,6 +6,7 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
+import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 import 'package:libmpv/libmpv.dart';
@@ -370,7 +371,12 @@ class Playback extends ChangeNotifier {
         instance.isCompleted = event;
         instance.notifyListeners();
       });
-      instance.libmpv?.streams.position.listen((event) {
+      instance.libmpv?.streams.position
+          .distinct(
+        (previous, next) =>
+            (next - previous).abs() < const Duration(milliseconds: 200),
+      )
+          .listen((event) {
         if (instance.interceptPositionChangeRebuilds) {
           return;
         }
