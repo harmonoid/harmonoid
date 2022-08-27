@@ -30,7 +30,11 @@ jobs:
       - run: |
           rmdir /s /q "assets/fonts"
         shell: cmd
+      - run: |
+          rmdir /s /q "assets/platform"
+        shell: cmd
       - run: mkdir "assets/fonts"
+      - run: mkdir "assets/platform"
 
       - run: flutter config --enable-windows-desktop
       - run: flutter pub get
@@ -200,6 +204,8 @@ jobs:
       - run: mkdir "assets/fonts"
       - run: rm -r "assets/icons"
       - run: mkdir "assets/icons"
+      - run: rm -r "assets/platform"
+      - run: mkdir "assets/platform"
       - run: rm -r "assets/preloaded_visuals"
       - run: mkdir "assets/preloaded_visuals"
       
