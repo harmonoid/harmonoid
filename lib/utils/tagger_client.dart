@@ -76,8 +76,13 @@ class TaggerClient {
       runInShell: true,
     );
     if (chmod.exitCode != 0) {
+      debugPrint(chmod.stdout.toString());
+      debugPrint(chmod.stderr.toString());
       throw TaggerClientPermissionRequestException(
-        '${chmod.stdout}\n${chmod.stderr}\n${chmod.exitCode}',
+        [
+          if (chmod.stdout.toString().isNotEmpty) chmod.stdout.toString(),
+          if (chmod.stderr.toString().isNotEmpty) chmod.stderr.toString(),
+        ].join(),
       );
     }
     final executableVersion = await Process.run(
@@ -90,8 +95,13 @@ class TaggerClient {
     if (executableVersion.exitCode != 0 ||
         executableVersion.stderr.toString().isNotEmpty ||
         !executableVersion.stdout.toString().startsWith('Tagger')) {
+      debugPrint(chmod.stdout.toString());
+      debugPrint(chmod.stderr.toString());
       throw TaggerClientVerificationException(
-        '${chmod.stdout}\n${chmod.stderr}\n${chmod.exitCode}',
+        [
+          if (chmod.stdout.toString().isNotEmpty) chmod.stdout.toString(),
+          if (chmod.stderr.toString().isNotEmpty) chmod.stderr.toString(),
+        ].join(),
       );
     }
     _executable ??= executable;
