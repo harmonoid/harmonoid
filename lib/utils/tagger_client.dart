@@ -66,43 +66,41 @@ class TaggerClient {
       'tagger',
     );
     assert(Platform.isLinux);
-    assert(dir.startsWith('/'));
-    final chmod = await Process.run(
-      'chmod',
+    assert(executable.startsWith('/') && !executable.endsWith('/'));
+    final script = '''if [[ -f "$executable" && -x "$executable" ]]; then
+  echo "true"
+else
+  echo "false"
+fi
+''';
+    final permission = await Process.run(
+      'bash',
       [
-        '+x',
-        executable,
+        '-c',
+        script,
       ],
       runInShell: true,
     );
-    if (chmod.exitCode != 0) {
-      debugPrint(chmod.stdout.toString());
-      debugPrint(chmod.stderr.toString());
-      throw TaggerClientPermissionRequestException(
+    if (permission.stdout.toString().trim() != 'true' ||
+        permission.stderr.toString().isNotEmpty) {
+      final chmod = await Process.run(
+        'chmod',
         [
-          if (chmod.stdout.toString().isNotEmpty) chmod.stdout.toString(),
-          if (chmod.stderr.toString().isNotEmpty) chmod.stderr.toString(),
-        ].join(),
+          '+x',
+          executable,
+        ],
+        runInShell: true,
       );
-    }
-    final executableVersion = await Process.run(
-      executable,
-      [
-        '--version',
-      ],
-      runInShell: true,
-    );
-    if (executableVersion.exitCode != 0 ||
-        executableVersion.stderr.toString().isNotEmpty ||
-        !executableVersion.stdout.toString().startsWith('Tagger')) {
-      debugPrint(chmod.stdout.toString());
-      debugPrint(chmod.stderr.toString());
-      throw TaggerClientVerificationException(
-        [
-          if (chmod.stdout.toString().isNotEmpty) chmod.stdout.toString(),
-          if (chmod.stderr.toString().isNotEmpty) chmod.stderr.toString(),
-        ].join(),
-      );
+      if (chmod.exitCode != 0) {
+        debugPrint(chmod.stdout.toString());
+        debugPrint(chmod.stderr.toString());
+        throw TaggerClientPermissionRequestException(
+          [
+            if (chmod.stdout.toString().isNotEmpty) chmod.stdout.toString(),
+            if (chmod.stderr.toString().isNotEmpty) chmod.stderr.toString(),
+          ].join(),
+        );
+      }
     }
     _executable ??= executable;
     _dll ??= dynamicLibrary;
