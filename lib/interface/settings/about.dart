@@ -301,7 +301,7 @@ class AboutPageState extends State<AboutPage> {
                                 child: (repository == null ||
                                         repository!.containsKey('message'))
                                     ? Text(
-                                        '🎵 Elegant music app to play & manage music library.',
+                                        'Plays & manages your music library. Looks beautiful & juicy.',
                                         style: TextStyle(
                                           color: Theme.of(context).brightness ==
                                                   Brightness.dark

@@ -2,7 +2,7 @@
 Version=1.0
 Type=Application
 Name=Harmonoid
-Comment=Elegant music app to play & manage music library.
+Comment=Plays & manages your music library. Looks beautiful & juicy.
 Icon=harmonoid
 Exec=harmonoid %f
 StartupWMClass=harmonoid

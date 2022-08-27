@@ -70,7 +70,7 @@ Source: "build/windows/runner/Release/*"; DestDir: "{app}"; Flags: ignoreversion
 ; Create the application capability key.
 Root: HKLM; Subkey: "Software\Harmonoid"; Flags: uninsdeletekeyifempty
 Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid"; Flags: uninsdeletekeyifempty
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability"; ValueType: string; ValueName: "ApplicationDescription"; ValueData: "Elegant music app to play & manage music library."; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability"; ValueType: string; ValueName: "ApplicationDescription"; ValueData: "Plays & manages your music library. Looks beautiful & juicy."; Flags: uninsdeletevalue
 Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability"; ValueType: string; ValueName: "ApplicationName"; ValueData: "Harmonoid"; Flags: uninsdeletevalue
 Root: HKLM; Subkey: "Software\RegisteredApplications"; ValueType: string; ValueName: "Harmonoid"; ValueData: "Software\Harmonoid\Harmonoid\Capability"; Flags: uninsdeletevalue
 
