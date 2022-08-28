@@ -1022,6 +1022,9 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                     );
                                   }),
                                 ),
+                                const SizedBox(
+                                  width: 16.0,
+                                ),
                                 Expanded(
                                   flex: 7,
                                   child: Card(
