@@ -76,13 +76,21 @@ static void my_application_window_new(GApplication* application) {
   } else {
     gtk_window_set_title(window, "Harmonoid");
   }
+  GdkRectangle workarea = {0};
+  GdkDisplay* default_display = gdk_display_get_default();
+  GdkMonitor* primary_monitor =
+      gdk_display_get_primary_monitor(default_display);
+  gdk_monitor_get_workarea(primary_monitor, &workarea);
+  gboolean is_full_hd_display = workarea.width > 1366 && workarea.height > 768;
+  gint base_width = is_full_hd_display ? 1280 : 1024,
+       base_height = is_full_hd_display ? 720 : 640;
   // Configure default & minimum window dimensions etc.
-  gtk_window_set_default_size(window, 1024, 640);
+  gtk_window_set_default_size(window, base_width, base_height);
   GdkGeometry geometry;
   geometry.min_width = 960;
   geometry.min_height = 640;
-  geometry.base_width = 1024;
-  geometry.base_height = 640;
+  geometry.base_width = base_width;
+  geometry.base_height = base_height;
   gtk_window_set_geometry_hints(
       window, GTK_WIDGET(window), &geometry,
       static_cast<GdkWindowHints>(GDK_HINT_MIN_SIZE | GDK_HINT_BASE_SIZE));
