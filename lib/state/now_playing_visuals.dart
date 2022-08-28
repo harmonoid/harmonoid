@@ -35,8 +35,7 @@ class NowPlayingVisuals {
   static Future<void> initialize() async {
     instance.directory = Directory(
       join(
-        await Configuration.instance.configurationDirectory,
-        '.Harmonoid',
+        Configuration.instance.cacheDirectory.path,
         'UserVisuals',
       ),
     );

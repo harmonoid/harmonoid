@@ -102,7 +102,8 @@ class _TrackTabState extends State<TrackTab> {
                                 MediaQuery.of(context).size.height,
                               ),
                             ),
-                            items: trackPopupMenuItems(context),
+                            items: trackPopupMenuItems(
+                                collection.tracks[index], context),
                           );
                           await trackPopupMenuHandle(
                             context,
@@ -176,7 +177,8 @@ class _TrackTabState extends State<TrackTab> {
                                         MediaQuery.of(context).size.height,
                                       ),
                                     ),
-                                    items: trackPopupMenuItems(context),
+                                    items: trackPopupMenuItems(
+                                        collection.tracks[index], context),
                                   );
                                   await trackPopupMenuHandle(
                                     context,
@@ -462,6 +464,7 @@ class TrackTileState extends State<TrackTile> {
                         ),
                       ),
                       items: trackPopupMenuItems(
+                        widget.track,
                         context,
                       ),
                     );
@@ -601,6 +604,7 @@ class TrackTileState extends State<TrackTile> {
                                 },
                                 color: Theme.of(context).iconTheme.color,
                                 itemBuilder: (_) => trackPopupMenuItems(
+                                  widget.track,
                                   context,
                                 ),
                               ),
@@ -730,6 +734,7 @@ class TrackTileState extends State<TrackTile> {
                             ),
                           ),
                           items: trackPopupMenuItems(
+                            widget.track,
                             context,
                           ),
                         );
@@ -881,6 +886,7 @@ class TrackTileState extends State<TrackTile> {
                                     },
                                     color: Theme.of(context).iconTheme.color,
                                     itemBuilder: (_) => trackPopupMenuItems(
+                                      widget.track,
                                       context,
                                     ),
                                   ),
@@ -997,7 +1003,7 @@ class TrackTileState extends State<TrackTile> {
       builder: (context) => Container(
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: trackPopupMenuItems(context).map((item) {
+          children: trackPopupMenuItems(widget.track, context).map((item) {
             return PopupMenuItem<int>(
               value: item.value,
               onTap: () {

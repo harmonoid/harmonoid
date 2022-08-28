@@ -1216,6 +1216,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                               ),
                                                               items:
                                                                   trackPopupMenuItems(
+                                                                track.value,
                                                                 context,
                                                               ),
                                                             );
@@ -1404,6 +1405,8 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                       itemBuilder:
                                                                           (_) =>
                                                                               trackPopupMenuItems(
+                                                                        track
+                                                                            .value,
                                                                         context,
                                                                       ),
                                                                     ),
@@ -1838,7 +1841,8 @@ class AlbumScreenState extends State<AlbumScreen>
                                       builder: (context) => Container(
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
-                                          children: trackPopupMenuItems(context)
+                                          children: trackPopupMenuItems(
+                                                  tracks[i], context)
                                               .map(
                                                 (item) => PopupMenuItem(
                                                   child: item.child,
@@ -1943,6 +1947,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                             MainAxisSize.min,
                                                         children:
                                                             trackPopupMenuItems(
+                                                                    tracks[i],
                                                                     context)
                                                                 .map(
                                                                   (item) =>
