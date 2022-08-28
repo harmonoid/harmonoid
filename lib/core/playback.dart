@@ -524,9 +524,13 @@ class Playback extends ChangeNotifier {
             );
             SystemMediaTransportControls.instance.setMusicData(
               title: track.trackName,
-              artist: track.trackArtistNames.take(2).join(', '),
+              artist: track.hasNoAvailableArtists
+                  ? null
+                  : track.trackArtistNames.take(2).join(', '),
+              albumArtist: track.hasNoAvailableAlbumArtists
+                  ? null
+                  : track.albumArtistName,
               albumTitle: track.albumName,
-              albumArtist: track.albumArtistName,
               trackNumber: track.trackNumber,
             );
             if (LibmpvPluginUtils.isSupported(track.uri)) {
@@ -558,9 +562,9 @@ class Playback extends ChangeNotifier {
           _HarmonoidMPRIS.instance.isCompleted = isCompleted;
           _HarmonoidMPRIS.instance.index = index;
           _HarmonoidMPRIS.instance.playlist = tracks.map((e) {
-            final json = e.toJson();
-            json['artworkUri'] = image.toString();
-            return MPRISMedia.fromJson(json);
+            final data = e.toJson();
+            data['artworkUri'] = image.toString();
+            return MPRISMedia.fromJson(data);
           }).toList();
         }
         if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
@@ -570,26 +574,19 @@ class Playback extends ChangeNotifier {
                     track.uri)
                 ? LibmpvPluginUtils.thumbnail(track.uri, small: true).toString()
                 : await (() async {
-                    final hasNoAlbumTag =
-                        ['', kUnknownAlbum].contains(track.albumName);
-                    final hasNoTrackArtistsTag = track.hasNoAvailableArtists;
-                    final hasNoAlbumArtistsTag = [
-                      '',
-                      kUnknownArtist,
-                    ].contains(track.albumArtistName);
                     // Chances are file has no tagged metadata, thus fallback to the default album art.
-                    if (hasNoAlbumTag &&
-                        hasNoTrackArtistsTag &&
-                        hasNoAlbumArtistsTag) {
+                    if (track.hasNoAvailableAlbum &&
+                        track.hasNoAvailableArtists &&
+                        track.hasNoAvailableAlbumArtists) {
                       return 'default_album_art';
                     }
                     final search = [
                       track.trackName,
-                      if (!hasNoTrackArtistsTag)
+                      if (!track.hasNoAvailableArtists)
                         track.trackArtistNames.take(1).join('')
-                      else if (!hasNoAlbumArtistsTag)
+                      else if (!track.hasNoAvailableAlbumArtists)
                         track.albumArtistName
-                      else if (!hasNoAlbumTag)
+                      else if (!track.hasNoAvailableAlbum)
                         track.albumName,
                     ].join(' ');
                     try {
@@ -647,31 +644,26 @@ class Playback extends ChangeNotifier {
       if (Configuration.instance.discordRPC) {
         try {
           final track = tracks[index];
-          final hasNoAlbumTag = ['', kUnknownAlbum].contains(track.albumName);
-          final hasNoTrackArtistsTag = track.hasNoAvailableArtists;
-          final hasNoAlbumArtistsTag = [
-            '',
-            kUnknownArtist,
-          ].contains(track.albumArtistName);
           final search = [
             track.trackName,
-            if (!hasNoTrackArtistsTag)
+            if (!track.hasNoAvailableArtists)
               track.trackArtistNames.take(1).join('')
-            else if (!hasNoAlbumArtistsTag)
+            else if (!track.hasNoAvailableAlbumArtists)
               track.albumArtistName,
           ].join(' ');
           if (!isCompleted) {
             discord?.start(autoRegister: true);
             discord?.updatePresence(
               DiscordPresence(
-                state: !hasNoTrackArtistsTag
+                state: !track.hasNoAvailableArtists
                     ? track.trackArtistNames.join(', ')
-                    : !hasNoAlbumArtistsTag
+                    : !track.hasNoAvailableAlbumArtists
                         ? track.albumArtistName
                         : null,
                 details: track.trackName,
                 largeImageKey: _discordPreviousLargeImageKey,
-                largeImageText: !hasNoAlbumTag ? track.albumName : null,
+                largeImageText:
+                    !track.hasNoAvailableAlbum ? track.albumName : null,
                 smallImageKey: isPlaying ? 'play' : 'pause',
                 smallImageText: isPlaying ? 'Playing' : 'Paused',
                 button1Label: LibmpvPluginUtils.isSupported(track.uri)
@@ -1183,12 +1175,10 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
   static MediaItem _trackToMediaItem(Track track) => MediaItem(
         id: track.uri.toString(),
         title: track.trackName,
-        album: !['', kUnknownAlbum].contains(track.albumName)
-            ? track.albumName
-            : null,
+        album: !track.hasNoAvailableAlbum ? track.albumName : null,
         artist: !track.hasNoAvailableArtists
             ? track.trackArtistNames.take(2).join(', ')
-            : !['', kUnknownArtist].contains(track.albumArtistName)
+            : !track.hasNoAvailableAlbumArtists
                 ? track.albumArtistName
                 : null,
         genre: track.genre,

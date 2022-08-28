@@ -73,4 +73,20 @@ extension TrackExtension on Track {
     }
     return false;
   }
+
+  /// Whether the [Track] actually has meaningful actual album artists from metadata tags.
+  bool get hasNoAvailableAlbumArtists {
+    if (albumArtistName.isEmpty || albumArtistName == kUnknownArtist) {
+      return true;
+    }
+    return false;
+  }
+
+  /// Whether the [Track] actually has meaningful actual album from metadata tags.
+  bool get hasNoAvailableAlbum {
+    if (albumName.isEmpty || albumName == kUnknownArtist) {
+      return true;
+    }
+    return false;
+  }
 }
