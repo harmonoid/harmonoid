@@ -724,7 +724,7 @@ InputDecoration inputDecoration(
     contentPadding: trailingIcon == null
         ? EdgeInsets.only(
             left: 10.0,
-            bottom: 18.0,
+            bottom: 16.0,
             right: 10.0,
           )
         : EdgeInsets.only(
