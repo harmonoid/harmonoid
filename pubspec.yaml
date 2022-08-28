@@ -57,6 +57,7 @@ dependencies:
 
   # Third-party UI widgets or "pure-dart" packages.
 
+  lrc: ^1.0.0
   http: ^0.13.0
   path: ^1.8.0
   provider: ^6.0.1
