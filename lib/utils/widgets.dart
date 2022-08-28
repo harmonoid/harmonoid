@@ -335,7 +335,9 @@ class SortBarFixedHolder extends StatelessWidget {
             'Yeah! You found the easter egg. 🥚',
             style: Theme.of(context).textTheme.headline3,
           )
-        else if (DateTime.now().day == 25 && DateTime.now().month == 12)
+        else if (DateTime.now().day > (25 - 7) &&
+            DateTime.now().day <= 25 &&
+            DateTime.now().month == 12)
           Text(
             'Merry Christmas! ❄️',
             style: Theme.of(context).textTheme.headline3,

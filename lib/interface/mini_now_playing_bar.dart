@@ -1098,7 +1098,8 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                               child: Text(
                                 Random().nextInt(400) == 50
                                     ? 'Yeah! You found the easter egg. 🥚'
-                                    : DateTime.now().day == 25 &&
+                                    : DateTime.now().day > (25 - 7) &&
+                                                DateTime.now().day <= 25 &&
                                             DateTime.now().month == 12
                                         ? 'Merry Christmas! ❄️'
                                         : DateTime.now().day == 1 &&
