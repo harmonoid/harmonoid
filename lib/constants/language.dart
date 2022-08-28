@@ -233,6 +233,7 @@ class Language extends Strings with ChangeNotifier {
     this.CANCEL = asset['CANCEL']!;
     this.CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC = asset['CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC']!;
     this.CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC_TITLE = asset['CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC_TITLE']!;
+    this.CLEAR_LRC_FILE = asset['CLEAR_LRC_FILE']!;
     this.COLLECTION = asset['COLLECTION']!;
     this.COLLECTION_ALBUM_DELETE_DIALOG_BODY = asset['COLLECTION_ALBUM_DELETE_DIALOG_BODY']!;
     this.COLLECTION_ALBUM_DELETE_DIALOG_HEADER = asset['COLLECTION_ALBUM_DELETE_DIALOG_HEADER']!;
@@ -260,6 +261,7 @@ class Language extends Strings with ChangeNotifier {
     this.CONTROL_PANEL = asset['CONTROL_PANEL']!;
     this.COPY_AS_JSON = asset['COPY_AS_JSON']!;
     this.COPY_LINK = asset['COPY_LINK']!;
+    this.CORRUPT_LRC_FILE = asset['CORRUPT_LRC_FILE']!;
     this.COUNT = asset['COUNT']!;
     this.CREATE = asset['CREATE']!;
     this.CREATE_NEW_PLAYLIST = asset['CREATE_NEW_PLAYLIST']!;
@@ -300,6 +302,7 @@ class Language extends Strings with ChangeNotifier {
     this.HIDE = asset['HIDE']!;
     this.HIDE_LYRICS = asset['HIDE_LYRICS']!;
     this.HIGHLIGHTED_LYRICS_SIZE = asset['HIGHLIGHTED_LYRICS_SIZE']!;
+    this.HISTORY = asset['HISTORY']!;
     this.IMAGES = asset['IMAGES']!;
     this.IMPORT = asset['IMPORT']!;
     this.IMPORT_PLAYLIST_SUBTITLE = asset['IMPORT_PLAYLIST_SUBTITLE']!;
@@ -311,6 +314,7 @@ class Language extends Strings with ChangeNotifier {
     this.KNOW_MORE = asset['KNOW_MORE']!;
     this.LAST_COLLECTION_DIRECTORY_REMOVED = asset['LAST_COLLECTION_DIRECTORY_REMOVED']!;
     this.LESS = asset['LESS']!;
+    this.LIKED_SONGS = asset['LIKED_SONGS']!;
     this.LISTENING_TO_MUSIC = asset['LISTENING_TO_MUSIC']!;
     this.LYRICS = asset['LYRICS']!;
     this.LYRICS_NOT_FOUND = asset['LYRICS_NOT_FOUND']!;
@@ -433,6 +437,7 @@ class Language extends Strings with ChangeNotifier {
     this.SETTING_STAR_GITHUB = asset['SETTING_STAR_GITHUB']!;
     this.SETTING_THEME_SUBTITLE = asset['SETTING_THEME_SUBTITLE']!;
     this.SETTING_THEME_TITLE = asset['SETTING_THEME_TITLE']!;
+    this.SET_LRC_FILE = asset['SET_LRC_FILE']!;
     this.SHARE = asset['SHARE']!;
     this.SHOW_ALBUM = asset['SHOW_ALBUM']!;
     this.SHOW_IN_FILE_MANAGER = asset['SHOW_IN_FILE_MANAGER']!;
@@ -481,11 +486,12 @@ class Language extends Strings with ChangeNotifier {
     this.YEAR = asset['YEAR']!;
     this.YES = asset['YES']!;
     Configuration.instance.save(languageRegion: languageRegion);
-    this.current = languageRegion;
-    this.notifyListeners();
-  }
-  late LanguageRegion current;
-  @override
-  // ignore: must_call_super
-  void dispose() {}
-}
+            this.current = languageRegion;
+            this.notifyListeners();
+        }
+        late LanguageRegion current;
+        @override
+        // ignore: must_call_super
+        void dispose() {}
+        }
+        

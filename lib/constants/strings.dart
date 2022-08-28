@@ -1,7 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
-class Strings {
-  late String ABOUT_SUBTITLE;
+        class Strings {
+          late String ABOUT_SUBTITLE;
   late String ABOUT_TITLE;
   late String ADD;
   late String ADD_NEW_FOLDER;
@@ -29,6 +29,7 @@ class Strings {
   late String CANCEL;
   late String CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC;
   late String CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC_TITLE;
+  late String CLEAR_LRC_FILE;
   late String COLLECTION;
   late String COLLECTION_ALBUM_DELETE_DIALOG_BODY;
   late String COLLECTION_ALBUM_DELETE_DIALOG_HEADER;
@@ -56,6 +57,7 @@ class Strings {
   late String CONTROL_PANEL;
   late String COPY_AS_JSON;
   late String COPY_LINK;
+  late String CORRUPT_LRC_FILE;
   late String COUNT;
   late String CREATE;
   late String CREATE_NEW_PLAYLIST;
@@ -96,6 +98,7 @@ class Strings {
   late String HIDE;
   late String HIDE_LYRICS;
   late String HIGHLIGHTED_LYRICS_SIZE;
+  late String HISTORY;
   late String IMAGES;
   late String IMPORT;
   late String IMPORT_PLAYLIST_SUBTITLE;
@@ -107,6 +110,7 @@ class Strings {
   late String KNOW_MORE;
   late String LAST_COLLECTION_DIRECTORY_REMOVED;
   late String LESS;
+  late String LIKED_SONGS;
   late String LISTENING_TO_MUSIC;
   late String LYRICS;
   late String LYRICS_NOT_FOUND;
@@ -229,6 +233,7 @@ class Strings {
   late String SETTING_STAR_GITHUB;
   late String SETTING_THEME_SUBTITLE;
   late String SETTING_THEME_TITLE;
+  late String SET_LRC_FILE;
   late String SHARE;
   late String SHOW_ALBUM;
   late String SHOW_IN_FILE_MANAGER;
