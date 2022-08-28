@@ -34,8 +34,7 @@ class AppState extends AppStateKeys {
   static Future<void> initialize() async {
     instance.storage = SafeSessionStorage(
       path.join(
-        await Configuration.instance.configurationDirectory,
-        '.Harmonoid',
+        Configuration.instance.cacheDirectory.path,
         'AppState.JSON',
       ),
       fallback: _defaultAppState,

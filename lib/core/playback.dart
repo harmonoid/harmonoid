@@ -456,13 +456,7 @@ class Playback extends ChangeNotifier {
     try {
       final track = tracks[index];
       NowPlayingColorPalette.instance.update(track);
-      Lyrics.instance.update([
-        track.trackName,
-        track.albumArtistName.isNotEmpty &&
-                track.albumArtistName != kUnknownArtist
-            ? track.albumArtistName
-            : track.trackArtistNames.take(1).join(''),
-      ].join(' '));
+      Lyrics.instance.update(track);
       try {
         // Add to History in asynchronous suspension.
         () async {
