@@ -85,7 +85,7 @@ static void my_application_window_new(GApplication* application) {
           registry, "ArgumentVectorHandlerPlugin");
   argument_vector_handler_plugin_register_with_registrar(
       argument_vector_handler_registrar);
-  gtk_widget_grab_focus(GTK_WIDGET(view));
+  gtk_widget_grab_focus(GTK_WIDGET(window));
   std::setlocale(LC_NUMERIC, "C");
 }
 
