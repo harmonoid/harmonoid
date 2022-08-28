@@ -17,6 +17,7 @@
 
 #include "argument_vector_handler.h"
 #include "flutter/generated_plugin_registrant.h"
+#include "window_utils.h"
 
 struct _MyApplication {
   GtkApplication parent_instance;
@@ -29,8 +30,28 @@ static void my_application_window_new(GApplication* application) {
   MyApplication* self = MY_APPLICATION(application);
   GtkWindow* window =
       GTK_WINDOW(gtk_application_window_new(GTK_APPLICATION(application)));
-  // Use a header bar when running in GNOME as this is the common style used
-  // by applications and is the setup most users will be using (e.g. Ubuntu
+  // Start window in minimized, in-sensitive & in-visible mode.
+  // This causes the Dart VM to start & Flutter to actually paint and receive
+  // waitUntilFirstFrameRasterized callback:
+  // https://api.flutter.dev/flutter/widgets/WidgetsBinding/waitUntilFirstFrameRasterized.html
+  // Once this is received, following methods are called:
+  // * |gtk_widget_hide|         : to make window hidden & present again with
+  //                              default window manager / desktop environment
+  //                              animation for window opening.
+  // * |gtk_widget_set_opacity|  : with `1.0`.
+  // * |gtk_widget_set_sensitive|: with `true`.
+  // * |gtk_window_deiconify|    : to un-minimize the window as done here.
+  // * |gtk_widget_show|         : actually show window.
+  if (gdk_screen_is_composited(gtk_window_get_screen(window))) {
+    gtk_window_iconify(window);
+  }
+  // Note that |gtk_widget_set_opacity| & |gtk_widget_set_sensitive| works after
+  // |gtk_widget_show| call, thus present down below this imperative code.
+  // Apparently, they are not supported by all window managers aswell, so that's
+  // handled too. In that case, only |gtk_window_iconify| is relied upon.
+
+  // Use a header bar when running in GNOME as this is the common style used by
+  // applications and is the setup most users will be using (e.g. Ubuntu
   // desktop).
   // If running on X and not using GNOME then just use a traditional title bar
   // in case the window manager does more exotic layout, e.g. tiling.
@@ -55,12 +76,13 @@ static void my_application_window_new(GApplication* application) {
   } else {
     gtk_window_set_title(window, "Harmonoid");
   }
-  gtk_window_set_default_size(window, 1280, 720);
+  // Configure default & minimum window dimensions etc.
+  gtk_window_set_default_size(window, 1024, 640);
   GdkGeometry geometry;
-  geometry.min_width = 1024;
+  geometry.min_width = 960;
   geometry.min_height = 640;
-  geometry.base_width = 1280;
-  geometry.base_height = 720;
+  geometry.base_width = 1024;
+  geometry.base_height = 640;
   gtk_window_set_geometry_hints(
       window, GTK_WIDGET(window), &geometry,
       static_cast<GdkWindowHints>(GDK_HINT_MIN_SIZE | GDK_HINT_BASE_SIZE));
@@ -70,22 +92,25 @@ static void my_application_window_new(GApplication* application) {
   gtk_style_context_add_provider_for_screen(
       screen, GTK_STYLE_PROVIDER(style),
       GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-  gtk_widget_show(GTK_WIDGET(window));
-  gtk_widget_show(GTK_WIDGET(window));
   g_autoptr(FlDartProject) project = fl_dart_project_new();
   fl_dart_project_set_dart_entrypoint_arguments(
       project, self->dart_entrypoint_arguments);
   FlView* view = fl_view_new(project);
-  gtk_widget_show(GTK_WIDGET(view));
   gtk_container_add(GTK_CONTAINER(window), GTK_WIDGET(view));
+  gtk_widget_show(GTK_WIDGET(window));
+  gtk_widget_show(GTK_WIDGET(view));
+  if (gdk_screen_is_composited(gtk_window_get_screen(window))) {
+    gtk_widget_set_opacity(GTK_WIDGET(window), 0.0);
+    gtk_widget_set_sensitive(GTK_WIDGET(window), false);
+  }
   auto registry = FL_PLUGIN_REGISTRY(view);
   fl_register_plugins(registry);
-  g_autoptr(FlPluginRegistrar) argument_vector_handler_registrar =
-      fl_plugin_registry_get_registrar_for_plugin(
-          registry, "ArgumentVectorHandlerPlugin");
+  window_utils_plugin_register_with_registrar(
+      fl_plugin_registry_get_registrar_for_plugin(registry,
+                                                  "WindowUtilsPlugin"));
   argument_vector_handler_plugin_register_with_registrar(
-      argument_vector_handler_registrar);
-  gtk_widget_grab_focus(GTK_WIDGET(window));
+      fl_plugin_registry_get_registrar_for_plugin(
+          registry, "ArgumentVectorHandlerPlugin"));
   std::setlocale(LC_NUMERIC, "C");
 }
 
