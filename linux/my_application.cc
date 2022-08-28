@@ -64,13 +64,13 @@ static void my_application_window_new(GApplication* application) {
   gtk_window_set_geometry_hints(
       window, GTK_WIDGET(window), &geometry,
       static_cast<GdkWindowHints>(GDK_HINT_MIN_SIZE | GDK_HINT_BASE_SIZE));
-  GdkRGBA color;
-  color.red = color.green = color.blue = 0.0;
-  color.alpha = 1.0;
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-  gtk_widget_override_background_color(GTK_WIDGET(window),
-                                       GTK_STATE_FLAG_NORMAL, &color);
+  g_autoptr(GtkCssProvider) style = gtk_css_provider_new();
+  gtk_css_provider_load_from_data(GTK_CSS_PROVIDER(style),
+                                  "window { background:none; }", -1, nullptr);
+  gtk_style_context_add_provider_for_screen(
+      screen, GTK_STYLE_PROVIDER(style),
+      GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+  gtk_widget_show(GTK_WIDGET(window));
   gtk_widget_show(GTK_WIDGET(window));
   g_autoptr(FlDartProject) project = fl_dart_project_new();
   fl_dart_project_set_dart_entrypoint_arguments(
