@@ -27,6 +27,7 @@ import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/interface/file_info_screen.dart';
 import 'package:harmonoid/interface/collection/playlist.dart';
 import 'package:harmonoid/interface/edit_details_screen.dart';
+import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -260,7 +261,8 @@ TileGridListWidgetsData tileGridListWidgetsWithScrollbarSupport({
   );
 }
 
-List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
+List<PopupMenuItem<int>> trackPopupMenuItems(
+    Track track, BuildContext context) {
   return [
     PopupMenuItem<int>(
       padding: EdgeInsets.zero,
@@ -364,6 +366,36 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
         ),
       ),
     ),
+    if (Lyrics.instance.hasLRCFile(track))
+      PopupMenuItem<int>(
+        padding: EdgeInsets.zero,
+        value: 9,
+        child: ListTile(
+          leading: Icon(
+            Platform.isWindows
+                ? FluentIcons.clear_formatting_24_regular
+                : Icons.clear,
+          ),
+          title: Text(
+            Language.instance.CLEAR_LRC_FILE,
+            style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+          ),
+        ),
+      )
+    else
+      PopupMenuItem<int>(
+        padding: EdgeInsets.zero,
+        value: 8,
+        child: ListTile(
+          leading: Icon(
+            Platform.isWindows ? FluentIcons.text_font_24_regular : Icons.abc,
+          ),
+          title: Text(
+            Language.instance.SET_LRC_FILE,
+            style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+          ),
+        ),
+      ),
     if (!isDesktop && !MobileNowPlayingController.instance.isHidden)
       PopupMenuItem<int>(
         padding: EdgeInsets.zero,
@@ -571,6 +603,42 @@ Future<void> trackPopupMenuHandle(
           context,
           uri: track.uri,
         );
+        break;
+      case 8:
+        final file = await pickFile(
+          label: 'LRC',
+          extensions: ['lrc'],
+        );
+        if (file != null) {
+          final added = await Lyrics.instance.addLRCFile(
+            track,
+            file,
+          );
+          if (!added) {
+            await showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                backgroundColor: Theme.of(context).cardColor,
+                title: Text(
+                  Language.instance.ERROR,
+                ),
+                content: Text(
+                  Language.instance.CORRUPT_LRC_FILE,
+                  style: Theme.of(context).textTheme.headline3,
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: Navigator.of(context).pop,
+                    child: Text(Language.instance.OK),
+                  ),
+                ],
+              ),
+            );
+          }
+        }
+        break;
+      case 9:
+        Lyrics.instance.removeLRCFile(track);
         break;
     }
   }
