@@ -10,11 +10,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/utils/rendering.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/rendering.dart';
 
 class ExceptionApp extends StatelessWidget {
   final Object exception;

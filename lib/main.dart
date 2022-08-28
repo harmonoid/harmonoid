@@ -69,6 +69,12 @@ Future<void> main(List<String> args) async {
     if (Platform.isLinux) {
       WindowCloseHandler.initialize();
       ArgumentVectorHandler.initialize();
+      WidgetsBinding.instance.waitUntilFirstFrameRasterized.then(
+        (_) {
+          const MethodChannel('com.alexmercerind.harmonoid/window_utils')
+              .invokeMethod('notify_first_frame_rasterized');
+        },
+      );
       await Configuration.initialize();
       await AppState.initialize();
       await NowPlayingVisuals.initialize();
