@@ -16,3 +16,6 @@
 [submodule "external/safe_session_storage"]
 	path = external/safe_session_storage
 	url = https://github.com/harmonoid/safe_session_storage.git
+[submodule "assets/translations"]
+	path = assets/translations
+	url = https://github.com/harmonoid/translations.git
