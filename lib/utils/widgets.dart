@@ -961,6 +961,7 @@ class DesktopAppBar extends StatelessWidget {
   final Widget? leading;
   final double? height;
   final double? elevation;
+  final List<Widget>? actions;
 
   const DesktopAppBar({
     Key? key,
@@ -970,6 +971,7 @@ class DesktopAppBar extends StatelessWidget {
     this.leading,
     this.height,
     this.elevation,
+    this.actions,
   }) : super(key: key);
 
   @override
@@ -1026,7 +1028,11 @@ class DesktopAppBar extends StatelessWidget {
                                             : Colors.black
                                         : null),
                           ),
-                        if (child != null)
+                        if (actions != null) ...[
+                          const Spacer(),
+                          ...actions!,
+                          const SizedBox(width: 16.0),
+                        ] else if (child != null)
                           Container(
                             width: MediaQuery.of(context).size.width - 72.0,
                             child: child!,
