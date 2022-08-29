@@ -761,7 +761,12 @@ class PlaylistTileState extends State<PlaylistTile> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.playlist.name.overflow,
+                            {
+                                  kHistoryPlaylist: Language.instance.HISTORY,
+                                  kLikedSongsPlaylist:
+                                      Language.instance.LIKED_SONGS,
+                                }[widget.playlist.id] ??
+                                widget.playlist.name.overflow,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             style:
@@ -1046,8 +1051,16 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                     MainAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    widget
-                                                        .playlist.name.overflow,
+                                                    {
+                                                          kHistoryPlaylist:
+                                                              Language.instance
+                                                                  .HISTORY,
+                                                          kLikedSongsPlaylist:
+                                                              Language.instance
+                                                                  .LIKED_SONGS,
+                                                        }[widget.playlist.id] ??
+                                                        widget.playlist.name
+                                                            .overflow,
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .headline1
@@ -1504,9 +1517,12 @@ class PlaylistScreenState extends State<PlaylistScreen>
                           builder: (context, value, _) => Opacity(
                             opacity: value,
                             child: Text(
-                              widget.playlist.tracks.isNotEmpty
-                                  ? widget.playlist.name
-                                  : '',
+                              {
+                                    kHistoryPlaylist: Language.instance.HISTORY,
+                                    kLikedSongsPlaylist:
+                                        Language.instance.LIKED_SONGS,
+                                  }[widget.playlist.id] ??
+                                  widget.playlist.name.overflow,
                               style: Theme.of(context)
                                   .textTheme
                                   .headline6
@@ -1596,7 +1612,14 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              widget.playlist.name.overflow,
+                                              {
+                                                    kHistoryPlaylist: Language
+                                                        .instance.HISTORY,
+                                                    kLikedSongsPlaylist:
+                                                        Language.instance
+                                                            .LIKED_SONGS,
+                                                  }[widget.playlist.id] ??
+                                                  widget.playlist.name.overflow,
                                               style:
                                                   Theme.of(context)
                                                       .textTheme
