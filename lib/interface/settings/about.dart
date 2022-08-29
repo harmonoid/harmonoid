@@ -214,61 +214,64 @@ class _AboutPageState extends State<AboutPage> {
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 clipBehavior: Clip.antiAlias,
-                child: Column(
-                  children: [
-                    SubHeader(Label.author),
-                    ListTile(
-                      onTap: () => open(URL.alexmercerind),
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        foregroundColor: Theme.of(context).iconTheme.color,
-                        child: Icon(
-                          Icons.person_outline,
-                          size: 26.0,
+                child: Material(
+                  color: Colors.transparent,
+                  child: Column(
+                    children: [
+                      SubHeader(Label.author),
+                      ListTile(
+                        onTap: () => open(URL.alexmercerind),
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          foregroundColor: Theme.of(context).iconTheme.color,
+                          child: Icon(
+                            Icons.person_outline,
+                            size: 26.0,
+                          ),
+                        ),
+                        title: Text(
+                          Label.alexmercerind,
+                          style: isDesktop
+                              ? Theme.of(context).textTheme.headline4
+                              : null,
                         ),
                       ),
-                      title: Text(
-                        Label.alexmercerind,
-                        style: isDesktop
-                            ? Theme.of(context).textTheme.headline4
-                            : null,
-                      ),
-                    ),
-                    ListTile(
-                      onTap: () => open(URL.alexmercerind_github),
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        foregroundColor: Theme.of(context).iconTheme.color,
-                        child: SvgPicture.string(
-                          SVG.github,
-                          color: Theme.of(context).iconTheme.color,
+                      ListTile(
+                        onTap: () => open(URL.alexmercerind_github),
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          foregroundColor: Theme.of(context).iconTheme.color,
+                          child: SvgPicture.string(
+                            SVG.github,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
+                        ),
+                        title: Text(
+                          Label.follow_on_github,
+                          style: isDesktop
+                              ? Theme.of(context).textTheme.headline4
+                              : null,
                         ),
                       ),
-                      title: Text(
-                        Label.follow_on_github,
-                        style: isDesktop
-                            ? Theme.of(context).textTheme.headline4
-                            : null,
-                      ),
-                    ),
-                    ListTile(
-                      onTap: () => open(URL.alexmercerind_twitter),
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        foregroundColor: Theme.of(context).iconTheme.color,
-                        child: SvgPicture.string(
-                          SVG.twitter,
-                          color: Theme.of(context).iconTheme.color,
+                      ListTile(
+                        onTap: () => open(URL.alexmercerind_twitter),
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          foregroundColor: Theme.of(context).iconTheme.color,
+                          child: SvgPicture.string(
+                            SVG.twitter,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
+                        ),
+                        title: Text(
+                          Label.follow_on_twitter,
+                          style: isDesktop
+                              ? Theme.of(context).textTheme.headline4
+                              : null,
                         ),
                       ),
-                      title: Text(
-                        Label.follow_on_twitter,
-                        style: isDesktop
-                            ? Theme.of(context).textTheme.headline4
-                            : null,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
