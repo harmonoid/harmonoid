@@ -22,7 +22,6 @@ import 'package:harmonoid/interface/settings/miscellaneous.dart';
 import 'package:harmonoid/interface/settings/experimental.dart';
 import 'package:harmonoid/interface/settings/theme.dart';
 import 'package:harmonoid/interface/settings/version.dart';
-import 'package:harmonoid/interface/settings/proxy.dart';
 import 'package:harmonoid/interface/settings/now_playing_visuals.dart';
 import 'package:harmonoid/interface/settings/now_playing_screen.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
@@ -50,7 +49,6 @@ class Settings extends StatelessWidget {
                       LanguageSetting(),
                       NowPlayingVisualsSetting(),
                       NowPlayingScreenSetting(),
-                      ProxySetting(),
                       ExperimentalSetting(),
                       VersionSetting(),
                       const SizedBox(height: 8.0),
@@ -168,8 +166,6 @@ class Settings extends StatelessWidget {
                   MiscellaneousSetting(),
                   Divider(thickness: 1.0),
                   ExperimentalSetting(),
-                  Divider(thickness: 1.0),
-                  ProxySetting(),
                   Divider(thickness: 1.0),
                   VersionSetting(),
                   const SizedBox(height: 8.0),

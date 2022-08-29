@@ -30,21 +30,6 @@ static void my_application_window_new(GApplication* application) {
   MyApplication* self = MY_APPLICATION(application);
   GtkWindow* window =
       GTK_WINDOW(gtk_application_window_new(GTK_APPLICATION(application)));
-  // Start window in minimized, in-sensitive & in-visible mode.
-  // This causes the Dart VM to start & Flutter to actually paint and receive
-  // waitUntilFirstFrameRasterized callback:
-  // https://api.flutter.dev/flutter/widgets/WidgetsBinding/waitUntilFirstFrameRasterized.html
-  // Once this is received, following methods are called:
-  // * |gtk_widget_hide|         : to make window hidden & present again with
-  //                              default window manager / desktop environment
-  //                              animation for window opening.
-  // * |gtk_widget_set_opacity|  : with `1.0`.
-  // * |gtk_widget_set_sensitive|: with `true`.
-  // * |gtk_window_deiconify|    : to un-minimize the window as done here.
-  // * |gtk_widget_show|         : actually show window.
-  if (gdk_screen_is_composited(gtk_window_get_screen(window))) {
-    gtk_window_iconify(window);
-  }
   // Note that |gtk_widget_set_opacity| & |gtk_widget_set_sensitive| works after
   // |gtk_widget_show| call, thus present down below this imperative code.
   // Apparently, they are not supported by all window managers aswell, so that's
@@ -76,13 +61,21 @@ static void my_application_window_new(GApplication* application) {
   } else {
     gtk_window_set_title(window, "Harmonoid");
   }
+  GdkRectangle workarea = {0};
+  GdkDisplay* default_display = gdk_display_get_default();
+  GdkMonitor* primary_monitor =
+      gdk_display_get_primary_monitor(default_display);
+  gdk_monitor_get_workarea(primary_monitor, &workarea);
+  gboolean is_full_hd_display = workarea.width > 1366 && workarea.height > 768;
+  gint base_width = is_full_hd_display ? 1280 : 1024,
+       base_height = is_full_hd_display ? 720 : 640;
   // Configure default & minimum window dimensions etc.
-  gtk_window_set_default_size(window, 1024, 640);
+  gtk_window_set_default_size(window, base_width, base_height);
   GdkGeometry geometry;
   geometry.min_width = 960;
   geometry.min_height = 640;
-  geometry.base_width = 1024;
-  geometry.base_height = 640;
+  geometry.base_width = base_width;
+  geometry.base_height = base_height;
   gtk_window_set_geometry_hints(
       window, GTK_WIDGET(window), &geometry,
       static_cast<GdkWindowHints>(GDK_HINT_MIN_SIZE | GDK_HINT_BASE_SIZE));
@@ -97,12 +90,8 @@ static void my_application_window_new(GApplication* application) {
       project, self->dart_entrypoint_arguments);
   FlView* view = fl_view_new(project);
   gtk_container_add(GTK_CONTAINER(window), GTK_WIDGET(view));
-  gtk_widget_show(GTK_WIDGET(window));
-  gtk_widget_show(GTK_WIDGET(view));
-  if (gdk_screen_is_composited(gtk_window_get_screen(window))) {
-    gtk_widget_set_opacity(GTK_WIDGET(window), 0.0);
-    gtk_widget_set_sensitive(GTK_WIDGET(window), false);
-  }
+  gtk_widget_realize(GTK_WIDGET(view));
+  gtk_widget_realize(GTK_WIDGET(window));
   auto registry = FL_PLUGIN_REGISTRY(view);
   fl_register_plugins(registry);
   window_utils_plugin_register_with_registrar(
