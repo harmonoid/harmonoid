@@ -69,12 +69,6 @@ Future<void> main(List<String> args) async {
     if (Platform.isLinux) {
       WindowCloseHandler.initialize();
       ArgumentVectorHandler.initialize();
-      WidgetsBinding.instance.waitUntilFirstFrameRasterized.then(
-        (_) {
-          const MethodChannel('com.alexmercerind.harmonoid/window_utils')
-              .invokeMethod('notify_first_frame_rasterized');
-        },
-      );
       await Configuration.initialize();
       await AppState.initialize();
       await NowPlayingVisuals.initialize();
@@ -133,6 +127,10 @@ Future<void> main(List<String> args) async {
     runApp(
       Harmonoid(),
     );
+    if (Platform.isLinux) {
+      const MethodChannel('com.alexmercerind.harmonoid/window_utils')
+          .invokeMethod('notify_run_app');
+    }
   } catch (exception, stacktrace) {
     debugPrint(exception.toString());
     debugPrint(stacktrace.toString());
@@ -144,6 +142,10 @@ Future<void> main(List<String> args) async {
         stacktrace: stacktrace,
       ),
     );
+    if (Platform.isLinux) {
+      const MethodChannel('com.alexmercerind.harmonoid/window_utils')
+          .invokeMethod('notify_run_app');
+    }
   }
 }
 

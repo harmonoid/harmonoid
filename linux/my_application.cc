@@ -30,21 +30,6 @@ static void my_application_window_new(GApplication* application) {
   MyApplication* self = MY_APPLICATION(application);
   GtkWindow* window =
       GTK_WINDOW(gtk_application_window_new(GTK_APPLICATION(application)));
-  // Start window in minimized, in-sensitive & in-visible mode.
-  // This causes the Dart VM to start & Flutter to actually paint and receive
-  // waitUntilFirstFrameRasterized callback:
-  // https://api.flutter.dev/flutter/widgets/WidgetsBinding/waitUntilFirstFrameRasterized.html
-  // Once this is received, following methods are called:
-  // * |gtk_widget_hide|         : to make window hidden & present again with
-  //                              default window manager / desktop environment
-  //                              animation for window opening.
-  // * |gtk_widget_set_opacity|  : with `1.0`.
-  // * |gtk_widget_set_sensitive|: with `true`.
-  // * |gtk_window_deiconify|    : to un-minimize the window as done here.
-  // * |gtk_widget_show|         : actually show window.
-  if (gdk_screen_is_composited(gtk_window_get_screen(window))) {
-    gtk_window_iconify(window);
-  }
   // Note that |gtk_widget_set_opacity| & |gtk_widget_set_sensitive| works after
   // |gtk_widget_show| call, thus present down below this imperative code.
   // Apparently, they are not supported by all window managers aswell, so that's
@@ -105,12 +90,8 @@ static void my_application_window_new(GApplication* application) {
       project, self->dart_entrypoint_arguments);
   FlView* view = fl_view_new(project);
   gtk_container_add(GTK_CONTAINER(window), GTK_WIDGET(view));
-  gtk_widget_show(GTK_WIDGET(window));
-  gtk_widget_show(GTK_WIDGET(view));
-  if (gdk_screen_is_composited(gtk_window_get_screen(window))) {
-    gtk_widget_set_opacity(GTK_WIDGET(window), 0.0);
-    gtk_widget_set_sensitive(GTK_WIDGET(window), false);
-  }
+  gtk_widget_realize(GTK_WIDGET(view));
+  gtk_widget_realize(GTK_WIDGET(window));
   auto registry = FL_PLUGIN_REGISTRY(view);
   fl_register_plugins(registry);
   window_utils_plugin_register_with_registrar(

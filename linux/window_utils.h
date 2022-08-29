@@ -23,13 +23,6 @@ typedef struct {
   GObjectClass parent_class;
 } WindowUtilsPluginClass;
 
-GtkWidget* get_window(WindowUtilsPlugin* self) {
-  FlView* view = fl_plugin_registrar_get_view(self->registrar);
-  if (view == nullptr) return nullptr;
-
-  return gtk_widget_get_toplevel(GTK_WIDGET(view));
-}
-
 GType window_utils_plugin_get_type();
 
 #define WINDOW_UTILS_PLUGIN(obj)                                     \
@@ -42,17 +35,11 @@ static void window_utils_plugin_handle_method_call(WindowUtilsPlugin* self,
                                                    FlMethodCall* method_call) {
   const gchar* method_name = fl_method_call_get_name(method_call);
   g_autoptr(FlMethodResponse) response = nullptr;
-  GtkWidget* window = get_window(self);
-  if (strcmp(method_name, "notify_first_frame_rasterized") == 0) {
-    if (gdk_screen_is_composited(gtk_widget_get_screen(window))) {
-      gtk_window_deiconify(GTK_WINDOW(window));
-      gtk_widget_hide(window);
-      gtk_widget_set_opacity(window, 1.0);
-      gtk_widget_set_sensitive(window, true);
-      gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_NONE);
-      gtk_widget_show(window);
-      gtk_widget_grab_focus(window);
-    }
+  if (strcmp(method_name, "notify_run_app") == 0) {
+    GtkWidget* view = GTK_WIDGET(fl_plugin_registrar_get_view(self->registrar));
+    GtkWidget* window = gtk_widget_get_toplevel(view);
+    gtk_widget_show(view);
+    gtk_widget_show(window);
     response =
         FL_METHOD_RESPONSE(fl_method_success_response_new(fl_value_new_null()));
   } else {
