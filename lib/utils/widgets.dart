@@ -330,21 +330,9 @@ class SortBarFixedHolder extends StatelessWidget {
           ),
         ),
         SizedBox(width: tileMargin),
-        if (Random().nextInt(400) == 50)
+        if (message.isNotEmpty)
           Text(
-            'Yeah! You found the easter egg. 🥚',
-            style: Theme.of(context).textTheme.headline3,
-          )
-        else if (DateTime.now().day > (25 - 7) &&
-            DateTime.now().day <= 25 &&
-            DateTime.now().month == 12)
-          Text(
-            'Merry Christmas! ❄️',
-            style: Theme.of(context).textTheme.headline3,
-          )
-        else if (DateTime.now().day == 1 && DateTime.now().month == 1)
-          Text(
-            'Happy New Year! 🎈',
+            message,
             style: Theme.of(context).textTheme.headline3,
           ),
         Spacer(),

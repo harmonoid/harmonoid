@@ -7,6 +7,7 @@
 ///
 
 import 'dart:io';
+import 'dart:math';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
@@ -54,9 +55,17 @@ final HotKey searchBarHotkey = HotKey(
   modifiers: [KeyModifier.control],
   scope: HotKeyScope.inapp,
 );
+final message = Random().nextInt(400) == 50
+    ? 'Yeah! You found the easter egg. 🥚'
+    : DateTime.now().day > (25 - 7) &&
+            DateTime.now().day <= 25 &&
+            DateTime.now().month == 12
+        ? 'Merry Christmas! ❄️'
+        : DateTime.now().day == 1 && DateTime.now().month == 1
+            ? 'Happy New Year! 🎈'
+            : '';
 
-// Remaining source code in this file consists of helper & utility functions used for rendering & handling some
-// repeated tasks linked at multiple places.
+// Remaining source code in this file consists of helper & utility methods used for rendering & handling some repeated tasks linked at multiple places.
 
 List<Widget> tileGridListWidgets({
   required double tileHeight,

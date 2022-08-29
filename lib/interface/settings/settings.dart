@@ -7,15 +7,16 @@
 ///
 
 import 'package:flutter/material.dart';
-import 'package:harmonoid/state/collection_refresh.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:animations/animations.dart';
 
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/interface/settings/about.dart';
 import 'package:harmonoid/interface/settings/indexing.dart';
 import 'package:harmonoid/interface/settings/language.dart';
-import 'package:harmonoid/interface/settings/desktop_header.dart';
 import 'package:harmonoid/interface/settings/stats.dart';
 import 'package:harmonoid/interface/settings/miscellaneous.dart';
 import 'package:harmonoid/interface/settings/experimental.dart';
@@ -24,7 +25,8 @@ import 'package:harmonoid/interface/settings/version.dart';
 import 'package:harmonoid/interface/settings/proxy.dart';
 import 'package:harmonoid/interface/settings/now_playing_visuals.dart';
 import 'package:harmonoid/interface/settings/now_playing_screen.dart';
-import 'package:provider/provider.dart';
+import 'package:harmonoid/state/collection_refresh.dart';
+import 'package:harmonoid/constants/language.dart';
 
 class Settings extends StatelessWidget {
   @override
@@ -41,8 +43,6 @@ class Settings extends StatelessWidget {
                     cacheExtent: MediaQuery.of(context).size.height * 4,
                     shrinkWrap: true,
                     children: [
-                      const Header(),
-                      const SizedBox(height: 4.0),
                       IndexingSetting(),
                       StatsSetting(),
                       ThemeSetting(),
@@ -59,6 +59,81 @@ class Settings extends StatelessWidget {
                 ),
                 DesktopAppBar(
                   title: Language.instance.SETTING,
+                  actions: [
+                    Tooltip(
+                      message: Label.github,
+                      child: InkWell(
+                        onTap: () {},
+                        borderRadius: BorderRadius.circular(20.0),
+                        child: Container(
+                          height: 40.0,
+                          width: 40.0,
+                          alignment: Alignment.center,
+                          child: SvgPicture.string(
+                            SVG.github,
+                            color: Theme.of(context)
+                                .appBarTheme
+                                .actionsIconTheme
+                                ?.color,
+                            height: 20.0,
+                            width: 20.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Tooltip(
+                      message: Label.become_a_patreon,
+                      child: InkWell(
+                        onTap: () {},
+                        borderRadius: BorderRadius.circular(20.0),
+                        child: Container(
+                          height: 40.0,
+                          width: 40.0,
+                          alignment: Alignment.center,
+                          child: SvgPicture.string(
+                            SVG.patreon,
+                            color: Theme.of(context)
+                                .appBarTheme
+                                .actionsIconTheme
+                                ?.color,
+                            height: 18.0,
+                            width: 18.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Tooltip(
+                      message: Language.instance.ABOUT_TITLE,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      FadeThroughTransition(
+                                fillColor: Colors.transparent,
+                                animation: animation,
+                                secondaryAnimation: secondaryAnimation,
+                                child: AboutPage(),
+                              ),
+                            ),
+                          );
+                        },
+                        borderRadius: BorderRadius.circular(20.0),
+                        child: Container(
+                          height: 40.0,
+                          width: 40.0,
+                          child: Icon(
+                            Icons.info,
+                            color: Theme.of(context)
+                                .appBarTheme
+                                .actionsIconTheme
+                                ?.color,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

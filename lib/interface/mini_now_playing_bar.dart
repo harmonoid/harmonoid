@@ -1096,17 +1096,9 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                             height: 72.0,
                             child: Center(
                               child: Text(
-                                Random().nextInt(400) == 50
-                                    ? 'Yeah! You found the easter egg. 🥚'
-                                    : DateTime.now().day > (25 - 7) &&
-                                                DateTime.now().day <= 25 &&
-                                            DateTime.now().month == 12
-                                        ? 'Merry Christmas! ❄️'
-                                        : DateTime.now().day == 1 &&
-                                                DateTime.now().month == 1
-                                            ? 'Happy New Year! 🎈'
-                                            : Language
-                                                .instance.NOTHING_IN_QUEUE,
+                                message.isNotEmpty
+                                    ? message
+                                    : Language.instance.NOTHING_IN_QUEUE,
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline3
