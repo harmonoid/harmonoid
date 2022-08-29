@@ -68,6 +68,7 @@ class CollectionScreenState extends State<CollectionScreen>
 
   FutureOr<void> saveCurrentTab() {
     if (index.value != Configuration.instance.libraryTab) {
+      MobileNowPlayingController.instance.show();
       return Configuration.instance.save(libraryTab: index.value);
     }
   }
