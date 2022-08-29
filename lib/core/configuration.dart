@@ -85,7 +85,6 @@ class Configuration extends ConfigurationKeys {
     bool? jumpToNowPlayingScreenOnPlay,
     bool? automaticMusicLookup,
     bool? dynamicNowPlayingBarColoring,
-    String? proxyURL,
     bool? modernNowPlayingScreen,
     int? modernNowPlayingScreenCarouselIndex,
     bool? lyricsVisible,
@@ -144,9 +143,6 @@ class Configuration extends ConfigurationKeys {
     }
     if (dynamicNowPlayingBarColoring != null) {
       this.dynamicNowPlayingBarColoring = dynamicNowPlayingBarColoring;
-    }
-    if (proxyURL != null) {
-      this.proxyURL = proxyURL;
     }
     if (modernNowPlayingScreen != null) {
       this.modernNowPlayingScreen = modernNowPlayingScreen;
@@ -225,7 +221,6 @@ class Configuration extends ConfigurationKeys {
         'jumpToNowPlayingScreenOnPlay': this.jumpToNowPlayingScreenOnPlay,
         'automaticMusicLookup': this.automaticMusicLookup,
         'dynamicNowPlayingBarColoring': this.dynamicNowPlayingBarColoring,
-        'proxyURL': this.proxyURL,
         'modernNowPlayingScreen': this.modernNowPlayingScreen,
         'modernNowPlayingScreenCarouselIndex':
             this.modernNowPlayingScreenCarouselIndex,
@@ -284,7 +279,6 @@ class Configuration extends ConfigurationKeys {
     jumpToNowPlayingScreenOnPlay = current['jumpToNowPlayingScreenOnPlay'];
     automaticMusicLookup = current['automaticMusicLookup'];
     dynamicNowPlayingBarColoring = current['dynamicNowPlayingBarColoring'];
-    proxyURL = current['proxyURL'];
     modernNowPlayingScreen = current['modernNowPlayingScreen'];
     modernNowPlayingScreenCarouselIndex =
         current['modernNowPlayingScreenCarouselIndex'];
@@ -323,7 +317,6 @@ abstract class ConfigurationKeys {
   late bool jumpToNowPlayingScreenOnPlay;
   late bool automaticMusicLookup;
   late bool dynamicNowPlayingBarColoring;
-  late String? proxyURL;
   late bool modernNowPlayingScreen;
   late int modernNowPlayingScreenCarouselIndex;
   late bool lyricsVisible;
@@ -374,7 +367,6 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
       'jumpToNowPlayingScreenOnPlay': isDesktop,
       'automaticMusicLookup': false,
       'dynamicNowPlayingBarColoring': isDesktop,
-      'proxyURL': null,
       'modernNowPlayingScreen': isDesktop,
       'modernNowPlayingScreenCarouselIndex': 0,
       'lyricsVisible': true,

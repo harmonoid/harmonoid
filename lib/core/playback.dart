@@ -448,8 +448,6 @@ class Playback extends ChangeNotifier {
         ),
       );
     }
-    // TODO: Improve this garbage. What kind of coding style even is this. FUCK!
-    ytm_request_authority = Configuration.instance.proxyURL;
   }
 
   void notifyNativeListeners() async {
