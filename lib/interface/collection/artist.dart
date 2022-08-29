@@ -1153,6 +1153,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                               ),
                                                               items:
                                                                   trackPopupMenuItems(
+                                                                track.value,
                                                                 context,
                                                               ),
                                                             );
@@ -1327,6 +1328,8 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                       itemBuilder:
                                                                           (_) =>
                                                                               trackPopupMenuItems(
+                                                                        track
+                                                                            .value,
                                                                         context,
                                                                       ),
                                                                     ),
@@ -1666,7 +1669,8 @@ class ArtistScreenState extends State<ArtistScreen>
                                       builder: (context) => Container(
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
-                                          children: trackPopupMenuItems(context)
+                                          children: trackPopupMenuItems(
+                                                  tracks[i], context)
                                               .map(
                                                 (item) => PopupMenuItem(
                                                   child: item.child,
@@ -1768,6 +1772,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                             MainAxisSize.min,
                                                         children:
                                                             trackPopupMenuItems(
+                                                                    tracks[i],
                                                                     context)
                                                                 .map(
                                                                   (item) =>

@@ -112,8 +112,9 @@ class Collection extends MediaLibrary with ChangeNotifier {
       final metadata = await _tagger!.parse(
         Media(uri.toString()),
         coverDirectory: coverDirectory,
-        timeout: timeout ?? const Duration(seconds: 2),
+        timeout: timeout ?? const Duration(seconds: 1),
       );
+      debugPrint(metadata.toString());
       return Track.fromTagger(metadata);
     }
     if (Platform.isLinux) {
@@ -121,8 +122,9 @@ class Collection extends MediaLibrary with ChangeNotifier {
       final metadata = await _client!.parse(
         uri.toString(),
         coverDirectory: coverDirectory,
-        timeout: timeout ?? const Duration(seconds: 2),
+        timeout: timeout ?? const Duration(seconds: 1),
       );
+      debugPrint(metadata.toString());
       return Track.fromTagger(metadata);
     }
     if (Platform.isAndroid) {
@@ -134,7 +136,7 @@ class Collection extends MediaLibrary with ChangeNotifier {
             'coverDirectory': coverDirectory.path,
             'waitUntilAlbumArtIsSaved': waitUntilAlbumArtIsSaved,
           },
-        ).timeout(timeout ?? const Duration(seconds: 2));
+        ).timeout(timeout ?? const Duration(seconds: 1));
         return _AndroidMetadata.fromJson(metadata);
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());

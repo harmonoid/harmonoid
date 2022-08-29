@@ -100,7 +100,6 @@ Future<void> main(List<String> args) async {
       await Configuration.initialize();
       await AppState.initialize();
       await Intent.initialize();
-      await Lyrics.initialize();
     }
     await Collection.initialize(
       collectionDirectories: Configuration.instance.collectionDirectories,
@@ -115,6 +114,7 @@ Future<void> main(List<String> args) async {
       genresOrderType: Configuration.instance.genresOrderType,
       minimumFileSize: Configuration.instance.minimumFileSize,
     );
+    await Lyrics.initialize();
     await Collection.instance.refresh(
       onProgress: (progress, total, _) {
         CollectionRefresh.instance.set(progress, total);

@@ -57,6 +57,7 @@ dependencies:
 
   # Third-party UI widgets or "pure-dart" packages.
 
+  lrc: ^1.0.0
   http: ^0.13.0
   path: ^1.8.0
   provider: ^6.0.1
@@ -97,7 +98,7 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window
-      ref: 1290c426397fcc1de9ca5f66871964ae0d16c8b1
+      ref: b52958dc526634836fa3563b05d9a19c7da32c80
   hotkey_manager:
     git:
       url: https://github.com/alexmercerind/hotkey_manager.git
@@ -113,6 +114,7 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/flutter_lyric.git
       ref: master
+  flutter_svg: ^1.1.4
 
 dependency_overrides:
   ffi: 1.1.0
@@ -124,17 +126,17 @@ dependency_overrides:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window_windows
-      ref: 1290c426397fcc1de9ca5f66871964ae0d16c8b1
+      ref: b52958dc526634836fa3563b05d9a19c7da32c80
   bitsdojo_window_linux:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window_linux
-      ref: 1290c426397fcc1de9ca5f66871964ae0d16c8b1
+      ref: b52958dc526634836fa3563b05d9a19c7da32c80
   bitsdojo_window_macos:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window_macos
-      ref: 1290c426397fcc1de9ca5f66871964ae0d16c8b1
+      ref: b52958dc526634836fa3563b05d9a19c7da32c80
   platform: ^3.1.0
 
 dev_dependencies:

@@ -89,4 +89,15 @@ extension TrackExtension on Track {
     }
     return false;
   }
+
+  String get lyricsQuery => [
+        trackName,
+        !hasNoAvailableArtists
+            ? trackArtistNames.take(2).join(' ')
+            : !hasNoAvailableAlbumArtists
+                ? albumArtistName
+                : !hasNoAvailableAlbum
+                    ? albumName
+                    : '',
+      ].join(' ').replaceAll(RegExp(r'[\\/:*?""<>|]'), ' ');
 }
