@@ -114,6 +114,7 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/flutter_lyric.git
       ref: master
+  flutter_svg: ^1.1.4
 
 dependency_overrides:
   ffi: 1.1.0
