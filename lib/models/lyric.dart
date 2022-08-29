@@ -15,7 +15,7 @@ class Lyric {
     required this.words,
   });
 
-  Map<String, dynamic> toJson(dynamic map) => {
+  Map<String, dynamic> toJson() => {
         'time': this.time,
         'words': this.words,
       };

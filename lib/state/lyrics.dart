@@ -5,22 +5,28 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
+import 'dart:io';
 import 'dart:async';
+import 'package:lrc/lrc.dart';
+import 'package:path/path.dart';
 import 'dart:convert' as convert;
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
+import 'package:media_library/media_library.dart';
+import 'package:safe_session_storage/safe_session_storage.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/models/lyric.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/models/lyric.dart';
 import 'package:harmonoid/constants/language.dart';
 
 /// Lyrics
 /// ------
 ///
-/// Minimal [ChangeNotifier] to fetch & update the lyrics based on the currently playing track.
+/// Minimal [ChangeNotifier] to handle selection & caching of LRC files.
+/// Also fetches & handles the lyrics from internal API.
 ///
 /// The notification lyrics are implemented specifically for mobile platforms in this class itself.
 ///
@@ -32,7 +38,18 @@ class Lyrics extends ChangeNotifier {
   /// Lyrics of the currently playing media.
   List<Lyric> current = <Lyric>[];
 
+  late final Directory directory;
+
   static Future<void> initialize() async {
+    instance.directory = Directory(
+      join(
+        Configuration.instance.cacheDirectory.path,
+        'Lyrics',
+      ),
+    );
+    if (!await instance.directory.exists_()) {
+      await instance.directory.create_();
+    }
     if (isMobile) {
       await AwesomeNotifications().initialize(
         'resource://drawable/ic_stat_format_color_text',
@@ -131,44 +148,70 @@ class Lyrics extends ChangeNotifier {
     // Run as asynchronous suspension.
     () async {
       // `await for` to avoid race conditions.
-      await for (final query in _controller.stream) {
-        if (_query == query) continue;
+      await for (final track in _controller.stream) {
+        if (_track == track) continue;
         current = <Lyric>[];
         _currentLyricsAveragedMap = {};
         _currentLyricsTimeStamps = {};
         _currentLyricsHidden = false;
         notifyListeners();
-        _query = query;
-        final uri = Uri.https(
-          'harmonoid-lyrics.vercel.app',
-          '/api/lyrics',
-          {
-            'name': _query,
-          },
-        );
+        _track = track;
         try {
           if (isMobile && Configuration.instance.notificationLyrics) {
             await dismissNotification();
           }
-          final response = await http.get(uri);
-          if (response.statusCode == 200) {
-            current.addAll(
-              (convert.jsonDecode(response.body) as List<dynamic>)
-                  .map((lyric) => Lyric.fromJson(lyric))
-                  .toList()
-                  .cast<Lyric>(),
-            );
-            for (final lyric in current) {
-              _currentLyricsAveragedMap[lyric.time ~/ 1000] = lyric.words;
-            }
-            _currentLyricsTimeStamps.addEntries(
-              _currentLyricsAveragedMap.keys.toList().asMap().entries.map(
-                    (e) => MapEntry(
-                      e.value,
-                      e.key,
+          final file = File(join(directory.path, track.moniker));
+          if (await file.exists_()) {
+            final contents = await file.read_();
+            if (contents != null) {
+              current.addAll(
+                Lrc.parse(contents).lyrics.map(
+                      (e) => Lyric(
+                        time: e.timestamp.inMilliseconds,
+                        words: e.lyrics,
+                      ),
                     ),
-                  ),
+              );
+              for (final lyric in current) {
+                _currentLyricsAveragedMap[lyric.time ~/ 1000] = lyric.words;
+              }
+              _currentLyricsTimeStamps.addEntries(
+                _currentLyricsAveragedMap.keys.toList().asMap().entries.map(
+                      (e) => MapEntry(
+                        e.value,
+                        e.key,
+                      ),
+                    ),
+              );
+            }
+          } else {
+            final uri = Uri.https(
+              'harmonoid-lyrics.vercel.app',
+              '/api/lyrics',
+              {
+                'name': track.lyricsQuery,
+              },
             );
+            final response = await http.get(uri);
+            if (response.statusCode == 200) {
+              current.addAll(
+                (convert.jsonDecode(response.body) as List<dynamic>)
+                    .map((lyric) => Lyric.fromJson(lyric))
+                    .toList()
+                    .cast<Lyric>(),
+              );
+              for (final lyric in current) {
+                _currentLyricsAveragedMap[lyric.time ~/ 1000] = lyric.words;
+              }
+              _currentLyricsTimeStamps.addEntries(
+                _currentLyricsAveragedMap.keys.toList().asMap().entries.map(
+                      (e) => MapEntry(
+                        e.value,
+                        e.key,
+                      ),
+                    ),
+              );
+            }
           }
         } catch (exception, stacktrace) {
           await dismissNotification();
@@ -180,10 +223,67 @@ class Lyrics extends ChangeNotifier {
     }();
   }
 
-  void update(String query) async {
-    _controller.add(query);
+  /// Whether a [Track] has a `.LRC` file available for it.
+  ///
+  /// Used directly in the [Widget] tree, thus kept `sync`.
+  bool hasLRCFile(Track track) =>
+      File(join(directory.path, track.moniker)).existsSync_();
+
+  /// Adds a new LRC [File] & caches it for future usage.
+  /// Returns `true` if the [File] was added successfully i.e. [lrc] syntax is valid & [File] is found, otherwise returns `false`.
+  ///
+  Future<bool> addLRCFile(Track track, File lrc) async {
+    try {
+      final contents = await lrc.read_();
+      if (contents == null) {
+        return false;
+      }
+      if (Lrc.isValid(contents)) {
+        try {
+          final file = File(
+            join(
+              directory.path,
+              track.moniker,
+            ),
+          );
+          await lrc.copy_(file.path);
+          return true;
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
+          return false;
+        }
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+      return false;
+    }
+    return false;
   }
 
+  /// Removes the cached `.LRC` file from the filesystem cache of the app.
+  ///
+  Future<void> removeLRCFile(Track track) async {
+    final file = File(
+      join(
+        directory.path,
+        track.moniker,
+      ),
+    );
+    if (await file.exists_()) {
+      await file.delete_();
+    }
+  }
+
+  /// Notifies about the currently playing [Track] & updates lyrics at various places inside Harmonoid.
+  /// This method is called whenever the [Track] changes from [Playback] class.
+  void update(Track track) async {
+    _controller.add(track);
+  }
+
+  /// Dismisses the lyrics notification.
+  /// Android specific.
   FutureOr<void> dismissNotification() {
     if (isMobile) {
       return AwesomeNotifications().dismiss(_kNotificationID);
@@ -214,10 +314,10 @@ class Lyrics extends ChangeNotifier {
   /// [StreamController] to avoid possible race condition when index
   /// switching in playlist takes place.
   /// * Using `await for` to handle this scenario.
-  final StreamController<String> _controller = StreamController<String>();
+  final StreamController<Track> _controller = StreamController<Track>();
 
   /// Current query string for lyrics.
-  String? _query;
+  Track? _track;
 
   /// Current lyrics hashmap with averaged seconds timestamps.
   Map<int, String> _currentLyricsAveragedMap = {};
