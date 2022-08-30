@@ -11,487 +11,338 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 
 import 'package:harmonoid/constants/strings.dart';
-import 'package:harmonoid/core/configuration.dart';
 
-class LanguageRegion {
+/// [LanguageData] model to represent a language, which will be displayed in the UI.
+///
+/// See: https://github.com/harmonoid/translations.git
+///
+/// The mentioned repository is kept as a submodule to the Harmonoid repository.
+///
+class LanguageData {
+  /// Language & country code. e.g. `en-US`.
+  /// This should match the name of the file.
   final String code;
-  final String countryCode;
-  final String name;
-  final String country;
-  final String translator;
-  final String github;
 
-  const LanguageRegion({
+  /// Language name. e.g. `English (United States)`.
+  /// Must be in the same language.
+  final String name;
+
+  /// Name of the country. e.g. `United States`.
+  /// Must be in the same language.
+  final String country;
+
+  const LanguageData({
     required this.code,
-    required this.countryCode,
     required this.name,
     required this.country,
-    required this.translator,
-    required this.github,
   });
 
-  static const enUs = LanguageRegion(
-    code: 'en',
-    countryCode: 'US',
-    name: 'English',
-    country: 'United States',
-    translator: 'alexmercerind',
-    github: 'https://github.com/alexmercerind',
-  );
-  static const ruRu = LanguageRegion(
-    code: 'ru',
-    countryCode: 'RU',
-    name: 'Русский',
-    country: 'Россия',
-    translator: 'raitonoberu',
-    github: 'https://github.com/raitonoberu',
-  );
-  static const slSi = LanguageRegion(
-    code: 'sl',
-    countryCode: 'SI',
-    name: 'slovenščina',
-    country: 'Slovenija',
-    translator: 'mytja',
-    github: 'https://github.com/mytja',
-  );
-  static const ptBr = LanguageRegion(
-    code: 'pt',
-    countryCode: 'BR',
-    name: 'Português',
-    country: 'Brasil',
-    translator: 'bdlukaa',
-    github: 'https://github.com/bdlukaa',
-  );
-  static const hiIn = LanguageRegion(
-    code: 'hi',
-    countryCode: 'IN',
-    name: 'हिंदी',
-    country: 'भारत',
-    translator: 'alexmercerind',
-    github: 'https://github.com/alexmercerind',
-  );
-  static const deDe = LanguageRegion(
-    code: 'de',
-    countryCode: 'DE',
-    name: 'Deutsche',
-    country: 'Deutschland',
-    translator: 'MickLesk',
-    github: 'https://github.com/MickLesk',
-  );
-  static const nlNl = LanguageRegion(
-    code: 'nl',
-    countryCode: 'NL',
-    name: 'Nederlands',
-    country: 'Nederland',
-    translator: 'kebabinjeneus',
-    github: 'https://github.com/kebabinjeneus',
-  );
-  static const svSe = LanguageRegion(
-    code: 'sv',
-    countryCode: 'SE',
-    name: 'Svenska',
-    country: 'Sverige',
-    translator: 'Max Haureus',
-    github: '',
-  );
-  static const frFr = LanguageRegion(
-    code: 'fr',
-    countryCode: 'FR',
-    name: 'Français',
-    country: 'France',
-    translator: 'Gaetan Jonathan',
-    github: 'https://github.com/gaetan1903',
-  );
-  static const faIR = LanguageRegion(
-    code: 'fa',
-    countryCode: 'IR',
-    name: 'فارسی',
-    country: 'ایران',
-    translator: '0xj0hn',
-    github: 'https://github.com/0xj0hn',
-  );
-  static const huHu = LanguageRegion(
-    code: 'hu',
-    countryCode: 'HU',
-    name: 'Magyar',
-    country: 'Magyarország',
-    translator: 'RedyAu',
-    github: 'https://github.com/RedyAu',
-  );
-  static const mgMG = LanguageRegion(
-    code: 'mg',
-    countryCode: 'MG',
-    name: 'Malagasy',
-    country: 'Madagascar',
-    translator: 'Dominick',
-    github: 'https://github.com/c3k4ah',
-  );
-  static const zhCN = LanguageRegion(
-    code: 'zh',
-    countryCode: 'CN',
-    name: '汉语',
-    country: '中国',
-    translator: 'stonegate',
-    github: 'https://github.com/stonega',
-  );
-  static const jaJP = LanguageRegion(
-    code: 'ja',
-    countryCode: 'JP',
-    name: '日本語',
-    country: '日本',
-    translator: 'さぶうぇい',
-    github: 'https://github.com/HiSubway',
-  );
-  static const trTR = LanguageRegion(
-    code: 'tr',
-    countryCode: 'TR',
-    name: 'Türkçe',
-    country: 'Türkiye',
-    translator: 'Yusuf Kamil Turan',
-    github: 'https://github.com/TuranBerlin',
-  );
-  static const azAZ = LanguageRegion(
-    code: 'az',
-    countryCode: 'AZ',
-    name: 'Azerbaijani',
-    country: 'Azərbaycan',
-    translator: 'Lucifer25x',
-    github: 'https://github.com/Lucifer25x',
-  );
-  static const idID = LanguageRegion(
-    code: 'id',
-    countryCode: 'ID',
-    name: 'Indonesian',
-    country: 'Indonesia',
-    translator: 'Takeshi',
-    github: 'https://github.com/KesiTakeshi',
-  );
+  factory LanguageData.fromJson(dynamic json) => LanguageData(
+        code: json['code'],
+        name: json['name'],
+        country: json['country'],
+      );
 
-  static const values = <LanguageRegion>[
-    enUs,
-    ruRu,
-    slSi,
-    ptBr,
-    hiIn,
-    deDe,
-    nlNl,
-    svSe,
-    frFr,
-    faIR,
-    huHu,
-    mgMG,
-    zhCN,
-    jaJP,
-    trTR,
-    azAZ,
-    idID,
-  ];
+  Map<String, String> toJson() => {
+        'code': code,
+        'name': name,
+        'country': country,
+      };
 
-  int get index => values.indexOf(this);
+  @override
+  int get hashCode => code.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is LanguageData) {
+      return code == other.code;
+    }
+    return false;
+  }
 }
 
+/// Provides the [String] labels localized for the [current] language to show inside the UI.
 class Language extends Strings with ChangeNotifier {
-  /// [Language] object instance. Must call [Language.initialize].
-  static late Language instance;
+  /// [Language] object singleton instance.
+  static final Language instance = Language();
 
-  static Future<void> initialize() async {
-    instance = Language();
-    await instance.set(
-      languageRegion: Configuration.instance.languageRegion,
-    );
+  /// Must be called before [runApp].
+  static Future<void> initialize({
+    required LanguageData language,
+  }) =>
+      instance.set(value: language);
+
+  /// Returns all the available languages after reading the assets.
+  Future<Set<LanguageData>> get available async {
+    final data = await rootBundle.loadString('assets/translations/index.json');
+    return Set.from(json.decode(data).map((e) => LanguageData.fromJson(e)));
   }
 
-  Future<void> set({required LanguageRegion languageRegion}) async {
-    var string = await rootBundle.loadString(
-        'assets/translations/${languageRegion.code}_${languageRegion.countryCode}.json');
-    var asset = jsonDecode(string);
-    this.ABOUT_SUBTITLE = asset['ABOUT_SUBTITLE']!;
-    this.ABOUT_TITLE = asset['ABOUT_TITLE']!;
-    this.ADD = asset['ADD']!;
-    this.ADD_NEW_FOLDER = asset['ADD_NEW_FOLDER']!;
-    this.ADD_NEW_FOLDER_SUBTITLE = asset['ADD_NEW_FOLDER_SUBTITLE']!;
-    this.ADD_TO_NOW_PLAYING = asset['ADD_TO_NOW_PLAYING']!;
-    this.ADD_TO_PLAYLIST = asset['ADD_TO_PLAYLIST']!;
-    this.ALBUM = asset['ALBUM']!;
-    this.ALBUMS_FROM_ARTIST = asset['ALBUMS_FROM_ARTIST']!;
-    this.ALBUM_ARTIST = asset['ALBUM_ARTIST']!;
-    this.ALBUM_SINGLE = asset['ALBUM_SINGLE']!;
-    this.ALL_FILES = asset['ALL_FILES']!;
-    this.ARTIST = asset['ARTIST']!;
-    this.ARTIST_SINGLE = asset['ARTIST_SINGLE']!;
-    this.ASCENDING = asset['ASCENDING']!;
-    this.AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING = asset['AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING']!;
-    this.AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING_TITLE = asset['AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING_TITLE']!;
-    this.AUTO_REFRESH_SETTING = asset['AUTO_REFRESH_SETTING']!;
-    this.AUTO_REFRESH_SETTING_TITLE = asset['AUTO_REFRESH_SETTING_TITLE']!;
-    this.AWESOME = asset['AWESOME']!;
-    this.A_TO_Z = asset['A_TO_Z']!;
-    this.BACKGROUND_ARTWORK_SUBTITLE = asset['BACKGROUND_ARTWORK_SUBTITLE']!;
-    this.BACKGROUND_ARTWORK_TITLE = asset['BACKGROUND_ARTWORK_TITLE']!;
-    this.BETA = asset['BETA']!;
-    this.BUFFERING = asset['BUFFERING']!;
-    this.CANCEL = asset['CANCEL']!;
-    this.CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC = asset['CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC']!;
-    this.CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC_TITLE = asset['CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC_TITLE']!;
-    this.CLEAR_LRC_FILE = asset['CLEAR_LRC_FILE']!;
-    this.COLLECTION = asset['COLLECTION']!;
-    this.COLLECTION_ALBUM_DELETE_DIALOG_BODY = asset['COLLECTION_ALBUM_DELETE_DIALOG_BODY']!;
-    this.COLLECTION_ALBUM_DELETE_DIALOG_HEADER = asset['COLLECTION_ALBUM_DELETE_DIALOG_HEADER']!;
-    this.COLLECTION_INDEXING_HINT = asset['COLLECTION_INDEXING_HINT']!;
-    this.COLLECTION_INDEXING_LABEL = asset['COLLECTION_INDEXING_LABEL']!;
-    this.COLLECTION_INFO_SUBHEADER = asset['COLLECTION_INFO_SUBHEADER']!;
-    this.COLLECTION_OTHER_SUBHEADER_ALBUM = asset['COLLECTION_OTHER_SUBHEADER_ALBUM']!;
-    this.COLLECTION_OTHER_SUBHEADER_ARTIST = asset['COLLECTION_OTHER_SUBHEADER_ARTIST']!;
-    this.COLLECTION_OTHER_SUBHEADER_TRACK = asset['COLLECTION_OTHER_SUBHEADER_TRACK']!;
-    this.COLLECTION_PLAYLIST_DELETE_DIALOG_BODY = asset['COLLECTION_PLAYLIST_DELETE_DIALOG_BODY']!;
-    this.COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER = asset['COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER']!;
-    this.COLLECTION_SEARCH_LABEL = asset['COLLECTION_SEARCH_LABEL']!;
-    this.COLLECTION_SEARCH_NO_RESULTS_SUBTITLE = asset['COLLECTION_SEARCH_NO_RESULTS_SUBTITLE']!;
-    this.COLLECTION_SEARCH_NO_RESULTS_TITLE = asset['COLLECTION_SEARCH_NO_RESULTS_TITLE']!;
-    this.COLLECTION_SEARCH_WELCOME = asset['COLLECTION_SEARCH_WELCOME']!;
-    this.COLLECTION_TOP_BODY_ALBUM_EMPTY = asset['COLLECTION_TOP_BODY_ALBUM_EMPTY']!;
-    this.COLLECTION_TOP_SUBHEADER_ALBUM = asset['COLLECTION_TOP_SUBHEADER_ALBUM']!;
-    this.COLLECTION_TOP_SUBHEADER_ARTIST = asset['COLLECTION_TOP_SUBHEADER_ARTIST']!;
-    this.COLLECTION_TOP_SUBHEADER_TRACK = asset['COLLECTION_TOP_SUBHEADER_TRACK']!;
-    this.COLLECTION_TRACKS_SUBHEADER = asset['COLLECTION_TRACKS_SUBHEADER']!;
-    this.COLLECTION_TRACK_DELETE_DIALOG_BODY = asset['COLLECTION_TRACK_DELETE_DIALOG_BODY']!;
-    this.COLLECTION_TRACK_DELETE_DIALOG_HEADER = asset['COLLECTION_TRACK_DELETE_DIALOG_HEADER']!;
-    this.COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY = asset['COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY']!;
-    this.COMING_UP = asset['COMING_UP']!;
-    this.CONTROL_PANEL = asset['CONTROL_PANEL']!;
-    this.COPY_AS_JSON = asset['COPY_AS_JSON']!;
-    this.COPY_LINK = asset['COPY_LINK']!;
-    this.CORRUPT_LRC_FILE = asset['CORRUPT_LRC_FILE']!;
-    this.COUNT = asset['COUNT']!;
-    this.CREATE = asset['CREATE']!;
-    this.CREATE_NEW_PLAYLIST = asset['CREATE_NEW_PLAYLIST']!;
-    this.CREATE_PLAYLIST_SUBHEADER = asset['CREATE_PLAYLIST_SUBHEADER']!;
-    this.DATE_ADDED = asset['DATE_ADDED']!;
-    this.DELETE = asset['DELETE']!;
-    this.DELETE_TRACK = asset['DELETE_TRACK']!;
-    this.DESCENDING = asset['DESCENDING']!;
-    this.DISABLE_VOLUME_BOOST = asset['DISABLE_VOLUME_BOOST']!;
-    this.DISCORD = asset['DISCORD']!;
-    this.DISCOVERING_FILES = asset['DISCOVERING_FILES']!;
-    this.DONATE = asset['DONATE']!;
-    this.DONE = asset['DONE']!;
-    this.DOWNLOAD = asset['DOWNLOAD']!;
-    this.DOWNLOAD_UPDATE = asset['DOWNLOAD_UPDATE']!;
-    this.EDIT_DETAILS = asset['EDIT_DETAILS']!;
-    this.ENABLE_125_SCALING = asset['ENABLE_125_SCALING']!;
-    this.ENABLE_ACRYLIC_BLUR = asset['ENABLE_ACRYLIC_BLUR']!;
-    this.ENABLE_DENSE_ALBUMS_LAYOUT = asset['ENABLE_DENSE_ALBUMS_LAYOUT']!;
-    this.ENABLE_DENSE_ARTISTS_LAYOUT = asset['ENABLE_DENSE_ARTISTS_LAYOUT']!;
-    this.ENABLE_DISCORD_RPC = asset['ENABLE_DISCORD_RPC']!;
-    this.ENABLE_GRID_ARTISTS_LAYOUT = asset['ENABLE_GRID_ARTISTS_LAYOUT']!;
-    this.ERROR = asset['ERROR']!;
-    this.EXIT_FULLSCREEN = asset['EXIT_FULLSCREEN']!;
-    this.EXIT_NOW_PLAYING = asset['EXIT_NOW_PLAYING']!;
-    this.EXIT_SUBTITLE = asset['EXIT_SUBTITLE']!;
-    this.EXIT_TITLE = asset['EXIT_TITLE']!;
-    this.EXPERIMENTAL = asset['EXPERIMENTAL']!;
-    this.EXPERIMENTAL_SUBTITLE = asset['EXPERIMENTAL_SUBTITLE']!;
-    this.FILE = asset['FILE']!;
-    this.FILE_INFORMATION = asset['FILE_INFORMATION']!;
-    this.FILE_PATH_OR_URL = asset['FILE_PATH_OR_URL']!;
-    this.FOLDERS_NOT_FOUND = asset['FOLDERS_NOT_FOUND']!;
-    this.FOLDER_NOT_FOUND = asset['FOLDER_NOT_FOUND']!;
-    this.FULLSCREEN = asset['FULLSCREEN']!;
-    this.GENRE = asset['GENRE']!;
-    this.GO_TO_SETTINGS = asset['GO_TO_SETTINGS']!;
-    this.HIDE = asset['HIDE']!;
-    this.HIDE_LYRICS = asset['HIDE_LYRICS']!;
-    this.HIGHLIGHTED_LYRICS_SIZE = asset['HIGHLIGHTED_LYRICS_SIZE']!;
-    this.HISTORY = asset['HISTORY']!;
-    this.IMAGES = asset['IMAGES']!;
-    this.IMPORT = asset['IMPORT']!;
-    this.IMPORT_PLAYLIST_SUBTITLE = asset['IMPORT_PLAYLIST_SUBTITLE']!;
-    this.IMPORT_PLAYLIST_TITLE = asset['IMPORT_PLAYLIST_TITLE']!;
-    this.INDEXING_ALREADY_GOING_ON_SUBTITLE = asset['INDEXING_ALREADY_GOING_ON_SUBTITLE']!;
-    this.INDEXING_ALREADY_GOING_ON_TITLE = asset['INDEXING_ALREADY_GOING_ON_TITLE']!;
-    this.INTERNET_ERROR = asset['INTERNET_ERROR']!;
-    this.INVALID_PLAYLIST_URL = asset['INVALID_PLAYLIST_URL']!;
-    this.KNOW_MORE = asset['KNOW_MORE']!;
-    this.LAST_COLLECTION_DIRECTORY_REMOVED = asset['LAST_COLLECTION_DIRECTORY_REMOVED']!;
-    this.LESS = asset['LESS']!;
-    this.LIKED_SONGS = asset['LIKED_SONGS']!;
-    this.LISTENING_TO_MUSIC = asset['LISTENING_TO_MUSIC']!;
-    this.LYRICS = asset['LYRICS']!;
-    this.LYRICS_NOT_FOUND = asset['LYRICS_NOT_FOUND']!;
-    this.LYRICS_RETRIEVING = asset['LYRICS_RETRIEVING']!;
-    this.MEDIA_FILES = asset['MEDIA_FILES']!;
-    this.MENU = asset['MENU']!;
-    this.MINIMUM_FILE_SIZE = asset['MINIMUM_FILE_SIZE']!;
-    this.MINIMUM_FILE_SIZE_WARNING = asset['MINIMUM_FILE_SIZE_WARNING']!;
-    this.MORE = asset['MORE']!;
-    this.MUTE = asset['MUTE']!;
-    this.M_TRACKS_AND_N_ALBUMS = asset['M_TRACKS_AND_N_ALBUMS']!;
-    this.NEXT = asset['NEXT']!;
-    this.NO = asset['NO']!;
-    this.NOTHING_IN_QUEUE = asset['NOTHING_IN_QUEUE']!;
-    this.NOTIFICATION_LYRICS_SUBTITLE = asset['NOTIFICATION_LYRICS_SUBTITLE']!;
-    this.NOTIFICATION_LYRICS_TITLE = asset['NOTIFICATION_LYRICS_TITLE']!;
-    this.NOW_PLAYING = asset['NOW_PLAYING']!;
-    this.NOW_PLAYING_NEXT_TRACK = asset['NOW_PLAYING_NEXT_TRACK']!;
-    this.NOW_PLAYING_NOT_PLAYING_TITLE = asset['NOW_PLAYING_NOT_PLAYING_TITLE']!;
-    this.NOW_PLAYING_PREVIOUS_TRACK = asset['NOW_PLAYING_PREVIOUS_TRACK']!;
-    this.NOW_PLAYING_SCREEN = asset['NOW_PLAYING_SCREEN']!;
-    this.NOW_PLAYING_SCREEN_SETTING_SUBTITLE = asset['NOW_PLAYING_SCREEN_SETTING_SUBTITLE']!;
-    this.NOW_YOU_ARE_GOOD_TO_GO_BACK = asset['NOW_YOU_ARE_GOOD_TO_GO_BACK']!;
-    this.NO_COLLECTION_SUBTITLE = asset['NO_COLLECTION_SUBTITLE']!;
-    this.NO_COLLECTION_TITLE = asset['NO_COLLECTION_TITLE']!;
-    this.NO_DOWNLOAD_UPDATE = asset['NO_DOWNLOAD_UPDATE']!;
-    this.NO_INTERNET_SUBTITLE = asset['NO_INTERNET_SUBTITLE']!;
-    this.NO_INTERNET_TITLE = asset['NO_INTERNET_TITLE']!;
-    this.NO_PLAYLISTS_FOUND = asset['NO_PLAYLISTS_FOUND']!;
-    this.N_TRACKS = asset['N_TRACKS']!;
-    this.OK = asset['OK']!;
-    this.OPEN_FILE_OR_URL = asset['OPEN_FILE_OR_URL']!;
-    this.OPEN_IN_BROWSER = asset['OPEN_IN_BROWSER']!;
-    this.OPTIONS = asset['OPTIONS']!;
-    this.ORDER = asset['ORDER']!;
-    this.PAUSE = asset['PAUSE']!;
-    this.PHONE = asset['PHONE']!;
-    this.PITCH = asset['PITCH']!;
-    this.PLAY = asset['PLAY']!;
-    this.PLAYLIST = asset['PLAYLIST']!;
-    this.PLAYLISTS_CREATE = asset['PLAYLISTS_CREATE']!;
-    this.PLAYLISTS_SUBHEADER = asset['PLAYLISTS_SUBHEADER']!;
-    this.PLAYLISTS_TEXT_FIELD_HINT = asset['PLAYLISTS_TEXT_FIELD_HINT']!;
-    this.PLAYLISTS_TEXT_FIELD_LABEL = asset['PLAYLISTS_TEXT_FIELD_LABEL']!;
-    this.PLAYLIST_ADD_DIALOG_BODY = asset['PLAYLIST_ADD_DIALOG_BODY']!;
-    this.PLAYLIST_ADD_DIALOG_TITLE = asset['PLAYLIST_ADD_DIALOG_TITLE']!;
-    this.PLAYLIST_NAME = asset['PLAYLIST_NAME']!;
-    this.PLAYLIST_SINGLE = asset['PLAYLIST_SINGLE']!;
-    this.PLAYLIST_TRACKS_SUBHEADER = asset['PLAYLIST_TRACKS_SUBHEADER']!;
-    this.PLAY_INTERNET = asset['PLAY_INTERNET']!;
-    this.PLAY_NOW = asset['PLAY_NOW']!;
-    this.PLAY_URL = asset['PLAY_URL']!;
-    this.PLAY_URL_SUBTITLE = asset['PLAY_URL_SUBTITLE']!;
-    this.PREVIOUS = asset['PREVIOUS']!;
-    this.PROPERTY = asset['PROPERTY']!;
-    this.PROXY_SUBTITLE = asset['PROXY_SUBTITLE']!;
-    this.PROXY_TITLE = asset['PROXY_TITLE']!;
-    this.PROXY_URL = asset['PROXY_URL']!;
-    this.READ = asset['READ']!;
-    this.READ_METADATA = asset['READ_METADATA']!;
-    this.RECOMMENDATIONS = asset['RECOMMENDATIONS']!;
-    this.RECOMMENDED_HINT = asset['RECOMMENDED_HINT']!;
-    this.REFRESH = asset['REFRESH']!;
-    this.REFRESH_INFORMATION = asset['REFRESH_INFORMATION']!;
-    this.REFRESH_SUBTITLE = asset['REFRESH_SUBTITLE']!;
-    this.REINDEX = asset['REINDEX']!;
-    this.REINDEX_INFORMATION = asset['REINDEX_INFORMATION']!;
-    this.REINDEX_SUBTITLE = asset['REINDEX_SUBTITLE']!;
-    this.REMIND_ME_NEXT_TIME = asset['REMIND_ME_NEXT_TIME']!;
-    this.REMOVE = asset['REMOVE']!;
-    this.REMOVE_FROM_PLAYLIST = asset['REMOVE_FROM_PLAYLIST']!;
-    this.RENAME = asset['RENAME']!;
-    this.REPEAT = asset['REPEAT']!;
-    this.RESET_PITCH = asset['RESET_PITCH']!;
-    this.RESET_SPEED = asset['RESET_SPEED']!;
-    this.RESTORE = asset['RESTORE']!;
-    this.RESTORE_DEFAULTS = asset['RESTORE_DEFAULTS']!;
-    this.RESULTS_FOR_QUERY = asset['RESULTS_FOR_QUERY']!;
-    this.RETRIEVING_INFO = asset['RETRIEVING_INFO']!;
-    this.RETRIEVING_LINK = asset['RETRIEVING_LINK']!;
-    this.SAVE = asset['SAVE']!;
-    this.SAVE_AS_PLAYLIST = asset['SAVE_AS_PLAYLIST']!;
-    this.SAVE_TO_DOWNLOADS = asset['SAVE_TO_DOWNLOADS']!;
-    this.SD_CARD = asset['SD_CARD']!;
-    this.SEARCH = asset['SEARCH']!;
-    this.SEARCH_COLLECTION = asset['SEARCH_COLLECTION']!;
-    this.SEARCH_HISTORY_SUBHEADER = asset['SEARCH_HISTORY_SUBHEADER']!;
-    this.SEARCH_NO_RECENT_SEARCHES = asset['SEARCH_NO_RECENT_SEARCHES']!;
-    this.SEARCH_RESULT_LOADER_LABEL = asset['SEARCH_RESULT_LOADER_LABEL']!;
-    this.SEARCH_WELCOME = asset['SEARCH_WELCOME']!;
-    this.SEE_ALL = asset['SEE_ALL']!;
-    this.SELECTED_DIRECTORIES = asset['SELECTED_DIRECTORIES']!;
-    this.SELECTED_DIRECTORY = asset['SELECTED_DIRECTORY']!;
-    this.SETTING = asset['SETTING']!;
-    this.SETTING_ACCENT_COLOR_AUTOMATIC = asset['SETTING_ACCENT_COLOR_AUTOMATIC']!;
-    this.SETTING_ACCENT_COLOR_SUBTITLE = asset['SETTING_ACCENT_COLOR_SUBTITLE']!;
-    this.SETTING_ACCENT_COLOR_TITLE = asset['SETTING_ACCENT_COLOR_TITLE']!;
-    this.SETTING_APP_VERSION_INSTALLED = asset['SETTING_APP_VERSION_INSTALLED']!;
-    this.SETTING_APP_VERSION_LATEST = asset['SETTING_APP_VERSION_LATEST']!;
-    this.SETTING_APP_VERSION_SUBTITLE = asset['SETTING_APP_VERSION_SUBTITLE']!;
-    this.SETTING_APP_VERSION_TITLE = asset['SETTING_APP_VERSION_TITLE']!;
-    this.SETTING_GITHUB = asset['SETTING_GITHUB']!;
-    this.SETTING_INDEXING_DONE = asset['SETTING_INDEXING_DONE']!;
-    this.SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR = asset['SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR']!;
-    this.SETTING_INDEXING_SUBTITLE = asset['SETTING_INDEXING_SUBTITLE']!;
-    this.SETTING_INDEXING_TITLE = asset['SETTING_INDEXING_TITLE']!;
-    this.SETTING_INDEXING_WARNING = asset['SETTING_INDEXING_WARNING']!;
-    this.SETTING_LANGUAGE_PROVIDERS_SUBTITLE = asset['SETTING_LANGUAGE_PROVIDERS_SUBTITLE']!;
-    this.SETTING_LANGUAGE_PROVIDERS_TITLE = asset['SETTING_LANGUAGE_PROVIDERS_TITLE']!;
-    this.SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE = asset['SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE']!;
-    this.SETTING_LANGUAGE_RESTART_DIALOG_TITLE = asset['SETTING_LANGUAGE_RESTART_DIALOG_TITLE']!;
-    this.SETTING_LANGUAGE_SUBTITLE = asset['SETTING_LANGUAGE_SUBTITLE']!;
-    this.SETTING_LANGUAGE_TITLE = asset['SETTING_LANGUAGE_TITLE']!;
-    this.SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE = asset['SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE']!;
-    this.SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE = asset['SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE']!;
-    this.SETTING_MISCELLANEOUS_SUBTITLE = asset['SETTING_MISCELLANEOUS_SUBTITLE']!;
-    this.SETTING_MISCELLANEOUS_TITLE = asset['SETTING_MISCELLANEOUS_TITLE']!;
-    this.SETTING_STARGAZERS_SUBTITLE = asset['SETTING_STARGAZERS_SUBTITLE']!;
-    this.SETTING_STARGAZERS_TITLE = asset['SETTING_STARGAZERS_TITLE']!;
-    this.SETTING_STAR_GITHUB = asset['SETTING_STAR_GITHUB']!;
-    this.SETTING_THEME_SUBTITLE = asset['SETTING_THEME_SUBTITLE']!;
-    this.SETTING_THEME_TITLE = asset['SETTING_THEME_TITLE']!;
-    this.SET_LRC_FILE = asset['SET_LRC_FILE']!;
-    this.SHARE = asset['SHARE']!;
-    this.SHOW_ALBUM = asset['SHOW_ALBUM']!;
-    this.SHOW_IN_FILE_MANAGER = asset['SHOW_IN_FILE_MANAGER']!;
-    this.SHOW_LYRICS = asset['SHOW_LYRICS']!;
-    this.SHOW_NOW_PLAYING_AFTER_PLAYING = asset['SHOW_NOW_PLAYING_AFTER_PLAYING']!;
-    this.SHOW_NOW_PLAYING_AFTER_PLAYING_SUBTITLE = asset['SHOW_NOW_PLAYING_AFTER_PLAYING_SUBTITLE']!;
-    this.SHOW_NOW_PLAYING_SCREEN = asset['SHOW_NOW_PLAYING_SCREEN']!;
-    this.SHOW_TRACK_PROGRESS_ON_TASKBAR = asset['SHOW_TRACK_PROGRESS_ON_TASKBAR']!;
-    this.SHOW_TRACK_PROGRESS_ON_TASKBAR_SUBTITLE = asset['SHOW_TRACK_PROGRESS_ON_TASKBAR_SUBTITLE']!;
-    this.SHUFFLE = asset['SHUFFLE']!;
-    this.SORT = asset['SORT']!;
-    this.SORT_BY = asset['SORT_BY']!;
-    this.SPEED = asset['SPEED']!;
-    this.STARTING_PLAYBACK = asset['STARTING_PLAYBACK']!;
-    this.STATS_SUBTITLE = asset['STATS_SUBTITLE']!;
-    this.STATS_TITLE = asset['STATS_TITLE']!;
-    this.STREAM = asset['STREAM']!;
-    this.SWITCH_THEME = asset['SWITCH_THEME']!;
-    this.THEME_MODE_DARK = asset['THEME_MODE_DARK']!;
-    this.THEME_MODE_LIGHT = asset['THEME_MODE_LIGHT']!;
-    this.THEME_MODE_SYSTEM = asset['THEME_MODE_SYSTEM']!;
-    this.TIMEOUT = asset['TIMEOUT']!;
-    this.TRACK = asset['TRACK']!;
-    this.TRACKS_FROM_ARTIST = asset['TRACKS_FROM_ARTIST']!;
-    this.TRACK_NUMBER = asset['TRACK_NUMBER']!;
-    this.TRACK_SINGLE = asset['TRACK_SINGLE']!;
-    this.TRANSFERS = asset['TRANSFERS']!;
-    this.TYPE = asset['TYPE']!;
-    this.UNHIGHLIGHTED_LYRICS_SIZE = asset['UNHIGHLIGHTED_LYRICS_SIZE']!;
-    this.UNMUTE = asset['UNMUTE']!;
-    this.UPDATE_AVAILABLE = asset['UPDATE_AVAILABLE']!;
-    this.URL = asset['URL']!;
-    this.USE_MODERN_NOW_PLAYING_SCREEN = asset['USE_MODERN_NOW_PLAYING_SCREEN']!;
-    this.USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS = asset['USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS']!;
-    this.VALUE = asset['VALUE']!;
-    this.VIDEO_SINGLE = asset['VIDEO_SINGLE']!;
-    this.VISUALS = asset['VISUALS']!;
-    this.VISUALS_TITLE = asset['VISUALS_TITLE']!;
-    this.VOLUME_BOOST = asset['VOLUME_BOOST']!;
-    this.WARNING = asset['WARNING']!;
-    this.WEB_INTERNET_ERROR = asset['WEB_INTERNET_ERROR']!;
-    this.WEB_NO_RESULTS = asset['WEB_NO_RESULTS']!;
-    this.WEB_WELCOME = asset['WEB_WELCOME']!;
-    this.WEB_WELCOME_SUBTITLE = asset['WEB_WELCOME_SUBTITLE']!;
-    this.WEB_WELCOME_TITLE = asset['WEB_WELCOME_TITLE']!;
-    this.YEAR = asset['YEAR']!;
-    this.YES = asset['YES']!;
-    Configuration.instance.save(languageRegion: languageRegion);
-            this.current = languageRegion;
-            this.notifyListeners();
-        }
-        late LanguageRegion current;
-        @override
-        // ignore: must_call_super
-        void dispose() {}
-        }
-        
+  /// Updates the [current] language & notifies the listeners.
+  Future<void> set({
+    required LanguageData value,
+  }) async {
+    final data = await rootBundle.loadString(
+      'assets/translations/${value.code}.json',
+      cache: true,
+    );
+    final map = json.decode(data);
+    ABOUT_TITLE = map['ABOUT_TITLE']!;
+    ADD = map['ADD']!;
+    ADD_NEW_FOLDER = map['ADD_NEW_FOLDER']!;
+    ADD_NEW_FOLDER_SUBTITLE = map['ADD_NEW_FOLDER_SUBTITLE']!;
+    ADD_TO_NOW_PLAYING = map['ADD_TO_NOW_PLAYING']!;
+    ADD_TO_PLAYLIST = map['ADD_TO_PLAYLIST']!;
+    ALBUM = map['ALBUM']!;
+    ALBUMS_FROM_ARTIST = map['ALBUMS_FROM_ARTIST']!;
+    ALBUM_ARTIST = map['ALBUM_ARTIST']!;
+    ALBUM_SINGLE = map['ALBUM_SINGLE']!;
+    ALL_FILES = map['ALL_FILES']!;
+    ARTIST = map['ARTIST']!;
+    ARTIST_SINGLE = map['ARTIST_SINGLE']!;
+    ASCENDING = map['ASCENDING']!;
+    AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING = map['AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING']!;
+    AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING_TITLE = map['AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING_TITLE']!;
+    AUTO_REFRESH_SETTING = map['AUTO_REFRESH_SETTING']!;
+    AUTO_REFRESH_SETTING_TITLE = map['AUTO_REFRESH_SETTING_TITLE']!;
+    AWESOME = map['AWESOME']!;
+    A_TO_Z = map['A_TO_Z']!;
+    BACKGROUND_ARTWORK_SUBTITLE = map['BACKGROUND_ARTWORK_SUBTITLE']!;
+    BACKGROUND_ARTWORK_TITLE = map['BACKGROUND_ARTWORK_TITLE']!;
+    BETA = map['BETA']!;
+    BUFFERING = map['BUFFERING']!;
+    CANCEL = map['CANCEL']!;
+    CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC = map['CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC']!;
+    CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC_TITLE = map['CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC_TITLE']!;
+    CLEAR_LRC_FILE = map['CLEAR_LRC_FILE']!;
+    COLLECTION = map['COLLECTION']!;
+    COLLECTION_ALBUM_DELETE_DIALOG_BODY = map['COLLECTION_ALBUM_DELETE_DIALOG_BODY']!;
+    COLLECTION_ALBUM_DELETE_DIALOG_HEADER = map['COLLECTION_ALBUM_DELETE_DIALOG_HEADER']!;
+    COLLECTION_INDEXING_HINT = map['COLLECTION_INDEXING_HINT']!;
+    COLLECTION_INDEXING_LABEL = map['COLLECTION_INDEXING_LABEL']!;
+    COLLECTION_PLAYLIST_DELETE_DIALOG_BODY = map['COLLECTION_PLAYLIST_DELETE_DIALOG_BODY']!;
+    COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER = map['COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER']!;
+    COLLECTION_SEARCH_LABEL = map['COLLECTION_SEARCH_LABEL']!;
+    COLLECTION_SEARCH_NO_RESULTS_SUBTITLE = map['COLLECTION_SEARCH_NO_RESULTS_SUBTITLE']!;
+    COLLECTION_SEARCH_NO_RESULTS_TITLE = map['COLLECTION_SEARCH_NO_RESULTS_TITLE']!;
+    COLLECTION_SEARCH_WELCOME = map['COLLECTION_SEARCH_WELCOME']!;
+    COLLECTION_TOP_SUBHEADER_ALBUM = map['COLLECTION_TOP_SUBHEADER_ALBUM']!;
+    COLLECTION_TOP_SUBHEADER_ARTIST = map['COLLECTION_TOP_SUBHEADER_ARTIST']!;
+    COLLECTION_TOP_SUBHEADER_TRACK = map['COLLECTION_TOP_SUBHEADER_TRACK']!;
+    COLLECTION_TRACKS_SUBHEADER = map['COLLECTION_TRACKS_SUBHEADER']!;
+    COLLECTION_TRACK_DELETE_DIALOG_BODY = map['COLLECTION_TRACK_DELETE_DIALOG_BODY']!;
+    COLLECTION_TRACK_DELETE_DIALOG_HEADER = map['COLLECTION_TRACK_DELETE_DIALOG_HEADER']!;
+    COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY = map['COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY']!;
+    COMING_UP = map['COMING_UP']!;
+    CONTROL_PANEL = map['CONTROL_PANEL']!;
+    COPY_AS_JSON = map['COPY_AS_JSON']!;
+    COPY_LINK = map['COPY_LINK']!;
+    CORRUPT_LRC_FILE = map['CORRUPT_LRC_FILE']!;
+    COUNT = map['COUNT']!;
+    CREATE = map['CREATE']!;
+    CREATE_NEW_PLAYLIST = map['CREATE_NEW_PLAYLIST']!;
+    CREATE_PLAYLIST_SUBHEADER = map['CREATE_PLAYLIST_SUBHEADER']!;
+    DATE_ADDED = map['DATE_ADDED']!;
+    DELETE = map['DELETE']!;
+    DESCENDING = map['DESCENDING']!;
+    DISABLE_VOLUME_BOOST = map['DISABLE_VOLUME_BOOST']!;
+    DISCOVERING_FILES = map['DISCOVERING_FILES']!;
+    DONATE = map['DONATE']!;
+    DONE = map['DONE']!;
+    DOWNLOAD = map['DOWNLOAD']!;
+    DOWNLOAD_UPDATE = map['DOWNLOAD_UPDATE']!;
+    EDIT_DETAILS = map['EDIT_DETAILS']!;
+    ENABLE_125_SCALING = map['ENABLE_125_SCALING']!;
+    ENABLE_ACRYLIC_BLUR = map['ENABLE_ACRYLIC_BLUR']!;
+    ENABLE_DENSE_ALBUMS_LAYOUT = map['ENABLE_DENSE_ALBUMS_LAYOUT']!;
+    ENABLE_DENSE_ARTISTS_LAYOUT = map['ENABLE_DENSE_ARTISTS_LAYOUT']!;
+    ENABLE_DISCORD_RPC = map['ENABLE_DISCORD_RPC']!;
+    ENABLE_GRID_ARTISTS_LAYOUT = map['ENABLE_GRID_ARTISTS_LAYOUT']!;
+    ERROR = map['ERROR']!;
+    EXIT_FULLSCREEN = map['EXIT_FULLSCREEN']!;
+    EXIT_NOW_PLAYING = map['EXIT_NOW_PLAYING']!;
+    EXIT_SUBTITLE = map['EXIT_SUBTITLE']!;
+    EXIT_TITLE = map['EXIT_TITLE']!;
+    EXPERIMENTAL = map['EXPERIMENTAL']!;
+    EXPERIMENTAL_SUBTITLE = map['EXPERIMENTAL_SUBTITLE']!;
+    FILE = map['FILE']!;
+    FILE_INFORMATION = map['FILE_INFORMATION']!;
+    FILE_PATH_OR_URL = map['FILE_PATH_OR_URL']!;
+    FOLDERS_NOT_FOUND = map['FOLDERS_NOT_FOUND']!;
+    FOLDER_NOT_FOUND = map['FOLDER_NOT_FOUND']!;
+    FULLSCREEN = map['FULLSCREEN']!;
+    GENRE = map['GENRE']!;
+    GO_TO_SETTINGS = map['GO_TO_SETTINGS']!;
+    HIDE = map['HIDE']!;
+    HIDE_LYRICS = map['HIDE_LYRICS']!;
+    HIGHLIGHTED_LYRICS_SIZE = map['HIGHLIGHTED_LYRICS_SIZE']!;
+    HISTORY = map['HISTORY']!;
+    IMAGES = map['IMAGES']!;
+    IMPORT = map['IMPORT']!;
+    IMPORT_PLAYLIST_SUBTITLE = map['IMPORT_PLAYLIST_SUBTITLE']!;
+    IMPORT_PLAYLIST_TITLE = map['IMPORT_PLAYLIST_TITLE']!;
+    INDEXING_ALREADY_GOING_ON_SUBTITLE = map['INDEXING_ALREADY_GOING_ON_SUBTITLE']!;
+    INDEXING_ALREADY_GOING_ON_TITLE = map['INDEXING_ALREADY_GOING_ON_TITLE']!;
+    INTERNET_ERROR = map['INTERNET_ERROR']!;
+    INVALID_PLAYLIST_URL = map['INVALID_PLAYLIST_URL']!;
+    LAST_COLLECTION_DIRECTORY_REMOVED = map['LAST_COLLECTION_DIRECTORY_REMOVED']!;
+    LESS = map['LESS']!;
+    LIKED_SONGS = map['LIKED_SONGS']!;
+    LYRICS = map['LYRICS']!;
+    LYRICS_NOT_FOUND = map['LYRICS_NOT_FOUND']!;
+    LYRICS_RETRIEVING = map['LYRICS_RETRIEVING']!;
+    MEDIA_FILES = map['MEDIA_FILES']!;
+    MENU = map['MENU']!;
+    MINIMUM_FILE_SIZE = map['MINIMUM_FILE_SIZE']!;
+    MINIMUM_FILE_SIZE_WARNING = map['MINIMUM_FILE_SIZE_WARNING']!;
+    MORE = map['MORE']!;
+    MUTE = map['MUTE']!;
+    M_TRACKS_AND_N_ALBUMS = map['M_TRACKS_AND_N_ALBUMS']!;
+    NEXT = map['NEXT']!;
+    NO = map['NO']!;
+    NOTHING_IN_QUEUE = map['NOTHING_IN_QUEUE']!;
+    NOTIFICATION_LYRICS_SUBTITLE = map['NOTIFICATION_LYRICS_SUBTITLE']!;
+    NOTIFICATION_LYRICS_TITLE = map['NOTIFICATION_LYRICS_TITLE']!;
+    NOW_PLAYING = map['NOW_PLAYING']!;
+    NOW_PLAYING_SCREEN = map['NOW_PLAYING_SCREEN']!;
+    NOW_PLAYING_SCREEN_SETTING_SUBTITLE = map['NOW_PLAYING_SCREEN_SETTING_SUBTITLE']!;
+    NOW_YOU_ARE_GOOD_TO_GO_BACK = map['NOW_YOU_ARE_GOOD_TO_GO_BACK']!;
+    NO_COLLECTION_SUBTITLE = map['NO_COLLECTION_SUBTITLE']!;
+    NO_COLLECTION_TITLE = map['NO_COLLECTION_TITLE']!;
+    NO_DOWNLOAD_UPDATE = map['NO_DOWNLOAD_UPDATE']!;
+    NO_INTERNET_SUBTITLE = map['NO_INTERNET_SUBTITLE']!;
+    NO_INTERNET_TITLE = map['NO_INTERNET_TITLE']!;
+    NO_PLAYLISTS_FOUND = map['NO_PLAYLISTS_FOUND']!;
+    N_TRACKS = map['N_TRACKS']!;
+    OK = map['OK']!;
+    OPEN_FILE_OR_URL = map['OPEN_FILE_OR_URL']!;
+    OPEN_IN_BROWSER = map['OPEN_IN_BROWSER']!;
+    OPTIONS = map['OPTIONS']!;
+    ORDER = map['ORDER']!;
+    PAUSE = map['PAUSE']!;
+    PHONE = map['PHONE']!;
+    PITCH = map['PITCH']!;
+    PLAY = map['PLAY']!;
+    PLAYLIST = map['PLAYLIST']!;
+    PLAYLISTS_CREATE = map['PLAYLISTS_CREATE']!;
+    PLAYLISTS_SUBHEADER = map['PLAYLISTS_SUBHEADER']!;
+    PLAYLISTS_TEXT_FIELD_HINT = map['PLAYLISTS_TEXT_FIELD_HINT']!;
+    PLAYLISTS_TEXT_FIELD_LABEL = map['PLAYLISTS_TEXT_FIELD_LABEL']!;
+    PLAYLIST_ADD_DIALOG_BODY = map['PLAYLIST_ADD_DIALOG_BODY']!;
+    PLAYLIST_ADD_DIALOG_TITLE = map['PLAYLIST_ADD_DIALOG_TITLE']!;
+    PLAYLIST_NAME = map['PLAYLIST_NAME']!;
+    PLAYLIST_SINGLE = map['PLAYLIST_SINGLE']!;
+    PLAYLIST_TRACKS_SUBHEADER = map['PLAYLIST_TRACKS_SUBHEADER']!;
+    PLAY_INTERNET = map['PLAY_INTERNET']!;
+    PLAY_NOW = map['PLAY_NOW']!;
+    PLAY_URL = map['PLAY_URL']!;
+    PLAY_URL_SUBTITLE = map['PLAY_URL_SUBTITLE']!;
+    PREVIOUS = map['PREVIOUS']!;
+    PROPERTY = map['PROPERTY']!;
+    READ = map['READ']!;
+    READ_METADATA = map['READ_METADATA']!;
+    RECOMMENDATIONS = map['RECOMMENDATIONS']!;
+    RECOMMENDED_HINT = map['RECOMMENDED_HINT']!;
+    REFRESH = map['REFRESH']!;
+    REFRESH_INFORMATION = map['REFRESH_INFORMATION']!;
+    REFRESH_SUBTITLE = map['REFRESH_SUBTITLE']!;
+    REINDEX = map['REINDEX']!;
+    REINDEX_INFORMATION = map['REINDEX_INFORMATION']!;
+    REINDEX_SUBTITLE = map['REINDEX_SUBTITLE']!;
+    REMIND_ME_NEXT_TIME = map['REMIND_ME_NEXT_TIME']!;
+    REMOVE = map['REMOVE']!;
+    REMOVE_FROM_PLAYLIST = map['REMOVE_FROM_PLAYLIST']!;
+    RENAME = map['RENAME']!;
+    REPEAT = map['REPEAT']!;
+    RESET_PITCH = map['RESET_PITCH']!;
+    RESET_SPEED = map['RESET_SPEED']!;
+    RESTORE = map['RESTORE']!;
+    RESTORE_DEFAULTS = map['RESTORE_DEFAULTS']!;
+    RESULTS_FOR_QUERY = map['RESULTS_FOR_QUERY']!;
+    RETRIEVING_INFO = map['RETRIEVING_INFO']!;
+    RETRIEVING_LINK = map['RETRIEVING_LINK']!;
+    SAVE = map['SAVE']!;
+    SAVE_AS_PLAYLIST = map['SAVE_AS_PLAYLIST']!;
+    SD_CARD = map['SD_CARD']!;
+    SEARCH = map['SEARCH']!;
+    SEARCH_COLLECTION = map['SEARCH_COLLECTION']!;
+    SEARCH_HISTORY_SUBHEADER = map['SEARCH_HISTORY_SUBHEADER']!;
+    SEARCH_NO_RECENT_SEARCHES = map['SEARCH_NO_RECENT_SEARCHES']!;
+    SEARCH_WELCOME = map['SEARCH_WELCOME']!;
+    SEE_ALL = map['SEE_ALL']!;
+    SELECTED_DIRECTORIES = map['SELECTED_DIRECTORIES']!;
+    SELECTED_DIRECTORY = map['SELECTED_DIRECTORY']!;
+    SETTING = map['SETTING']!;
+    SETTING_ACCENT_COLOR_AUTOMATIC = map['SETTING_ACCENT_COLOR_AUTOMATIC']!;
+    SETTING_ACCENT_COLOR_SUBTITLE = map['SETTING_ACCENT_COLOR_SUBTITLE']!;
+    SETTING_ACCENT_COLOR_TITLE = map['SETTING_ACCENT_COLOR_TITLE']!;
+    SETTING_APP_VERSION_INSTALLED = map['SETTING_APP_VERSION_INSTALLED']!;
+    SETTING_APP_VERSION_LATEST = map['SETTING_APP_VERSION_LATEST']!;
+    SETTING_APP_VERSION_SUBTITLE = map['SETTING_APP_VERSION_SUBTITLE']!;
+    SETTING_APP_VERSION_TITLE = map['SETTING_APP_VERSION_TITLE']!;
+    SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR = map['SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR']!;
+    SETTING_INDEXING_SUBTITLE = map['SETTING_INDEXING_SUBTITLE']!;
+    SETTING_INDEXING_TITLE = map['SETTING_INDEXING_TITLE']!;
+    SETTING_LANGUAGE_SUBTITLE = map['SETTING_LANGUAGE_SUBTITLE']!;
+    SETTING_LANGUAGE_TITLE = map['SETTING_LANGUAGE_TITLE']!;
+    SETTING_MISCELLANEOUS_SUBTITLE = map['SETTING_MISCELLANEOUS_SUBTITLE']!;
+    SETTING_MISCELLANEOUS_TITLE = map['SETTING_MISCELLANEOUS_TITLE']!;
+    SETTING_THEME_SUBTITLE = map['SETTING_THEME_SUBTITLE']!;
+    SETTING_THEME_TITLE = map['SETTING_THEME_TITLE']!;
+    SET_LRC_FILE = map['SET_LRC_FILE']!;
+    SHARE = map['SHARE']!;
+    SHOW_ALBUM = map['SHOW_ALBUM']!;
+    SHOW_IN_FILE_MANAGER = map['SHOW_IN_FILE_MANAGER']!;
+    SHOW_LYRICS = map['SHOW_LYRICS']!;
+    SHOW_NOW_PLAYING_AFTER_PLAYING = map['SHOW_NOW_PLAYING_AFTER_PLAYING']!;
+    SHOW_NOW_PLAYING_AFTER_PLAYING_SUBTITLE = map['SHOW_NOW_PLAYING_AFTER_PLAYING_SUBTITLE']!;
+    SHOW_NOW_PLAYING_SCREEN = map['SHOW_NOW_PLAYING_SCREEN']!;
+    SHOW_TRACK_PROGRESS_ON_TASKBAR = map['SHOW_TRACK_PROGRESS_ON_TASKBAR']!;
+    SHOW_TRACK_PROGRESS_ON_TASKBAR_SUBTITLE = map['SHOW_TRACK_PROGRESS_ON_TASKBAR_SUBTITLE']!;
+    SHUFFLE = map['SHUFFLE']!;
+    SORT = map['SORT']!;
+    SORT_BY = map['SORT_BY']!;
+    SPEED = map['SPEED']!;
+    STARTING_PLAYBACK = map['STARTING_PLAYBACK']!;
+    STATS_SUBTITLE = map['STATS_SUBTITLE']!;
+    STATS_TITLE = map['STATS_TITLE']!;
+    STREAM = map['STREAM']!;
+    THEME_MODE_DARK = map['THEME_MODE_DARK']!;
+    THEME_MODE_LIGHT = map['THEME_MODE_LIGHT']!;
+    THEME_MODE_SYSTEM = map['THEME_MODE_SYSTEM']!;
+    TRACK = map['TRACK']!;
+    TRACKS_FROM_ARTIST = map['TRACKS_FROM_ARTIST']!;
+    TRACK_NUMBER = map['TRACK_NUMBER']!;
+    TRACK_SINGLE = map['TRACK_SINGLE']!;
+    TRANSFERS = map['TRANSFERS']!;
+    TYPE = map['TYPE']!;
+    UNHIGHLIGHTED_LYRICS_SIZE = map['UNHIGHLIGHTED_LYRICS_SIZE']!;
+    UNMUTE = map['UNMUTE']!;
+    UPDATE_AVAILABLE = map['UPDATE_AVAILABLE']!;
+    URL = map['URL']!;
+    USE_MODERN_NOW_PLAYING_SCREEN = map['USE_MODERN_NOW_PLAYING_SCREEN']!;
+    USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS = map['USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS']!;
+    VALUE = map['VALUE']!;
+    VIDEO_SINGLE = map['VIDEO_SINGLE']!;
+    VISUALS = map['VISUALS']!;
+    VISUALS_TITLE = map['VISUALS_TITLE']!;
+    VOLUME_BOOST = map['VOLUME_BOOST']!;
+    WARNING = map['WARNING']!;
+    WEB_INTERNET_ERROR = map['WEB_INTERNET_ERROR']!;
+    WEB_NO_RESULTS = map['WEB_NO_RESULTS']!;
+    WEB_WELCOME = map['WEB_WELCOME']!;
+    WEB_WELCOME_SUBTITLE = map['WEB_WELCOME_SUBTITLE']!;
+    WEB_WELCOME_TITLE = map['WEB_WELCOME_TITLE']!;
+    YEAR = map['YEAR']!;
+    YES = map['YES']!;
+    current = value;
+    notifyListeners();
+  }
+
+  /// Currently selected & displayed [Language].
+  late LanguageData current;
+
+  @override
+  // ignore: must_call_super
+  void dispose() {}
+}
