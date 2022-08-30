@@ -73,7 +73,7 @@ class Configuration extends ConfigurationKeys {
   ///
   Future<void> save({
     List<Directory>? collectionDirectories,
-    LanguageRegion? languageRegion,
+    LanguageData? language,
     ThemeMode? themeMode,
     bool? automaticAccent,
     bool? notificationLyrics,
@@ -108,8 +108,8 @@ class Configuration extends ConfigurationKeys {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
     }
-    if (languageRegion != null) {
-      this.languageRegion = languageRegion;
+    if (language != null) {
+      this.language = language;
     }
     if (themeMode != null) {
       this.themeMode = themeMode;
@@ -209,7 +209,7 @@ class Configuration extends ConfigurationKeys {
             .map((directory) => directory.path)
             .toList()
             .cast<String>(),
-        'languageRegion': this.languageRegion.index,
+        'language': this.language.toJson(),
         'themeMode': this.themeMode.index,
         'automaticAccent': this.automaticAccent,
         'notificationLyrics': this.notificationLyrics,
@@ -247,14 +247,12 @@ class Configuration extends ConfigurationKeys {
 
   /// Reads various configuration keys & stores in memory.
   ///
-  Future<void> read({
-    bool retry = true,
-  }) async {
+  Future<void> read() async {
     final current = await storage.read();
     final conf = await _defaultConfiguration;
     // Emblace default values for the keys that not found.
     // Most likely due to update in Harmonoid's app version.
-    // The new Harmonoid's version likely brought new app keys & fallback to default for those.
+    // The Harmonoid's version update likely brought new app keys & fallback to default for those.
     conf.keys.forEach(
       (key) {
         if (!current.containsKey(key)) {
@@ -267,7 +265,7 @@ class Configuration extends ConfigurationKeys {
         .map((directory) => Directory(directory))
         .toList()
         .cast<Directory>();
-    languageRegion = LanguageRegion.values[current['languageRegion']];
+    language = LanguageData.fromJson(current['language']);
     themeMode = ThemeMode.values[current['themeMode']];
     automaticAccent = current['automaticAccent'];
     notificationLyrics = current['notificationLyrics'];
@@ -305,7 +303,7 @@ class Configuration extends ConfigurationKeys {
 abstract class ConfigurationKeys {
   late List<Directory> collectionDirectories;
   late Directory cacheDirectory;
-  late LanguageRegion languageRegion;
+  late LanguageData language;
   late ThemeMode themeMode;
   late bool automaticAccent;
   late bool notificationLyrics;
@@ -343,10 +341,21 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
         await {
           'windows': () async =>
               path.join(Platform.environment['USERPROFILE']!, 'Music'),
-          'linux': () async => (await Process.run('xdg-user-dir', ['MUSIC']))
-              .stdout
-              .toString()
-              .trim(),
+          'linux': () async {
+            try {
+              final result = await Process.run(
+                'xdg-user-dir',
+                [
+                  'MUSIC',
+                ],
+              );
+              return result.stdout.toString().trim();
+            } catch (exception, stacktrace) {
+              debugPrint(exception.toString());
+              debugPrint(stacktrace.toString());
+              return Platform.environment['HOME']!;
+            }
+          },
           'android': () async {
             final directories =
                 await ExternalPath.getExternalStorageDirectories();
@@ -355,7 +364,11 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
           },
         }[Platform.operatingSystem]!(),
       ],
-      'languageRegion': 0,
+      'language': {
+        'code': 'en_US',
+        'name': 'English',
+        'country': 'United States',
+      },
       'themeMode': isDesktop ? 1 : 0,
       'automaticAccent': false,
       'notificationLyrics': true,

@@ -15,13 +15,37 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/constants/language.dart';
 
-class LanguageSetting extends StatelessWidget {
+class LanguageSetting extends StatefulWidget {
+  LanguageSetting({Key? key}) : super(key: key);
+
+  @override
+  LanguageSettingState createState() => LanguageSettingState();
+}
+
+class LanguageSettingState extends State<LanguageSetting> {
+  final Set<LanguageData> available = {};
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) async {
+        if (available.isEmpty) {
+          available.addAll(await Language.instance.available);
+          if (mounted) {
+            setState(() {});
+          }
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (isMobile) {
       return ListTile(
         onTap: () async {
-          LanguageRegion value = Language.instance.current;
+          LanguageData value = Language.instance.current;
           await showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -41,22 +65,22 @@ class LanguageSetting extends StatelessWidget {
                     child: StatefulBuilder(
                       builder: (context, setState) => SingleChildScrollView(
                         child: Column(
-                          children: LanguageRegion.values
+                          children: available
                               .map(
-                                (e) => RadioListTile<LanguageRegion>(
-                                  title: Text(
-                                    e.name,
-                                    style: isDesktop
-                                        ? Theme.of(context).textTheme.headline4
-                                        : null,
-                                  ),
+                                (data) => RadioListTile<LanguageData>(
+                                  value: data,
                                   groupValue: value,
                                   onChanged: (e) {
                                     if (e != null) {
                                       setState(() => value = e);
                                     }
                                   },
-                                  value: e,
+                                  title: Text(
+                                    data.name,
+                                    style: isDesktop
+                                        ? Theme.of(context).textTheme.headline4
+                                        : null,
+                                  ),
                                 ),
                               )
                               .toList(),
@@ -74,8 +98,8 @@ class LanguageSetting extends StatelessWidget {
                 TextButton(
                   onPressed: () async {
                     Navigator.of(context).maybePop();
-                    await Language.instance.set(languageRegion: value);
-                    await Configuration.instance.save(languageRegion: value);
+                    await Language.instance.set(value: value);
+                    await Configuration.instance.save(language: value);
                   },
                   child: Text(
                     Language.instance.OK,
@@ -100,11 +124,14 @@ class LanguageSetting extends StatelessWidget {
         ),
       );
     }
-    final regions = LanguageRegion.values.toList()
-      ..removeWhere((languageRegion) =>
-          languageRegion ==
-          Provider.of<Language>(context, listen: false).current)
-      ..insert(0, Provider.of<Language>(context, listen: false).current);
+    final data = available.toList()
+      ..removeWhere(
+        (data) => data == Provider.of<Language>(context, listen: false).current,
+      )
+      ..insert(
+        0,
+        Provider.of<Language>(context, listen: false).current,
+      );
     return Consumer<Language>(
       builder: (context, language, _) => Container(
         margin: EdgeInsets.symmetric(
@@ -165,21 +192,21 @@ class LanguageSetting extends StatelessWidget {
               ],
             ),
             fixedChild: AnimatedSwitcher(
-              duration: Duration(milliseconds: 300),
-              child: _buildLanguageRegionTile(Language.instance.current),
+              duration: const Duration(milliseconds: 300),
+              child: tile(Language.instance.current),
             ),
             children: [
-              ImplicitlyAnimatedList<LanguageRegion>(
+              ImplicitlyAnimatedList<LanguageData>(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 areItemsTheSame: (a, b) => a == b,
-                items: regions,
-                itemBuilder: (context, animation, region, index) {
+                items: data,
+                itemBuilder: (context, animation, e, index) {
                   return SizeFadeTransition(
                     sizeFraction: 0.7,
                     curve: Curves.easeInOut,
                     animation: animation,
-                    child: _buildLanguageRegionTile(region),
+                    child: tile(e),
                   );
                 },
               ),
@@ -190,13 +217,16 @@ class LanguageSetting extends StatelessWidget {
     );
   }
 
-  Widget _buildLanguageRegionTile(LanguageRegion? languageRegion, {Key? key}) {
+  Widget tile(
+    LanguageData data, {
+    Key? key,
+  }) {
     return Consumer<Language>(
-      builder: (context, language, _) => RadioListTile<LanguageRegion?>(
+      builder: (context, language, _) => RadioListTile<LanguageData>(
         key: key,
-        value: languageRegion,
+        value: data,
         title: Text(
-          languageRegion!.name,
+          data.name,
           style: TextStyle(
             color: Theme.of(context).brightness == Brightness.dark
                 ? Colors.white
@@ -206,7 +236,7 @@ class LanguageSetting extends StatelessWidget {
           ),
         ),
         subtitle: Text(
-          languageRegion.country,
+          data.country,
           style: TextStyle(
             color: Theme.of(context).brightness == Brightness.dark
                 ? Colors.white.withOpacity(0.8)
@@ -214,10 +244,11 @@ class LanguageSetting extends StatelessWidget {
             fontSize: 14.0,
           ),
         ),
-        groupValue: Configuration.instance.languageRegion,
-        onChanged: (languageRegion) async {
-          if (languageRegion != null) {
-            await Language.instance.set(languageRegion: languageRegion);
+        groupValue: Language.instance.current,
+        onChanged: (value) async {
+          if (value != null) {
+            await Language.instance.set(value: value);
+            await Configuration.instance.save(language: value);
           }
         },
       ),

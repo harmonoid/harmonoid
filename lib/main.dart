@@ -122,7 +122,9 @@ Future<void> main(List<String> args) async {
       update: Configuration.instance.automaticMusicLookup,
     );
     await Playback.initialize();
-    await Language.initialize();
+    await Language.initialize(
+      language: Configuration.instance.language,
+    );
     Updater.initialize();
     runApp(
       Harmonoid(),
