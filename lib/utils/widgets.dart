@@ -1231,7 +1231,7 @@ class ExceptionWidget extends StatelessWidget {
                 );
               },
               child: Text(
-                Language.instance.GO_TO_SETTINGS,
+                Language.instance.GO_TO_SETTINGS.toUpperCase(),
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
                 ),

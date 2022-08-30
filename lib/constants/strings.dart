@@ -1,5 +1,4 @@
 // ignore_for_file: non_constant_identifier_names
-// AUTO GENERATED FILE, DO NOT EDIT.
 
 class Strings {
   late String ABOUT_TITLE;
