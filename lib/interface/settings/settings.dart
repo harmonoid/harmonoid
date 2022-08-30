@@ -7,9 +7,10 @@
 ///
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -28,6 +29,11 @@ import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class Settings extends StatelessWidget {
+  Future<void> open(String url) => launchUrl(
+        Uri.parse(url),
+        mode: LaunchMode.externalApplication,
+      );
+
   @override
   Widget build(BuildContext context) {
     return isDesktop
@@ -61,7 +67,7 @@ class Settings extends StatelessWidget {
                     Tooltip(
                       message: Label.github,
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () => open(URL.github),
                         borderRadius: BorderRadius.circular(20.0),
                         child: Container(
                           height: 40.0,
@@ -82,7 +88,7 @@ class Settings extends StatelessWidget {
                     Tooltip(
                       message: Label.become_a_patreon,
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () => open(URL.patreon),
                         borderRadius: BorderRadius.circular(20.0),
                         child: Container(
                           height: 40.0,

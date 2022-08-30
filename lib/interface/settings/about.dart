@@ -335,7 +335,7 @@ abstract class URL {
   static const discord = 'https://discord.gg/2Rc3edFWd8';
   static const patreon = 'https://www.patreon.com/harmonoid';
   static const paypal = 'https://www.paypal.me/alexmercerind';
-  static const alexmercerind = 'https://www.alexmercerind.github.io';
+  static const alexmercerind = 'https://alexmercerind.github.io';
   static const alexmercerind_github = 'https://github.com/alexmercerind';
   static const alexmercerind_twitter = 'https://twitter.com/alexmercerind';
 }
