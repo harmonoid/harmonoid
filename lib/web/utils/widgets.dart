@@ -910,7 +910,7 @@ class _WebMobileAppBarOverflowButtonState
                 MediaQuery.of(context).size.width - tileMargin - 48.0,
                 MediaQuery.of(context).padding.top +
                     kMobileSearchBarHeight +
-                    2 * tileMargin,
+                    4 * tileMargin,
               ) &
               Size(160.0, 160.0),
           Rect.fromLTWH(

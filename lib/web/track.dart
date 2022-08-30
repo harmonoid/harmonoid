@@ -440,9 +440,10 @@ class WebTrackTile extends StatelessWidget {
                         width: 56.0,
                         child: Text(
                           '${track.trackNumber}',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline3
+                              ?.copyWith(fontSize: 18.0),
                         ),
                         alignment: Alignment.center,
                       ),
@@ -467,10 +468,10 @@ class WebTrackTile extends StatelessWidget {
                               if (group == null &&
                                   track.duration != Duration.zero)
                                 Language.instance.TRACK_SINGLE,
-                              if (track.albumName.isNotEmpty)
-                                track.albumName.overflow,
                               if (track.albumArtistName.isNotEmpty)
                                 track.albumArtistName.overflow,
+                              if (track.albumName.isNotEmpty)
+                                track.albumName.overflow,
                               if (track.duration != Duration.zero)
                                 track.duration.label
                             ].join(' • '),
