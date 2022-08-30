@@ -47,8 +47,6 @@ https://user-images.githubusercontent.com/28951144/180613641-baf7a246-08ba-496f-
 - `.LRC` file compatibility.
 - Built-in YouTube Music client.
 
-See [planned features]()
-
 ## Why
 
 It's really hard to find software with good design & animations on desktop. It's almost like desktop app developers don't have faith in adding animations to their UI. Other music players, which look kind-of good don't work properly, refuse to support an audio format, read tags incorrectly, don't have my favorite feature or simply use [electron.js](https://electronjs.org).
