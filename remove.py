@@ -8,7 +8,7 @@ if __name__ == "__main__":
     if input(f"Remove {string}?\n") in ["y", "Y"]:
         file_names = os.listdir("assets/translations")
         for file_name in file_names:
-            if ".json" in file_name:
+            if ".json" in file_name and file_name != "index.json":
                 with open(
                     f"assets/translations/{file_name}",
                     "r+",
@@ -40,8 +40,8 @@ if __name__ == "__main__":
                 file.write(
                     """// ignore_for_file: non_constant_identifier_names
 
-    class Strings {
-    """
+class Strings {
+"""
                 )
                 for key in keys:
                     file.write(f"  late String {key};\n")
@@ -52,23 +52,28 @@ if __name__ == "__main__":
                 contents = file.read()
                 file.close()
                 with open(
-                    "lib/constants/language.dart", "r+", encoding="utf_8", errors="ignore"
+                    "lib/constants/language.dart",
+                    "r+",
+                    encoding="utf_8",
+                    errors="ignore",
                 ) as writeable:
                     writeable.write(
-                        contents.split("var asset = jsonDecode(string);")[0]
-                        + "var asset = jsonDecode(string);\n"
+                        contents.split("final map = json.decode(data);")[0]
+                        + "final map = json.decode(data);\n"
                     )
                     for key in keys:
-                        writeable.write(f"    this.{key} = asset['{key}']!;\n")
+                        writeable.write(f"    {key} = map['{key}']!;\n")
                     writeable.write(
-                        """    Configuration.instance.save(languageRegion: languageRegion);
-        this.current = languageRegion;
-        this.notifyListeners();
-    }
-    late LanguageRegion current;
-    @override
-    // ignore: must_call_super
-    void dispose() {}
-    }
-    """
+                        """    current = value;
+    notifyListeners();
+  }
+
+  /// Currently selected & displayed [Language].
+  late LanguageData current;
+
+  @override
+  // ignore: must_call_super
+  void dispose() {}
+}
+"""
                     )
