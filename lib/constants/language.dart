@@ -1,10 +1,5 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
+// ignore_for_file: non_constant_identifier_names
+// AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
@@ -320,6 +315,7 @@ class Language extends Strings with ChangeNotifier {
     UNMUTE = map['UNMUTE']!;
     UPDATE_AVAILABLE = map['UPDATE_AVAILABLE']!;
     URL = map['URL']!;
+    USE_LRC_FILE_FROM_TRACK_DIRECTORY = map['USE_LRC_FILE_FROM_TRACK_DIRECTORY']!;
     USE_MODERN_NOW_PLAYING_SCREEN = map['USE_MODERN_NOW_PLAYING_SCREEN']!;
     USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS = map['USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS']!;
     VALUE = map['VALUE']!;

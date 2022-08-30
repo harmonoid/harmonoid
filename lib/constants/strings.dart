@@ -1,4 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
+// AUTO GENERATED FILE, DO NOT EDIT.
 
 class Strings {
   late String ABOUT_TITLE;
@@ -234,6 +235,7 @@ class Strings {
   late String UNMUTE;
   late String UPDATE_AVAILABLE;
   late String URL;
+  late String USE_LRC_FILE_FROM_TRACK_DIRECTORY;
   late String USE_MODERN_NOW_PLAYING_SCREEN;
   late String USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS;
   late String VALUE;

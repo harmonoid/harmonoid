@@ -118,6 +118,19 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
               }),
               value: Configuration.instance.discordRPC,
             ),
+          CorrectedSwitchListTile(
+            title: Language.instance.USE_LRC_FILE_FROM_TRACK_DIRECTORY,
+            subtitle: Language.instance.USE_LRC_FILE_FROM_TRACK_DIRECTORY,
+            onChanged: (_) => Configuration.instance
+                .save(
+              useLRCFromTrackDirectory:
+                  !Configuration.instance.useLRCFromTrackDirectory,
+            )
+                .then((_) {
+              setState(() {});
+            }),
+            value: Configuration.instance.useLRCFromTrackDirectory,
+          ),
         ],
       ),
     );

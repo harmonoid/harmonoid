@@ -161,56 +161,133 @@ class Lyrics extends ChangeNotifier {
             await dismissNotification();
           }
           final file = File(join(directory.path, track.moniker));
+          debugPrint('[Lyrics]: (custom) $file');
+          bool trackDirectoryLRCFound = false;
           if (await file.exists_()) {
             final contents = await file.read_();
             if (contents != null) {
-              current.addAll(
-                Lrc.parse(contents).lyrics.map(
-                      (e) => Lyric(
-                        time: e.timestamp.inMilliseconds,
-                        words: e.lyrics,
+              if (Lrc.isValid(contents)) {
+                current.addAll(
+                  Lrc.parse(contents).lyrics.map(
+                        (e) => Lyric(
+                          time: e.timestamp.inMilliseconds,
+                          words: e.lyrics,
+                        ),
                       ),
-                    ),
-              );
-              for (final lyric in current) {
-                _currentLyricsAveragedMap[lyric.time ~/ 1000] = lyric.words;
+                );
+                for (final lyric in current) {
+                  _currentLyricsAveragedMap[lyric.time ~/ 1000] = lyric.words;
+                }
+                _currentLyricsTimeStamps.addEntries(
+                  _currentLyricsAveragedMap.keys.toList().asMap().entries.map(
+                        (e) => MapEntry(
+                          e.value,
+                          e.key,
+                        ),
+                      ),
+                );
               }
-              _currentLyricsTimeStamps.addEntries(
-                _currentLyricsAveragedMap.keys.toList().asMap().entries.map(
-                      (e) => MapEntry(
-                        e.value,
-                        e.key,
-                      ),
-                    ),
-              );
             }
           } else {
-            final uri = Uri.https(
-              'harmonoid-lyrics.vercel.app',
-              '/api/lyrics',
-              {
-                'name': track.lyricsQuery,
-              },
-            );
-            final response = await http.get(uri);
-            if (response.statusCode == 200) {
-              current.addAll(
-                (convert.jsonDecode(response.body) as List<dynamic>)
-                    .map((lyric) => Lyric.fromJson(lyric))
-                    .toList()
-                    .cast<Lyric>(),
-              );
-              for (final lyric in current) {
-                _currentLyricsAveragedMap[lyric.time ~/ 1000] = lyric.words;
-              }
-              _currentLyricsTimeStamps.addEntries(
-                _currentLyricsAveragedMap.keys.toList().asMap().entries.map(
-                      (e) => MapEntry(
-                        e.value,
-                        e.key,
+            // Lookup for `.LRC` file inside the [Track]'s [Directory].
+            // Wrapping in a try/catch clause for avoiding any possible file-system related errors.
+            debugPrint(
+                '[Lyrics]: Configuration.instance.useLRCFromTrackDirectory: ${Configuration.instance.useLRCFromTrackDirectory}');
+            try {
+              if (track.uri.isScheme('FILE') &&
+                  Configuration.instance.useLRCFromTrackDirectory) {
+                final source = File(track.uri.toFilePath());
+                final elements = basename(source.path).split('.');
+                elements.removeLast();
+                final name = elements.join('.');
+                final files = [
+                  File(
+                    join(
+                      source.parent.path,
+                      name + '.lrc',
+                    ),
+                  ),
+                  // case-insensitive file paths on Windows.
+                  if (!Platform.isWindows)
+                    File(
+                      join(
+                        source.parent.path,
+                        name + '.LRC',
                       ),
                     ),
+                ];
+                for (final file in files) {
+                  debugPrint('[Lyrics]: (in-directory) $file');
+                  if (await file.exists_()) {
+                    final contents = await file.read_();
+                    if (contents != null) {
+                      if (Lrc.isValid(contents)) {
+                        debugPrint('[Lyrics]: (in-directory) VALID: $file');
+                        current.addAll(
+                          Lrc.parse(contents).lyrics.map(
+                                (e) => Lyric(
+                                  time: e.timestamp.inMilliseconds,
+                                  words: e.lyrics,
+                                ),
+                              ),
+                        );
+                        for (final lyric in current) {
+                          _currentLyricsAveragedMap[lyric.time ~/ 1000] =
+                              lyric.words;
+                        }
+                        _currentLyricsTimeStamps.addEntries(
+                          _currentLyricsAveragedMap.keys
+                              .toList()
+                              .asMap()
+                              .entries
+                              .map(
+                                (e) => MapEntry(
+                                  e.value,
+                                  e.key,
+                                ),
+                              ),
+                        );
+                        trackDirectoryLRCFound = true;
+                      }
+                    }
+                    break;
+                  }
+                }
+              }
+            } catch (exception, stacktrace) {
+              debugPrint(exception.toString());
+              debugPrint(stacktrace.toString());
+            }
+            if (!trackDirectoryLRCFound) {
+              debugPrint('[Lyrics]: (API) ${track.lyricsQuery}');
+              // Lookup for the lyrics using lambda API.
+              final uri = Uri.https(
+                'harmonoid-lyrics.vercel.app',
+                '/api/lyrics',
+                {
+                  'name': track.lyricsQuery,
+                },
               );
+              final response = await http.get(uri);
+              if (response.statusCode == 200) {
+                current.addAll(
+                  (convert.jsonDecode(response.body) as List<dynamic>)
+                      .map((lyric) => Lyric.fromJson(lyric))
+                      .toList()
+                      .cast<Lyric>(),
+                );
+                for (final lyric in current) {
+                  _currentLyricsAveragedMap[lyric.time ~/ 1000] = lyric.words;
+                }
+                _currentLyricsTimeStamps.addEntries(
+                  _currentLyricsAveragedMap.keys.toList().asMap().entries.map(
+                        (e) => MapEntry(
+                          e.value,
+                          e.key,
+                        ),
+                      ),
+                );
+              }
             }
           }
         } catch (exception, stacktrace) {

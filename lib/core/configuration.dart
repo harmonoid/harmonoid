@@ -104,6 +104,7 @@ class Configuration extends ConfigurationKeys {
     OrderType? genresOrderType,
     int? minimumFileSize,
     int? libraryTab,
+    bool? useLRCFromTrackDirectory,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -202,6 +203,9 @@ class Configuration extends ConfigurationKeys {
     if (libraryTab != null) {
       this.libraryTab = libraryTab;
     }
+    if (useLRCFromTrackDirectory != null) {
+      this.useLRCFromTrackDirectory = useLRCFromTrackDirectory;
+    }
     await storage.write(
       {
         'collectionDirectories': this
@@ -241,6 +245,7 @@ class Configuration extends ConfigurationKeys {
         'genresOrderType': this.genresOrderType.index,
         'minimumFileSize': this.minimumFileSize,
         'libraryTab': this.libraryTab,
+        'useLRCFromTrackDirectory': this.useLRCFromTrackDirectory,
       },
     );
   }
@@ -297,6 +302,7 @@ class Configuration extends ConfigurationKeys {
     genresOrderType = OrderType.values[current['genresOrderType']];
     minimumFileSize = current['minimumFileSize'];
     libraryTab = current['libraryTab'];
+    useLRCFromTrackDirectory = current['useLRCFromTrackDirectory'];
   }
 }
 
@@ -334,6 +340,7 @@ abstract class ConfigurationKeys {
   late OrderType genresOrderType;
   late int minimumFileSize;
   late int libraryTab;
+  late bool useLRCFromTrackDirectory;
 }
 
 Future<Map<String, dynamic>> get _defaultConfiguration async => {
@@ -399,4 +406,5 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
       'genresOrderType': 0,
       'minimumFileSize': 1024 * 1024,
       'libraryTab': isDesktop ? 0 : 2,
+      'useLRCFromTrackDirectory': false,
     };
