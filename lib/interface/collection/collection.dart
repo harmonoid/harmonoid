@@ -67,8 +67,12 @@ class CollectionScreenState extends State<CollectionScreen>
   bool get wantKeepAlive => true;
 
   FutureOr<void> saveCurrentTab() {
+    // [index.value] at 4 is the [SearchTab] on desktop, which should not be saved in cache as a starting point for the next session.
+    // It is only meant to be accessed via the search [TextField].
+    if (isDesktop && index.value == 4) {
+      return Future.value();
+    }
     if (index.value != Configuration.instance.libraryTab) {
-      MobileNowPlayingController.instance.show();
       return Configuration.instance.save(libraryTab: index.value);
     }
   }
@@ -91,6 +95,7 @@ class CollectionScreenState extends State<CollectionScreen>
       });
     }
     index.addListener(saveCurrentTab);
+    index.addListener(MobileNowPlayingController.instance.show);
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         if (!Collection.instance.collectionDirectories
@@ -121,6 +126,7 @@ class CollectionScreenState extends State<CollectionScreen>
   void dispose() {
     HotKeyManager.instance.unregister(searchBarHotkey);
     index.removeListener(saveCurrentTab);
+    index.removeListener(MobileNowPlayingController.instance.show);
     super.dispose();
   }
 
