@@ -116,7 +116,7 @@ public class MetadataRetriever implements MethodCallHandler {
         // Passed "uri" inside the arguments must be a String interpretation of a URI, which follows
         // a scheme such as `file://` or `http://` etc. Where as, "coverDirectory" must be a direct
         // path to the file system directory where the cover art will be extracted (not a URI).
-        if (call.method.equals("MetadataRetriever")) {
+        if (call.method.equals("parse")) {
             final String[] uri = {call.argument("uri")};
             final String[] coverDirectory = {call.argument("coverDirectory")};
             final Boolean[] waitUntilAlbumArtIsSaved = {call.argument("waitUntilAlbumArtIsSaved")};

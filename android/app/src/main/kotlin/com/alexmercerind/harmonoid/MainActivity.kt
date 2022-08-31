@@ -23,23 +23,53 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import com.ryanheise.audioservice.AudioServiceActivity
 
+private const val INTENT_CHANNEL_NAME: String = "com.alexmercerind.harmonoid";
+private const val METADATA_RETRIEVER_CHANNEL_NAME: String = "com.alexmercerind.harmonoid.MetadataRetriever";
+private const val STORAGE_RETRIEVER_CHANNEL_NAME: String = "com.alexmercerind.harmonoid.StorageRetriever";
+
 class MainActivity : AudioServiceActivity() {
     private var channel: MethodChannel? = null
     private var uri: String? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         GeneratedPluginRegistrant.registerWith(flutterEngine)
+        Log.d(
+            "Harmonoid",
+            context.getExternalFilesDirs(null).map { file -> file.absolutePath }.toString()
+        )
         channel = MethodChannel(
-                flutterEngine.dartExecutor.binaryMessenger,
-                "com.alexmercerind.harmonoid"
+            flutterEngine.dartExecutor.binaryMessenger,
+            INTENT_CHANNEL_NAME
         )
         channel?.setMethodCallHandler { _, result ->
             result.success(uri)
         }
         MethodChannel(
-                flutterEngine.dartExecutor.binaryMessenger,
-                "com.alexmercerind.harmonoid.MetadataRetriever"
+            flutterEngine.dartExecutor.binaryMessenger,
+            METADATA_RETRIEVER_CHANNEL_NAME
         ).setMethodCallHandler(MetadataRetriever())
+        // Gets the absolute paths for internal storage & external SD card.
+        // This is the only solution.
+        // By default, [getExternalFilesDirs] returns the application specific & private path e.g.
+        // `/storage/emulated/0/Android/data/com.alexmercerind.harmonoid/files`.
+        // This is because Android is promoting Scoped Storage & [MediaStore], which unfortunately
+        // fail many of our use cases like custom or multiple directory selection for music indexing
+        // or looking for .LRC files in the same directory as audio file etc.
+        // This would also mean that all the application (in-theory) would have to be additionally
+        // written in Kotlin just to support Android, because existing media library manager &
+        // indexer written in Dart is completely file-system based, since Windows & Linux have no
+        // such concepts as Android recently redundantly introduced.
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            STORAGE_RETRIEVER_CHANNEL_NAME
+        ).setMethodCallHandler { call, result ->
+            if (call.method.equals("directories")) {
+                val directories: List<String> = context.getExternalFilesDirs(null).map { file -> file.absolutePath.split("/Android/")[0] }
+                result.success(directories)
+            } else {
+                result.notImplemented()
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,7 +103,7 @@ class MainActivity : AudioServiceActivity() {
             // Separately handle modern content:// URIs in Android.
             else if (intent.data?.scheme == "content") {
                 val resolveInfoList: List<ResolveInfo> = context.packageManager
-                        .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+                    .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
                 // Not requesting Intent.FLAG_GRANT_READ_URI_PERMISSION.
                 // Since, we are never going to write the file which is being opened.
                 //
@@ -83,8 +113,8 @@ class MainActivity : AudioServiceActivity() {
                 for (resolveInfo in resolveInfoList) {
                     val packageName: String = resolveInfo.activityInfo.packageName
                     context.grantUriPermission(
-                            packageName,
-                            intent.data, Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        packageName,
+                        intent.data, Intent.FLAG_GRANT_READ_URI_PERMISSION
                     )
                 }
                 // In general, the idea is to copy the file to a local temporary file with unique
@@ -97,7 +127,7 @@ class MainActivity : AudioServiceActivity() {
                 var externalFilesDirAbsolutePath = context.getExternalFilesDir(null)?.absolutePath!!
                 if (externalFilesDirAbsolutePath.endsWith("/")) {
                     externalFilesDirAbsolutePath = externalFilesDirAbsolutePath.substring(
-                            0, externalFilesDirAbsolutePath.length - 1
+                        0, externalFilesDirAbsolutePath.length - 1
                     )
                 }
                 // Saving the file in "Intents" subdirectory, for easy clean-up the cache in future.
@@ -106,11 +136,13 @@ class MainActivity : AudioServiceActivity() {
                 // Last segment of the URI is interpreted as the file path.
                 // Removing all special characters to prevent any issues with URI deserialization/
                 // serialization inside Flutter or file creation.
-                val fileName = intent.data.toString().split("/").toList().lastOrNull()?.replace("[^a-zA-Z0-9]".toRegex(), "")
+                val fileName = intent.data.toString().split("/").toList().lastOrNull()
+                    ?.replace("[^a-zA-Z0-9]".toRegex(), "")
                 Log.d("Harmonoid", fileName.toString())
                 // If file name is null, then a random integer value is used as the temporary file's name.
                 val path = "$intentFilesDirAbsolutePath/${
-                    fileName ?: Random().nextInt(Integer.MAX_VALUE).toString().replace("[\\\\/:*?\"<>| ]".toRegex(), "")
+                    fileName ?: Random().nextInt(Integer.MAX_VALUE).toString()
+                        .replace("[\\\\/:*?\"<>| ]".toRegex(), "")
                 }"
                 // Only create/copy the content from the [Intent] if same file does not exist.
                 if (!File(path).exists()) {
@@ -119,7 +151,8 @@ class MainActivity : AudioServiceActivity() {
                     // some previous intent handling would've resulted in file creations here.
                     // This wastage of space can quickly get out of hands.
                     if (File(intentFilesDirAbsolutePath).exists()
-                            && File(intentFilesDirAbsolutePath).isDirectory) {
+                        && File(intentFilesDirAbsolutePath).isDirectory
+                    ) {
                         File(intentFilesDirAbsolutePath).deleteRecursively()
                     }
                     // Recursively create all the directories & subdirectories to the temporary file,
