@@ -202,13 +202,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.3.0"
-  external_path:
-    dependency: "direct main"
-    description:
-      name: external_path
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1"
   ffi:
     dependency: "direct main"
     description:
