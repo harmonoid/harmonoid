@@ -10,13 +10,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:external_path/external_path.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
+import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -28,7 +28,7 @@ class IndexingSetting extends StatefulWidget {
 
 class IndexingState extends State<IndexingSetting>
     with AutomaticKeepAliveClientMixin {
-  List<String>? storages;
+  List<Directory>? storages;
 
   bool hovered = false;
 
@@ -37,7 +37,7 @@ class IndexingState extends State<IndexingSetting>
     super.initState();
     if (Platform.isAndroid) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
-        final storages = await ExternalPath.getExternalStorageDirectories();
+        final storages = await StorageRetriever.instance.directories;
         setState(() => this.storages = storages);
       });
     }
@@ -279,11 +279,11 @@ class IndexingState extends State<IndexingSetting>
                                               ? directory.path.overflow
                                               : directory.path
                                                   .replaceAll(
-                                                    storages!.first,
+                                                    storages!.first.path,
                                                     Language.instance.PHONE,
                                                   )
                                                   .replaceAll(
-                                                    storages!.last,
+                                                    storages!.last.path,
                                                     Language.instance.SD_CARD,
                                                   )
                                                   .overflow,

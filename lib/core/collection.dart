@@ -130,7 +130,7 @@ class Collection extends MediaLibrary with ChangeNotifier {
     if (Platform.isAndroid) {
       try {
         final metadata = await _channel.invokeMethod(
-          'MetadataRetriever',
+          'parse',
           {
             'uri': uri.toString(),
             'coverDirectory': coverDirectory.path,

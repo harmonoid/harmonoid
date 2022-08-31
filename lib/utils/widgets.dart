@@ -22,7 +22,6 @@ import 'package:flutter/foundation.dart';
 import 'package:animations/animations.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:media_library/media_library.dart';
-import 'package:external_path/external_path.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
@@ -32,6 +31,7 @@ import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -2986,7 +2986,7 @@ class FoldersNotFoundDialog extends StatefulWidget {
 }
 
 class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
-  List<String>? storages;
+  List<Directory>? storages;
 
   @override
   void initState() {
@@ -2994,7 +2994,7 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
     if (Platform.isAndroid) {
       WidgetsBinding.instance.addPostFrameCallback(
         (_) async {
-          final storages = await ExternalPath.getExternalStorageDirectories();
+          final storages = await StorageRetriever.instance.directories;
           setState(
             () => this.storages = storages,
           );
@@ -3015,11 +3015,11 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
             (e) => Directory(
               e.path
                   .replaceAll(
-                    storages!.first,
+                    storages!.first.path,
                     Language.instance.PHONE,
                   )
                   .replaceAll(
-                    storages!.last,
+                    storages!.last.path,
                     Language.instance.SD_CARD,
                   ),
             ),

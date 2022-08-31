@@ -10,10 +10,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:media_library/media_library.dart';
-import 'package:external_path/external_path.dart';
 import 'package:safe_session_storage/safe_session_storage.dart';
 
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/constants/language.dart';
 
 /// Configuration
@@ -38,9 +38,9 @@ class Configuration extends ConfigurationKeys {
       case 'linux':
         return Platform.environment['HOME']!;
       case 'android':
-        final directories = await ExternalPath.getExternalStorageDirectories();
+        final directories = await StorageRetriever.instance.directories;
         debugPrint(directories.toString());
-        return directories.first;
+        return directories.first.path;
       default:
         return '';
     }
@@ -364,10 +364,9 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
             }
           },
           'android': () async {
-            final directories =
-                await ExternalPath.getExternalStorageDirectories();
+            final directories = await StorageRetriever.instance.directories;
             debugPrint(directories.toString());
-            return directories.first;
+            return directories.first.path;
           },
         }[Platform.operatingSystem]!(),
       ],
