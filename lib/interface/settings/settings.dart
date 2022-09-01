@@ -45,7 +45,6 @@ class Settings extends StatelessWidget {
                     top: desktopTitleBarHeight + kDesktopAppBarHeight,
                   ),
                   child: CustomListView(
-                    cacheExtent: MediaQuery.of(context).size.height * 4,
                     shrinkWrap: true,
                     children: [
                       IndexingSetting(),
@@ -161,8 +160,10 @@ class Settings extends StatelessWidget {
             body: NowPlayingBarScrollHideNotifier(
               child: CustomListView(
                 shrinkWrap: true,
+                padding: EdgeInsets.symmetric(
+                  vertical: 8.0,
+                ),
                 children: [
-                  const SizedBox(height: 4.0),
                   IndexingSetting(),
                   Divider(thickness: 1.0),
                   ThemeSetting(),
@@ -174,7 +175,6 @@ class Settings extends StatelessWidget {
                   ExperimentalSetting(),
                   Divider(thickness: 1.0),
                   VersionSetting(),
-                  const SizedBox(height: 8.0),
                 ],
               ),
             ),
