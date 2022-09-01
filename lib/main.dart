@@ -92,7 +92,7 @@ Future<void> main(List<String> args) async {
         PermissionStatus storagePermissionState =
             await Permission.storage.request();
         if (!storagePermissionState.isGranted) {
-          SystemNavigator.pop(
+          await SystemNavigator.pop(
             animated: true,
           );
         }

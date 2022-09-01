@@ -17,13 +17,16 @@ import 'package:flutter/services.dart';
 ///
 /// By default, [getExternalFilesDirs] returns the application specific & private path e.g.
 /// `/storage/emulated/0/Android/data/com.alexmercerind.harmonoid/files`.
+///
 /// This is because Android is promoting Scoped Storage & [MediaStore], which unfortunately
 /// fail many of our use cases like custom or multiple directory selection for music indexing
 /// or looking for .LRC files in the same directory as audio file etc.
+///
 /// This would also mean that all the application (in-theory) would have to be additionally
 /// written in Kotlin just to support Android, because existing media library manager &
 /// indexer written in Dart is completely file-system based, since Windows & Linux have no
 /// such concepts as Android recently redundantly introduced.
+///
 class StorageRetriever {
   /// [StorageRetriever] singleton instance.
   static final StorageRetriever instance = StorageRetriever._();
