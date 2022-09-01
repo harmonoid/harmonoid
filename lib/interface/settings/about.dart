@@ -6,14 +6,15 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:harmonoid/utils/dimensions.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:harmonoid/main.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 
 class AboutPage extends StatefulWidget {
@@ -162,44 +163,48 @@ class _AboutPageState extends State<AboutPage> {
                               : null,
                         ),
                       ),
-                      ListTile(
-                        onTap: () => open(URL.patreon),
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          foregroundColor: Theme.of(context).iconTheme.color,
-                          child: SvgPicture.string(
-                            SVG.patreon,
-                            height: 20.0,
-                            width: 20.0,
-                            color: Theme.of(context).iconTheme.color,
+                      // TODO: Use `package:in_app_purchase` on Android.
+                      if (!Platform.isAndroid)
+                        ListTile(
+                          onTap: () => open(URL.patreon),
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            foregroundColor: Theme.of(context).iconTheme.color,
+                            child: SvgPicture.string(
+                              SVG.patreon,
+                              height: 20.0,
+                              width: 20.0,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
+                          ),
+                          title: Text(
+                            Label.become_a_patreon,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.headline4
+                                : null,
                           ),
                         ),
-                        title: Text(
-                          Label.become_a_patreon,
-                          style: isDesktop
-                              ? Theme.of(context).textTheme.headline4
-                              : null,
-                        ),
-                      ),
-                      ListTile(
-                        onTap: () => open(URL.paypal),
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          foregroundColor: Theme.of(context).iconTheme.color,
-                          child: SvgPicture.string(
-                            SVG.paypal,
-                            height: 20.0,
-                            width: 20.0,
-                            color: Theme.of(context).iconTheme.color,
+                      // TODO: Use `package:in_app_purchase` on Android.
+                      if (!Platform.isAndroid)
+                        ListTile(
+                          onTap: () => open(URL.paypal),
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            foregroundColor: Theme.of(context).iconTheme.color,
+                            child: SvgPicture.string(
+                              SVG.paypal,
+                              height: 20.0,
+                              width: 20.0,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
+                          ),
+                          title: Text(
+                            Label.donate_with_paypal,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.headline4
+                                : null,
                           ),
                         ),
-                        title: Text(
-                          Label.donate_with_paypal,
-                          style: isDesktop
-                              ? Theme.of(context).textTheme.headline4
-                              : null,
-                        ),
-                      ),
                     ],
                   ),
                 ),
