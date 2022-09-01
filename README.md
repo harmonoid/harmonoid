@@ -43,6 +43,7 @@ https://user-images.githubusercontent.com/28951144/180613641-baf7a246-08ba-496f-
 - Music visuals.
 - Metadata reader.
 - Gapless playback.
+- Multiple artist support.
 - Online URLs player.
 - `.LRC` file compatibility.
 - Built-in YouTube Music client.
