@@ -56,6 +56,11 @@ Harmonoid very strictly implements [Material Design](https://user-images.githubu
 
 There are no inconsistent paddings, spacings or weird alignments to make me feel uncomfortable. It's built with care & proper time is given to everything. Learn more about the project on [official website](https://harmonoid.com/) [until I can afford this domain].
 
+## Sponsors
+
+- [Oleks](https://www.patreon.com/user/creators?u=28979760) • 5$ per month.
+- [Benjamin Kranz](https://twitter.com/RisuDesign) • Checkout their [YouTube channel](https://www.youtube.com/c/RapidzDE)! • 5$ per month.
+
 ## Support
 
 If you enjoy using this music player, please consider buying me a coffee.
@@ -63,12 +68,7 @@ If you enjoy using this music player, please consider buying me a coffee.
 - [PayPal](https://paypal.me/alexmercerind)
 - [Patreon](https://patreon.com/harmonoid)
 
-## Sponsors
-
-- [Oleks](https://www.patreon.com/user/creators?u=28979760) • 5$ per month.
-
 ## Mobile
-
 
 <table>
   <tr>
