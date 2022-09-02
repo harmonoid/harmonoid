@@ -452,6 +452,9 @@ class Playback extends ChangeNotifier {
 
   void notifyNativeListeners() async {
     try {
+      if (index < 0 || index > tracks.length - 1) {
+        return;
+      }
       final track = tracks[index];
       NowPlayingColorPalette.instance.update(track);
       Lyrics.instance.update(track);
