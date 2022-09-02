@@ -6,14 +6,13 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'dart:ui';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:libmpv/libmpv.dart';
 import 'package:provider/provider.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:collection/collection.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:media_engine/media_engine.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';

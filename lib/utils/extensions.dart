@@ -7,7 +7,7 @@
 ///
 
 import 'package:flutter/widgets.dart';
-import 'package:libmpv/libmpv.dart';
+import 'package:media_engine/media_engine.dart';
 import 'package:media_library/media_library.dart';
 
 extension IterableExtension<T> on Iterable<T> {

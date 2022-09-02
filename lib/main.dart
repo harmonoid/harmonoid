@@ -7,9 +7,9 @@
 ///
 import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
-import 'package:libmpv/libmpv.dart';
+import 'package:flutter/material.dart' hide Intent;
+import 'package:media_engine/media_engine.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 import 'package:permission_handler/permission_handler.dart';

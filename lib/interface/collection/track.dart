@@ -7,11 +7,11 @@
 ///
 
 import 'dart:async';
-import 'package:libmpv/libmpv.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
+import 'package:media_engine/media_engine.dart';
 import 'package:desktop/desktop.dart' as desktop;
 import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';

@@ -5,9 +5,9 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
-import 'package:libmpv/libmpv.dart';
 import 'package:flutter/material.dart';
 import 'package:ytm_client/ytm_client.dart';
+import 'package:media_engine/media_engine.dart';
 import 'package:media_library/media_library.dart' as media;
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 

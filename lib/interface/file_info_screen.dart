@@ -10,7 +10,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
-import 'package:libmpv/libmpv.dart';
+import 'package:media_engine/media_engine.dart';
 import 'package:media_library/media_library.dart' hide Media;
 
 import 'package:harmonoid/core/collection.dart';

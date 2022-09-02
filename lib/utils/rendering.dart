@@ -12,12 +12,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:libmpv/libmpv.dart' hide Media;
-import 'package:media_library/media_library.dart';
-import 'package:hotkey_manager/hotkey_manager.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_selector/file_selector.dart';
+import 'package:media_library/media_library.dart';
+import 'package:media_engine/media_engine.dart' hide Media;
+import 'package:hotkey_manager/hotkey_manager.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:filepicker_windows/filepicker_windows.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
