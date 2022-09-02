@@ -56,7 +56,7 @@ final HotKey searchBarHotkey = HotKey(
   modifiers: [KeyModifier.control],
   scope: HotKeyScope.inapp,
 );
-final message = Random().nextInt(400) == 50
+final message = Random().nextInt(100) == 50
     ? 'Yeah! You found the easter egg. 🥚'
     : DateTime.now().day > (25 - 7) &&
             DateTime.now().day <= 25 &&
