@@ -1,6 +1,3 @@
-[submodule "external/libmpv.dart"]
-	path = external/libmpv.dart
-	url = https://github.com/harmonoid/libmpv.dart.git
 [submodule "external/smtc-win32"]
 	path = external/smtc-win32
 	url = https://github.com/harmonoid/smtc-win32.git
@@ -22,3 +19,6 @@
 [submodule "assets/translations"]
 	path = assets/translations
 	url = https://github.com/harmonoid/translations.git
+[submodule "external/media_engine"]
+	path = external/media_engine
+	url = https://github.com/harmonoid/media_engine.git

@@ -7,9 +7,9 @@
 ///
 
 import 'dart:io';
-import 'package:libmpv/libmpv.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
+import 'package:media_engine/media_engine.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:media_library/media_library.dart' hide Media;
 import 'package:ytm_client/ytm_client.dart' hide Media, Track;

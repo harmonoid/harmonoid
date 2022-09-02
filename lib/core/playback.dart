@@ -9,9 +9,9 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
-import 'package:libmpv/libmpv.dart';
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:media_engine/media_engine.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:mpris_service/mpris_service.dart';

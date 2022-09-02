@@ -7,7 +7,7 @@
 ///
 
 import 'package:flutter/widgets.dart';
-import 'package:libmpv/libmpv.dart';
+import 'package:media_engine/media_engine.dart';
 import 'package:media_library/media_library.dart';
 
 extension IterableExtension<T> on Iterable<T> {
@@ -75,20 +75,11 @@ extension TrackExtension on Track {
   }
 
   /// Whether the [Track] actually has meaningful actual album artists from metadata tags.
-  bool get hasNoAvailableAlbumArtists {
-    if (albumArtistName.isEmpty || albumArtistName == kUnknownArtist) {
-      return true;
-    }
-    return false;
-  }
+  bool get hasNoAvailableAlbumArtists =>
+      ['', kUnknownArtist].contains(albumArtistName);
 
   /// Whether the [Track] actually has meaningful actual album from metadata tags.
-  bool get hasNoAvailableAlbum {
-    if (albumName.isEmpty || albumName == kUnknownArtist) {
-      return true;
-    }
-    return false;
-  }
+  bool get hasNoAvailableAlbum => ['', kUnknownAlbum].contains(albumName);
 
   String get lyricsQuery => [
         trackName,
