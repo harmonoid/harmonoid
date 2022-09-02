@@ -19,3 +19,6 @@
 [submodule "assets/translations"]
 	path = assets/translations
 	url = https://github.com/harmonoid/translations.git
+[submodule "external/media_engine"]
+	path = external/media_engine
+	url = https://github.com/harmonoid/media_engine.git
