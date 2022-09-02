@@ -12,10 +12,10 @@ dependencies:
 
   # Plugins maintained by github.com/alexmercerind or first-party to the Harmonoid.
 
+  media_engine:
+    path: external/media_engine
   media_library:
     path: external/media_library
-  libmpv:
-    path: external/libmpv.dart
   system_media_transport_controls:
     path: external/smtc-win32/bindings/system_media_transport_controls.dart
   mpris_service:
@@ -118,8 +118,8 @@ dependencies:
 
 dependency_overrides:
   ffi: 1.1.0
-  libmpv:
-    path: external/libmpv.dart
+  media_engine:
+    path: external/media_engine
   safe_session_storage:
     path: external/safe_session_storage
   bitsdojo_window_windows:
