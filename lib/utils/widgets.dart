@@ -1214,7 +1214,7 @@ class ExceptionWidget extends StatelessWidget {
           ),
           if (title == Language.instance.NO_COLLECTION_TITLE) ...[
             const SizedBox(
-              height: 4.0,
+              height: 16.0,
             ),
             TextButton(
               onPressed: () {
