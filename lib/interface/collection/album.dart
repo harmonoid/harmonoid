@@ -1676,55 +1676,63 @@ class AlbumScreenState extends State<AlbumScreen>
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                 ),
-                                                const SizedBox(height: 4.0),
-                                                Text(
-                                                  widget.album.albumArtistName
-                                                      .overflow,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline2
-                                                      ?.copyWith(
-                                                        color: [
-                                                          Color(0xFF363636),
-                                                          Color(0xFFD9D9D9),
-                                                        ][(color?.computeLuminance() ??
-                                                                    (Theme.of(context).brightness ==
-                                                                            Brightness.dark
-                                                                        ? 0.0
-                                                                        : 1.0)) >
-                                                                0.5
-                                                            ? 0
-                                                            : 1],
-                                                        fontSize: 16.0,
-                                                      ),
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                                const SizedBox(height: 2.0),
-                                                Text(
-                                                  '${widget.album.year}',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline2
-                                                      ?.copyWith(
-                                                        color: [
-                                                          Color(0xFF363636),
-                                                          Color(0xFFD9D9D9),
-                                                        ][(color?.computeLuminance() ??
-                                                                    (Theme.of(context).brightness ==
-                                                                            Brightness.dark
-                                                                        ? 0.0
-                                                                        : 1.0)) >
-                                                                0.5
-                                                            ? 0
-                                                            : 1],
-                                                        fontSize: 16.0,
-                                                      ),
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
+                                                if (!['', kUnknownArtist]
+                                                    .contains(widget.album
+                                                        .albumArtistName)) ...[
+                                                  const SizedBox(height: 4.0),
+                                                  Text(
+                                                    widget.album.albumArtistName
+                                                        .overflow,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline2
+                                                        ?.copyWith(
+                                                          color: [
+                                                            Color(0xFF363636),
+                                                            Color(0xFFD9D9D9),
+                                                          ][(color?.computeLuminance() ??
+                                                                      (Theme.of(context).brightness ==
+                                                                              Brightness.dark
+                                                                          ? 0.0
+                                                                          : 1.0)) >
+                                                                  0.5
+                                                              ? 0
+                                                              : 1],
+                                                          fontSize: 16.0,
+                                                        ),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ],
+                                                if (!['', kUnknownYear]
+                                                    .contains(
+                                                        widget.album.year)) ...[
+                                                  const SizedBox(height: 2.0),
+                                                  Text(
+                                                    '${widget.album.year}',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline2
+                                                        ?.copyWith(
+                                                          color: [
+                                                            Color(0xFF363636),
+                                                            Color(0xFFD9D9D9),
+                                                          ][(color?.computeLuminance() ??
+                                                                      (Theme.of(context).brightness ==
+                                                                              Brightness.dark
+                                                                          ? 0.0
+                                                                          : 1.0)) >
+                                                                  0.5
+                                                              ? 0
+                                                              : 1],
+                                                          fontSize: 16.0,
+                                                        ),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ],
                                               ],
                                             ),
                                           ),
@@ -1911,14 +1919,18 @@ class AlbumScreenState extends State<AlbumScreen>
                                                     height: 2.0,
                                                   ),
                                                   Text(
-                                                    (tracks[i].duration ??
-                                                                Duration.zero)
-                                                            .label +
-                                                        ' • ' +
+                                                    [
+                                                      tracks[i]
+                                                              .duration
+                                                              ?.label ??
+                                                          Duration.zero.label,
+                                                      if (!tracks[i]
+                                                          .hasNoAvailableArtists)
                                                         tracks[i]
                                                             .trackArtistNames
                                                             .take(2)
                                                             .join(', '),
+                                                    ].join(' • '),
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     maxLines: 1,

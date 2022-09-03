@@ -429,6 +429,11 @@ class TrackTileState extends State<TrackTile> {
 
   @override
   Widget build(BuildContext context) {
+    final mobileSubtitle = [
+      if (!widget.track.hasNoAvailableAlbum) widget.track.albumName.overflow,
+      if (!widget.track.hasNoAvailableArtists)
+        widget.track.trackArtistNames.take(2).join(', ')
+    ].join(' • ');
     return widget.onPressed != null
         ? (isDesktop
             ? MouseRegion(
@@ -656,25 +661,18 @@ class TrackTileState extends State<TrackTile> {
                                     style:
                                         Theme.of(context).textTheme.headline2,
                                   ),
-                                  const SizedBox(
-                                    height: 2.0,
-                                  ),
-                                  Text(
-                                    [
-                                      if (widget.track.albumName.isNotEmpty &&
-                                          widget.track.albumName !=
-                                              kUnknownAlbum)
-                                        widget.track.albumName.overflow,
-                                      if (!widget.track.hasNoAvailableArtists)
-                                        widget.track.trackArtistNames
-                                            .take(2)
-                                            .join(', ')
-                                    ].join(' • '),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style:
-                                        Theme.of(context).textTheme.headline3,
-                                  ),
+                                  if (mobileSubtitle.isNotEmpty) ...[
+                                    const SizedBox(
+                                      height: 2.0,
+                                    ),
+                                    Text(
+                                      mobileSubtitle,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style:
+                                          Theme.of(context).textTheme.headline3,
+                                    ),
+                                  ],
                                 ],
                               ),
                             ),
@@ -947,28 +945,19 @@ class TrackTileState extends State<TrackTile> {
                                             .textTheme
                                             .headline2,
                                       ),
-                                      const SizedBox(
-                                        height: 2.0,
-                                      ),
-                                      Text(
-                                        [
-                                          if (widget
-                                                  .track.albumName.isNotEmpty &&
-                                              widget.track.albumName !=
-                                                  kUnknownAlbum)
-                                            widget.track.albumName.overflow,
-                                          if (!widget
-                                              .track.hasNoAvailableArtists)
-                                            widget.track.trackArtistNames
-                                                .take(2)
-                                                .join(', ')
-                                        ].join(' • '),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline3,
-                                      ),
+                                      if (mobileSubtitle.isNotEmpty) ...[
+                                        const SizedBox(
+                                          height: 2.0,
+                                        ),
+                                        Text(
+                                          mobileSubtitle,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline3,
+                                        ),
+                                      ],
                                     ],
                                   ),
                                 ),

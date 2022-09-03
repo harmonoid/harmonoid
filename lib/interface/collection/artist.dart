@@ -1739,11 +1739,15 @@ class ArtistScreenState extends State<ArtistScreen>
                                                     height: 2.0,
                                                   ),
                                                   Text(
-                                                    (tracks[i].duration ??
-                                                                Duration.zero)
-                                                            .label +
-                                                        ' • ' +
+                                                    [
+                                                      tracks[i]
+                                                              .duration
+                                                              ?.label ??
+                                                          Duration.zero.label,
+                                                      if (!tracks[i]
+                                                          .hasNoAvailableAlbum)
                                                         tracks[i].albumName,
+                                                    ].join(' • '),
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     maxLines: 1,
