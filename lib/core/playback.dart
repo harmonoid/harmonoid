@@ -869,6 +869,7 @@ class _HarmonoidMPRIS extends MPRISService {
 ///
 /// Takes existing [Playback] reference as [playback]. This is tightly coupled with the
 /// parent [Playback] class. But, I guess it's the best approach for now.
+///
 class _HarmonoidMobilePlayer extends BaseAudioHandler
     with SeekHandler, QueueHandler {
   _HarmonoidMobilePlayer(this.playback) {
@@ -899,7 +900,31 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
           ..index = e
           ..notify();
         debugPrint(queue.value[e].toString());
-        mediaItem.add(queue.value[e]);
+        // Request for album art for the current track.
+        // More performant than requesting for all the album arts at once inside [_transformEvent].
+        mediaItem.add(
+          queue.value[e].copyWith(
+            artUri: () {
+              Uri? image;
+              if (LibmpvPluginUtils.isSupported(Uri.parse(queue.value[e].id))) {
+                final artwork = getAlbumArt(
+                  Track.fromJson(queue.value[e].extras),
+                  small: true,
+                );
+                image =
+                    Uri.parse((artwork as ExtendedNetworkImageProvider).url);
+              } else {
+                final artwork = getAlbumArt(
+                  Track.fromJson(
+                    queue.value[e].extras,
+                  ),
+                );
+                image = (artwork as ExtendedFileImageProvider).file.uri;
+              }
+              return image;
+            }(),
+          ),
+        );
       }
     });
     // Handled within [Playback] instance.
@@ -1083,7 +1108,26 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
     if (play) {
       _player.play();
       // Update [mediaItem] regardless, since index change won't happen.
-      mediaItem.add(_trackToMediaItem(tracks[index]));
+      mediaItem.add(
+        _trackToMediaItem(tracks[index]).copyWith(
+          artUri: () {
+            Uri? image;
+            if (LibmpvPluginUtils.isSupported(tracks[index].uri)) {
+              final artwork = getAlbumArt(
+                tracks[index],
+                small: true,
+              );
+              image = Uri.parse((artwork as ExtendedNetworkImageProvider).url);
+            } else {
+              final artwork = getAlbumArt(
+                tracks[index],
+              );
+              image = (artwork as ExtendedFileImageProvider).file.uri;
+            }
+            return image;
+          }(),
+        ),
+      );
     }
   }
 
@@ -1178,17 +1222,6 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
                 : null,
         genre: track.genre,
         duration: track.duration,
-        artUri: () {
-          Uri? image;
-          if (LibmpvPluginUtils.isSupported(track.uri)) {
-            final artwork = getAlbumArt(track, small: true);
-            image = Uri.parse((artwork as ExtendedNetworkImageProvider).url);
-          } else {
-            final artwork = getAlbumArt(track);
-            image = (artwork as ExtendedFileImageProvider).file.uri;
-          }
-          return image;
-        }(),
         extras: track.toJson(),
       );
 
