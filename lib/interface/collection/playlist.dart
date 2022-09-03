@@ -673,9 +673,26 @@ class PlaylistTileState extends State<PlaylistTile> {
                 Playback.instance.interceptPositionChangeRebuilds = true;
                 Iterable<Color>? palette;
                 try {
+                  for (final track in widget.playlist.tracks.take(3)) {
+                    await precacheImage(
+                      getAlbumArt(
+                        track,
+                      ),
+                      context,
+                    );
+                  }
+                } catch (exception, stacktrace) {
+                  debugPrint(exception.toString());
+                  debugPrint(stacktrace.toString());
+                }
+                try {
                   if (isMobile && widget.playlist.tracks.isNotEmpty) {
                     final result = await PaletteGenerator.fromImageProvider(
-                        getAlbumArt(widget.playlist.tracks.first, small: true));
+                      getAlbumArt(
+                        widget.playlist.tracks.first,
+                        small: true,
+                      ),
+                    );
                     palette = result.colors;
                   }
                   MobileNowPlayingController.instance.hide();
