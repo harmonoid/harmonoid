@@ -1010,13 +1010,21 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
 
   @override
   Future<void> skipToNext() async {
-    await _player.seekToNext();
+    final next = playback.index + 1;
+    await _player.seek(
+      Duration.zero,
+      index: next >= playback.tracks.length ? 0 : next,
+    );
     await play();
   }
 
   @override
   Future<void> skipToPrevious() async {
-    await _player.seekToPrevious();
+    final previous = playback.index - 1;
+    await _player.seek(
+      Duration.zero,
+      index: previous < 0 ? playback.tracks.length - 1 : previous,
+    );
     await play();
   }
 
