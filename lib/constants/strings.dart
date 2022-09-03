@@ -79,6 +79,7 @@ class Strings {
   late String EXIT_TITLE;
   late String EXPERIMENTAL;
   late String EXPERIMENTAL_SUBTITLE;
+  late String FALLBACK_ALBUM_ARTS;
   late String FILE;
   late String FILE_INFORMATION;
   late String FILE_PATH_OR_URL;

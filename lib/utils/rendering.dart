@@ -21,8 +21,9 @@ import 'package:extended_image/extended_image.dart';
 import 'package:filepicker_windows/filepicker_windows.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
-import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/interface/file_info_screen.dart';
@@ -905,7 +906,16 @@ ImageProvider getAlbumArt(
   Media media, {
   int? cacheWidth,
   bool small = false,
+  bool? lookupForFallbackAlbumArt,
 }) {
+  bool fallback = false;
+  try {
+    fallback = Configuration.instance.lookupForFallbackAlbumArt;
+  } catch (exception, stacktrace) {
+    debugPrint(exception.toString());
+    debugPrint(stacktrace.toString());
+  }
+  lookupForFallbackAlbumArt ??= fallback;
   ImageProvider? image;
   // Separately handle the web URLs.
   if (media is Track) {
@@ -925,7 +935,10 @@ ImageProvider getAlbumArt(
   if (image == null) {
     // The passed [media] wasn't a web entity, fetch album art for the locally stored media.
     // Automatically checks for fallback album arts e.g. `Folder.jpg` or `cover.jpg` etc.
-    final file = Collection.instance.getAlbumArt(media);
+    final file = Collection.instance.getAlbumArt(
+      media,
+      lookupForFallbackAlbumArt: lookupForFallbackAlbumArt,
+    );
     if (file != null) {
       // An album art is found.
       image = ExtendedFileImageProvider(file);

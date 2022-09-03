@@ -160,6 +160,7 @@ class Language extends Strings with ChangeNotifier {
     EXIT_TITLE = map['EXIT_TITLE']!;
     EXPERIMENTAL = map['EXPERIMENTAL']!;
     EXPERIMENTAL_SUBTITLE = map['EXPERIMENTAL_SUBTITLE']!;
+    FALLBACK_ALBUM_ARTS = map['FALLBACK_ALBUM_ARTS']!;
     FILE = map['FILE']!;
     FILE_INFORMATION = map['FILE_INFORMATION']!;
     FILE_PATH_OR_URL = map['FILE_PATH_OR_URL']!;

@@ -105,6 +105,7 @@ class Configuration extends ConfigurationKeys {
     int? minimumFileSize,
     int? libraryTab,
     bool? useLRCFromTrackDirectory,
+    bool? lookupForFallbackAlbumArt,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -206,6 +207,9 @@ class Configuration extends ConfigurationKeys {
     if (useLRCFromTrackDirectory != null) {
       this.useLRCFromTrackDirectory = useLRCFromTrackDirectory;
     }
+    if (lookupForFallbackAlbumArt != null) {
+      this.lookupForFallbackAlbumArt = lookupForFallbackAlbumArt;
+    }
     await storage.write(
       {
         'collectionDirectories': this
@@ -246,6 +250,7 @@ class Configuration extends ConfigurationKeys {
         'minimumFileSize': this.minimumFileSize,
         'libraryTab': this.libraryTab,
         'useLRCFromTrackDirectory': this.useLRCFromTrackDirectory,
+        'lookupForFallbackAlbumArt': this.lookupForFallbackAlbumArt,
       },
     );
   }
@@ -303,6 +308,7 @@ class Configuration extends ConfigurationKeys {
     minimumFileSize = current['minimumFileSize'];
     libraryTab = current['libraryTab'];
     useLRCFromTrackDirectory = current['useLRCFromTrackDirectory'];
+    lookupForFallbackAlbumArt = current['lookupForFallbackAlbumArt'];
   }
 }
 
@@ -341,6 +347,7 @@ abstract class ConfigurationKeys {
   late int minimumFileSize;
   late int libraryTab;
   late bool useLRCFromTrackDirectory;
+  late bool lookupForFallbackAlbumArt;
 }
 
 Future<Map<String, dynamic>> get _defaultConfiguration async => {
@@ -406,4 +413,5 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
       'minimumFileSize': 1024 * 1024,
       'libraryTab': isDesktop ? 0 : 2,
       'useLRCFromTrackDirectory': false,
+      'lookupForFallbackAlbumArt': false,
     };

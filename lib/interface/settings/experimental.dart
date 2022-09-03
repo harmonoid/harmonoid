@@ -27,6 +27,17 @@ class ExperimentalSettingState extends State<ExperimentalSetting> {
       child: Column(
         children: [
           CorrectedSwitchListTile(
+            title: Language.instance.FALLBACK_ALBUM_ARTS,
+            subtitle: Language.instance.FALLBACK_ALBUM_ARTS,
+            onChanged: (_) => Configuration.instance
+                .save(
+                  lookupForFallbackAlbumArt:
+                      !Configuration.instance.lookupForFallbackAlbumArt,
+                )
+                .then((value) => setState(() {})),
+            value: Configuration.instance.lookupForFallbackAlbumArt,
+          ),
+          CorrectedSwitchListTile(
             title: Language.instance.AUTO_REFRESH_SETTING_TITLE,
             subtitle: Language.instance.AUTO_REFRESH_SETTING,
             onChanged: (_) => Configuration.instance
