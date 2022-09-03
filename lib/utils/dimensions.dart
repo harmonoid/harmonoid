@@ -12,9 +12,9 @@ const double kDenseAlbumTileWidth = 96.0;
 const double kDenseAlbumTileHeight = 96.0 + 32.0;
 
 const double kArtistTileWidth = 142.0;
-const double kArtistTileHeight = 142.0 + 28.0;
+const double kArtistTileHeight = 142.0 + 34.0;
 const double kDenseArtistTileWidth = 94.0;
-const double kDenseArtistTileHeight = 94.0 + 28.0;
+const double kDenseArtistTileHeight = 94.0 + 34.0;
 
 const double kMobileArtistTileHeight = 64.0 + 8.0 + 1.0;
 const double kMobileTrackTileHeight = 64.0 + 8.0 + 1.0;
