@@ -461,15 +461,17 @@ class Playback extends ChangeNotifier {
       try {
         // Add to History in asynchronous suspension.
         () async {
-          final history = Collection.instance.playlists
-              .where((element) => element.id == kHistoryPlaylist)
-              .first;
-          if (history.tracks.isEmpty) {
-            Collection.instance.playlistAddTrack(history, track);
-            return;
-          }
-          if (history.tracks.first != track) {
-            Collection.instance.playlistAddTrack(history, track);
+          if (Collection.instance.historyPlaylist.tracks.isEmpty) {
+            Collection.instance.playlistAddTrack(
+              Collection.instance.historyPlaylist,
+              track,
+            );
+          } else if (Collection.instance.historyPlaylist.tracks.first !=
+              track) {
+            Collection.instance.playlistAddTrack(
+              Collection.instance.historyPlaylist,
+              track,
+            );
           }
         }();
         if (Platform.isWindows) {

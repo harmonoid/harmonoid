@@ -9,6 +9,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'dart:async';
+import 'dart:collection';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -222,7 +223,7 @@ class PlaylistTab extends StatelessWidget {
 }
 
 class PlaylistThumbnail extends StatelessWidget {
-  final List<Track> tracks;
+  final LinkedHashSet<Track> tracks;
   final double width;
   final double? height;
   final bool encircle;
@@ -268,6 +269,7 @@ class PlaylistThumbnail extends StatelessWidget {
   }
 
   Widget _child(BuildContext context, double width, double height, bool mini) {
+    final tracks = this.tracks.take(3).toList();
     if (tracks.length > 2) {
       return Container(
         height: height,
@@ -967,6 +969,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
           MediaQuery.of(context).padding.top;
       mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
     }
+    final tracks = widget.playlist.tracks.toList();
     return Consumer<Collection>(
       builder: (context, collection, _) {
         return isDesktop
@@ -1156,7 +1159,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                         'add_to_now_playing',
                                                     onPressed: () {
                                                       Playback.instance.open(
-                                                        widget.playlist.tracks,
+                                                        tracks,
                                                       );
                                                     },
                                                     mini: true,
@@ -1238,7 +1241,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                   ),
                                                   Divider(height: 1.0),
                                                 ] +
-                                                widget.playlist.tracks
+                                                tracks
                                                     .asMap()
                                                     .entries
                                                     .map(
@@ -1372,7 +1375,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                             onPressed:
                                                                                 () {
                                                                               Playback.instance.open(
-                                                                                widget.playlist.tracks,
+                                                                                tracks,
                                                                                 index: track.key,
                                                                               );
                                                                             },
@@ -1779,214 +1782,207 @@ class PlaylistScreenState extends State<PlaylistScreen>
                       ),
                       SliverList(
                         delegate: SliverChildBuilderDelegate(
-                          (context, i) => Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () => Playback.instance.open(
-                                [
-                                  ...widget.playlist.tracks,
-                                  if (Configuration.instance.seamlessPlayback)
-                                    ...[...Collection.instance.tracks]
-                                      ..shuffle()
-                                ],
-                                index: i,
-                              ),
-                              onLongPress: () async {
-                                showDialog(
-                                  context: context,
-                                  builder: (subContext) => AlertDialog(
-                                    title: Text(
-                                      Language.instance.REMOVE,
-                                    ),
-                                    content: Text(
-                                      Language.instance
-                                          .COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY
-                                          .replaceAll(
-                                            'TRACK_NAME',
-                                            widget.playlist.tracks[i].trackName,
-                                          )
-                                          .replaceAll('PLAYLIST_NAME',
-                                              widget.playlist.name),
-                                      style: Theme.of(subContext)
-                                          .textTheme
-                                          .headline3,
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () async {
-                                          await Collection.instance
-                                              .playlistRemoveTrack(
-                                            widget.playlist,
-                                            widget.playlist.tracks[i],
-                                          );
-
-                                          Navigator.of(subContext).pop();
-                                          setState(() {});
-                                        },
-                                        child: Text(Language.instance.YES),
+                          (context, i) {
+                            final subtitle = [
+                              if (!tracks[i].hasNoAvailableAlbum)
+                                tracks[i].albumName.overflow,
+                              if (!tracks[i].hasNoAvailableArtists)
+                                tracks[i].trackArtistNames.take(2).join(', ')
+                            ].join(' • ');
+                            return Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                onTap: () => Playback.instance.open(
+                                  [
+                                    ...tracks,
+                                    if (Configuration.instance.seamlessPlayback)
+                                      ...[...Collection.instance.tracks]
+                                        ..shuffle()
+                                  ],
+                                  index: i,
+                                ),
+                                onLongPress: () async {
+                                  showDialog(
+                                    context: context,
+                                    builder: (subContext) => AlertDialog(
+                                      title: Text(
+                                        Language.instance.REMOVE,
                                       ),
-                                      TextButton(
-                                        onPressed: Navigator.of(subContext).pop,
-                                        child: Text(Language.instance.NO),
+                                      content: Text(
+                                        Language.instance
+                                            .COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY
+                                            .replaceAll(
+                                              'TRACK_NAME',
+                                              tracks[i].trackName,
+                                            )
+                                            .replaceAll('PLAYLIST_NAME',
+                                                widget.playlist.name),
+                                        style: Theme.of(subContext)
+                                            .textTheme
+                                            .headline3,
                                       ),
-                                    ],
-                                  ),
-                                );
-                              },
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    height: 64.0,
-                                    alignment: Alignment.center,
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 4.0),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        const SizedBox(width: 12.0),
-                                        Container(
-                                          height: 56.0,
-                                          width: 56.0,
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            (i + 1).toString(),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline3
-                                                ?.copyWith(fontSize: 18.0),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 12.0),
-                                        Expanded(
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                widget.playlist.tracks[i]
-                                                    .trackName.overflow,
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline2,
-                                              ),
-                                              const SizedBox(
-                                                height: 2.0,
-                                              ),
-                                              Text(
-                                                [
-                                                  if (widget
-                                                          .playlist
-                                                          .tracks[i]
-                                                          .albumName
-                                                          .isNotEmpty &&
-                                                      widget.playlist.tracks[i]
-                                                              .albumName !=
-                                                          kUnknownAlbum)
-                                                    widget.playlist.tracks[i]
-                                                        .albumName.overflow,
-                                                  if (!widget.playlist.tracks[i]
-                                                      .hasNoAvailableArtists)
-                                                    widget.playlist.tracks[i]
-                                                        .trackArtistNames
-                                                        .take(2)
-                                                        .join(', ')
-                                                ].join(' • '),
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline3,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(width: 12.0),
-                                        Container(
-                                          width: 64.0,
-                                          height: 64.0,
-                                          alignment: Alignment.center,
-                                          child: IconButton(
-                                            onPressed: () async {
-                                              showDialog(
-                                                context: context,
-                                                builder: (subContext) =>
-                                                    AlertDialog(
-                                                  title: Text(
-                                                    Language.instance.REMOVE,
-                                                  ),
-                                                  content: Text(
-                                                    Language.instance
-                                                        .COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY
-                                                        .replaceAll(
-                                                          'TRACK_NAME',
-                                                          widget
-                                                              .playlist
-                                                              .tracks[i]
-                                                              .trackName,
-                                                        )
-                                                        .replaceAll(
-                                                            'PLAYLIST_NAME',
-                                                            widget
-                                                                .playlist.name),
-                                                    style: Theme.of(subContext)
-                                                        .textTheme
-                                                        .headline3,
-                                                  ),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () async {
-                                                        await Collection
-                                                            .instance
-                                                            .playlistRemoveTrack(
-                                                          widget.playlist,
-                                                          widget.playlist
-                                                              .tracks[i],
-                                                        );
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () async {
+                                            await Collection.instance
+                                                .playlistRemoveTrack(
+                                              widget.playlist,
+                                              tracks[i],
+                                            );
 
-                                                        Navigator.of(subContext)
-                                                            .pop();
-                                                        setState(() {});
-                                                      },
-                                                      child: Text(Language
-                                                          .instance.YES),
-                                                    ),
-                                                    TextButton(
-                                                      onPressed: Navigator.of(
-                                                              subContext)
-                                                          .pop,
-                                                      child: Text(
-                                                          Language.instance.NO),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                            icon: Icon(
-                                              Icons.more_vert,
-                                            ),
-                                            iconSize: 24.0,
-                                            splashRadius: 20.0,
-                                          ),
+                                            Navigator.of(subContext).pop();
+                                            setState(() {});
+                                          },
+                                          child: Text(Language.instance.YES),
+                                        ),
+                                        TextButton(
+                                          onPressed:
+                                              Navigator.of(subContext).pop,
+                                          child: Text(Language.instance.NO),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                  const Divider(
-                                    height: 1.0,
-                                    indent: 80.0,
-                                  ),
-                                ],
+                                  );
+                                },
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      height: 64.0,
+                                      alignment: Alignment.center,
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 4.0),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          const SizedBox(width: 12.0),
+                                          Container(
+                                            height: 56.0,
+                                            width: 56.0,
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              (i + 1).toString(),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline3
+                                                  ?.copyWith(fontSize: 18.0),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12.0),
+                                          Expanded(
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  tracks[i].trackName.overflow,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline2,
+                                                ),
+                                                if (subtitle.isNotEmpty) ...[
+                                                  const SizedBox(
+                                                    height: 2.0,
+                                                  ),
+                                                  Text(
+                                                    subtitle,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline3,
+                                                  ),
+                                                ],
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12.0),
+                                          Container(
+                                            width: 64.0,
+                                            height: 64.0,
+                                            alignment: Alignment.center,
+                                            child: IconButton(
+                                              onPressed: () async {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (subContext) =>
+                                                      AlertDialog(
+                                                    title: Text(
+                                                      Language.instance.REMOVE,
+                                                    ),
+                                                    content: Text(
+                                                      Language.instance
+                                                          .COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY
+                                                          .replaceAll(
+                                                            'TRACK_NAME',
+                                                            tracks[i].trackName,
+                                                          )
+                                                          .replaceAll(
+                                                              'PLAYLIST_NAME',
+                                                              widget.playlist
+                                                                  .name),
+                                                      style:
+                                                          Theme.of(subContext)
+                                                              .textTheme
+                                                              .headline3,
+                                                    ),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () async {
+                                                          await Collection
+                                                              .instance
+                                                              .playlistRemoveTrack(
+                                                            widget.playlist,
+                                                            tracks[i],
+                                                          );
+
+                                                          Navigator.of(
+                                                                  subContext)
+                                                              .pop();
+                                                          setState(() {});
+                                                        },
+                                                        child: Text(Language
+                                                            .instance.YES),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: Navigator.of(
+                                                                subContext)
+                                                            .pop,
+                                                        child: Text(Language
+                                                            .instance.NO),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                              icon: Icon(
+                                                Icons.more_vert,
+                                              ),
+                                              iconSize: 24.0,
+                                              splashRadius: 20.0,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const Divider(
+                                      height: 1.0,
+                                      indent: 80.0,
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ),
-                          childCount: widget.playlist.tracks.length,
+                            );
+                          },
+                          childCount: tracks.length,
                         ),
                       ),
                       SliverPadding(

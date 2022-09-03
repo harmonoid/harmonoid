@@ -806,6 +806,38 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                               bottom: 8.0,
                                                                             ),
                                                                             child:
+                                                                                Consumer<Collection>(
+                                                                              builder: (context, collection, _) => IconButton(
+                                                                                onPressed: collection.likedSongsPlaylist.tracks.contains(Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)])
+                                                                                    ? () {
+                                                                                        collection.playlistRemoveTrack(
+                                                                                          collection.likedSongsPlaylist,
+                                                                                          Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)],
+                                                                                        );
+                                                                                      }
+                                                                                    : () {
+                                                                                        collection.playlistAddTrack(
+                                                                                          collection.likedSongsPlaylist,
+                                                                                          Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)],
+                                                                                        );
+                                                                                      },
+                                                                                icon: Icon(
+                                                                                  collection.likedSongsPlaylist.tracks.contains(Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)]) ? Icons.thumb_up : Icons.thumb_up_outlined,
+                                                                                ),
+                                                                                color: Theme.of(context).extension<IconColors>()?.appBarDarkIconColor,
+                                                                                splashRadius: 24.0,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          Container(
+                                                                            padding:
+                                                                                EdgeInsets.only(
+                                                                              top: MediaQuery.of(context).padding.top + 8.0,
+                                                                              left: 8.0,
+                                                                              right: 8.0,
+                                                                              bottom: 8.0,
+                                                                            ),
+                                                                            child:
                                                                                 IconButton(
                                                                               onPressed: () async {
                                                                                 final track = Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)];

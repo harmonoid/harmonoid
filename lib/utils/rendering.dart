@@ -659,6 +659,7 @@ Future<void> showAddToPlaylistDialog(
   Track track, {
   bool elevated = false,
 }) {
+  final playlists = Collection.instance.playlists.toList();
   if (isDesktop) {
     return showDialog(
       context: context,
@@ -679,16 +680,16 @@ Future<void> showAddToPlaylistDialog(
               Expanded(
                 child: CustomListViewBuilder(
                   itemExtents: List.generate(
-                    Collection.instance.playlists.length,
+                    playlists.length,
                     (index) => 64.0 + 9.0,
                   ),
                   shrinkWrap: true,
-                  itemCount: Collection.instance.playlists.length,
+                  itemCount: playlists.length,
                   itemBuilder: (context, i) => PlaylistTile(
-                    playlist: Collection.instance.playlists[i],
+                    playlist: playlists[i],
                     onTap: () async {
                       await Collection.instance.playlistAddTrack(
-                        Collection.instance.playlists[i],
+                        playlists[i],
                         track,
                       );
                       Navigator.of(subContext).pop();
@@ -731,13 +732,13 @@ Future<void> showAddToPlaylistDialog(
               padding: EdgeInsets.zero,
               controller: controller,
               shrinkWrap: true,
-              itemCount: Collection.instance.playlists.length,
+              itemCount: playlists.length,
               itemBuilder: (context, i) {
                 return PlaylistTile(
-                  playlist: Collection.instance.playlists[i],
+                  playlist: playlists[i],
                   onTap: () async {
                     await Collection.instance.playlistAddTrack(
-                      Collection.instance.playlists[i],
+                      playlists[i],
                       track,
                     );
                     Navigator.of(context).pop();
@@ -760,13 +761,13 @@ Future<void> showAddToPlaylistDialog(
           padding: EdgeInsets.zero,
           controller: controller,
           shrinkWrap: true,
-          itemCount: Collection.instance.playlists.length,
+          itemCount: playlists.length,
           itemBuilder: (context, i) {
             return PlaylistTile(
-              playlist: Collection.instance.playlists[i],
+              playlist: playlists[i],
               onTap: () async {
                 await Collection.instance.playlistAddTrack(
-                  Collection.instance.playlists[i],
+                  playlists[i],
                   track,
                 );
                 Navigator.of(context).pop();
