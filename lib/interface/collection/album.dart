@@ -955,11 +955,12 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                   .transparent,
                                                               child: IconButton(
                                                                 onPressed: () {
-                                                                  launchUrl(
-                                                                    Uri.parse(
-                                                                        'file:///${(getAlbumArt(widget.album) as FileImage).file.path}'),
-                                                                    mode: LaunchMode
-                                                                        .externalApplication,
+                                                                  // ignore: deprecated_member_use
+                                                                  launch(
+                                                                    (getAlbumArt(widget.album)
+                                                                            as FileImage)
+                                                                        .file
+                                                                        .path,
                                                                   );
                                                                 },
                                                                 icon: Icon(
