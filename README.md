@@ -23,7 +23,7 @@ https://user-images.githubusercontent.com/28951144/180613641-baf7a246-08ba-496f-
 ## Features
 
 - Music library management based on metadata tags.
-- Capable of indexing 50+ files/second & saves cache for future app start-ups.
+- Capable of indexing 30+ files/second & saves cache for future app start-ups.
 - Very strictly follows Material Design guidelines for UI & animations.
 - mpv based music playback for strong format support (on Linux & Windows) using `dart:ffi`.
 - Taskbar & System Media Transport Controls for Windows.
@@ -45,8 +45,10 @@ https://user-images.githubusercontent.com/28951144/180613641-baf7a246-08ba-496f-
 - Gapless playback.
 - Multiple artist support.
 - Online URLs player.
-- `.LRC` file compatibility.
 - Built-in YouTube Music client.
+- .LRC file compatibility (mannual loading or automatic lookup in folder).
+- Fallback cover support. e.g. `cover.jpg`, `Folder.jpg` etc.
+- Multiple artist support.
 
 ## Why
 
