@@ -801,7 +801,6 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                             padding:
                                                                                 EdgeInsets.only(
                                                                               top: MediaQuery.of(context).padding.top + 8.0,
-                                                                              left: 8.0,
                                                                               right: 8.0,
                                                                               bottom: 8.0,
                                                                             ),
@@ -833,7 +832,6 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                             padding:
                                                                                 EdgeInsets.only(
                                                                               top: MediaQuery.of(context).padding.top + 8.0,
-                                                                              left: 8.0,
                                                                               right: 8.0,
                                                                               bottom: 8.0,
                                                                             ),
