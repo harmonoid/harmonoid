@@ -45,10 +45,9 @@ https://user-images.githubusercontent.com/28951144/180613641-baf7a246-08ba-496f-
 - Gapless playback.
 - Multiple artist support.
 - Online URLs player.
-- Built-in YouTube Music client.
 - .LRC file compatibility (mannual loading or automatic lookup in folder).
 - Fallback cover support. e.g. `cover.jpg`, `Folder.jpg` etc.
-- Multiple artist support.
+- Built-in YouTube Music client.
 
 ## Why
 
