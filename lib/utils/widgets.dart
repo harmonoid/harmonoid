@@ -27,6 +27,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:known_extents_list_view_builder/known_extents_list_view_builder.dart';
 
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/core/collection.dart';
@@ -1622,33 +1623,56 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
                 _index = index;
               });
             },
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.playlist_play),
-                label: Language.instance.PLAYLIST,
-                backgroundColor: color ?? Theme.of(context).primaryColor,
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.music_note),
-                label: Language.instance.TRACK,
-                backgroundColor: color ?? Theme.of(context).primaryColor,
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.album),
-                label: Language.instance.ALBUM,
-                backgroundColor: color ?? Theme.of(context).primaryColor,
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: Language.instance.ARTIST,
-                backgroundColor: color ?? Theme.of(context).primaryColor,
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.wifi_tethering_rounded),
-                label: Language.instance.STREAM,
-                backgroundColor: color ?? Theme.of(context).primaryColor,
-              ),
-            ],
+            items: kPlayStore
+                ? [
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.playlist_play),
+                      label: Language.instance.PLAYLIST,
+                      backgroundColor: color ?? Theme.of(context).primaryColor,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.album),
+                      label: Language.instance.ALBUM,
+                      backgroundColor: color ?? Theme.of(context).primaryColor,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.music_note),
+                      label: Language.instance.TRACK,
+                      backgroundColor: color ?? Theme.of(context).primaryColor,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.person),
+                      label: Language.instance.ARTIST,
+                      backgroundColor: color ?? Theme.of(context).primaryColor,
+                    ),
+                  ]
+                : [
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.playlist_play),
+                      label: Language.instance.PLAYLIST,
+                      backgroundColor: color ?? Theme.of(context).primaryColor,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.music_note),
+                      label: Language.instance.TRACK,
+                      backgroundColor: color ?? Theme.of(context).primaryColor,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.album),
+                      label: Language.instance.ALBUM,
+                      backgroundColor: color ?? Theme.of(context).primaryColor,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.person),
+                      label: Language.instance.ARTIST,
+                      backgroundColor: color ?? Theme.of(context).primaryColor,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.wifi_tethering_rounded),
+                      label: Language.instance.STREAM,
+                      backgroundColor: color ?? Theme.of(context).primaryColor,
+                    ),
+                  ],
           ),
         ),
       ),

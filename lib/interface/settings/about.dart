@@ -6,13 +6,13 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:harmonoid/main.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
@@ -101,7 +101,10 @@ class _AboutPageState extends State<AboutPage> {
                               ),
                               const SizedBox(height: 2.0),
                               Text(
-                                kVersion,
+                                [
+                                  kVersion,
+                                  if (kPlayStore) 'Play Store',
+                                ].join(' • '),
                                 style: Theme.of(context).textTheme.headline3,
                               ),
                             ],
@@ -163,8 +166,7 @@ class _AboutPageState extends State<AboutPage> {
                               : null,
                         ),
                       ),
-                      // TODO: Use `package:in_app_purchase` on Android.
-                      if (!Platform.isAndroid)
+                      if (!kPlayStore)
                         ListTile(
                           onTap: () => open(URL.patreon),
                           leading: CircleAvatar(
@@ -184,8 +186,7 @@ class _AboutPageState extends State<AboutPage> {
                                 : null,
                           ),
                         ),
-                      // TODO: Use `package:in_app_purchase` on Android.
-                      if (!Platform.isAndroid)
+                      if (!kPlayStore)
                         ListTile(
                           onTap: () => open(URL.paypal),
                           leading: CircleAvatar(
