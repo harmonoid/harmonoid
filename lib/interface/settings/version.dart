@@ -51,7 +51,7 @@ class VersionState extends State<VersionSetting>
       margin: EdgeInsets.only(
         left: 16.0,
         right: 16.0,
-        bottom: 16.0,
+        bottom: latest == kVersion ? 16.0 : 8.0,
       ),
       child: Column(
         children: [

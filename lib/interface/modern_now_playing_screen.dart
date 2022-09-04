@@ -256,213 +256,194 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                 Container(
                   width: MediaQuery.of(context).size.width,
                   height: 196.0,
-                  child: PageView(
+                  child: PageView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     controller: pageController,
                     // onPageChanged: (page) {
                     //   currentPage = page;
                     // },
-                    children: List.generate(
-                      Playback.instance.tracks.length,
-                      (i) => i,
-                    )
-                        .map(
-                          (i) => Consumer<Playback>(
-                            builder: (context, playback, _) => Container(
-                              width: MediaQuery.of(context).size.width,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Card(
-                                    margin: EdgeInsets.only(
-                                      left: 24.0,
-                                      bottom: 24.0,
-                                    ),
-                                    color: Colors.white,
-                                    clipBehavior: Clip.antiAlias,
-                                    elevation: 8.0,
-                                    child: Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: ExtendedImage(
-                                        image: getAlbumArt(playback.tracks[i],
-                                            small: true),
-                                        height: 156.0,
-                                        width: 156.0,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 24.0),
-                                  Expanded(
-                                    child: Container(
-                                      padding: EdgeInsets.only(bottom: 24.0),
-                                      child: () {
-                                        if (playback.isBuffering) {
-                                          return Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              SizedBox(
-                                                width: 8.0,
-                                              ),
-                                              Container(
-                                                height: 28.0,
-                                                width: 28.0,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  valueColor:
-                                                      AlwaysStoppedAnimation(
-                                                    Theme.of(context)
-                                                        .primaryColor,
-                                                  ),
-                                                  strokeWidth: 4.8,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 24.0,
-                                              ),
-                                              Expanded(
-                                                child: Text(
-                                                  Language.instance.BUFFERING,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline1
-                                                      ?.copyWith(
-                                                        color: Colors.white,
-                                                        fontSize: 20.0,
-                                                      ),
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        } else if (playback.tracks.isEmpty ||
-                                            playback.tracks.length <=
-                                                    playback.index &&
-                                                0 > playback.index) {
-                                          return Container();
-                                        } else {
-                                          return Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                playback.tracks[i].trackName
-                                                    .overflow,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline1
-                                                    ?.copyWith(
-                                                  fontSize: 28.0,
-                                                  color: Colors.white,
-                                                  shadows: <Shadow>[
-                                                    Shadow(
-                                                      offset: Offset(-2.0, 2.0),
-                                                      blurRadius: 3.0,
-                                                      color: Color.fromARGB(
-                                                          96, 0, 0, 0),
-                                                    ),
-                                                    Shadow(
-                                                      offset: Offset(2.0, 2.0),
-                                                      blurRadius: 8.0,
-                                                      color: Color.fromARGB(
-                                                          128, 0, 0, 0),
-                                                    ),
-                                                  ],
-                                                ),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                              if (!playback
-                                                  .tracks[playback.index.clamp(
-                                                      0,
-                                                      playback.tracks.length -
-                                                          1)]
-                                                  .hasNoAvailableArtists)
-                                                Text(
-                                                  [
-                                                    playback.tracks[i]
-                                                        .trackArtistNames
-                                                        .take(2)
-                                                        .join(', ')
-                                                        .overflow,
-                                                    if (playback.tracks[i]
-                                                            .albumName !=
-                                                        kUnknownAlbum)
-                                                      playback
-                                                          .tracks[i].albumName
-                                                  ].join(' • '),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline3
-                                                      ?.copyWith(
-                                                    color: Colors.white70,
-                                                    shadows: <Shadow>[
-                                                      Shadow(
-                                                        offset:
-                                                            Offset(-2.0, 2.0),
-                                                        blurRadius: 3.0,
-                                                        color: Color.fromARGB(
-                                                            96, 0, 0, 0),
-                                                      ),
-                                                      Shadow(
-                                                        offset:
-                                                            Offset(2.0, 2.0),
-                                                        blurRadius: 8.0,
-                                                        color: Color.fromARGB(
-                                                            128, 0, 0, 0),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              if (![kUnknownYear, ''].contains(
-                                                  playback.tracks[i].year))
-                                                Text(
-                                                  playback.tracks[i].year,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline3
-                                                      ?.copyWith(
-                                                    color: Colors.white70,
-                                                    shadows: <Shadow>[
-                                                      Shadow(
-                                                        offset:
-                                                            Offset(-2.0, 2.0),
-                                                        blurRadius: 3.0,
-                                                        color: Color.fromARGB(
-                                                            96, 0, 0, 0),
-                                                      ),
-                                                      Shadow(
-                                                        offset:
-                                                            Offset(2.0, 2.0),
-                                                        blurRadius: 8.0,
-                                                        color: Color.fromARGB(
-                                                            128, 0, 0, 0),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                            ],
-                                          );
-                                        }
-                                      }(),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 32.0),
-                                ],
+                    itemCount: Playback.instance.tracks.length,
+                    itemBuilder: (context, i) => Consumer<Playback>(
+                      builder: (context, playback, _) => Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Card(
+                              margin: EdgeInsets.only(
+                                left: 24.0,
+                                bottom: 24.0,
+                              ),
+                              color: Colors.white,
+                              clipBehavior: Clip.antiAlias,
+                              elevation: 8.0,
+                              child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: ExtendedImage(
+                                  image: getAlbumArt(playback.tracks[i],
+                                      small: true),
+                                  height: 156.0,
+                                  width: 156.0,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
-                          ),
-                        )
-                        .toList(),
+                            SizedBox(width: 24.0),
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.only(bottom: 24.0),
+                                child: () {
+                                  if (playback.isBuffering) {
+                                    return Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        SizedBox(
+                                          width: 8.0,
+                                        ),
+                                        Container(
+                                          height: 28.0,
+                                          width: 28.0,
+                                          child: CircularProgressIndicator(
+                                            valueColor: AlwaysStoppedAnimation(
+                                              Theme.of(context).primaryColor,
+                                            ),
+                                            strokeWidth: 4.8,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 24.0,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            Language.instance.BUFFERING,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline1
+                                                ?.copyWith(
+                                                  color: Colors.white,
+                                                  fontSize: 20.0,
+                                                ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  } else if (playback.tracks.isEmpty ||
+                                      playback.tracks.length <=
+                                              playback.index &&
+                                          0 > playback.index) {
+                                    return Container();
+                                  } else {
+                                    return Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          playback.tracks[i].trackName.overflow,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline1
+                                              ?.copyWith(
+                                            fontSize: 28.0,
+                                            color: Colors.white,
+                                            shadows: <Shadow>[
+                                              Shadow(
+                                                offset: Offset(-2.0, 2.0),
+                                                blurRadius: 3.0,
+                                                color:
+                                                    Color.fromARGB(96, 0, 0, 0),
+                                              ),
+                                              Shadow(
+                                                offset: Offset(2.0, 2.0),
+                                                blurRadius: 8.0,
+                                                color: Color.fromARGB(
+                                                    128, 0, 0, 0),
+                                              ),
+                                            ],
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        if (!playback
+                                            .tracks[playback.index.clamp(
+                                                0, playback.tracks.length - 1)]
+                                            .hasNoAvailableArtists)
+                                          Text(
+                                            [
+                                              playback
+                                                  .tracks[i].trackArtistNames
+                                                  .take(2)
+                                                  .join(', ')
+                                                  .overflow,
+                                              if (playback
+                                                      .tracks[i].albumName !=
+                                                  kUnknownAlbum)
+                                                playback.tracks[i].albumName
+                                            ].join(' • '),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline3
+                                                ?.copyWith(
+                                              color: Colors.white70,
+                                              shadows: <Shadow>[
+                                                Shadow(
+                                                  offset: Offset(-2.0, 2.0),
+                                                  blurRadius: 3.0,
+                                                  color: Color.fromARGB(
+                                                      96, 0, 0, 0),
+                                                ),
+                                                Shadow(
+                                                  offset: Offset(2.0, 2.0),
+                                                  blurRadius: 8.0,
+                                                  color: Color.fromARGB(
+                                                      128, 0, 0, 0),
+                                                ),
+                                              ],
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        if (![kUnknownYear, '']
+                                            .contains(playback.tracks[i].year))
+                                          Text(
+                                            playback.tracks[i].year,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline3
+                                                ?.copyWith(
+                                              color: Colors.white70,
+                                              shadows: <Shadow>[
+                                                Shadow(
+                                                  offset: Offset(-2.0, 2.0),
+                                                  blurRadius: 3.0,
+                                                  color: Color.fromARGB(
+                                                      96, 0, 0, 0),
+                                                ),
+                                                Shadow(
+                                                  offset: Offset(2.0, 2.0),
+                                                  blurRadius: 8.0,
+                                                  color: Color.fromARGB(
+                                                      128, 0, 0, 0),
+                                                ),
+                                              ],
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                      ],
+                                    );
+                                  }
+                                }(),
+                              ),
+                            ),
+                            const SizedBox(width: 32.0),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ],
