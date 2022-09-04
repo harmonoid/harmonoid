@@ -147,7 +147,6 @@ class __ExceptionAppState extends State<_ExceptionApp> {
                                   padding: EdgeInsets.only(
                                     top: 16.0,
                                     left: 36.0,
-                                    right: 36.0,
                                   ),
                                   child: Text(
                                     widget.exception.toString().overflow,
@@ -268,7 +267,7 @@ class __ExceptionAppState extends State<_ExceptionApp> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 FloatingActionButton(
-                  tooltip: 'COPY',
+                  tooltip: 'Copy',
                   backgroundColor: Colors.black,
                   onPressed: () {
                     Clipboard.setData(
@@ -284,7 +283,7 @@ class __ExceptionAppState extends State<_ExceptionApp> {
                 ),
                 const SizedBox(width: 16.0),
                 FloatingActionButton(
-                  tooltip: 'REPORT',
+                  tooltip: 'Report',
                   backgroundColor: Colors.black,
                   onPressed: () {
                     launchUrl(
@@ -323,10 +322,11 @@ class __ExceptionAppState extends State<_ExceptionApp> {
                     title: Text('Error'),
                     titlePadding: padding,
                     background: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
                           alignment: Alignment.centerRight,
-                          height: 196.0,
+                          height: 184.0,
                           width: MediaQuery.of(context).size.width,
                           child: Transform.translate(
                             offset: Offset(32.0, 32.0),
@@ -338,7 +338,11 @@ class __ExceptionAppState extends State<_ExceptionApp> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 16.0, right: 16.0),
+                          padding: EdgeInsets.only(
+                            left: 16.0,
+                            right: 16.0,
+                            bottom: 16.0,
+                          ),
                           child: Text(
                             widget.exception.toString().overflow,
                             overflow: TextOverflow.ellipsis,
