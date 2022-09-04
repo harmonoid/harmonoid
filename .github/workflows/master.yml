@@ -72,7 +72,7 @@ jobs:
           files: |
             Output/harmonoid-windows-setup.exe
             harmonoid-windows-exe.zip
-          token: ${{ secrets.ACCESS_TOKEN }}
+          token: ${{ secrets.ACCESS_TOKEN_2 }}
       - name: Release Nightly
         uses: softprops/action-gh-release@v1
         env:
@@ -154,7 +154,7 @@ jobs:
           body: ""
           tag_name: "vnext"
           files: harmonoid-linux-*
-          token: ${{ secrets.ACCESS_TOKEN }}
+          token: ${{ secrets.ACCESS_TOKEN_2 }}
       - name: Release Nightly
         uses: softprops/action-gh-release@v1
         env:
@@ -233,4 +233,4 @@ jobs:
             harmonoid-android-arm64-v8a-release.apk
             harmonoid-android-armeabi-v7a-release.apk
             harmonoid-android-x86_64-release.apk
-          token: ${{ secrets.ACCESS_TOKEN }}
+          token: ${{ secrets.ACCESS_TOKEN_2 }}
