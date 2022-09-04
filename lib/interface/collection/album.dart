@@ -660,10 +660,9 @@ class AlbumTile extends StatelessWidget {
                       image: getAlbumArt(
                         album,
                         small: true,
-                        cacheWidth:
-                            ((dense ? kDenseAlbumTileWidth : kAlbumTileHeight) *
-                                    MediaQuery.of(context).size.width) ~/
-                                1,
+                        cacheWidth: width *
+                            MediaQuery.of(context).devicePixelRatio ~/
+                            1,
                       ),
                       fit: BoxFit.cover,
                       height: width,

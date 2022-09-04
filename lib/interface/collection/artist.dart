@@ -527,10 +527,9 @@ class ArtistTile extends StatelessWidget {
                                           image: getAlbumArt(
                                             artist,
                                             small: true,
-                                            cacheWidth: ((width - 8.0) *
-                                                    MediaQuery.of(context)
-                                                        .size
-                                                        .width) ~/
+                                            cacheWidth: (width - 8.0) *
+                                                MediaQuery.of(context)
+                                                    .devicePixelRatio ~/
                                                 1,
                                           ),
                                           height: width - 8.0,
@@ -632,10 +631,9 @@ class ArtistTile extends StatelessWidget {
                                           image: getAlbumArt(
                                             artist,
                                             small: true,
-                                            cacheWidth: ((width - 8.0) *
-                                                    MediaQuery.of(context)
-                                                        .size
-                                                        .width) ~/
+                                            cacheWidth: (width - 8.0) *
+                                                MediaQuery.of(context)
+                                                    .devicePixelRatio ~/
                                                 1,
                                           ),
                                           height: width - 8.0,
