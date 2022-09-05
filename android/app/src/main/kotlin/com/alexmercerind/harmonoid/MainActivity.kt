@@ -63,9 +63,14 @@ class MainActivity : AudioServiceActivity() {
             flutterEngine.dartExecutor.binaryMessenger,
             STORAGE_RETRIEVER_CHANNEL_NAME
         ).setMethodCallHandler { call, result ->
-            if (call.method.equals("directories")) {
-                val directories: List<String> = context.getExternalFilesDirs(null).map { file -> file.absolutePath.split("/Android/")[0] }
-                result.success(directories)
+            if (call.method.equals("volumes")) {
+                val volumes: List<String> = context.getExternalFilesDirs(null).map { file -> file.absolutePath.split("/Android/")[0] }
+                Log.d("Harmonoid", volumes.toString())
+                result.success(volumes)
+            } else if (call.method.equals("cache")) {
+                val cache: String? = context.getExternalFilesDirs(null).firstOrNull()?.absolutePath
+                Log.d("Harmonoid", cache.toString())
+                result.success(cache)
             } else {
                 result.notImplemented()
             }
