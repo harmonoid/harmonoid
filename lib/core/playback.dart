@@ -904,29 +904,32 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
         debugPrint(queue.value[e].toString());
         // Request for album art for the current track.
         // More performant than requesting for all the album arts at once inside [_transformEvent].
-        mediaItem.add(
-          queue.value[e].copyWith(
-            artUri: () {
-              Uri? image;
-              if (LibmpvPluginUtils.isSupported(Uri.parse(queue.value[e].id))) {
-                final artwork = getAlbumArt(
-                  Track.fromJson(queue.value[e].extras),
-                  small: true,
-                );
-                image =
-                    Uri.parse((artwork as ExtendedNetworkImageProvider).url);
-              } else {
-                final artwork = getAlbumArt(
-                  Track.fromJson(
-                    queue.value[e].extras,
-                  ),
-                );
-                image = (artwork as ExtendedFileImageProvider).file.uri;
-              }
-              return image;
-            }(),
-          ),
-        );
+        if (e >= 0 && e < queue.value.length) {
+          mediaItem.add(
+            queue.value[e].copyWith(
+              artUri: () {
+                Uri? image;
+                if (LibmpvPluginUtils.isSupported(
+                    Uri.parse(queue.value[e].id))) {
+                  final artwork = getAlbumArt(
+                    Track.fromJson(queue.value[e].extras),
+                    small: true,
+                  );
+                  image =
+                      Uri.parse((artwork as ExtendedNetworkImageProvider).url);
+                } else {
+                  final artwork = getAlbumArt(
+                    Track.fromJson(
+                      queue.value[e].extras,
+                    ),
+                  );
+                  image = (artwork as ExtendedFileImageProvider).file.uri;
+                }
+                return image;
+              }(),
+            ),
+          );
+        }
       }
     });
     // Handled within [Playback] instance.
