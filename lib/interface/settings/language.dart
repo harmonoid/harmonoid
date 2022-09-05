@@ -63,27 +63,32 @@ class LanguageSettingState extends State<LanguageSetting> {
                       maxHeight: MediaQuery.of(context).size.height / 2,
                     ),
                     child: StatefulBuilder(
-                      builder: (context, setState) => SingleChildScrollView(
-                        child: Column(
-                          children: available
-                              .map(
-                                (data) => RadioListTile<LanguageData>(
-                                  value: data,
-                                  groupValue: value,
-                                  onChanged: (e) {
-                                    if (e != null) {
-                                      setState(() => value = e);
-                                    }
-                                  },
-                                  title: Text(
-                                    data.name,
-                                    style: isDesktop
-                                        ? Theme.of(context).textTheme.headline4
-                                        : null,
+                      builder: (context, setState) => Material(
+                        color: Colors.transparent,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: available
+                                .map(
+                                  (data) => RadioListTile<LanguageData>(
+                                    value: data,
+                                    groupValue: value,
+                                    onChanged: (e) {
+                                      if (e != null) {
+                                        setState(() => value = e);
+                                      }
+                                    },
+                                    title: Text(
+                                      data.name,
+                                      style: isDesktop
+                                          ? Theme.of(context)
+                                              .textTheme
+                                              .headline4
+                                          : null,
+                                    ),
                                   ),
-                                ),
-                              )
-                              .toList(),
+                                )
+                                .toList(),
+                          ),
                         ),
                       ),
                     ),
