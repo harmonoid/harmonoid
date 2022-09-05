@@ -609,17 +609,44 @@ packages:
   permission_handler:
     dependency: "direct main"
     description:
-      name: permission_handler
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "6.1.3"
-  permission_handler_platform_interface:
+      path: permission_handler
+      ref: master
+      resolved-ref: "00684caf4a38b669f3150c5e681a977aa0b63ba3"
+      url: "https://github.com/alexmercerind/flutter-permission-handler.git"
+    source: git
+    version: "10.1.0"
+  permission_handler_android:
+    dependency: "direct overridden"
+    description:
+      path: permission_handler_android
+      ref: master
+      resolved-ref: "00684caf4a38b669f3150c5e681a977aa0b63ba3"
+      url: "https://github.com/alexmercerind/flutter-permission-handler.git"
+    source: git
+    version: "10.1.0"
+  permission_handler_apple:
     dependency: transitive
     description:
-      name: permission_handler_platform_interface
+      name: permission_handler_apple
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.7.0"
+    version: "9.0.4"
+  permission_handler_platform_interface:
+    dependency: "direct overridden"
+    description:
+      path: permission_handler_platform_interface
+      ref: master
+      resolved-ref: "00684caf4a38b669f3150c5e681a977aa0b63ba3"
+      url: "https://github.com/alexmercerind/flutter-permission-handler.git"
+    source: git
+    version: "3.8.0"
+  permission_handler_windows:
+    dependency: transitive
+    description:
+      name: permission_handler_windows
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   petitparser:
     dependency: transitive
     description:
