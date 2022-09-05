@@ -28,7 +28,7 @@ class IndexingSetting extends StatefulWidget {
 
 class IndexingState extends State<IndexingSetting>
     with AutomaticKeepAliveClientMixin {
-  List<Directory>? storages;
+  List<Directory>? volumes;
 
   bool hovered = false;
 
@@ -37,8 +37,8 @@ class IndexingState extends State<IndexingSetting>
     super.initState();
     if (Platform.isAndroid) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
-        final storages = await StorageRetriever.instance.directories;
-        setState(() => this.storages = storages);
+        final volumes = await StorageRetriever.instance.volumes;
+        setState(() => this.volumes = volumes);
       });
     }
   }
@@ -238,7 +238,7 @@ class IndexingState extends State<IndexingSetting>
                         SizedBox(
                           height: 8.0,
                         ),
-                        if (!Platform.isAndroid || storages != null)
+                        if (!Platform.isAndroid || volumes != null)
                           ...Configuration.instance.collectionDirectories
                               .map(
                                 (directory) => Container(
@@ -275,15 +275,15 @@ class IndexingState extends State<IndexingSetting>
                                       SizedBox(width: isDesktop ? 2.0 : 16.0),
                                       Expanded(
                                         child: Text(
-                                          storages == null
+                                          volumes == null
                                               ? directory.path.overflow
                                               : directory.path
                                                   .replaceAll(
-                                                    storages!.first.path,
+                                                    volumes!.first.path,
                                                     Language.instance.PHONE,
                                                   )
                                                   .replaceAll(
-                                                    storages!.last.path,
+                                                    volumes!.last.path,
                                                     Language.instance.SD_CARD,
                                                   )
                                                   .overflow,

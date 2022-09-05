@@ -38,9 +38,9 @@ class Configuration extends ConfigurationKeys {
       case 'linux':
         return Platform.environment['HOME']!;
       case 'android':
-        final directories = await StorageRetriever.instance.directories;
-        debugPrint(directories.toString());
-        return directories.first.path;
+        final cache = await StorageRetriever.instance.cache;
+        debugPrint(cache.toString());
+        return cache.path;
       default:
         return '';
     }
@@ -372,9 +372,9 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
             }
           },
           'android': () async {
-            final directories = await StorageRetriever.instance.directories;
-            debugPrint(directories.toString());
-            return directories.first.path;
+            final volumes = await StorageRetriever.instance.volumes;
+            debugPrint(volumes.toString());
+            return volumes.first.path;
           },
         }[Platform.operatingSystem]!(),
       ],

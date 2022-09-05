@@ -38,6 +38,7 @@ const String kAuthor = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
 const String kLicense = 'End-User License Agreement for Harmonoid';
 
 Future<void> main(List<String> args) async {
+  debugPrint(Platform.operatingSystemVersion);
   WidgetsFlutterBinding.ensureInitialized();
   try {
     HttpOverrides.global = _HttpOverrides();
@@ -89,9 +90,8 @@ Future<void> main(List<String> args) async {
         systemNavigationBarIconBrightness: Brightness.dark,
       ));
       if (await Permission.storage.isDenied) {
-        PermissionStatus storagePermissionState =
-            await Permission.storage.request();
-        if (!storagePermissionState.isGranted) {
+        PermissionStatus state = await Permission.storage.request();
+        if (!state.isGranted) {
           await SystemNavigator.pop(
             animated: true,
           );

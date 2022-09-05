@@ -383,6 +383,9 @@ class _SortBarState extends State<SortBar> {
                 final value = await showMenu(
                   elevation: 4.0,
                   context: context,
+                  constraints: BoxConstraints(
+                    maxWidth: double.infinity,
+                  ),
                   position: RelativeRect.fromLTRB(
                     _key0.globalPaintBounds!.left - (widget.fixed ? 0.0 : 8.0),
                     _key0.globalPaintBounds!.bottom +
@@ -650,6 +653,9 @@ class _SortBarState extends State<SortBar> {
                 final value = await showMenu(
                   elevation: 4.0,
                   context: context,
+                  constraints: BoxConstraints(
+                    maxWidth: double.infinity,
+                  ),
                   position: RelativeRect.fromLTRB(
                     MediaQuery.of(context).size.width,
                     _key1.globalPaintBounds!.bottom +
@@ -1623,32 +1629,32 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
               });
             },
             items: [
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.playlist_play),
-                      label: Language.instance.PLAYLIST,
-                      backgroundColor: color ?? Theme.of(context).primaryColor,
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.music_note),
-                      label: Language.instance.TRACK,
-                      backgroundColor: color ?? Theme.of(context).primaryColor,
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.album),
-                      label: Language.instance.ALBUM,
-                      backgroundColor: color ?? Theme.of(context).primaryColor,
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.person),
-                      label: Language.instance.ARTIST,
-                      backgroundColor: color ?? Theme.of(context).primaryColor,
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.wifi_tethering_rounded),
-                      label: Language.instance.STREAM,
-                      backgroundColor: color ?? Theme.of(context).primaryColor,
-                    ),
-                  ],
+              BottomNavigationBarItem(
+                icon: Icon(Icons.playlist_play),
+                label: Language.instance.PLAYLIST,
+                backgroundColor: color ?? Theme.of(context).primaryColor,
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.music_note),
+                label: Language.instance.TRACK,
+                backgroundColor: color ?? Theme.of(context).primaryColor,
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.album),
+                label: Language.instance.ALBUM,
+                backgroundColor: color ?? Theme.of(context).primaryColor,
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: Language.instance.ARTIST,
+                backgroundColor: color ?? Theme.of(context).primaryColor,
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.wifi_tethering_rounded),
+                label: Language.instance.STREAM,
+                backgroundColor: color ?? Theme.of(context).primaryColor,
+              ),
+            ],
           ),
         ),
       ),
@@ -2986,7 +2992,7 @@ class FoldersNotFoundDialog extends StatefulWidget {
 }
 
 class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
-  List<Directory>? storages;
+  List<Directory>? volumes;
 
   @override
   void initState() {
@@ -2994,9 +3000,9 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
     if (Platform.isAndroid) {
       WidgetsBinding.instance.addPostFrameCallback(
         (_) async {
-          final storages = await StorageRetriever.instance.directories;
+          final volumes = await StorageRetriever.instance.volumes;
           setState(
-            () => this.storages = storages,
+            () => this.volumes = volumes,
           );
         },
       );
@@ -3010,16 +3016,16 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
         Iterable<Directory> missingDirectories = collection
             .collectionDirectories
             .where((element) => !element.existsSync_());
-        if (storages != null) {
+        if (volumes != null) {
           missingDirectories = missingDirectories.map(
             (e) => Directory(
               e.path
                   .replaceAll(
-                    storages!.first.path,
+                    volumes!.first.path,
                     Language.instance.PHONE,
                   )
                   .replaceAll(
-                    storages!.last.path,
+                    volumes!.last.path,
                     Language.instance.SD_CARD,
                   ),
             ),
@@ -3277,6 +3283,9 @@ class _MobileAppBarOverflowButtonState
           context: context,
           position: position,
           elevation: 4.0,
+          constraints: BoxConstraints(
+            maxWidth: double.infinity,
+          ),
           items: [
             PopupMenuItem(
               value: 0,

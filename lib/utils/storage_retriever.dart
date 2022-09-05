@@ -33,16 +33,26 @@ class StorageRetriever {
 
   StorageRetriever._();
 
-  /// Returns the absolute paths of internal storage & SD card in a [List].
-  /// First element of the list is the absolute path of internal storage & second element is the absolute path of SD card.
+  /// Returns the internal storage & SD card [Directory] (s) in a [List].
+  ///
+  /// First element of the list is the internal storage & second element is the SD card.
   ///
   /// If the length of the returned [List] is `1`, it may be assumed that there is no SD card.
   ///
-  Future<List<Directory>> get directories async {
+  Future<List<Directory>> get volumes async {
     assert(Platform.isAndroid);
-    final result = await _channel.invokeMethod('directories');
+    final result = await _channel.invokeMethod('volumes');
     assert(result is List);
     return result.map((e) => Directory(e)).toList().cast<Directory>();
+  }
+
+  /// Returns the cache directory.
+  /// The internal Harmonoid cache is stored here.
+  Future<Directory> get cache async {
+    assert(Platform.isAndroid);
+    final result = await _channel.invokeMethod('cache');
+    assert(result is String);
+    return Directory(result);
   }
 
   static const MethodChannel _channel =
