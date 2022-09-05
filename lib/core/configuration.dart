@@ -12,7 +12,6 @@ import 'package:path/path.dart' as path;
 import 'package:media_library/media_library.dart';
 import 'package:safe_session_storage/safe_session_storage.dart';
 
-import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -413,7 +412,7 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
       'artistsOrderType': 0,
       'genresOrderType': 0,
       'minimumFileSize': 1024 * 1024,
-      'libraryTab': isDesktop ? 0 : (kPlayStore ? 1 : 2),
+      'libraryTab': isDesktop ? 0 : 2,
       'useLRCFromTrackDirectory': false,
       'lookupForFallbackAlbumArt': false,
     };

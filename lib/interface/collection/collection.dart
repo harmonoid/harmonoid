@@ -24,7 +24,6 @@ import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/interface/collection/album.dart';
@@ -729,20 +728,13 @@ class CollectionScreenState extends State<CollectionScreen>
                             onPageChanged: (page) {
                               currentIndex = page;
                             },
-                            children: kPlayStore
-                                ? [
-                                    PlaylistTab(),
-                                    AlbumTab(),
-                                    TrackTab(),
-                                    ArtistTab(),
-                                  ]
-                                : [
-                                    PlaylistTab(),
-                                    TrackTab(),
-                                    AlbumTab(),
-                                    ArtistTab(),
-                                    WebTab(),
-                                  ],
+                            children: [
+                              PlaylistTab(),
+                              TrackTab(),
+                              AlbumTab(),
+                              ArtistTab(),
+                              WebTab(),
+                            ],
                           ),
                         ),
                       ),
