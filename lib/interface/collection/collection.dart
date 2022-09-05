@@ -621,6 +621,9 @@ class CollectionScreenState extends State<CollectionScreen>
                                 context: context,
                                 position: position,
                                 elevation: 4.0,
+                                constraints: BoxConstraints(
+                                  maxWidth: double.infinity,
+                                ),
                                 items: [
                                   CheckedPopupMenuItem(
                                     padding: EdgeInsets.zero,

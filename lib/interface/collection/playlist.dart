@@ -654,6 +654,9 @@ class PlaylistTileState extends State<PlaylistTile> {
         final result = await showMenu(
           elevation: 4.0,
           context: context,
+          constraints: BoxConstraints(
+            maxWidth: double.infinity,
+          ),
           position: RelativeRect.fromRect(
             Offset(e.position.dx, e.position.dy) & Size(164.0, 320.0),
             Rect.fromLTWH(

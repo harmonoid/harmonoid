@@ -92,6 +92,9 @@ class _TrackTabState extends State<TrackTab> {
                           final result = await showMenu(
                             elevation: 4.0,
                             context: context,
+                            constraints: BoxConstraints(
+                              maxWidth: double.infinity,
+                            ),
                             position: RelativeRect.fromRect(
                               Offset(position.left, position.top) &
                                   Size(228.0, 320.0),
@@ -167,6 +170,9 @@ class _TrackTabState extends State<TrackTab> {
                                   final result = await showMenu(
                                     elevation: 4.0,
                                     context: context,
+                                    constraints: BoxConstraints(
+                                      maxWidth: double.infinity,
+                                    ),
                                     position: RelativeRect.fromRect(
                                       Offset(e.position.dx, e.position.dy) &
                                           Size(228.0, 320.0),
@@ -458,6 +464,9 @@ class TrackTileState extends State<TrackTile> {
                     var result = await showMenu(
                       elevation: 4.0,
                       context: context,
+                      constraints: BoxConstraints(
+                        maxWidth: double.infinity,
+                      ),
                       position: RelativeRect.fromRect(
                         Offset(e.position.dx, e.position.dy) &
                             Size(228.0, 320.0),
@@ -721,6 +730,9 @@ class TrackTileState extends State<TrackTile> {
                         var result = await showMenu(
                           elevation: 4.0,
                           context: context,
+                          constraints: BoxConstraints(
+                            maxWidth: double.infinity,
+                          ),
                           position: RelativeRect.fromRect(
                             Offset(e.position.dx, e.position.dy) &
                                 Size(228.0, 320.0),

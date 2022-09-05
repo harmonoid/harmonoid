@@ -1191,6 +1191,11 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                 await showMenu(
                                                               elevation: 4.0,
                                                               context: context,
+                                                              constraints:
+                                                                  BoxConstraints(
+                                                                maxWidth: double
+                                                                    .infinity,
+                                                              ),
                                                               position:
                                                                   RelativeRect
                                                                       .fromRect(

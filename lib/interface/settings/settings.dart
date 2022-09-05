@@ -142,45 +142,53 @@ class Settings extends StatelessWidget {
               ],
             ),
           )
-        : Scaffold(
-            resizeToAvoidBottomInset: true,
-            appBar: AppBar(
-              leading: IconButton(
-                onPressed: Navigator.of(context).pop,
-                icon: Icon(Icons.arrow_back),
-                splashRadius: 20.0,
-              ),
-              bottom: PreferredSize(
-                preferredSize: Size(MediaQuery.of(context).size.width, 2.0),
-                child: MobileIndexingProgressIndicator(),
-              ),
-              title: Text(
-                Language.instance.SETTING,
-              ),
-            ),
-            body: NowPlayingBarScrollHideNotifier(
-              child: CustomListView(
-                shrinkWrap: true,
-                padding: EdgeInsets.symmetric(
-                  vertical: 8.0,
+        : Stack(
+            children: [
+              Scaffold(
+                resizeToAvoidBottomInset: true,
+                appBar: AppBar(
+                  leading: IconButton(
+                    onPressed: Navigator.of(context).pop,
+                    icon: Icon(Icons.arrow_back),
+                    splashRadius: 20.0,
+                  ),
+                  title: Text(
+                    Language.instance.SETTING,
+                  ),
                 ),
-                children: [
-                  IndexingSetting(),
-                  Divider(thickness: 1.0),
-                  ThemeSetting(),
-                  LanguageSetting(),
-                  Divider(thickness: 1.0),
-                  StatsSetting(),
-                  MiscellaneousSetting(),
-                  Divider(thickness: 1.0),
-                  ExperimentalSetting(),
-                  if (!kPlayStore) ...{
-                    Divider(thickness: 1.0),
-                    VersionSetting(),
-                  }
-                ],
+                body: NowPlayingBarScrollHideNotifier(
+                  child: CustomListView(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.symmetric(
+                      vertical: 8.0,
+                    ),
+                    children: [
+                      IndexingSetting(),
+                      Divider(thickness: 1.0),
+                      ThemeSetting(),
+                      LanguageSetting(),
+                      Divider(thickness: 1.0),
+                      StatsSetting(),
+                      MiscellaneousSetting(),
+                      Divider(thickness: 1.0),
+                      ExperimentalSetting(),
+                      if (!kPlayStore) ...{
+                        Divider(thickness: 1.0),
+                        VersionSetting(),
+                      }
+                    ],
+                  ),
+                ),
               ),
-            ),
+              Positioned(
+                top: kToolbarHeight + MediaQuery.of(context).padding.top - 4.0,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 4.0,
+                  child: MobileIndexingProgressIndicator(),
+                ),
+              ),
+            ],
           );
   }
 }

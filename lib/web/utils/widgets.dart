@@ -923,6 +923,9 @@ class _WebMobileAppBarOverflowButtonState
         showMenu<int>(
           context: context,
           position: position,
+          constraints: BoxConstraints(
+            maxWidth: double.infinity,
+          ),
           elevation: 4.0,
           items: [
             PopupMenuItem(

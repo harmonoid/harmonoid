@@ -1126,6 +1126,11 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                 await showMenu(
                                                               elevation: 4.0,
                                                               context: context,
+                                                              constraints:
+                                                                  BoxConstraints(
+                                                                maxWidth: double
+                                                                    .infinity,
+                                                              ),
                                                               position:
                                                                   RelativeRect
                                                                       .fromRect(
