@@ -7,9 +7,10 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <application android:name="${applicationName}" android:icon="@mipmap/ic_launcher" android:label="Music" android:requestLegacyExternalStorage="true" android:usesCleartextTraffic="true">
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <application android:name="${applicationName}" android:icon="@mipmap/ic_launcher" android:label="Music" android:usesCleartextTraffic="true">
         <activity android:name=".MainActivity" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:exported="true" android:hardwareAccelerated="true" android:launchMode="singleTask" android:theme="@style/Theme.App.Starting" android:windowSoftInputMode="adjustResize" tools:ignore="Instantiatable">
             <!-- Specifies an Android theme to apply to this Activity as soon as
                        the Android process has started. This theme is visible to the user
