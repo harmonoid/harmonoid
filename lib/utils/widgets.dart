@@ -3148,7 +3148,7 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
                                 return;
                               }
                               await Collection.instance.removeDirectories(
-                                directories: [directory],
+                                directories: {directory},
                                 onProgress: (progress, total, isCompleted) {
                                   CollectionRefresh.instance
                                       .set(progress, total);
