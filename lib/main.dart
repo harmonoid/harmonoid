@@ -26,8 +26,9 @@ import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/now_playing_visuals.dart';
 import 'package:harmonoid/utils/updater.dart';
 import 'package:harmonoid/utils/tagger_client.dart';
-import 'package:harmonoid/utils/argument_vector_handler.dart';
+import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/utils/window_close_handler.dart';
+import 'package:harmonoid/utils/argument_vector_handler.dart';
 import 'package:harmonoid/interface/harmonoid.dart';
 import 'package:harmonoid/interface/exception.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -89,12 +90,31 @@ Future<void> main(List<String> args) async {
         systemNavigationBarDividerColor: Colors.black,
         systemNavigationBarIconBrightness: Brightness.dark,
       ));
-      if (await Permission.storage.isDenied) {
-        PermissionStatus state = await Permission.storage.request();
-        if (!state.isGranted) {
-          await SystemNavigator.pop(
-            animated: true,
-          );
+      if (await StorageRetriever.instance.version < 33) {
+        if (await Permission.storage.isDenied) {
+          PermissionStatus state = await Permission.storage.request();
+          if (!state.isGranted) {
+            await SystemNavigator.pop(
+              animated: true,
+            );
+          }
+        }
+      } else {
+        if (await Permission.audio.isDenied ||
+            await Permission.videos.isDenied ||
+            await Permission.photos.isDenied) {
+          final statuses = await [
+            Permission.audio,
+            Permission.videos,
+            Permission.photos,
+          ].request();
+          for (final entry in statuses.entries) {
+            if (!entry.value.isGranted) {
+              await SystemNavigator.pop(
+                animated: true,
+              );
+            }
+          }
         }
       }
       await Configuration.initialize();

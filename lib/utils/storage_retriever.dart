@@ -55,6 +55,15 @@ class StorageRetriever {
     return Directory(result);
   }
 
+  /// Returns the value of `android.os.Build.VERSION.SDK_INT`.
+  /// This is used to determine the Android version.
+  Future<int> get version async {
+    assert(Platform.isAndroid);
+    final result = await _channel.invokeMethod('version');
+    assert(result is int);
+    return result;
+  }
+
   static const MethodChannel _channel =
       MethodChannel('com.alexmercerind.harmonoid.StorageRetriever');
 }

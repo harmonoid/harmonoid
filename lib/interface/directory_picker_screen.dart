@@ -264,44 +264,48 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
               width: MediaQuery.of(context).size.width,
               child: ValueListenableBuilder<List<String>>(
                 valueListenable: stack,
-                builder: (context, stack, _) => stack.length <= 1
-                    ? Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          Language.instance.AVAILABLE_STORAGES,
-                          style: Theme.of(context).textTheme.headline2,
-                        ),
-                      )
-                    : ListView.separated(
-                        physics: BouncingScrollPhysics(),
-                        key: ValueKey('directory_screen_picker/address_bar'),
-                        controller: controller,
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, i) => Container(
-                          alignment: Alignment.center,
-                          child: volumes == null
-                              ? Text(stack[i])
-                              : Text(
-                                  stack[i]
-                                      .replaceAll(
-                                        volumes!.first.path,
-                                        Language.instance.PHONE,
-                                      )
-                                      .replaceAll(
-                                        volumes!.last.path,
-                                        Language.instance.SD_CARD,
-                                      ),
-                                ),
-                        ),
-                        separatorBuilder: (context, i) => Container(
-                          height: 64.0,
-                          width: 48.0,
-                          child: Icon(Icons.chevron_right),
-                        ),
-                        itemCount: stack.length,
-                      ),
+                builder: (context, stack, _) => volumes == null
+                    ? const SizedBox(height: 64.0)
+                    : stack.length <= 1
+                        ? Container(
+                            height: 64.0,
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              Language.instance.AVAILABLE_STORAGES,
+                              style: Theme.of(context).textTheme.headline2,
+                            ),
+                          )
+                        : ListView.separated(
+                            physics: BouncingScrollPhysics(),
+                            key:
+                                ValueKey('directory_screen_picker/address_bar'),
+                            controller: controller,
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, i) => Container(
+                              alignment: Alignment.center,
+                              child: volumes == null
+                                  ? Text(stack[i])
+                                  : Text(
+                                      stack[i]
+                                          .replaceAll(
+                                            volumes!.first.path,
+                                            Language.instance.PHONE,
+                                          )
+                                          .replaceAll(
+                                            volumes!.last.path,
+                                            Language.instance.SD_CARD,
+                                          ),
+                                    ),
+                            ),
+                            separatorBuilder: (context, i) => Container(
+                              height: 64.0,
+                              width: 48.0,
+                              child: Icon(Icons.chevron_right),
+                            ),
+                            itemCount: stack.length,
+                          ),
               ),
             ),
             Expanded(
