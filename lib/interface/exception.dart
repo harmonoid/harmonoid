@@ -53,10 +53,10 @@ class _ExceptionApp extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  __ExceptionAppState createState() => __ExceptionAppState();
+  _ExceptionAppState createState() => _ExceptionAppState();
 }
 
-class __ExceptionAppState extends State<_ExceptionApp> {
+class _ExceptionAppState extends State<_ExceptionApp> {
   final ScrollController controller = ScrollController();
   EdgeInsetsDirectional padding = EdgeInsetsDirectional.only(
     start: 16.0,
@@ -130,7 +130,7 @@ class __ExceptionAppState extends State<_ExceptionApp> {
                                     bottom: 16.0,
                                   ),
                                   child: Text(
-                                    'Error',
+                                    Label.error,
                                     style: TextStyle(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -179,12 +179,12 @@ class __ExceptionAppState extends State<_ExceptionApp> {
                                             Clipboard.setData(
                                               ClipboardData(
                                                 text:
-                                                    'Exception: ${widget.exception.toString()}\nStacktrace: ${widget.stacktrace.toString()}',
+                                                    '${Label.exception}: ${widget.exception.toString()}\n${Label.stack_trace}: ${widget.stacktrace.toString()}',
                                               ),
                                             );
                                           },
                                           child: Text(
-                                            'COPY',
+                                            Label.copy.toUpperCase(),
                                             style: TextStyle(
                                               color: Theme.of(context)
                                                   .colorScheme
@@ -209,7 +209,7 @@ class __ExceptionAppState extends State<_ExceptionApp> {
                                             );
                                           },
                                           child: Text(
-                                            ' REPORT',
+                                            Label.report.toUpperCase(),
                                             style: TextStyle(
                                               color: Theme.of(context)
                                                   .colorScheme
@@ -245,7 +245,7 @@ class __ExceptionAppState extends State<_ExceptionApp> {
                     ),
                     children: [
                       Text(
-                        'Stack trace',
+                        Label.stack_trace,
                         style: TextStyle(
                           fontSize: 20.0,
                           fontWeight: FontWeight.w600,
@@ -267,13 +267,13 @@ class __ExceptionAppState extends State<_ExceptionApp> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 FloatingActionButton(
-                  tooltip: 'Copy',
+                  tooltip: Label.copy,
                   backgroundColor: Colors.black,
                   onPressed: () {
                     Clipboard.setData(
                       ClipboardData(
                         text:
-                            'Exception: ${widget.exception.toString()}\nStacktrace: ${widget.stacktrace.toString()}',
+                            '${Label.exception}: ${widget.exception.toString()}\n${Label.stack_trace}: ${widget.stacktrace.toString()}',
                       ),
                     );
                   },
@@ -283,7 +283,7 @@ class __ExceptionAppState extends State<_ExceptionApp> {
                 ),
                 const SizedBox(width: 16.0),
                 FloatingActionButton(
-                  tooltip: 'Report',
+                  tooltip: Label.report,
                   backgroundColor: Colors.black,
                   onPressed: () {
                     launchUrl(
@@ -319,17 +319,17 @@ class __ExceptionAppState extends State<_ExceptionApp> {
                   forceElevated: true,
                   backgroundColor: Theme.of(context).primaryColor,
                   flexibleSpace: FlexibleSpaceBar(
-                    title: Text('Error'),
+                    title: Text(Label.error),
                     titlePadding: padding,
                     background: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Container(
-                          alignment: Alignment.centerRight,
-                          height: 184.0,
-                          width: MediaQuery.of(context).size.width,
-                          child: Transform.translate(
-                            offset: Offset(32.0, 32.0),
+                        Expanded(
+                          child: Container(
+                            alignment: Alignment.centerRight,
+                            padding: EdgeInsets.all(24.0),
+                            width: MediaQuery.of(context).size.width,
                             child: Icon(
                               Icons.close_outlined,
                               color: Colors.red.shade900,
@@ -369,7 +369,7 @@ class __ExceptionAppState extends State<_ExceptionApp> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SubHeader(
-                              'Stack trace',
+                              Label.stack_trace,
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -387,4 +387,12 @@ class __ExceptionAppState extends State<_ExceptionApp> {
             ),
           );
   }
+}
+
+abstract class Label {
+  static const error = 'Error';
+  static const exception = 'Exception';
+  static const stack_trace = 'Stack trace';
+  static const copy = 'Copy';
+  static const report = 'Report';
 }
