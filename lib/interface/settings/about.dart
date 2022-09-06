@@ -133,23 +133,6 @@ class _AboutPageState extends State<AboutPage> {
                         ),
                       ),
                       ListTile(
-                        onTap: () => open(URL.license),
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          foregroundColor: Theme.of(context).iconTheme.color,
-                          child: Icon(
-                            Icons.description_outlined,
-                            size: 26.0,
-                          ),
-                        ),
-                        title: Text(
-                          Label.license,
-                          style: isDesktop
-                              ? Theme.of(context).textTheme.headline4
-                              : null,
-                        ),
-                      ),
-                      ListTile(
                         onTap: () => open(URL.discord),
                         leading: CircleAvatar(
                           backgroundColor: Colors.transparent,
@@ -206,6 +189,40 @@ class _AboutPageState extends State<AboutPage> {
                                 : null,
                           ),
                         ),
+                      ListTile(
+                        onTap: () => open(URL.license),
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          foregroundColor: Theme.of(context).iconTheme.color,
+                          child: Icon(
+                            Icons.description_outlined,
+                            size: 26.0,
+                          ),
+                        ),
+                        title: Text(
+                          Label.license,
+                          style: isDesktop
+                              ? Theme.of(context).textTheme.headline4
+                              : null,
+                        ),
+                      ),
+                      ListTile(
+                        onTap: () => open(URL.translate),
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          foregroundColor: Theme.of(context).iconTheme.color,
+                          child: Icon(
+                            Icons.translate_outlined,
+                            size: 26.0,
+                          ),
+                        ),
+                        title: Text(
+                          Label.translate,
+                          style: isDesktop
+                              ? Theme.of(context).textTheme.headline4
+                              : null,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -311,10 +328,11 @@ class _AboutPageState extends State<AboutPage> {
 abstract class Label {
   static const about = 'About';
   static const github = 'GitHub';
-  static const license = 'License';
   static const talk_on_discord = 'Talk on Discord';
   static const become_a_patreon = 'Become a Patreon';
   static const donate_with_paypal = 'Donate with PayPal';
+  static const license = 'License';
+  static const translate = 'Translate';
   static const developer = 'Developer';
   static const alexmercerind = 'Hitesh Kumar Saini';
   static const follow_on_github = 'Follow on GitHub';
@@ -336,11 +354,12 @@ abstract class SVG {
 
 abstract class URL {
   static const github = 'https://github.com/harmonoid/harmonoid';
-  static const license =
-      'https://github.com/harmonoid/harmonoid/tree/master/EULA.txt?raw=true';
   static const discord = 'https://discord.gg/2Rc3edFWd8';
   static const patreon = 'https://www.patreon.com/harmonoid';
   static const paypal = 'https://www.paypal.me/alexmercerind';
+  static const license =
+      'https://github.com/harmonoid/harmonoid/tree/master/EULA.txt?raw=true';
+  static const translate = 'https://github.com/harmonoid/translations.git';
   static const alexmercerind = 'https://alexmercerind.github.io';
   static const alexmercerind_github = 'https://github.com/alexmercerind';
   static const alexmercerind_twitter = 'https://twitter.com/alexmercerind';
