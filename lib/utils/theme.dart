@@ -150,7 +150,13 @@ ThemeData createTheme({
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(color),
+        backgroundColor: MaterialStateProperty.resolveWith((states) {
+          return states.contains(MaterialState.disabled)
+              ? isLight
+                  ? Colors.black12
+                  : Colors.white24
+              : color;
+        }),
         textStyle: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
             ? MaterialStateProperty.all(
                 TextStyle(

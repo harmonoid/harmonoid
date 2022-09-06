@@ -5,13 +5,16 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
+
+// ignore_for_file: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
+
 import 'dart:io';
-import 'package:draggable_scrollbar/draggable_scrollbar.dart';
-import 'package:media_library/media_library.dart';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:animations/animations.dart';
-import 'package:safe_session_storage/isolates.dart';
+import 'package:media_library/media_library.dart';
+import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:safe_session_storage/safe_session_storage.dart';
 
 import 'package:harmonoid/utils/storage_retriever.dart';
@@ -26,8 +29,9 @@ class DirectoryPickerScreen extends StatefulWidget {
 
 class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
   final GlobalKey<NavigatorState> key = GlobalKey<NavigatorState>();
+  final ValueNotifier<List<String>> stack = ValueNotifier(<String>[]);
+  final ScrollController controller = ScrollController();
   List<Directory>? volumes;
-  List<String> stack = [];
 
   static Future<List<FileSystemEntity>> dir(Directory directory) async {
     final root = await directory.children_();
@@ -41,10 +45,20 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
   }
 
   Future<void> pushDirectoryIntoStack(Directory directory) async {
-    if (stack.isEmpty) {
-      stack.add(directory.path);
+    if (stack.value.isEmpty) {
+      stack.value.add(directory.path);
     } else {
-      stack.add(basename(directory.path));
+      stack.value.add(basename(directory.path));
+    }
+    stack.notifyListeners();
+    if (this.controller.hasClients) {
+      Future.delayed(const Duration(milliseconds: 400), () {
+        this.controller.animateTo(
+              this.controller.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+            );
+      });
     }
     debugPrint(stack.toString());
     final root = await compute(dir, directory);
@@ -57,16 +71,26 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
         controller: controller,
         child: ListView.separated(
           controller: controller,
-          itemCount: root.length + (stack.length > 1 ? 1 : 0),
+          itemCount: root.length + (stack.value.length > 1 ? 1 : 0),
           itemBuilder: (context, i) {
-            if (i == 0 && stack.length > 1) {
+            if (i == 0 && stack.value.length > 1) {
               return Material(
                 color: Colors.transparent,
                 child: ListTile(
                   dense: false,
-                  enabled: stack.length > 1,
+                  enabled: stack.value.length > 1,
                   onTap: () async {
-                    stack.removeLast();
+                    stack.value.removeLast();
+                    stack.notifyListeners();
+                    if (this.controller.hasClients) {
+                      Future.delayed(const Duration(milliseconds: 400), () {
+                        this.controller.animateTo(
+                              this.controller.position.maxScrollExtent,
+                              duration: const Duration(milliseconds: 200),
+                              curve: Curves.easeInOut,
+                            );
+                      });
+                    }
                     await Navigator.of(key.currentContext!).maybePop();
                   },
                   leading: CircleAvatar(
@@ -85,7 +109,7 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
                 ),
               );
             } else {
-              if (stack.length > 1) i--;
+              if (stack.value.length > 1) i--;
               return Material(
                 color: Colors.transparent,
                 child: ListTile(
@@ -130,6 +154,12 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
       ),
     );
     controller.dispose();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -190,9 +220,10 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
         if (exit) {
           return true;
         }
-        stack.removeLast();
+        stack.value.removeLast();
+        stack.notifyListeners();
         await Navigator.of(key.currentContext!).maybePop();
-        return stack.isEmpty;
+        return stack.value.isEmpty;
       },
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -209,20 +240,81 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
             Language.instance.ADD_NEW_FOLDER,
           ),
         ),
-        body: Navigator(
-          key: key,
-          onGenerateRoute: (settings) => PageRouteBuilder(
-            transitionDuration: const Duration(milliseconds: 300),
-            reverseTransitionDuration: const Duration(milliseconds: 300),
-            pageBuilder: (_, animation, secondaryAnimation) =>
-                SharedAxisTransition(
-              fillColor: Theme.of(context).scaffoldBackgroundColor,
-              transitionType: SharedAxisTransitionType.vertical,
-              animation: animation,
-              secondaryAnimation: secondaryAnimation,
-              child: settings.arguments as Widget?,
+        body: Column(
+          children: [
+            Container(
+              height: 64.0,
+              width: MediaQuery.of(context).size.width,
+              child: ValueListenableBuilder<List<String>>(
+                valueListenable: stack,
+                builder: (context, stack, _) => ListView.separated(
+                  physics: BouncingScrollPhysics(),
+                  key: ValueKey('directory_screen_picker/address_bar'),
+                  controller: controller,
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, i) => Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      stack[i]
+                          .replaceAll(
+                            volumes!.first.path,
+                            Language.instance.PHONE,
+                          )
+                          .replaceAll(
+                            volumes!.last.path,
+                            Language.instance.SD_CARD,
+                          ),
+                    ),
+                  ),
+                  separatorBuilder: (context, i) => Container(
+                    height: 64.0,
+                    width: 48.0,
+                    child: Icon(Icons.chevron_right),
+                  ),
+                  itemCount: stack.length,
+                ),
+              ),
             ),
-          ),
+            Expanded(
+              child: Navigator(
+                key: key,
+                onGenerateRoute: (settings) => PageRouteBuilder(
+                  transitionDuration: const Duration(milliseconds: 300),
+                  reverseTransitionDuration: const Duration(milliseconds: 300),
+                  pageBuilder: (_, animation, secondaryAnimation) =>
+                      SharedAxisTransition(
+                    fillColor: Theme.of(context).scaffoldBackgroundColor,
+                    transitionType: SharedAxisTransitionType.vertical,
+                    animation: animation,
+                    secondaryAnimation: secondaryAnimation,
+                    child: settings.arguments as Widget?,
+                  ),
+                ),
+              ),
+            ),
+            const Divider(
+              height: 1.0,
+              thickness: 1.0,
+            ),
+            Container(
+              padding: EdgeInsets.all(8.0),
+              width: MediaQuery.of(context).size.width,
+              child: ElevatedButton(
+                onPressed: stack.value.isEmpty
+                    ? null
+                    : () {
+                        exit = true;
+                        debugPrint(joinAll(stack.value));
+                        Navigator.of(context).maybePop();
+                      },
+                child: Text(
+                  'Add This Folder'.toUpperCase(),
+                  style: TextStyle(letterSpacing: 2.0),
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );

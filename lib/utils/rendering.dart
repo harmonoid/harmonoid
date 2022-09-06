@@ -495,18 +495,13 @@ Future<Directory?> pickDirectory({
         directory = Directory(path);
       }
     } else {
-      return Navigator.of(
-        navigatorKey.currentContext!,
-        rootNavigator: true,
-      ).push<Directory?>(
-        PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              FadeThroughTransition(
-            animation: animation,
-            secondaryAnimation: secondaryAnimation,
-            child: DirectoryPickerScreen(),
-          ),
-        ),
+      return showGeneralDialog(
+        context: navigatorKey.currentContext!,
+        useRootNavigator: true,
+        barrierDismissible: false,
+        barrierColor: Colors.transparent,
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            DirectoryPickerScreen(),
       );
     }
   }
