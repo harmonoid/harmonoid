@@ -23,9 +23,9 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import com.ryanheise.audioservice.AudioServiceActivity
 
-private const val INTENT_CHANNEL_NAME: String = "com.alexmercerind.harmonoid";
-private const val METADATA_RETRIEVER_CHANNEL_NAME: String = "com.alexmercerind.harmonoid.MetadataRetriever";
-private const val STORAGE_RETRIEVER_CHANNEL_NAME: String = "com.alexmercerind.harmonoid.StorageRetriever";
+private const val INTENT_CHANNEL_NAME: String = "com.alexmercerind.harmonoid"
+private const val METADATA_RETRIEVER_CHANNEL_NAME: String = "com.alexmercerind.harmonoid.MetadataRetriever"
+private const val STORAGE_RETRIEVER_CHANNEL_NAME: String = "com.alexmercerind.harmonoid.StorageRetriever"
 
 class MainActivity : AudioServiceActivity() {
     private var channel: MethodChannel? = null
@@ -63,16 +63,25 @@ class MainActivity : AudioServiceActivity() {
             flutterEngine.dartExecutor.binaryMessenger,
             STORAGE_RETRIEVER_CHANNEL_NAME
         ).setMethodCallHandler { call, result ->
-            if (call.method.equals("volumes")) {
-                val volumes: List<String> = context.getExternalFilesDirs(null).map { file -> file.absolutePath.split("/Android/")[0] }
-                Log.d("Harmonoid", volumes.toString())
-                result.success(volumes)
-            } else if (call.method.equals("cache")) {
-                val cache: String? = context.getExternalFilesDirs(null).firstOrNull()?.absolutePath
-                Log.d("Harmonoid", cache.toString())
-                result.success(cache)
-            } else {
-                result.notImplemented()
+            when {
+                call.method.equals("volumes") -> {
+                    val volumes: List<String> = context.getExternalFilesDirs(null).map { file -> file.absolutePath.split("/Android/")[0] }
+                    Log.d("Harmonoid", volumes.toString())
+                    result.success(volumes)
+                }
+                call.method.equals("cache") -> {
+                    val cache: String? = context.getExternalFilesDirs(null).firstOrNull()?.absolutePath
+                    Log.d("Harmonoid", cache.toString())
+                    result.success(cache)
+                }
+                call.method.equals("version") -> {
+                    val version: Int = android.os.Build.VERSION.SDK_INT
+                    Log.d("Harmonoid", version.toString())
+                    result.success(version)
+                }
+                else -> {
+                    result.notImplemented()
+                }
             }
         }
     }
