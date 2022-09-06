@@ -272,12 +272,9 @@ class Configuration extends ConfigurationKeys {
     );
     debugPrint(current.toString());
     // Check for actual keys from the cache.
-    collectionDirectories = Set<Directory>.from(
-      current['collectionDirectories']
-          .map((directory) => Directory(directory))
-          .toList()
-          .cast<Directory>(),
-    );
+    collectionDirectories = Set<String>.from(current['collectionDirectories'])
+        .map((directory) => Directory(directory))
+        .toSet();
     language = LanguageData.fromJson(current['language']);
     themeMode = ThemeMode.values[current['themeMode']];
     automaticAccent = current['automaticAccent'];
