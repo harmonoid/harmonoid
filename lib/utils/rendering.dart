@@ -29,6 +29,7 @@ import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/interface/file_info_screen.dart';
 import 'package:harmonoid/interface/collection/playlist.dart';
 import 'package:harmonoid/interface/edit_details_screen.dart';
+import 'package:harmonoid/interface/directory_screen_picker.dart';
 import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -465,7 +466,17 @@ Future<File?> pickFile({
   return path == null ? null : File(path);
 }
 
-Future<Directory?> pickDirectory() async {
+/// Prompts the user to select a folder.
+///
+/// [useNativePicker] only works on Android.
+/// Modern Android SDK 30+ are strictier about file access & enforce Scoped Storage.
+/// This means that native file picker cannot pick the root phone or SD card directory & the downloads folder.
+///
+/// To address this issue with directory selection for file indexing, a custom file picker is used, which is entirely Flutter based.
+///
+Future<Directory?> pickDirectory({
+  bool useNativePicker = false,
+}) async {
   Directory? directory;
   if (Platform.isWindows) {
     final picker = DirectoryPicker();
@@ -478,9 +489,25 @@ Future<Directory?> pickDirectory() async {
   }
   // Using `package:file_picker` on other platforms.
   else {
-    final path = await FilePicker.platform.getDirectoryPath();
-    if (path != null) {
-      directory = Directory(path);
+    if (useNativePicker) {
+      final path = await FilePicker.platform.getDirectoryPath();
+      if (path != null) {
+        directory = Directory(path);
+      }
+    } else {
+      return Navigator.of(
+        navigatorKey.currentContext!,
+        rootNavigator: true,
+      ).push<Directory?>(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              FadeThroughTransition(
+            animation: animation,
+            secondaryAnimation: secondaryAnimation,
+            child: DirectoryPickerScreen(),
+          ),
+        ),
+      );
     }
   }
   return directory;
