@@ -69,6 +69,7 @@ class Strings {
   late String DOWNLOAD;
   late String DOWNLOAD_UPDATE;
   late String EDIT_DETAILS;
+  late String EDIT_MINIMUM_FILE_SIZE;
   late String ENABLE_125_SCALING;
   late String ENABLE_ACRYLIC_BLUR;
   late String ENABLE_DENSE_ALBUMS_LAYOUT;

@@ -632,7 +632,9 @@ class IndexingState extends State<IndexingSetting>
                           ),
                         );
                       },
-                      child: Text('EDIT MINIMUM FILE SIZE'),
+                      child: Text(
+                        Language.instance.EDIT_MINIMUM_FILE_SIZE.toUpperCase(),
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(
