@@ -224,7 +224,7 @@ class _AboutPageState extends State<AboutPage> {
                   color: Colors.transparent,
                   child: Column(
                     children: [
-                      SubHeader(Label.author),
+                      SubHeader(Label.developer),
                       ListTile(
                         onTap: () => open(URL.alexmercerind),
                         leading: CircleAvatar(
@@ -315,7 +315,7 @@ abstract class Label {
   static const talk_on_discord = 'Talk on Discord';
   static const become_a_patreon = 'Become a Patreon';
   static const donate_with_paypal = 'Donate with PayPal';
-  static const author = 'Author';
+  static const developer = 'Developer';
   static const alexmercerind = 'Hitesh Kumar Saini';
   static const follow_on_github = 'Follow on GitHub';
   static const follow_on_twitter = 'Follow on Twitter';

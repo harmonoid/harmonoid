@@ -50,7 +50,7 @@ class TaggerClient {
   static String? _dll;
 
   /// Initializes [TaggerClient] class for usage.
-  static Future<void> ensureInitialized({
+  static Future<void> initialize({
     String? dynamicLibrary,
   }) async {
     if (_executable != null) {
@@ -111,7 +111,7 @@ fi
   }) {
     assert(
       _executable != null,
-      '[TaggerClient.ensureInitialized] is not called.',
+      '[TaggerClient.initialize] is not called.',
     );
     Process.start(
       _executable!,

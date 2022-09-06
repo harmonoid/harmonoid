@@ -74,7 +74,7 @@ Future<void> main(List<String> args) async {
       await AppState.initialize();
       await NowPlayingVisuals.initialize();
       await MPV.initialize();
-      await TaggerClient.ensureInitialized();
+      await TaggerClient.initialize();
       await Intent.initialize(args: args);
       await HotKeys.initialize();
       DiscordRPC.initialize();
