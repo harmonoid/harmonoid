@@ -33,7 +33,7 @@ import 'package:harmonoid/interface/exception.dart';
 import 'package:harmonoid/constants/language.dart';
 
 const String kTitle = 'Harmonoid';
-const String kVersion = 'v0.3.0';
+const String kVersion = 'v0.3.1';
 const String kAuthor = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
 const String kLicense = 'End-User License Agreement for Harmonoid';
 
