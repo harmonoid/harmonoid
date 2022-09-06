@@ -338,7 +338,7 @@ class IndexingState extends State<IndexingSetting>
                                           }
                                           await Collection.instance
                                               .removeDirectories(
-                                            directories: [directory],
+                                            directories: {directory},
                                             onProgress:
                                                 (progress, total, isCompleted) {
                                               controller.set(
@@ -669,7 +669,7 @@ class IndexingState extends State<IndexingSetting>
         return;
       }
       await Collection.instance.addDirectories(
-        directories: [directory],
+        directories: {directory},
         onProgress: (progress, total, isCompleted) {
           CollectionRefresh.instance.set(progress, total);
         },

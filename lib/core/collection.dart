@@ -48,7 +48,7 @@ class Collection extends MediaLibrary with ChangeNotifier {
   }
 
   static Future<void> initialize({
-    required List<Directory> collectionDirectories,
+    required Set<Directory> collectionDirectories,
     required Directory cacheDirectory,
     required AlbumsSort albumsSort,
     required TracksSort tracksSort,

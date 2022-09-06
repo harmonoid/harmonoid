@@ -29,7 +29,7 @@ import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/interface/file_info_screen.dart';
 import 'package:harmonoid/interface/collection/playlist.dart';
 import 'package:harmonoid/interface/edit_details_screen.dart';
-import 'package:harmonoid/interface/directory_screen_picker.dart';
+import 'package:harmonoid/interface/directory_picker_screen.dart';
 import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/widgets.dart';

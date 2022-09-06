@@ -29,9 +29,10 @@ class DirectoryPickerScreen extends StatefulWidget {
 
 class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
   final GlobalKey<NavigatorState> key = GlobalKey<NavigatorState>();
-  final ValueNotifier<List<String>> stack = ValueNotifier(<String>[]);
+  final ValueNotifier<List<String>> stack = ValueNotifier(<String>['.']);
   final ScrollController controller = ScrollController();
   List<Directory>? volumes;
+  bool exit = false;
 
   static Future<List<FileSystemEntity>> dir(Directory directory) async {
     final root = await directory.children_();
@@ -45,24 +46,31 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
   }
 
   Future<void> pushDirectoryIntoStack(Directory directory) async {
-    if (stack.value.isEmpty) {
+    if (stack.value.length == 1) {
       stack.value.add(directory.path);
     } else {
       stack.value.add(basename(directory.path));
     }
     stack.notifyListeners();
-    if (this.controller.hasClients) {
-      Future.delayed(const Duration(milliseconds: 400), () {
-        this.controller.animateTo(
-              this.controller.position.maxScrollExtent,
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeInOut,
-            );
-      });
+    try {
+      if (this.controller.hasClients) {
+        Future.delayed(const Duration(milliseconds: 400), () {
+          this.controller.animateTo(
+                this.controller.position.maxScrollExtent,
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeInOut,
+              );
+        });
+      }
+    } catch (exception) {
+      //
     }
-    debugPrint(stack.toString());
+    debugPrint(stack.value.toString());
     final root = await compute(dir, directory);
     final controller = ScrollController();
+    final shouldShowMoveUpButton = volumes!.length > 1
+        ? (stack.value.length > 1)
+        : (stack.value.length > 2);
     await Navigator.of(key.currentContext!).pushNamed(
       '/',
       arguments: DraggableScrollbar.semicircle(
@@ -71,27 +79,31 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
         controller: controller,
         child: ListView.separated(
           controller: controller,
-          itemCount: root.length + (stack.value.length > 1 ? 1 : 0),
+          itemCount: root.length + (shouldShowMoveUpButton ? 1 : 0),
           itemBuilder: (context, i) {
-            if (i == 0 && stack.value.length > 1) {
+            if (i == 0 && shouldShowMoveUpButton) {
               return Material(
                 color: Colors.transparent,
                 child: ListTile(
                   dense: false,
-                  enabled: stack.value.length > 1,
+                  enabled: shouldShowMoveUpButton,
                   onTap: () async {
                     stack.value.removeLast();
                     stack.notifyListeners();
-                    if (this.controller.hasClients) {
-                      Future.delayed(const Duration(milliseconds: 400), () {
-                        this.controller.animateTo(
-                              this.controller.position.maxScrollExtent,
-                              duration: const Duration(milliseconds: 200),
-                              curve: Curves.easeInOut,
-                            );
-                      });
-                    }
                     await Navigator.of(key.currentContext!).maybePop();
+                    try {
+                      if (this.controller.hasClients) {
+                        Future.delayed(const Duration(milliseconds: 400), () {
+                          this.controller.animateTo(
+                                this.controller.position.maxScrollExtent,
+                                duration: const Duration(milliseconds: 200),
+                                curve: Curves.easeInOut,
+                              );
+                        });
+                      }
+                    } catch (exception) {
+                      //
+                    }
                   },
                   leading: CircleAvatar(
                     child: const Icon(
@@ -109,7 +121,7 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
                 ),
               );
             } else {
-              if (stack.value.length > 1) i--;
+              if (shouldShowMoveUpButton) i--;
               return Material(
                 color: Colors.transparent,
                 child: ListTile(
@@ -126,7 +138,7 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
                           )
                         : kSupportedFileTypes.contains(root[i].extension)
                             ? const Icon(
-                                Icons.audio_file_outlined,
+                                Icons.music_note,
                                 size: 24.0,
                               )
                             : const Icon(
@@ -157,12 +169,6 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
   }
 
   @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -170,6 +176,7 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
         volumes = await StorageRetriever.instance.volumes;
         setState(() {});
         if (volumes!.length == 1) {
+          // Only internal storage is available.
           await pushDirectoryIntoStack(volumes![0]);
         } else {
           await Navigator.of(key.currentContext!).pushNamed(
@@ -211,7 +218,11 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
     });
   }
 
-  bool exit = false;
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -220,10 +231,16 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
         if (exit) {
           return true;
         }
-        stack.value.removeLast();
-        stack.notifyListeners();
+        try {
+          stack.value.removeLast();
+          stack.notifyListeners();
+        } catch (exception) {
+          //
+        }
         await Navigator.of(key.currentContext!).maybePop();
-        return stack.value.isEmpty;
+        return (volumes?.length ?? 1) > 1
+            ? (stack.value.length < 1)
+            : (stack.value.length < 2);
       },
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -247,33 +264,44 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
               width: MediaQuery.of(context).size.width,
               child: ValueListenableBuilder<List<String>>(
                 valueListenable: stack,
-                builder: (context, stack, _) => ListView.separated(
-                  physics: BouncingScrollPhysics(),
-                  key: ValueKey('directory_screen_picker/address_bar'),
-                  controller: controller,
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, i) => Container(
-                    alignment: Alignment.center,
-                    child: Text(
-                      stack[i]
-                          .replaceAll(
-                            volumes!.first.path,
-                            Language.instance.PHONE,
-                          )
-                          .replaceAll(
-                            volumes!.last.path,
-                            Language.instance.SD_CARD,
-                          ),
-                    ),
-                  ),
-                  separatorBuilder: (context, i) => Container(
-                    height: 64.0,
-                    width: 48.0,
-                    child: Icon(Icons.chevron_right),
-                  ),
-                  itemCount: stack.length,
-                ),
+                builder: (context, stack, _) => stack.length <= 1
+                    ? Container(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          Language.instance.AVAILABLE_STORAGES,
+                          style: Theme.of(context).textTheme.headline2,
+                        ),
+                      )
+                    : ListView.separated(
+                        physics: BouncingScrollPhysics(),
+                        key: ValueKey('directory_screen_picker/address_bar'),
+                        controller: controller,
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, i) => Container(
+                          alignment: Alignment.center,
+                          child: volumes == null
+                              ? Text(stack[i])
+                              : Text(
+                                  stack[i]
+                                      .replaceAll(
+                                        volumes!.first.path,
+                                        Language.instance.PHONE,
+                                      )
+                                      .replaceAll(
+                                        volumes!.last.path,
+                                        Language.instance.SD_CARD,
+                                      ),
+                                ),
+                        ),
+                        separatorBuilder: (context, i) => Container(
+                          height: 64.0,
+                          width: 48.0,
+                          child: Icon(Icons.chevron_right),
+                        ),
+                        itemCount: stack.length,
+                      ),
               ),
             ),
             Expanded(
@@ -293,27 +321,30 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
                 ),
               ),
             ),
-            const Divider(
-              height: 1.0,
-              thickness: 1.0,
-            ),
-            Container(
-              padding: EdgeInsets.all(8.0),
-              width: MediaQuery.of(context).size.width,
-              child: ElevatedButton(
-                onPressed: stack.value.isEmpty
-                    ? null
-                    : () {
-                        exit = true;
-                        debugPrint(joinAll(stack.value));
-                        Navigator.of(context).maybePop();
-                      },
-                child: Text(
-                  'Add This Folder'.toUpperCase(),
-                  style: TextStyle(letterSpacing: 2.0),
+            ValueListenableBuilder<List<String>>(
+              valueListenable: stack,
+              builder: (context, stack, _) => Container(
+                padding: EdgeInsets.all(8.0),
+                width: MediaQuery.of(context).size.width,
+                child: ElevatedButton(
+                  onPressed: stack.length <= 1
+                      ? null
+                      : () async {
+                          exit = true;
+                          final path = joinAll(stack.sublist(1));
+                          debugPrint(path);
+                          final result = Directory(path);
+                          Navigator.of(context).maybePop(
+                            await result.exists_() ? result : null,
+                          );
+                        },
+                  child: Text(
+                    Language.instance.ADD_THIS_FOLDER.toUpperCase(),
+                    style: TextStyle(letterSpacing: 2.0),
+                  ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

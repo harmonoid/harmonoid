@@ -72,7 +72,7 @@ class Configuration extends ConfigurationKeys {
   /// Updates a particular key in the Harmonoid's configuration.
   ///
   Future<void> save({
-    List<Directory>? collectionDirectories,
+    Set<Directory>? collectionDirectories,
     LanguageData? language,
     ThemeMode? themeMode,
     bool? automaticAccent,
@@ -272,10 +272,12 @@ class Configuration extends ConfigurationKeys {
     );
     debugPrint(current.toString());
     // Check for actual keys from the cache.
-    collectionDirectories = current['collectionDirectories']
-        .map((directory) => Directory(directory))
-        .toList()
-        .cast<Directory>();
+    collectionDirectories = Set<Directory>.from(
+      current['collectionDirectories']
+          .map((directory) => Directory(directory))
+          .toList()
+          .cast<Directory>(),
+    );
     language = LanguageData.fromJson(current['language']);
     themeMode = ThemeMode.values[current['themeMode']];
     automaticAccent = current['automaticAccent'];
@@ -314,7 +316,7 @@ class Configuration extends ConfigurationKeys {
 }
 
 abstract class ConfigurationKeys {
-  late List<Directory> collectionDirectories;
+  late Set<Directory> collectionDirectories;
   late Directory cacheDirectory;
   late LanguageData language;
   late ThemeMode themeMode;
