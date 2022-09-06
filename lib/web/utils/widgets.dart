@@ -5,8 +5,8 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
+import 'dart:ui';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:animations/animations.dart';
@@ -882,9 +882,11 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
 
 class WebMobileAppBarOverflowButton extends StatefulWidget {
   final Color? color;
+  final bool withinScreen;
   WebMobileAppBarOverflowButton({
     Key? key,
     this.color,
+    this.withinScreen = true,
   }) : super(key: key);
 
   @override
@@ -908,11 +910,15 @@ class _WebMobileAppBarOverflowButtonState
         final position = RelativeRect.fromRect(
           Offset(
                 MediaQuery.of(context).size.width - tileMargin - 48.0,
-                MediaQuery.of(context).padding.top +
-                    kMobileSearchBarHeight +
-                    4 * tileMargin,
+                widget.withinScreen
+                    ? (MediaQueryData.fromWindow(window).padding.top +
+                        kMobileSearchBarHeight +
+                        2 * tileMargin)
+                    : (MediaQuery.of(context).padding.top +
+                        kToolbarHeight +
+                        2 * tileMargin),
               ) &
-              Size(160.0, 160.0),
+              Size(double.infinity, double.infinity),
           Rect.fromLTWH(
             0,
             0,
@@ -925,20 +931,27 @@ class _WebMobileAppBarOverflowButtonState
           position: position,
           constraints: BoxConstraints(
             maxWidth: double.infinity,
+            maxHeight: double.infinity,
           ),
           elevation: 4.0,
           items: [
             PopupMenuItem(
               value: 0,
               child: ListTile(
-                leading: Icon(Icons.settings),
+                leading: Icon(
+                  Icons.settings,
+                  color: Theme.of(context).iconTheme.color,
+                ),
                 title: Text(Language.instance.SETTING),
               ),
             ),
             PopupMenuItem(
               value: 1,
               child: ListTile(
-                leading: Icon(Icons.info),
+                leading: Icon(
+                  Icons.info,
+                  color: Theme.of(context).iconTheme.color,
+                ),
                 title: Text(Language.instance.ABOUT_TITLE),
               ),
             ),
