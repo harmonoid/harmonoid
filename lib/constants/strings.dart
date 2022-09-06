@@ -1,10 +1,12 @@
 // ignore_for_file: non_constant_identifier_names
+// AUTO GENERATED FILE, DO NOT EDIT.
 
 class Strings {
   late String ABOUT_TITLE;
   late String ADD;
   late String ADD_NEW_FOLDER;
   late String ADD_NEW_FOLDER_SUBTITLE;
+  late String ADD_THIS_FOLDER;
   late String ADD_TO_NOW_PLAYING;
   late String ADD_TO_PLAYLIST;
   late String ALBUM;
@@ -19,6 +21,7 @@ class Strings {
   late String AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING_TITLE;
   late String AUTO_REFRESH_SETTING;
   late String AUTO_REFRESH_SETTING_TITLE;
+  late String AVAILABLE_STORAGES;
   late String AWESOME;
   late String A_TO_Z;
   late String BACKGROUND_ARTWORK_SUBTITLE;

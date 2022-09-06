@@ -38,6 +38,7 @@ if __name__ == "__main__":
             ) as file:
                 file.write(
                     """// ignore_for_file: non_constant_identifier_names
+// AUTO GENERATED FILE, DO NOT EDIT.
 
 class Strings {
 """
