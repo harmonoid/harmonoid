@@ -107,6 +107,7 @@ class Collection extends MediaLibrary with ChangeNotifier {
     Duration? timeout,
     bool waitUntilAlbumArtIsSaved = false,
   }) async {
+    debugPrint(uri.toString());
     if (Platform.isWindows) {
       assert(_tagger != null);
       final metadata = await _tagger!.parse(
