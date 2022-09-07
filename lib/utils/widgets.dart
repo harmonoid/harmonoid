@@ -24,6 +24,7 @@ import 'package:harmonoid/core/playback.dart';
 import 'package:media_library/media_library.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:harmonoid_visual_assets/harmonoid_visual_assets.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:known_extents_list_view_builder/known_extents_list_view_builder.dart';
 
@@ -1188,13 +1189,13 @@ class ExceptionWidget extends StatelessWidget {
                     : 1.2,
             child: Image.memory(
               {
-                Language.instance.NO_COLLECTION_TITLE: visualAssets.collection,
-                Language.instance.NO_INTERNET_TITLE: visualAssets.collection,
+                Language.instance.NO_COLLECTION_TITLE: VisualAssets.library,
+                Language.instance.NO_INTERNET_TITLE: VisualAssets.library,
                 Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE:
-                    visualAssets.searchPage,
-                Language.instance.WEB_WELCOME_TITLE: visualAssets.searchNotes,
+                    VisualAssets.searchPage,
+                Language.instance.WEB_WELCOME_TITLE: VisualAssets.searchNotes,
                 Language.instance.COLLECTION_SEARCH_LABEL:
-                    visualAssets.searchPage,
+                    VisualAssets.searchPage,
               }[title]!,
               height: iconSize,
               width: iconSize,

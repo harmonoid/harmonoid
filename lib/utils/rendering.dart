@@ -38,7 +38,6 @@ import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/utils/windows_info.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid_visual_assets/harmonoid_visual_assets.dart';
 
 export 'package:harmonoid/utils/extensions.dart';
 
@@ -52,7 +51,6 @@ final isMobile = Platform.isAndroid || Platform.isIOS;
 final desktopTitleBarHeight =
     WindowsInfo.instance.isWindows10OrGreater ? 32.0 : 0.0;
 final tileMargin = isDesktop ? kDesktopTileMargin : kMobileTileMargin;
-final visualAssets = VisualAssets();
 final HotKey searchBarHotkey = HotKey(
   KeyCode.keyF,
   modifiers: [KeyModifier.control],
