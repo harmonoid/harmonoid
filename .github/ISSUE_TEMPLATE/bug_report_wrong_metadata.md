@@ -1,6 +1,6 @@
 ---
-name: Performance Bug Report
-about: Report incorrect or missing tags/metadata issue
+name: Incorrect/Missing Tags Bug Report
+about: Report incorrect or missing tags/metadata
 title: ''
 labels: bug
 assignees: alexmercerind
