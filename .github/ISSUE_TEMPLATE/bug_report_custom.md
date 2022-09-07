@@ -1,5 +1,5 @@
 ---
-name: Custom Bug Report
+name: Custom bug report
 about: Report a bug you just discovered
 title: ''
 labels: bug

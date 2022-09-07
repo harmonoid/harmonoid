@@ -1,5 +1,5 @@
 ---
-name: Performance Bug Report
+name: Performance issue
 about: Report a performance issue
 title: ''
 labels: bug

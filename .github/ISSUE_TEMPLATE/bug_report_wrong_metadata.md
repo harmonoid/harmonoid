@@ -1,5 +1,5 @@
 ---
-name: Incorrect/Missing Tags Bug Report
+name: Incorrect or missing tags
 about: Report incorrect or missing tags/metadata
 title: ''
 labels: bug
