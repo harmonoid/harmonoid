@@ -233,14 +233,17 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
         }
         try {
           stack.value.removeLast();
-          stack.notifyListeners();
         } catch (exception) {
           //
         }
         await Navigator.of(key.currentContext!).maybePop();
-        return (volumes?.length ?? 1) > 1
+        final value = (volumes?.length ?? 1) > 1
             ? (stack.value.length < 1)
             : (stack.value.length < 2);
+        if (!value) {
+          stack.notifyListeners();
+        }
+        return value;
       },
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
