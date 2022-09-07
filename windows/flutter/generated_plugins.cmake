@@ -5,9 +5,9 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_windows
   dart_discord_rpc
-  flutter_lyric
   flutter_platform_alert
   flutter_window_close
+  permission_handler_windows
   screen_retriever
   url_launcher_windows
   window_manager
