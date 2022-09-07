@@ -92,7 +92,7 @@ Future<void> main(List<String> args) async {
       ));
       if (await StorageRetriever.instance.version < 33) {
         if (await Permission.storage.isDenied) {
-          PermissionStatus state = await Permission.storage.request();
+          final state = await Permission.storage.request();
           if (!state.isGranted) {
             await SystemNavigator.pop(
               animated: true,
@@ -100,20 +100,12 @@ Future<void> main(List<String> args) async {
           }
         }
       } else {
-        if (await Permission.audio.isDenied ||
-            await Permission.videos.isDenied ||
-            await Permission.photos.isDenied) {
-          final statuses = await [
-            Permission.audio,
-            Permission.videos,
-            Permission.photos,
-          ].request();
-          for (final entry in statuses.entries) {
-            if (!entry.value.isGranted) {
-              await SystemNavigator.pop(
-                animated: true,
-              );
-            }
+        if (await Permission.audio.isDenied) {
+          final state = await Permission.audio.request();
+          if (!state.isGranted) {
+            await SystemNavigator.pop(
+              animated: true,
+            );
           }
         }
       }
