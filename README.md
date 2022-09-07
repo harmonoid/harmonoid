@@ -1,5 +1,3 @@
-<img align="left" src="https://raw.githubusercontent.com/harmonoid/harmonoid/master/windows/runner/resources/app_icon.ico" width="64" height="64"></img>
-
 <h1 align="left">Harmonoid</h1>
 
 **🎵 Plays & manages your music library. Looks beautiful & juicy.**
