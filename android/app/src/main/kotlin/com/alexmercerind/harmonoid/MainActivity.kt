@@ -48,42 +48,10 @@ class MainActivity : AudioServiceActivity() {
             flutterEngine.dartExecutor.binaryMessenger,
             METADATA_RETRIEVER_CHANNEL_NAME
         ).setMethodCallHandler(MetadataRetriever())
-        // Gets the absolute paths for internal storage & external SD card.
-        // This is the only solution.
-        // By default, [getExternalFilesDirs] returns the application specific & private path e.g.
-        // `/storage/emulated/0/Android/data/com.alexmercerind.harmonoid/files`.
-        // This is because Android is promoting Scoped Storage & [MediaStore], which unfortunately
-        // fail many of our use cases like custom or multiple directory selection for music indexing
-        // or looking for .LRC files in the same directory as audio file etc.
-        // This would also mean that all the application (in-theory) would have to be additionally
-        // written in Kotlin just to support Android, because existing media library manager &
-        // indexer written in Dart is completely file-system based, since Windows & Linux have no
-        // such concepts as Android recently redundantly introduced.
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
             STORAGE_RETRIEVER_CHANNEL_NAME
-        ).setMethodCallHandler { call, result ->
-            when {
-                call.method.equals("volumes") -> {
-                    val volumes: List<String> = context.getExternalFilesDirs(null).map { file -> file.absolutePath.split("/Android/")[0] }
-                    Log.d("Harmonoid", volumes.toString())
-                    result.success(volumes)
-                }
-                call.method.equals("cache") -> {
-                    val cache: String? = context.getExternalFilesDirs(null).firstOrNull()?.absolutePath
-                    Log.d("Harmonoid", cache.toString())
-                    result.success(cache)
-                }
-                call.method.equals("version") -> {
-                    val version: Int = android.os.Build.VERSION.SDK_INT
-                    Log.d("Harmonoid", version.toString())
-                    result.success(version)
-                }
-                else -> {
-                    result.notImplemented()
-                }
-            }
-        }
+        ).setMethodCallHandler(StorageRetriever(context))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -148,8 +116,7 @@ class MainActivity : AudioServiceActivity() {
                 val intentFilesDirAbsolutePath = "$externalFilesDirAbsolutePath/Intents"
                 Log.d("Harmonoid", intentFilesDirAbsolutePath)
                 // Last segment of the URI is interpreted as the file path.
-                // Removing all special characters to prevent any issues with URI deserialization/
-                // serialization inside Flutter or file creation.
+                // Removing all special characters to prevent any issues with URI deserialization/serialization inside Flutter or file creation.
                 val fileName = intent.data.toString().split("/").toList().lastOrNull()
                     ?.replace("[^a-zA-Z0-9]".toRegex(), "")
                 Log.d("Harmonoid", fileName.toString())
@@ -169,8 +136,7 @@ class MainActivity : AudioServiceActivity() {
                     ) {
                         File(intentFilesDirAbsolutePath).deleteRecursively()
                     }
-                    // Recursively create all the directories & subdirectories to the temporary file,
-                    // and copy the stream to it after creation of file itself.
+                    // Recursively create all the directories & subdirectories to the temporary file, and copy the stream to it after creation of file itself.
                     File(intentFilesDirAbsolutePath).mkdirs()
                     if (!File(path).exists()) {
                         File(path).createNewFile()
