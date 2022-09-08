@@ -100,7 +100,7 @@ class Lyrics extends ChangeNotifier {
             }
           }
           // The rounded-off [Map] contains current position timestamp, and it hasn't been shown before.
-          if (instance._currentLyricsAveragedMap
+          if (instance.currentLyricsAveragedMap
                   .containsKey(Playback.instance.position.inSeconds) &&
               instance._currentLyricsTimeStamp !=
                   Playback.instance.position.inSeconds) {
@@ -117,7 +117,7 @@ class Lyrics extends ChangeNotifier {
                   notificationLayout: NotificationLayout.Messaging,
                   category: NotificationCategory.Status,
                   title: track.trackName,
-                  body: instance._currentLyricsAveragedMap[
+                  body: instance.currentLyricsAveragedMap[
                       instance._currentLyricsTimeStamp],
                   summary: track.trackName,
                   showWhen: false,
@@ -151,7 +151,7 @@ class Lyrics extends ChangeNotifier {
       await for (final track in _controller.stream) {
         if (_track == track) continue;
         current = <Lyric>[];
-        _currentLyricsAveragedMap = {};
+        currentLyricsAveragedMap = {};
         _currentLyricsTimeStamps = {};
         _currentLyricsHidden = false;
         notifyListeners();
@@ -176,10 +176,10 @@ class Lyrics extends ChangeNotifier {
                       ),
                 );
                 for (final lyric in current) {
-                  _currentLyricsAveragedMap[lyric.time ~/ 1000] = lyric.words;
+                  currentLyricsAveragedMap[lyric.time ~/ 1000] = lyric.words;
                 }
                 _currentLyricsTimeStamps.addEntries(
-                  _currentLyricsAveragedMap.keys.toList().asMap().entries.map(
+                  currentLyricsAveragedMap.keys.toList().asMap().entries.map(
                         (e) => MapEntry(
                           e.value,
                           e.key,
@@ -232,11 +232,11 @@ class Lyrics extends ChangeNotifier {
                               ),
                         );
                         for (final lyric in current) {
-                          _currentLyricsAveragedMap[lyric.time ~/ 1000] =
+                          currentLyricsAveragedMap[lyric.time ~/ 1000] =
                               lyric.words;
                         }
                         _currentLyricsTimeStamps.addEntries(
-                          _currentLyricsAveragedMap.keys
+                          currentLyricsAveragedMap.keys
                               .toList()
                               .asMap()
                               .entries
@@ -277,10 +277,10 @@ class Lyrics extends ChangeNotifier {
                       .cast<Lyric>(),
                 );
                 for (final lyric in current) {
-                  _currentLyricsAveragedMap[lyric.time ~/ 1000] = lyric.words;
+                  currentLyricsAveragedMap[lyric.time ~/ 1000] = lyric.words;
                 }
                 _currentLyricsTimeStamps.addEntries(
-                  _currentLyricsAveragedMap.keys.toList().asMap().entries.map(
+                  currentLyricsAveragedMap.keys.toList().asMap().entries.map(
                         (e) => MapEntry(
                           e.value,
                           e.key,
@@ -388,6 +388,9 @@ class Lyrics extends ChangeNotifier {
     }
   }
 
+  /// Current lyrics hashmap with averaged seconds timestamps.
+  Map<int, String> currentLyricsAveragedMap = {};
+
   /// [StreamController] to avoid possible race condition when index
   /// switching in playlist takes place.
   /// * Using `await for` to handle this scenario.
@@ -396,9 +399,7 @@ class Lyrics extends ChangeNotifier {
   /// Current query string for lyrics.
   Track? _track;
 
-  /// Current lyrics hashmap with averaged seconds timestamps.
-  Map<int, String> _currentLyricsAveragedMap = {};
-
+  /// Averaged timestamp in seconds vs. index.
   Map<int, int> _currentLyricsTimeStamps = {};
 
   /// Whether notification lyrics are hidden for the current song.

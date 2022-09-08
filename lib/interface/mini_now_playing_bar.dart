@@ -1438,6 +1438,29 @@ class LyricsScreen extends StatefulWidget {
 }
 
 class _LyricsScreenState extends State<LyricsScreen> {
+  int current = Playback.instance.position.inSeconds;
+
+  void listener() {
+    if (Playback.instance.position.inSeconds != current &&
+        Lyrics.instance.currentLyricsAveragedMap
+            .containsKey(Playback.instance.position.inSeconds)) {
+      setState(() {
+        current = Playback.instance.position.inSeconds;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Playback.instance.addListener(listener);
+  }
+
+  dispose() {
+    Playback.instance.removeListener(listener);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<NowPlayingColorPalette>(
@@ -1470,56 +1493,52 @@ class _LyricsScreenState extends State<LyricsScreen> {
                   curve: Curves.easeInOut,
                   builder: (context, opacity, _) => Opacity(
                     opacity: opacity,
-                    child: Consumer<Playback>(
-                      builder: (context, playback, _) => ShaderMask(
-                        shaderCallback: (Rect rect) {
-                          return LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.black,
-                              Colors.transparent,
-                              Colors.black,
-                            ],
-                            stops: [0.1, 0.5, 0.9],
-                          ).createShader(rect);
-                        },
-                        blendMode: BlendMode.dstOut,
-                        child: LyricsReader(
-                          padding: EdgeInsets.all(tileMargin * 2),
-                          model: LyricsReaderModel()
-                            ..lyrics = Lyrics.instance.current
-                                .asMap()
-                                .entries
-                                .map((e) {
-                              return LyricsLineModel()
-                                ..mainText = e.value.words
-                                ..startTime = e.value.time
-                                ..endTime = e.key + 1 <
-                                        Lyrics.instance.current.length
-                                    ? Lyrics.instance.current[e.key + 1].time
-                                    : 1 << 32;
-                            }).toList(),
-                          position: playback.position.inMilliseconds,
-                          lyricUi: () {
-                            final colors = palette.palette ??
-                                [Theme.of(context).cardColor];
-                            return LyricsStyle(
-                              color: colors.first.isDark
-                                  ? Colors.white
-                                  : Colors.black,
-                              primary:
-                                  colors.first != Theme.of(context).cardColor
-                                      ? colors.first.isDark
-                                          ? Colors.white
-                                          : Colors.black
-                                      : (palette.palette ??
-                                              [Theme.of(context).primaryColor])
-                                          .last,
-                            );
-                          }(),
-                          playing: true,
-                        ),
+                    child: ShaderMask(
+                      shaderCallback: (Rect rect) {
+                        return LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.black,
+                            Colors.transparent,
+                            Colors.black,
+                          ],
+                          stops: [0.1, 0.5, 0.9],
+                        ).createShader(rect);
+                      },
+                      blendMode: BlendMode.dstOut,
+                      child: LyricsReader(
+                        padding: EdgeInsets.all(tileMargin * 2),
+                        model: LyricsReaderModel()
+                          ..lyrics =
+                              Lyrics.instance.current.asMap().entries.map((e) {
+                            return LyricsLineModel()
+                              ..mainText = e.value.words
+                              ..startTime = e.value.time ~/ 1000
+                              ..endTime = e.key + 1 <
+                                      Lyrics.instance.current.length
+                                  ? Lyrics.instance.current[e.key + 1].time ~/
+                                      1000
+                                  : 1 << 32;
+                          }).toList(),
+                        position: current,
+                        lyricUi: () {
+                          final colors =
+                              palette.palette ?? [Theme.of(context).cardColor];
+                          return LyricsStyle(
+                            color: colors.first.isDark
+                                ? Colors.white
+                                : Colors.black,
+                            primary: colors.first != Theme.of(context).cardColor
+                                ? colors.first.isDark
+                                    ? Colors.white
+                                    : Colors.black
+                                : (palette.palette ??
+                                        [Theme.of(context).primaryColor])
+                                    .last,
+                          );
+                        }(),
+                        playing: true,
                       ),
                     ),
                   ),
