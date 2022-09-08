@@ -415,18 +415,20 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
 
 Future<File?> pickFile({
   required String label,
-  required List<String> extensions,
+  List<String>? extensions,
 }) async {
   String? path;
   if (Platform.isWindows) {
     OpenFilePicker picker = OpenFilePicker()
       ..filterSpecification = {
-        label: extensions.map((e) => '*.${e.toLowerCase()}').join(';'),
+        if (extensions != null) ...{
+          label: extensions.map((e) => '*.${e.toLowerCase()}').join(';'),
+        },
         Language.instance.ALL_FILES: '*',
       }
       // Choosing first [extensions] extension as default.
       ..defaultFilterIndex = 0
-      ..defaultExtension = extensions.first.toLowerCase();
+      ..defaultExtension = extensions?.first.toLowerCase();
     path = picker.getFile()?.path;
   } else if (Platform.isLinux) {
     final result = await openFile(
@@ -435,8 +437,10 @@ Future<File?> pickFile({
           label: label,
           // Case sensitive paths on GNU/Linux.
           extensions: [
-            ...extensions.map((e) => e.toLowerCase()).toList(),
-            ...extensions.map((e) => e.toUpperCase()).toList(),
+            if (extensions != null) ...[
+              ...extensions.map((e) => e.toLowerCase()).toList(),
+              ...extensions.map((e) => e.toUpperCase()).toList(),
+            ],
           ].toSet().toList(),
         ),
         XTypeGroup(
@@ -450,12 +454,14 @@ Future<File?> pickFile({
   else {
     final result = await FilePicker.platform.pickFiles(
       // Case sensitive paths on Android.
-      allowedExtensions: [
-        ...extensions.map((e) => e.toLowerCase()).toList(),
-        ...extensions.map((e) => e.toUpperCase()).toList(),
-      ].toSet().toList(),
+      allowedExtensions: extensions == null
+          ? null
+          : [
+              ...extensions.map((e) => e.toLowerCase()).toList(),
+              ...extensions.map((e) => e.toUpperCase()).toList(),
+            ].toSet().toList(),
       // Needed for [allowedExtensions].
-      type: FileType.custom,
+      type: extensions == null ? FileType.any : FileType.custom,
     );
     if ((result?.count ?? 0) > 0) {
       path = result?.files.first.path;
@@ -640,7 +646,8 @@ Future<void> trackPopupMenuHandle(
       case 8:
         final file = await pickFile(
           label: 'LRC',
-          extensions: ['lrc'],
+          // Compatiblitity issues with Android 5.0. SDK 21.
+          extensions: Platform.isAndroid ? null : ['lrc'],
         );
         if (file != null) {
           final added = await Lyrics.instance.addLRCFile(
