@@ -35,8 +35,8 @@ import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/web/utils/widgets.dart';
 
-const kDetailsAreaHeight = 96.0;
-const kControlsAreaHeight = 136.0;
+const kDetailsAreaHeight = 92.0;
+const kControlsAreaHeight = 124.0;
 
 class MiniNowPlayingBar extends StatefulWidget {
   MiniNowPlayingBar({Key? key}) : super(key: key);
@@ -47,21 +47,21 @@ class MiniNowPlayingBar extends StatefulWidget {
 
 class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
     with TickerProviderStateMixin {
-  double _yOffset = 0.0;
+  double _y = 0.0;
 
-  bool get isHidden => _yOffset != 0.0;
+  bool get isHidden => _y != 0.0;
 
   void show() {
     if (Playback.instance.tracks.isEmpty) return;
-    if (_yOffset != 0.0) {
-      setState(() => _yOffset = 0.0);
+    if (_y != 0.0) {
+      setState(() => _y = 0.0);
     }
   }
 
   void hide() {
-    if (_yOffset == 0.0) {
+    if (_y == 0.0) {
       setState(
-        () => _yOffset = (kMobileNowPlayingBarHeight + 4.0) /
+        () => _y = (kMobileNowPlayingBarHeight + 4.0) /
             (MediaQuery.of(context).size.height -
                 MediaQuery.of(context).padding.vertical),
       );
@@ -91,7 +91,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
   @override
   void initState() {
     super.initState();
-    _yOffset = (kMobileNowPlayingBarHeight + 4.0) /
+    _y = (kMobileNowPlayingBarHeight + 4.0) /
         (window.physicalSize.height -
             window.padding.top -
             window.padding.bottom) *
@@ -198,7 +198,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
   Widget build(BuildContext context) {
     return Consumer<NowPlayingColorPalette>(
       builder: (context, colors, _) => AnimatedSlide(
-        offset: Offset(0, _yOffset),
+        offset: Offset(0, _y),
         duration: Duration(milliseconds: 200),
         curve: Curves.easeInOut,
         child: TweenAnimationBuilder<Color?>(
@@ -308,8 +308,8 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                         color: Colors.white24,
                         child: Padding(
                           padding: EdgeInsets.only(
-                            top: 48.0,
-                            bottom: 24.0,
+                            top: 44.0,
+                            bottom: 16.0 + 8.0,
                           ),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -498,7 +498,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 32.0),
+                          const SizedBox(height: 24.0),
                           const SizedBox(width: 16.0),
                           Text(
                             playback.position.label,
@@ -549,6 +549,22 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
             maxHeight: MediaQuery.of(context).size.height,
             tapToCollapse: false,
             builder: (height, percentage) {
+              try {
+                final hidden = percentage > 0.8;
+                if (MobileNowPlayingController
+                        .instance.bottomNavigationBar.value !=
+                    hidden) {
+                  WidgetsBinding.instance.addPostFrameCallback(
+                    (_) {
+                      MobileNowPlayingController
+                          .instance.bottomNavigationBar.value = hidden;
+                    },
+                  );
+                }
+              } catch (exception, stacktrace) {
+                debugPrint(exception.toString());
+                debugPrint(stacktrace.toString());
+              }
               physics = percentage == 0 ? NeverScrollableScrollPhysics() : null;
               return () {
                 if (Playback.instance.tracks.isEmpty) return Container();
@@ -586,14 +602,12 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                           height: percentage == 1.0
                               ? MediaQuery.of(context).size.width +
                                           kDetailsAreaHeight +
-                                          kControlsAreaHeight +
-                                          kBottomNavigationBarHeight <
+                                          kControlsAreaHeight <
                                       MediaQuery.of(context).size.height
                                   ? MediaQuery.of(context).size.width
                                   : MediaQuery.of(context).size.height -
                                       kDetailsAreaHeight -
-                                      kControlsAreaHeight -
-                                      kBottomNavigationBarHeight
+                                      kControlsAreaHeight
                               : height < MediaQuery.of(context).size.width
                                   ? height - 2.0
                                   : height >= MediaQuery.of(context).size.width
@@ -684,38 +698,22 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                 Stack(
                                                           children: [
                                                             SizedBox(
-                                                              child: Transform
-                                                                  .scale(
-                                                                // Scale up the network images on smaller screens.
-                                                                scale: LibmpvPluginUtils.isSupported(Playback
-                                                                            .instance
-                                                                            .tracks[
-                                                                                i]
-                                                                            .uri) &&
-                                                                        MediaQuery.of(context).size.width +
-                                                                                kDetailsAreaHeight +
-                                                                                kControlsAreaHeight +
-                                                                                kBottomNavigationBarHeight >
-                                                                            MediaQuery.of(context).size.height
-                                                                    ? 1.4
-                                                                    : 1.0,
-                                                                child:
-                                                                    ExtendedImage(
-                                                                  image: getAlbumArt(
-                                                                      Playback
-                                                                          .instance
-                                                                          .tracks[i]),
-                                                                  width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width,
-                                                                  height: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                ),
+                                                              child:
+                                                                  ExtendedImage(
+                                                                image: getAlbumArt(
+                                                                    Playback
+                                                                        .instance
+                                                                        .tracks[i]),
+                                                                width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                                height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                                fit: BoxFit
+                                                                    .cover,
                                                               ),
                                                             ),
                                                             TweenAnimationBuilder<
@@ -747,7 +745,9 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                             .bottomCenter,
                                                                       ),
                                                                     ),
-                                                                    height: MediaQuery.of(context).size.width + kDetailsAreaHeight + kControlsAreaHeight + kBottomNavigationBarHeight <
+                                                                    height: MediaQuery.of(context).size.width +
+                                                                                kDetailsAreaHeight +
+                                                                                kControlsAreaHeight <
                                                                             MediaQuery.of(context)
                                                                                 .size
                                                                                 .height
@@ -756,8 +756,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                             .width
                                                                         : MediaQuery.of(context).size.height -
                                                                             kDetailsAreaHeight -
-                                                                            kControlsAreaHeight -
-                                                                            kBottomNavigationBarHeight,
+                                                                            kControlsAreaHeight,
                                                                     width: MediaQuery.of(
                                                                             context)
                                                                         .size
@@ -1205,7 +1204,7 @@ class MiniNowPlayingBarRefreshCollectionButton extends StatefulWidget {
 class MiniNowPlayingBarRefreshCollectionButtonState
     extends State<MiniNowPlayingBarRefreshCollectionButton> {
   bool refreshFAB = true;
-  double _yOffset = MobileNowPlayingController.instance.isHidden
+  double _y = MobileNowPlayingController.instance.isHidden
       ? 0.0
       : kMobileNowPlayingBarHeight;
 
@@ -1233,14 +1232,14 @@ class MiniNowPlayingBarRefreshCollectionButtonState
 
   void show() {
     if (Playback.instance.tracks.isEmpty) return;
-    if (_yOffset == 0.0) {
-      setState(() => _yOffset = kMobileNowPlayingBarHeight);
+    if (_y == 0.0) {
+      setState(() => _y = kMobileNowPlayingBarHeight);
     }
   }
 
   void hide() {
-    if (_yOffset != 0.0) {
-      setState(() => _yOffset = 0.0);
+    if (_y != 0.0) {
+      setState(() => _y = 0.0);
     }
   }
 
@@ -1421,7 +1420,7 @@ class MiniNowPlayingBarRefreshCollectionButtonState
             ),
           ),
           AnimatedContainer(
-            height: _yOffset,
+            height: _y,
             duration: Duration(milliseconds: 200),
             curve: Curves.easeInOut,
           ),

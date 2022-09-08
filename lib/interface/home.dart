@@ -64,8 +64,6 @@ class HomeState extends State<Home>
       TabRouteSender.systemNavigationBackButton,
     ),
   ];
-  final MobileNowPlayingController mobileNowPlayingController =
-      MobileNowPlayingController();
 
   /// [WidgetsBindingObserver.didPushRoute] does not work.
   late final _NavigatorObserver observer;
@@ -327,16 +325,29 @@ class HomeState extends State<Home>
                         ),
                       ),
                       MiniNowPlayingBar(
-                        key: mobileNowPlayingController.barKey,
+                        key: MobileNowPlayingController.instance.barKey,
                       ),
                     ],
                   ),
-                  bottomNavigationBar: (isMobile &&
-                          MediaQuery.of(context).viewInsets.bottom < 180.0)
-                      ? MobileBottomNavigationBar(
-                          tabControllerNotifier: tabControllerNotifier,
-                        )
-                      : null,
+                  bottomNavigationBar: ValueListenableBuilder<bool>(
+                    valueListenable:
+                        MobileNowPlayingController.instance.bottomNavigationBar,
+                    child: (isMobile &&
+                            MediaQuery.of(context).viewInsets.bottom < 180.0)
+                        ? MobileBottomNavigationBar(
+                            tabControllerNotifier: tabControllerNotifier,
+                          )
+                        : const SizedBox.shrink(),
+                    builder: (context, hidden, child) => AnimatedContainer(
+                      height: hidden ? 0.0 : kBottomNavigationBarHeight,
+                      duration: Duration(milliseconds: 200),
+                      curve: Curves.easeInOut,
+                      child: SingleChildScrollView(
+                        physics: NeverScrollableScrollPhysics(),
+                        child: child!,
+                      ),
+                    ),
+                  ),
                 ),
               ),
       ),

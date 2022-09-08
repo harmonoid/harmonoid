@@ -10,18 +10,20 @@ import 'package:flutter/widgets.dart';
 import 'package:harmonoid/interface/mini_now_playing_bar.dart';
 
 class MobileNowPlayingController {
-  static late MobileNowPlayingController instance;
+  static final MobileNowPlayingController instance =
+      MobileNowPlayingController._();
+
+  MobileNowPlayingController._();
 
   final GlobalKey<MiniNowPlayingBarState> barKey =
       GlobalKey<MiniNowPlayingBarState>();
   final GlobalKey<MiniNowPlayingBarRefreshCollectionButtonState> fabKey =
       GlobalKey<MiniNowPlayingBarRefreshCollectionButtonState>();
-  ValueNotifier<Iterable<Color>?> palette = ValueNotifier(null);
-  bool get isHidden => barKey.currentState?.isHidden ?? true;
 
-  MobileNowPlayingController() {
-    MobileNowPlayingController.instance = this;
-  }
+  final ValueNotifier<Iterable<Color>?> palette = ValueNotifier(null);
+  final ValueNotifier<bool> bottomNavigationBar = ValueNotifier(false);
+
+  bool get isHidden => barKey.currentState?.isHidden ?? true;
 
   void show() {
     barKey.currentState?.show();
