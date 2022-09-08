@@ -901,10 +901,10 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
         playback
           ..index = e
           ..notify();
-        debugPrint(queue.value[e].toString());
         // Request for album art for the current track.
         // More performant than requesting for all the album arts at once inside [_transformEvent].
         if (e >= 0 && e < queue.value.length) {
+          debugPrint(queue.value[e].toString());
           mediaItem.add(
             queue.value[e].copyWith(
               artUri: () {
