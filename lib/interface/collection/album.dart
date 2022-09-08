@@ -607,7 +607,7 @@ class AlbumTile extends StatelessWidget {
               onLongPress: () {
                 showDialog(
                   context: context,
-                  builder: (subContext) => AlertDialog(
+                  builder: (ctx) => AlertDialog(
                     title: Text(
                       Language.instance.COLLECTION_ALBUM_DELETE_DIALOG_HEADER,
                     ),
@@ -617,19 +617,18 @@ class AlbumTile extends StatelessWidget {
                         'NAME',
                         album.albumName,
                       ),
-                      style: Theme.of(subContext).textTheme.headline3,
+                      style: Theme.of(ctx).textTheme.headline3,
                     ),
                     actions: [
                       TextButton(
                         onPressed: () async {
                           await Collection.instance.delete(album);
-                          Navigator.of(subContext).pop();
-                          Navigator.of(context).pop();
+                          Navigator.of(ctx).pop();
                         },
                         child: Text(Language.instance.YES),
                       ),
                       TextButton(
-                        onPressed: Navigator.of(subContext).pop,
+                        onPressed: Navigator.of(ctx).pop,
                         child: Text(Language.instance.NO),
                       ),
                     ],
@@ -640,7 +639,11 @@ class AlbumTile extends StatelessWidget {
                 try {
                   if (palette == null) {
                     final result = await PaletteGenerator.fromImageProvider(
-                        getAlbumArt(album, small: true));
+                      getAlbumArt(
+                        album,
+                        small: true,
+                      ),
+                    );
                     palette = result.colors;
                   }
                   await precacheImage(getAlbumArt(album), context);
@@ -1501,44 +1504,40 @@ class AlbumScreenState extends State<AlbumScreen>
                               //   splashRadius: 20.0,
                               // ),
                               IconButton(
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (subContext) => AlertDialog(
-                                      title: Text(
-                                        Language.instance
-                                            .COLLECTION_ALBUM_DELETE_DIALOG_HEADER,
-                                      ),
-                                      content: Text(
-                                        Language.instance
-                                            .COLLECTION_ALBUM_DELETE_DIALOG_BODY
-                                            .replaceAll(
-                                          'NAME',
-                                          widget.album.albumName,
-                                        ),
-                                        style: Theme.of(subContext)
-                                            .textTheme
-                                            .headline3,
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () async {
-                                            await Collection.instance
-                                                .delete(widget.album);
-                                            Navigator.of(subContext).maybePop();
-                                            Navigator.of(subContext).maybePop();
-                                          },
-                                          child: Text(Language.instance.YES),
-                                        ),
-                                        TextButton(
-                                          onPressed:
-                                              Navigator.of(subContext).pop,
-                                          child: Text(Language.instance.NO),
-                                        ),
-                                      ],
+                                onPressed: () => showDialog(
+                                  context: context,
+                                  builder: (ctx) => AlertDialog(
+                                    title: Text(
+                                      Language.instance
+                                          .COLLECTION_ALBUM_DELETE_DIALOG_HEADER,
                                     ),
-                                  );
-                                },
+                                    content: Text(
+                                      Language.instance
+                                          .COLLECTION_ALBUM_DELETE_DIALOG_BODY
+                                          .replaceAll(
+                                        'NAME',
+                                        widget.album.albumName,
+                                      ),
+                                      style: Theme.of(ctx).textTheme.headline3,
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () async {
+                                          await Navigator.of(ctx).maybePop();
+                                          await Navigator.of(context)
+                                              .maybePop();
+                                          await Collection.instance
+                                              .delete(widget.album);
+                                        },
+                                        child: Text(Language.instance.YES),
+                                      ),
+                                      TextButton(
+                                        onPressed: Navigator.of(ctx).pop,
+                                        child: Text(Language.instance.NO),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 icon: Icon(
                                   Icons.delete,
                                   color: detailsVisible

@@ -517,7 +517,7 @@ Future<void> trackPopupMenuHandle(
       case 0:
         showDialog(
           context: context,
-          builder: (subContext) => AlertDialog(
+          builder: (ctx) => AlertDialog(
             title: Text(
               Language.instance.COLLECTION_TRACK_DELETE_DIALOG_HEADER,
             ),
@@ -526,17 +526,17 @@ Future<void> trackPopupMenuHandle(
                 'NAME',
                 track.trackName,
               ),
-              style: Theme.of(subContext).textTheme.headline3,
+              style: Theme.of(ctx).textTheme.headline3,
             ),
             actions: [
               TextButton(
                 onPressed: () async {
                   await Collection.instance.delete(track);
-                  Navigator.of(subContext).pop();
+                  await Navigator.of(ctx).maybePop();
                   if (recursivelyPopNavigatorOnDeleteIf != null) {
                     if (recursivelyPopNavigatorOnDeleteIf()) {
                       while (Navigator.of(context).canPop()) {
-                        Navigator.of(context).pop();
+                        await Navigator.of(context).maybePop();
                       }
                       if (floatingSearchBarController.isOpen) {
                         floatingSearchBarController.close();
@@ -547,7 +547,7 @@ Future<void> trackPopupMenuHandle(
                 child: Text(Language.instance.YES),
               ),
               TextButton(
-                onPressed: Navigator.of(subContext).pop,
+                onPressed: Navigator.of(ctx).pop,
                 child: Text(Language.instance.NO),
               ),
             ],
@@ -608,9 +608,12 @@ Future<void> trackPopupMenuHandle(
               ),
             ),
           );
-          Timer(const Duration(milliseconds: 400), () {
-            Playback.instance.interceptPositionChangeRebuilds = false;
-          });
+          Timer(
+            const Duration(milliseconds: 400),
+            () {
+              Playback.instance.interceptPositionChangeRebuilds = false;
+            },
+          );
           break;
         }
       case 5:
