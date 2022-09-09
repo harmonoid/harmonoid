@@ -12,6 +12,8 @@ import android.os.Bundle
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
+import android.net.Uri
+import android.os.Build
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import io.flutter.Log
 import io.flutter.embedding.engine.FlutterEngine
@@ -23,12 +25,16 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import com.ryanheise.audioservice.AudioServiceActivity
 
-private const val INTENT_CHANNEL_NAME: String = "com.alexmercerind.harmonoid"
-private const val METADATA_RETRIEVER_CHANNEL_NAME: String = "com.alexmercerind.harmonoid.MetadataRetriever"
-private const val STORAGE_RETRIEVER_CHANNEL_NAME: String = "com.alexmercerind.harmonoid.StorageRetriever"
+private const val CHANNEL_NAME: String = "com.alexmercerind.harmonoid"
+private const val METADATA_RETRIEVER_CHANNEL_NAME: String =
+    "com.alexmercerind.harmonoid.MetadataRetriever"
+private const val STORAGE_RETRIEVER_CHANNEL_NAME: String =
+    "com.alexmercerind.harmonoid.StorageRetriever"
 
 class MainActivity : AudioServiceActivity() {
     private var channel: MethodChannel? = null
+    private var metadataRetrieverChannel: MethodChannel? = null
+    private var storageRetrieverChannel: MethodChannel? = null
     private var uri: String? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -39,19 +45,52 @@ class MainActivity : AudioServiceActivity() {
         )
         channel = MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
-            INTENT_CHANNEL_NAME
+            CHANNEL_NAME
+        )
+        metadataRetrieverChannel = MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            METADATA_RETRIEVER_CHANNEL_NAME
+        )
+        storageRetrieverChannel = MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            STORAGE_RETRIEVER_CHANNEL_NAME
         )
         channel?.setMethodCallHandler { _, result ->
             result.success(uri)
         }
-        MethodChannel(
-            flutterEngine.dartExecutor.binaryMessenger,
-            METADATA_RETRIEVER_CHANNEL_NAME
-        ).setMethodCallHandler(MetadataRetriever())
-        MethodChannel(
-            flutterEngine.dartExecutor.binaryMessenger,
-            STORAGE_RETRIEVER_CHANNEL_NAME
-        ).setMethodCallHandler(StorageRetriever(context))
+        metadataRetrieverChannel?.setMethodCallHandler(MetadataRetriever())
+        storageRetrieverChannel?.setMethodCallHandler(
+            StorageRetriever(
+                storageRetrieverChannel,
+                context
+            )
+        )
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        // From [StorageRetriever] class.
+        when (requestCode) {
+            STORAGE_RETRIEVER_DELETE_REQUEST_CODE -> {
+                // Android 10 is retarded. Sorry, all Android versions after 9 are retarded.
+                if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q && resultCode == RESULT_OK && data != null) {
+                    try {
+                        context.contentResolver.delete(
+                            Uri.parse(data.action),
+                            null,
+                            null
+                        )
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+                Log.d("Harmonoid", "STORAGE_RETRIEVER_DELETE_NOTIFY_METHOD_NAME: $resultCode")
+                storageRetrieverChannel?.invokeMethod(
+                    STORAGE_RETRIEVER_DELETE_NOTIFY_METHOD_NAME,
+                    resultCode == RESULT_OK
+                )
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
