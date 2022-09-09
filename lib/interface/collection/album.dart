@@ -6,13 +6,13 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
-import 'dart:math';
+import 'dart:io';
 import 'dart:ui';
+import 'dart:math';
 import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
@@ -24,11 +24,13 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/collection/artist.dart';
-import 'package:harmonoid/utils/widgets.dart';
-import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/theme.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/storage_retriever.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class AlbumTab extends StatefulWidget {
@@ -604,36 +606,46 @@ class AlbumTile extends StatelessWidget {
             openElevation: 0.0,
             openColor: Theme.of(context).scaffoldBackgroundColor,
             closedBuilder: (context, open) => InkWell(
-              onLongPress: () {
-                showDialog(
-                  context: context,
-                  builder: (ctx) => AlertDialog(
-                    title: Text(
-                      Language.instance.COLLECTION_ALBUM_DELETE_DIALOG_HEADER,
-                    ),
-                    content: Text(
-                      Language.instance.COLLECTION_ALBUM_DELETE_DIALOG_BODY
-                          .replaceAll(
-                        'NAME',
-                        album.albumName,
+              onLongPress: () async {
+                // No [Album] delete feature on Android API level 29 only.
+                if (Platform.isAndroid) {
+                  final sdk = await StorageRetriever.instance.version;
+                  if (sdk < 29) {
+                    // Android 9 or below need an [AlertDialog] for confirmation.
+                    await showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: Text(
+                          Language
+                              .instance.COLLECTION_ALBUM_DELETE_DIALOG_HEADER,
+                        ),
+                        content: Text(
+                          Language.instance.COLLECTION_ALBUM_DELETE_DIALOG_BODY
+                              .replaceAll(
+                            'NAME',
+                            album.albumName,
+                          ),
+                          style: Theme.of(ctx).textTheme.headline3,
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () async {
+                              await Collection.instance.delete(album);
+                              Navigator.of(ctx).pop();
+                            },
+                            child: Text(Language.instance.YES),
+                          ),
+                          TextButton(
+                            onPressed: Navigator.of(ctx).pop,
+                            child: Text(Language.instance.NO),
+                          ),
+                        ],
                       ),
-                      style: Theme.of(ctx).textTheme.headline3,
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () async {
-                          await Collection.instance.delete(album);
-                          Navigator.of(ctx).pop();
-                        },
-                        child: Text(Language.instance.YES),
-                      ),
-                      TextButton(
-                        onPressed: Navigator.of(ctx).pop,
-                        child: Text(Language.instance.NO),
-                      ),
-                    ],
-                  ),
-                );
+                    );
+                  } else if (sdk > 29) {
+                    await Collection.instance.delete(album);
+                  }
+                }
               },
               onTap: () async {
                 try {
@@ -1503,66 +1515,94 @@ class AlbumScreenState extends State<AlbumScreen>
                               //   iconSize: 24.0,
                               //   splashRadius: 20.0,
                               // ),
-                              IconButton(
-                                onPressed: () => showDialog(
-                                  context: context,
-                                  builder: (ctx) => AlertDialog(
-                                    title: Text(
-                                      Language.instance
-                                          .COLLECTION_ALBUM_DELETE_DIALOG_HEADER,
-                                    ),
-                                    content: Text(
-                                      Language.instance
-                                          .COLLECTION_ALBUM_DELETE_DIALOG_BODY
-                                          .replaceAll(
-                                        'NAME',
-                                        widget.album.albumName,
-                                      ),
-                                      style: Theme.of(ctx).textTheme.headline3,
-                                    ),
-                                    actions: [
-                                      TextButton(
+                              CustomFutureBuilder<int>(
+                                future: StorageRetriever.instance.version,
+                                loadingBuilder: (context) =>
+                                    const SizedBox.shrink(),
+                                builder: (context, sdk) => sdk == 29
+                                    ? const SizedBox.shrink()
+                                    : IconButton(
                                         onPressed: () async {
-                                          await Navigator.of(ctx).maybePop();
-                                          await Navigator.of(context)
-                                              .maybePop();
-                                          await Collection.instance
-                                              .delete(widget.album);
+                                          if (sdk != null) {
+                                            // No [Album] delete feature on Android API level 29 only.
+                                            if (Platform.isAndroid) {
+                                              if (sdk < 29) {
+                                                // Android 9 or below need an [AlertDialog] for confirmation.
+                                                await showDialog(
+                                                  context: context,
+                                                  builder: (ctx) => AlertDialog(
+                                                    title: Text(
+                                                      Language.instance
+                                                          .COLLECTION_ALBUM_DELETE_DIALOG_HEADER,
+                                                    ),
+                                                    content: Text(
+                                                      Language.instance
+                                                          .COLLECTION_ALBUM_DELETE_DIALOG_BODY
+                                                          .replaceAll(
+                                                        'NAME',
+                                                        widget.album.albumName,
+                                                      ),
+                                                      style: Theme.of(ctx)
+                                                          .textTheme
+                                                          .headline3,
+                                                    ),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () async {
+                                                          await Collection
+                                                              .instance
+                                                              .delete(
+                                                                  widget.album);
+                                                          Navigator.of(ctx)
+                                                              .pop();
+                                                        },
+                                                        child: Text(Language
+                                                            .instance.YES),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed:
+                                                            Navigator.of(ctx)
+                                                                .pop,
+                                                        child: Text(Language
+                                                            .instance.NO),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              } else if (sdk > 29) {
+                                                await Collection.instance
+                                                    .delete(widget.album);
+                                              }
+                                            }
+                                          }
                                         },
-                                        child: Text(Language.instance.YES),
+                                        icon: Icon(
+                                          Icons.delete,
+                                          color: detailsVisible
+                                              ? Theme.of(context)
+                                                  .extension<IconColors>()
+                                                  ?.appBarActionDarkIconColor
+                                              : [
+                                                  Theme.of(context)
+                                                      .extension<IconColors>()
+                                                      ?.appBarActionLightIconColor,
+                                                  Theme.of(context)
+                                                      .extension<IconColors>()
+                                                      ?.appBarActionDarkIconColor,
+                                                ][(color?.computeLuminance() ??
+                                                          (Theme.of(context)
+                                                                      .brightness ==
+                                                                  Brightness
+                                                                      .dark
+                                                              ? 0.0
+                                                              : 1.0)) >
+                                                      0.5
+                                                  ? 0
+                                                  : 1],
+                                        ),
+                                        iconSize: 24.0,
+                                        splashRadius: 20.0,
                                       ),
-                                      TextButton(
-                                        onPressed: Navigator.of(ctx).pop,
-                                        child: Text(Language.instance.NO),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: detailsVisible
-                                      ? Theme.of(context)
-                                          .extension<IconColors>()
-                                          ?.appBarActionDarkIconColor
-                                      : [
-                                          Theme.of(context)
-                                              .extension<IconColors>()
-                                              ?.appBarActionLightIconColor,
-                                          Theme.of(context)
-                                              .extension<IconColors>()
-                                              ?.appBarActionDarkIconColor,
-                                        ][(color?.computeLuminance() ??
-                                                  (Theme.of(context)
-                                                              .brightness ==
-                                                          Brightness.dark
-                                                      ? 0.0
-                                                      : 1.0)) >
-                                              0.5
-                                          ? 0
-                                          : 1],
-                                ),
-                                iconSize: 24.0,
-                                splashRadius: 20.0,
                               ),
                               const SizedBox(width: 8.0),
                             ],

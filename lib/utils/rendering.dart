@@ -37,6 +37,7 @@ import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/utils/windows_info.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/constants/language.dart';
 
 export 'package:harmonoid/utils/extensions.dart';
@@ -521,7 +522,16 @@ Future<void> trackPopupMenuHandle(
   if (result != null) {
     switch (result) {
       case 0:
-        showDialog(
+        if (Platform.isAndroid) {
+          final sdk = await StorageRetriever.instance.version;
+          if (sdk >= 29) {
+            // No [AlertDialog] required for confirmation.
+            // Android 10 or higher (API level 29) will ask for permissions from the user before deletion.
+            await Collection.instance.delete(track);
+            return;
+          }
+        }
+        await showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
             title: Text(
@@ -562,7 +572,7 @@ Future<void> trackPopupMenuHandle(
         break;
       case 1:
         if (track.uri.isScheme('FILE')) {
-          Share.shareFiles(
+          await Share.shareFiles(
             [track.uri.toFilePath()],
             subject: '${track.trackName} • ${[
               '',
@@ -570,7 +580,7 @@ Future<void> trackPopupMenuHandle(
             ].contains(track.albumArtistName) ? track.trackArtistNames.take(2).join(', ') : track.albumArtistName}',
           );
         } else {
-          Share.share(
+          await Share.share(
             '${track.trackName} • ${[
               '',
               kUnknownArtist,
@@ -579,7 +589,7 @@ Future<void> trackPopupMenuHandle(
         }
         break;
       case 2:
-        showAddToPlaylistDialog(context, track);
+        await showAddToPlaylistDialog(context, track);
         break;
       case 3:
         Playback.instance.add([track]);
@@ -626,7 +636,7 @@ Future<void> trackPopupMenuHandle(
         File(track.uri.toFilePath()).explore_();
         break;
       case 6:
-        Navigator.of(context).push(
+        await Navigator.of(context).push(
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
                 FadeThroughTransition(
@@ -638,7 +648,7 @@ Future<void> trackPopupMenuHandle(
         );
         break;
       case 7:
-        FileInfoScreen.show(
+        await FileInfoScreen.show(
           context,
           uri: track.uri,
         );

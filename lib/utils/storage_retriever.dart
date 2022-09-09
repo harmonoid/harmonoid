@@ -6,7 +6,9 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 
 /// StorageRetriever
 /// ----------------
@@ -31,7 +33,21 @@ class StorageRetriever {
   /// [StorageRetriever] singleton instance.
   static final StorageRetriever instance = StorageRetriever._();
 
-  StorageRetriever._();
+  StorageRetriever._() {
+    _channel.setMethodCallHandler(
+      (call) async {
+        debugPrint(call.method.toString());
+        debugPrint(call.arguments.toString());
+        switch (call.method) {
+          case 'com.alexmercerind.StorageRetriever/delete':
+            {
+              _deleteCompleter.complete(call.arguments);
+              break;
+            }
+        }
+      },
+    );
+  }
 
   /// Returns the internal storage & SD card [Directory] (s) in a [List].
   ///
@@ -64,6 +80,30 @@ class StorageRetriever {
     return result;
   }
 
-  static const MethodChannel _channel =
-      MethodChannel('com.alexmercerind.harmonoid.StorageRetriever');
+  /// Deletes given [File]s from the user's device.
+  /// Returns [bool] based on success & user approval.
+  ///
+  /// Deleting multiple [File]s at once is not supported only on Android 10 (API 29).
+  ///
+  Future<bool> delete(Iterable<File> files) async {
+    assert(Platform.isAndroid);
+    debugPrint('StorageRetriever.delete: $files');
+    _deleteCompleter = Completer();
+    await _channel.invokeMethod(
+      'delete',
+      {
+        'paths': files.map((e) => e.path).toList(),
+      },
+    );
+    final result = await _deleteCompleter.future;
+    debugPrint('StorageRetriever.delete: $files: $result');
+    return result;
+  }
+
+  /// Used by [delete] to receive result from native code from [onActivityResult].
+  ///
+  Completer<bool> _deleteCompleter = Completer<bool>();
+
+  final MethodChannel _channel =
+      const MethodChannel('com.alexmercerind.harmonoid.StorageRetriever');
 }
