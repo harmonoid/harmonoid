@@ -10,11 +10,13 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
-import 'package:media_engine/media_engine.dart';
-import 'package:media_library/media_library.dart' hide Media;
+import 'package:media_engine/media_engine.dart' hide Media;
+import 'package:media_engine/media_engine.dart' as engine;
+import 'package:media_library/media_library.dart';
 import 'package:safe_session_storage/safe_session_storage.dart';
 
 import 'package:harmonoid/utils/tagger_client.dart';
+import 'package:harmonoid/utils/storage_retriever.dart';
 
 /// Collection
 /// ----------
@@ -111,7 +113,7 @@ class Collection extends MediaLibrary with ChangeNotifier {
     if (Platform.isWindows) {
       assert(_tagger != null);
       final metadata = await _tagger!.parse(
-        Media(uri.toString()),
+        engine.Media(uri.toString()),
         coverDirectory: coverDirectory,
         timeout: timeout ?? const Duration(seconds: 1),
       );
@@ -147,6 +149,29 @@ class Collection extends MediaLibrary with ChangeNotifier {
         );
       }
     }
+  }
+
+  /// This is because modern Android versions i.e. 10 or higher have stricter file access/management policies.
+  /// `MediaStore` is the only way to delete files on Android.
+  /// In source code, this is done using:
+  ///
+  /// - `MediaStore.createDeleteRequest` on Android 11 or higher.
+  /// - `RecoverableSecurityException` and `ContentResolver.delete` on Android 10.
+  /// - Simply using `java.io.File.delete` on Android 9 or lower. Good old days.
+  ///
+  /// This method is internally called by [delete] method to perform the actual delete operation & get result as `true` or `false`.
+  ///
+  /// If the result is `true` i.e. user approval is granted, then the [delete] method will continue & update the [MediaLibrary] accordingly.
+  @override
+  Future<bool> androidDeleteRequestDelegate(Media object) {
+    if (object is Album) {
+      return StorageRetriever.instance.delete(
+        object.tracks.map((e) => File(e.uri.toFilePath())),
+      );
+    } else if (object is Track) {
+      return StorageRetriever.instance.delete([File(object.uri.toFilePath())]);
+    }
+    return Future.value(false);
   }
 
   File get unknownAlbumArt => File(
