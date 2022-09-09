@@ -1553,8 +1553,12 @@ class AlbumScreenState extends State<AlbumScreen>
                                                               .instance
                                                               .delete(
                                                                   widget.album);
-                                                          Navigator.of(ctx)
-                                                              .pop();
+                                                          await Navigator.of(
+                                                                  ctx)
+                                                              .maybePop();
+                                                          await Navigator.of(
+                                                                  context)
+                                                              .maybePop();
                                                         },
                                                         child: Text(Language
                                                             .instance.YES),
@@ -1562,7 +1566,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                       TextButton(
                                                         onPressed:
                                                             Navigator.of(ctx)
-                                                                .pop,
+                                                                .maybePop,
                                                         child: Text(Language
                                                             .instance.NO),
                                                       ),
@@ -1572,6 +1576,8 @@ class AlbumScreenState extends State<AlbumScreen>
                                               } else if (sdk > 29) {
                                                 await Collection.instance
                                                     .delete(widget.album);
+                                                await Navigator.of(context)
+                                                    .maybePop();
                                               }
                                             }
                                           }
