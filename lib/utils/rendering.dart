@@ -528,6 +528,16 @@ Future<void> trackPopupMenuHandle(
             // No [AlertDialog] required for confirmation.
             // Android 10 or higher (API level 29) will ask for permissions from the user before deletion.
             await Collection.instance.delete(track);
+            if (recursivelyPopNavigatorOnDeleteIf != null) {
+              if (recursivelyPopNavigatorOnDeleteIf()) {
+                while (Navigator.of(context).canPop()) {
+                  await Navigator.of(context).maybePop();
+                }
+                if (floatingSearchBarController.isOpen) {
+                  floatingSearchBarController.close();
+                }
+              }
+            }
             return;
           }
         }
