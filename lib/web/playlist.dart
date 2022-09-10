@@ -304,7 +304,7 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
         }
       });
     }
-    // TODO: MUST BE REMOVED BEFORE Flutter 3.1.0.
+    // TODO: MUST BE REMOVED BEFORE Flutter 3.3.x.
     if (Platform.isWindows) {
       scrollController.addListener(
         () {

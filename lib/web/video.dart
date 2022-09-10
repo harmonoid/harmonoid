@@ -6,8 +6,8 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'package:flutter/material.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:ytm_client/ytm_client.dart';
+import 'package:extended_image/extended_image.dart';
 
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/rendering.dart';

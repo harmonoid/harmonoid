@@ -205,7 +205,7 @@ class _WebRecommendationsState extends State<WebRecommendations>
   @override
   void initState() {
     super.initState();
-    // TODO: MUST BE REMOVED BEFORE Flutter 3.1.0.
+    // TODO: MUST BE REMOVED BEFORE Flutter 3.3.x.
     if (Platform.isWindows) {
       _scrollController.addListener(
         () {
@@ -380,13 +380,19 @@ class _WebRecommendationsState extends State<WebRecommendations>
                               child: item.thumbnails.containsKey(120)
                                   ? WebTrackLargeTile(
                                       height: 72.0,
-                                      width: width,
+                                      width: MediaQuery.of(context).size.width -
+                                          2 * tileMargin,
                                       track: item,
                                       colorKeys: colorKeys,
                                     )
                                   : WebVideoLargeTile(
-                                      height: height,
-                                      width: width,
+                                      height:
+                                          (MediaQuery.of(context).size.width -
+                                                  2 * tileMargin) *
+                                              9 /
+                                              16,
+                                      width: MediaQuery.of(context).size.width -
+                                          2 * tileMargin,
                                       track: item,
                                     ),
                             ),
