@@ -89,9 +89,6 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/flutter_platform_alert.git
       ref: b174a505c6c2c00bad973c2fc285e80d6a85cb7d
-  miniplayer:
-    git:
-      url: https://github.com/alexmercerind/miniplayer.git
   desktop:
     git:
       url: https://github.com/alexmercerind/desktop.git
