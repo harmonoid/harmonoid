@@ -74,6 +74,10 @@ class StorageRetriever(private val channel: MethodChannel?, private val context:
                             try {
                                 if (!File(paths.first()).deleteRecursively()) {
                                     deleteAPILevel30(paths)
+                                } else {
+                                    channel?.invokeMethod(
+                                        STORAGE_RETRIEVER_DELETE_NOTIFY_METHOD_NAME, true
+                                    )
                                 }
                             } catch (e: Exception) {
                                 e.printStackTrace()
@@ -84,6 +88,10 @@ class StorageRetriever(private val channel: MethodChannel?, private val context:
                             try {
                                 if (!File(paths.first()).deleteRecursively()) {
                                     deleteAPILevel29(paths)
+                                } else {
+                                    channel?.invokeMethod(
+                                        STORAGE_RETRIEVER_DELETE_NOTIFY_METHOD_NAME, true
+                                    )
                                 }
                             } catch (e: Exception) {
                                 e.printStackTrace()
@@ -248,8 +256,8 @@ class StorageRetriever(private val channel: MethodChannel?, private val context:
                 }
             }
         } catch (e: Exception) {
-            e.printStackTrace();
-            return null;
+            e.printStackTrace()
+            return null
         }
         try {
             val collection =
@@ -284,8 +292,8 @@ class StorageRetriever(private val channel: MethodChannel?, private val context:
                 }
             }
         } catch (e: Exception) {
-            e.printStackTrace();
-            return null;
+            e.printStackTrace()
+            return null
         }
         try {
             val collection =
@@ -320,8 +328,8 @@ class StorageRetriever(private val channel: MethodChannel?, private val context:
                 }
             }
         } catch (e: Exception) {
-            e.printStackTrace();
-            return null;
+            e.printStackTrace()
+            return null
         }
         return null
     }
