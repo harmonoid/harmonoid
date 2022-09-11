@@ -17,6 +17,7 @@ import 'package:media_library/media_library.dart';
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:safe_session_storage/safe_session_storage.dart';
 
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -279,35 +280,45 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
                               style: Theme.of(context).textTheme.headline2,
                             ),
                           )
-                        : ListView.separated(
-                            physics: BouncingScrollPhysics(),
-                            key:
-                                ValueKey('directory_screen_picker/address_bar'),
-                            controller: controller,
-                            padding: EdgeInsets.symmetric(horizontal: 16.0),
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, i) => Container(
-                              alignment: Alignment.center,
-                              child: volumes == null
-                                  ? Text(stack[i])
-                                  : Text(
-                                      stack[i]
-                                          .replaceAll(
-                                            volumes!.first.path,
-                                            Language.instance.PHONE,
-                                          )
-                                          .replaceAll(
-                                            volumes!.last.path,
-                                            Language.instance.SD_CARD,
-                                          ),
-                                    ),
+                        : Theme(
+                            data: Theme.of(context).copyWith(
+                              // ignore: deprecated_member_use
+                              androidOverscrollIndicator:
+                                  AndroidOverscrollIndicator.glow,
                             ),
-                            separatorBuilder: (context, i) => Container(
-                              height: 64.0,
-                              width: 48.0,
-                              child: Icon(Icons.chevron_right),
+                            child: ScrollConfiguration(
+                              behavior: NoOverscrollGlowBehavior(),
+                              child: ListView.separated(
+                                physics: ClampingScrollPhysics(),
+                                key: ValueKey(
+                                    'directory_screen_picker/address_bar'),
+                                controller: controller,
+                                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, i) => Container(
+                                  alignment: Alignment.center,
+                                  child: volumes == null
+                                      ? Text(stack[i])
+                                      : Text(
+                                          stack[i]
+                                              .replaceAll(
+                                                volumes!.first.path,
+                                                Language.instance.PHONE,
+                                              )
+                                              .replaceAll(
+                                                volumes!.last.path,
+                                                Language.instance.SD_CARD,
+                                              ),
+                                        ),
+                                ),
+                                separatorBuilder: (context, i) => Container(
+                                  height: 64.0,
+                                  width: 48.0,
+                                  child: Icon(Icons.chevron_right),
+                                ),
+                                itemCount: stack.length,
+                              ),
                             ),
-                            itemCount: stack.length,
                           ),
               ),
             ),
