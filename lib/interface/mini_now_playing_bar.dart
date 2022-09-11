@@ -1585,8 +1585,6 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                               ? tracksSkipped
                                               : tracks;
                                           return CustomListViewSeparated(
-                                            physics:
-                                                NeverScrollableScrollPhysics(),
                                             padding: EdgeInsets.zero,
                                             controller: controller,
                                             itemCount: 1 +
