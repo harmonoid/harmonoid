@@ -563,96 +563,51 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                               color: Colors.white,
                               tooltip: Language.instance.NEXT,
                             ),
-                            Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Container(
-                                  height: 32.0,
-                                  width: 32.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    border: playback.isShuffling
-                                        ? Border.all(
-                                            width: 1.6,
-                                            color: Theme.of(context)
-                                                        .brightness ==
-                                                    Brightness.dark
-                                                ? Colors.white.withOpacity(0.87)
-                                                : Colors.black87,
-                                          )
-                                        : null,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    shuffleCooldown = Timer(
-                                        const Duration(milliseconds: 300),
-                                        () {});
-                                    playback.toggleShuffle();
-                                  },
-                                  iconSize: 20.0,
-                                  color: Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Colors.white.withOpacity(0.87)
-                                      : Colors.black87,
-                                  splashRadius: 18.0,
-                                  icon: Icon(
-                                    Icons.shuffle,
-                                  ),
-                                  tooltip: Language.instance.SHUFFLE,
-                                ),
-                              ],
+                            IconButton(
+                              onPressed: () {
+                                shuffleCooldown = Timer(
+                                    const Duration(milliseconds: 300), () {});
+                                playback.toggleShuffle();
+                              },
+                              iconSize: 20.0,
+                              color: playback.isShuffling
+                                  ? Color.lerp(Colors.black, Colors.white, 0.87)
+                                  : Color.lerp(
+                                      Colors.black, Colors.white, 0.54),
+                              splashRadius: 18.0,
+                              icon: Icon(
+                                Icons.shuffle,
+                              ),
+                              tooltip: Language.instance.SHUFFLE,
                             ),
-                            Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Container(
-                                  height: 32.0,
-                                  width: 32.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    border: playback.playlistLoopMode !=
-                                            PlaylistLoopMode.none
-                                        ? Border.all(
-                                            width: 1.6,
-                                            color: Theme.of(context)
-                                                        .brightness ==
-                                                    Brightness.dark
-                                                ? Colors.white.withOpacity(0.87)
-                                                : Colors.black87,
-                                          )
-                                        : null,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    if (playback.playlistLoopMode ==
-                                        PlaylistLoopMode.loop) {
-                                      playback.setPlaylistLoopMode(
-                                        PlaylistLoopMode.none,
-                                      );
-                                      return;
-                                    }
-                                    playback.setPlaylistLoopMode(
-                                      PlaylistLoopMode.values[
-                                          playback.playlistLoopMode.index + 1],
-                                    );
-                                  },
-                                  iconSize: 20.0,
-                                  color: Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Colors.white.withOpacity(0.87)
-                                      : Colors.black87,
-                                  splashRadius: 18.0,
-                                  icon: Icon(
-                                    playback.playlistLoopMode ==
-                                            PlaylistLoopMode.single
-                                        ? Icons.repeat_one
-                                        : Icons.repeat,
-                                  ),
-                                  tooltip: Language.instance.REPEAT,
-                                ),
-                              ],
+                            IconButton(
+                              onPressed: () {
+                                if (playback.playlistLoopMode ==
+                                    PlaylistLoopMode.loop) {
+                                  playback.setPlaylistLoopMode(
+                                    PlaylistLoopMode.none,
+                                  );
+                                  return;
+                                }
+                                playback.setPlaylistLoopMode(
+                                  PlaylistLoopMode.values[
+                                      playback.playlistLoopMode.index + 1],
+                                );
+                              },
+                              iconSize: 20.0,
+                              color: (playback.playlistLoopMode !=
+                                      PlaylistLoopMode.none)
+                                  ? Color.lerp(Colors.black, Colors.white, 0.87)
+                                  : Color.lerp(
+                                      Colors.black, Colors.white, 0.54),
+                              splashRadius: 18.0,
+                              icon: Icon(
+                                playback.playlistLoopMode ==
+                                        PlaylistLoopMode.single
+                                    ? Icons.repeat_one
+                                    : Icons.repeat,
+                              ),
+                              tooltip: Language.instance.REPEAT,
                             ),
                             IconButton(
                               splashRadius: 20.0,
@@ -669,42 +624,23 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                               color: Colors.white,
                               tooltip: Language.instance.ADD_TO_PLAYLIST,
                             ),
-                            Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Container(
-                                  height: 32.0,
-                                  width: 32.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    border: Configuration.instance.lyricsVisible
-                                        ? Border.all(
-                                            width: 1.6,
-                                            color: Theme.of(context)
-                                                        .brightness ==
-                                                    Brightness.dark
-                                                ? Colors.white.withOpacity(0.87)
-                                                : Colors.black87,
-                                          )
-                                        : null,
-                                  ),
-                                ),
-                                IconButton(
-                                  splashRadius: 20.0,
-                                  onPressed: () async {
-                                    await Configuration.instance.save(
-                                      lyricsVisible:
-                                          !Configuration.instance.lyricsVisible,
-                                    );
-                                    setState(() {});
-                                  },
-                                  icon: Icon(
-                                    Icons.text_format,
-                                  ),
-                                  color: Colors.white,
-                                  tooltip: Language.instance.SHOW_LYRICS,
-                                ),
-                              ],
+                            IconButton(
+                              splashRadius: 20.0,
+                              onPressed: () async {
+                                await Configuration.instance.save(
+                                  lyricsVisible:
+                                      !Configuration.instance.lyricsVisible,
+                                );
+                                setState(() {});
+                              },
+                              icon: Icon(
+                                Icons.text_format,
+                              ),
+                              color: Configuration.instance.lyricsVisible
+                                  ? Color.lerp(Colors.black, Colors.white, 0.87)
+                                  : Color.lerp(
+                                      Colors.black, Colors.white, 0.54),
+                              tooltip: Language.instance.SHOW_LYRICS,
                             ),
                             if (LibmpvPluginUtils.isSupported(
                                 playback.tracks[playback.index].uri))

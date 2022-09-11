@@ -96,9 +96,9 @@ class NowPlayingBarState extends State<NowPlayingBar>
         await Future.delayed(const Duration(milliseconds: 100));
         setState(() {
           debugPrint(
-            '[NowPlayingBar] Freed ${fills.length - 1} [Color] [TweenAnimationBuilder] fill(s).',
+            '[NowPlayingBar] Freed ${fills.length} [Color] [TweenAnimationBuilder] fill(s).',
           );
-          fills.removeRange(1, fills.length - 1);
+          fills.clear();
         });
       },
     );
@@ -175,6 +175,12 @@ class NowPlayingBarState extends State<NowPlayingBar>
                           width: MediaQuery.of(context).size.width,
                           alignment: Alignment.center,
                           color: Theme.of(context).cardColor,
+                        ),
+                        Container(
+                          height: kDesktopNowPlayingBarHeight,
+                          width: MediaQuery.of(context).size.width,
+                          alignment: Alignment.center,
+                          color: color,
                         ),
                         ...fills,
                         Material(
@@ -664,56 +670,37 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                               tooltip:
                                                   Language.instance.COPY_LINK,
                                             ),
-                                          Stack(
-                                            alignment: Alignment.center,
-                                            children: [
-                                              Container(
-                                                height: 32.0,
-                                                width: 32.0,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20.0),
-                                                  border: playback.isShuffling
-                                                      ? Border.all(
-                                                          width: 1.6,
-                                                          color: (colors.palette ??
-                                                                      [
-                                                                        Theme.of(context)
-                                                                            .cardColor
-                                                                      ])
-                                                                  .first
-                                                                  .isDark
-                                                              ? Colors.white
-                                                                  .withOpacity(
-                                                                      0.87)
-                                                              : Colors.black87,
-                                                        )
-                                                      : null,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                onPressed:
-                                                    playback.toggleShuffle,
-                                                iconSize: 20.0,
-                                                color: (colors.palette ??
+                                          IconButton(
+                                            onPressed: playback.toggleShuffle,
+                                            iconSize: 20.0,
+                                            color: playback.isShuffling
+                                                ? (colors.palette ??
                                                             [
                                                               Theme.of(context)
                                                                   .cardColor
                                                             ])
                                                         .first
                                                         .isDark
-                                                    ? Colors.white
-                                                        .withOpacity(0.87)
-                                                    : Colors.black87,
-                                                splashRadius: 18.0,
-                                                tooltip:
-                                                    Language.instance.SHUFFLE,
-                                                icon: Icon(
-                                                  Icons.shuffle,
-                                                ),
-                                              ),
-                                            ],
+                                                    ? Color.lerp(Colors.black,
+                                                        Colors.white, 0.87)
+                                                    : Color.lerp(Colors.white,
+                                                        Colors.black, 0.87)
+                                                : (colors.palette ??
+                                                            [
+                                                              Theme.of(context)
+                                                                  .cardColor
+                                                            ])
+                                                        .first
+                                                        .isDark
+                                                    ? Color.lerp(Colors.black,
+                                                        Colors.white, 0.54)
+                                                    : Color.lerp(Colors.white,
+                                                        Colors.black, 0.54),
+                                            splashRadius: 18.0,
+                                            tooltip: Language.instance.SHUFFLE,
+                                            icon: Icon(
+                                              Icons.shuffle,
+                                            ),
                                           ),
                                           IconButton(
                                             onPressed: playback.isFirstTrack
@@ -804,78 +791,55 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                               Icons.skip_next,
                                             ),
                                           ),
-                                          Stack(
-                                            alignment: Alignment.center,
-                                            children: [
-                                              Container(
-                                                height: 32.0,
-                                                width: 32.0,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20.0),
-                                                  border: playback
-                                                              .playlistLoopMode !=
-                                                          PlaylistLoopMode.none
-                                                      ? Border.all(
-                                                          width: 1.6,
-                                                          color: (colors.palette ??
-                                                                      [
-                                                                        Theme.of(context)
-                                                                            .cardColor
-                                                                      ])
-                                                                  .first
-                                                                  .isDark
-                                                              ? Colors.white
-                                                                  .withOpacity(
-                                                                      0.87)
-                                                              : Colors.black87,
-                                                        )
-                                                      : null,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                onPressed: () {
-                                                  if (playback
-                                                          .playlistLoopMode ==
-                                                      PlaylistLoopMode.loop) {
-                                                    playback
-                                                        .setPlaylistLoopMode(
-                                                      PlaylistLoopMode.none,
-                                                    );
-                                                    return;
-                                                  }
-                                                  playback.setPlaylistLoopMode(
-                                                    PlaylistLoopMode
-                                                        .values[playback
-                                                            .playlistLoopMode
-                                                            .index +
-                                                        1],
-                                                  );
-                                                },
-                                                tooltip:
-                                                    Language.instance.REPEAT,
-                                                iconSize: 20.0,
-                                                color: (colors.palette ??
+                                          IconButton(
+                                            onPressed: () {
+                                              if (playback.playlistLoopMode ==
+                                                  PlaylistLoopMode.loop) {
+                                                playback.setPlaylistLoopMode(
+                                                  PlaylistLoopMode.none,
+                                                );
+                                                return;
+                                              }
+                                              playback.setPlaylistLoopMode(
+                                                PlaylistLoopMode.values[playback
+                                                        .playlistLoopMode
+                                                        .index +
+                                                    1],
+                                              );
+                                            },
+                                            tooltip: Language.instance.REPEAT,
+                                            iconSize: 20.0,
+                                            color: (playback.playlistLoopMode !=
+                                                    PlaylistLoopMode.none)
+                                                ? (colors.palette ??
                                                             [
                                                               Theme.of(context)
                                                                   .cardColor
                                                             ])
                                                         .first
                                                         .isDark
-                                                    ? Colors.white
-                                                        .withOpacity(0.87)
-                                                    : Colors.black87,
-                                                splashRadius: 18.0,
-                                                icon: Icon(
-                                                  playback.playlistLoopMode ==
-                                                          PlaylistLoopMode
-                                                              .single
-                                                      ? Icons.repeat_one
-                                                      : Icons.repeat,
-                                                ),
-                                              ),
-                                            ],
+                                                    ? Color.lerp(Colors.black,
+                                                        Colors.white, 0.87)
+                                                    : Color.lerp(Colors.white,
+                                                        Colors.black, 0.87)
+                                                : (colors.palette ??
+                                                            [
+                                                              Theme.of(context)
+                                                                  .cardColor
+                                                            ])
+                                                        .first
+                                                        .isDark
+                                                    ? Color.lerp(Colors.black,
+                                                        Colors.white, 0.54)
+                                                    : Color.lerp(Colors.white,
+                                                        Colors.black, 0.54),
+                                            splashRadius: 18.0,
+                                            icon: Icon(
+                                              playback.playlistLoopMode ==
+                                                      PlaylistLoopMode.single
+                                                  ? Icons.repeat_one
+                                                  : Icons.repeat,
+                                            ),
                                           ),
                                           if (playback.tracks.isNotEmpty &&
                                               LibmpvPluginUtils.isSupported(

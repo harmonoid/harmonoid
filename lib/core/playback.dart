@@ -292,7 +292,8 @@ class Playback extends ChangeNotifier {
       libmpv?.volume = volume;
       libmpv?.pitch = pitch;
       libmpv?.setPlaylistMode(PlaylistMode.values[playlistLoopMode.index]);
-      libmpv?.shuffle = isShuffling;
+      // Shuffle is per-playlist, so this is meaningless for current `package:media_engine` implementation.
+      // libmpv?.shuffle = isShuffling;
     }
     if (Platform.isAndroid || Platform.isIOS) {
       audioService?.setSpeed(rate);
