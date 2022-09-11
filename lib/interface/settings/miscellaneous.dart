@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
+import 'package:harmonoid/state/now_playing_color_palette.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 
 class MiscellaneousSetting extends StatefulWidget {
   MiscellaneousSetting({Key? key}) : super(key: key);
@@ -37,8 +37,17 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
                 .then((_) => setState(() {
                       if (!Configuration
                           .instance.dynamicNowPlayingBarColoring) {
-                        MobileNowPlayingController.instance.palette.value =
-                            null;
+                        NowPlayingColorPalette.instance.cleanup();
+                      } else {
+                        try {
+                          NowPlayingColorPalette.instance.update(
+                            Playback.instance.tracks[Playback.instance.index],
+                            force: true,
+                          );
+                        } catch (exception, stacktrace) {
+                          debugPrint(exception.toString());
+                          debugPrint(stacktrace.toString());
+                        }
                       }
                     })),
             value: Configuration.instance.dynamicNowPlayingBarColoring,

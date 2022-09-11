@@ -5,7 +5,7 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 import 'package:harmonoid/interface/mini_now_playing_bar.dart';
 
@@ -21,7 +21,8 @@ class MobileNowPlayingController {
       GlobalKey<MiniNowPlayingBarRefreshCollectionButtonState>();
 
   final ValueNotifier<Iterable<Color>?> palette = ValueNotifier(null);
-  final ValueNotifier<bool> bottomNavigationBar = ValueNotifier(false);
+  final ValueNotifier<double> bottomNavigationBar =
+      ValueNotifier(kBottomNavigationBarHeight);
 
   bool get isHidden => barKey.currentState?.isHidden ?? true;
 

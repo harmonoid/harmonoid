@@ -40,9 +40,17 @@ class NowPlayingColorPalette extends ChangeNotifier {
         if (_current != track) {
           _current = track;
           try {
-            final image = getAlbumArt(track, small: true);
-            final result = await PaletteGenerator.fromImageProvider(image);
-            palette = result.colors?.toList();
+            // On mobile devices, `package:palette_generator` needs to run anyway, since the [MiniNowPlayingBar] always has a tint of the palette.
+            // [Configuration.instance.dynamicNowPlayingBarColoring] only affects the coloring of refresh FAB & [BottomNavigationBar].
+            //
+            // On desktop, the [palette] isn't used anywhere once [Configuration.instance.dynamicNowPlayingBarColoring] is disabled.
+            if (isMobile ||
+                (isDesktop &&
+                    Configuration.instance.dynamicNowPlayingBarColoring)) {
+              final image = getAlbumArt(track, small: true);
+              final result = await PaletteGenerator.fromImageProvider(image);
+              palette = result.colors?.toList();
+            }
             if (Configuration.instance.dynamicNowPlayingBarColoring) {
               MobileNowPlayingController.instance.palette.value = palette;
             }
@@ -59,8 +67,25 @@ class NowPlayingColorPalette extends ChangeNotifier {
     }();
   }
 
-  void update(Track track) async {
+  /// Notifies the currently playing [Track].
+  void update(
+    Track track, {
+    bool force = false,
+  }) async {
+    if (force) {
+      _current = null;
+    }
     _controller.add(track);
+  }
+
+  /// Clears the currently extracted [palette] & notifies the listeners.
+  void cleanup() {
+    if (isDesktop) {
+      palette = null;
+    } else {
+      MobileNowPlayingController.instance.palette.value = null;
+    }
+    notifyListeners();
   }
 
   @override
