@@ -7,7 +7,7 @@
 ///
 
 const double kAlbumTileWidth = 148.0;
-const double kAlbumTileHeight = 148.0 + 56.0;
+const double kAlbumTileHeight = 148.0 + 60.0;
 const double kDenseAlbumTileWidth = 96.0;
 const double kDenseAlbumTileHeight = 96.0 + 32.0;
 

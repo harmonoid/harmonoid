@@ -12,7 +12,6 @@ import 'dart:ui';
 import 'dart:math';
 // ignore: unnecessary_import
 import 'dart:typed_data';
-import 'dart:math' as math;
 import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/rendering.dart';
@@ -78,7 +77,7 @@ class _CustomListViewState extends State<CustomListView> {
   void initState() {
     super.initState();
     controller = widget.controller ?? ScrollController();
-    // TODO: MUST BE REMOVED BEFORE Flutter 3.1.0.
+    // TODO: MUST BE REMOVED BEFORE Flutter 3.3.x.
     if (Platform.isWindows) {
       controller.addListener(
         () {
@@ -88,8 +87,10 @@ class _CustomListViewState extends State<CustomListView> {
                 (scrollDirection == ScrollDirection.reverse
                     ? kWindowsScrollDelta
                     : -kWindowsScrollDelta);
-            scrollEnd = math.min(controller.position.maxScrollExtent,
-                math.max(controller.position.minScrollExtent, scrollEnd));
+            scrollEnd = min(
+              controller.position.maxScrollExtent,
+              max(controller.position.minScrollExtent, scrollEnd),
+            );
             controller.jumpTo(scrollEnd);
           }
         },
@@ -121,13 +122,13 @@ class _CustomListViewState extends State<CustomListView> {
 
 class CustomListViewBuilder extends StatefulWidget {
   final ScrollController? controller;
-  final int velocity = 40;
   final int itemCount;
   final List<double> itemExtents;
   final Widget Function(BuildContext, int) itemBuilder;
   final Axis? scrollDirection;
   final bool? shrinkWrap;
   final EdgeInsets? padding;
+  final ScrollPhysics? physics;
 
   CustomListViewBuilder({
     required this.itemCount,
@@ -137,6 +138,7 @@ class CustomListViewBuilder extends StatefulWidget {
     this.scrollDirection,
     this.shrinkWrap,
     this.padding,
+    this.physics,
   });
 
   @override
@@ -150,7 +152,7 @@ class _CustomListViewBuilderState extends State<CustomListViewBuilder> {
   void initState() {
     super.initState();
     controller = widget.controller ?? ScrollController();
-    // TODO: MUST BE REMOVED BEFORE Flutter 3.1.0.
+    // TODO: MUST BE REMOVED BEFORE Flutter 3.3.x.
     if (Platform.isWindows) {
       controller.addListener(
         () {
@@ -160,8 +162,10 @@ class _CustomListViewBuilderState extends State<CustomListViewBuilder> {
                 (scrollDirection == ScrollDirection.reverse
                     ? kWindowsScrollDelta
                     : -kWindowsScrollDelta);
-            scrollEnd = math.min(controller.position.maxScrollExtent,
-                math.max(controller.position.minScrollExtent, scrollEnd));
+            scrollEnd = min(
+              controller.position.maxScrollExtent,
+              max(controller.position.minScrollExtent, scrollEnd),
+            );
             controller.jumpTo(scrollEnd);
           }
         },
@@ -183,6 +187,89 @@ class _CustomListViewBuilderState extends State<CustomListViewBuilder> {
       itemCount: widget.itemCount,
       itemBuilder: widget.itemBuilder,
       padding: widget.padding,
+      physics: widget.physics,
+    );
+  }
+}
+
+class CustomListViewSeparated extends StatefulWidget {
+  final ScrollController? controller;
+  final int itemCount;
+  final double separatorExtent;
+  final Widget Function(BuildContext, int) separatorBuilder;
+  final List<double> itemExtents;
+  final Widget Function(BuildContext, int) itemBuilder;
+  final Axis? scrollDirection;
+  final bool? shrinkWrap;
+  final EdgeInsets? padding;
+  final ScrollPhysics? physics;
+
+  CustomListViewSeparated({
+    required this.itemCount,
+    required this.separatorExtent,
+    required this.separatorBuilder,
+    required this.itemExtents,
+    required this.itemBuilder,
+    this.controller,
+    this.scrollDirection,
+    this.shrinkWrap,
+    this.padding,
+    this.physics,
+  });
+
+  @override
+  _CustomListViewSeparatedState createState() =>
+      _CustomListViewSeparatedState();
+}
+
+class _CustomListViewSeparatedState extends State<CustomListViewSeparated> {
+  late final ScrollController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = widget.controller ?? ScrollController();
+    // TODO: MUST BE REMOVED BEFORE Flutter 3.3.x.
+    if (Platform.isWindows) {
+      controller.addListener(
+        () {
+          final scrollDirection = controller.position.userScrollDirection;
+          if (scrollDirection != ScrollDirection.idle) {
+            var scrollEnd = controller.offset +
+                (scrollDirection == ScrollDirection.reverse
+                    ? kWindowsScrollDelta
+                    : -kWindowsScrollDelta);
+            scrollEnd = min(
+              controller.position.maxScrollExtent,
+              max(controller.position.minScrollExtent, scrollEnd),
+            );
+            controller.jumpTo(scrollEnd);
+          }
+        },
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return KnownExtentsListView.builder(
+      controller: controller,
+      itemExtents: List.generate(
+        2 * widget.itemCount - 1,
+        (i) => i % 2 == 0 ? widget.itemExtents[i ~/ 2] : widget.separatorExtent,
+      ),
+      itemCount: 2 * widget.itemCount - 1,
+      itemBuilder: (context, i) => i % 2 == 0
+          ? widget.itemBuilder(context, i ~/ 2)
+          : widget.separatorBuilder(context, i ~/ 2),
+      padding: widget.padding,
+      physics: widget.physics,
     );
   }
 }
@@ -209,7 +296,7 @@ class _CustomSingleChildScrollViewState
   void initState() {
     super.initState();
     controller = widget.controller ?? ScrollController();
-    // TODO: MUST BE REMOVED BEFORE Flutter 3.1.0.
+    // TODO: MUST BE REMOVED BEFORE Flutter 3.3.x.
     if (Platform.isWindows) {
       controller.addListener(
         () {
@@ -219,8 +306,8 @@ class _CustomSingleChildScrollViewState
                 (scrollDirection == ScrollDirection.reverse
                     ? kWindowsScrollDelta
                     : -kWindowsScrollDelta);
-            scrollEnd = math.min(controller.position.maxScrollExtent,
-                math.max(controller.position.minScrollExtent, scrollEnd));
+            scrollEnd = min(controller.position.maxScrollExtent,
+                max(controller.position.minScrollExtent, scrollEnd));
             controller.jumpTo(scrollEnd);
           }
         },
@@ -1902,7 +1989,7 @@ class _HorizontalListState extends State<HorizontalList> {
                 child: Center(
                   child: FloatingActionButton(
                     mini: true,
-                    heroTag: ValueKey(math.Random().nextInt(1 << 32)),
+                    heroTag: ValueKey(Random().nextInt(1 << 32)),
                     onPressed: () {
                       controller.animateTo(
                         controller.offset +
@@ -1924,7 +2011,7 @@ class _HorizontalListState extends State<HorizontalList> {
                 child: Center(
                   child: FloatingActionButton(
                     mini: true,
-                    heroTag: ValueKey(math.Random().nextInt(1 << 32)),
+                    heroTag: ValueKey(Random().nextInt(1 << 32)),
                     onPressed: () {
                       controller.animateTo(
                         controller.offset -
@@ -3540,5 +3627,13 @@ class _MobileAppBarOverflowButtonState
         });
       },
     );
+  }
+}
+
+class NoOverscrollGlowBehavior extends ScrollBehavior {
+  @override
+  Widget buildOverscrollIndicator(
+      BuildContext context, Widget child, ScrollableDetails details) {
+    return child;
   }
 }
