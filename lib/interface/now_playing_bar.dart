@@ -7,6 +7,7 @@
 ///
 
 import 'dart:core';
+import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,7 +21,6 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/interface/collection/artist.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -46,6 +46,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
   bool isShuffling = Playback.instance.isShuffling;
   bool showAlbumArtButton = false;
   bool controlPanelVisible = false;
+  Color? color;
+  Timer? timer;
 
   @override
   void initState() {
@@ -60,8 +62,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
       } else {
         playOrPause.reverse();
       }
-      if (!Configuration.instance.dynamicNowPlayingBarColoring ||
-          Playback.instance.index < 0 ||
+      if (Playback.instance.index < 0 ||
           Playback.instance.index >= Playback.instance.tracks.length) {
         return;
       }
@@ -76,42 +77,64 @@ class NowPlayingBarState extends State<NowPlayingBar>
   }
 
   void colorPaletteListener() {
-    fills.add(
-      TweenAnimationBuilder(
-        tween: Tween<double>(begin: 0.0, end: 40.0),
-        duration: Duration(
-          milliseconds: (1000 * (400 / MediaQuery.of(context).size.width) ~/ 1),
-        ),
-        onEnd: () {
-          if (fills.length > 2) {
-            fills.removeAt(0);
-          }
-        },
-        curve: Curves.elasticInOut,
-        child: Container(
-          height: kDesktopNowPlayingBarHeight,
-          width: MediaQuery.of(context).size.width,
-          alignment: Alignment.center,
-          child: ClipRect(
-            child: Container(
-              height: kDesktopNowPlayingBarHeight,
-              width: kDesktopNowPlayingBarHeight,
-              decoration: BoxDecoration(
-                color: NowPlayingColorPalette.instance.palette == null
-                    ? Theme.of(context).cardColor
-                    : NowPlayingColorPalette.instance.palette!.first
-                        .withOpacity(1.0),
-                shape: BoxShape.circle,
+    final ms = ((1000 * (800 / MediaQuery.of(context).size.width)) ~/ 1);
+    final color = NowPlayingColorPalette.instance.palette == null
+        ? Theme.of(context).cardColor
+        : NowPlayingColorPalette.instance.palette?.first.withOpacity(1.0);
+    if (color == this.color) {
+      return;
+    }
+    if (timer?.isActive ?? true) {
+      timer?.cancel();
+    }
+    timer = Timer(
+      Duration(milliseconds: ms + 100),
+      () async {
+        setState(() {
+          this.color = color;
+        });
+        await Future.delayed(const Duration(milliseconds: 100));
+        setState(() {
+          debugPrint(
+            '[NowPlayingBar] Freed ${fills.length - 1} [Color] [TweenAnimationBuilder] fill(s).',
+          );
+          fills.removeRange(1, fills.length - 1);
+        });
+      },
+    );
+    setState(() {
+      fills.add(
+        TweenAnimationBuilder(
+          tween: Tween<double>(
+            begin: 0.0,
+            end: 2 * MediaQuery.of(context).size.width / 4.0,
+          ),
+          duration: Duration(
+            milliseconds: ms,
+          ),
+          curve: Curves.easeInOut,
+          child: Container(
+            height: kDesktopNowPlayingBarHeight,
+            width: MediaQuery.of(context).size.width,
+            alignment: Alignment.center,
+            child: ClipRect(
+              child: Container(
+                height: 4.0,
+                width: 4.0,
+                decoration: BoxDecoration(
+                  color: color,
+                  shape: BoxShape.circle,
+                ),
               ),
             ),
           ),
+          builder: (context, value, child) => Transform.scale(
+            scale: value as double,
+            child: child,
+          ),
         ),
-        builder: (context, value, child) => Transform.scale(
-          scale: value as double,
-          child: child,
-        ),
-      ),
-    );
+      );
+    });
   }
 
   @override
@@ -147,14 +170,13 @@ class NowPlayingBarState extends State<NowPlayingBar>
                     elevation: 12.0,
                     child: Stack(
                       children: [
+                        Container(
+                          height: kDesktopNowPlayingBarHeight,
+                          width: MediaQuery.of(context).size.width,
+                          alignment: Alignment.center,
+                          color: Theme.of(context).cardColor,
+                        ),
                         ...fills,
-                        if (fills.isEmpty)
-                          Container(
-                            height: kDesktopNowPlayingBarHeight,
-                            width: MediaQuery.of(context).size.width,
-                            alignment: Alignment.center,
-                            color: Theme.of(context).cardColor,
-                          ),
                         Material(
                           clipBehavior: Clip.antiAlias,
                           color: Colors.transparent,

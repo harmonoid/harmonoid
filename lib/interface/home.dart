@@ -329,19 +329,21 @@ class HomeState extends State<Home>
                       ),
                     ],
                   ),
-                  bottomNavigationBar: ValueListenableBuilder<bool>(
+                  bottomNavigationBar: ValueListenableBuilder<double>(
                     valueListenable:
                         MobileNowPlayingController.instance.bottomNavigationBar,
-                    child: (isMobile &&
-                            MediaQuery.of(context).viewInsets.bottom < 180.0)
-                        ? MobileBottomNavigationBar(
-                            tabControllerNotifier: tabControllerNotifier,
-                          )
-                        : const SizedBox.shrink(),
-                    builder: (context, hidden, child) => AnimatedContainer(
-                      height: hidden ? 0.0 : kBottomNavigationBarHeight,
-                      duration: Duration(milliseconds: 200),
-                      curve: Curves.easeInOut,
+                    child: MobileBottomNavigationBar(
+                      tabControllerNotifier: tabControllerNotifier,
+                    ),
+                    builder: (context, height, child) => Container(
+                      height: (
+                              // [MobileBottomNavigationBar] only visible on mobile.
+                              isMobile &&
+                                  // On-screen keyboard is hidden (not visible).
+                                  MediaQuery.of(context).viewInsets.bottom <
+                                      180.0)
+                          ? height
+                          : 0.0,
                       child: SingleChildScrollView(
                         physics: NeverScrollableScrollPhysics(),
                         child: child!,

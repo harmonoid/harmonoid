@@ -6,10 +6,10 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'dart:ui';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:miniplayer/miniplayer.dart';
 import 'package:collection/collection.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:media_engine/media_engine.dart';
@@ -20,23 +20,23 @@ import 'package:flutter_lyric/lyrics_reader.dart';
 import 'package:flutter_lyric/lyrics_reader_model.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
-import 'package:harmonoid/utils/widgets.dart';
-import 'package:harmonoid/utils/theme.dart';
-import 'package:harmonoid/interface/now_playing_bar.dart';
-import 'package:harmonoid/interface/collection/track.dart';
+import 'package:harmonoid/utils/mini_player.dart';
 import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/now_playing_color_palette.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
+import 'package:harmonoid/interface/now_playing_bar.dart';
+import 'package:harmonoid/interface/collection/track.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/web/utils/widgets.dart';
 
-const kDetailsAreaHeight = 92.0;
-const kControlsAreaHeight = 124.0;
+const kDetailsAreaHeight = 96.0;
 
 class MiniNowPlayingBar extends StatefulWidget {
   MiniNowPlayingBar({Key? key}) : super(key: key);
@@ -80,20 +80,29 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
   int index = Playback.instance.index;
   int currentPage = Playback.instance.index;
   Track? track;
-  Iterable<Widget> comingUpTracks = [];
+
+  List<Widget> more = [];
+  List<Widget> tracks = [];
+  List<Widget> tracksSkipped = [];
   bool showAlbumArtButton = false;
-  ScrollPhysics? physics = NeverScrollableScrollPhysics();
-  PageController pageController = PageController(
-    initialPage: Playback.instance.index,
-  );
-  final MiniplayerController controller = MiniplayerController();
+  PageController pageController =
+      PageController(initialPage: Playback.instance.index);
+  MiniplayerController controller = MiniplayerController();
+  DraggableScrollableController scrollableController =
+      DraggableScrollableController();
+  ScrollController? scrollableControllerReference;
+  bool minimizedPlaylist = true;
+  List<Widget> fills = [];
+  Color? color;
+  Timer? timer;
 
   @override
   void initState() {
     super.initState();
     _y = (kMobileNowPlayingBarHeight + 4.0) /
         (window.physicalSize.height -
-            window.padding.top -
+            window.padding.top / window.devicePixelRatio +
+            16.0 -
             window.padding.bottom) *
         window.devicePixelRatio;
     playOrPause = AnimationController(
@@ -101,12 +110,107 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
       duration: Duration(milliseconds: 200),
     );
     Playback.instance.addListener(listener);
+    NowPlayingColorPalette.instance.addListener(colorPaletteListener);
+    scrollableController.addListener(scrollableControllerListener);
   }
 
   @override
   void dispose() {
     Playback.instance.removeListener(listener);
+    NowPlayingColorPalette.instance.removeListener(colorPaletteListener);
+    scrollableController.removeListener(scrollableControllerListener);
     super.dispose();
+  }
+
+  void colorPaletteListener() {
+    final ms = ((1000 * (400 / MediaQuery.of(context).size.width)) ~/ 1);
+    final color =
+        NowPlayingColorPalette.instance.palette?.first.withOpacity(1.0);
+    if (color == this.color) {
+      return;
+    }
+    if (timer?.isActive ?? true) {
+      timer?.cancel();
+    }
+    timer = Timer(
+      Duration(milliseconds: ms + 100),
+      () async {
+        setState(() {
+          this.color = color;
+        });
+        await Future.delayed(const Duration(milliseconds: 100));
+        setState(() {
+          debugPrint(
+            '[MiniNowPlayingBar] Freed ${fills.length} [Color] [TweenAnimationBuilder] fill(s).',
+          );
+          fills.clear();
+        });
+      },
+    );
+    setState(() {
+      fills.add(
+        TweenAnimationBuilder(
+          tween: Tween<double>(
+            begin: 0.0,
+            end: 2 * MediaQuery.of(context).size.width / 4.0,
+          ),
+          duration: Duration(
+            milliseconds: ms,
+          ),
+          curve: Curves.easeInOut,
+          child: Container(
+            height: kDesktopNowPlayingBarHeight,
+            width: MediaQuery.of(context).size.width,
+            alignment: Alignment.center,
+            child: ClipRect(
+              child: Container(
+                height: 4.0,
+                width: 4.0,
+                decoration: BoxDecoration(
+                  color: color,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+          ),
+          builder: (context, value, child) => Transform.scale(
+            scale: value as double,
+            child: child,
+          ),
+        ),
+      );
+    });
+  }
+
+  void scrollableControllerListener() {
+    try {
+      final vh = MediaQuery.of(context).size.height;
+      final vw = MediaQuery.of(context).size.width;
+      final pt = window.padding.top / window.devicePixelRatio + 16.0;
+      final min =
+          ((vh - (vw + kDetailsAreaHeight + 128.0)) / vh).toStringAsFixed(2);
+      final max = ((vh - (kToolbarHeight + pt)) / vh).toStringAsFixed(2);
+      final current = scrollableController.size.toStringAsFixed(2).toString();
+      if (!minimizedPlaylist && current == min) {
+        setState(() {
+          minimizedPlaylist = true;
+        });
+        scrollableControllerReference?.jumpTo(0.0);
+      } else if (minimizedPlaylist && current == max) {
+        setState(() {
+          minimizedPlaylist = false;
+        });
+        scrollableControllerReference?.jumpTo(
+          32.0 + Playback.instance.index * (72.0 + 1.0),
+        );
+      }
+    } catch (exception, stacktrace) {
+      minimizedPlaylist = true;
+      scrollableControllerReference?.jumpTo(0.0);
+      fills.clear();
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
   }
 
   Future<void> listener() async {
@@ -116,7 +220,8 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
       playOrPause.reverse();
     }
     if (Playback.instance.index < 0 ||
-        Playback.instance.index >= Playback.instance.tracks.length) {
+        Playback.instance.index >= Playback.instance.tracks.length ||
+        Playback.instance.tracks.isEmpty) {
       return;
     }
     if (index != Playback.instance.index) {
@@ -140,19 +245,13 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
         Future.wait([
           precacheImage(
             getAlbumArt(
-              Playback.instance.tracks[(Playback.instance.index - 1).clamp(
-                0,
-                Playback.instance.tracks.length,
-              )],
+              Playback.instance.tracks[Playback.instance.index - 1],
             ),
             context,
           ),
           precacheImage(
             getAlbumArt(
-              Playback.instance.tracks[(Playback.instance.index + 1).clamp(
-                0,
-                Playback.instance.tracks.length,
-              )],
+              Playback.instance.tracks[Playback.instance.index + 1],
             ),
             context,
           ),
@@ -163,412 +262,155 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
       }
     }
     final track = Playback.instance.tracks[Playback.instance.index];
-    if (this.track != track ||
-        comingUpTracks.length.compareTo(Playback.instance.tracks.length) != 0) {
+    final update = this.track != track ||
+        tracks.length.compareTo(Playback.instance.tracks.length) != 0;
+    if (update) {
       this.track = track;
-      comingUpTracks = Playback.instance.tracks
-          .skip(Playback.instance.index + 1)
-          .toList()
+      // NOTE: Do not depend on [BuildContext] here.
+      tracks = Playback.instance.tracks
           .asMap()
           .entries
-          .map((e) => TrackTile(
-                track: e.value,
-                index: e.key,
+          .map(
+            (e) => TrackTile(
+              track: e.value,
+              index: e.key,
+              disableContextMenu: true,
+              disableSeparator: true,
+              onPressed: () {
+                Playback.instance.jump(e.key);
+              },
+              leading: Container(
+                height: 56.0,
+                width: 56.0,
+                alignment: Alignment.center,
+                child: e.key == Playback.instance.index
+                    ? Container(
+                        height: 32.0,
+                        width: 28.0,
+                        alignment: Alignment.center,
+                        child: MiniMusicVisualizer(
+                          color: Colors.black54,
+                          width: 6,
+                          height: 15,
+                        ),
+                      )
+                    : Text(
+                        '${e.key - Playback.instance.index <= 0 ? '' : '+'}${e.key - Playback.instance.index}',
+                        style: Theme.of(context).textTheme.headline3?.copyWith(
+                              fontSize: 18.0,
+                              color: Colors.black54,
+                            ),
+                      ),
+              ),
+              title: Text(
+                e.value.trackName,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: e.key < Playback.instance.index
+                      ? Colors.black54
+                      : Colors.black87,
+                  fontSize: 16.0,
+                ),
+              ),
+              subtitle: Text(
+                e.value.trackArtistNames.take(1).join(', '),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black54,
+                  fontSize: 14.0,
+                ),
+              ),
+            ),
+          )
+          .toList();
+      if (minimizedPlaylist || more.isEmpty) {
+        final shuffle = [
+          ...Collection.instance.tracks,
+        ]..shuffle();
+        more = shuffle
+            .take(10)
+            .map(
+              (e) => TrackTile(
+                track: e,
+                index: 0,
+                group: [e] + shuffle,
                 disableContextMenu: true,
+                disableSeparator: true,
                 leading: Container(
                   height: 56.0,
                   width: 56.0,
                   alignment: Alignment.center,
-                  child: Text(
-                    '${e.key + Playback.instance.index + 1}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline3
-                        ?.copyWith(fontSize: 18.0),
+                  child: Icon(Icons.music_note_outlined),
+                ),
+                title: Text(
+                  e.trackName,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black87,
+                    fontSize: 16.0,
                   ),
                 ),
-                onPressed: () {
-                  Playback.instance.jump(Playback.instance.index + e.key + 1);
-                },
-              ));
+                subtitle: Text(
+                  e.trackArtistNames.take(1).join(', '),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black54,
+                    fontSize: 14.0,
+                  ),
+                ),
+              ),
+            )
+            .toList();
+      }
+      tracksSkipped = tracks.skip(Playback.instance.index + 1).toList();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<NowPlayingColorPalette>(
-      builder: (context, colors, _) => AnimatedSlide(
-        offset: Offset(0, _y),
-        duration: Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-        child: TweenAnimationBuilder<Color?>(
-          tween: ColorTween(
-            begin: colors.palette?.first ?? Theme.of(context).cardColor,
-            end: colors.palette?.first ?? Theme.of(context).cardColor,
-          ),
-          duration: Duration(milliseconds: 400),
-          child: Stack(
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Consumer<Playback>(
-                  builder: (context, playback, _) => Column(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: kDetailsAreaHeight,
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        color: Colors.transparent,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              playback
-                                  .tracks[playback.index
-                                      .clamp(0, playback.tracks.length - 1)]
-                                  .trackName
-                                  .overflow,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline6
-                                  ?.copyWith(
-                                    color: (colors.palette ??
-                                                [Theme.of(context).cardColor])
-                                            .first
-                                            .isDark
-                                        ? Colors.white
-                                        : Colors.black,
-                                    fontSize: 24.0,
-                                  ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 4.0),
-                            Text(
-                              [
-                                if (!const ListEquality().equals(
-                                        playback
-                                            .tracks[playback.index.clamp(
-                                                0, playback.tracks.length - 1)]
-                                            .trackArtistNames
-                                            .take(1)
-                                            .toList(),
-                                        [kUnknownArtist]) &&
-                                    playback
-                                        .tracks[playback.index.clamp(
-                                            0, playback.tracks.length - 1)]
-                                        .trackArtistNames
-                                        .join('')
-                                        .trim()
-                                        .isNotEmpty)
-                                  playback
-                                      .tracks[playback.index
-                                          .clamp(0, playback.tracks.length - 1)]
-                                      .trackArtistNames
-                                      .take(2)
-                                      .join(', ')
-                                      .overflow,
-                                if (playback
-                                            .tracks[playback.index.clamp(
-                                                0, playback.tracks.length - 1)]
-                                            .albumName !=
-                                        kUnknownAlbum &&
-                                    playback
-                                        .tracks[playback.index.clamp(
-                                            0, playback.tracks.length - 1)]
-                                        .albumName
-                                        .isNotEmpty)
-                                  playback
-                                      .tracks[playback.index
-                                          .clamp(0, playback.tracks.length - 1)]
-                                      .albumName
-                                      .overflow,
-                              ].join(' • '),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline3
-                                  ?.copyWith(
-                                    color: (colors.palette ??
-                                                [Theme.of(context).cardColor])
-                                            .first
-                                            .isDark
-                                        ? Colors.white
-                                        : Colors.black,
-                                  ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: kControlsAreaHeight,
-                        color: Colors.white24,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            top: 44.0,
-                            bottom: 16.0 + 8.0,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              const SizedBox(width: 12.0),
-                              IconButton(
-                                onPressed: () {
-                                  if (playback.playlistLoopMode ==
-                                      PlaylistLoopMode.loop) {
-                                    playback.setPlaylistLoopMode(
-                                      PlaylistLoopMode.none,
-                                    );
-                                    return;
-                                  }
-                                  playback.setPlaylistLoopMode(
-                                    PlaylistLoopMode.values[
-                                        playback.playlistLoopMode.index + 1],
-                                  );
-                                },
-                                iconSize: 24.0,
-                                color: (playback.playlistLoopMode !=
-                                        PlaylistLoopMode.none)
-                                    ? (colors.palette ??
-                                                [Theme.of(context).cardColor])
-                                            .first
-                                            .isDark
-                                        ? Color.lerp(
-                                            Colors.black, Colors.white, 0.87)
-                                        : Color.lerp(
-                                            Colors.white, Colors.black, 0.87)
-                                    : (colors.palette ??
-                                                [Theme.of(context).cardColor])
-                                            .first
-                                            .isDark
-                                        ? Color.lerp(
-                                            Colors.black, Colors.white, 0.54)
-                                        : Color.lerp(
-                                            Colors.white, Colors.black, 0.54),
-                                splashRadius: 24.0,
-                                icon: Icon(
-                                  playback.playlistLoopMode ==
-                                          PlaylistLoopMode.single
-                                      ? Icons.repeat_one
-                                      : Icons.repeat,
-                                ),
-                              ),
-                              Spacer(),
-                              Container(
-                                width: 48.0,
-                                child: IconButton(
-                                  onPressed: Playback.instance.previous,
-                                  icon: Icon(
-                                    Icons.skip_previous,
-                                    color: (colors.palette ??
-                                                [Theme.of(context).cardColor])
-                                            .first
-                                            .isDark
-                                        ? Color.lerp(
-                                            Colors.black, Colors.white, 0.87)
-                                        : Color.lerp(
-                                            Colors.white, Colors.black, 0.87),
-                                    size: 28.0,
-                                  ),
-                                  splashRadius: 28.0,
-                                ),
-                              ),
-                              const SizedBox(width: 8.0),
-                              Container(
-                                width: 72.0,
-                                child: FloatingActionButton(
-                                  onPressed: Playback.instance.isPlaying
-                                      ? Playback.instance.pause
-                                      : Playback.instance.play,
-                                  backgroundColor: (colors.palette ??
-                                          [Theme.of(context).primaryColor])
-                                      .last,
-                                  child: AnimatedIcon(
-                                    progress: playOrPause,
-                                    icon: AnimatedIcons.play_pause,
-                                    color: (colors.palette ??
-                                                [
-                                                  Theme.of(context).primaryColor
-                                                ])
-                                            .last
-                                            .isDark
-                                        ? Colors.white
-                                        : Colors.black,
-                                    size: 32.0,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 8.0),
-                              Container(
-                                width: 48.0,
-                                child: IconButton(
-                                  onPressed: Playback.instance.next,
-                                  icon: Icon(
-                                    Icons.skip_next,
-                                    color: (colors.palette ??
-                                                [Theme.of(context).cardColor])
-                                            .first
-                                            .isDark
-                                        ? Color.lerp(
-                                            Colors.black, Colors.white, 0.87)
-                                        : Color.lerp(
-                                            Colors.white, Colors.black, 0.87),
-                                    size: 28.0,
-                                  ),
-                                  splashRadius: 28.0,
-                                ),
-                              ),
-                              Spacer(),
-                              IconButton(
-                                onPressed: playback.toggleShuffle,
-                                iconSize: 24.0,
-                                color: playback.isShuffling
-                                    ? (colors.palette ??
-                                                [Theme.of(context).cardColor])
-                                            .first
-                                            .isDark
-                                        ? Color.lerp(
-                                            Colors.black, Colors.white, 0.87)
-                                        : Color.lerp(
-                                            Colors.white, Colors.black, 0.87)
-                                    : (colors.palette ??
-                                                [Theme.of(context).cardColor])
-                                            .first
-                                            .isDark
-                                        ? Color.lerp(
-                                            Colors.black, Colors.white, 0.54)
-                                        : Color.lerp(
-                                            Colors.white, Colors.black, 0.54),
-                                splashRadius: 24.0,
-                                icon: Icon(
-                                  Icons.shuffle,
-                                ),
-                              ),
-                              const SizedBox(width: 12.0),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Consumer<Playback>(
-                builder: (context, playback, _) => Positioned(
-                  left: 0.0,
-                  right: 0.0,
-                  top: kDetailsAreaHeight - 12.0,
-                  child: Column(
-                    children: [
-                      ScrollableSlider(
-                        min: 0.0,
-                        max: playback.duration.inMilliseconds.toDouble(),
-                        value: playback.position.inMilliseconds
-                            .clamp(
-                                0, playback.duration.inMilliseconds.toDouble())
-                            .toDouble(),
-                        color: colors.palette?.last,
-                        secondaryColor: colors.palette?.first,
-                        onChanged: (value) {
-                          playback.seek(
-                            Duration(
-                              milliseconds: value.toInt(),
-                            ),
-                          );
-                        },
-                        onScrolledUp: () {
-                          if (playback.position >= playback.duration) return;
-                          playback.seek(
-                            playback.position + Duration(seconds: 10),
-                          );
-                        },
-                        onScrolledDown: () {
-                          if (playback.position <= Duration.zero) return;
-                          playback.seek(
-                            playback.position - Duration(seconds: 10),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 4.0),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 24.0),
-                          const SizedBox(width: 16.0),
-                          Text(
-                            playback.position.label,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline3
-                                ?.copyWith(
-                                  color: (colors.palette ??
-                                              [Theme.of(context).primaryColor])
-                                          .first
-                                          .isDark
-                                      ? Colors.white
-                                      : Colors.black,
-                                ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Spacer(),
-                          Text(
-                            playback.duration.label,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline3
-                                ?.copyWith(
-                                  color: (colors.palette ??
-                                              [Theme.of(context).primaryColor])
-                                          .first
-                                          .isDark
-                                      ? Colors.white
-                                      : Colors.black,
-                                ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(width: 16.0),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          builder: (context, color, child) => Miniplayer(
-            controller: controller,
-            elevation: 8.0,
-            minHeight: kMobileNowPlayingBarHeight,
-            maxHeight: MediaQuery.of(context).size.height,
-            tapToCollapse: false,
-            builder: (height, percentage) {
-              try {
-                final hidden = percentage > 0.8;
-                if (MobileNowPlayingController
-                        .instance.bottomNavigationBar.value !=
-                    hidden) {
-                  WidgetsBinding.instance.addPostFrameCallback(
-                    (_) {
-                      MobileNowPlayingController
-                          .instance.bottomNavigationBar.value = hidden;
-                    },
-                  );
-                }
-              } catch (exception, stacktrace) {
-                debugPrint(exception.toString());
-                debugPrint(stacktrace.toString());
-              }
-              physics = percentage == 0 ? NeverScrollableScrollPhysics() : null;
-              return () {
-                if (Playback.instance.tracks.isEmpty) return Container();
-                return Container(
+    if (color == null) {
+      color = NowPlayingColorPalette.instance.palette?.first.withOpacity(1.0);
+    }
+    final colors = NowPlayingColorPalette.instance;
+    return AnimatedSlide(
+      offset: Offset(0, _y),
+      duration: Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
+      child: Miniplayer(
+        controller: controller,
+        elevation: 8.0,
+        minHeight: kMobileNowPlayingBarHeight,
+        maxHeight: MediaQuery.of(context).size.height,
+        tapToCollapse: false,
+        builder: (height, percentage) {
+          try {
+            WidgetsBinding.instance.addPostFrameCallback(
+              (_) {
+                MobileNowPlayingController.instance.bottomNavigationBar.value =
+                    (1.0 - (percentage * 1.4).clamp(0.0, 1.0)) *
+                        kBottomNavigationBarHeight;
+              },
+            );
+          } catch (exception, stacktrace) {
+            debugPrint(exception.toString());
+            debugPrint(stacktrace.toString());
+          }
+          return () {
+            if (Playback.instance.tracks.isEmpty)
+              return const SizedBox.shrink();
+            return Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height,
                   color: Theme.of(context).scaffoldBackgroundColor,
                   child: AnnotatedRegion<SystemUiOverlayStyle>(
                     value: SystemUiOverlayStyle(
@@ -578,8 +420,8 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                     ),
                     child: ListView(
                       shrinkWrap: false,
+                      physics: NeverScrollableScrollPhysics(),
                       padding: EdgeInsets.zero,
-                      physics: physics,
                       children: [
                         if (percentage < 0.8)
                           Consumer<Playback>(
@@ -600,14 +442,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                           ),
                         Container(
                           height: percentage == 1.0
-                              ? MediaQuery.of(context).size.width +
-                                          kDetailsAreaHeight +
-                                          kControlsAreaHeight <
-                                      MediaQuery.of(context).size.height
-                                  ? MediaQuery.of(context).size.width
-                                  : MediaQuery.of(context).size.height -
-                                      kDetailsAreaHeight -
-                                      kControlsAreaHeight
+                              ? MediaQuery.of(context).size.width
                               : height < MediaQuery.of(context).size.width
                                   ? height - 2.0
                                   : height >= MediaQuery.of(context).size.width
@@ -745,18 +580,10 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                             .bottomCenter,
                                                                       ),
                                                                     ),
-                                                                    height: MediaQuery.of(context).size.width +
-                                                                                kDetailsAreaHeight +
-                                                                                kControlsAreaHeight <
-                                                                            MediaQuery.of(context)
-                                                                                .size
-                                                                                .height
-                                                                        ? MediaQuery.of(context)
-                                                                            .size
-                                                                            .width
-                                                                        : MediaQuery.of(context).size.height -
-                                                                            kDetailsAreaHeight -
-                                                                            kControlsAreaHeight,
+                                                                    height: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width,
                                                                     width: MediaQuery.of(
                                                                             context)
                                                                         .size
@@ -805,26 +632,28 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                             ),
                                                                             child:
                                                                                 Consumer<Collection>(
-                                                                              builder: (context, collection, _) => IconButton(
-                                                                                onPressed: collection.likedSongsPlaylist.tracks.contains(Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)])
-                                                                                    ? () {
-                                                                                        collection.playlistRemoveTrack(
-                                                                                          collection.likedSongsPlaylist,
-                                                                                          Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)],
-                                                                                        );
-                                                                                      }
-                                                                                    : () {
-                                                                                        collection.playlistAddTrack(
-                                                                                          collection.likedSongsPlaylist,
-                                                                                          Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)],
-                                                                                        );
-                                                                                      },
-                                                                                icon: Icon(
-                                                                                  collection.likedSongsPlaylist.tracks.contains(Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)]) ? Icons.thumb_up : Icons.thumb_up_outlined,
-                                                                                ),
-                                                                                color: Theme.of(context).extension<IconColors>()?.appBarDarkIconColor,
-                                                                                splashRadius: 24.0,
-                                                                              ),
+                                                                              builder: (context, collection, _) => (Playback.instance.index < 0 || Playback.instance.index >= Playback.instance.tracks.length || Playback.instance.tracks.isEmpty)
+                                                                                  ? const SizedBox.shrink()
+                                                                                  : IconButton(
+                                                                                      onPressed: collection.likedSongsPlaylist.tracks.contains(Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)])
+                                                                                          ? () {
+                                                                                              collection.playlistRemoveTrack(
+                                                                                                collection.likedSongsPlaylist,
+                                                                                                Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)],
+                                                                                              );
+                                                                                            }
+                                                                                          : () {
+                                                                                              collection.playlistAddTrack(
+                                                                                                collection.likedSongsPlaylist,
+                                                                                                Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)],
+                                                                                              );
+                                                                                            },
+                                                                                      icon: Icon(
+                                                                                        collection.likedSongsPlaylist.tracks.contains(Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)]) ? Icons.favorite : Icons.favorite_border,
+                                                                                      ),
+                                                                                      color: Theme.of(context).extension<IconColors>()?.appBarDarkIconColor,
+                                                                                      splashRadius: 24.0,
+                                                                                    ),
                                                                             ),
                                                                           ),
                                                                           Container(
@@ -1018,82 +847,76 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                     ),
                                                   );
                                                 }()
-                                              : Consumer<Playback>(
-                                                  builder:
-                                                      (context, playback, _) =>
+                                              : Playback.instance.index < 0 ||
+                                                      Playback.instance.index >=
+                                                          Playback.instance
+                                                              .tracks.length ||
+                                                      Playback.instance.tracks
+                                                          .isEmpty
+                                                  ? const SizedBox.shrink()
+                                                  : Consumer<Playback>(
+                                                      builder: (context,
+                                                              playback, _) =>
                                                           SizedBox(
-                                                    child: ExtendedImage(
-                                                      image: getAlbumArt(playback
-                                                              .tracks[
-                                                          playback.index.clamp(
-                                                              0,
-                                                              playback.tracks
-                                                                  .length)]),
-                                                      constraints:
-                                                          BoxConstraints(
-                                                        maxWidth: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .width,
-                                                        maxHeight:
-                                                            MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width,
+                                                        child: ExtendedImage(
+                                                          image: getAlbumArt(playback
+                                                                  .tracks[
+                                                              playback.index.clamp(
+                                                                  0,
+                                                                  playback
+                                                                      .tracks
+                                                                      .length)]),
+                                                          constraints:
+                                                              BoxConstraints(
+                                                            maxWidth:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                            maxHeight:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                          ),
+                                                          width: percentage ==
+                                                                  1.0
+                                                              ? MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width
+                                                              : height - 2.0,
+                                                          height: percentage ==
+                                                                  1.0
+                                                              ? MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width
+                                                              : height - 2.0,
+                                                          fit: BoxFit.cover,
+                                                        ),
                                                       ),
-                                                      width: percentage == 1.0
-                                                          ? MediaQuery.of(
-                                                                  context)
-                                                              .size
-                                                              .width
-                                                          : height - 2.0,
-                                                      height: percentage == 1.0
-                                                          ? MediaQuery.of(
-                                                                  context)
-                                                              .size
-                                                              .width
-                                                          : height - 2.0,
-                                                      fit: BoxFit.cover,
                                                     ),
-                                                  ),
-                                                ),
                                         ],
                                       ),
                                       if (percentage < 1.0)
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Opacity(
-                                                opacity: (1 - percentage * 5)
-                                                    .clamp(0.0, 1.0),
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 16.0),
-                                                  child: Text(
-                                                    Playback
-                                                        .instance
-                                                        .tracks[Playback
-                                                            .instance.index]
-                                                        .trackName
-                                                        .overflow,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline2,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              ),
-                                              if (!Playback
-                                                  .instance
-                                                  .tracks[
-                                                      Playback.instance.index]
-                                                  .hasNoAvailableArtists)
+                                        () {
+                                          if (Playback.instance.index < 0 ||
+                                              Playback.instance.index >=
+                                                  Playback
+                                                      .instance.tracks.length ||
+                                              Playback
+                                                  .instance.tracks.isEmpty) {
+                                            return const SizedBox.shrink();
+                                          }
+                                          return Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
                                                 Opacity(
                                                   opacity: (1 - percentage * 5)
                                                       .clamp(0.0, 1.0),
@@ -1105,21 +928,49 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                           .instance
                                                           .tracks[Playback
                                                               .instance.index]
-                                                          .trackArtistNames
-                                                          .take(2)
-                                                          .join(', ')
+                                                          .trackName
                                                           .overflow,
                                                       style: Theme.of(context)
                                                           .textTheme
-                                                          .headline3,
+                                                          .headline2,
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                     ),
                                                   ),
                                                 ),
-                                            ],
-                                          ),
-                                        ),
+                                                if (!Playback
+                                                    .instance
+                                                    .tracks[
+                                                        Playback.instance.index]
+                                                    .hasNoAvailableArtists)
+                                                  Opacity(
+                                                    opacity:
+                                                        (1 - percentage * 5)
+                                                            .clamp(0.0, 1.0),
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 16.0),
+                                                      child: Text(
+                                                        Playback
+                                                            .instance
+                                                            .tracks[Playback
+                                                                .instance.index]
+                                                            .trackArtistNames
+                                                            .take(2)
+                                                            .join(', ')
+                                                            .overflow,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .headline3,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ),
+                                                  ),
+                                              ],
+                                            ),
+                                          );
+                                        }(),
                                       if (height <
                                           MediaQuery.of(context).size.width -
                                               64.0)
@@ -1148,42 +999,688 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                           ),
                         ),
                         if (height >= MediaQuery.of(context).size.width)
-                          Material(
-                            elevation: 4.0,
-                            color: color ?? Theme.of(context).primaryColor,
-                            child: child,
-                          ),
-                        if (height >= MediaQuery.of(context).size.width &&
-                            comingUpTracks.length >= 1)
-                          SubHeader(
-                            Language.instance.COMING_UP,
-                          ),
-                        if (height >= MediaQuery.of(context).size.width &&
-                            comingUpTracks.length < 1)
                           Container(
-                            height: 72.0,
-                            child: Center(
-                              child: Text(
-                                message.isNotEmpty
-                                    ? message
-                                    : Language.instance.NOTHING_IN_QUEUE,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline3
-                                    ?.copyWith(fontSize: 16.0),
+                            color: this.color ?? Theme.of(context).cardColor,
+                            child: ClipRect(
+                              child: Stack(
+                                alignment: Alignment.bottomCenter,
+                                children: [
+                                  Positioned(
+                                    top: kDetailsAreaHeight + 48.0,
+                                    child: Stack(
+                                      alignment: Alignment.bottomCenter,
+                                      children: [
+                                        ...fills,
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Consumer<Playback>(
+                                      builder: (context, playback, _) => Column(
+                                        children: [
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            height: kDetailsAreaHeight,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 16.0),
+                                            color: Colors.transparent,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  playback
+                                                      .tracks[playback.index
+                                                          .clamp(
+                                                              0,
+                                                              playback.tracks
+                                                                      .length -
+                                                                  1)]
+                                                      .trackName
+                                                      .overflow,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline6
+                                                      ?.copyWith(
+                                                        color:
+                                                            (colors.palette ??
+                                                                        [
+                                                                          Theme.of(context)
+                                                                              .cardColor
+                                                                        ])
+                                                                    .first
+                                                                    .isDark
+                                                                ? Colors.white
+                                                                : Colors.black,
+                                                        fontSize: 24.0,
+                                                      ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                                const SizedBox(height: 4.0),
+                                                Text(
+                                                  [
+                                                    if (!const ListEquality().equals(
+                                                            playback
+                                                                .tracks[playback.index.clamp(0, playback.tracks.length - 1)]
+                                                                .trackArtistNames
+                                                                .take(1)
+                                                                .toList(),
+                                                            [
+                                                              kUnknownArtist
+                                                            ]) &&
+                                                        playback
+                                                            .tracks[playback.index.clamp(
+                                                                0,
+                                                                playback.tracks
+                                                                        .length -
+                                                                    1)]
+                                                            .trackArtistNames
+                                                            .join('')
+                                                            .trim()
+                                                            .isNotEmpty)
+                                                      playback
+                                                          .tracks[playback.index
+                                                              .clamp(0,
+                                                                  playback.tracks.length - 1)]
+                                                          .trackArtistNames
+                                                          .take(2)
+                                                          .join(', ')
+                                                          .overflow,
+                                                    if (playback
+                                                                .tracks[playback
+                                                                    .index
+                                                                    .clamp(
+                                                                        0,
+                                                                        playback.tracks.length -
+                                                                            1)]
+                                                                .albumName !=
+                                                            kUnknownAlbum &&
+                                                        playback
+                                                            .tracks[playback
+                                                                .index
+                                                                .clamp(
+                                                                    0,
+                                                                    playback.tracks
+                                                                            .length -
+                                                                        1)]
+                                                            .albumName
+                                                            .isNotEmpty)
+                                                      playback
+                                                          .tracks[playback.index
+                                                              .clamp(
+                                                                  0,
+                                                                  playback.tracks
+                                                                          .length -
+                                                                      1)]
+                                                          .albumName
+                                                          .overflow,
+                                                  ].join(' • '),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline3
+                                                      ?.copyWith(
+                                                        color:
+                                                            (colors.palette ??
+                                                                        [
+                                                                          Theme.of(context)
+                                                                              .cardColor
+                                                                        ])
+                                                                    .first
+                                                                    .isDark
+                                                                ? Colors.white
+                                                                : Colors.black,
+                                                      ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                              alignment: Alignment.topCenter,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              color: Colors.white24,
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                  top: 44.0,
+                                                  bottom: 16.0 + 8.0,
+                                                ),
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  children: [
+                                                    const SizedBox(width: 20.0),
+                                                    IconButton(
+                                                      onPressed: () {
+                                                        if (playback
+                                                                .playlistLoopMode ==
+                                                            PlaylistLoopMode
+                                                                .loop) {
+                                                          playback
+                                                              .setPlaylistLoopMode(
+                                                            PlaylistLoopMode
+                                                                .none,
+                                                          );
+                                                          return;
+                                                        }
+                                                        playback
+                                                            .setPlaylistLoopMode(
+                                                          PlaylistLoopMode
+                                                              .values[playback
+                                                                  .playlistLoopMode
+                                                                  .index +
+                                                              1],
+                                                        );
+                                                      },
+                                                      iconSize: 24.0,
+                                                      color: (playback
+                                                                  .playlistLoopMode !=
+                                                              PlaylistLoopMode
+                                                                  .none)
+                                                          ? (colors.palette ??
+                                                                      [
+                                                                        Theme.of(context)
+                                                                            .cardColor
+                                                                      ])
+                                                                  .first
+                                                                  .isDark
+                                                              ? Color.lerp(
+                                                                  Colors.black,
+                                                                  Colors.white,
+                                                                  0.87)
+                                                              : Color.lerp(
+                                                                  Colors.white,
+                                                                  Colors.black,
+                                                                  0.87)
+                                                          : (colors.palette ??
+                                                                      [
+                                                                        Theme.of(context)
+                                                                            .cardColor
+                                                                      ])
+                                                                  .first
+                                                                  .isDark
+                                                              ? Color.lerp(
+                                                                  Colors.black,
+                                                                  Colors.white,
+                                                                  0.54)
+                                                              : Color.lerp(
+                                                                  Colors.white,
+                                                                  Colors.black,
+                                                                  0.54),
+                                                      splashRadius: 24.0,
+                                                      icon: Icon(
+                                                        playback.playlistLoopMode ==
+                                                                PlaylistLoopMode
+                                                                    .single
+                                                            ? Icons.repeat_one
+                                                            : Icons.repeat,
+                                                      ),
+                                                    ),
+                                                    Spacer(),
+                                                    Container(
+                                                      width: 48.0,
+                                                      child: IconButton(
+                                                        onPressed: Playback
+                                                            .instance.previous,
+                                                        icon: Icon(
+                                                          Icons.skip_previous,
+                                                          color: (colors.palette ??
+                                                                      [
+                                                                        Theme.of(context)
+                                                                            .cardColor
+                                                                      ])
+                                                                  .first
+                                                                  .isDark
+                                                              ? Color.lerp(
+                                                                  Colors.black,
+                                                                  Colors.white,
+                                                                  0.87)
+                                                              : Color.lerp(
+                                                                  Colors.white,
+                                                                  Colors.black,
+                                                                  0.87),
+                                                          size: 28.0,
+                                                        ),
+                                                        splashRadius: 28.0,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 8.0),
+                                                    Container(
+                                                      width: 72.0,
+                                                      child:
+                                                          FloatingActionButton(
+                                                        onPressed: Playback
+                                                                .instance
+                                                                .isPlaying
+                                                            ? Playback
+                                                                .instance.pause
+                                                            : Playback
+                                                                .instance.play,
+                                                        backgroundColor:
+                                                            (colors.palette ??
+                                                                    [
+                                                                      Theme.of(
+                                                                              context)
+                                                                          .primaryColor
+                                                                    ])
+                                                                .last,
+                                                        child: AnimatedIcon(
+                                                          progress: playOrPause,
+                                                          icon: AnimatedIcons
+                                                              .play_pause,
+                                                          color:
+                                                              (colors.palette ??
+                                                                          [
+                                                                            Theme.of(context).primaryColor
+                                                                          ])
+                                                                      .last
+                                                                      .isDark
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black,
+                                                          size: 32.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 8.0),
+                                                    Container(
+                                                      width: 48.0,
+                                                      child: IconButton(
+                                                        onPressed: Playback
+                                                            .instance.next,
+                                                        icon: Icon(
+                                                          Icons.skip_next,
+                                                          color: (colors.palette ??
+                                                                      [
+                                                                        Theme.of(context)
+                                                                            .cardColor
+                                                                      ])
+                                                                  .first
+                                                                  .isDark
+                                                              ? Color.lerp(
+                                                                  Colors.black,
+                                                                  Colors.white,
+                                                                  0.87)
+                                                              : Color.lerp(
+                                                                  Colors.white,
+                                                                  Colors.black,
+                                                                  0.87),
+                                                          size: 28.0,
+                                                        ),
+                                                        splashRadius: 28.0,
+                                                      ),
+                                                    ),
+                                                    Spacer(),
+                                                    IconButton(
+                                                      onPressed: playback
+                                                          .toggleShuffle,
+                                                      iconSize: 24.0,
+                                                      color: playback
+                                                              .isShuffling
+                                                          ? (colors.palette ??
+                                                                      [
+                                                                        Theme.of(context)
+                                                                            .cardColor
+                                                                      ])
+                                                                  .first
+                                                                  .isDark
+                                                              ? Color.lerp(
+                                                                  Colors.black,
+                                                                  Colors.white,
+                                                                  0.87)
+                                                              : Color.lerp(
+                                                                  Colors.white,
+                                                                  Colors.black,
+                                                                  0.87)
+                                                          : (colors.palette ??
+                                                                      [
+                                                                        Theme.of(context)
+                                                                            .cardColor
+                                                                      ])
+                                                                  .first
+                                                                  .isDark
+                                                              ? Color.lerp(
+                                                                  Colors.black,
+                                                                  Colors.white,
+                                                                  0.54)
+                                                              : Color.lerp(
+                                                                  Colors.white,
+                                                                  Colors.black,
+                                                                  0.54),
+                                                      splashRadius: 24.0,
+                                                      icon: Icon(
+                                                        Icons.shuffle,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 20.0),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Consumer<Playback>(
+                                    builder: (context, playback, _) =>
+                                        Positioned(
+                                      left: 0.0,
+                                      right: 0.0,
+                                      top: kDetailsAreaHeight - 12.0,
+                                      child: Column(
+                                        children: [
+                                          ScrollableSlider(
+                                            min: 0.0,
+                                            max: playback
+                                                .duration.inMilliseconds
+                                                .toDouble(),
+                                            value: playback
+                                                .position.inMilliseconds
+                                                .clamp(
+                                                    0,
+                                                    playback
+                                                        .duration.inMilliseconds
+                                                        .toDouble())
+                                                .toDouble(),
+                                            color: colors.palette?.last,
+                                            secondaryColor:
+                                                colors.palette?.first,
+                                            onChanged: (value) {
+                                              playback.seek(
+                                                Duration(
+                                                  milliseconds: value.toInt(),
+                                                ),
+                                              );
+                                            },
+                                            onScrolledUp: () {
+                                              if (playback.position >=
+                                                  playback.duration) return;
+                                              playback.seek(
+                                                playback.position +
+                                                    Duration(seconds: 10),
+                                              );
+                                            },
+                                            onScrolledDown: () {
+                                              if (playback.position <=
+                                                  Duration.zero) return;
+                                              playback.seek(
+                                                playback.position -
+                                                    Duration(seconds: 10),
+                                              );
+                                            },
+                                          ),
+                                          const SizedBox(height: 4.0),
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(height: 24.0),
+                                              const SizedBox(width: 18.0),
+                                              Text(
+                                                playback.position.label,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline3
+                                                    ?.copyWith(
+                                                      color:
+                                                          (colors.palette ??
+                                                                      [
+                                                                        Theme.of(context)
+                                                                            .cardColor
+                                                                      ])
+                                                                  .first
+                                                                  .isDark
+                                                              ? Colors.white
+                                                              : Colors.black,
+                                                    ),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              Spacer(),
+                                              Text(
+                                                playback.duration.label,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline3
+                                                    ?.copyWith(
+                                                      color:
+                                                          (colors.palette ??
+                                                                      [
+                                                                        Theme.of(context)
+                                                                            .cardColor
+                                                                      ])
+                                                                  .first
+                                                                  .isDark
+                                                              ? Colors.white
+                                                              : Colors.black,
+                                                    ),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              const SizedBox(width: 18.0),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                        if (height >= MediaQuery.of(context).size.width)
-                          ...comingUpTracks,
                       ],
                     ),
                   ),
-                );
-              }();
-            },
-          ),
-        ),
+                ),
+                if (!minimizedPlaylist &&
+                    percentage > 0.7 &&
+                    (MediaQuery.of(context).size.width +
+                            kDetailsAreaHeight +
+                            128.0) <
+                        MediaQuery.of(context).size.height)
+                  GestureDetector(
+                    onTap: () {
+                      final vh = MediaQuery.of(context).size.height;
+                      final vw = MediaQuery.of(context).size.width;
+                      final min = (vh - (vw + kDetailsAreaHeight + 128.0)) / vh;
+                      scrollableController.animateTo(
+                        min,
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                  ),
+                if (percentage > 0.7 &&
+                    (MediaQuery.of(context).size.width +
+                            kDetailsAreaHeight +
+                            128.0) <
+                        MediaQuery.of(context).size.height)
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (percentage < 1.0)
+                          SizedBox(
+                            height: MediaQuery.of(context).size.width +
+                                kDetailsAreaHeight +
+                                128.0,
+                          ),
+                        Expanded(
+                          child: () {
+                            final vh = MediaQuery.of(context).size.height;
+                            final vw = MediaQuery.of(context).size.width;
+                            final pt =
+                                window.padding.top / window.devicePixelRatio +
+                                    16.0;
+                            final min =
+                                (vh - (vw + kDetailsAreaHeight + 128.0)) / vh;
+                            final max = (vh - (kToolbarHeight + pt)) / vh;
+
+                            return Theme(
+                              data: createTheme(
+                                color: Color(0xFF6200EA),
+                                themeMode: ThemeMode.light,
+                              ),
+                              child: ScrollConfiguration(
+                                behavior: NoOverscrollGlowBehavior(),
+                                child: DraggableScrollableSheet(
+                                  key: ValueKey(
+                                    'mini_now_playing_bar/playlist',
+                                  ),
+                                  controller: scrollableController,
+                                  snap: true,
+                                  snapSizes: percentage < 1.0
+                                      ? [1.0]
+                                      : [
+                                          min,
+                                          max,
+                                        ],
+                                  initialChildSize:
+                                      percentage < 1.0 ? 1.0 : min,
+                                  minChildSize: percentage < 1.0 ? 1.0 : min,
+                                  maxChildSize: percentage < 1.0 ? 1.0 : max,
+                                  builder: (context, controller) {
+                                    scrollableControllerReference = controller;
+                                    return Container(
+                                      margin: EdgeInsets.symmetric(
+                                        horizontal: 16.0,
+                                      ),
+                                      width: vw - 32.0,
+                                      child: Card(
+                                        clipBehavior: Clip.antiAlias,
+                                        elevation: 4.0,
+                                        margin: EdgeInsets.zero,
+                                        shape: CardTheme.of(context)
+                                            .copyWith(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(4.0),
+                                                  topRight:
+                                                      Radius.circular(4.0),
+                                                ),
+                                              ),
+                                            )
+                                            .shape,
+                                        child: () {
+                                          final elements = minimizedPlaylist
+                                              ? tracksSkipped
+                                              : tracks;
+                                          return CustomListViewSeparated(
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            padding: EdgeInsets.zero,
+                                            controller: controller,
+                                            itemCount: 1 +
+                                                elements.length +
+                                                1 +
+                                                more.length,
+                                            itemExtents: [32.0] +
+                                                List.generate(
+                                                  elements.length,
+                                                  (index) => 72.0,
+                                                ) +
+                                                [56.0] +
+                                                List.generate(
+                                                  more.length,
+                                                  (index) => 72.0,
+                                                ),
+                                            separatorExtent: 1.0,
+                                            itemBuilder: (context, i) {
+                                              if (i == 0) {
+                                                return Material(
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      scrollableController
+                                                          .animateTo(
+                                                        max,
+                                                        duration:
+                                                            const Duration(
+                                                          milliseconds: 200,
+                                                        ),
+                                                        curve: Curves.easeInOut,
+                                                      );
+                                                    },
+                                                    child: Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Container(
+                                                        width: 48.0,
+                                                        height: 4.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                            2.0,
+                                                          ),
+                                                          color: Colors.black54,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              } else if (i ==
+                                                  elements.length + 1) {
+                                                return Padding(
+                                                  padding: EdgeInsets.only(
+                                                    left: 62.0,
+                                                  ),
+                                                  child: SubHeader(
+                                                    Language.instance.MORE,
+                                                  ),
+                                                );
+                                              } else if (i <= elements.length) {
+                                                return elements[i - 1];
+                                              } else if (i >
+                                                  elements.length + 1) {
+                                                return more[
+                                                    i - elements.length - 2];
+                                              }
+                                              return const SizedBox.shrink();
+                                            },
+                                            separatorBuilder: (context, i) =>
+                                                Divider(
+                                              height: 1.0,
+                                              thickness: 1.0,
+                                              indent: i == 0 ? 0.0 : 78.0,
+                                              endIndent: i == 0 ? 0.0 : 8.0,
+                                            ),
+                                          );
+                                        }(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            );
+                          }(),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            );
+          }();
+        },
       ),
     );
   }
@@ -1427,6 +1924,115 @@ class MiniNowPlayingBarRefreshCollectionButtonState
         ],
       ),
     );
+  }
+}
+
+class MiniMusicVisualizer extends StatelessWidget {
+  const MiniMusicVisualizer({
+    Key? key,
+    this.color,
+    this.width,
+    this.height,
+  }) : super(key: key);
+  final Color? color;
+  final double? width;
+  final double? height;
+
+  @override
+  Widget build(BuildContext context) {
+    final List<int> duration = [900, 800, 700, 600, 500];
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: List<Widget>.generate(
+        3,
+        (index) => VisualComponent(
+          curve: Curves.bounceOut,
+          duration: duration[index % 5],
+          color: color ?? Theme.of(context).colorScheme.secondary,
+          width: width,
+          height: height,
+        ),
+      ),
+    );
+  }
+}
+
+class VisualComponent extends StatefulWidget {
+  const VisualComponent({
+    Key? key,
+    required this.duration,
+    required this.color,
+    required this.curve,
+    this.width,
+    this.height,
+  }) : super(key: key);
+
+  final int duration;
+  final Color color;
+  final Curve curve;
+  final double? width;
+  final double? height;
+
+  @override
+  _VisualComponentState createState() => _VisualComponentState();
+}
+
+class _VisualComponentState extends State<VisualComponent>
+    with SingleTickerProviderStateMixin {
+  late Animation<double> animation;
+  late AnimationController controller;
+  late double width;
+  late double height;
+
+  @override
+  void initState() {
+    super.initState();
+    width = widget.width ?? 4;
+    height = widget.height ?? 15;
+    animate();
+  }
+
+  void animate() {
+    controller = AnimationController(
+      duration: Duration(milliseconds: widget.duration),
+      vsync: this,
+    );
+    animation = Tween<double>(begin: 2, end: height).animate(
+      CurvedAnimation(
+        parent: controller,
+        curve: widget.curve,
+      ),
+    );
+    controller.repeat(reverse: true);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: width,
+      height: height,
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: AnimatedBuilder(
+          animation: animation,
+          builder: (context, _) => Container(
+            height: animation.value,
+            decoration: BoxDecoration(
+              color: widget.color,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    controller.stop();
+    controller.reset();
+    controller.dispose();
+    super.dispose();
   }
 }
 

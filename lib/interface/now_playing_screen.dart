@@ -264,14 +264,14 @@ class NowPlayingState extends State<NowPlayingScreen>
                                       itemExtents: List.generate(
                                           tracks.length, (index) => 48.0),
                                       itemCount: tracks.length,
-                                      itemBuilder: (context, index) => Material(
-                                        color: this.index == index
+                                      itemBuilder: (context, i) => Material(
+                                        color: index == i
                                             ? Theme.of(context)
                                                 .dividerColor
                                                 .withOpacity(0.12)
                                             : Colors.transparent,
                                         child: TrackTile(
-                                          leading: this.index == index
+                                          leading: index == i
                                               ? Icon(
                                                   Icons.play_arrow,
                                                   size: 24.0,
@@ -282,11 +282,11 @@ class NowPlayingState extends State<NowPlayingScreen>
                                                       .textTheme
                                                       .headline4,
                                                 ),
-                                          track: tracks[index],
+                                          track: tracks[i],
                                           index: 0,
                                           onPressed: () {
                                             Playback.instance.play();
-                                            Playback.instance.jump(index);
+                                            Playback.instance.jump(i);
                                           },
                                           disableContextMenu: true,
                                         ),
