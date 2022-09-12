@@ -144,6 +144,7 @@ class Language extends Strings with ChangeNotifier {
     DESCENDING = map['DESCENDING']!;
     DISABLE_VOLUME_BOOST = map['DISABLE_VOLUME_BOOST']!;
     DISCOVERING_FILES = map['DISCOVERING_FILES']!;
+    DISPLAY_AUDIO_FORMAT = map['DISPLAY_AUDIO_FORMAT']!;
     DONATE = map['DONATE']!;
     DONE = map['DONE']!;
     DOWNLOAD = map['DOWNLOAD']!;
@@ -194,6 +195,7 @@ class Language extends Strings with ChangeNotifier {
     MENU = map['MENU']!;
     MINIMUM_FILE_SIZE = map['MINIMUM_FILE_SIZE']!;
     MINIMUM_FILE_SIZE_WARNING = map['MINIMUM_FILE_SIZE_WARNING']!;
+    MOBILE_ENABLE_VOLUME_SLIDER = map['MOBILE_ENABLE_VOLUME_SLIDER']!;
     MORE = map['MORE']!;
     MUTE = map['MUTE']!;
     M_TRACKS_AND_N_ALBUMS = map['M_TRACKS_AND_N_ALBUMS']!;

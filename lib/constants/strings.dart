@@ -64,6 +64,7 @@ class Strings {
   late String DESCENDING;
   late String DISABLE_VOLUME_BOOST;
   late String DISCOVERING_FILES;
+  late String DISPLAY_AUDIO_FORMAT;
   late String DONATE;
   late String DONE;
   late String DOWNLOAD;
@@ -114,6 +115,7 @@ class Strings {
   late String MENU;
   late String MINIMUM_FILE_SIZE;
   late String MINIMUM_FILE_SIZE_WARNING;
+  late String MOBILE_ENABLE_VOLUME_SLIDER;
   late String MORE;
   late String MUTE;
   late String M_TRACKS_AND_N_ALBUMS;
