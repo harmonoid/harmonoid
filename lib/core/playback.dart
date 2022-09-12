@@ -10,7 +10,6 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:harmonoid/utils/metadata_retriever.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:media_engine/media_engine.dart';
 import 'package:synchronized/synchronized.dart';
@@ -29,6 +28,7 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/app_state.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/metadata_retriever.dart';
 import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/now_playing_color_palette.dart';
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';
@@ -69,6 +69,9 @@ class Playback extends ChangeNotifier {
   bool isBuffering = false;
   bool isCompleted = false;
   bool isShuffling = DefaultPlaybackValues.isShuffling;
+  // Only for Windows & Linux.
+  AudioParams audioParams = AudioParams();
+  double? audioBitrate;
   // Only for Android.
   AndroidMediaFormat androidAudioFormat = AndroidMediaFormat();
 
@@ -400,6 +403,14 @@ class Playback extends ChangeNotifier {
       });
       instance.libmpv?.streams.duration.listen((event) {
         instance.duration = event;
+        instance.notifyListeners();
+      });
+      instance.libmpv?.streams.audioParams.listen((event) {
+        instance.audioParams = event;
+        instance.notifyListeners();
+      });
+      instance.libmpv?.streams.audioBitrate.listen((event) {
+        instance.audioBitrate = event;
         instance.notifyListeners();
       });
       try {
