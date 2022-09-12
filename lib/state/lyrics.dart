@@ -22,6 +22,9 @@ import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/models/lyric.dart';
 import 'package:harmonoid/constants/language.dart';
 
+// TODO(alexmercerind): Move this to another [Isolate] for better performance.
+// Currently [ChangeNotifier] & event synchronization may interrupt this simple workflow.
+
 /// Lyrics
 /// ------
 ///
@@ -186,6 +189,8 @@ class Lyrics extends ChangeNotifier {
                         ),
                       ),
                 );
+              } else {
+                debugPrint('[Lyrics]: (custom) Corrupt $file.');
               }
             }
           } else {
@@ -287,6 +292,7 @@ class Lyrics extends ChangeNotifier {
                         ),
                       ),
                 );
+                await cacheLRCFile();
               }
             }
           }
@@ -335,6 +341,56 @@ class Lyrics extends ChangeNotifier {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
       return false;
+    }
+    return false;
+  }
+
+  /// Caches a LRC [File] for a [Track].
+  Future<bool> cacheLRCFile() async {
+    if (_track != null && current.isNotEmpty) {
+      try {
+        final lrc = Lrc(
+          type: LrcTypes.simple,
+          artist: !(_track?.hasNoAvailableArtists ?? true)
+              ? _track?.trackArtistNames.join(';')
+              : null,
+          album:
+              !(_track?.hasNoAvailableAlbum ?? true) ? _track?.albumName : null,
+          title: _track?.trackName,
+          author: !(_track?.hasNoAvailableArtists ?? true)
+              ? _track?.trackArtistNames.join(';')
+              : null,
+          version: '1.0.0',
+          lyrics: current
+              .map(
+                (e) => LrcLine(
+                  timestamp: Duration(milliseconds: e.time),
+                  lyrics: e.words,
+                  type: LrcTypes.simple,
+                ),
+              )
+              .toList()
+              .cast<LrcLine>(),
+        );
+        assert(_track != null);
+        final file = File(
+          join(
+            directory.path,
+            _track?.moniker,
+          ),
+        );
+        // If an already set LRC [File] is found, then avoid overwriting it.
+        if (!await file.exists_()) {
+          final data = lrc.format();
+          // Remove the ending `\n` character. Results in correct LRC file.
+          await file.write_(data.substring(0, data.length - 1));
+        }
+        return true;
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+        return false;
+      }
     }
     return false;
   }
