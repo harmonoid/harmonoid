@@ -444,9 +444,11 @@ packages:
   lrc:
     dependency: "direct main"
     description:
-      name: lrc
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: patch-1
+      resolved-ref: e99e906759835ca9dc4ace691846d19c88d28277
+      url: "https://github.com/alexmercerind/lrc"
+    source: git
     version: "1.0.0"
   material_color_utilities:
     dependency: transitive
