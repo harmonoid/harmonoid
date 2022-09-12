@@ -106,6 +106,8 @@ class Configuration extends ConfigurationKeys {
     int? libraryTab,
     bool? useLRCFromTrackDirectory,
     bool? lookupForFallbackAlbumArt,
+    bool? displayAudioFormat,
+    bool? mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -210,6 +212,13 @@ class Configuration extends ConfigurationKeys {
     if (lookupForFallbackAlbumArt != null) {
       this.lookupForFallbackAlbumArt = lookupForFallbackAlbumArt;
     }
+    if (displayAudioFormat != null) {
+      this.displayAudioFormat = displayAudioFormat;
+    }
+    if (mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen != null) {
+      this.mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen =
+          mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen;
+    }
     await storage.write(
       {
         'collectionDirectories': this
@@ -251,6 +260,9 @@ class Configuration extends ConfigurationKeys {
         'libraryTab': this.libraryTab,
         'useLRCFromTrackDirectory': this.useLRCFromTrackDirectory,
         'lookupForFallbackAlbumArt': this.lookupForFallbackAlbumArt,
+        'displayAudioFormat': this.displayAudioFormat,
+        'mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen':
+            this.mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen,
       },
     );
   }
@@ -309,6 +321,9 @@ class Configuration extends ConfigurationKeys {
     libraryTab = current['libraryTab'];
     useLRCFromTrackDirectory = current['useLRCFromTrackDirectory'];
     lookupForFallbackAlbumArt = current['lookupForFallbackAlbumArt'];
+    displayAudioFormat = current['displayAudioFormat'];
+    mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen =
+        current['mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen'];
   }
 }
 
@@ -348,6 +363,8 @@ abstract class ConfigurationKeys {
   late int libraryTab;
   late bool useLRCFromTrackDirectory;
   late bool lookupForFallbackAlbumArt;
+  late bool displayAudioFormat;
+  late bool mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen;
 }
 
 Future<Map<String, dynamic>> get _defaultConfiguration async => {
@@ -414,4 +431,6 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
       'libraryTab': isDesktop ? 0 : 2,
       'useLRCFromTrackDirectory': false,
       'lookupForFallbackAlbumArt': false,
+      'displayAudioFormat': true,
+      'mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen': false,
     };
