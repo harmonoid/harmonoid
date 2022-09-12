@@ -265,10 +265,12 @@ public class MetadataRetriever implements MethodCallHandler {
             // Only supports FILE scheme.
             if (uri != null && uri.toLowerCase().startsWith("file://")) {
                 CompletableFuture.runAsync(() -> {
+                    MediaExtractor extractor = null;
+                    FileInputStream input = null;
                     try {
-                        final MediaExtractor extractor = new MediaExtractor();
+                        extractor = new MediaExtractor();
                         // Set data source using [FileDescriptor], which tends to be safer.
-                        final FileInputStream input = new FileInputStream(Uri.parse(uri).getPath());
+                        input = new FileInputStream(Uri.parse(uri).getPath());
                         extractor.setDataSource(input.getFD());
                         Log.d("Harmonoid", String.valueOf(extractor.getTrackCount()));
                         final MediaFormat format = extractor.getTrackFormat(0);
@@ -329,14 +331,18 @@ public class MetadataRetriever implements MethodCallHandler {
                         }
                         new Handler(Looper.getMainLooper()).post(() -> {
                             result.success(response);
-                            extractor.release();
                         });
+                        if (extractor != null) {
+                            extractor.release();
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         new Handler(Looper.getMainLooper()).post(() -> {
                             result.success(response);
-                            extractor.release();
                         });
+                        if (extractor != null) {
+                            extractor.release();
+                        }
                     }
                 });
             } else {
