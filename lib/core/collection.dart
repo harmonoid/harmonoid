@@ -7,6 +7,7 @@
 ///
 
 import 'dart:io';
+import 'package:harmonoid/utils/metadata_retriever.dart';
 import 'package:path/path.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
@@ -131,23 +132,12 @@ class Collection extends MediaLibrary with ChangeNotifier {
       return Track.fromTagger(metadata);
     }
     if (Platform.isAndroid) {
-      try {
-        final metadata = await _channel.invokeMethod(
-          'parse',
-          {
-            'uri': uri.toString(),
-            'coverDirectory': coverDirectory.path,
-            'waitUntilAlbumArtIsSaved': waitUntilAlbumArtIsSaved,
-          },
-        ).timeout(timeout ?? const Duration(seconds: 1));
-        return _AndroidMetadata.fromJson(metadata);
-      } catch (exception, stacktrace) {
-        debugPrint(exception.toString());
-        debugPrint(stacktrace.toString());
-        return _AndroidMetadata(
-          uri: uri.toString(),
-        );
-      }
+      return MetadataRetriever.instance.metadata(
+        uri,
+        coverDirectory,
+        timeout: timeout,
+        waitUntilAlbumArtIsSaved: waitUntilAlbumArtIsSaved,
+      );
     }
   }
 
@@ -184,121 +174,8 @@ class Collection extends MediaLibrary with ChangeNotifier {
 
   Tagger? _tagger;
   TaggerClient? _client;
-  final MethodChannel _channel =
-      const MethodChannel('com.alexmercerind.harmonoid.MetadataRetriever');
 
   static const String _kUnknownAlbumArtRootBundle =
       'assets/images/default_album_art.png';
   static const String _kUnknownAlbumArtFileName = 'UnknownAlbum.PNG';
-}
-
-class _AndroidMetadata {
-  final String? trackName;
-  final String? trackArtistNames;
-  final String? albumName;
-  final String? albumArtistName;
-  final int? trackNumber;
-  final int? albumLength;
-  final int? year;
-  final String? genre;
-  final String? authorName;
-  final String? writerName;
-  final int? discNumber;
-  final String? mimeType;
-  final int? duration;
-  final int? bitrate;
-  final String? uri;
-
-  const _AndroidMetadata({
-    this.trackName,
-    this.trackArtistNames,
-    this.albumName,
-    this.albumArtistName,
-    this.trackNumber,
-    this.albumLength,
-    this.year,
-    this.genre,
-    this.authorName,
-    this.writerName,
-    this.discNumber,
-    this.mimeType,
-    this.duration,
-    this.bitrate,
-    this.uri,
-  });
-
-  factory _AndroidMetadata.fromJson(dynamic map) => _AndroidMetadata(
-        trackName: map['trackName'],
-        trackArtistNames: map['trackArtistNames'],
-        albumName: map['albumName'],
-        albumArtistName: map['albumArtistName'],
-        trackNumber: _parseInteger(
-          map['trackNumber'],
-        ),
-        albumLength: _parseInteger(
-          map['albumLength'],
-        ),
-        year: _parseInteger(
-          map['year'],
-        ),
-        genre: map['genre'],
-        authorName: map['authorName'],
-        writerName: map['writerName'],
-        discNumber: _parseInteger(
-          map['discNumber'],
-        ),
-        mimeType: map['mimeType'],
-        duration: _parseInteger(
-          map['duration'],
-        ),
-        bitrate: _parseInteger(
-          map['bitrate'],
-        ),
-        uri: map['uri'],
-      );
-
-  Map<String, dynamic> toJson() => {
-        'trackName': trackName,
-        'trackArtistNames': trackArtistNames,
-        'albumName': albumName,
-        'albumArtistName': albumArtistName,
-        'trackNumber': trackNumber,
-        'albumLength': albumLength,
-        'year': year,
-        'genre': genre,
-        'authorName': authorName,
-        'writerName': writerName,
-        'discNumber': discNumber,
-        'mimeType': mimeType,
-        'duration': duration,
-        'bitrate': bitrate,
-        'uri': uri,
-      };
-
-  @override
-  String toString() =>
-      '$_AndroidMetadata(trackName: $trackName, trackArtistNames: $trackArtistNames, albumName: $albumName, albumArtistName: $albumArtistName, trackNumber: $trackNumber, albumLength: $albumLength, year: $year, genre: $genre, authorName: $authorName, writerName: $writerName, discNumber: $discNumber, mimeType: $mimeType, duration: $duration, bitrate: $bitrate, uri: $uri)';
-
-  static int? _parseInteger(dynamic value) {
-    if (value == null) {
-      return null;
-    }
-    if (value is int) {
-      return value;
-    } else if (value is String) {
-      try {
-        try {
-          return int.parse(value);
-        } catch (exception, stacktrace) {
-          debugPrint(exception.toString());
-          debugPrint(stacktrace.toString());
-          return int.parse(value.split('/').first);
-        }
-      } catch (exception, stacktrace) {
-        debugPrint(exception.toString());
-        debugPrint(stacktrace.toString());
-      }
-    }
-    return null;
-  }
 }

@@ -10,6 +10,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:harmonoid/utils/metadata_retriever.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:media_engine/media_engine.dart';
 import 'package:synchronized/synchronized.dart';
@@ -68,6 +69,8 @@ class Playback extends ChangeNotifier {
   bool isBuffering = false;
   bool isCompleted = false;
   bool isShuffling = DefaultPlaybackValues.isShuffling;
+  // Only for Android.
+  AndroidMediaFormat androidAudioFormat = AndroidMediaFormat();
 
   void play() {
     if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
@@ -135,9 +138,7 @@ class Playback extends ChangeNotifier {
       audioService?.setSpeed(value);
     }
     rate = value;
-    if (Platform.isLinux) {
-      _HarmonoidMPRIS.instance.rate = value;
-    }
+    instance.mpris?.rate = value;
     notifyListeners();
   }
 
@@ -149,9 +150,7 @@ class Playback extends ChangeNotifier {
       audioService?.setVolume(value / 100.0);
     }
     volume = value;
-    if (Platform.isLinux) {
-      _HarmonoidMPRIS.instance.volume = value;
-    }
+    instance.mpris?.volume = value;
     notifyListeners();
   }
 
@@ -241,7 +240,7 @@ class Playback extends ChangeNotifier {
         index: index,
       );
     }
-    // TODO: Get rid of this tight coupling with non-native & UI related implementation classes.
+    // TODO(alexmercerind): Tighly coupled impl.
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       if (Configuration.instance.jumpToNowPlayingScreenOnPlay) {
         Future.delayed(const Duration(milliseconds: 500), () {
@@ -392,7 +391,7 @@ class Playback extends ChangeNotifier {
           );
         }
         if (Platform.isLinux) {
-          _HarmonoidMPRIS.instance.position = event;
+          instance.mpris?.position = event;
         }
         // [PlaylistLoopMode.single] needs to update [endTimeStamp] in Discord RPC.
         if (event == Duration.zero) {
@@ -404,7 +403,11 @@ class Playback extends ChangeNotifier {
         instance.notifyListeners();
       });
       try {
-        // System Media Transport Controls. Windows specific.
+        // MPRIS.
+        if (Platform.isLinux) {
+          instance.mpris = MPRIS(instance);
+        }
+        // System Media Transport Controls.
         if (Platform.isWindows) {
           try {
             WindowsTaskbar.resetWindowTitle();
@@ -556,14 +559,15 @@ class Playback extends ChangeNotifier {
             final artwork = getAlbumArt(track);
             image = (artwork as ExtendedFileImageProvider).file.uri;
           }
-          _HarmonoidMPRIS.instance.isPlaying = isPlaying;
-          _HarmonoidMPRIS.instance.isCompleted = isCompleted;
-          _HarmonoidMPRIS.instance.index = index;
-          _HarmonoidMPRIS.instance.playlist = tracks.map((e) {
-            final data = e.toJson();
-            data['artworkUri'] = image.toString();
-            return MPRISMedia.fromJson(data);
-          }).toList();
+          instance.mpris
+            ?..isPlaying = isPlaying
+            ..isCompleted = isCompleted
+            ..index = index
+            ..playlist = tracks.map((e) {
+              final data = e.toJson();
+              data['artworkUri'] = image.toString();
+              return MPRISMedia.fromJson(data);
+            }).toList();
         }
         if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
           // Fetch [largeImageKey] if the current [track] was changed.
@@ -728,6 +732,9 @@ class Playback extends ChangeNotifier {
 
   final Lock _discordLock = Lock();
 
+  /// MPRIS controls for Linux.
+  MPRIS? mpris;
+
   /// The volume that is restored to, before the unmute.
   /// See [toggleMute].
   double _volume = 0.0;
@@ -770,11 +777,11 @@ abstract class DefaultPlaybackValues {
 }
 
 /// Implements `org.mpris.MediaPlayer2` & `org.mpris.MediaPlayer2.Player`.
-class _HarmonoidMPRIS extends MPRISService {
-  /// [_HarmonoidMPRIS] object instance.
-  static final instance = _HarmonoidMPRIS();
+class MPRIS extends MPRISService {
+  /// The [Playback] object present as composition in this class.
+  final Playback playback;
 
-  _HarmonoidMPRIS()
+  MPRIS(this.playback)
       : super(
           'harmonoid',
           identity: 'Harmonoid',
@@ -930,6 +937,8 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
               }(),
             ),
           );
+          // Update [Playback.format] using [MetadataRetriever].
+          fetchFormat(Uri.parse(queue.value[e].id));
         }
       }
     });
@@ -1142,6 +1151,7 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
           }(),
         ),
       );
+      await fetchFormat(tracks[index].uri);
     }
   }
 
@@ -1245,7 +1255,26 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
   final AndroidLoudnessEnhancer _playerAndroidLoudnessEnhancer =
       AndroidLoudnessEnhancer();
   final Playback playback;
-  // Encapsulated private attributes which are used to maintain & restore the mute state.
+
+  /// Encapsulated private attributes which are used to maintain & restore the mute state.
   bool _muted = false;
   double _volume = 0.0;
+
+  /// Fetches [Playback.format] & notify listeners.
+  Future<void> fetchFormat(Uri uri) {
+    playback
+      ..androidAudioFormat = AndroidMediaFormat()
+      ..notify();
+    // Update [Playback.format] using [MetadataRetriever].
+    return _lock.synchronized(
+      () async {
+        playback
+          ..androidAudioFormat = await MetadataRetriever.instance.format(uri)
+          ..notify();
+      },
+    );
+  }
+
+  /// This is used to maintain synchronization with [MetadataRetriever.format] calls.
+  final Lock _lock = Lock();
 }
