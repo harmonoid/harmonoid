@@ -6,10 +6,13 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
+import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:media_engine/media_engine.dart';
 import 'package:media_library/media_library.dart';
+import 'package:safe_session_storage/safe_session_storage.dart';
 
+import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/utils/metadata_retriever.dart';
 
 extension IterableExtension<T> on Iterable<T> {
@@ -109,4 +112,47 @@ extension AndroidMediaFormatExtension on AndroidMediaFormat {
           else
             '$channelCount Channels',
       ].join(' • ');
+}
+
+extension PlaybackExtension on Playback {
+  String get audioFormatLabel {
+    if (index < 0 || index >= tracks.length) return '';
+    if (!tracks[index].uri.isScheme('FILE')) return '';
+    final data = [
+      if (audioBitrate != null) '${audioBitrate! ~/ 1000} KB/s',
+      if (audioParams.sampleRate != null)
+        '${(audioParams.sampleRate! / 1000).toStringAsFixed(1)} kHz',
+      if (audioParams.channelCount != null)
+        if (audioParams.channelCount == 1)
+          'Mono'
+        else if (audioParams.channelCount == 2)
+          'Stereo'
+        else
+          '${audioParams.channelCount} Channels',
+    ];
+    if (data.join().trim().isNotEmpty) {
+      data.insert(
+        0,
+        File(tracks[index].uri.toFilePath()).extension,
+      );
+    }
+    return data.join(' • ');
+  }
+
+  String get audioFormatLabelSmall {
+    if (index < 0 || index >= tracks.length) return '';
+    if (!tracks[index].uri.isScheme('FILE')) return '';
+    final data = [
+      if (audioBitrate != null) '${audioBitrate! ~/ 1000} KB/s',
+      if (audioParams.sampleRate != null)
+        '${(audioParams.sampleRate! / 1000).toStringAsFixed(1)} kHz',
+    ];
+    if (data.join().trim().isNotEmpty) {
+      data.insert(
+        0,
+        File(tracks[index].uri.toFilePath()).extension,
+      );
+    }
+    return data.join(' • ');
+  }
 }

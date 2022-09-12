@@ -19,6 +19,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/interface/home.dart';
@@ -463,6 +464,33 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                                   : Colors
                                                                       .black,
                                                         ),
+                                                  ),
+                                                if (Configuration.instance
+                                                        .displayAudioFormat &&
+                                                    playback
+                                                        .audioFormatLabelSmall
+                                                        .isNotEmpty)
+                                                  Text(
+                                                    playback
+                                                        .audioFormatLabelSmall,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline3
+                                                        ?.copyWith(
+                                                          color:
+                                                              (colors.palette ??
+                                                                          [
+                                                                            Theme.of(context).cardColor
+                                                                          ])
+                                                                      .first
+                                                                      .isDark
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black,
+                                                        ),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                   ),
                                               ],
                                             ),

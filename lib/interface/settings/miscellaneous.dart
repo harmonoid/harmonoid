@@ -139,21 +139,22 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
             }),
             value: Configuration.instance.displayAudioFormat,
           ),
-          CorrectedSwitchListTile(
-            title: Language.instance.MOBILE_ENABLE_VOLUME_SLIDER,
-            subtitle: Language.instance.MOBILE_ENABLE_VOLUME_SLIDER,
-            onChanged: (_) => Configuration.instance
-                .save(
-              mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen:
-                  !Configuration.instance
-                      .mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen,
-            )
-                .then((_) {
-              setState(() {});
-            }),
-            value: Configuration
-                .instance.mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen,
-          ),
+          if (isMobile)
+            CorrectedSwitchListTile(
+              title: Language.instance.MOBILE_ENABLE_VOLUME_SLIDER,
+              subtitle: Language.instance.MOBILE_ENABLE_VOLUME_SLIDER,
+              onChanged: (_) => Configuration.instance
+                  .save(
+                mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen:
+                    !Configuration.instance
+                        .mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen,
+              )
+                  .then((_) {
+                setState(() {});
+              }),
+              value: Configuration
+                  .instance.mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen,
+            ),
           CorrectedSwitchListTile(
             title: Language.instance.USE_LRC_FILE_FROM_TRACK_DIRECTORY,
             subtitle: Language.instance.USE_LRC_FILE_FROM_TRACK_DIRECTORY,
