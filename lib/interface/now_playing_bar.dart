@@ -16,6 +16,7 @@ import 'package:animations/animations.dart';
 import 'package:media_engine/media_engine.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:window_size/window_size.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/collection.dart';
@@ -49,6 +50,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
   bool controlPanelVisible = false;
   Color? color;
   Timer? timer;
+  // Always use window resolution width when drawing the palette color ripple effects.
+  double? screenX;
 
   @override
   void initState() {
@@ -77,8 +80,16 @@ class NowPlayingBarState extends State<NowPlayingBar>
     NowPlayingColorPalette.instance.addListener(colorPaletteListener);
   }
 
-  void colorPaletteListener() {
-    final ms = ((1000 * (800 / MediaQuery.of(context).size.width)) ~/ 1);
+  void colorPaletteListener() async {
+    if (screenX == null) {
+      final screens = await getScreenList();
+      screenX = screens
+          .map((e) => e.frame.width)
+          .reduce((value, element) => value + element);
+      debugPrint(screens.first.frame.toString());
+    }
+    final ms =
+        ((1000 * (800 / (screenX ?? MediaQuery.of(context).size.width))) ~/ 1);
     final color = NowPlayingColorPalette.instance.palette == null
         ? Theme.of(context).cardColor
         : NowPlayingColorPalette.instance.palette?.first.withOpacity(1.0);
