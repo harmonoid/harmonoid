@@ -19,6 +19,8 @@ import java.nio.charset.StandardCharsets;
 
 import java9.util.concurrent.CompletableFuture;
 
+import android.media.MediaExtractor;
+import android.media.MediaFormat;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -31,11 +33,12 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 
 import android.media.MediaMetadataRetriever;
+import android.webkit.MimeTypeMap;
 
-class MetadataRetrieverImplementation extends MediaMetadataRetriever {
+class MediaMetadataRetrieverExt extends MediaMetadataRetriever {
     private final String uri;
 
-    public MetadataRetrieverImplementation(String uri) {
+    public MediaMetadataRetrieverExt(String uri) {
         super();
         this.uri = uri;
     }
@@ -116,7 +119,7 @@ public class MetadataRetriever implements MethodCallHandler {
         // Passed [uri] inside the arguments must be a String interpretation of a URI, which follows
         // a scheme such as `file://` or `http://` etc. Where as, [coverDirectory] must be a direct
         // path to the file system directory where the cover art will be extracted (not a URI).
-        if (call.method.equals("parse")) {
+        if (call.method.equals("metadata")) {
             final String[] uri = {call.argument("uri")};
             final String[] coverDirectory = {call.argument("coverDirectory")};
             final Boolean[] waitUntilAlbumArtIsSaved = {call.argument("waitUntilAlbumArtIsSaved")};
@@ -129,7 +132,7 @@ public class MetadataRetriever implements MethodCallHandler {
             // Run [MediaMetadataRetriever] on another thread. Extracting metadata of a [File] is
             // a heavy operation & causes substantial jitter in the UI.
             CompletableFuture.runAsync(() -> {
-                final MetadataRetrieverImplementation retriever = new MetadataRetrieverImplementation(uri[0]);
+                final MediaMetadataRetrieverExt retriever = new MediaMetadataRetrieverExt(uri[0]);
                 // Try to get the [FileInputStream] from the passed [uri].
                 try {
                     // Only used for `file://` scheme.
@@ -145,9 +148,7 @@ public class MetadataRetriever implements MethodCallHandler {
                         // Return the metadata.
                         final HashMap<String, Object> response = metadata;
                         if (!waitUntilAlbumArtIsSaved[0]) {
-                            new Handler(
-                                    Looper.getMainLooper()).post(() -> result.success(response)
-                            );
+                            new Handler(Looper.getMainLooper()).post(() -> result.success(response));
                         }
                     } else {
                         // Handle other URI schemes. Expected to be network URLs. Hope for the best!
@@ -156,9 +157,7 @@ public class MetadataRetriever implements MethodCallHandler {
                         metadata.put("uri", uri[0]);
                         final HashMap<String, Object> response = metadata;
                         if (!waitUntilAlbumArtIsSaved[0]) {
-                            new Handler(
-                                    Looper.getMainLooper()).post(() -> result.success(response)
-                            );
+                            new Handler(Looper.getMainLooper()).post(() -> result.success(response));
                         }
                     }
                     // Now proceed to save the album art in background.
@@ -248,9 +247,7 @@ public class MetadataRetriever implements MethodCallHandler {
                         e.printStackTrace();
                     }
                     if (waitUntilAlbumArtIsSaved[0]) {
-                        new Handler(
-                                Looper.getMainLooper()).post(() -> result.success(metadata)
-                        );
+                        new Handler(Looper.getMainLooper()).post(() -> result.success(metadata));
                     }
                 }
                 // Return fallback [metadata] [HashMap], with only [uri] key present inside it.
@@ -259,11 +256,92 @@ public class MetadataRetriever implements MethodCallHandler {
                     exception.printStackTrace();
                     final HashMap<String, Object> metadata = new HashMap<>();
                     metadata.put("uri", uri[0]);
-                    new Handler(
-                            Looper.getMainLooper()).post(() -> result.success(metadata)
-                    );
+                    new Handler(Looper.getMainLooper()).post(() -> result.success(metadata));
                 }
             });
+        } else if (call.method.equals("format")) {
+            final String uri = call.argument("uri");
+            final HashMap<String, Object> response = new HashMap<>();
+            // Only supports FILE scheme.
+            if (uri != null && uri.toLowerCase().startsWith("file://")) {
+                CompletableFuture.runAsync(() -> {
+                    try {
+                        final MediaExtractor extractor = new MediaExtractor();
+                        // Set data source using [FileDescriptor], which tends to be safer.
+                        final FileInputStream input = new FileInputStream(Uri.parse(uri).getPath());
+                        extractor.setDataSource(input.getFD());
+                        Log.d("Harmonoid", String.valueOf(extractor.getTrackCount()));
+                        final MediaFormat format = extractor.getTrackFormat(0);
+                        try {
+                            final int channelCount = format.getInteger(MediaFormat.KEY_CHANNEL_COUNT);
+                            response.put("channelCount", channelCount);
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            final int bitrate = format.getInteger(MediaFormat.KEY_BIT_RATE);
+                            response.put("bitrate", bitrate);
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            final int sampleRate = format.getInteger(MediaFormat.KEY_SAMPLE_RATE);
+                            response.put("sampleRate", sampleRate);
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            final int channelCount = format.getInteger(MediaFormat.KEY_CHANNEL_COUNT);
+                            response.put("channelCount", channelCount);
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            final String mime = format.getString(MediaFormat.KEY_MIME);
+                            final String extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mime);
+                            response.put("extension", extension);
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                        }
+                        // [MediaExtractor] does not read the bitrate & mime in some situations.
+                        // I've noticed this particularly with some OPUS [File]s.
+                        // [MediaMetadataRetriever] is used as a fallback.
+                        if (!response.containsKey("bitrate")) {
+                            try {
+                                final MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                                retriever.setDataSource(input.getFD());
+                                response.put(
+                                        "bitrate",
+                                        Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE))
+                                );
+                                retriever.release();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        try {
+                            if (!response.containsKey("extension") || response.get("extension") == null) {
+                                final String[] data = Uri.parse(uri).getPath().split("\\.");
+                                response.put("extension", data[data.length - 1].toUpperCase());
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        new Handler(Looper.getMainLooper()).post(() -> {
+                            result.success(response);
+                            extractor.release();
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        new Handler(Looper.getMainLooper()).post(() -> {
+                            result.success(response);
+                            extractor.release();
+                        });
+                    }
+                });
+            } else {
+                result.success(response);
+            }
         } else {
             result.notImplemented();
         }
