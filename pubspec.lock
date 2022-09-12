@@ -906,6 +906,15 @@ packages:
       url: "https://github.com/harmonoid/window_manager.git"
     source: git
     version: "0.2.5"
+  window_size:
+    dependency: "direct main"
+    description:
+      path: "plugins/window_size"
+      ref: main
+      resolved-ref: "17d4710c17f4913137e7ec931f6e71eaef443363"
+      url: "https://github.com/google/flutter-desktop-embedding.git"
+    source: git
+    version: "0.1.0"
   windows_taskbar:
     dependency: "direct main"
     description:

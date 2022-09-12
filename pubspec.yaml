@@ -57,7 +57,11 @@ dependencies:
       url: https://github.com/google/flutter-desktop-embedding.git
       path: plugins/file_selector/file_selector_linux
       ref: 4bc2c310e8acf3740ea0c2b326b3ef71280391f8
-
+  window_size:
+    git:
+      url: https://github.com/google/flutter-desktop-embedding.git
+      path: plugins/window_size
+      ref: main
   # Third-party UI widgets or "pure-dart" packages.
 
   lrc:
@@ -81,6 +85,7 @@ dependencies:
   uuid: ^3.0.6
   synchronized: ^3.0.0+2
   flutter_speed_dial: ^6.0.0
+  flutter_svg: ^1.1.4
 
   # Third-party forked plugins & packages to meet requirements.
 
@@ -117,7 +122,6 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/flutter_lyric.git
       ref: master
-  flutter_svg: ^1.1.4
 
 dependency_overrides:
   ffi: 1.1.0
