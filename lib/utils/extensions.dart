@@ -10,6 +10,8 @@ import 'package:flutter/widgets.dart';
 import 'package:media_engine/media_engine.dart';
 import 'package:media_library/media_library.dart';
 
+import 'package:harmonoid/utils/metadata_retriever.dart';
+
 extension IterableExtension<T> on Iterable<T> {
   /// Return distinct array by comparing hash codes.
   Iterable<T> distinct() {
@@ -91,4 +93,20 @@ extension TrackExtension on Track {
                     ? albumName
                     : '',
       ].join(' ').replaceAll(RegExp(r'[\\/:*?""<>|]'), ' ');
+}
+
+extension AndroidMediaFormatExtension on AndroidMediaFormat {
+  String get label => [
+        if (extension != null) extension!.toUpperCase(),
+        if (bitrate != null) '${bitrate! ~/ 1000} KB/s',
+        if (sampleRate != null)
+          '${(sampleRate! / 1000).toStringAsFixed(1)} kHz',
+        if (channelCount != null)
+          if (channelCount == 1)
+            'Mono'
+          else if (channelCount == 2)
+            'Stereo'
+          else
+            '$channelCount Channels',
+      ].join(' • ');
 }

@@ -10,7 +10,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:collection/collection.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:media_engine/media_engine.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -36,7 +35,7 @@ import 'package:harmonoid/interface/collection/track.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/web/utils/widgets.dart';
 
-const kDetailsAreaHeight = 96.0;
+const kDetailsAreaHeight = 100.0;
 
 class MiniNowPlayingBar extends StatefulWidget {
   MiniNowPlayingBar({Key? key}) : super(key: key);
@@ -182,13 +181,26 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
     });
   }
 
+  bool get isVolumeSliderVisible {
+    final vh = MediaQuery.of(context).size.height;
+    final vw = MediaQuery.of(context).size.width;
+    // Enabled in Settings.
+    return Configuration
+            .instance.mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen &&
+        // Has enough room on screen. Referring to taller 20:9 (?) devices with larger resolution.
+        // Bottom sheet's height compared with certain threshold, here `256.0`.
+        (vh - (vw + kDetailsAreaHeight + 128.0)) >= 128.0;
+  }
+
+  double get bottomSheetMinHeight => isVolumeSliderVisible ? 172.0 : 128.0;
+
   void scrollableControllerListener() {
     try {
       final vh = MediaQuery.of(context).size.height;
       final vw = MediaQuery.of(context).size.width;
       final pt = window.padding.top / window.devicePixelRatio + 16.0;
-      final min =
-          ((vh - (vw + kDetailsAreaHeight + 128.0)) / vh).toStringAsFixed(2);
+      final min = ((vh - (vw + kDetailsAreaHeight + bottomSheetMinHeight)) / vh)
+          .toStringAsFixed(2);
       final max = ((vh - (kToolbarHeight + pt)) / vh).toStringAsFixed(2);
       final current = scrollableController.size.toStringAsFixed(2).toString();
       if (!minimizedPlaylist && current == min) {
@@ -549,6 +561,44 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                     .width,
                                                                 fit: BoxFit
                                                                     .cover,
+                                                                enableLoadState:
+                                                                    true,
+                                                                handleLoadingProgress:
+                                                                    true,
+                                                                loadStateChanged:
+                                                                    (state) {
+                                                                  switch (state
+                                                                      .extendedImageLoadState) {
+                                                                    case LoadState
+                                                                        .failed:
+                                                                      {
+                                                                        if (LibmpvPluginUtils.isSupported(Playback
+                                                                            .instance
+                                                                            .tracks[i]
+                                                                            .uri)) {
+                                                                          // Show [getAlbumArt] with smaller size in-case of a load failure.
+                                                                          return ExtendedImage(
+                                                                            image:
+                                                                                getAlbumArt(
+                                                                              Playback.instance.tracks[i],
+                                                                              small: true,
+                                                                            ),
+                                                                            width:
+                                                                                MediaQuery.of(context).size.width,
+                                                                            height:
+                                                                                MediaQuery.of(context).size.width,
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                          );
+                                                                        }
+                                                                        return state
+                                                                            .completedWidget;
+                                                                      }
+                                                                    default:
+                                                                      return state
+                                                                          .completedWidget;
+                                                                  }
+                                                                },
                                                               ),
                                                             ),
                                                             TweenAnimationBuilder<
@@ -631,25 +681,61 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                               bottom: 8.0,
                                                                             ),
                                                                             child:
+                                                                                IconButton(
+                                                                              onPressed: () {
+                                                                                showDialog(
+                                                                                  context: context,
+                                                                                  builder: (context) => AlertDialog(
+                                                                                    contentPadding: EdgeInsets.zero,
+                                                                                    content: ControlPanel(
+                                                                                      onPop: () {},
+                                                                                    ),
+                                                                                  ),
+                                                                                );
+                                                                              },
+                                                                              icon: Icon(
+                                                                                Icons.equalizer_outlined,
+                                                                              ),
+                                                                              tooltip: Language.instance.CONTROL_PANEL,
+                                                                              color: Theme.of(context).extension<IconColors>()?.appBarDarkIconColor,
+                                                                              splashRadius: 24.0,
+                                                                            ),
+                                                                          ),
+                                                                          Container(
+                                                                            padding:
+                                                                                EdgeInsets.only(
+                                                                              top: MediaQuery.of(context).padding.top + 8.0,
+                                                                              right: 8.0,
+                                                                              bottom: 8.0,
+                                                                            ),
+                                                                            child:
                                                                                 Consumer<Collection>(
                                                                               builder: (context, collection, _) => (Playback.instance.index < 0 || Playback.instance.index >= Playback.instance.tracks.length || Playback.instance.tracks.isEmpty)
                                                                                   ? const SizedBox.shrink()
                                                                                   : IconButton(
-                                                                                      onPressed: collection.likedSongsPlaylist.tracks.contains(Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)])
-                                                                                          ? () {
-                                                                                              collection.playlistRemoveTrack(
-                                                                                                collection.likedSongsPlaylist,
-                                                                                                Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)],
-                                                                                              );
-                                                                                            }
-                                                                                          : () {
-                                                                                              collection.playlistAddTrack(
-                                                                                                collection.likedSongsPlaylist,
-                                                                                                Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)],
-                                                                                              );
-                                                                                            },
+                                                                                      onPressed: () {
+                                                                                        if (collection.likedSongsPlaylist.tracks.contains(Playback.instance.tracks[Playback.instance.index])) {
+                                                                                          collection.playlistRemoveTrack(
+                                                                                            collection.likedSongsPlaylist,
+                                                                                            Playback.instance.tracks[Playback.instance.index],
+                                                                                          );
+                                                                                        } else {
+                                                                                          collection.playlistAddTrack(
+                                                                                            collection.likedSongsPlaylist,
+                                                                                            Playback.instance.tracks[Playback.instance.index],
+                                                                                          );
+                                                                                        }
+                                                                                      },
                                                                                       icon: Icon(
-                                                                                        collection.likedSongsPlaylist.tracks.contains(Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)]) ? Icons.favorite : Icons.favorite_border,
+                                                                                        () {
+                                                                                          try {
+                                                                                            return collection.likedSongsPlaylist.tracks.contains(Playback.instance.tracks[Playback.instance.index]) ? Icons.favorite : Icons.favorite_border;
+                                                                                          } catch (exception, stacktrace) {
+                                                                                            print(exception);
+                                                                                            print(stacktrace);
+                                                                                            return Icons.favorite_border;
+                                                                                          }
+                                                                                        }(),
                                                                                       ),
                                                                                       color: Theme.of(context).extension<IconColors>()?.appBarDarkIconColor,
                                                                                       splashRadius: 24.0,
@@ -666,8 +752,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                             child:
                                                                                 IconButton(
                                                                               onPressed: () async {
-                                                                                final track = Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)];
-
+                                                                                final track = Playback.instance.tracks[Playback.instance.index];
                                                                                 int? result;
                                                                                 await showModalBottomSheet(
                                                                                   isScrollControlled: true,
@@ -685,14 +770,14 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                       child: Column(
                                                                                         mainAxisSize: MainAxisSize.min,
                                                                                         children: [
-                                                                                          PopupMenuItem(
-                                                                                            onTap: () => result = 0,
-                                                                                            value: 0,
-                                                                                            child: ListTile(
-                                                                                              leading: Icon(Icons.equalizer),
-                                                                                              title: Text(Language.instance.CONTROL_PANEL),
-                                                                                            ),
-                                                                                          ),
+                                                                                          // PopupMenuItem(
+                                                                                          //   onTap: () => result = 0,
+                                                                                          //   value: 0,
+                                                                                          //   child: ListTile(
+                                                                                          //     leading: Icon(Icons.equalizer),
+                                                                                          //     title: Text(Language.instance.CONTROL_PANEL),
+                                                                                          //   ),
+                                                                                          // ),
                                                                                           if (LibmpvPluginUtils.isSupported(track.uri))
                                                                                             PopupMenuItem(
                                                                                               onTap: () => result = 1,
@@ -742,20 +827,20 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                   ),
                                                                                 );
                                                                                 switch (result) {
-                                                                                  case 0:
-                                                                                    {
-                                                                                      await Future.delayed(const Duration(milliseconds: 200));
-                                                                                      await showDialog(
-                                                                                        context: context,
-                                                                                        builder: (context) => AlertDialog(
-                                                                                          contentPadding: EdgeInsets.zero,
-                                                                                          content: ControlPanel(
-                                                                                            onPop: () {},
-                                                                                          ),
-                                                                                        ),
-                                                                                      );
-                                                                                      break;
-                                                                                    }
+                                                                                  // case 0:
+                                                                                  //   {
+                                                                                  //     await Future.delayed(const Duration(milliseconds: 200));
+                                                                                  //     await showDialog(
+                                                                                  //       context: context,
+                                                                                  //       builder: (context) => AlertDialog(
+                                                                                  //         contentPadding: EdgeInsets.zero,
+                                                                                  //         content: ControlPanel(
+                                                                                  //           onPop: () {},
+                                                                                  //         ),
+                                                                                  //       ),
+                                                                                  //     );
+                                                                                  //     break;
+                                                                                  //   }
                                                                                   case 1:
                                                                                     {
                                                                                       Clipboard.setData(ClipboardData(text: track.uri.toString()));
@@ -859,13 +944,10 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                               playback, _) =>
                                                           SizedBox(
                                                         child: ExtendedImage(
-                                                          image: getAlbumArt(playback
-                                                                  .tracks[
-                                                              playback.index.clamp(
-                                                                  0,
+                                                          image: getAlbumArt(
+                                                              playback.tracks[
                                                                   playback
-                                                                      .tracks
-                                                                      .length)]),
+                                                                      .index]),
                                                           constraints:
                                                               BoxConstraints(
                                                             maxWidth:
@@ -894,6 +976,55 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                   .width
                                                               : height - 2.0,
                                                           fit: BoxFit.cover,
+                                                          enableLoadState: true,
+                                                          handleLoadingProgress:
+                                                              true,
+                                                          loadStateChanged:
+                                                              (state) {
+                                                            switch (state
+                                                                .extendedImageLoadState) {
+                                                              case LoadState
+                                                                  .failed:
+                                                                {
+                                                                  if (LibmpvPluginUtils.isSupported(playback
+                                                                      .tracks[playback
+                                                                          .index]
+                                                                      .uri)) {
+                                                                    // Show [getAlbumArt] with smaller size in-case of a load failure.
+                                                                    return ExtendedImage(
+                                                                      image:
+                                                                          getAlbumArt(
+                                                                        playback
+                                                                            .tracks[playback.index],
+                                                                        small:
+                                                                            true,
+                                                                      ),
+                                                                      width: percentage ==
+                                                                              1.0
+                                                                          ? MediaQuery.of(context)
+                                                                              .size
+                                                                              .width
+                                                                          : height -
+                                                                              2.0,
+                                                                      height: percentage ==
+                                                                              1.0
+                                                                          ? MediaQuery.of(context)
+                                                                              .size
+                                                                              .width
+                                                                          : height -
+                                                                              2.0,
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    );
+                                                                  }
+                                                                  return state
+                                                                      .completedWidget;
+                                                                }
+                                                              default:
+                                                                return state
+                                                                    .completedWidget;
+                                                            }
+                                                          },
                                                         ),
                                                       ),
                                                     ),
@@ -1018,7 +1149,14 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                     height: MediaQuery.of(context).size.height,
                                     width: MediaQuery.of(context).size.width,
                                     child: Consumer<Playback>(
-                                      builder: (context, playback, _) => Column(
+                                        builder: (context, playback, _) {
+                                      if (playback.index < 0 ||
+                                          playback.index >=
+                                              playback.tracks.length ||
+                                          playback.tracks.isEmpty) {
+                                        return const SizedBox.shrink();
+                                      }
+                                      return Column(
                                         children: [
                                           Container(
                                             width: MediaQuery.of(context)
@@ -1067,61 +1205,22 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                 const SizedBox(height: 4.0),
                                                 Text(
                                                   [
-                                                    if (!const ListEquality().equals(
-                                                            playback
-                                                                .tracks[playback.index.clamp(0, playback.tracks.length - 1)]
-                                                                .trackArtistNames
-                                                                .take(1)
-                                                                .toList(),
-                                                            [
-                                                              kUnknownArtist
-                                                            ]) &&
-                                                        playback
-                                                            .tracks[playback.index.clamp(
-                                                                0,
-                                                                playback.tracks
-                                                                        .length -
-                                                                    1)]
-                                                            .trackArtistNames
-                                                            .join('')
-                                                            .trim()
-                                                            .isNotEmpty)
+                                                    if (!playback
+                                                        .tracks[playback.index]
+                                                        .hasNoAvailableArtists)
                                                       playback
-                                                          .tracks[playback.index
-                                                              .clamp(0,
-                                                                  playback.tracks.length - 1)]
+                                                          .tracks[
+                                                              playback.index]
                                                           .trackArtistNames
                                                           .take(2)
-                                                          .join(', ')
-                                                          .overflow,
-                                                    if (playback
-                                                                .tracks[playback
-                                                                    .index
-                                                                    .clamp(
-                                                                        0,
-                                                                        playback.tracks.length -
-                                                                            1)]
-                                                                .albumName !=
-                                                            kUnknownAlbum &&
-                                                        playback
-                                                            .tracks[playback
-                                                                .index
-                                                                .clamp(
-                                                                    0,
-                                                                    playback.tracks
-                                                                            .length -
-                                                                        1)]
-                                                            .albumName
-                                                            .isNotEmpty)
+                                                          .join(', '),
+                                                    if (!playback
+                                                        .tracks[playback.index]
+                                                        .hasNoAvailableAlbum)
                                                       playback
-                                                          .tracks[playback.index
-                                                              .clamp(
-                                                                  0,
-                                                                  playback.tracks
-                                                                          .length -
-                                                                      1)]
-                                                          .albumName
-                                                          .overflow,
+                                                          .tracks[
+                                                              playback.index]
+                                                          .albumName,
                                                   ].join(' • '),
                                                   style: Theme.of(context)
                                                       .textTheme
@@ -1142,6 +1241,35 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                 ),
+                                                const SizedBox(height: 4.0),
+                                                if (Configuration.instance
+                                                        .displayAudioFormat &&
+                                                    playback
+                                                        .tracks[playback.index]
+                                                        .uri
+                                                        .isScheme('FILE'))
+                                                  Text(
+                                                    playback.androidAudioFormat
+                                                        .label,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline3
+                                                        ?.copyWith(
+                                                          color:
+                                                              (colors.palette ??
+                                                                          [
+                                                                            Theme.of(context).cardColor
+                                                                          ])
+                                                                      .first
+                                                                      .isDark
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black,
+                                                        ),
+                                                  ),
                                               ],
                                             ),
                                           ),
@@ -1157,226 +1285,407 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                   top: 44.0,
                                                   bottom: 16.0 + 8.0,
                                                 ),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
+                                                child: Column(
                                                   children: [
-                                                    const SizedBox(width: 20.0),
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        if (playback
-                                                                .playlistLoopMode ==
-                                                            PlaylistLoopMode
-                                                                .loop) {
-                                                          playback
-                                                              .setPlaylistLoopMode(
-                                                            PlaylistLoopMode
-                                                                .none,
-                                                          );
-                                                          return;
-                                                        }
-                                                        playback
-                                                            .setPlaylistLoopMode(
-                                                          PlaylistLoopMode
-                                                              .values[playback
-                                                                  .playlistLoopMode
-                                                                  .index +
-                                                              1],
-                                                        );
-                                                      },
-                                                      iconSize: 24.0,
-                                                      color: (playback
-                                                                  .playlistLoopMode !=
-                                                              PlaylistLoopMode
-                                                                  .none)
-                                                          ? (colors.palette ??
-                                                                      [
-                                                                        Theme.of(context)
-                                                                            .cardColor
-                                                                      ])
-                                                                  .first
-                                                                  .isDark
-                                                              ? Color.lerp(
-                                                                  Colors.black,
-                                                                  Colors.white,
-                                                                  0.87)
-                                                              : Color.lerp(
-                                                                  Colors.white,
-                                                                  Colors.black,
-                                                                  0.87)
-                                                          : (colors.palette ??
-                                                                      [
-                                                                        Theme.of(context)
-                                                                            .cardColor
-                                                                      ])
-                                                                  .first
-                                                                  .isDark
-                                                              ? Color.lerp(
-                                                                  Colors.black,
-                                                                  Colors.white,
-                                                                  0.54)
-                                                              : Color.lerp(
-                                                                  Colors.white,
-                                                                  Colors.black,
-                                                                  0.54),
-                                                      splashRadius: 24.0,
-                                                      icon: Icon(
-                                                        playback.playlistLoopMode ==
+                                                    Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      children: [
+                                                        const SizedBox(
+                                                            width: 20.0),
+                                                        IconButton(
+                                                          onPressed: () {
+                                                            if (playback
+                                                                    .playlistLoopMode ==
                                                                 PlaylistLoopMode
-                                                                    .single
-                                                            ? Icons.repeat_one
-                                                            : Icons.repeat,
-                                                      ),
-                                                    ),
-                                                    Spacer(),
-                                                    Container(
-                                                      width: 48.0,
-                                                      child: IconButton(
-                                                        onPressed: Playback
-                                                            .instance.previous,
-                                                        icon: Icon(
-                                                          Icons.skip_previous,
-                                                          color: (colors.palette ??
-                                                                      [
-                                                                        Theme.of(context)
-                                                                            .cardColor
-                                                                      ])
-                                                                  .first
-                                                                  .isDark
-                                                              ? Color.lerp(
-                                                                  Colors.black,
-                                                                  Colors.white,
-                                                                  0.87)
-                                                              : Color.lerp(
-                                                                  Colors.white,
-                                                                  Colors.black,
-                                                                  0.87),
-                                                          size: 28.0,
-                                                        ),
-                                                        splashRadius: 28.0,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(width: 8.0),
-                                                    Container(
-                                                      width: 72.0,
-                                                      child:
-                                                          FloatingActionButton(
-                                                        onPressed: Playback
-                                                                .instance
-                                                                .isPlaying
-                                                            ? Playback
-                                                                .instance.pause
-                                                            : Playback
-                                                                .instance.play,
-                                                        backgroundColor:
-                                                            (colors.palette ??
-                                                                    [
-                                                                      Theme.of(
-                                                                              context)
-                                                                          .primaryColor
-                                                                    ])
-                                                                .last,
-                                                        child: AnimatedIcon(
-                                                          progress: playOrPause,
-                                                          icon: AnimatedIcons
-                                                              .play_pause,
-                                                          color:
-                                                              (colors.palette ??
+                                                                    .loop) {
+                                                              playback
+                                                                  .setPlaylistLoopMode(
+                                                                PlaylistLoopMode
+                                                                    .none,
+                                                              );
+                                                              return;
+                                                            }
+                                                            playback
+                                                                .setPlaylistLoopMode(
+                                                              PlaylistLoopMode
+                                                                  .values[playback
+                                                                      .playlistLoopMode
+                                                                      .index +
+                                                                  1],
+                                                            );
+                                                          },
+                                                          iconSize: 24.0,
+                                                          color: (playback
+                                                                      .playlistLoopMode !=
+                                                                  PlaylistLoopMode
+                                                                      .none)
+                                                              ? (colors.palette ??
                                                                           [
-                                                                            Theme.of(context).primaryColor
+                                                                            Theme.of(context).cardColor
                                                                           ])
-                                                                      .last
+                                                                      .first
                                                                       .isDark
-                                                                  ? Colors.white
-                                                                  : Colors
-                                                                      .black,
-                                                          size: 32.0,
+                                                                  ? Color.lerp(
+                                                                      Colors
+                                                                          .black,
+                                                                      Colors
+                                                                          .white,
+                                                                      0.87)
+                                                                  : Color.lerp(
+                                                                      Colors
+                                                                          .white,
+                                                                      Colors
+                                                                          .black,
+                                                                      0.87)
+                                                              : (colors.palette ??
+                                                                          [
+                                                                            Theme.of(context).cardColor
+                                                                          ])
+                                                                      .first
+                                                                      .isDark
+                                                                  ? Color.lerp(
+                                                                      Colors
+                                                                          .black,
+                                                                      Colors
+                                                                          .white,
+                                                                      0.54)
+                                                                  : Color.lerp(
+                                                                      Colors
+                                                                          .white,
+                                                                      Colors
+                                                                          .black,
+                                                                      0.54),
+                                                          splashRadius: 24.0,
+                                                          icon: Icon(
+                                                            playback.playlistLoopMode ==
+                                                                    PlaylistLoopMode
+                                                                        .single
+                                                                ? Icons
+                                                                    .repeat_one
+                                                                : Icons.repeat,
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(width: 8.0),
-                                                    Container(
-                                                      width: 48.0,
-                                                      child: IconButton(
-                                                        onPressed: Playback
-                                                            .instance.next,
-                                                        icon: Icon(
-                                                          Icons.skip_next,
-                                                          color: (colors.palette ??
-                                                                      [
-                                                                        Theme.of(context)
-                                                                            .cardColor
-                                                                      ])
-                                                                  .first
-                                                                  .isDark
-                                                              ? Color.lerp(
-                                                                  Colors.black,
-                                                                  Colors.white,
-                                                                  0.87)
-                                                              : Color.lerp(
-                                                                  Colors.white,
-                                                                  Colors.black,
-                                                                  0.87),
-                                                          size: 28.0,
+                                                        Spacer(),
+                                                        Container(
+                                                          width: 48.0,
+                                                          child: IconButton(
+                                                            onPressed: Playback
+                                                                .instance
+                                                                .previous,
+                                                            icon: Icon(
+                                                              Icons
+                                                                  .skip_previous,
+                                                              color: (colors.palette ??
+                                                                          [
+                                                                            Theme.of(context).cardColor
+                                                                          ])
+                                                                      .first
+                                                                      .isDark
+                                                                  ? Color.lerp(
+                                                                      Colors
+                                                                          .black,
+                                                                      Colors
+                                                                          .white,
+                                                                      0.87)
+                                                                  : Color.lerp(
+                                                                      Colors
+                                                                          .white,
+                                                                      Colors
+                                                                          .black,
+                                                                      0.87),
+                                                              size: 28.0,
+                                                            ),
+                                                            splashRadius: 28.0,
+                                                          ),
                                                         ),
-                                                        splashRadius: 28.0,
-                                                      ),
+                                                        const SizedBox(
+                                                            width: 8.0),
+                                                        Container(
+                                                          width: 72.0,
+                                                          child:
+                                                              FloatingActionButton(
+                                                            onPressed: Playback
+                                                                    .instance
+                                                                    .isPlaying
+                                                                ? Playback
+                                                                    .instance
+                                                                    .pause
+                                                                : Playback
+                                                                    .instance
+                                                                    .play,
+                                                            backgroundColor:
+                                                                (colors.palette ??
+                                                                        [
+                                                                          Theme.of(context)
+                                                                              .primaryColor
+                                                                        ])
+                                                                    .last,
+                                                            child: AnimatedIcon(
+                                                              progress:
+                                                                  playOrPause,
+                                                              icon: AnimatedIcons
+                                                                  .play_pause,
+                                                              color:
+                                                                  (colors.palette ??
+                                                                              [
+                                                                                Theme.of(context).primaryColor
+                                                                              ])
+                                                                          .last
+                                                                          .isDark
+                                                                      ? Colors
+                                                                          .white
+                                                                      : Colors
+                                                                          .black,
+                                                              size: 32.0,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                            width: 8.0),
+                                                        Container(
+                                                          width: 48.0,
+                                                          child: IconButton(
+                                                            onPressed: Playback
+                                                                .instance.next,
+                                                            icon: Icon(
+                                                              Icons.skip_next,
+                                                              color: (colors.palette ??
+                                                                          [
+                                                                            Theme.of(context).cardColor
+                                                                          ])
+                                                                      .first
+                                                                      .isDark
+                                                                  ? Color.lerp(
+                                                                      Colors
+                                                                          .black,
+                                                                      Colors
+                                                                          .white,
+                                                                      0.87)
+                                                                  : Color.lerp(
+                                                                      Colors
+                                                                          .white,
+                                                                      Colors
+                                                                          .black,
+                                                                      0.87),
+                                                              size: 28.0,
+                                                            ),
+                                                            splashRadius: 28.0,
+                                                          ),
+                                                        ),
+                                                        Spacer(),
+                                                        IconButton(
+                                                          onPressed: playback
+                                                              .toggleShuffle,
+                                                          iconSize: 24.0,
+                                                          color: playback
+                                                                  .isShuffling
+                                                              ? (colors.palette ??
+                                                                          [
+                                                                            Theme.of(context).cardColor
+                                                                          ])
+                                                                      .first
+                                                                      .isDark
+                                                                  ? Color.lerp(
+                                                                      Colors
+                                                                          .black,
+                                                                      Colors
+                                                                          .white,
+                                                                      0.87)
+                                                                  : Color.lerp(
+                                                                      Colors
+                                                                          .white,
+                                                                      Colors
+                                                                          .black,
+                                                                      0.87)
+                                                              : (colors.palette ??
+                                                                          [
+                                                                            Theme.of(context).cardColor
+                                                                          ])
+                                                                      .first
+                                                                      .isDark
+                                                                  ? Color.lerp(
+                                                                      Colors
+                                                                          .black,
+                                                                      Colors
+                                                                          .white,
+                                                                      0.54)
+                                                                  : Color.lerp(
+                                                                      Colors
+                                                                          .white,
+                                                                      Colors
+                                                                          .black,
+                                                                      0.54),
+                                                          splashRadius: 24.0,
+                                                          icon: Icon(
+                                                            Icons.shuffle,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                            width: 20.0),
+                                                      ],
                                                     ),
-                                                    Spacer(),
-                                                    IconButton(
-                                                      onPressed: playback
-                                                          .toggleShuffle,
-                                                      iconSize: 24.0,
-                                                      color: playback
-                                                              .isShuffling
-                                                          ? (colors.palette ??
-                                                                      [
-                                                                        Theme.of(context)
-                                                                            .cardColor
-                                                                      ])
-                                                                  .first
-                                                                  .isDark
-                                                              ? Color.lerp(
-                                                                  Colors.black,
-                                                                  Colors.white,
-                                                                  0.87)
-                                                              : Color.lerp(
-                                                                  Colors.white,
-                                                                  Colors.black,
-                                                                  0.87)
-                                                          : (colors.palette ??
-                                                                      [
-                                                                        Theme.of(context)
-                                                                            .cardColor
-                                                                      ])
-                                                                  .first
-                                                                  .isDark
-                                                              ? Color.lerp(
-                                                                  Colors.black,
-                                                                  Colors.white,
-                                                                  0.54)
-                                                              : Color.lerp(
-                                                                  Colors.white,
-                                                                  Colors.black,
-                                                                  0.54),
-                                                      splashRadius: 24.0,
-                                                      icon: Icon(
-                                                        Icons.shuffle,
+                                                    if (minimizedPlaylist &&
+                                                        isVolumeSliderVisible)
+                                                      const SizedBox(
+                                                        height: 8.0,
                                                       ),
-                                                    ),
-                                                    const SizedBox(width: 20.0),
+                                                    if (minimizedPlaylist &&
+                                                        isVolumeSliderVisible)
+                                                      Row(
+                                                        children: [
+                                                          const SizedBox(
+                                                            width: 48.0,
+                                                          ),
+                                                          IconButton(
+                                                            icon: Icon(
+                                                              Icons.volume_down,
+                                                            ),
+                                                            onPressed: () {
+                                                              playback
+                                                                  .setVolume(
+                                                                (playback.volume -
+                                                                        5.0)
+                                                                    .clamp(
+                                                                  0.0,
+                                                                  100.0,
+                                                                ),
+                                                              );
+                                                            },
+                                                            color: (colors.palette ??
+                                                                        [
+                                                                          Theme.of(context)
+                                                                              .cardColor
+                                                                        ])
+                                                                    .first
+                                                                    .isDark
+                                                                ? Color.lerp(
+                                                                    Colors
+                                                                        .black,
+                                                                    Colors
+                                                                        .white,
+                                                                    0.87)
+                                                                : Color.lerp(
+                                                                    Colors
+                                                                        .white,
+                                                                    Colors
+                                                                        .black,
+                                                                    0.87),
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 16.0,
+                                                          ),
+                                                          Consumer<Playback>(
+                                                            builder: (context,
+                                                                    playback,
+                                                                    _) =>
+                                                                Expanded(
+                                                              child:
+                                                                  ScrollableSlider(
+                                                                min: 0.0,
+                                                                max: 100.0,
+                                                                value: playback
+                                                                    .volume
+                                                                    .clamp(0.0,
+                                                                        100.0),
+                                                                color: colors
+                                                                    .palette
+                                                                    ?.last,
+                                                                secondaryColor:
+                                                                    colors
+                                                                        .palette
+                                                                        ?.first,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  playback
+                                                                      .setVolume(
+                                                                    value,
+                                                                  );
+                                                                },
+                                                                onScrolledUp:
+                                                                    () {
+                                                                  playback
+                                                                      .setVolume(
+                                                                    (playback.volume +
+                                                                            5.0)
+                                                                        .clamp(
+                                                                      0.0,
+                                                                      100.0,
+                                                                    ),
+                                                                  );
+                                                                },
+                                                                onScrolledDown:
+                                                                    () {
+                                                                  playback
+                                                                      .setVolume(
+                                                                    (playback.volume -
+                                                                            5.0)
+                                                                        .clamp(
+                                                                      0.0,
+                                                                      100.0,
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 16.0,
+                                                          ),
+                                                          IconButton(
+                                                            icon: Icon(
+                                                              Icons.volume_up,
+                                                            ),
+                                                            onPressed: () {
+                                                              playback
+                                                                  .setVolume(
+                                                                (playback.volume +
+                                                                        5.0)
+                                                                    .clamp(
+                                                                  0.0,
+                                                                  200.0,
+                                                                ),
+                                                              );
+                                                            },
+                                                            color: (colors.palette ??
+                                                                        [
+                                                                          Theme.of(context)
+                                                                              .cardColor
+                                                                        ])
+                                                                    .first
+                                                                    .isDark
+                                                                ? Color.lerp(
+                                                                    Colors
+                                                                        .black,
+                                                                    Colors
+                                                                        .white,
+                                                                    0.87)
+                                                                : Color.lerp(
+                                                                    Colors
+                                                                        .white,
+                                                                    Colors
+                                                                        .black,
+                                                                    0.87),
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 48.0,
+                                                          ),
+                                                        ],
+                                                      ),
                                                   ],
                                                 ),
                                               ),
                                             ),
                                           ),
                                         ],
-                                      ),
-                                    ),
+                                      );
+                                    }),
                                   ),
                                   Consumer<Playback>(
                                     builder: (context, playback, _) =>
@@ -1493,13 +1802,17 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                     percentage > 0.7 &&
                     (MediaQuery.of(context).size.width +
                             kDetailsAreaHeight +
-                            128.0) <
+                            bottomSheetMinHeight) <
                         MediaQuery.of(context).size.height)
                   GestureDetector(
                     onTap: () {
                       final vh = MediaQuery.of(context).size.height;
                       final vw = MediaQuery.of(context).size.width;
-                      final min = (vh - (vw + kDetailsAreaHeight + 128.0)) / vh;
+                      final min = (vh -
+                              (vw +
+                                  kDetailsAreaHeight +
+                                  bottomSheetMinHeight)) /
+                          vh;
                       scrollableController.animateTo(
                         min,
                         duration: const Duration(milliseconds: 200),
@@ -1510,7 +1823,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                 if (percentage > 0.7 &&
                     (MediaQuery.of(context).size.width +
                             kDetailsAreaHeight +
-                            128.0) <
+                            bottomSheetMinHeight) <
                         MediaQuery.of(context).size.height)
                   SizedBox(
                     height: MediaQuery.of(context).size.height,
@@ -1522,7 +1835,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                           SizedBox(
                             height: MediaQuery.of(context).size.width +
                                 kDetailsAreaHeight +
-                                128.0,
+                                bottomSheetMinHeight,
                           ),
                         Expanded(
                           child: () {
@@ -1531,8 +1844,11 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                             final pt =
                                 window.padding.top / window.devicePixelRatio +
                                     16.0;
-                            final min =
-                                (vh - (vw + kDetailsAreaHeight + 128.0)) / vh;
+                            final min = (vh -
+                                    (vw +
+                                        kDetailsAreaHeight +
+                                        bottomSheetMinHeight)) /
+                                vh;
                             final max = (vh - (kToolbarHeight + pt)) / vh;
 
                             return Theme(

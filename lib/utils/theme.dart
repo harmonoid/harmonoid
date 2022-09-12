@@ -206,7 +206,8 @@ ThemeData createTheme({
     primaryColorLight: color,
     primaryColor: color,
     primaryColorDark: color,
-    scaffoldBackgroundColor: isLight ? Colors.white : Color(0xFF121212),
+    scaffoldBackgroundColor: isLight ? Colors.white : Colors.black,
+    // ignore: deprecated_member_use
     toggleableActiveColor: color,
     snackBarTheme: SnackBarThemeData(
       backgroundColor: isLight ? Color(0xFF202020) : Colors.white,
