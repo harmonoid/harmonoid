@@ -100,7 +100,8 @@ extension TrackExtension on Track {
 
 extension AndroidMediaFormatExtension on AndroidMediaFormat {
   String get label => [
-        if (extension != null) extension!.toUpperCase(),
+        if (extension != null)
+          if (extension!.length < 5) extension!.toUpperCase(),
         if (bitrate != null) '${bitrate! ~/ 1000} KB/s',
         if (sampleRate != null)
           '${(sampleRate! / 1000).toStringAsFixed(1)} kHz',
@@ -130,10 +131,11 @@ extension PlaybackExtension on Playback {
         else
           '${audioParams.channelCount} Channels',
     ];
-    if (data.join().trim().isNotEmpty) {
+    final ext = File(tracks[index].uri.toFilePath()).extension;
+    if (data.join().trim().isNotEmpty && ext.length < 5) {
       data.insert(
         0,
-        File(tracks[index].uri.toFilePath()).extension,
+        ext,
       );
     }
     return data.join(' • ');
@@ -147,10 +149,11 @@ extension PlaybackExtension on Playback {
       if (audioParams.sampleRate != null)
         '${(audioParams.sampleRate! / 1000).toStringAsFixed(1)} kHz',
     ];
-    if (data.join().trim().isNotEmpty) {
+    final ext = File(tracks[index].uri.toFilePath()).extension;
+    if (data.join().trim().isNotEmpty && ext.length < 5) {
       data.insert(
         0,
-        File(tracks[index].uri.toFilePath()).extension,
+        ext,
       );
     }
     return data.join(' • ');
