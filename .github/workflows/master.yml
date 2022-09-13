@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - stable
   workflow_dispatch:
 
 jobs:
