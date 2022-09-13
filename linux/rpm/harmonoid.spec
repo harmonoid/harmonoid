@@ -6,6 +6,8 @@ License:    EULA
 Requires:   mpv, mpv-libs-devel
 AutoReqProv: no
 
+%define __os_install_post %{nil}
+
 %description
 Plays & manages your music library. Looks beautiful & juicy.
 
@@ -16,6 +18,7 @@ Plays & manages your music library. Looks beautiful & juicy.
 # no source
 
 %install
+export DONT_STRIP=1
 mkdir -p %{buildroot}
 cp -rf linux/debian/usr/ %{buildroot}
 
