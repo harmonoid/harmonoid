@@ -108,6 +108,7 @@ class Configuration extends ConfigurationKeys {
     bool? lookupForFallbackAlbumArt,
     bool? displayAudioFormat,
     bool? mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen,
+    bool? mobileEnableNowPlayingScreenRippleEffect,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -219,6 +220,10 @@ class Configuration extends ConfigurationKeys {
       this.mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen =
           mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen;
     }
+    if (mobileEnableNowPlayingScreenRippleEffect != null) {
+      this.mobileEnableNowPlayingScreenRippleEffect =
+          mobileEnableNowPlayingScreenRippleEffect;
+    }
     await storage.write(
       {
         'collectionDirectories': this
@@ -263,6 +268,8 @@ class Configuration extends ConfigurationKeys {
         'displayAudioFormat': this.displayAudioFormat,
         'mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen':
             this.mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen,
+        'mobileEnableNowPlayingScreenRippleEffect':
+            this.mobileEnableNowPlayingScreenRippleEffect,
       },
     );
   }
@@ -324,6 +331,8 @@ class Configuration extends ConfigurationKeys {
     displayAudioFormat = current['displayAudioFormat'];
     mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen =
         current['mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen'];
+    mobileEnableNowPlayingScreenRippleEffect =
+        current['mobileEnableNowPlayingScreenRippleEffect'];
   }
 }
 
@@ -365,6 +374,7 @@ abstract class ConfigurationKeys {
   late bool lookupForFallbackAlbumArt;
   late bool displayAudioFormat;
   late bool mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen;
+  late bool mobileEnableNowPlayingScreenRippleEffect;
 }
 
 Future<Map<String, dynamic>> get _defaultConfiguration async => {
@@ -433,4 +443,5 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
       'lookupForFallbackAlbumArt': false,
       'displayAudioFormat': true,
       'mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen': false,
+      'mobileEnableNowPlayingScreenRippleEffect': true,
     };

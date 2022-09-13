@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
+import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/state/now_playing_color_palette.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -154,6 +155,23 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
               }),
               value: Configuration
                   .instance.mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen,
+            ),
+          if (isMobile)
+            CorrectedSwitchListTile(
+              title: Language.instance.MOBILE_ENABLE_NOW_PLAYING_RIPPLE_EFFECT,
+              subtitle:
+                  Language.instance.MOBILE_ENABLE_NOW_PLAYING_RIPPLE_EFFECT,
+              onChanged: (_) => Configuration.instance
+                  .save(
+                mobileEnableNowPlayingScreenRippleEffect: !Configuration
+                    .instance.mobileEnableNowPlayingScreenRippleEffect,
+              )
+                  .then((_) {
+                setState(() {});
+                MobileNowPlayingController.instance.hide();
+              }),
+              value: Configuration
+                  .instance.mobileEnableNowPlayingScreenRippleEffect,
             ),
           CorrectedSwitchListTile(
             title: Language.instance.USE_LRC_FILE_FROM_TRACK_DIRECTORY,

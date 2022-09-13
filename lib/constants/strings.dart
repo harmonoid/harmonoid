@@ -115,6 +115,7 @@ class Strings {
   late String MENU;
   late String MINIMUM_FILE_SIZE;
   late String MINIMUM_FILE_SIZE_WARNING;
+  late String MOBILE_ENABLE_NOW_PLAYING_RIPPLE_EFFECT;
   late String MOBILE_ENABLE_VOLUME_SLIDER;
   late String MORE;
   late String MUTE;

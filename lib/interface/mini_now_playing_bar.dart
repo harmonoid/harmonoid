@@ -122,63 +122,68 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
   }
 
   void colorPaletteListener() {
-    final ms = ((1000 * (400 / MediaQuery.of(context).size.width)) ~/ 1);
-    final color =
-        NowPlayingColorPalette.instance.palette?.first.withOpacity(1.0);
-    if (color == this.color) {
-      return;
-    }
-    if (timer?.isActive ?? true) {
-      timer?.cancel();
-    }
-    timer = Timer(
-      Duration(milliseconds: ms + 100),
-      () async {
-        setState(() {
-          this.color = color;
-        });
-        await Future.delayed(const Duration(milliseconds: 100));
-        setState(() {
-          debugPrint(
-            '[MiniNowPlayingBar] Freed ${fills.length} [Color] [TweenAnimationBuilder] fill(s).',
-          );
-          fills.clear();
-        });
-      },
-    );
-    setState(() {
-      fills.add(
-        TweenAnimationBuilder(
-          tween: Tween<double>(
-            begin: 0.0,
-            end: 2 * MediaQuery.of(context).size.width / 4.0,
-          ),
-          duration: Duration(
-            milliseconds: ms,
-          ),
-          curve: Curves.easeInOut,
-          child: Container(
-            height: kDesktopNowPlayingBarHeight,
-            width: MediaQuery.of(context).size.width,
-            alignment: Alignment.center,
-            child: ClipRect(
-              child: Container(
-                height: 4.0,
-                width: 4.0,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
+    if (!Configuration.instance.mobileEnableNowPlayingScreenRippleEffect) {
+      color = Theme.of(context).scaffoldBackgroundColor;
+      setState(() {});
+    } else {
+      final ms = ((1000 * (400 / MediaQuery.of(context).size.width)) ~/ 1);
+      final color =
+          NowPlayingColorPalette.instance.palette?.first.withOpacity(1.0);
+      if (color == this.color) {
+        return;
+      }
+      if (timer?.isActive ?? true) {
+        timer?.cancel();
+      }
+      timer = Timer(
+        Duration(milliseconds: ms + 100),
+        () async {
+          setState(() {
+            this.color = color;
+          });
+          await Future.delayed(const Duration(milliseconds: 100));
+          setState(() {
+            debugPrint(
+              '[MiniNowPlayingBar] Freed ${fills.length} [Color] [TweenAnimationBuilder] fill(s).',
+            );
+            fills.clear();
+          });
+        },
+      );
+      setState(() {
+        fills.add(
+          TweenAnimationBuilder(
+            tween: Tween<double>(
+              begin: 0.0,
+              end: 2 * MediaQuery.of(context).size.width / 4.0,
+            ),
+            duration: Duration(
+              milliseconds: ms,
+            ),
+            curve: Curves.easeInOut,
+            child: Container(
+              height: kDesktopNowPlayingBarHeight,
+              width: MediaQuery.of(context).size.width,
+              alignment: Alignment.center,
+              child: ClipRect(
+                child: Container(
+                  height: 4.0,
+                  width: 4.0,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                  ),
                 ),
               ),
             ),
+            builder: (context, value, child) => Transform.scale(
+              scale: value as double,
+              child: child,
+            ),
           ),
-          builder: (context, value, child) => Transform.scale(
-            scale: value as double,
-            child: child,
-          ),
-        ),
-      );
-    });
+        );
+      });
+    }
   }
 
   bool get isVolumeSliderVisible {
@@ -213,7 +218,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
           minimizedPlaylist = false;
         });
         scrollableControllerReference?.jumpTo(
-          32.0 + Playback.instance.index * (72.0 + 1.0),
+          Playback.instance.index * (72.0 + 1.0),
         );
       }
     } catch (exception, stacktrace) {
@@ -283,57 +288,53 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
           .asMap()
           .entries
           .map(
-            (e) => TrackTile(
-              track: e.value,
-              index: e.key,
-              disableContextMenu: true,
-              disableSeparator: true,
-              onPressed: () {
-                Playback.instance.jump(e.key);
-              },
-              leading: Container(
-                height: 56.0,
-                width: 56.0,
-                alignment: Alignment.center,
-                child: e.key == Playback.instance.index
-                    ? Container(
-                        height: 32.0,
-                        width: 28.0,
-                        alignment: Alignment.center,
-                        child: MiniMusicVisualizer(
-                          color: Colors.black54,
-                          width: 6,
-                          height: 15,
+            (e) => Builder(
+              builder: (context) => TrackTile(
+                track: e.value,
+                index: e.key,
+                disableContextMenu: true,
+                disableSeparator: true,
+                onPressed: () {
+                  Playback.instance.jump(e.key);
+                },
+                leading: Container(
+                  height: 56.0,
+                  width: 56.0,
+                  alignment: Alignment.center,
+                  child: e.key == Playback.instance.index
+                      ? Container(
+                          height: 32.0,
+                          width: 28.0,
+                          alignment: Alignment.center,
+                          child: MiniMusicVisualizer(
+                            color: Theme.of(context).textTheme.headline3?.color,
+                            width: 6,
+                            height: 15,
+                          ),
+                        )
+                      : Text(
+                          '${e.key - Playback.instance.index <= 0 ? '' : '+'}${e.key - Playback.instance.index}',
+                          style:
+                              Theme.of(context).textTheme.headline3?.copyWith(
+                                    fontSize: 18.0,
+                                  ),
                         ),
-                      )
-                    : Text(
-                        '${e.key - Playback.instance.index <= 0 ? '' : '+'}${e.key - Playback.instance.index}',
-                        style: Theme.of(context).textTheme.headline3?.copyWith(
-                              fontSize: 18.0,
-                              color: Colors.black54,
-                            ),
-                      ),
-              ),
-              title: Text(
-                e.value.trackName,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                  color: e.key < Playback.instance.index
-                      ? Colors.black54
-                      : Colors.black87,
-                  fontSize: 16.0,
                 ),
-              ),
-              subtitle: Text(
-                e.value.trackArtistNames.take(1).join(', '),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                  color: Colors.black54,
-                  fontSize: 14.0,
+                title: Text(
+                  e.value.trackName,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: Theme.of(context).textTheme.headline2?.copyWith(
+                        color: e.key < Playback.instance.index
+                            ? Theme.of(context).textTheme.headline3?.color
+                            : null,
+                      ),
+                ),
+                subtitle: Text(
+                  e.value.trackArtistNames.take(1).join(', '),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: Theme.of(context).textTheme.headline3,
                 ),
               ),
             ),
@@ -346,36 +347,30 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
         more = shuffle
             .take(10)
             .map(
-              (e) => TrackTile(
-                track: e,
-                index: 0,
-                group: [e] + shuffle,
-                disableContextMenu: true,
-                disableSeparator: true,
-                leading: Container(
-                  height: 56.0,
-                  width: 56.0,
-                  alignment: Alignment.center,
-                  child: Icon(Icons.music_note_outlined),
-                ),
-                title: Text(
-                  e.trackName,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    color: Colors.black87,
-                    fontSize: 16.0,
+              (e) => Builder(
+                builder: (context) => TrackTile(
+                  track: e,
+                  index: 0,
+                  group: [e] + shuffle,
+                  disableContextMenu: true,
+                  disableSeparator: true,
+                  leading: Container(
+                    height: 56.0,
+                    width: 56.0,
+                    alignment: Alignment.center,
+                    child: Icon(Icons.music_note_outlined),
                   ),
-                ),
-                subtitle: Text(
-                  e.trackArtistNames.take(1).join(', '),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    color: Colors.black54,
-                    fontSize: 14.0,
+                  title: Text(
+                    e.trackName,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: Theme.of(context).textTheme.headline2,
+                  ),
+                  subtitle: Text(
+                    e.trackArtistNames.take(1).join(', '),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: Theme.of(context).textTheme.headline3,
                   ),
                 ),
               ),
@@ -388,10 +383,27 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
 
   @override
   Widget build(BuildContext context) {
-    if (color == null) {
-      color = NowPlayingColorPalette.instance.palette?.first.withOpacity(1.0);
+    NowPlayingColorPalette colors = NowPlayingColorPalette.instance;
+    // If [Configuration.instance.mobileEnableNowPlayingScreenRippleEffect] is enabled, then
+    // just use the color from palette & set the [color] attribute accordingly.
+    // Else, remove the existingly set palette color & fallback to [Theme.of(context).scaffoldBackgroundColor].
+    if (!Configuration.instance.mobileEnableNowPlayingScreenRippleEffect) {
+      color = Theme.of(context).scaffoldBackgroundColor;
+      colors = NowPlayingColorPalette()
+        ..palette = [
+          Theme.of(context).scaffoldBackgroundColor,
+          if (colors.palette?.last != null)
+            colors.palette!.last
+          else
+            Theme.of(context).primaryColor,
+        ];
+    } else if ([
+      null,
+      Theme.of(context).scaffoldBackgroundColor,
+    ].contains(color)) {
+      color = colors.palette?.first.withOpacity(1.0);
     }
-    final colors = NowPlayingColorPalette.instance;
+
     return AnimatedSlide(
       offset: Offset(0, _y),
       duration: Duration(milliseconds: 200),
@@ -1279,7 +1291,10 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                               width: MediaQuery.of(context)
                                                   .size
                                                   .width,
-                                              color: Colors.white24,
+                                              color: Configuration.instance
+                                                      .mobileEnableNowPlayingScreenRippleEffect
+                                                  ? Colors.white24
+                                                  : Colors.white10,
                                               child: Padding(
                                                 padding: EdgeInsets.only(
                                                   top: 44.0,
@@ -1851,139 +1866,147 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                 vh;
                             final max = (vh - (kToolbarHeight + pt)) / vh;
 
-                            return Theme(
-                              data: createTheme(
-                                color: Color(0xFF6200EA),
-                                themeMode: ThemeMode.light,
-                              ),
-                              child: ScrollConfiguration(
-                                behavior: NoOverscrollGlowBehavior(),
-                                child: DraggableScrollableSheet(
-                                  key: ValueKey(
-                                    'mini_now_playing_bar/playlist',
-                                  ),
-                                  controller: scrollableController,
-                                  snap: true,
-                                  snapSizes: percentage < 1.0
-                                      ? [1.0]
-                                      : [
-                                          min,
-                                          max,
-                                        ],
-                                  initialChildSize:
-                                      percentage < 1.0 ? 1.0 : min,
-                                  minChildSize: percentage < 1.0 ? 1.0 : min,
-                                  maxChildSize: percentage < 1.0 ? 1.0 : max,
-                                  builder: (context, controller) {
-                                    scrollableControllerReference = controller;
-                                    return Container(
-                                      margin: EdgeInsets.symmetric(
-                                        horizontal: 16.0,
-                                      ),
-                                      width: vw - 32.0,
-                                      child: Card(
-                                        clipBehavior: Clip.antiAlias,
-                                        elevation: 4.0,
-                                        margin: EdgeInsets.zero,
-                                        shape: CardTheme.of(context)
-                                            .copyWith(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(4.0),
-                                                  topRight:
-                                                      Radius.circular(4.0),
-                                                ),
+                            return ScrollConfiguration(
+                              behavior: NoOverscrollGlowBehavior(),
+                              child: DraggableScrollableSheet(
+                                key: ValueKey(
+                                  'mini_now_playing_bar/playlist',
+                                ),
+                                controller: scrollableController,
+                                snap: true,
+                                snapSizes: percentage < 1.0
+                                    ? [1.0]
+                                    : [
+                                        min,
+                                        max,
+                                      ],
+                                initialChildSize: percentage < 1.0 ? 1.0 : min,
+                                minChildSize: percentage < 1.0 ? 1.0 : min,
+                                maxChildSize: percentage < 1.0 ? 1.0 : max,
+                                builder: (context, controller) {
+                                  scrollableControllerReference = controller;
+                                  return Container(
+                                    margin: EdgeInsets.symmetric(
+                                      horizontal: 16.0,
+                                    ),
+                                    width: vw - 32.0,
+                                    child: Card(
+                                      clipBehavior: Clip.antiAlias,
+                                      elevation: 4.0,
+                                      margin: EdgeInsets.zero,
+                                      shape: CardTheme.of(context)
+                                          .copyWith(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(4.0),
+                                                topRight: Radius.circular(4.0),
                                               ),
-                                            )
-                                            .shape,
-                                        child: () {
-                                          final elements = minimizedPlaylist
-                                              ? tracksSkipped
-                                              : tracks;
-                                          return CustomListViewSeparated(
-                                            padding: EdgeInsets.zero,
-                                            controller: controller,
-                                            itemCount: 1 +
-                                                elements.length +
-                                                1 +
-                                                more.length,
-                                            itemExtents: [32.0] +
-                                                List.generate(
-                                                  elements.length,
-                                                  (index) => 72.0,
-                                                ) +
-                                                [56.0] +
-                                                List.generate(
-                                                  more.length,
-                                                  (index) => 72.0,
-                                                ),
-                                            separatorExtent: 1.0,
-                                            itemBuilder: (context, i) {
-                                              if (i == 0) {
-                                                return Material(
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      scrollableController
-                                                          .animateTo(
-                                                        max,
-                                                        duration:
-                                                            const Duration(
-                                                          milliseconds: 200,
-                                                        ),
-                                                        curve: Curves.easeInOut,
-                                                      );
-                                                    },
-                                                    child: Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Container(
-                                                        width: 48.0,
-                                                        height: 4.0,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                            2.0,
-                                                          ),
-                                                          color: Colors.black54,
-                                                        ),
+                                            ),
+                                          )
+                                          .shape,
+                                      child: () {
+                                        final elements = minimizedPlaylist
+                                            ? tracksSkipped
+                                            : tracks;
+                                        return Column(
+                                          children: [
+                                            Material(
+                                              child: InkWell(
+                                                onTap: () {
+                                                  scrollableController
+                                                      .animateTo(
+                                                    max,
+                                                    duration: const Duration(
+                                                      milliseconds: 200,
+                                                    ),
+                                                    curve: Curves.easeInOut,
+                                                  );
+                                                },
+                                                child: Container(
+                                                  height: 32.0,
+                                                  alignment: Alignment.center,
+                                                  child: Container(
+                                                    width: 48.0,
+                                                    height: 4.0,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                        2.0,
                                                       ),
+                                                      color: Theme.of(context)
+                                                          .dividerColor
+                                                          .withOpacity(0.54),
                                                     ),
                                                   ),
-                                                );
-                                              } else if (i ==
-                                                  elements.length + 1) {
-                                                return Padding(
-                                                  padding: EdgeInsets.only(
-                                                    left: 62.0,
-                                                  ),
-                                                  child: SubHeader(
-                                                    Language.instance.MORE,
-                                                  ),
-                                                );
-                                              } else if (i <= elements.length) {
-                                                return elements[i - 1];
-                                              } else if (i >
-                                                  elements.length + 1) {
-                                                return more[
-                                                    i - elements.length - 2];
-                                              }
-                                              return const SizedBox.shrink();
-                                            },
-                                            separatorBuilder: (context, i) =>
-                                                Divider(
+                                                ),
+                                              ),
+                                            ),
+                                            Divider(
                                               height: 1.0,
                                               thickness: 1.0,
-                                              indent: i == 0 ? 0.0 : 78.0,
-                                              endIndent: i == 0 ? 0.0 : 8.0,
                                             ),
-                                          );
-                                        }(),
-                                      ),
-                                    );
-                                  },
-                                ),
+                                            Expanded(
+                                              child: CustomListViewSeparated(
+                                                padding: EdgeInsets.zero,
+                                                controller: controller,
+                                                itemCount: // 1 +
+                                                    elements.length +
+                                                        1 +
+                                                        more.length,
+                                                itemExtents: // [32.0] +
+                                                    List.generate(
+                                                          elements.length,
+                                                          (index) => 72.0,
+                                                        ) +
+                                                        [56.0] +
+                                                        List.generate(
+                                                          more.length,
+                                                          (index) => 72.0,
+                                                        ),
+                                                separatorExtent: 1.0,
+                                                itemBuilder: (context, i) {
+                                                  // if (i == 0) {
+                                                  //   return const SizedBox
+                                                  //       .shrink();
+                                                  // } else
+                                                  i++;
+                                                  if (i ==
+                                                      elements.length + 1) {
+                                                    return Padding(
+                                                      padding: EdgeInsets.only(
+                                                        left: 62.0,
+                                                      ),
+                                                      child: SubHeader(
+                                                        Language.instance.MORE,
+                                                      ),
+                                                    );
+                                                  } else if (i <=
+                                                      elements.length) {
+                                                    return elements[i - 1];
+                                                  } else if (i >
+                                                      elements.length + 1) {
+                                                    return more[i -
+                                                        elements.length -
+                                                        2];
+                                                  }
+                                                  return const SizedBox
+                                                      .shrink();
+                                                },
+                                                separatorBuilder:
+                                                    (context, i) => Divider(
+                                                  height: 1.0,
+                                                  thickness: 1.0,
+                                                  indent: 78.0,
+                                                  endIndent: 8.0,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      }(),
+                                    ),
+                                  );
+                                },
                               ),
                             );
                           }(),
