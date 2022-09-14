@@ -194,333 +194,429 @@ class ArtistTile extends StatelessWidget {
   final double height;
   final double width;
   final Artist artist;
+  final bool forceDefaultStyleOnMobile;
 
   const ArtistTile({
     Key? key,
     required this.height,
     required this.width,
     required this.artist,
+    this.forceDefaultStyleOnMobile = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final helper = DimensionsHelper(context);
     Iterable<Color>? palette;
-    return Consumer<Collection>(
-      builder: (context, collection, _) => isDesktop
-          ? Container(
-              height: height,
-              width: width,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Card(
-                    clipBehavior: Clip.antiAlias,
-                    margin: EdgeInsets.zero,
-                    elevation: 4.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        width / 2.0,
-                      ),
-                    ),
-                    child: Stack(
-                      alignment: Alignment.center,
+    if (isMobile && forceDefaultStyleOnMobile) {
+      return Material(
+        color: Colors.transparent,
+        child: OpenContainer(
+          closedColor: Colors.transparent,
+          closedElevation: 0.0,
+          openColor: Colors.transparent,
+          openElevation: 0.0,
+          openBuilder: (context, close) => ArtistScreen(
+            artist: artist,
+            palette: palette,
+          ),
+          closedBuilder: (context, open) => SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Divider(
+                  height: 1.0,
+                  thickness: 1.0,
+                  indent: 76.0,
+                ),
+                InkWell(
+                  onTap: () async {
+                    try {
+                      if (palette == null) {
+                        final result = await PaletteGenerator.fromImageProvider(
+                            getAlbumArt(artist, small: true));
+                        palette = result.colors;
+                      }
+                      await precacheImage(getAlbumArt(artist), context);
+                      MobileNowPlayingController.instance.hide();
+                    } catch (exception, stacktrace) {
+                      debugPrint(exception.toString());
+                      debugPrint(stacktrace.toString());
+                    }
+                    open();
+                  },
+                  child: Container(
+                    height: 64.0,
+                    width: MediaQuery.of(context).size.width,
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Hero(
-                          tag: 'artist_art_${artist.artistName}',
-                          child: ClipOval(
-                            child: ExtendedImage(
-                              image: getAlbumArt(artist, small: true),
-                              height: width - 8.0,
-                              width: width - 8.0,
+                        const SizedBox(width: 12.0),
+                        Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(28.0),
+                          ),
+                          elevation: 4.0,
+                          margin: EdgeInsets.zero,
+                          child: Padding(
+                            padding: EdgeInsets.all(2.0),
+                            child: ClipOval(
+                              child: ExtendedImage(
+                                image: getAlbumArt(artist, small: true),
+                                height: 48.0,
+                                width: 48.0,
+                              ),
                             ),
                           ),
                         ),
-                        Material(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                              width / 2.0,
-                            ),
+                        const SizedBox(width: 12.0),
+                        Expanded(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                artist.artistName.overflow,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: Theme.of(context).textTheme.headline2,
+                              ),
+                              const SizedBox(
+                                height: 2.0,
+                              ),
+                              Text(
+                                Language.instance.M_TRACKS_AND_N_ALBUMS
+                                    .replaceAll('M', '${artist.tracks.length}')
+                                    .replaceAll('N', '${artist.albums.length}'),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: Theme.of(context).textTheme.headline3,
+                              ),
+                            ],
                           ),
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () async {
+                        ),
+                        const SizedBox(width: 12.0),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+    return isDesktop
+        ? Container(
+            height: height,
+            width: width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  margin: EdgeInsets.zero,
+                  elevation: 4.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      width / 2.0,
+                    ),
+                  ),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Hero(
+                        tag: 'artist_art_${artist.artistName}',
+                        child: ClipOval(
+                          child: ExtendedImage(
+                            image: getAlbumArt(artist, small: true),
+                            height: width - 8.0,
+                            width: width - 8.0,
+                          ),
+                        ),
+                      ),
+                      Material(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            width / 2.0,
+                          ),
+                        ),
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () async {
+                            Playback.instance.interceptPositionChangeRebuilds =
+                                true;
+                            try {
+                              await precacheImage(getAlbumArt(artist), context);
+                            } catch (exception, stacktrace) {
+                              debugPrint(exception.toString());
+                              debugPrint(stacktrace.toString());
+                            }
+                            Navigator.of(context).push(
+                              PageRouteBuilder(
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        FadeThroughTransition(
+                                  animation: animation,
+                                  secondaryAnimation: secondaryAnimation,
+                                  child: ArtistScreen(
+                                    artist: artist,
+                                  ),
+                                ),
+                                transitionDuration: Duration(milliseconds: 300),
+                                reverseTransitionDuration:
+                                    Duration(milliseconds: 300),
+                              ),
+                            );
+                            Timer(const Duration(milliseconds: 400), () {
                               Playback.instance
-                                  .interceptPositionChangeRebuilds = true;
-                              try {
-                                await precacheImage(
-                                    getAlbumArt(artist), context);
-                              } catch (exception, stacktrace) {
-                                debugPrint(exception.toString());
-                                debugPrint(stacktrace.toString());
+                                  .interceptPositionChangeRebuilds = false;
+                            });
+                          },
+                          child: Container(
+                            height: width,
+                            width: width,
+                            padding: EdgeInsets.all(4.0),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Spacer(),
+                Text(
+                  artist.artistName.overflow,
+                  style: Theme.of(context).textTheme.headline2,
+                  textAlign: TextAlign.left,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          )
+        : helper.artistElementsPerRow == 1
+            ? Material(
+                color: Colors.transparent,
+                child: OpenContainer(
+                  closedColor: Colors.transparent,
+                  closedElevation: 0.0,
+                  openColor: Colors.transparent,
+                  openElevation: 0.0,
+                  openBuilder: (context, close) => ArtistScreen(
+                    artist: artist,
+                    palette: palette,
+                  ),
+                  closedBuilder: (context, open) => SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Divider(
+                          height: 1.0,
+                          thickness: 1.0,
+                          indent: 76.0,
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            try {
+                              if (palette == null) {
+                                final result =
+                                    await PaletteGenerator.fromImageProvider(
+                                        getAlbumArt(artist, small: true));
+                                palette = result.colors;
                               }
-                              Navigator.of(context).push(
-                                PageRouteBuilder(
-                                  pageBuilder: (context, animation,
-                                          secondaryAnimation) =>
-                                      FadeThroughTransition(
-                                    animation: animation,
-                                    secondaryAnimation: secondaryAnimation,
-                                    child: ArtistScreen(
-                                      artist: artist,
+                              await precacheImage(getAlbumArt(artist), context);
+                              MobileNowPlayingController.instance.hide();
+                            } catch (exception, stacktrace) {
+                              debugPrint(exception.toString());
+                              debugPrint(stacktrace.toString());
+                            }
+                            open();
+                          },
+                          child: Container(
+                            height: 64.0,
+                            width: MediaQuery.of(context).size.width,
+                            alignment: Alignment.center,
+                            margin: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const SizedBox(width: 12.0),
+                                Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(28.0),
+                                  ),
+                                  elevation: 4.0,
+                                  margin: EdgeInsets.zero,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(2.0),
+                                    child: ClipOval(
+                                      child: ExtendedImage(
+                                        image: getAlbumArt(artist, small: true),
+                                        height: 48.0,
+                                        width: 48.0,
+                                      ),
                                     ),
                                   ),
-                                  transitionDuration:
-                                      Duration(milliseconds: 300),
-                                  reverseTransitionDuration:
-                                      Duration(milliseconds: 300),
                                 ),
-                              );
-                              Timer(const Duration(milliseconds: 400), () {
-                                Playback.instance
-                                    .interceptPositionChangeRebuilds = false;
-                              });
-                            },
-                            child: Container(
-                              height: width,
-                              width: width,
-                              padding: EdgeInsets.all(4.0),
+                                const SizedBox(width: 12.0),
+                                Expanded(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        artist.artistName.overflow,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline2,
+                                      ),
+                                      const SizedBox(
+                                        height: 2.0,
+                                      ),
+                                      Text(
+                                        Language.instance.M_TRACKS_AND_N_ALBUMS
+                                            .replaceAll(
+                                                'M', '${artist.tracks.length}')
+                                            .replaceAll(
+                                                'N', '${artist.albums.length}'),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline3,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 12.0),
+                              ],
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  Spacer(),
-                  Text(
-                    artist.artistName.overflow,
-                    style: Theme.of(context).textTheme.headline2,
-                    textAlign: TextAlign.left,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                ),
+              )
+            : Material(
+                color: Colors.transparent,
+                child: OpenContainer(
+                  closedElevation: 0.0,
+                  openElevation: 0.0,
+                  openColor: Colors.transparent,
+                  closedColor: Colors.transparent,
+                  openBuilder: (context, close) => ArtistScreen(
+                    artist: artist,
+                    palette: palette,
                   ),
-                ],
-              ),
-            )
-          : helper.artistElementsPerRow == 1
-              ? Material(
-                  color: Colors.transparent,
-                  child: OpenContainer(
-                    closedColor: Colors.transparent,
-                    closedElevation: 0.0,
-                    openColor: Colors.transparent,
-                    openElevation: 0.0,
-                    openBuilder: (context, close) => ArtistScreen(
-                      artist: artist,
-                      palette: palette,
-                    ),
-                    closedBuilder: (context, open) => SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Divider(
-                            height: 1.0,
-                            thickness: 1.0,
-                            indent: 76.0,
-                          ),
-                          InkWell(
-                            onTap: () async {
-                              try {
-                                if (palette == null) {
-                                  final result =
-                                      await PaletteGenerator.fromImageProvider(
-                                          getAlbumArt(artist, small: true));
-                                  palette = result.colors;
-                                }
-                                await precacheImage(
-                                    getAlbumArt(artist), context);
-                                MobileNowPlayingController.instance.hide();
-                              } catch (exception, stacktrace) {
-                                debugPrint(exception.toString());
-                                debugPrint(stacktrace.toString());
-                              }
-                              open();
-                            },
-                            child: Container(
-                              height: 64.0,
-                              width: MediaQuery.of(context).size.width,
-                              alignment: Alignment.center,
-                              margin: const EdgeInsets.symmetric(vertical: 4.0),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  const SizedBox(width: 12.0),
-                                  Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(28.0),
-                                    ),
-                                    elevation: 4.0,
-                                    margin: EdgeInsets.zero,
-                                    child: Padding(
-                                      padding: EdgeInsets.all(2.0),
-                                      child: ClipOval(
-                                        child: ExtendedImage(
-                                          image:
-                                              getAlbumArt(artist, small: true),
-                                          height: 48.0,
-                                          width: 48.0,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12.0),
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          artist.artistName.overflow,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline2,
-                                        ),
-                                        const SizedBox(
-                                          height: 2.0,
-                                        ),
-                                        Text(
-                                          Language
-                                              .instance.M_TRACKS_AND_N_ALBUMS
-                                              .replaceAll('M',
-                                                  '${artist.tracks.length}')
-                                              .replaceAll('N',
-                                                  '${artist.albums.length}'),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline3,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12.0),
-                                ],
-                              ),
+                  closedBuilder: (context, open) => Container(
+                    height: height,
+                    width: width,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Card(
+                          clipBehavior: Clip.antiAlias,
+                          margin: EdgeInsets.zero,
+                          elevation: 4.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              width / 2.0,
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                )
-              : Material(
-                  color: Colors.transparent,
-                  child: OpenContainer(
-                    closedElevation: 0.0,
-                    openElevation: 0.0,
-                    openColor: Colors.transparent,
-                    closedColor: Colors.transparent,
-                    openBuilder: (context, close) => ArtistScreen(
-                      artist: artist,
-                      palette: palette,
-                    ),
-                    closedBuilder: (context, open) => Container(
-                      height: height,
-                      width: width,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Card(
-                            clipBehavior: Clip.antiAlias,
-                            margin: EdgeInsets.zero,
-                            elevation: 4.0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                width / 2.0,
-                              ),
-                            ),
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Hero(
-                                  tag: 'artist_art_${artist.artistName}',
-                                  child: ClipOval(
-                                    child: ExtendedImage(
-                                      image: getAlbumArt(
-                                        artist,
-                                        small: true,
-                                        cacheWidth: (width - 8.0) *
-                                            MediaQuery.of(context)
-                                                .devicePixelRatio ~/
-                                            1,
-                                      ),
-                                      height: width - 8.0,
-                                      width: width - 8.0,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Hero(
+                                tag: 'artist_art_${artist.artistName}',
+                                child: ClipOval(
+                                  child: ExtendedImage(
+                                    image: getAlbumArt(
+                                      artist,
+                                      small: true,
+                                      cacheWidth: (width - 8.0) *
+                                          MediaQuery.of(context)
+                                              .devicePixelRatio ~/
+                                          1,
                                     ),
+                                    height: width - 8.0,
+                                    width: width - 8.0,
                                   ),
                                 ),
-                                Material(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                      width / 2.0,
-                                    ),
+                              ),
+                              Material(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    width / 2.0,
                                   ),
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    onTap: () async {
-                                      try {
-                                        if (palette == null) {
-                                          final result = await PaletteGenerator
-                                              .fromImageProvider(getAlbumArt(
-                                                  artist,
-                                                  small: true));
-                                          palette = result.colors;
-                                        }
-                                        await precacheImage(
-                                            getAlbumArt(artist), context);
-                                        MobileNowPlayingController.instance
-                                            .hide();
-                                      } catch (exception, stacktrace) {
-                                        debugPrint(exception.toString());
-                                        debugPrint(stacktrace.toString());
+                                ),
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () async {
+                                    try {
+                                      if (palette == null) {
+                                        final result = await PaletteGenerator
+                                            .fromImageProvider(getAlbumArt(
+                                                artist,
+                                                small: true));
+                                        palette = result.colors;
                                       }
-                                      open();
-                                    },
-                                    child: Container(
-                                      height: width,
-                                      width: width,
-                                      padding: EdgeInsets.all(4.0),
-                                    ),
+                                      await precacheImage(
+                                          getAlbumArt(artist), context);
+                                      MobileNowPlayingController.instance
+                                          .hide();
+                                    } catch (exception, stacktrace) {
+                                      debugPrint(exception.toString());
+                                      debugPrint(stacktrace.toString());
+                                    }
+                                    open();
+                                  },
+                                  child: Container(
+                                    height: width,
+                                    width: width,
+                                    padding: EdgeInsets.all(4.0),
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                          SizedBox(
-                            height: helper.artistElementsPerRow == 4
-                                ? 8.0
-                                : helper.artistTileNormalDensity
-                                    ? 18.0
-                                    : 10.0,
-                          ),
-                          Text(
-                            artist.artistName.overflow,
-                            style:
-                                Theme.of(context).textTheme.headline2?.copyWith(
-                                      fontSize: helper.artistTileNormalDensity
-                                          ? null
-                                          : 14.0,
-                                    ),
-                            textAlign: TextAlign.center,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const Spacer(),
-                        ],
-                      ),
+                        ),
+                        SizedBox(
+                          height: helper.artistElementsPerRow == 4
+                              ? 8.0
+                              : helper.artistTileNormalDensity
+                                  ? 18.0
+                                  : 10.0,
+                        ),
+                        Text(
+                          artist.artistName.overflow,
+                          style:
+                              Theme.of(context).textTheme.headline2?.copyWith(
+                                    fontSize: helper.artistTileNormalDensity
+                                        ? null
+                                        : 14.0,
+                                  ),
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const Spacer(),
+                      ],
                     ),
                   ),
                 ),
-    );
+              );
   }
 }
 

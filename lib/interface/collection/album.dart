@@ -472,17 +472,154 @@ class AlbumTile extends StatelessWidget {
   final double height;
   final double width;
   final Album album;
+  final bool forceDefaultStyleOnMobile;
 
   const AlbumTile({
     Key? key,
     required this.album,
     required this.height,
     required this.width,
+    this.forceDefaultStyleOnMobile = false,
   }) : super(key: key);
+
+  Future<void> delete(BuildContext context) async {
+// No [Album] delete feature on Android API level 29 only.
+    if (Platform.isAndroid) {
+      final sdk = StorageRetriever.instance.version;
+      if (sdk < 29) {
+        // Android 9 or below need an [AlertDialog] for confirmation.
+        await showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text(
+              Language.instance.COLLECTION_ALBUM_DELETE_DIALOG_HEADER,
+            ),
+            content: Text(
+              Language.instance.COLLECTION_ALBUM_DELETE_DIALOG_BODY.replaceAll(
+                'NAME',
+                album.albumName,
+              ),
+              style: Theme.of(ctx).textTheme.headline3,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  await Collection.instance.delete(album);
+                  Navigator.of(ctx).pop();
+                },
+                child: Text(Language.instance.YES),
+              ),
+              TextButton(
+                onPressed: Navigator.of(ctx).pop,
+                child: Text(Language.instance.NO),
+              ),
+            ],
+          ),
+        );
+      } else if (sdk > 29) {
+        await Collection.instance.delete(album);
+      }
+    }
+  }
 
   Widget build(BuildContext context) {
     final helper = DimensionsHelper(context);
     Iterable<Color>? palette;
+    if (isMobile && forceDefaultStyleOnMobile) {
+      return OpenContainer(
+        closedColor: Theme.of(context).cardColor,
+        closedElevation: 4.0,
+        openElevation: 0.0,
+        openColor: Theme.of(context).scaffoldBackgroundColor,
+        closedBuilder: (context, open) => InkWell(
+          onLongPress: () => delete(context),
+          onTap: () async {
+            try {
+              if (palette == null) {
+                final result = await PaletteGenerator.fromImageProvider(
+                  getAlbumArt(
+                    album,
+                    small: true,
+                  ),
+                );
+                palette = result.colors;
+              }
+              await precacheImage(getAlbumArt(album), context);
+              MobileNowPlayingController.instance.hide();
+            } catch (exception, stacktrace) {
+              debugPrint(exception.toString());
+              debugPrint(stacktrace.toString());
+            }
+            open();
+          },
+          child: Container(
+            height: height,
+            width: width,
+            child: Column(
+              children: [
+                Ink.image(
+                  image: getAlbumArt(
+                    album,
+                    small: true,
+                    cacheWidth:
+                        width * MediaQuery.of(context).devicePixelRatio ~/ 1,
+                  ),
+                  fit: BoxFit.cover,
+                  height: width,
+                  width: width,
+                ),
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: helper.albumTileNormalDensity ? 12.0 : 8.0,
+                    ),
+                    width: width,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          album.albumName.overflow,
+                          style:
+                              Theme.of(context).textTheme.headline2?.copyWith(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                          textAlign: TextAlign.left,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 2),
+                          child: Text(
+                            [
+                              if (!['', kUnknownArtist]
+                                  .contains(album.albumArtistName))
+                                album.albumArtistName,
+                              if (!['', kUnknownYear].contains(album.year))
+                                album.year,
+                            ].join(' • '),
+                            style: Theme.of(context).textTheme.headline3,
+                            maxLines: 1,
+                            textAlign: TextAlign.left,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        openBuilder: (context, _) => AlbumScreen(
+          album: album,
+          palette: palette,
+        ),
+      );
+    }
     return isDesktop
         ? Card(
             clipBehavior: Clip.antiAlias,
@@ -622,49 +759,7 @@ class AlbumTile extends StatelessWidget {
                             }
                             open();
                           },
-                          onLongPress: () async {
-                            // No [Album] delete feature on Android API level 29 only.
-                            if (Platform.isAndroid) {
-                              final sdk = StorageRetriever.instance.version;
-                              if (sdk < 29) {
-                                // Android 9 or below need an [AlertDialog] for confirmation.
-                                await showDialog(
-                                  context: context,
-                                  builder: (ctx) => AlertDialog(
-                                    title: Text(
-                                      Language.instance
-                                          .COLLECTION_ALBUM_DELETE_DIALOG_HEADER,
-                                    ),
-                                    content: Text(
-                                      Language.instance
-                                          .COLLECTION_ALBUM_DELETE_DIALOG_BODY
-                                          .replaceAll(
-                                        'NAME',
-                                        album.albumName,
-                                      ),
-                                      style: Theme.of(ctx).textTheme.headline3,
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () async {
-                                          await Collection.instance
-                                              .delete(album);
-                                          Navigator.of(ctx).pop();
-                                        },
-                                        child: Text(Language.instance.YES),
-                                      ),
-                                      TextButton(
-                                        onPressed: Navigator.of(ctx).pop,
-                                        child: Text(Language.instance.NO),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              } else if (sdk > 29) {
-                                await Collection.instance.delete(album);
-                              }
-                            }
-                          },
+                          onLongPress: () => delete(context),
                           child: Container(
                             height: 64.0,
                             width: MediaQuery.of(context).size.width,
@@ -739,48 +834,7 @@ class AlbumTile extends StatelessWidget {
                 openElevation: 0.0,
                 openColor: Theme.of(context).scaffoldBackgroundColor,
                 closedBuilder: (context, open) => InkWell(
-                  onLongPress: () async {
-                    // No [Album] delete feature on Android API level 29 only.
-                    if (Platform.isAndroid) {
-                      final sdk = StorageRetriever.instance.version;
-                      if (sdk < 29) {
-                        // Android 9 or below need an [AlertDialog] for confirmation.
-                        await showDialog(
-                          context: context,
-                          builder: (ctx) => AlertDialog(
-                            title: Text(
-                              Language.instance
-                                  .COLLECTION_ALBUM_DELETE_DIALOG_HEADER,
-                            ),
-                            content: Text(
-                              Language
-                                  .instance.COLLECTION_ALBUM_DELETE_DIALOG_BODY
-                                  .replaceAll(
-                                'NAME',
-                                album.albumName,
-                              ),
-                              style: Theme.of(ctx).textTheme.headline3,
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () async {
-                                  await Collection.instance.delete(album);
-                                  Navigator.of(ctx).pop();
-                                },
-                                child: Text(Language.instance.YES),
-                              ),
-                              TextButton(
-                                onPressed: Navigator.of(ctx).pop,
-                                child: Text(Language.instance.NO),
-                              ),
-                            ],
-                          ),
-                        );
-                      } else if (sdk > 29) {
-                        await Collection.instance.delete(album);
-                      }
-                    }
-                  },
+                  onLongPress: () => delete(context),
                   onTap: () async {
                     try {
                       if (palette == null) {
