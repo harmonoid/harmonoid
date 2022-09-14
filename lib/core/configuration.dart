@@ -91,9 +91,6 @@ class Configuration extends ConfigurationKeys {
     bool? discordRPC,
     double? highlightedLyricsSize,
     double? unhighlightedLyricsSize,
-    bool? mobileDenseAlbumTabLayout,
-    bool? mobileDenseArtistTabLayout,
-    bool? mobileGridArtistTabLayout,
     AlbumsSort? albumsSort,
     TracksSort? tracksSort,
     ArtistsSort? artistsSort,
@@ -109,6 +106,9 @@ class Configuration extends ConfigurationKeys {
     bool? displayAudioFormat,
     bool? mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen,
     bool? mobileEnableNowPlayingScreenRippleEffect,
+    int? mobileAlbumsGridSize,
+    int? mobileArtistsGridSize,
+    int? mobileGenresGridSize,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -168,15 +168,6 @@ class Configuration extends ConfigurationKeys {
     if (unhighlightedLyricsSize != null) {
       this.unhighlightedLyricsSize = unhighlightedLyricsSize;
     }
-    if (mobileDenseAlbumTabLayout != null) {
-      this.mobileDenseAlbumTabLayout = mobileDenseAlbumTabLayout;
-    }
-    if (mobileDenseArtistTabLayout != null) {
-      this.mobileDenseArtistTabLayout = mobileDenseArtistTabLayout;
-    }
-    if (mobileGridArtistTabLayout != null) {
-      this.mobileGridArtistTabLayout = mobileGridArtistTabLayout;
-    }
     if (albumsSort != null) {
       this.albumsSort = albumsSort;
     }
@@ -224,6 +215,15 @@ class Configuration extends ConfigurationKeys {
       this.mobileEnableNowPlayingScreenRippleEffect =
           mobileEnableNowPlayingScreenRippleEffect;
     }
+    if (mobileAlbumsGridSize != null) {
+      this.mobileAlbumsGridSize = mobileAlbumsGridSize;
+    }
+    if (mobileArtistsGridSize != null) {
+      this.mobileArtistsGridSize = mobileArtistsGridSize;
+    }
+    if (mobileGenresGridSize != null) {
+      this.mobileGenresGridSize = mobileGenresGridSize;
+    }
     await storage.write(
       {
         'collectionDirectories': this
@@ -250,9 +250,6 @@ class Configuration extends ConfigurationKeys {
         'discordRPC': this.discordRPC,
         'highlightedLyricsSize': this.highlightedLyricsSize,
         'unhighlightedLyricsSize': this.unhighlightedLyricsSize,
-        'mobileDenseAlbumTabLayout': this.mobileDenseAlbumTabLayout,
-        'mobileDenseArtistTabLayout': this.mobileDenseArtistTabLayout,
-        'mobileGridArtistTabLayout': this.mobileGridArtistTabLayout,
         'albumsSort': this.albumsSort.index,
         'tracksSort': this.tracksSort.index,
         'artistsSort': this.artistsSort.index,
@@ -270,6 +267,9 @@ class Configuration extends ConfigurationKeys {
             this.mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen,
         'mobileEnableNowPlayingScreenRippleEffect':
             this.mobileEnableNowPlayingScreenRippleEffect,
+        'mobileAlbumsGridSize': this.mobileAlbumsGridSize,
+        'mobileArtistsGridSize': this.mobileArtistsGridSize,
+        'mobileGenresGridSize': this.mobileGenresGridSize,
       },
     );
   }
@@ -313,9 +313,6 @@ class Configuration extends ConfigurationKeys {
     discordRPC = current['discordRPC'];
     highlightedLyricsSize = current['highlightedLyricsSize'];
     unhighlightedLyricsSize = current['unhighlightedLyricsSize'];
-    mobileDenseAlbumTabLayout = current['mobileDenseAlbumTabLayout'];
-    mobileDenseArtistTabLayout = current['mobileDenseArtistTabLayout'];
-    mobileGridArtistTabLayout = current['mobileGridArtistTabLayout'];
     albumsSort = AlbumsSort.values[current['albumsSort']];
     tracksSort = TracksSort.values[current['tracksSort']];
     artistsSort = ArtistsSort.values[current['artistsSort']];
@@ -333,6 +330,9 @@ class Configuration extends ConfigurationKeys {
         current['mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen'];
     mobileEnableNowPlayingScreenRippleEffect =
         current['mobileEnableNowPlayingScreenRippleEffect'];
+    mobileAlbumsGridSize = current['mobileAlbumsGridSize'];
+    mobileArtistsGridSize = current['mobileArtistsGridSize'];
+    mobileGenresGridSize = current['mobileGenresGridSize'];
   }
 }
 
@@ -357,9 +357,6 @@ abstract class ConfigurationKeys {
   late bool discordRPC;
   late double highlightedLyricsSize;
   late double unhighlightedLyricsSize;
-  late bool mobileDenseAlbumTabLayout;
-  late bool mobileDenseArtistTabLayout;
-  late bool mobileGridArtistTabLayout;
   late AlbumsSort albumsSort;
   late TracksSort tracksSort;
   late ArtistsSort artistsSort;
@@ -375,6 +372,9 @@ abstract class ConfigurationKeys {
   late bool displayAudioFormat;
   late bool mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen;
   late bool mobileEnableNowPlayingScreenRippleEffect;
+  late int mobileAlbumsGridSize;
+  late int mobileArtistsGridSize;
+  late int mobileGenresGridSize;
 }
 
 Future<Map<String, dynamic>> get _defaultConfiguration async => {
@@ -426,9 +426,6 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
       'discordRPC': true,
       'highlightedLyricsSize': 24.0,
       'unhighlightedLyricsSize': 14.0,
-      'mobileDenseAlbumTabLayout': false,
-      'mobileDenseArtistTabLayout': true,
-      'mobileGridArtistTabLayout': true,
       'albumsSort': isDesktop ? 3 : 0,
       'tracksSort': 0,
       'artistsSort': 0,
@@ -444,4 +441,7 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
       'displayAudioFormat': true,
       'mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen': false,
       'mobileEnableNowPlayingScreenRippleEffect': true,
+      'mobileAlbumsGridSize': 2,
+      'mobileArtistsGridSize': 3,
+      'mobileGenresGridSize': 3,
     };

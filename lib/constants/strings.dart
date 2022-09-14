@@ -1,5 +1,4 @@
 // ignore_for_file: non_constant_identifier_names
-// AUTO GENERATED FILE, DO NOT EDIT.
 
 class Strings {
   late String ABOUT_TITLE;
@@ -73,10 +72,7 @@ class Strings {
   late String EDIT_MINIMUM_FILE_SIZE;
   late String ENABLE_125_SCALING;
   late String ENABLE_ACRYLIC_BLUR;
-  late String ENABLE_DENSE_ALBUMS_LAYOUT;
-  late String ENABLE_DENSE_ARTISTS_LAYOUT;
   late String ENABLE_DISCORD_RPC;
-  late String ENABLE_GRID_ARTISTS_LAYOUT;
   late String ERROR;
   late String EXIT_FULLSCREEN;
   late String EXIT_NOW_PLAYING;
@@ -115,6 +111,8 @@ class Strings {
   late String MENU;
   late String MINIMUM_FILE_SIZE;
   late String MINIMUM_FILE_SIZE_WARNING;
+  late String MOBILE_ALBUM_GRID_SIZE;
+  late String MOBILE_ARTIST_GRID_SIZE;
   late String MOBILE_ENABLE_NOW_PLAYING_RIPPLE_EFFECT;
   late String MOBILE_ENABLE_VOLUME_SLIDER;
   late String MORE;
