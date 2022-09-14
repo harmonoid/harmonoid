@@ -21,7 +21,7 @@ packages:
       name: args
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.0"
+    version: "2.3.1"
   async:
     dependency: transitive
     description:
@@ -219,10 +219,12 @@ packages:
   file_picker:
     dependency: "direct main"
     description:
-      name: file_picker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.4"
+      path: "."
+      ref: f4a8faac83df23506f310a1b49a1861df228a54a
+      resolved-ref: f4a8faac83df23506f310a1b49a1861df228a54a
+      url: "https://github.com/alexmercerind/flutter_file_picker.git"
+    source: git
+    version: "5.0.1"
   file_selector:
     dependency: "direct main"
     description:
@@ -303,7 +305,7 @@ packages:
       name: flutter_plugin_android_lifecycle
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.5"
+    version: "2.0.7"
   flutter_speed_dial:
     dependency: "direct main"
     description:
@@ -696,13 +698,6 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  screen_retriever:
-    dependency: transitive
-    description:
-      name: screen_retriever
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.2"
   share_plus:
     dependency: "direct main"
     description:
@@ -902,7 +897,7 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: bd47920836a580c39431c4154a0d79e7d0232951
+      resolved-ref: "723ae4e52f9273c5f6d7dbb27a0a8d4a96b94220"
       url: "https://github.com/harmonoid/window_manager.git"
     source: git
     version: "0.2.5"
