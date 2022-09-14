@@ -599,7 +599,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                   .actionsIconTheme
                                   ?.color,
                             ),
-                            onPressed: () {
+                            onPressed: () async {
                               final position = RelativeRect.fromRect(
                                 Offset(
                                       MediaQuery.of(context).size.width -
@@ -625,71 +625,139 @@ class CollectionScreenState extends State<CollectionScreen>
                                   maxWidth: double.infinity,
                                 ),
                                 items: [
-                                  CheckedPopupMenuItem(
+                                  PopupMenuItem(
                                     padding: EdgeInsets.zero,
-                                    checked: Configuration
-                                        .instance.mobileDenseAlbumTabLayout,
                                     value: 0,
-                                    child: Text(
-                                      Language
-                                          .instance.ENABLE_DENSE_ALBUMS_LAYOUT,
+                                    child: ListTile(
+                                      leading: CircleAvatar(
+                                        backgroundColor: Colors.transparent,
+                                        child: Text(
+                                          Configuration
+                                              .instance.mobileAlbumsGridSize
+                                              .toString(),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline3
+                                              ?.copyWith(
+                                                fontSize: 18.0,
+                                              ),
+                                        ),
+                                      ),
+                                      title: Text(
+                                        Language
+                                            .instance.MOBILE_ALBUM_GRID_SIZE,
+                                      ),
                                     ),
                                   ),
-                                  CheckedPopupMenuItem(
+                                  PopupMenuItem(
                                     padding: EdgeInsets.zero,
-                                    checked: Configuration
-                                        .instance.mobileDenseArtistTabLayout,
                                     value: 1,
-                                    child: Text(
-                                      Language
-                                          .instance.ENABLE_DENSE_ARTISTS_LAYOUT,
-                                    ),
-                                  ),
-                                  CheckedPopupMenuItem(
-                                    padding: EdgeInsets.zero,
-                                    checked: Configuration
-                                        .instance.mobileGridArtistTabLayout,
-                                    value: 2,
-                                    child: Text(
-                                      Language
-                                          .instance.ENABLE_GRID_ARTISTS_LAYOUT,
+                                    child: ListTile(
+                                      leading: CircleAvatar(
+                                        backgroundColor: Colors.transparent,
+                                        child: Text(
+                                          Configuration
+                                              .instance.mobileArtistsGridSize
+                                              .toString(),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline3
+                                              ?.copyWith(
+                                                fontSize: 18.0,
+                                              ),
+                                        ),
+                                      ),
+                                      title: Text(
+                                        Language
+                                            .instance.MOBILE_ARTIST_GRID_SIZE,
+                                      ),
                                     ),
                                   ),
                                 ],
-                              ).then((value) {
+                              ).then((value) async {
                                 switch (value) {
                                   case 0:
                                     {
-                                      Configuration.instance
-                                          .save(
-                                            mobileDenseAlbumTabLayout:
-                                                !Configuration.instance
-                                                    .mobileDenseAlbumTabLayout,
-                                          )
-                                          .then((_) => setState(() {}));
+                                      int result = Configuration
+                                          .instance.mobileAlbumsGridSize;
+                                      await showDialog(
+                                        context: context,
+                                        builder: (context) => StatefulBuilder(
+                                          builder: (context, setState) =>
+                                              SimpleDialog(
+                                            title: Text(
+                                              Language.instance
+                                                  .MOBILE_ALBUM_GRID_SIZE,
+                                            ),
+                                            children: [1, 2, 3, 4]
+                                                .map(
+                                                  (e) => RadioListTile<int>(
+                                                    title: Text(e.toString()),
+                                                    groupValue: result,
+                                                    onChanged: (e) {
+                                                      if (e != null) {
+                                                        result = e;
+                                                        Navigator.of(context)
+                                                            .maybePop();
+                                                      }
+                                                    },
+                                                    value: e,
+                                                  ),
+                                                )
+                                                .toList(),
+                                          ),
+                                        ),
+                                      );
+                                      if (result !=
+                                          Configuration
+                                              .instance.mobileAlbumsGridSize) {
+                                        await Configuration.instance.save(
+                                          mobileAlbumsGridSize: result,
+                                        );
+                                        setState(() {});
+                                      }
                                       break;
                                     }
                                   case 1:
                                     {
-                                      Configuration.instance
-                                          .save(
-                                            mobileDenseArtistTabLayout:
-                                                !Configuration.instance
-                                                    .mobileDenseArtistTabLayout,
-                                            mobileGridArtistTabLayout: true,
-                                          )
-                                          .then((_) => setState(() {}));
-                                      break;
-                                    }
-                                  case 2:
-                                    {
-                                      Configuration.instance
-                                          .save(
-                                            mobileGridArtistTabLayout:
-                                                !Configuration.instance
-                                                    .mobileGridArtistTabLayout,
-                                          )
-                                          .then((_) => setState(() {}));
+                                      int result = Configuration
+                                          .instance.mobileArtistsGridSize;
+                                      await showDialog(
+                                        context: context,
+                                        builder: (context) => StatefulBuilder(
+                                          builder: (context, setState) =>
+                                              SimpleDialog(
+                                            title: Text(
+                                              Language.instance
+                                                  .MOBILE_ARTIST_GRID_SIZE,
+                                            ),
+                                            children: [1, 2, 3, 4]
+                                                .map(
+                                                  (e) => RadioListTile<int>(
+                                                    title: Text(e.toString()),
+                                                    groupValue: result,
+                                                    onChanged: (e) {
+                                                      if (e != null) {
+                                                        result = e;
+                                                        Navigator.of(context)
+                                                            .maybePop();
+                                                      }
+                                                    },
+                                                    value: e,
+                                                  ),
+                                                )
+                                                .toList(),
+                                          ),
+                                        ),
+                                      );
+                                      if (result !=
+                                          Configuration
+                                              .instance.mobileArtistsGridSize) {
+                                        await Configuration.instance.save(
+                                          mobileArtistsGridSize: result,
+                                        );
+                                        setState(() {});
+                                      }
                                       break;
                                     }
                                 }

@@ -1257,7 +1257,7 @@ class ExceptionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconSize = isDesktop ? 196.0 : 244.0;
+    final iconSize = 196.0;
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: 16.0,
@@ -1268,27 +1268,23 @@ class ExceptionWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Transform.scale(
-            scale: title == Language.instance.NO_COLLECTION_TITLE
-                ? 1.4
-                : title == Language.instance.COLLECTION_SEARCH_LABEL
-                    ? 1.0
-                    : 1.2,
-            child: Image.memory(
-              {
-                Language.instance.NO_COLLECTION_TITLE: VisualAssets.library,
-                Language.instance.NO_INTERNET_TITLE: VisualAssets.library,
-                Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE:
-                    VisualAssets.searchPage,
-                Language.instance.WEB_WELCOME_TITLE: VisualAssets.searchNotes,
-                Language.instance.COLLECTION_SEARCH_LABEL:
-                    VisualAssets.searchPage,
-              }[title]!,
-              height: iconSize,
-              width: iconSize,
-              filterQuality: FilterQuality.high,
-              fit: BoxFit.contain,
-            ),
+          Image.memory(
+            {
+              Language.instance.NO_COLLECTION_TITLE: VisualAssets.library,
+              Language.instance.NO_INTERNET_TITLE: VisualAssets.library,
+              Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE:
+                  VisualAssets.searchPage,
+              Language.instance.WEB_WELCOME_TITLE: VisualAssets.searchNotes,
+              Language.instance.COLLECTION_SEARCH_LABEL:
+                  VisualAssets.searchPage,
+            }[title]!,
+            height: iconSize,
+            width: iconSize,
+            filterQuality: FilterQuality.high,
+            fit: BoxFit.contain,
+          ),
+          const SizedBox(
+            height: 8.0,
           ),
           Text(
             title!,

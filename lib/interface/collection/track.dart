@@ -660,6 +660,7 @@ class TrackTileState extends State<TrackTile> {
                   if (!widget.disableSeparator)
                     const Divider(
                       height: 1.0,
+                      thickness: 1.0,
                       indent: 80.0,
                     ),
                   Container(

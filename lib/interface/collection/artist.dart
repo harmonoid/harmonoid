@@ -60,49 +60,21 @@ class _ArtistTabState extends State<ArtistTab> {
   }
 
   Widget build(BuildContext context) {
-    // Enforcing larger [tileMargin] on mobile.
-    final tileMargin = isDesktop ? kDesktopTileMargin : 16.0;
-    // Is dense or not?
-    // TODO: dense layouts only present on the mobile.
-    final baseWidth =
-        ((Configuration.instance.mobileDenseArtistTabLayout && isMobile)
-            ? kDenseArtistTileWidth
-            : kArtistTileWidth);
-    final baseHeight =
-        ((Configuration.instance.mobileDenseArtistTabLayout && isMobile)
-            ? kDenseArtistTileHeight
-            : kArtistTileHeight);
-    final elementsPerRow =
-        (Configuration.instance.mobileGridArtistTabLayout || isDesktop)
-            ? (MediaQuery.of(context).size.width - tileMargin) ~/
-                (baseWidth + tileMargin)
-            : 2;
-    final double width = isMobile
-        ? (MediaQuery.of(context).size.width -
-                (elementsPerRow + 1) * tileMargin) /
-            elementsPerRow
-        : baseWidth;
-    final double height =
-        isMobile ? width * baseHeight / baseWidth : baseHeight;
-
+    final helper = DimensionsHelper(context);
     return Consumer<Collection>(
       builder: (context, collection, _) {
         final data = tileGridListWidgetsWithScrollbarSupport(
           context: context,
-          tileHeight: height,
-          tileWidth: width,
+          tileWidth: helper.artistTileWidth,
+          tileHeight: helper.artistTileHeight,
           margin: tileMargin,
-          elementsPerRow: elementsPerRow,
+          elementsPerRow: helper.artistElementsPerRow,
           widgetCount: collection.artists.length,
           builder: (BuildContext context, int index) => ArtistTile(
-            height: height,
-            width: width,
+            width: helper.artistTileWidth,
+            height: helper.artistTileHeight,
             artist: collection.artists[index],
             key: ValueKey(collection.artists[index]),
-            dense: Configuration.instance.mobileGridArtistTabLayout
-                ? (Configuration.instance.mobileDenseArtistTabLayout &&
-                    isMobile)
-                : null,
           ),
         );
         return isDesktop
@@ -118,7 +90,7 @@ class _ArtistTabState extends State<ArtistTab> {
                               ] +
                               List.generate(
                                 data.widgets.length,
-                                (index) => height + tileMargin,
+                                (index) => helper.artistTileHeight + tileMargin,
                               ),
                           itemBuilder: (context, i) => i == 0
                               ? SortBarFixedHolder(
@@ -147,119 +119,65 @@ class _ArtistTabState extends State<ArtistTab> {
             : Consumer<Collection>(
                 builder: (context, collection, _) => collection
                         .artists.isNotEmpty
-                    ? (Configuration.instance.mobileGridArtistTabLayout
-                        ?
-                        // Grid layout on mobile.
-                        () {
-                            return DraggableScrollbar.semicircle(
-                              heightScrollThumb: 56.0,
-                              labelConstraints: BoxConstraints.tightFor(
-                                width: 120.0,
-                                height: 32.0,
-                              ),
-                              labelTextBuilder: (offset) {
-                                final index = (offset -
-                                        (kMobileSearchBarHeight +
-                                            2 * tileMargin +
-                                            MediaQuery.of(context)
-                                                .padding
-                                                .top)) ~/
-                                    (height + tileMargin);
-                                final artist = data
-                                    .data[index.clamp(
-                                  0,
-                                  data.data.length - 1,
-                                )]
-                                    .first as Artist;
-                                switch (collection.artistsSort) {
-                                  case ArtistsSort.aToZ:
-                                    {
-                                      return Text(
-                                        artist.artistName[0].toUpperCase(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline1,
-                                      );
-                                    }
-                                  case ArtistsSort.dateAdded:
-                                    {
-                                      return Text(
-                                        '${artist.timeAdded.label}',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline4,
-                                      );
-                                    }
+                    ? DraggableScrollbar.semicircle(
+                        heightScrollThumb: 56.0,
+                        labelConstraints: BoxConstraints.tightFor(
+                          width: 120.0,
+                          height: 32.0,
+                        ),
+                        labelTextBuilder: (offset) {
+                          final perTileHeight = helper.artistElementsPerRow > 1
+                              ? (helper.artistTileHeight + tileMargin)
+                              : kArtistTileListViewHeight;
+                          final index = (offset -
+                                  (kMobileSearchBarHeight +
+                                      2 * tileMargin +
+                                      MediaQuery.of(context).padding.top)) ~/
+                              perTileHeight;
+                          final artist = data
+                              .data[index.clamp(
+                            0,
+                            data.data.length - 1,
+                          )]
+                              .first as Artist;
+                          switch (collection.artistsSort) {
+                            case ArtistsSort.aToZ:
+                              {
+                                return Text(
+                                  artist.artistName[0].toUpperCase(),
+                                  style: Theme.of(context).textTheme.headline1,
+                                );
+                              }
+                            case ArtistsSort.dateAdded:
+                              {
+                                return Text(
+                                  '${artist.timeAdded.label}',
+                                  style: Theme.of(context).textTheme.headline4,
+                                );
+                              }
 
-                                  default:
-                                    return Text(
-                                      '',
-                                      style:
-                                          Theme.of(context).textTheme.headline4,
-                                    );
-                                }
-                              },
-                              backgroundColor: Theme.of(context).cardColor,
-                              controller: controller,
-                              child: ListView(
-                                controller: controller,
-                                itemExtent: height + tileMargin,
-                                padding: EdgeInsets.only(
-                                  top: MediaQuery.of(context).padding.top +
-                                      kMobileSearchBarHeight +
-                                      2 * tileMargin,
-                                ),
-                                children: data.widgets,
-                              ),
-                            );
-                          }()
-                        :
-                        // List layour on mobile.
-                        DraggableScrollbar.semicircle(
-                            heightScrollThumb: 56.0,
-                            labelConstraints: BoxConstraints.tightFor(
-                              width: 120.0,
-                              height: 32.0,
-                            ),
-                            labelTextBuilder: (offset) {
-                              final index = (offset -
-                                      (kMobileSearchBarHeight +
-                                          2 * tileMargin +
-                                          MediaQuery.of(context)
-                                              .padding
-                                              .top)) ~/
-                                  kMobileTrackTileHeight;
-                              final artist = collection.artists[index.clamp(
-                                0,
-                                collection.tracks.length - 1,
-                              )];
-                              // Always A to Z in artists' tab.
+                            default:
                               return Text(
-                                artist.artistName[0].toUpperCase(),
-                                style: Theme.of(context).textTheme.headline1,
+                                '',
+                                style: Theme.of(context).textTheme.headline4,
                               );
-                            },
-                            backgroundColor: Theme.of(context).cardColor,
-                            controller: controller,
-                            child: ListView(
-                              controller: controller,
-                              itemExtent: kMobileArtistTileHeight,
-                              padding: EdgeInsets.only(
-                                top: MediaQuery.of(context).padding.top +
-                                    kMobileSearchBarHeight +
-                                    tileMargin,
-                              ),
-                              children: collection.artists
-                                  .map(
-                                    (artist) => ArtistTile(
-                                      height: -1,
-                                      width: -1,
-                                      artist: artist,
-                                    ),
-                                  )
-                                  .toList(),
-                            ),
-                          ))
+                          }
+                        },
+                        backgroundColor: Theme.of(context).cardColor,
+                        controller: controller,
+                        child: ListView(
+                          controller: controller,
+                          itemExtent: helper.artistElementsPerRow > 1
+                              ? (helper.artistTileHeight + tileMargin)
+                              : kArtistTileListViewHeight,
+                          padding: EdgeInsets.only(
+                            top: MediaQuery.of(context).padding.top +
+                                kMobileSearchBarHeight +
+                                2 * tileMargin,
+                          ),
+                          children: data.widgets,
+                        ),
+                      )
                     : Center(
                         child: ExceptionWidget(
                           title: Language.instance.NO_COLLECTION_TITLE,
@@ -277,21 +195,16 @@ class ArtistTile extends StatelessWidget {
   final double width;
   final Artist artist;
 
-  /// Only for mobile.
-  /// `null`: [ListTile] like layout.
-  /// `true`: dense tile layout.
-  /// `false`: normal tile layout.
-  final bool? dense;
   const ArtistTile({
     Key? key,
     required this.height,
     required this.width,
     required this.artist,
-    this.dense,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final helper = DimensionsHelper(context);
     Iterable<Color>? palette;
     return Consumer<Collection>(
       builder: (context, collection, _) => isDesktop
@@ -385,7 +298,7 @@ class ArtistTile extends StatelessWidget {
                 ],
               ),
             )
-          : dense == null
+          : helper.artistElementsPerRow == 1
               ? Material(
                   color: Colors.transparent,
                   child: OpenContainer(
@@ -397,91 +310,100 @@ class ArtistTile extends StatelessWidget {
                       artist: artist,
                       palette: palette,
                     ),
-                    closedBuilder: (context, open) => InkWell(
-                      onTap: () async {
-                        try {
-                          if (palette == null) {
-                            final result =
-                                await PaletteGenerator.fromImageProvider(
-                                    getAlbumArt(artist, small: true));
-                            palette = result.colors;
-                          }
-                          await precacheImage(getAlbumArt(artist), context);
-                          MobileNowPlayingController.instance.hide();
-                        } catch (exception, stacktrace) {
-                          debugPrint(exception.toString());
-                          debugPrint(stacktrace.toString());
-                        }
-                        open();
-                      },
+                    closedBuilder: (context, open) => SizedBox(
+                      width: MediaQuery.of(context).size.width,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Divider(
                             height: 1.0,
-                            indent: 80.0,
+                            thickness: 1.0,
+                            indent: 76.0,
                           ),
-                          Container(
-                            height: 64.0,
-                            alignment: Alignment.center,
-                            margin: const EdgeInsets.symmetric(vertical: 4.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const SizedBox(width: 12.0),
-                                Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(28.0),
-                                  ),
-                                  elevation: 4.0,
-                                  margin: EdgeInsets.zero,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(2.0),
-                                    child: ClipOval(
-                                      child: ExtendedImage(
-                                        image: getAlbumArt(artist, small: true),
-                                        height: 48.0,
-                                        width: 48.0,
+                          InkWell(
+                            onTap: () async {
+                              try {
+                                if (palette == null) {
+                                  final result =
+                                      await PaletteGenerator.fromImageProvider(
+                                          getAlbumArt(artist, small: true));
+                                  palette = result.colors;
+                                }
+                                await precacheImage(
+                                    getAlbumArt(artist), context);
+                                MobileNowPlayingController.instance.hide();
+                              } catch (exception, stacktrace) {
+                                debugPrint(exception.toString());
+                                debugPrint(stacktrace.toString());
+                              }
+                              open();
+                            },
+                            child: Container(
+                              height: 64.0,
+                              width: MediaQuery.of(context).size.width,
+                              alignment: Alignment.center,
+                              margin: const EdgeInsets.symmetric(vertical: 4.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const SizedBox(width: 12.0),
+                                  Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(28.0),
+                                    ),
+                                    elevation: 4.0,
+                                    margin: EdgeInsets.zero,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(2.0),
+                                      child: ClipOval(
+                                        child: ExtendedImage(
+                                          image:
+                                              getAlbumArt(artist, small: true),
+                                          height: 48.0,
+                                          width: 48.0,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(width: 12.0),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        artist.artistName.overflow,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline2,
-                                      ),
-                                      const SizedBox(
-                                        height: 2.0,
-                                      ),
-                                      Text(
-                                        Language.instance.M_TRACKS_AND_N_ALBUMS
-                                            .replaceAll(
-                                                'M', '${artist.tracks.length}')
-                                            .replaceAll(
-                                                'N', '${artist.albums.length}'),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline3,
-                                      ),
-                                    ],
+                                  const SizedBox(width: 12.0),
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          artist.artistName.overflow,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline2,
+                                        ),
+                                        const SizedBox(
+                                          height: 2.0,
+                                        ),
+                                        Text(
+                                          Language
+                                              .instance.M_TRACKS_AND_N_ALBUMS
+                                              .replaceAll('M',
+                                                  '${artist.tracks.length}')
+                                              .replaceAll('N',
+                                                  '${artist.albums.length}'),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline3,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 12.0),
-                              ],
+                                  const SizedBox(width: 12.0),
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -489,210 +411,115 @@ class ArtistTile extends StatelessWidget {
                     ),
                   ),
                 )
-              : dense == true
-                  ? Material(
-                      color: Colors.transparent,
-                      child: OpenContainer(
-                        closedColor: Colors.transparent,
-                        closedElevation: 0.0,
-                        openColor: Colors.transparent,
-                        openElevation: 0.0,
-                        openBuilder: (context, close) => ArtistScreen(
-                          artist: artist,
-                          palette: palette,
-                        ),
-                        closedBuilder: (context, open) => Container(
-                          height: height,
-                          width: width,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Card(
-                                clipBehavior: Clip.antiAlias,
-                                margin: EdgeInsets.zero,
-                                elevation: 4.0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    width / 2.0,
+              : Material(
+                  color: Colors.transparent,
+                  child: OpenContainer(
+                    closedElevation: 0.0,
+                    openElevation: 0.0,
+                    openColor: Colors.transparent,
+                    closedColor: Colors.transparent,
+                    openBuilder: (context, close) => ArtistScreen(
+                      artist: artist,
+                      palette: palette,
+                    ),
+                    closedBuilder: (context, open) => Container(
+                      height: height,
+                      width: width,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Card(
+                            clipBehavior: Clip.antiAlias,
+                            margin: EdgeInsets.zero,
+                            elevation: 4.0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                width / 2.0,
+                              ),
+                            ),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Hero(
+                                  tag: 'artist_art_${artist.artistName}',
+                                  child: ClipOval(
+                                    child: ExtendedImage(
+                                      image: getAlbumArt(
+                                        artist,
+                                        small: true,
+                                        cacheWidth: (width - 8.0) *
+                                            MediaQuery.of(context)
+                                                .devicePixelRatio ~/
+                                            1,
+                                      ),
+                                      height: width - 8.0,
+                                      width: width - 8.0,
+                                    ),
                                   ),
                                 ),
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Hero(
-                                      tag: 'artist_art_${artist.artistName}',
-                                      child: ClipOval(
-                                        child: ExtendedImage(
-                                          image: getAlbumArt(
-                                            artist,
-                                            small: true,
-                                            cacheWidth: (width - 8.0) *
-                                                MediaQuery.of(context)
-                                                    .devicePixelRatio ~/
-                                                1,
-                                          ),
-                                          height: width - 8.0,
-                                          width: width - 8.0,
-                                        ),
-                                      ),
+                                Material(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      width / 2.0,
                                     ),
-                                    Material(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                          width / 2.0,
-                                        ),
-                                      ),
-                                      color: Colors.transparent,
-                                      child: InkWell(
-                                        onTap: () async {
-                                          try {
-                                            if (palette == null) {
-                                              final result =
-                                                  await PaletteGenerator
-                                                      .fromImageProvider(
-                                                          getAlbumArt(artist,
-                                                              small: true));
-                                              palette = result.colors;
-                                            }
-                                            await precacheImage(
-                                                getAlbumArt(artist), context);
-                                            MobileNowPlayingController.instance
-                                                .hide();
-                                          } catch (exception, stacktrace) {
-                                            debugPrint(exception.toString());
-                                            debugPrint(stacktrace.toString());
-                                          }
-                                          open();
-                                        },
-                                        child: Container(
-                                          height: width,
-                                          width: width,
-                                          padding: EdgeInsets.all(4.0),
-                                        ),
-                                      ),
+                                  ),
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () async {
+                                      try {
+                                        if (palette == null) {
+                                          final result = await PaletteGenerator
+                                              .fromImageProvider(getAlbumArt(
+                                                  artist,
+                                                  small: true));
+                                          palette = result.colors;
+                                        }
+                                        await precacheImage(
+                                            getAlbumArt(artist), context);
+                                        MobileNowPlayingController.instance
+                                            .hide();
+                                      } catch (exception, stacktrace) {
+                                        debugPrint(exception.toString());
+                                        debugPrint(stacktrace.toString());
+                                      }
+                                      open();
+                                    },
+                                    child: Container(
+                                      height: width,
+                                      width: width,
+                                      padding: EdgeInsets.all(4.0),
                                     ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 14.0),
-                              Text(
-                                artist.artistName.overflow,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline2
-                                    ?.copyWith(
-                                      fontSize: 14.0,
-                                    ),
-                                textAlign: TextAlign.left,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              const Spacer(),
-                            ],
-                          ),
-                        ),
-                      ),
-                    )
-                  : Material(
-                      color: Colors.transparent,
-                      child: OpenContainer(
-                        closedColor: Colors.transparent,
-                        closedElevation: 0.0,
-                        openColor: Colors.transparent,
-                        openElevation: 0.0,
-                        openBuilder: (context, close) => ArtistScreen(
-                          artist: artist,
-                          palette: palette,
-                        ),
-                        closedBuilder: (context, open) => Container(
-                          height: height,
-                          width: width,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Card(
-                                clipBehavior: Clip.antiAlias,
-                                margin: EdgeInsets.zero,
-                                elevation: 4.0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    width / 2.0,
                                   ),
                                 ),
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Hero(
-                                      tag: 'artist_art_${artist.artistName}',
-                                      child: ClipOval(
-                                        child: ExtendedImage(
-                                          image: getAlbumArt(
-                                            artist,
-                                            small: true,
-                                            cacheWidth: (width - 8.0) *
-                                                MediaQuery.of(context)
-                                                    .devicePixelRatio ~/
-                                                1,
-                                          ),
-                                          height: width - 8.0,
-                                          width: width - 8.0,
-                                        ),
-                                      ),
-                                    ),
-                                    Material(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                          width / 2.0,
-                                        ),
-                                      ),
-                                      color: Colors.transparent,
-                                      child: InkWell(
-                                        onTap: () async {
-                                          try {
-                                            if (palette == null) {
-                                              final result =
-                                                  await PaletteGenerator
-                                                      .fromImageProvider(
-                                                          getAlbumArt(artist,
-                                                              small: true));
-                                              palette = result.colors;
-                                            }
-                                            await precacheImage(
-                                                getAlbumArt(artist), context);
-                                            MobileNowPlayingController.instance
-                                                .hide();
-                                          } catch (exception, stacktrace) {
-                                            debugPrint(exception.toString());
-                                            debugPrint(stacktrace.toString());
-                                          }
-                                          open();
-                                        },
-                                        child: Container(
-                                          height: width,
-                                          width: width,
-                                          padding: EdgeInsets.all(4.0),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 14.0),
-                              Text(
-                                artist.artistName.overflow,
-                                style: Theme.of(context).textTheme.headline2,
-                                textAlign: TextAlign.left,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              const Spacer(),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
+                          SizedBox(
+                            height: helper.artistElementsPerRow == 4
+                                ? 8.0
+                                : helper.artistTileNormalDensity
+                                    ? 18.0
+                                    : 10.0,
+                          ),
+                          Text(
+                            artist.artistName.overflow,
+                            style:
+                                Theme.of(context).textTheme.headline2?.copyWith(
+                                      fontSize: helper.artistTileNormalDensity
+                                          ? null
+                                          : 14.0,
+                                    ),
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const Spacer(),
+                        ],
                       ),
                     ),
+                  ),
+                ),
     );
   }
 }

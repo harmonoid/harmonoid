@@ -183,6 +183,19 @@ TileGridListWidgetsData tileGridListWidgetsWithScrollbarSupport({
   required int elementsPerRow,
   double? margin,
 }) {
+  if (elementsPerRow == 1) {
+    final children = List.generate(
+      widgetCount,
+      (i) => builder(
+        context,
+        i,
+      ),
+    );
+    return TileGridListWidgetsData(
+      children,
+      children.map((e) => [(e.key as ValueKey).value]).toList(),
+    );
+  }
   final widgets = <Widget>[];
   final data = <List<dynamic>>[];
   var rowIndex = 0;
@@ -523,7 +536,7 @@ Future<void> trackPopupMenuHandle(
     switch (result) {
       case 0:
         if (Platform.isAndroid) {
-          final sdk =  StorageRetriever.instance.version;
+          final sdk = StorageRetriever.instance.version;
           if (sdk >= 29) {
             // No [AlertDialog] required for confirmation.
             // Android 10 or higher (API level 29) will ask for permissions from the user before deletion.
