@@ -978,11 +978,16 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
         }[e]!
         ..notify(),
     );
-    _player.positionStream.listen(
-      (e) => playback
-        ..position = e
-        ..notify(),
-    );
+    _player.positionStream
+        .distinct(
+          (previous, next) =>
+              (next - previous).abs() < const Duration(milliseconds: 200),
+        )
+        .listen(
+          (e) => playback
+            ..position = e
+            ..notify(),
+        );
     _player.durationStream.listen(
       (e) => playback
         ..duration = e ?? Duration.zero
