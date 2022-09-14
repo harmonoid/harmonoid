@@ -142,6 +142,14 @@ class Strings {
   late String OPTIONS;
   late String ORDER;
   late String PAUSE;
+  late String PERMISSIONS;
+  late String PERMISSIONS_SUBTITLE;
+  late String PERMISSION_IMAGES_AND_PHOTOS;
+  late String PERMISSION_IMAGES_AND_PHOTOS_SUBTITLE;
+  late String PERMISSION_MUSIC_AND_AUDIO;
+  late String PERMISSION_MUSIC_AND_AUDIO_SUBTITLE;
+  late String PERMISSION_NOTIFICATIONS;
+  late String PERMISSION_NOTIFICATIONS_SUBTITLE;
   late String PHONE;
   late String PITCH;
   late String PLAY;

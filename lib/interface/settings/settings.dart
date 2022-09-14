@@ -16,6 +16,7 @@ import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/constants.dart';
+import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/interface/settings/about.dart';
 import 'package:harmonoid/interface/settings/indexing.dart';
 import 'package:harmonoid/interface/settings/language.dart';
@@ -26,6 +27,7 @@ import 'package:harmonoid/interface/settings/theme.dart';
 import 'package:harmonoid/interface/settings/version.dart';
 import 'package:harmonoid/interface/settings/now_playing_visuals.dart';
 import 'package:harmonoid/interface/settings/now_playing_screen.dart';
+import 'package:harmonoid/interface/settings/android_permissions.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -169,6 +171,10 @@ class Settings extends StatelessWidget {
                       LanguageSetting(),
                       Divider(thickness: 1.0),
                       StatsSetting(),
+                      if (StorageRetriever.instance.version >= 33) ...[
+                        AndroidPermissionsSetting(),
+                        Divider(thickness: 1.0),
+                      ],
                       MiscellaneousSetting(),
                       Divider(thickness: 1.0),
                       ExperimentalSetting(),

@@ -13,12 +13,14 @@ import 'dart:convert' as convert;
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:media_library/media_library.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:safe_session_storage/safe_session_storage.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/models/lyric.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -44,16 +46,23 @@ class Lyrics extends ChangeNotifier {
   late final Directory directory;
 
   static Future<void> initialize() async {
-    instance.directory = Directory(
-      join(
-        Configuration.instance.cacheDirectory.path,
-        'Lyrics',
-      ),
-    );
-    if (!await instance.directory.exists_()) {
-      await instance.directory.create_();
+    if (!_initialized) {
+      _initialized = true;
+      instance.directory = Directory(
+        join(
+          Configuration.instance.cacheDirectory.path,
+          'Lyrics',
+        ),
+      );
+      if (!await instance.directory.exists_()) {
+        await instance.directory.create_();
+      }
     }
-    if (isMobile) {
+    if (Platform.isAndroid &&
+        !_isAndroidNotificationInitialized &&
+        (StorageRetriever.instance.version < 33 ||
+            await Permission.notification.isGranted)) {
+      _isAndroidNotificationInitialized = true;
       await AwesomeNotifications().initialize(
         'resource://drawable/ic_stat_format_color_text',
         [
@@ -417,9 +426,12 @@ class Lyrics extends ChangeNotifier {
 
   /// Dismisses the lyrics notification.
   /// Android specific.
-  FutureOr<void> dismissNotification() {
-    if (isMobile) {
-      return AwesomeNotifications().dismiss(_kNotificationID);
+  FutureOr<void> dismissNotification() async {
+    if (Platform.isAndroid &&
+        _isAndroidNotificationInitialized &&
+        (StorageRetriever.instance.version < 33 ||
+            await Permission.notification.isGranted)) {
+      await AwesomeNotifications().dismiss(_kNotificationID);
     }
   }
 
@@ -460,6 +472,12 @@ class Lyrics extends ChangeNotifier {
 
   /// Whether notification lyrics are hidden for the current song.
   bool _currentLyricsHidden = false;
+
+  /// Prevent registering method call handler on platform channel more than once.
+  static bool _initialized = false;
+
+  /// Whether Android notification callbacks & channels are initialized.
+  static bool _isAndroidNotificationInitialized = false;
 
   /// Currently visible notification lyrics' time stamp.
   int _currentLyricsTimeStamp = 0;
