@@ -162,6 +162,7 @@ class Intent {
           final _metadata = await Collection.instance.parse(
             file!.uri,
             Collection.instance.albumArtDirectory,
+            waitUntilAlbumArtIsSaved: true,
           );
           metadata.addAll(_metadata.toJson());
           final track = Track.fromJson(metadata);
@@ -220,6 +221,7 @@ class Intent {
                 final _metadata = await Collection.instance.parse(
                   file.uri,
                   Collection.instance.albumArtDirectory,
+                  waitUntilAlbumArtIsSaved: true,
                 );
                 metadata.addAll(_metadata.toJson());
                 final track = Track.fromJson(metadata);
@@ -337,6 +339,7 @@ class Intent {
         final _metadata = await Collection.instance.parse(
           uri,
           Collection.instance.albumArtDirectory,
+          waitUntilAlbumArtIsSaved: true,
         );
         metadata.addAll(_metadata.toJson());
         final track = Track.fromJson(metadata);
@@ -405,6 +408,7 @@ class Intent {
               final _metadata = await Collection.instance.parse(
                 file.uri,
                 Collection.instance.albumArtDirectory,
+                waitUntilAlbumArtIsSaved: true,
               );
               metadata.addAll(_metadata.toJson());
               final track = Track.fromJson(metadata);
