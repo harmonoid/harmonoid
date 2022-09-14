@@ -8,12 +8,12 @@
 
 package com.alexmercerind.harmonoid
 
-import android.os.Bundle
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import io.flutter.Log
 import io.flutter.embedding.engine.FlutterEngine
@@ -73,6 +73,7 @@ class MainActivity : AudioServiceActivity() {
         when (requestCode) {
             STORAGE_RETRIEVER_DELETE_REQUEST_CODE -> {
                 // Android 10 is retarded. Sorry, all Android versions after 9 are retarded.
+                // [File] needs to be deleted afterwards here.
                 if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q && resultCode == RESULT_OK && data != null) {
                     try {
                         context.contentResolver.delete(
@@ -125,6 +126,21 @@ class MainActivity : AudioServiceActivity() {
             else if (intent.data?.scheme == "content") {
                 val resolveInfoList: List<ResolveInfo> = context.packageManager
                     .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+                // TODO: [queryIntentActivities] with [ResolveInfoFlags] overload seems to be not working on Android 13.
+                // val resolveInfoList: List<ResolveInfo> =
+                //     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                //         context.packageManager
+                //             .queryIntentActivities(
+                //                 intent,
+                //                 PackageManager.ResolveInfoFlags.of(PackageManager.MATCH_DEFAULT_ONLY.toLong())
+                //             )
+                //     } else {
+                //         context.packageManager
+                //             .queryIntentActivities(
+                //                 intent,
+                //                 PackageManager.MATCH_DEFAULT_ONLY
+                //             )
+                //     }
                 // Not requesting Intent.FLAG_GRANT_READ_URI_PERMISSION.
                 // Since, we are never going to write the file which is being opened.
                 //

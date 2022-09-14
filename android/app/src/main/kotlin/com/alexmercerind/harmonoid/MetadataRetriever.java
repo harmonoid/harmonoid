@@ -266,7 +266,7 @@ public class MetadataRetriever implements MethodCallHandler {
             if (uri != null && uri.toLowerCase().startsWith("file://")) {
                 CompletableFuture.runAsync(() -> {
                     MediaExtractor extractor = null;
-                    FileInputStream input = null;
+                    FileInputStream input;
                     try {
                         extractor = new MediaExtractor();
                         // Set data source using [FileDescriptor], which tends to be safer.
@@ -329,17 +329,11 @@ public class MetadataRetriever implements MethodCallHandler {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        new Handler(Looper.getMainLooper()).post(() -> {
-                            result.success(response);
-                        });
-                        if (extractor != null) {
-                            extractor.release();
-                        }
+                        new Handler(Looper.getMainLooper()).post(() -> result.success(response));
+                        extractor.release();
                     } catch (Exception e) {
                         e.printStackTrace();
-                        new Handler(Looper.getMainLooper()).post(() -> {
-                            result.success(response);
-                        });
+                        new Handler(Looper.getMainLooper()).post(() -> result.success(response));
                         if (extractor != null) {
                             extractor.release();
                         }
