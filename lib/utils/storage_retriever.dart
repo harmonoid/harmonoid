@@ -30,7 +30,7 @@ import 'package:flutter/foundation.dart';
 /// such concepts as Android recently redundantly introduced.
 ///
 class StorageRetriever {
-  /// [StorageRetriever] singleton instance.
+  /// [StorageRetriever] singleton instance. Must call [initialize] before accessing.
   static final StorageRetriever instance = StorageRetriever._();
 
   StorageRetriever._() {
@@ -48,6 +48,18 @@ class StorageRetriever {
       },
     );
   }
+
+  /// Initializes the [StorageRetriever] singleton [instance].
+  static Future<void> initialize() async {
+    if (_initialized) {
+      return;
+    }
+    _initialized = true;
+    instance.version = await instance._version;
+  }
+
+  /// The value of `android.os.Build.VERSION.SDK_INT`. This is used to determine the Android version.
+  int version = -1;
 
   /// Returns the internal storage & SD card [Directory] (s) in a [List].
   ///
@@ -71,15 +83,6 @@ class StorageRetriever {
     return Directory(result);
   }
 
-  /// Returns the value of `android.os.Build.VERSION.SDK_INT`.
-  /// This is used to determine the Android version.
-  Future<int> get version async {
-    assert(Platform.isAndroid);
-    final result = await _channel.invokeMethod('version');
-    assert(result is int);
-    return result;
-  }
-
   /// Deletes given [File]s from the user's device.
   /// Returns [bool] based on success & user approval.
   ///
@@ -100,9 +103,20 @@ class StorageRetriever {
     return result;
   }
 
+  Future<int> get _version async {
+    assert(Platform.isAndroid);
+    final result = await _channel.invokeMethod('version');
+    debugPrint(result.toString());
+    assert(result is int);
+    return result;
+  }
+
   /// Used by [delete] to receive result from native code from [onActivityResult].
   ///
   Completer<bool> _deleteCompleter = Completer<bool>();
+
+  /// Prevent registering method call handler on platform channel more than once.
+  static bool _initialized = false;
 
   final MethodChannel _channel =
       const MethodChannel('com.alexmercerind.harmonoid.StorageRetriever');

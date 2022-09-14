@@ -81,6 +81,7 @@ Future<void> main(List<String> args) async {
       DiscordRPC.initialize();
     }
     if (Platform.isAndroid) {
+      await StorageRetriever.initialize();
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown,
@@ -90,8 +91,10 @@ Future<void> main(List<String> args) async {
         systemNavigationBarDividerColor: Colors.black,
         systemNavigationBarIconBrightness: Brightness.dark,
       ));
-      if (await StorageRetriever.instance.version < 33) {
-        if (await Permission.storage.isDenied) {
+      // Android 12 or lower.
+      if (StorageRetriever.instance.version < 33) {
+        if (await Permission.storage.isDenied ||
+            await Permission.storage.isPermanentlyDenied) {
           final state = await Permission.storage.request();
           if (!state.isGranted) {
             await SystemNavigator.pop(
@@ -99,8 +102,11 @@ Future<void> main(List<String> args) async {
             );
           }
         }
-      } else {
-        if (await Permission.audio.isDenied) {
+      }
+      // Android 13 or higher.
+      else {
+        if (await Permission.audio.isDenied ||
+            await Permission.storage.isPermanentlyDenied) {
           final state = await Permission.audio.request();
           if (!state.isGranted) {
             await SystemNavigator.pop(

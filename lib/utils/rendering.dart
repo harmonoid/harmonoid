@@ -523,7 +523,7 @@ Future<void> trackPopupMenuHandle(
     switch (result) {
       case 0:
         if (Platform.isAndroid) {
-          final sdk = await StorageRetriever.instance.version;
+          final sdk =  StorageRetriever.instance.version;
           if (sdk >= 29) {
             // No [AlertDialog] required for confirmation.
             // Android 10 or higher (API level 29) will ask for permissions from the user before deletion.

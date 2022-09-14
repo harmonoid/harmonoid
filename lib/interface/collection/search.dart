@@ -405,6 +405,7 @@ class _FloatingSearchBarSearchTabState
     return Card(
       elevation: 4.0,
       margin: EdgeInsets.zero,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: SizedBox(
         height: (MediaQuery.of(context).size.height -
                 kMobileSearchBarHeight -
