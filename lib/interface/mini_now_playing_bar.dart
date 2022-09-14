@@ -1286,414 +1286,422 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                             ),
                                           ),
                                           Expanded(
-                                            child: Container(
-                                              alignment: Alignment.topCenter,
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              color: Configuration.instance
-                                                      .mobileEnableNowPlayingScreenRippleEffect
-                                                  ? Colors.white24
-                                                  : Colors.white10,
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                  top: 44.0,
-                                                  bottom: 16.0 + 8.0,
-                                                ),
-                                                child: Column(
-                                                  children: [
-                                                    Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      children: [
-                                                        const SizedBox(
-                                                            width: 20.0),
-                                                        IconButton(
-                                                          onPressed: () {
-                                                            if (playback
-                                                                    .playlistLoopMode ==
-                                                                PlaylistLoopMode
-                                                                    .loop) {
+                                            child: Material(
+                                              color: Colors.transparent,
+                                              child: Container(
+                                                alignment: Alignment.topCenter,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                color: Configuration.instance
+                                                        .mobileEnableNowPlayingScreenRippleEffect
+                                                    ? Colors.white24
+                                                    : Colors.transparent,
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                    top: 44.0,
+                                                    bottom: 16.0 + 8.0,
+                                                  ),
+                                                  child: Column(
+                                                    children: [
+                                                      Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        mainAxisSize:
+                                                            MainAxisSize.max,
+                                                        children: [
+                                                          const SizedBox(
+                                                              width: 20.0),
+                                                          IconButton(
+                                                            onPressed: () {
+                                                              if (playback
+                                                                      .playlistLoopMode ==
+                                                                  PlaylistLoopMode
+                                                                      .loop) {
+                                                                playback
+                                                                    .setPlaylistLoopMode(
+                                                                  PlaylistLoopMode
+                                                                      .none,
+                                                                );
+                                                                return;
+                                                              }
                                                               playback
                                                                   .setPlaylistLoopMode(
                                                                 PlaylistLoopMode
-                                                                    .none,
-                                                              );
-                                                              return;
-                                                            }
-                                                            playback
-                                                                .setPlaylistLoopMode(
-                                                              PlaylistLoopMode
-                                                                  .values[playback
-                                                                      .playlistLoopMode
-                                                                      .index +
-                                                                  1],
-                                                            );
-                                                          },
-                                                          iconSize: 24.0,
-                                                          color: (playback
-                                                                      .playlistLoopMode !=
-                                                                  PlaylistLoopMode
-                                                                      .none)
-                                                              ? (colors.palette ??
-                                                                          [
-                                                                            Theme.of(context).cardColor
-                                                                          ])
-                                                                      .first
-                                                                      .isDark
-                                                                  ? Color.lerp(
-                                                                      Colors
-                                                                          .black,
-                                                                      Colors
-                                                                          .white,
-                                                                      0.87)
-                                                                  : Color.lerp(
-                                                                      Colors
-                                                                          .white,
-                                                                      Colors
-                                                                          .black,
-                                                                      0.87)
-                                                              : (colors.palette ??
-                                                                          [
-                                                                            Theme.of(context).cardColor
-                                                                          ])
-                                                                      .first
-                                                                      .isDark
-                                                                  ? Color.lerp(
-                                                                      Colors
-                                                                          .black,
-                                                                      Colors
-                                                                          .white,
-                                                                      0.54)
-                                                                  : Color.lerp(
-                                                                      Colors
-                                                                          .white,
-                                                                      Colors
-                                                                          .black,
-                                                                      0.54),
-                                                          splashRadius: 24.0,
-                                                          icon: Icon(
-                                                            playback.playlistLoopMode ==
-                                                                    PlaylistLoopMode
-                                                                        .single
-                                                                ? Icons
-                                                                    .repeat_one
-                                                                : Icons.repeat,
-                                                          ),
-                                                        ),
-                                                        Spacer(),
-                                                        Container(
-                                                          width: 48.0,
-                                                          child: IconButton(
-                                                            onPressed: Playback
-                                                                .instance
-                                                                .previous,
-                                                            icon: Icon(
-                                                              Icons
-                                                                  .skip_previous,
-                                                              color: (colors.palette ??
-                                                                          [
-                                                                            Theme.of(context).cardColor
-                                                                          ])
-                                                                      .first
-                                                                      .isDark
-                                                                  ? Color.lerp(
-                                                                      Colors
-                                                                          .black,
-                                                                      Colors
-                                                                          .white,
-                                                                      0.87)
-                                                                  : Color.lerp(
-                                                                      Colors
-                                                                          .white,
-                                                                      Colors
-                                                                          .black,
-                                                                      0.87),
-                                                              size: 28.0,
-                                                            ),
-                                                            splashRadius: 28.0,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                            width: 8.0),
-                                                        Container(
-                                                          width: 72.0,
-                                                          child:
-                                                              FloatingActionButton(
-                                                            onPressed: Playback
-                                                                    .instance
-                                                                    .isPlaying
-                                                                ? Playback
-                                                                    .instance
-                                                                    .pause
-                                                                : Playback
-                                                                    .instance
-                                                                    .play,
-                                                            backgroundColor:
-                                                                (colors.palette ??
-                                                                        [
-                                                                          Theme.of(context)
-                                                                              .primaryColor
-                                                                        ])
-                                                                    .last,
-                                                            child: AnimatedIcon(
-                                                              progress:
-                                                                  playOrPause,
-                                                              icon: AnimatedIcons
-                                                                  .play_pause,
-                                                              color:
-                                                                  (colors.palette ??
-                                                                              [
-                                                                                Theme.of(context).primaryColor
-                                                                              ])
-                                                                          .last
-                                                                          .isDark
-                                                                      ? Colors
-                                                                          .white
-                                                                      : Colors
-                                                                          .black,
-                                                              size: 32.0,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                            width: 8.0),
-                                                        Container(
-                                                          width: 48.0,
-                                                          child: IconButton(
-                                                            onPressed: Playback
-                                                                .instance.next,
-                                                            icon: Icon(
-                                                              Icons.skip_next,
-                                                              color: (colors.palette ??
-                                                                          [
-                                                                            Theme.of(context).cardColor
-                                                                          ])
-                                                                      .first
-                                                                      .isDark
-                                                                  ? Color.lerp(
-                                                                      Colors
-                                                                          .black,
-                                                                      Colors
-                                                                          .white,
-                                                                      0.87)
-                                                                  : Color.lerp(
-                                                                      Colors
-                                                                          .white,
-                                                                      Colors
-                                                                          .black,
-                                                                      0.87),
-                                                              size: 28.0,
-                                                            ),
-                                                            splashRadius: 28.0,
-                                                          ),
-                                                        ),
-                                                        Spacer(),
-                                                        IconButton(
-                                                          onPressed: playback
-                                                              .toggleShuffle,
-                                                          iconSize: 24.0,
-                                                          color: playback
-                                                                  .isShuffling
-                                                              ? (colors.palette ??
-                                                                          [
-                                                                            Theme.of(context).cardColor
-                                                                          ])
-                                                                      .first
-                                                                      .isDark
-                                                                  ? Color.lerp(
-                                                                      Colors
-                                                                          .black,
-                                                                      Colors
-                                                                          .white,
-                                                                      0.87)
-                                                                  : Color.lerp(
-                                                                      Colors
-                                                                          .white,
-                                                                      Colors
-                                                                          .black,
-                                                                      0.87)
-                                                              : (colors.palette ??
-                                                                          [
-                                                                            Theme.of(context).cardColor
-                                                                          ])
-                                                                      .first
-                                                                      .isDark
-                                                                  ? Color.lerp(
-                                                                      Colors
-                                                                          .black,
-                                                                      Colors
-                                                                          .white,
-                                                                      0.54)
-                                                                  : Color.lerp(
-                                                                      Colors
-                                                                          .white,
-                                                                      Colors
-                                                                          .black,
-                                                                      0.54),
-                                                          splashRadius: 24.0,
-                                                          icon: Icon(
-                                                            Icons.shuffle,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                            width: 20.0),
-                                                      ],
-                                                    ),
-                                                    if (minimizedPlaylist &&
-                                                        isVolumeSliderVisible)
-                                                      const SizedBox(
-                                                        height: 8.0,
-                                                      ),
-                                                    if (minimizedPlaylist &&
-                                                        isVolumeSliderVisible)
-                                                      Row(
-                                                        children: [
-                                                          const SizedBox(
-                                                            width: 48.0,
-                                                          ),
-                                                          IconButton(
-                                                            icon: Icon(
-                                                              Icons.volume_down,
-                                                            ),
-                                                            onPressed: () {
-                                                              playback
-                                                                  .setVolume(
-                                                                (playback.volume -
-                                                                        5.0)
-                                                                    .clamp(
-                                                                  0.0,
-                                                                  100.0,
-                                                                ),
+                                                                    .values[playback
+                                                                        .playlistLoopMode
+                                                                        .index +
+                                                                    1],
                                                               );
                                                             },
-                                                            color: (colors.palette ??
-                                                                        [
-                                                                          Theme.of(context)
-                                                                              .cardColor
-                                                                        ])
-                                                                    .first
-                                                                    .isDark
-                                                                ? Color.lerp(
-                                                                    Colors
-                                                                        .black,
-                                                                    Colors
-                                                                        .white,
-                                                                    0.87)
-                                                                : Color.lerp(
-                                                                    Colors
-                                                                        .white,
-                                                                    Colors
-                                                                        .black,
-                                                                    0.87),
+                                                            iconSize: 24.0,
+                                                            color: (playback
+                                                                        .playlistLoopMode !=
+                                                                    PlaylistLoopMode
+                                                                        .none)
+                                                                ? (colors.palette ??
+                                                                            [
+                                                                              Theme.of(context).cardColor
+                                                                            ])
+                                                                        .first
+                                                                        .isDark
+                                                                    ? Color.lerp(
+                                                                        Colors
+                                                                            .black,
+                                                                        Colors
+                                                                            .white,
+                                                                        0.87)
+                                                                    : Color.lerp(
+                                                                        Colors
+                                                                            .white,
+                                                                        Colors
+                                                                            .black,
+                                                                        0.87)
+                                                                : (colors.palette ??
+                                                                            [
+                                                                              Theme.of(context).cardColor
+                                                                            ])
+                                                                        .first
+                                                                        .isDark
+                                                                    ? Color.lerp(
+                                                                        Colors
+                                                                            .black,
+                                                                        Colors
+                                                                            .white,
+                                                                        0.54)
+                                                                    : Color.lerp(
+                                                                        Colors
+                                                                            .white,
+                                                                        Colors
+                                                                            .black,
+                                                                        0.54),
+                                                            splashRadius: 24.0,
+                                                            icon: Icon(
+                                                              playback.playlistLoopMode ==
+                                                                      PlaylistLoopMode
+                                                                          .single
+                                                                  ? Icons
+                                                                      .repeat_one
+                                                                  : Icons
+                                                                      .repeat,
+                                                            ),
+                                                          ),
+                                                          Spacer(),
+                                                          Container(
+                                                            width: 48.0,
+                                                            child: IconButton(
+                                                              onPressed:
+                                                                  Playback
+                                                                      .instance
+                                                                      .previous,
+                                                              icon: Icon(
+                                                                Icons
+                                                                    .skip_previous,
+                                                                color: (colors.palette ??
+                                                                            [
+                                                                              Theme.of(context).cardColor
+                                                                            ])
+                                                                        .first
+                                                                        .isDark
+                                                                    ? Color.lerp(
+                                                                        Colors
+                                                                            .black,
+                                                                        Colors
+                                                                            .white,
+                                                                        0.87)
+                                                                    : Color.lerp(
+                                                                        Colors
+                                                                            .white,
+                                                                        Colors
+                                                                            .black,
+                                                                        0.87),
+                                                                size: 28.0,
+                                                              ),
+                                                              splashRadius:
+                                                                  28.0,
+                                                            ),
                                                           ),
                                                           const SizedBox(
-                                                            width: 16.0,
-                                                          ),
-                                                          Consumer<Playback>(
-                                                            builder: (context,
-                                                                    playback,
-                                                                    _) =>
-                                                                Expanded(
+                                                              width: 8.0),
+                                                          Container(
+                                                            width: 72.0,
+                                                            child:
+                                                                FloatingActionButton(
+                                                              onPressed: Playback
+                                                                      .instance
+                                                                      .isPlaying
+                                                                  ? Playback
+                                                                      .instance
+                                                                      .pause
+                                                                  : Playback
+                                                                      .instance
+                                                                      .play,
+                                                              backgroundColor:
+                                                                  (colors.palette ??
+                                                                          [
+                                                                            Theme.of(context).primaryColor
+                                                                          ])
+                                                                      .last,
                                                               child:
-                                                                  ScrollableSlider(
-                                                                min: 0.0,
-                                                                max: 100.0,
-                                                                value: playback
-                                                                    .volume
-                                                                    .clamp(0.0,
-                                                                        100.0),
-                                                                color: colors
-                                                                    .palette
-                                                                    ?.last,
-                                                                secondaryColor:
-                                                                    colors
-                                                                        .palette
-                                                                        ?.first,
-                                                                onChanged:
-                                                                    (value) {
-                                                                  playback
-                                                                      .setVolume(
-                                                                    value,
-                                                                  );
-                                                                },
-                                                                onScrolledUp:
-                                                                    () {
-                                                                  playback
-                                                                      .setVolume(
-                                                                    (playback.volume +
-                                                                            5.0)
-                                                                        .clamp(
-                                                                      0.0,
-                                                                      100.0,
-                                                                    ),
-                                                                  );
-                                                                },
-                                                                onScrolledDown:
-                                                                    () {
-                                                                  playback
-                                                                      .setVolume(
-                                                                    (playback.volume -
-                                                                            5.0)
-                                                                        .clamp(
-                                                                      0.0,
-                                                                      100.0,
-                                                                    ),
-                                                                  );
-                                                                },
+                                                                  AnimatedIcon(
+                                                                progress:
+                                                                    playOrPause,
+                                                                icon: AnimatedIcons
+                                                                    .play_pause,
+                                                                color: (colors.palette ??
+                                                                            [
+                                                                              Theme.of(context).primaryColor
+                                                                            ])
+                                                                        .last
+                                                                        .isDark
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Colors
+                                                                        .black,
+                                                                size: 32.0,
                                                               ),
                                                             ),
                                                           ),
                                                           const SizedBox(
-                                                            width: 16.0,
-                                                          ),
-                                                          IconButton(
-                                                            icon: Icon(
-                                                              Icons.volume_up,
+                                                              width: 8.0),
+                                                          Container(
+                                                            width: 48.0,
+                                                            child: IconButton(
+                                                              onPressed:
+                                                                  Playback
+                                                                      .instance
+                                                                      .next,
+                                                              icon: Icon(
+                                                                Icons.skip_next,
+                                                                color: (colors.palette ??
+                                                                            [
+                                                                              Theme.of(context).cardColor
+                                                                            ])
+                                                                        .first
+                                                                        .isDark
+                                                                    ? Color.lerp(
+                                                                        Colors
+                                                                            .black,
+                                                                        Colors
+                                                                            .white,
+                                                                        0.87)
+                                                                    : Color.lerp(
+                                                                        Colors
+                                                                            .white,
+                                                                        Colors
+                                                                            .black,
+                                                                        0.87),
+                                                                size: 28.0,
+                                                              ),
+                                                              splashRadius:
+                                                                  28.0,
                                                             ),
-                                                            onPressed: () {
-                                                              playback
-                                                                  .setVolume(
-                                                                (playback.volume +
-                                                                        5.0)
-                                                                    .clamp(
-                                                                  0.0,
-                                                                  200.0,
-                                                                ),
-                                                              );
-                                                            },
-                                                            color: (colors.palette ??
-                                                                        [
-                                                                          Theme.of(context)
-                                                                              .cardColor
-                                                                        ])
-                                                                    .first
-                                                                    .isDark
-                                                                ? Color.lerp(
-                                                                    Colors
-                                                                        .black,
-                                                                    Colors
-                                                                        .white,
-                                                                    0.87)
-                                                                : Color.lerp(
-                                                                    Colors
-                                                                        .white,
-                                                                    Colors
-                                                                        .black,
-                                                                    0.87),
+                                                          ),
+                                                          Spacer(),
+                                                          IconButton(
+                                                            onPressed: playback
+                                                                .toggleShuffle,
+                                                            iconSize: 24.0,
+                                                            color: playback
+                                                                    .isShuffling
+                                                                ? (colors.palette ??
+                                                                            [
+                                                                              Theme.of(context).cardColor
+                                                                            ])
+                                                                        .first
+                                                                        .isDark
+                                                                    ? Color.lerp(
+                                                                        Colors
+                                                                            .black,
+                                                                        Colors
+                                                                            .white,
+                                                                        0.87)
+                                                                    : Color.lerp(
+                                                                        Colors
+                                                                            .white,
+                                                                        Colors
+                                                                            .black,
+                                                                        0.87)
+                                                                : (colors.palette ??
+                                                                            [
+                                                                              Theme.of(context).cardColor
+                                                                            ])
+                                                                        .first
+                                                                        .isDark
+                                                                    ? Color.lerp(
+                                                                        Colors
+                                                                            .black,
+                                                                        Colors
+                                                                            .white,
+                                                                        0.54)
+                                                                    : Color.lerp(
+                                                                        Colors
+                                                                            .white,
+                                                                        Colors
+                                                                            .black,
+                                                                        0.54),
+                                                            splashRadius: 24.0,
+                                                            icon: Icon(
+                                                              Icons.shuffle,
+                                                            ),
                                                           ),
                                                           const SizedBox(
-                                                            width: 48.0,
-                                                          ),
+                                                              width: 20.0),
                                                         ],
                                                       ),
-                                                  ],
+                                                      if (minimizedPlaylist &&
+                                                          isVolumeSliderVisible)
+                                                        const SizedBox(
+                                                          height: 8.0,
+                                                        ),
+                                                      if (minimizedPlaylist &&
+                                                          isVolumeSliderVisible)
+                                                        Row(
+                                                          children: [
+                                                            const SizedBox(
+                                                              width: 48.0,
+                                                            ),
+                                                            IconButton(
+                                                              icon: Icon(
+                                                                Icons
+                                                                    .volume_down,
+                                                              ),
+                                                              onPressed: () {
+                                                                playback
+                                                                    .setVolume(
+                                                                  (playback.volume -
+                                                                          5.0)
+                                                                      .clamp(
+                                                                    0.0,
+                                                                    100.0,
+                                                                  ),
+                                                                );
+                                                              },
+                                                              color: (colors.palette ??
+                                                                          [
+                                                                            Theme.of(context).cardColor
+                                                                          ])
+                                                                      .first
+                                                                      .isDark
+                                                                  ? Color.lerp(
+                                                                      Colors
+                                                                          .black,
+                                                                      Colors
+                                                                          .white,
+                                                                      0.87)
+                                                                  : Color.lerp(
+                                                                      Colors
+                                                                          .white,
+                                                                      Colors
+                                                                          .black,
+                                                                      0.87),
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 16.0,
+                                                            ),
+                                                            Consumer<Playback>(
+                                                              builder: (context,
+                                                                      playback,
+                                                                      _) =>
+                                                                  Expanded(
+                                                                child:
+                                                                    ScrollableSlider(
+                                                                  min: 0.0,
+                                                                  max: 100.0,
+                                                                  value: playback
+                                                                      .volume
+                                                                      .clamp(
+                                                                          0.0,
+                                                                          100.0),
+                                                                  color: colors
+                                                                      .palette
+                                                                      ?.last,
+                                                                  secondaryColor:
+                                                                      colors
+                                                                          .palette
+                                                                          ?.first,
+                                                                  onChanged:
+                                                                      (value) {
+                                                                    playback
+                                                                        .setVolume(
+                                                                      value,
+                                                                    );
+                                                                  },
+                                                                  onScrolledUp:
+                                                                      () {
+                                                                    playback
+                                                                        .setVolume(
+                                                                      (playback.volume +
+                                                                              5.0)
+                                                                          .clamp(
+                                                                        0.0,
+                                                                        100.0,
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                  onScrolledDown:
+                                                                      () {
+                                                                    playback
+                                                                        .setVolume(
+                                                                      (playback.volume -
+                                                                              5.0)
+                                                                          .clamp(
+                                                                        0.0,
+                                                                        100.0,
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 16.0,
+                                                            ),
+                                                            IconButton(
+                                                              icon: Icon(
+                                                                Icons.volume_up,
+                                                              ),
+                                                              onPressed: () {
+                                                                playback
+                                                                    .setVolume(
+                                                                  (playback.volume +
+                                                                          5.0)
+                                                                      .clamp(
+                                                                    0.0,
+                                                                    200.0,
+                                                                  ),
+                                                                );
+                                                              },
+                                                              color: (colors.palette ??
+                                                                          [
+                                                                            Theme.of(context).cardColor
+                                                                          ])
+                                                                      .first
+                                                                      .isDark
+                                                                  ? Color.lerp(
+                                                                      Colors
+                                                                          .black,
+                                                                      Colors
+                                                                          .white,
+                                                                      0.87)
+                                                                  : Color.lerp(
+                                                                      Colors
+                                                                          .white,
+                                                                      Colors
+                                                                          .black,
+                                                                      0.87),
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 48.0,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -1885,126 +1893,162 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                 maxChildSize: percentage < 1.0 ? 1.0 : max,
                                 builder: (context, controller) {
                                   scrollableControllerReference = controller;
+                                  final elements = minimizedPlaylist
+                                      ? tracksSkipped
+                                      : tracks;
+                                  final child = Column(
+                                    children: [
+                                      Material(
+                                        child: InkWell(
+                                          onTap: () {
+                                            scrollableController.animateTo(
+                                              max,
+                                              duration: const Duration(
+                                                milliseconds: 200,
+                                              ),
+                                              curve: Curves.easeInOut,
+                                            );
+                                          },
+                                          child: Container(
+                                            height: 32.0,
+                                            alignment: Alignment.center,
+                                            child: Container(
+                                              width: 48.0,
+                                              height: 4.0,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                  2.0,
+                                                ),
+                                                color: Theme.of(context)
+                                                    .dividerColor
+                                                    .withOpacity(0.54),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Divider(
+                                        height: 1.0,
+                                        thickness: 1.0,
+                                      ),
+                                      Expanded(
+                                        child: CustomListViewSeparated(
+                                          padding: EdgeInsets.zero,
+                                          controller: controller,
+                                          itemCount: // 1 +
+                                              elements.length + 1 + more.length,
+                                          itemExtents: // [32.0] +
+                                              List.generate(
+                                                    elements.length,
+                                                    (index) => 72.0,
+                                                  ) +
+                                                  [56.0] +
+                                                  List.generate(
+                                                    more.length,
+                                                    (index) => 72.0,
+                                                  ),
+                                          separatorExtent: 1.0,
+                                          itemBuilder: (context, i) {
+                                            // if (i == 0) {
+                                            //   return const SizedBox
+                                            //       .shrink();
+                                            // } else
+                                            i++;
+                                            if (i == elements.length + 1) {
+                                              return Padding(
+                                                padding: EdgeInsets.only(
+                                                  left: 62.0,
+                                                ),
+                                                child: SubHeader(
+                                                  Language.instance.MORE,
+                                                ),
+                                              );
+                                            } else if (i <= elements.length) {
+                                              return elements[i - 1];
+                                            } else if (i >
+                                                elements.length + 1) {
+                                              return more[
+                                                  i - elements.length - 2];
+                                            }
+                                            return const SizedBox.shrink();
+                                          },
+                                          separatorBuilder: (context, i) =>
+                                              Divider(
+                                            height: 1.0,
+                                            thickness: 1.0,
+                                            indent: 78.0,
+                                            endIndent: 8.0,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                  // final side = BorderSide(
+                                  //   color: Theme.of(context)
+                                  //       .dividerColor
+                                  //       .withOpacity(0.27),
+                                  //   width: 1.0,
+                                  // );
                                   return Container(
                                     margin: EdgeInsets.symmetric(
                                       horizontal: 16.0,
                                     ),
                                     width: vw - 32.0,
-                                    child: Card(
-                                      clipBehavior: Clip.antiAlias,
-                                      elevation: 4.0,
-                                      margin: EdgeInsets.zero,
-                                      shape: CardTheme.of(context)
-                                          .copyWith(
-                                            shape: RoundedRectangleBorder(
+                                    child: Configuration.instance
+                                            .mobileEnableNowPlayingScreenRippleEffect
+                                        ? Card(
+                                            clipBehavior: Clip.antiAlias,
+                                            elevation: 4.0,
+                                            margin: EdgeInsets.zero,
+                                            shape: CardTheme.of(context)
+                                                .copyWith(
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                      topLeft:
+                                                          Radius.circular(4.0),
+                                                      topRight:
+                                                          Radius.circular(4.0),
+                                                    ),
+                                                  ),
+                                                )
+                                                .shape,
+                                            child: child,
+                                          )
+                                        : Container(
+                                            clipBehavior: Clip.antiAlias,
+                                            decoration: BoxDecoration(
+                                              color: Theme.of(context)
+                                                          .brightness ==
+                                                      Brightness.light
+                                                  ? Color.lerp(Colors.white,
+                                                      Colors.black, 0.12)
+                                                  : Color.lerp(Colors.black,
+                                                      Colors.white, 0.24),
                                               borderRadius: BorderRadius.only(
                                                 topLeft: Radius.circular(4.0),
                                                 topRight: Radius.circular(4.0),
                                               ),
                                             ),
-                                          )
-                                          .shape,
-                                      child: () {
-                                        final elements = minimizedPlaylist
-                                            ? tracksSkipped
-                                            : tracks;
-                                        return Column(
-                                          children: [
-                                            Material(
-                                              child: InkWell(
-                                                onTap: () {
-                                                  scrollableController
-                                                      .animateTo(
-                                                    max,
-                                                    duration: const Duration(
-                                                      milliseconds: 200,
-                                                    ),
-                                                    curve: Curves.easeInOut,
-                                                  );
-                                                },
-                                                child: Container(
-                                                  height: 32.0,
-                                                  alignment: Alignment.center,
-                                                  child: Container(
-                                                    width: 48.0,
-                                                    height: 4.0,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                        2.0,
-                                                      ),
-                                                      color: Theme.of(context)
-                                                          .dividerColor
-                                                          .withOpacity(0.54),
-                                                    ),
-                                                  ),
+                                            child: Container(
+                                              margin: EdgeInsets.only(
+                                                top: 1.0,
+                                                left: 1.0,
+                                                right: 1.0,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: Theme.of(context)
+                                                    .scaffoldBackgroundColor,
+                                                borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(4.0),
+                                                  topRight:
+                                                      Radius.circular(4.0),
                                                 ),
                                               ),
+                                              child: child,
                                             ),
-                                            Divider(
-                                              height: 1.0,
-                                              thickness: 1.0,
-                                            ),
-                                            Expanded(
-                                              child: CustomListViewSeparated(
-                                                padding: EdgeInsets.zero,
-                                                controller: controller,
-                                                itemCount: // 1 +
-                                                    elements.length +
-                                                        1 +
-                                                        more.length,
-                                                itemExtents: // [32.0] +
-                                                    List.generate(
-                                                          elements.length,
-                                                          (index) => 72.0,
-                                                        ) +
-                                                        [56.0] +
-                                                        List.generate(
-                                                          more.length,
-                                                          (index) => 72.0,
-                                                        ),
-                                                separatorExtent: 1.0,
-                                                itemBuilder: (context, i) {
-                                                  // if (i == 0) {
-                                                  //   return const SizedBox
-                                                  //       .shrink();
-                                                  // } else
-                                                  i++;
-                                                  if (i ==
-                                                      elements.length + 1) {
-                                                    return Padding(
-                                                      padding: EdgeInsets.only(
-                                                        left: 62.0,
-                                                      ),
-                                                      child: SubHeader(
-                                                        Language.instance.MORE,
-                                                      ),
-                                                    );
-                                                  } else if (i <=
-                                                      elements.length) {
-                                                    return elements[i - 1];
-                                                  } else if (i >
-                                                      elements.length + 1) {
-                                                    return more[i -
-                                                        elements.length -
-                                                        2];
-                                                  }
-                                                  return const SizedBox
-                                                      .shrink();
-                                                },
-                                                separatorBuilder:
-                                                    (context, i) => Divider(
-                                                  height: 1.0,
-                                                  thickness: 1.0,
-                                                  indent: 78.0,
-                                                  endIndent: 8.0,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      }(),
-                                    ),
+                                          ),
                                   );
                                 },
                               ),
