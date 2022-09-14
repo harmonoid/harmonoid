@@ -849,8 +849,9 @@ class ArtistScreenState extends State<ArtistScreen>
                                             ),
                                           ],
                                         ),
-                                        Divider(
+                                        const Divider(
                                           height: 1.0,
+                                          thickness: 1.0,
                                         ),
                                         LayoutBuilder(
                                           builder: (context, constraints) =>
@@ -918,7 +919,10 @@ class ArtistScreenState extends State<ArtistScreen>
                                                       ),
                                                     ],
                                                   ),
-                                                  Divider(height: 1.0),
+                                                  const Divider(
+                                                    height: 1.0,
+                                                    thickness: 1.0,
+                                                  ),
                                                 ] +
                                                 tracks
                                                     .toList()
@@ -1643,6 +1647,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                       ),
                                       const Divider(
                                         height: 1.0,
+                                        thickness: 1.0,
                                         indent: 80.0,
                                       ),
                                     ],

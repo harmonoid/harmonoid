@@ -1246,8 +1246,9 @@ class AlbumScreenState extends State<AlbumScreen>
                                             ),
                                           ],
                                         ),
-                                        Divider(
+                                        const Divider(
                                           height: 1.0,
+                                          thickness: 1.0,
                                         ),
                                         LayoutBuilder(
                                           builder: (context, constraints) =>
@@ -1313,7 +1314,10 @@ class AlbumScreenState extends State<AlbumScreen>
                                                       ),
                                                     ],
                                                   ),
-                                                  Divider(height: 1.0),
+                                                  const Divider(
+                                                    height: 1.0,
+                                                    thickness: 1.0,
+                                                  ),
                                                 ] +
                                                 (tracks
                                                     .asMap()
@@ -2180,6 +2184,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                       ),
                                       const Divider(
                                         height: 1.0,
+                                        thickness: 1.0,
                                         indent: 80.0,
                                       ),
                                     ],
