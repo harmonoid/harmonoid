@@ -1,3 +1,10 @@
+<img
+  align="left"
+  src="https://user-images.githubusercontent.com/28951144/190144379-364185ea-3e3e-4f41-87fd-9581acfc7f7f.png"
+  width="64"
+  height="64" >
+</img>
+
 <h1 align="left">Harmonoid</h1>
 
 **🎵 Plays & manages your music library. Looks beautiful & juicy.**
@@ -21,12 +28,14 @@ https://user-images.githubusercontent.com/28951144/180613641-baf7a246-08ba-496f-
 ## Features
 
 - Music library management based on metadata tags.
-- Capable of indexing 30+ files/second & saves cache for future app start-ups.
+- Capable of indexing 30+ files/second & saves library cache for future app start-ups.
+- Hyperlinks. Albums & artists are properly hyperlinked together, so that everything is one click away.
 - Very strictly follows Material Design guidelines for UI & animations.
 - mpv based music playback for strong format support (on Linux & Windows) using `dart:ffi`.
 - Taskbar & System Media Transport Controls for Windows.
 - D-Bus MPRIS controls for Linux.
 - Small installer (≈ 35 MB) & low RAM usage (≈ 150 MB).
+- Excellent backward compatibility. Supports as far as Windows 7 & Android 5.0.
 - Time synced lyrics for all your music.
 - Ability to create persistent or "Now playing" playlists.
 - Context menu integrations & file associations (exclusive to setup version).
@@ -39,11 +48,12 @@ https://user-images.githubusercontent.com/28951144/180613641-baf7a246-08ba-496f-
 - Cross-platform (currently aiming Windows, Linux & Android).
 - Does not use electron.js.
 - Music visuals.
-- Metadata reader.
+- File/URL player.
+- File/URL metadata reader.
 - Gapless playback.
 - Multiple artist support.
-- Online URLs player.
-- .LRC file compatibility (mannual loading or automatic lookup in folder).
+- Audio output details e.g. bitrate, sample rate & channel count.
+- .LRC file compatibility (manual loading or automatic lookup in folder).
 - Fallback cover support. e.g. `cover.jpg`, `Folder.jpg` etc.
 - Built-in YouTube Music client.
 
