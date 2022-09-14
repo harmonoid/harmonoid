@@ -322,65 +322,66 @@ class _FloatingSearchBarSearchTabState
   List<Widget> tracks = <Widget>[];
   List<Widget> artists = <Widget>[];
   int index = 0;
-  late VoidCallback listener;
+
+  Future<void> listener() async {
+    final elementsPerRow = (MediaQuery.of(context).size.width - tileMargin) ~/
+        (kAlbumTileWidth + tileMargin);
+    final double width = (MediaQuery.of(context).size.width -
+            (elementsPerRow + 1) * tileMargin) /
+        elementsPerRow;
+    final double height = width * kAlbumTileHeight / kAlbumTileWidth;
+    albums = <Widget>[];
+    tracks = <Widget>[];
+    artists = <Widget>[];
+    final result = Collection.instance.search(widget.query.value);
+    for (final media in result) {
+      if (media is Album) {
+        albums.addAll(
+          [
+            AlbumTile(
+              width: width,
+              height: height,
+              album: media,
+              forceDefaultStyleOnMobile: true,
+            ),
+            const SizedBox(
+              width: 16.0,
+            ),
+          ],
+        );
+      }
+      if (media is Artist) {
+        artists.addAll(
+          [
+            ArtistTile(
+              width: -1,
+              height: -1,
+              artist: media,
+              forceDefaultStyleOnMobile: true,
+            ),
+            const SizedBox(
+              width: 16.0,
+            ),
+          ],
+        );
+      } else if (media is Track) {
+        tracks.add(
+          TrackTile(
+            track: media,
+            index: 0,
+            group: [
+              media,
+            ],
+          ),
+        );
+      }
+    }
+    setState(() {});
+  }
 
   @override
   void initState() {
     super.initState();
-    listener = () {
-      final elementsPerRow = (MediaQuery.of(context).size.width - tileMargin) ~/
-          (kAlbumTileWidth + tileMargin);
-      final double width = isMobile
-          ? (MediaQuery.of(context).size.width -
-                  (elementsPerRow + 1) * tileMargin) /
-              elementsPerRow
-          : kAlbumTileWidth;
-      final double height = isMobile
-          ? width * kAlbumTileHeight / kAlbumTileWidth
-          : kAlbumTileHeight;
-      albums = <Widget>[];
-      tracks = <Widget>[];
-      artists = <Widget>[];
-      final result = Collection.instance.search(widget.query.value);
-      for (final media in result) {
-        if (media is Album) {
-          albums.addAll(
-            [
-              AlbumTile(
-                width: width,
-                height: height,
-                album: media,
-              ),
-              const SizedBox(
-                width: 16.0,
-              ),
-            ],
-          );
-        }
-        if (media is Artist) {
-          artists.addAll(
-            [
-              ArtistTile(
-                width: kArtistTileWidth,
-                height: kArtistTileHeight,
-                artist: media,
-              ),
-              const SizedBox(
-                width: 16.0,
-              ),
-            ],
-          );
-        } else if (media is Track) {
-          tracks.add(
-            TrackTile(
-              track: media,
-              index: Collection.instance.tracks.indexOf(media),
-            ),
-          );
-        }
-      }
-      setState(() {});
-    };
     widget.query.addListener(listener);
   }
 
@@ -439,7 +440,8 @@ class _FloatingSearchBarSearchTabState
                                     body: NowPlayingBarScrollHideNotifier(
                                       child: CustomListView(
                                         padding: EdgeInsets.symmetric(
-                                            vertical: tileMargin),
+                                          vertical: tileMargin,
+                                        ),
                                         children: tileGridListWidgets(
                                           context: context,
                                           tileHeight: height,
@@ -510,7 +512,8 @@ class _FloatingSearchBarSearchTabState
                                           NowPlayingBarScrollHideNotifier(
                                             child: CustomListView(
                                               padding: EdgeInsets.symmetric(
-                                                  vertical: tileMargin),
+                                                vertical: tileMargin,
+                                              ),
                                               children: artists,
                                             ),
                                           ),
