@@ -1257,7 +1257,6 @@ class ExceptionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconSize = 196.0;
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: 16.0,
@@ -1278,13 +1277,13 @@ class ExceptionWidget extends StatelessWidget {
               Language.instance.COLLECTION_SEARCH_LABEL:
                   VisualAssets.searchPage,
             }[title]!,
-            height: iconSize,
-            width: iconSize,
+            height: 196.0,
+            width: 196.0,
             filterQuality: FilterQuality.high,
             fit: BoxFit.contain,
           ),
           const SizedBox(
-            height: 8.0,
+            height: 4.0,
           ),
           Text(
             title!,
@@ -1304,7 +1303,7 @@ class ExceptionWidget extends StatelessWidget {
           ),
           if (title == Language.instance.NO_COLLECTION_TITLE) ...[
             const SizedBox(
-              height: 16.0,
+              height: 8.0,
             ),
             TextButton(
               onPressed: () {

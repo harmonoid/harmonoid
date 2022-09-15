@@ -178,10 +178,17 @@ class _ArtistTabState extends State<ArtistTab> {
                           children: data.widgets,
                         ),
                       )
-                    : Center(
-                        child: ExceptionWidget(
-                          title: Language.instance.NO_COLLECTION_TITLE,
-                          subtitle: Language.instance.NO_COLLECTION_SUBTITLE,
+                    : Container(
+                        padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).padding.top +
+                              kMobileSearchBarHeight +
+                              2 * tileMargin,
+                        ),
+                        child: Center(
+                          child: ExceptionWidget(
+                            title: Language.instance.NO_COLLECTION_TITLE,
+                            subtitle: Language.instance.NO_COLLECTION_SUBTITLE,
+                          ),
                         ),
                       ),
               );
@@ -396,6 +403,7 @@ class ArtistTile extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
+                const Spacer(),
               ],
             ),
           )

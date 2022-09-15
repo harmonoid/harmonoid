@@ -93,7 +93,7 @@ class _AlbumTabState extends State<AlbumTab> {
                             ] +
                             List.generate(
                               data.widgets.length,
-                              (index) => helper.albumTileWidth + tileMargin,
+                              (index) => helper.albumTileHeight + tileMargin,
                             ),
                         itemBuilder: (context, i) => i == 0
                             ? SortBarFixedHolder(
@@ -186,10 +186,17 @@ class _AlbumTabState extends State<AlbumTab> {
                           children: data.widgets,
                         ),
                       )
-                    : Center(
-                        child: ExceptionWidget(
-                          title: Language.instance.NO_COLLECTION_TITLE,
-                          subtitle: Language.instance.NO_COLLECTION_SUBTITLE,
+                    : Container(
+                        padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).padding.top +
+                              kMobileSearchBarHeight +
+                              2 * tileMargin,
+                        ),
+                        child: Center(
+                          child: ExceptionWidget(
+                            title: Language.instance.NO_COLLECTION_TITLE,
+                            subtitle: Language.instance.NO_COLLECTION_SUBTITLE,
+                          ),
                         ),
                       ),
               );

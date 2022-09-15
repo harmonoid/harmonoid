@@ -288,6 +288,13 @@ class _WebRecommendationsState extends State<WebRecommendations>
       children: [
         if (Configuration.instance.webRecent.isEmpty)
           Container(
+            padding: EdgeInsets.only(
+              top: isDesktop
+                  ? 0.0
+                  : MediaQuery.of(context).padding.top +
+                      kMobileSearchBarHeight +
+                      2 * tileMargin,
+            ),
             color: Theme.of(context).scaffoldBackgroundColor,
             child: Center(
               child: ExceptionWidget(
@@ -668,6 +675,7 @@ class _FloatingSearchBarWebSearchTabState
   Widget build(BuildContext context) {
     if (widget.query.value.isEmpty) {
       return Card(
+        color: Theme.of(context).scaffoldBackgroundColor,
         elevation: 4.0,
         margin: EdgeInsets.zero,
         child: SizedBox(
@@ -690,6 +698,7 @@ class _FloatingSearchBarWebSearchTabState
     }
     if (result.isEmpty) {
       return Card(
+        color: Theme.of(context).scaffoldBackgroundColor,
         elevation: 4.0,
         margin: EdgeInsets.zero,
         child: SizedBox(
