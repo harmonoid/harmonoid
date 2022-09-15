@@ -8,8 +8,9 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'package:harmonoid/interface/settings/settings.dart';
+import 'package:harmonoid/utils/extensions.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
+import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -95,8 +96,9 @@ class AndroidPermissionsSettingState extends State<AndroidPermissionsSetting> {
             },
             title: Text(Language.instance.PERMISSION_MUSIC_AND_AUDIO),
             subtitle: Text(
-              Language.instance.PERMISSION_MUSIC_AND_AUDIO_SUBTITLE,
+              Language.instance.PERMISSION_MUSIC_AND_AUDIO_SUBTITLE.overflow,
               maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           // Notifications permission is only required by Android 13 or higher.
@@ -126,8 +128,9 @@ class AndroidPermissionsSettingState extends State<AndroidPermissionsSetting> {
               },
               title: Text(Language.instance.PERMISSION_NOTIFICATIONS),
               subtitle: Text(
-                Language.instance.PERMISSION_NOTIFICATIONS_SUBTITLE,
+                Language.instance.PERMISSION_NOTIFICATIONS_SUBTITLE.overflow,
                 maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           // Photos & images permission is only required by Android 13 or higher.
@@ -151,8 +154,10 @@ class AndroidPermissionsSettingState extends State<AndroidPermissionsSetting> {
                 Language.instance.PERMISSION_IMAGES_AND_PHOTOS,
               ),
               subtitle: Text(
-                Language.instance.PERMISSION_IMAGES_AND_PHOTOS_SUBTITLE,
+                Language
+                    .instance.PERMISSION_IMAGES_AND_PHOTOS_SUBTITLE.overflow,
                 maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
         ],
