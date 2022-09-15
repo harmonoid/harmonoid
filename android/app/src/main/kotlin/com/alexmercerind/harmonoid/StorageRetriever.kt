@@ -257,7 +257,6 @@ class StorageRetriever(private val channel: MethodChannel?, private val context:
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            return null
         }
         try {
             val collection =
@@ -293,7 +292,6 @@ class StorageRetriever(private val channel: MethodChannel?, private val context:
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            return null
         }
         try {
             val collection =
@@ -329,7 +327,6 @@ class StorageRetriever(private val channel: MethodChannel?, private val context:
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            return null
         }
         return null
     }
