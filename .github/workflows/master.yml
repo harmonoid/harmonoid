@@ -184,7 +184,7 @@ jobs:
         run: echo ${{ steps.vars.outputs.sha_short }}
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: "3.3.2"
+          flutter-version: "3.0.5"
           channel: "stable"
 
       - name: Create Key Store
