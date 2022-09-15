@@ -71,12 +71,13 @@ class CustomListView extends StatefulWidget {
 }
 
 class _CustomListViewState extends State<CustomListView> {
-  late final ScrollController controller;
+  ScrollController? controller;
 
   @override
   void initState() {
     super.initState();
-    controller = widget.controller ?? ScrollController();
+    final controller = widget.controller ?? ScrollController();
+    this.controller = controller;
     // TODO: MUST BE REMOVED BEFORE Flutter 3.3.x.
     if (Platform.isWindows) {
       controller.addListener(
@@ -100,7 +101,9 @@ class _CustomListViewState extends State<CustomListView> {
 
   @override
   void dispose() {
-    controller.dispose();
+    if (widget.controller == null) {
+      controller?.dispose();
+    }
     super.dispose();
   }
 
@@ -146,12 +149,13 @@ class CustomListViewBuilder extends StatefulWidget {
 }
 
 class _CustomListViewBuilderState extends State<CustomListViewBuilder> {
-  late final ScrollController controller;
+  ScrollController? controller;
 
   @override
   void initState() {
     super.initState();
-    controller = widget.controller ?? ScrollController();
+    final controller = widget.controller ?? ScrollController();
+    this.controller = controller;
     // TODO: MUST BE REMOVED BEFORE Flutter 3.3.x.
     if (Platform.isWindows) {
       controller.addListener(
@@ -175,7 +179,9 @@ class _CustomListViewBuilderState extends State<CustomListViewBuilder> {
 
   @override
   void dispose() {
-    controller.dispose();
+    if (widget.controller == null) {
+      controller?.dispose();
+    }
     super.dispose();
   }
 
@@ -223,12 +229,13 @@ class CustomListViewSeparated extends StatefulWidget {
 }
 
 class _CustomListViewSeparatedState extends State<CustomListViewSeparated> {
-  late final ScrollController controller;
+  ScrollController? controller;
 
   @override
   void initState() {
     super.initState();
-    controller = widget.controller ?? ScrollController();
+    final controller = widget.controller ?? ScrollController();
+    this.controller = controller;
     // TODO: MUST BE REMOVED BEFORE Flutter 3.3.x.
     if (Platform.isWindows) {
       controller.addListener(
@@ -252,7 +259,9 @@ class _CustomListViewSeparatedState extends State<CustomListViewSeparated> {
 
   @override
   void dispose() {
-    controller.dispose();
+    if (widget.controller == null) {
+      controller?.dispose();
+    }
     super.dispose();
   }
 
@@ -290,12 +299,13 @@ class CustomSingleChildScrollView extends StatefulWidget {
 
 class _CustomSingleChildScrollViewState
     extends State<CustomSingleChildScrollView> {
-  late final ScrollController controller;
+  ScrollController? controller;
 
   @override
   void initState() {
     super.initState();
-    controller = widget.controller ?? ScrollController();
+    final controller = widget.controller ?? ScrollController();
+    this.controller = controller;
     // TODO: MUST BE REMOVED BEFORE Flutter 3.3.x.
     if (Platform.isWindows) {
       controller.addListener(
@@ -306,8 +316,10 @@ class _CustomSingleChildScrollViewState
                 (scrollDirection == ScrollDirection.reverse
                     ? kWindowsScrollDelta
                     : -kWindowsScrollDelta);
-            scrollEnd = min(controller.position.maxScrollExtent,
-                max(controller.position.minScrollExtent, scrollEnd));
+            scrollEnd = min(
+              controller.position.maxScrollExtent,
+              max(controller.position.minScrollExtent, scrollEnd),
+            );
             controller.jumpTo(scrollEnd);
           }
         },
@@ -317,7 +329,9 @@ class _CustomSingleChildScrollViewState
 
   @override
   void dispose() {
-    controller.dispose();
+    if (widget.controller == null) {
+      controller?.dispose();
+    }
     super.dispose();
   }
 

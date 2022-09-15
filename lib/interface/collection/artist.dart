@@ -12,7 +12,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:media_library/media_library.dart';
@@ -24,6 +23,7 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/collection/album.dart';
+import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -52,6 +52,7 @@ class _ArtistTabState extends State<ArtistTab> {
   @override
   void dispose() {
     controller.removeListener(listener);
+    controller.dispose();
     super.dispose();
   }
 

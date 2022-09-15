@@ -14,11 +14,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:animations/animations.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
-import 'package:animations/animations.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
@@ -55,6 +55,7 @@ class _AlbumTabState extends State<AlbumTab> {
   @override
   void dispose() {
     controller.removeListener(listener);
+    controller.dispose();
     super.dispose();
   }
 
@@ -225,6 +226,7 @@ class _DesktopAlbumArtistTabState extends State<DesktopAlbumArtistTab> {
   @override
   void dispose() {
     scrollController.removeListener(listener);
+    scrollController.dispose();
     super.dispose();
   }
 
