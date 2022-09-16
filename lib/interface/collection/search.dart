@@ -75,7 +75,10 @@ class SearchTabState extends State<SearchTab> {
           tracks.add(
             TrackTile(
               track: media,
-              index: Collection.instance.tracks.indexOf(media),
+              index: 0,
+              group: [
+                media,
+              ],
             ),
           );
         }
