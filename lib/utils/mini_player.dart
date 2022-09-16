@@ -123,7 +123,7 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
     return MiniplayerWillPopScope(
       onWillPop: () async {
         if (heightNotifier.value > widget.minHeight) {
-          _snapToPosition(PanelState.MIN);
+          _snapToPosition(MiniPlayerPanelState.MIN);
           return false;
         }
         return true;
@@ -185,8 +185,8 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
                         _dragHeight == widget.maxHeight && !widget.tapToCollapse
                             ? null
                             : _snapToPosition(_dragHeight != widget.maxHeight
-                                ? PanelState.MAX
-                                : PanelState.MIN),
+                                ? MiniPlayerPanelState.MAX
+                                : MiniPlayerPanelState.MIN),
                     onPanStart: (details) {
                       _startHeight = _dragHeight;
                       updateCount = 0;
@@ -210,7 +210,7 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
                       } else if (speed <= 50) {
                         snapPercentage = 0.01;
                       }
-                      PanelState snap = PanelState.MIN;
+                      MiniPlayerPanelState snap = MiniPlayerPanelState.MIN;
                       final _percentageMax = percentageFromValueInRange(
                           min: widget.minHeight,
                           max: widget.maxHeight,
@@ -218,11 +218,11 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
 
                       if (_startHeight > widget.minHeight) {
                         if (_percentageMax > 1 - snapPercentage) {
-                          snap = PanelState.MAX;
+                          snap = MiniPlayerPanelState.MAX;
                         }
                       } else {
                         if (_percentageMax > snapPercentage) {
-                          snap = PanelState.MAX;
+                          snap = MiniPlayerPanelState.MAX;
                         } else if (onDismissed != null &&
                             percentageFromValueInRange(
                                   min: widget.minHeight,
@@ -230,7 +230,7 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
                                   value: _dragHeight,
                                 ) >
                                 snapPercentage) {
-                          snap = PanelState.DISMISS;
+                          snap = MiniPlayerPanelState.DISMISS;
                         }
                       }
                       _snapToPosition(snap);
@@ -276,15 +276,15 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
     }
   }
 
-  void _snapToPosition(PanelState snapPosition) {
+  void _snapToPosition(MiniPlayerPanelState snapPosition) {
     switch (snapPosition) {
-      case PanelState.MAX:
+      case MiniPlayerPanelState.MAX:
         _animateToHeight(widget.maxHeight);
         return;
-      case PanelState.MIN:
+      case MiniPlayerPanelState.MIN:
         _animateToHeight(widget.minHeight);
         return;
-      case PanelState.DISMISS:
+      case MiniPlayerPanelState.DISMISS:
         _animateToHeight(0);
         return;
     }
@@ -343,7 +343,7 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
   }
 }
 
-enum PanelState {
+enum MiniPlayerPanelState {
   MAX,
   MIN,
   DISMISS,
@@ -359,7 +359,7 @@ class MiniplayerController extends ValueNotifier<ControllerData?> {
   MiniplayerController() : super(null);
   void animateToHeight({
     double? height,
-    PanelState? state,
+    MiniPlayerPanelState? state,
     Duration? duration,
   }) {
     ControllerData? data = value;
@@ -438,14 +438,14 @@ class _MiniplayerWillPopScopeState extends State<MiniplayerWillPopScope> {
   Widget build(BuildContext context) => widget.child;
 }
 
-extension SelectedColorExtension on PanelState {
+extension SelectedColorExtension on MiniPlayerPanelState {
   int get heightCode {
     switch (this) {
-      case PanelState.MIN:
+      case MiniPlayerPanelState.MIN:
         return -1;
-      case PanelState.MAX:
+      case MiniPlayerPanelState.MAX:
         return -2;
-      case PanelState.DISMISS:
+      case MiniPlayerPanelState.DISMISS:
         return -3;
       default:
         return -1;
