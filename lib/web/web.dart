@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:animations/animations.dart';
-import 'package:harmonoid/web/state/web.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
@@ -24,13 +23,14 @@ import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/interface/collection/playlist.dart';
-import 'package:harmonoid/web/utils/widgets.dart';
 import 'package:harmonoid/web/artist.dart';
 import 'package:harmonoid/web/track.dart';
 import 'package:harmonoid/web/album.dart';
 import 'package:harmonoid/web/video.dart';
 import 'package:harmonoid/web/playlist.dart';
+import 'package:harmonoid/web/utils/widgets.dart';
 import 'package:harmonoid/web/utils/dimensions.dart';
+import 'package:harmonoid/web/state/web.dart';
 
 class WebTab extends StatefulWidget {
   const WebTab({Key? key}) : super(key: key);
@@ -47,13 +47,13 @@ class WebTabState extends State<WebTab> with AutomaticKeepAliveClientMixin {
     super.build(context);
     return PageStorage(
       bucket: PageStorageBucket(),
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: isMobile
-            ? WebRecommendations(
-                key: PageStorageKey(0),
-              )
-            : Stack(
+      child: isMobile
+          ? FloatingSearchBarWebSearchScreen(
+              query: '',
+            )
+          : Scaffold(
+              resizeToAvoidBottomInset: false,
+              body: Stack(
                 children: [
                   Padding(
                     padding: EdgeInsets.only(
@@ -183,7 +183,7 @@ class WebTabState extends State<WebTab> with AutomaticKeepAliveClientMixin {
                   ),
                 ],
               ),
-      ),
+            ),
     );
   }
 }
@@ -732,16 +732,20 @@ class _FloatingSearchBarWebSearchTabState
                     overflow: TextOverflow.ellipsis,
                   ),
                   onTap: () {
-                    Navigator.of(context).push(PageRouteBuilder(
+                    Navigator.of(context).push(
+                      PageRouteBuilder(
                         pageBuilder: (context, animation, secondaryAnimation) =>
                             FadeThroughTransition(
-                                fillColor: Colors.transparent,
-                                animation: animation,
-                                secondaryAnimation: secondaryAnimation,
-                                child: FloatingSearchBarWebSearchScreen(
-                                  future: YTMClient.search(e),
-                                  query: e,
-                                ))));
+                          fillColor: Colors.transparent,
+                          animation: animation,
+                          secondaryAnimation: secondaryAnimation,
+                          child: FloatingSearchBarWebSearchScreen(
+                            future: YTMClient.search(e),
+                            query: e,
+                          ),
+                        ),
+                      ),
+                    );
                   },
                   leading: Icon(
                     Icons.search,

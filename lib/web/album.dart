@@ -97,7 +97,7 @@ class WebAlbumLargeTile extends StatelessWidget {
               Expanded(
                 child: Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: 8.0,
+                    horizontal: isMobile ? 12.0 : 8.0,
                   ),
                   width: width,
                   child: Column(
@@ -107,7 +107,10 @@ class WebAlbumLargeTile extends StatelessWidget {
                     children: [
                       Text(
                         album.albumName.overflow,
-                        style: Theme.of(context).textTheme.headline2,
+                        style: Theme.of(context).textTheme.headline2?.copyWith(
+                              fontSize: isMobile ? 18.0 : null,
+                              fontWeight: isMobile ? FontWeight.w700 : null,
+                            ),
                         textAlign: TextAlign.left,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
