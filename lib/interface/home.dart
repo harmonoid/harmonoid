@@ -201,9 +201,6 @@ class HomeState extends State<Home>
           create: (context) => CollectionRefresh.instance,
         ),
         ChangeNotifierProvider(
-          create: (context) => Language.instance,
-        ),
-        ChangeNotifierProvider(
           create: (context) => DesktopNowPlayingController(
             launch: () {
               if (Configuration.instance.modernNowPlayingScreen) {

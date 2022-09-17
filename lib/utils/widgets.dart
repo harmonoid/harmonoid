@@ -1727,8 +1727,8 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
             },
             items: [
               BottomNavigationBarItem(
-                icon: Icon(Icons.playlist_play),
-                label: Language.instance.PLAYLIST,
+                icon: Icon(Icons.album),
+                label: Language.instance.ALBUM,
                 backgroundColor: color ?? Theme.of(context).primaryColor,
               ),
               BottomNavigationBarItem(
@@ -1737,18 +1737,13 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
                 backgroundColor: color ?? Theme.of(context).primaryColor,
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.album),
-                label: Language.instance.ALBUM,
-                backgroundColor: color ?? Theme.of(context).primaryColor,
-              ),
-              BottomNavigationBarItem(
                 icon: Icon(Icons.person),
                 label: Language.instance.ARTIST,
                 backgroundColor: color ?? Theme.of(context).primaryColor,
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.wifi_tethering_rounded),
-                label: Language.instance.STREAM,
+                icon: Icon(Icons.playlist_play),
+                label: Language.instance.PLAYLIST,
                 backgroundColor: color ?? Theme.of(context).primaryColor,
               ),
             ],
@@ -1991,7 +1986,7 @@ class _HorizontalListState extends State<HorizontalList> {
               children: widget.children,
             ),
           ),
-          if (extentAfter != 0)
+          if (extentAfter != 0.0 && isDesktop)
             Positioned(
               child: Container(
                 height: c.maxHeight,
@@ -2013,7 +2008,7 @@ class _HorizontalListState extends State<HorizontalList> {
               ),
               right: isDesktop ? 32.0 : tileMargin,
             ),
-          if (extentBefore != 0)
+          if (extentBefore != 0.0 && isDesktop)
             Positioned(
               child: Container(
                 height: c.maxHeight,
@@ -2436,17 +2431,9 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
 
   @override
   Widget build(BuildContext context) {
-    // Indices are different on mobile.
-    final tab = {
-      // [PlaylistTab]
-      0: -1,
-      1: 1,
-      2: 0,
-      3: 2,
-      4: 4,
-    }[index]!;
+    final tab = index;
     return AnimatedOpacity(
-      opacity: [1, 2, 3].contains(index) ? 1.0 : 0.0,
+      opacity: [0, 1, 2].contains(tab) ? 1.0 : 0.0,
       duration: Duration(milliseconds: 50),
       child: CircularButton(
         icon: Icon(
@@ -2454,7 +2441,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
           color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
         ),
         onPressed: () async {
-          if (index == 4) return;
+          if (tab == 3) return;
           final position = RelativeRect.fromRect(
             Offset(
                   MediaQuery.of(context).size.width - tileMargin - 48.0,
@@ -2761,7 +2748,7 @@ class CollectionMoreButton extends StatelessWidget {
           child: ListTile(
             contentPadding: EdgeInsets.zero,
             dense: true,
-            leading: Icon(Icons.wifi_tethering),
+            leading: Icon(Icons.waves),
             title: Text(
               Language.instance.STREAM,
               style: Theme.of(context).textTheme.headline4,
@@ -3401,12 +3388,19 @@ class _MobileAppBarOverflowButtonState
             PopupMenuItem(
               value: 2,
               child: ListTile(
+                leading: Icon(Icons.waves),
+                title: Text(Language.instance.STREAM),
+              ),
+            ),
+            PopupMenuItem(
+              value: 3,
+              child: ListTile(
                 leading: Icon(Icons.settings),
                 title: Text(Language.instance.SETTING),
               ),
             ),
             PopupMenuItem(
-              value: 3,
+              value: 4,
               child: ListTile(
                 leading: Icon(Icons.info),
                 title: Text(Language.instance.ABOUT_TITLE),
@@ -3611,13 +3605,28 @@ class _MobileAppBarOverflowButtonState
                         FadeThroughTransition(
                       animation: animation,
                       secondaryAnimation: secondaryAnimation,
-                      child: Settings(),
+                      child: WebTab(),
                     ),
                   ),
                 );
                 break;
               }
             case 3:
+              {
+                await Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        FadeThroughTransition(
+                      animation: animation,
+                      secondaryAnimation: secondaryAnimation,
+                      child: Settings(),
+                    ),
+                  ),
+                );
+                break;
+              }
+            case 4:
               {
                 await Navigator.push(
                   context,

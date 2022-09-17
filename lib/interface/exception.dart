@@ -262,48 +262,20 @@ class _ExceptionAppState extends State<_ExceptionApp> {
             ),
           )
         : Scaffold(
-            floatingActionButton: Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                FloatingActionButton(
-                  tooltip: Label.copy,
-                  backgroundColor: Colors.black,
-                  onPressed: () {
-                    Clipboard.setData(
-                      ClipboardData(
-                        text:
-                            '${Label.exception}: ${widget.exception.toString()}\n${Label.stack_trace}: ${widget.stacktrace.toString()}',
-                      ),
-                    );
-                  },
-                  child: Icon(
-                    Icons.copy,
+            floatingActionButton: FloatingActionButton(
+              tooltip: Label.copy,
+              backgroundColor: Colors.black,
+              onPressed: () {
+                Clipboard.setData(
+                  ClipboardData(
+                    text:
+                        '${Label.exception}: ${widget.exception.toString()}\n${Label.stack_trace}: ${widget.stacktrace.toString()}',
                   ),
-                ),
-                const SizedBox(width: 16.0),
-                FloatingActionButton(
-                  tooltip: Label.report,
-                  backgroundColor: Colors.black,
-                  onPressed: () {
-                    launchUrl(
-                      Uri.https(
-                        'github.com',
-                        '/harmonoid/harmonoid/issues/new',
-                        {
-                          'assignees': 'alexmercerind',
-                          'labels': 'bug',
-                          'template': 'bug_report.md',
-                        },
-                      ),
-                      mode: LaunchMode.externalApplication,
-                    );
-                  },
-                  child: Icon(
-                    Icons.bug_report,
-                  ),
-                ),
-              ],
+                );
+              },
+              child: Icon(
+                Icons.copy,
+              ),
             ),
             body: CustomScrollView(
               controller: controller,

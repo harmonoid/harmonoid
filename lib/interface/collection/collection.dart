@@ -511,12 +511,10 @@ class CollectionScreenState extends State<CollectionScreen>
                       opacity: value,
                       child: child,
                     ),
-                    child: [0, 1, 2, 3].contains(index.value)
-                        ? MiniNowPlayingBarRefreshCollectionButton(
-                            key: MobileNowPlayingController.instance.fabKey,
-                            index: index,
-                          )
-                        : Container(),
+                    child: MiniNowPlayingBarRefreshCollectionButton(
+                      key: MobileNowPlayingController.instance.fabKey,
+                      index: index,
+                    ),
                   ),
                 ),
                 body: Stack(
@@ -541,21 +539,6 @@ class CollectionScreenState extends State<CollectionScreen>
                       margins: EdgeInsets.only(
                         top: MediaQuery.of(context).padding.top + tileMargin,
                       ),
-                      onSubmitted: (query) {
-                        if (index.value == 4) {
-                          Navigator.of(context).push(PageRouteBuilder(
-                              pageBuilder: (context, animation,
-                                      secondaryAnimation) =>
-                                  FadeThroughTransition(
-                                      fillColor: Colors.transparent,
-                                      animation: animation,
-                                      secondaryAnimation: secondaryAnimation,
-                                      child: FloatingSearchBarWebSearchScreen(
-                                        query: query,
-                                        future: YTMClient.search(query),
-                                      ))));
-                        }
-                      },
                       accentColor: Theme.of(context).primaryColor,
                       onQueryChanged: (value) => query.value = value,
                       clearQueryOnClose: true,
@@ -778,9 +761,7 @@ class CollectionScreenState extends State<CollectionScreen>
                         ),
                       ],
                       builder: (context, transition) {
-                        return index.value != 4
-                            ? FloatingSearchBarSearchTab(query: query)
-                            : FloatingSearchBarWebSearchTab(query: query);
+                        return FloatingSearchBarSearchTab(query: query);
                       },
                       body: FloatingSearchBarScrollNotifier(
                         child: NotificationListener<ScrollNotification>(
@@ -800,11 +781,10 @@ class CollectionScreenState extends State<CollectionScreen>
                               currentIndex = page;
                             },
                             children: [
-                              PlaylistTab(),
-                              TrackTab(),
                               AlbumTab(),
+                              TrackTab(),
                               ArtistTab(),
-                              WebTab(),
+                              PlaylistTab(),
                             ],
                           ),
                         ),

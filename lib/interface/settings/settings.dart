@@ -15,7 +15,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/interface/settings/about.dart';
 import 'package:harmonoid/interface/settings/indexing.dart';
@@ -178,10 +177,8 @@ class Settings extends StatelessWidget {
                       MiscellaneousSetting(),
                       Divider(thickness: 1.0),
                       ExperimentalSetting(),
-                      if (!kPlayStore) ...{
-                        Divider(thickness: 1.0),
-                        VersionSetting(),
-                      }
+                      Divider(thickness: 1.0),
+                      VersionSetting(),
                     ],
                   ),
                 ),

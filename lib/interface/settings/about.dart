@@ -12,7 +12,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:harmonoid/main.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
@@ -103,7 +102,6 @@ class _AboutPageState extends State<AboutPage> {
                               Text(
                                 [
                                   kVersion,
-                                  if (kPlayStore) 'Play Store',
                                 ].join(' • '),
                                 style: Theme.of(context).textTheme.headline3,
                               ),
@@ -149,46 +147,44 @@ class _AboutPageState extends State<AboutPage> {
                               : null,
                         ),
                       ),
-                      if (!kPlayStore)
-                        ListTile(
-                          onTap: () => open(URL.patreon),
-                          leading: CircleAvatar(
-                            backgroundColor: Colors.transparent,
-                            foregroundColor: Theme.of(context).iconTheme.color,
-                            child: SvgPicture.string(
-                              SVG.patreon,
-                              height: 20.0,
-                              width: 20.0,
-                              color: Theme.of(context).iconTheme.color,
-                            ),
-                          ),
-                          title: Text(
-                            Label.become_a_patreon,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.headline4
-                                : null,
+                      ListTile(
+                        onTap: () => open(URL.patreon),
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          foregroundColor: Theme.of(context).iconTheme.color,
+                          child: SvgPicture.string(
+                            SVG.patreon,
+                            height: 20.0,
+                            width: 20.0,
+                            color: Theme.of(context).iconTheme.color,
                           ),
                         ),
-                      if (!kPlayStore)
-                        ListTile(
-                          onTap: () => open(URL.paypal),
-                          leading: CircleAvatar(
-                            backgroundColor: Colors.transparent,
-                            foregroundColor: Theme.of(context).iconTheme.color,
-                            child: SvgPicture.string(
-                              SVG.paypal,
-                              height: 20.0,
-                              width: 20.0,
-                              color: Theme.of(context).iconTheme.color,
-                            ),
-                          ),
-                          title: Text(
-                            Label.donate_with_paypal,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.headline4
-                                : null,
+                        title: Text(
+                          Label.become_a_patreon,
+                          style: isDesktop
+                              ? Theme.of(context).textTheme.headline4
+                              : null,
+                        ),
+                      ),
+                      ListTile(
+                        onTap: () => open(URL.paypal),
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          foregroundColor: Theme.of(context).iconTheme.color,
+                          child: SvgPicture.string(
+                            SVG.paypal,
+                            height: 20.0,
+                            width: 20.0,
+                            color: Theme.of(context).iconTheme.color,
                           ),
                         ),
+                        title: Text(
+                          Label.donate_with_paypal,
+                          style: isDesktop
+                              ? Theme.of(context).textTheme.headline4
+                              : null,
+                        ),
+                      ),
                       ListTile(
                         onTap: () => open(URL.license),
                         leading: CircleAvatar(
