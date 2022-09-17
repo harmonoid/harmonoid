@@ -699,9 +699,12 @@ class TrackTileState extends State<TrackTile> {
                                     style:
                                         Theme.of(context).textTheme.headline2,
                                   ),
-                              if (widget.subtitle != null)
+                              if (widget.subtitle != null) ...[
+                                const SizedBox(
+                                  height: 2.0,
+                                ),
                                 widget.subtitle!
-                              else if (subtitle.isNotEmpty) ...[
+                              ] else if (subtitle.isNotEmpty) ...[
                                 const SizedBox(
                                   height: 2.0,
                                 ),

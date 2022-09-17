@@ -93,6 +93,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
   List<Widget> fills = [];
   Color? color;
   Timer? timer;
+  Widget? playlistPanel;
 
   @override
   void initState() {
@@ -383,7 +384,18 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
         tapToCollapse: false,
         builder: (height, percentage) {
           if (percentage < 1.0) {
-            minimizedPlaylist.value = true;
+            try {
+              minimizedPlaylist.value = true;
+            } catch (exception, stacktrace) {
+              debugPrint(exception.toString());
+              debugPrint(stacktrace.toString());
+            }
+            try {
+              slidingUpPanelController.close();
+            } catch (exception, stacktrace) {
+              debugPrint(exception.toString());
+              debugPrint(stacktrace.toString());
+            }
           }
           try {
             WidgetsBinding.instance.addPostFrameCallback(
@@ -1786,305 +1798,317 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                     ),
                   ),
                 ),
-                if (percentage > 0.7 &&
-                    (MediaQuery.of(context).size.width +
-                            kDetailsAreaHeight +
-                            bottomSheetMinHeight) <
-                        MediaQuery.of(context).size.height)
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (percentage < 1.0)
-                          SizedBox(
-                            height: MediaQuery.of(context).size.width +
-                                kDetailsAreaHeight +
-                                bottomSheetMinHeight,
-                          ),
-                        Expanded(
-                          child: ScrollConfiguration(
-                            behavior: NoOverscrollGlowBehavior(),
-                            child: () {
-                              final vh = MediaQuery.of(context).size.height;
-                              final vw = MediaQuery.of(context).size.width;
-                              final pt =
-                                  window.padding.top / window.devicePixelRatio +
-                                      16.0;
-                              final min = vh -
-                                  (vw +
+                if ((MediaQuery.of(context).size.width +
+                        kDetailsAreaHeight +
+                        bottomSheetMinHeight) <
+                    MediaQuery.of(context).size.height)
+                  () {
+                    // Only cause re-draw or updates to [SlidingUpPanel], when it is maximized.
+                    // It is quite expensive process & lag is very apparent.
+                    if (playlistPanel == null || percentage == 1.0) {
+                      playlistPanel = SizedBox(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (percentage < 1.0)
+                              Expanded(
+                                child: SizedBox(
+                                  height: MediaQuery.of(context).size.width +
                                       kDetailsAreaHeight +
-                                      bottomSheetMinHeight);
-                              final max = vh - (kToolbarHeight + pt);
-                              return SlidingUpPanel(
-                                controller: slidingUpPanelController,
-                                minHeight: min,
-                                maxHeight: max,
-                                renderPanelSheet: true,
-                                backdropEnabled: true,
-                                backdropTapClosesPanel: true,
-                                panelSnapping: true,
-                                backdropOpacity: 0.0,
-                                color: Theme.of(context).cardColor,
-                                margin: EdgeInsets.only(
-                                  left: 16.0,
-                                  right: 16.0,
+                                      bottomSheetMinHeight,
                                 ),
-                                onPanelOpened: () =>
-                                    minimizedPlaylist.value = false,
-                                onPanelClosed: () =>
-                                    minimizedPlaylist.value = true,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(4.0),
-                                  topRight: Radius.circular(4.0),
-                                ),
-                                collapsed: () {
-                                  final child = Column(
-                                    children: [
-                                      Material(
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(4.0),
-                                          topRight: Radius.circular(4.0),
-                                        ),
-                                        child: Container(
-                                          height: 32.0,
-                                          alignment: Alignment.center,
+                              ),
+                            ScrollConfiguration(
+                              behavior: NoOverscrollGlowBehavior(),
+                              child: () {
+                                final vh = MediaQuery.of(context).size.height;
+                                final vw = MediaQuery.of(context).size.width;
+                                final pt = window.padding.top /
+                                        window.devicePixelRatio +
+                                    16.0;
+                                final min = vh -
+                                    (vw +
+                                        kDetailsAreaHeight +
+                                        bottomSheetMinHeight);
+                                final max = vh - (kToolbarHeight + pt);
+                                return SlidingUpPanel(
+                                  controller: slidingUpPanelController,
+                                  minHeight: min,
+                                  maxHeight: max,
+                                  renderPanelSheet: true,
+                                  backdropEnabled: true,
+                                  backdropTapClosesPanel: true,
+                                  panelSnapping: true,
+                                  backdropOpacity: 0.0,
+                                  color: Theme.of(context).cardColor,
+                                  margin: EdgeInsets.only(
+                                    left: 16.0,
+                                    right: 16.0,
+                                  ),
+                                  onPanelOpened: () =>
+                                      minimizedPlaylist.value = false,
+                                  onPanelClosed: () =>
+                                      minimizedPlaylist.value = true,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(4.0),
+                                    topRight: Radius.circular(4.0),
+                                  ),
+                                  collapsed: () {
+                                    final child = Column(
+                                      children: [
+                                        Material(
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(4.0),
+                                            topRight: Radius.circular(4.0),
+                                          ),
                                           child: Container(
-                                            width: 48.0,
-                                            height: 4.0,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                2.0,
+                                            height: 32.0,
+                                            alignment: Alignment.center,
+                                            child: Container(
+                                              width: 48.0,
+                                              height: 4.0,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                  2.0,
+                                                ),
+                                                color: Theme.of(context)
+                                                    .dividerColor
+                                                    .withOpacity(0.54),
                                               ),
-                                              color: Theme.of(context)
-                                                  .dividerColor
-                                                  .withOpacity(0.54),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      Divider(
-                                        height: 1.0,
-                                        thickness: 1.0,
-                                      ),
-                                      Expanded(
-                                        child: CustomListViewSeparated(
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
-                                          padding: EdgeInsets.zero,
-                                          itemCount: tracksSkipped.length +
-                                              1 +
-                                              more.length,
-                                          itemExtents: List.generate(
-                                                tracksSkipped.length,
-                                                (i) => 72.0,
-                                              ) +
-                                              [56.0] +
-                                              List.generate(
+                                        Divider(
+                                          height: 1.0,
+                                          thickness: 1.0,
+                                        ),
+                                        Expanded(
+                                          child: CustomListViewSeparated(
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            padding: EdgeInsets.zero,
+                                            itemCount: tracksSkipped.length +
+                                                1 +
                                                 more.length,
-                                                (i) => 72.0,
-                                              ),
-                                          separatorExtent: 1.0,
-                                          itemBuilder: (context, i) {
-                                            i++;
-                                            if (i == tracksSkipped.length + 1) {
-                                              return Padding(
-                                                padding: EdgeInsets.only(
-                                                  left: 62.0,
+                                            itemExtents: List.generate(
+                                                  tracksSkipped.length,
+                                                  (i) => 72.0,
+                                                ) +
+                                                [56.0] +
+                                                List.generate(
+                                                  more.length,
+                                                  (i) => 72.0,
                                                 ),
-                                                child: SubHeader(
-                                                  Language.instance.MORE,
-                                                ),
-                                              );
-                                            } else if (i <=
-                                                tracksSkipped.length) {
-                                              return tracksSkipped[i - 1];
-                                            } else if (i >
-                                                tracksSkipped.length + 1) {
-                                              return more[
-                                                  i - tracksSkipped.length - 2];
-                                            }
-                                            return const SizedBox.shrink();
-                                          },
-                                          separatorBuilder: (context, i) =>
-                                              Divider(
-                                            height: 1.0,
-                                            thickness: 1.0,
-                                            indent: 78.0,
-                                            endIndent: 8.0,
+                                            separatorExtent: 1.0,
+                                            itemBuilder: (context, i) {
+                                              i++;
+                                              if (i ==
+                                                  tracksSkipped.length + 1) {
+                                                return Padding(
+                                                  padding: EdgeInsets.only(
+                                                    left: 62.0,
+                                                  ),
+                                                  child: SubHeader(
+                                                    Language.instance.MORE,
+                                                  ),
+                                                );
+                                              } else if (i <=
+                                                  tracksSkipped.length) {
+                                                return tracksSkipped[i - 1];
+                                              } else if (i >
+                                                  tracksSkipped.length + 1) {
+                                                return more[i -
+                                                    tracksSkipped.length -
+                                                    2];
+                                              }
+                                              return const SizedBox.shrink();
+                                            },
+                                            separatorBuilder: (context, i) =>
+                                                Divider(
+                                              height: 1.0,
+                                              thickness: 1.0,
+                                              indent: 78.0,
+                                              endIndent: 8.0,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  );
-                                  return Configuration.instance
-                                          .mobileEnableNowPlayingScreenRippleEffect
-                                      ? Container(
-                                          clipBehavior: Clip.antiAlias,
-                                          decoration: BoxDecoration(
-                                            color: Theme.of(context).cardColor,
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(4.0),
-                                              topRight: Radius.circular(4.0),
-                                            ),
-                                          ),
-                                          child: child,
-                                        )
-                                      : Container(
-                                          clipBehavior: Clip.antiAlias,
-                                          decoration: BoxDecoration(
-                                            color:
-                                                Theme.of(context).brightness ==
-                                                        Brightness.light
-                                                    ? Color.lerp(Colors.white,
-                                                        Colors.black, 0.12)
-                                                    : Color.lerp(Colors.black,
-                                                        Colors.white, 0.24),
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(4.0),
-                                              topRight: Radius.circular(4.0),
-                                            ),
-                                          ),
-                                          child: Container(
-                                            margin: EdgeInsets.only(
-                                              top: 1.0,
-                                              left: 1.0,
-                                              right: 1.0,
-                                            ),
+                                      ],
+                                    );
+                                    return Configuration.instance
+                                            .mobileEnableNowPlayingScreenRippleEffect
+                                        ? Container(
+                                            clipBehavior: Clip.antiAlias,
                                             decoration: BoxDecoration(
-                                              color: Theme.of(context)
-                                                  .scaffoldBackgroundColor,
+                                              color:
+                                                  Theme.of(context).cardColor,
                                               borderRadius: BorderRadius.only(
                                                 topLeft: Radius.circular(4.0),
                                                 topRight: Radius.circular(4.0),
                                               ),
                                             ),
                                             child: child,
-                                          ),
-                                        );
-                                }(),
-                                panelBuilder: (controller) {
-                                  final child = Column(
-                                    children: [
-                                      Material(
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(4.0),
-                                          topRight: Radius.circular(4.0),
-                                        ),
-                                        child: Container(
-                                          height: 32.0,
-                                          alignment: Alignment.center,
-                                          child: Container(
-                                            width: 48.0,
-                                            height: 4.0,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                2.0,
-                                              ),
-                                              color: Theme.of(context)
-                                                  .dividerColor
-                                                  .withOpacity(0.54),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Divider(
-                                        height: 1.0,
-                                        thickness: 1.0,
-                                      ),
-                                      Expanded(
-                                        child: CustomListViewSeparated(
-                                          physics: null,
-                                          padding: EdgeInsets.zero,
-                                          controller: controller,
-                                          itemCount:
-                                              tracks.length + 1 + more.length,
-                                          itemExtents: List.generate(
-                                                tracks.length,
-                                                (i) => 72.0,
-                                              ) +
-                                              [56.0] +
-                                              List.generate(
-                                                more.length,
-                                                (i) => 72.0,
-                                              ),
-                                          separatorExtent: 1.0,
-                                          itemBuilder: (context, i) {
-                                            i++;
-                                            if (i == tracks.length + 1) {
-                                              return Padding(
-                                                padding: EdgeInsets.only(
-                                                  left: 62.0,
-                                                ),
-                                                child: SubHeader(
-                                                  Language.instance.MORE,
-                                                ),
-                                              );
-                                            } else if (i <= tracks.length) {
-                                              return tracks[i - 1];
-                                            } else if (i > tracks.length + 1) {
-                                              return more[
-                                                  i - tracks.length - 2];
-                                            }
-                                            return const SizedBox.shrink();
-                                          },
-                                          separatorBuilder: (context, i) =>
-                                              Divider(
-                                            height: 1.0,
-                                            thickness: 1.0,
-                                            indent: 78.0,
-                                            endIndent: 8.0,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                  return Configuration.instance
-                                          .mobileEnableNowPlayingScreenRippleEffect
-                                      ? child
-                                      : Container(
-                                          clipBehavior: Clip.antiAlias,
-                                          decoration: BoxDecoration(
-                                            color:
-                                                Theme.of(context).brightness ==
-                                                        Brightness.light
-                                                    ? Color.lerp(Colors.white,
-                                                        Colors.black, 0.12)
-                                                    : Color.lerp(Colors.black,
-                                                        Colors.white, 0.24),
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(4.0),
-                                              topRight: Radius.circular(4.0),
-                                            ),
-                                          ),
-                                          child: Container(
-                                            margin: EdgeInsets.only(
-                                              top: 1.0,
-                                              left: 1.0,
-                                              right: 1.0,
-                                            ),
+                                          )
+                                        : Container(
+                                            clipBehavior: Clip.antiAlias,
                                             decoration: BoxDecoration(
                                               color: Theme.of(context)
-                                                  .scaffoldBackgroundColor,
+                                                          .brightness ==
+                                                      Brightness.light
+                                                  ? Color.lerp(Colors.white,
+                                                      Colors.black, 0.12)
+                                                  : Color.lerp(Colors.black,
+                                                      Colors.white, 0.24),
                                               borderRadius: BorderRadius.only(
                                                 topLeft: Radius.circular(4.0),
                                                 topRight: Radius.circular(4.0),
                                               ),
                                             ),
-                                            child: child,
+                                            child: Container(
+                                              margin: EdgeInsets.only(
+                                                top: 1.0,
+                                                left: 1.0,
+                                                right: 1.0,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: Theme.of(context)
+                                                    .scaffoldBackgroundColor,
+                                                borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(4.0),
+                                                  topRight:
+                                                      Radius.circular(4.0),
+                                                ),
+                                              ),
+                                              child: child,
+                                            ),
+                                          );
+                                  }(),
+                                  panelBuilder: (controller) {
+                                    final child = Column(
+                                      children: [
+                                        Material(
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(4.0),
+                                            topRight: Radius.circular(4.0),
                                           ),
-                                        );
-                                },
-                              );
-                            }(),
-                          ),
+                                          child: Container(
+                                            height: 32.0,
+                                            alignment: Alignment.center,
+                                            child: Container(
+                                              width: 48.0,
+                                              height: 4.0,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                  2.0,
+                                                ),
+                                                color: Theme.of(context)
+                                                    .dividerColor
+                                                    .withOpacity(0.54),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Divider(
+                                          height: 1.0,
+                                          thickness: 1.0,
+                                        ),
+                                        Expanded(
+                                          child: CustomListViewSeparated(
+                                            physics: null,
+                                            padding: EdgeInsets.zero,
+                                            controller: controller,
+                                            itemCount:
+                                                tracks.length + 1 + more.length,
+                                            itemExtents: List.generate(
+                                                  tracks.length,
+                                                  (i) => 72.0,
+                                                ) +
+                                                [56.0] +
+                                                List.generate(
+                                                  more.length,
+                                                  (i) => 72.0,
+                                                ),
+                                            separatorExtent: 1.0,
+                                            itemBuilder: (context, i) {
+                                              i++;
+                                              if (i == tracks.length + 1) {
+                                                return Padding(
+                                                  padding: EdgeInsets.only(
+                                                    left: 62.0,
+                                                  ),
+                                                  child: SubHeader(
+                                                    Language.instance.MORE,
+                                                  ),
+                                                );
+                                              } else if (i <= tracks.length) {
+                                                return tracks[i - 1];
+                                              } else if (i >
+                                                  tracks.length + 1) {
+                                                return more[
+                                                    i - tracks.length - 2];
+                                              }
+                                              return const SizedBox.shrink();
+                                            },
+                                            separatorBuilder: (context, i) =>
+                                                Divider(
+                                              height: 1.0,
+                                              thickness: 1.0,
+                                              indent: 78.0,
+                                              endIndent: 8.0,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                    return Configuration.instance
+                                            .mobileEnableNowPlayingScreenRippleEffect
+                                        ? child
+                                        : Container(
+                                            clipBehavior: Clip.antiAlias,
+                                            decoration: BoxDecoration(
+                                              color: Theme.of(context)
+                                                          .brightness ==
+                                                      Brightness.light
+                                                  ? Color.lerp(Colors.white,
+                                                      Colors.black, 0.12)
+                                                  : Color.lerp(Colors.black,
+                                                      Colors.white, 0.24),
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(4.0),
+                                                topRight: Radius.circular(4.0),
+                                              ),
+                                            ),
+                                            child: Container(
+                                              margin: EdgeInsets.only(
+                                                top: 1.0,
+                                                left: 1.0,
+                                                right: 1.0,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: Theme.of(context)
+                                                    .scaffoldBackgroundColor,
+                                                borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(4.0),
+                                                  topRight:
+                                                      Radius.circular(4.0),
+                                                ),
+                                              ),
+                                              child: child,
+                                            ),
+                                          );
+                                  },
+                                );
+                              }(),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
+                      );
+                    }
+                    return playlistPanel!;
+                  }()
               ],
             );
           }();
@@ -2164,7 +2188,7 @@ class MiniNowPlayingBarRefreshCollectionButtonState
                 end: value?.first ?? Theme.of(context).primaryColor,
               ),
               builder: (context, color, _) => Container(
-                child: widget.index.value == 0
+                child: widget.index.value == 3
                     ? SpeedDial(
                         icon: Icons.add,
                         activeIcon: Icons.close,
@@ -2348,7 +2372,13 @@ class MiniMusicVisualizer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<int> duration = [900, 800, 700, 600, 500];
+    final List<int> duration = [
+      900,
+      800,
+      700,
+      600,
+      500,
+    ];
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
