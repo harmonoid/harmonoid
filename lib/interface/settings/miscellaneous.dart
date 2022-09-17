@@ -25,6 +25,46 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (isMobile)
+            CorrectedSwitchListTile(
+              title: Language.instance.NOTIFICATION_LYRICS_TITLE,
+              subtitle: Language.instance.NOTIFICATION_LYRICS_SUBTITLE,
+              onChanged: (_) => Configuration.instance
+                  .save(
+                    notificationLyrics:
+                        !Configuration.instance.notificationLyrics,
+                  )
+                  .then((_) => setState(() {})),
+              value: Configuration.instance.notificationLyrics,
+            ),
+          CorrectedSwitchListTile(
+            title: Language.instance.DISPLAY_AUDIO_FORMAT,
+            subtitle: Language.instance.DISPLAY_AUDIO_FORMAT,
+            onChanged: (_) => Configuration.instance
+                .save(
+              displayAudioFormat: !Configuration.instance.displayAudioFormat,
+            )
+                .then((_) {
+              setState(() {});
+            }),
+            value: Configuration.instance.displayAudioFormat,
+          ),
+          if (isMobile)
+            CorrectedSwitchListTile(
+              title: Language.instance.MOBILE_ENABLE_VOLUME_SLIDER,
+              subtitle: Language.instance.MOBILE_ENABLE_VOLUME_SLIDER,
+              onChanged: (_) => Configuration.instance
+                  .save(
+                mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen:
+                    !Configuration.instance
+                        .mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen,
+              )
+                  .then((_) {
+                setState(() {});
+              }),
+              value: Configuration
+                  .instance.mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen,
+            ),
           CorrectedSwitchListTile(
             title: Language
                 .instance.CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC_TITLE,
@@ -53,18 +93,6 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
                     })),
             value: Configuration.instance.dynamicNowPlayingBarColoring,
           ),
-          if (Platform.isAndroid)
-            CorrectedSwitchListTile(
-              title: Language.instance.NOTIFICATION_LYRICS_TITLE,
-              subtitle: Language.instance.NOTIFICATION_LYRICS_SUBTITLE,
-              onChanged: (_) => Configuration.instance
-                  .save(
-                    notificationLyrics:
-                        !Configuration.instance.notificationLyrics,
-                  )
-                  .then((_) => setState(() {})),
-              value: Configuration.instance.notificationLyrics,
-            ),
           if (Platform.isWindows)
             CorrectedSwitchListTile(
               title: Language.instance.SHOW_TRACK_PROGRESS_ON_TASKBAR,
@@ -88,6 +116,19 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
                 )
                 .then((_) => setState(() {})),
             value: Configuration.instance.seamlessPlayback,
+          ),
+          CorrectedSwitchListTile(
+            title: Language.instance.USE_LRC_FILE_FROM_TRACK_DIRECTORY,
+            subtitle: Language.instance.USE_LRC_FILE_FROM_TRACK_DIRECTORY,
+            onChanged: (_) => Configuration.instance
+                .save(
+              useLRCFromTrackDirectory:
+                  !Configuration.instance.useLRCFromTrackDirectory,
+            )
+                .then((_) {
+              setState(() {});
+            }),
+            value: Configuration.instance.useLRCFromTrackDirectory,
           ),
           CorrectedSwitchListTile(
             title: Language.instance.SHOW_NOW_PLAYING_AFTER_PLAYING,
@@ -128,34 +169,6 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
               }),
               value: Configuration.instance.discordRPC,
             ),
-          CorrectedSwitchListTile(
-            title: Language.instance.DISPLAY_AUDIO_FORMAT,
-            subtitle: Language.instance.DISPLAY_AUDIO_FORMAT,
-            onChanged: (_) => Configuration.instance
-                .save(
-              displayAudioFormat: !Configuration.instance.displayAudioFormat,
-            )
-                .then((_) {
-              setState(() {});
-            }),
-            value: Configuration.instance.displayAudioFormat,
-          ),
-          if (isMobile)
-            CorrectedSwitchListTile(
-              title: Language.instance.MOBILE_ENABLE_VOLUME_SLIDER,
-              subtitle: Language.instance.MOBILE_ENABLE_VOLUME_SLIDER,
-              onChanged: (_) => Configuration.instance
-                  .save(
-                mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen:
-                    !Configuration.instance
-                        .mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen,
-              )
-                  .then((_) {
-                setState(() {});
-              }),
-              value: Configuration
-                  .instance.mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen,
-            ),
           if (isMobile)
             CorrectedSwitchListTile(
               title: Language.instance.MOBILE_ENABLE_NOW_PLAYING_RIPPLE_EFFECT,
@@ -173,19 +186,6 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
               value: Configuration
                   .instance.mobileEnableNowPlayingScreenRippleEffect,
             ),
-          CorrectedSwitchListTile(
-            title: Language.instance.USE_LRC_FILE_FROM_TRACK_DIRECTORY,
-            subtitle: Language.instance.USE_LRC_FILE_FROM_TRACK_DIRECTORY,
-            onChanged: (_) => Configuration.instance
-                .save(
-              useLRCFromTrackDirectory:
-                  !Configuration.instance.useLRCFromTrackDirectory,
-            )
-                .then((_) {
-              setState(() {});
-            }),
-            value: Configuration.instance.useLRCFromTrackDirectory,
-          ),
         ],
       ),
     );
