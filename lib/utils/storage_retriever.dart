@@ -55,7 +55,25 @@ class StorageRetriever {
       return;
     }
     _initialized = true;
-    instance.version = await instance._version;
+    // According to:
+    // https://github.com/flutter/flutter/issues/58160#issuecomment-639139990
+    // https://github.com/flutter/samples/blob/master/add_to_app/plugin/android_using_plugin/app/src/main/java/dev/flutter/example/androidusingplugin/MyApplication.kt
+    //
+    // There seems to be a race condition between Dart code's execution start & creation of [MethodChannel] on the native side.
+    //
+    // Personally, I have never experienced a [MissingPluginException], but a user has sent a report. So, for now I have decided to do polling on Dart side until
+    // the [MethodChannel] correctly responds with the value instead of throwing a [MissingPluginException].
+    // This hopefully will avoid any errors before Flutter starts, even though with a busy-waiting (if it ever takes place in any rare situation).
+    int? result;
+    while (result == null) {
+      try {
+        result = await instance._version;
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+    }
+    instance.version = result;
   }
 
   /// The value of `android.os.Build.VERSION.SDK_INT`. This is used to determine the Android version.
