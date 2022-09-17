@@ -403,7 +403,6 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
                           child: AnimatedBuilder(
                             animation: _ac,
                             builder: (context, _) {
-                              debugPrint(_ac.value.toString());
                               return (_isPanelOpen ||
                                       _ac.value == 1.0 ||
                                       restored)
