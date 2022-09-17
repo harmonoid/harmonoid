@@ -897,7 +897,8 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
     _player = AudioPlayer(
       audioPipeline: AudioPipeline(
         androidAudioEffects: [
-          _playerAndroidEqualizer,
+          // TODO: Missing implementation for [AndroidEqualizer].
+          // _playerAndroidEqualizer,
           _playerAndroidLoudnessEnhancer,
         ],
       ),
@@ -1267,7 +1268,9 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
 
   /// [AudioPlayer] instance from `package:just_audio`.
   late final AudioPlayer _player;
-  final AndroidEqualizer _playerAndroidEqualizer = AndroidEqualizer();
+
+  /// TODO: Missing implementation for [AndroidEqualizer].
+  /// final AndroidEqualizer _playerAndroidEqualizer = AndroidEqualizer();
   final AndroidLoudnessEnhancer _playerAndroidLoudnessEnhancer =
       AndroidLoudnessEnhancer();
   final Playback playback;

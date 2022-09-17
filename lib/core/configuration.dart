@@ -435,7 +435,7 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
       'artistsOrderType': 0,
       'genresOrderType': 0,
       'minimumFileSize': 1024 * 1024,
-      'libraryTab': isDesktop ? 0 : 2,
+      'libraryTab': 0,
       'useLRCFromTrackDirectory': false,
       'lookupForFallbackAlbumArt': false,
       'displayAudioFormat': true,
