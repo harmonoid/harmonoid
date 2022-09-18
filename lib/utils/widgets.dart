@@ -2865,9 +2865,6 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                                   decoration: inputDecoration(
                                     ctx,
                                     Language.instance.PLAY_URL_SUBTITLE,
-                                  ).copyWith(
-                                    errorMaxLines: 1,
-                                    errorStyle: TextStyle(height: 0),
                                   ),
                                 ),
                               ),

@@ -1292,13 +1292,13 @@ class _ControlPanelState extends State<ControlPanel> {
                         : TextAlignVertical.center,
                     style:
                         isMobile ? null : Theme.of(context).textTheme.headline4,
-                    decoration: inputDecoration(
-                      context,
-                      '',
-                    ).copyWith(
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor:
+                          Theme.of(context).dividerColor.withOpacity(0.04),
                       contentPadding: isMobile
                           ? EdgeInsets.only(bottom: 15.6)
-                          : EdgeInsets.all(0.0),
+                          : EdgeInsets.zero,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                         borderSide: BorderSide.none,
@@ -1402,13 +1402,13 @@ class _ControlPanelState extends State<ControlPanel> {
                         : TextAlignVertical.center,
                     style:
                         isMobile ? null : Theme.of(context).textTheme.headline4,
-                    decoration: inputDecoration(
-                      context,
-                      '',
-                    ).copyWith(
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor:
+                          Theme.of(context).dividerColor.withOpacity(0.04),
                       contentPadding: isMobile
                           ? EdgeInsets.only(bottom: 15.6)
-                          : EdgeInsets.all(0.0),
+                          : EdgeInsets.zero,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                         borderSide: BorderSide.none,
@@ -1516,13 +1516,13 @@ class _ControlPanelState extends State<ControlPanel> {
                         : TextAlignVertical.center,
                     style:
                         isMobile ? null : Theme.of(context).textTheme.headline4,
-                    decoration: inputDecoration(
-                      context,
-                      '',
-                    ).copyWith(
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor:
+                          Theme.of(context).dividerColor.withOpacity(0.04),
                       contentPadding: isMobile
                           ? EdgeInsets.only(bottom: 15.6)
-                          : EdgeInsets.all(0.0),
+                          : EdgeInsets.zero,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                         borderSide: BorderSide.none,

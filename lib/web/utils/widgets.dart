@@ -229,12 +229,6 @@ class _WebSearchBarState extends State<WebSearchBar> {
                       searchOrPlay(controller.text);
                     }
                   },
-                ).copyWith(
-                  contentPadding: EdgeInsets.only(
-                    left: 10.0,
-                    bottom: 10.0,
-                    right: 10.0,
-                  ),
                 ),
               ),
             ),
