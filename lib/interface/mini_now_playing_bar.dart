@@ -674,6 +674,31 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                             ),
                                                                             child:
                                                                                 IconButton(
+                                                                              onPressed: () async {
+                                                                                await showGeneralDialog(
+                                                                                  useRootNavigator: false,
+                                                                                  context: context,
+                                                                                  pageBuilder: (context, animation, secondaryAnimation) {
+                                                                                    return LyricsScreen();
+                                                                                  },
+                                                                                );
+                                                                              },
+                                                                              icon: Icon(
+                                                                                Icons.text_format,
+                                                                              ),
+                                                                              tooltip: Language.instance.SHOW_LYRICS,
+                                                                              color: Theme.of(context).extension<IconColors>()?.appBarDarkIconColor,
+                                                                              splashRadius: 24.0,
+                                                                            ),
+                                                                          ),
+                                                                          Container(
+                                                                            padding:
+                                                                                EdgeInsets.only(
+                                                                              top: MediaQuery.of(context).padding.top + 8.0,
+                                                                              bottom: 8.0,
+                                                                            ),
+                                                                            child:
+                                                                                IconButton(
                                                                               onPressed: () {
                                                                                 showDialog(
                                                                                   context: context,
@@ -803,15 +828,15 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                               title: Text(Language.instance.SHARE),
                                                                                             ),
                                                                                           ),
-                                                                                          if (Lyrics.instance.current.length > 1)
-                                                                                            PopupMenuItem(
-                                                                                              onTap: () => result = 4,
-                                                                                              value: 4,
-                                                                                              child: ListTile(
-                                                                                                leading: Icon(Icons.text_format),
-                                                                                                title: Text(Language.instance.SHOW_LYRICS),
-                                                                                              ),
-                                                                                            ),
+                                                                                          // if (Lyrics.instance.current.length > 1)
+                                                                                          //   PopupMenuItem(
+                                                                                          //     onTap: () => result = 4,
+                                                                                          //     value: 4,
+                                                                                          //     child: ListTile(
+                                                                                          //       leading: Icon(Icons.text_format),
+                                                                                          //       title: Text(Language.instance.SHOW_LYRICS),
+                                                                                          //     ),
+                                                                                          //   ),
                                                                                         ],
                                                                                       ),
                                                                                     ),
@@ -854,17 +879,17 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                       );
                                                                                       break;
                                                                                     }
-                                                                                  case 4:
-                                                                                    {
-                                                                                      await showGeneralDialog(
-                                                                                        useRootNavigator: false,
-                                                                                        context: context,
-                                                                                        pageBuilder: (context, animation, secondaryAnimation) {
-                                                                                          return LyricsScreen();
-                                                                                        },
-                                                                                      );
-                                                                                      break;
-                                                                                    }
+                                                                                  // case 4:
+                                                                                  //   {
+                                                                                  //     await showGeneralDialog(
+                                                                                  //       useRootNavigator: false,
+                                                                                  //       context: context,
+                                                                                  //       pageBuilder: (context, animation, secondaryAnimation) {
+                                                                                  //         return LyricsScreen();
+                                                                                  //       },
+                                                                                  //     );
+                                                                                  //     break;
+                                                                                  //   }
                                                                                   case 5:
                                                                                     {
                                                                                       if (track.uri.isScheme('FILE')) {
