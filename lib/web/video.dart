@@ -262,14 +262,11 @@ class VideoTile extends StatelessWidget {
             constraints: BoxConstraints(
               maxWidth: double.infinity,
             ),
-            position: RelativeRect.fromRect(
-              Offset(e.position.dx, e.position.dy) & Size(228.0, 320.0),
-              Rect.fromLTWH(
-                0,
-                0,
-                MediaQuery.of(context).size.width,
-                MediaQuery.of(context).size.height,
-              ),
+            position: RelativeRect.fromLTRB(
+              e.position.dx,
+              e.position.dy,
+              MediaQuery.of(context).size.width,
+              MediaQuery.of(context).size.width,
             ),
             items: webTrackPopupMenuItems(
               context,
