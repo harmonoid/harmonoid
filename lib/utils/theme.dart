@@ -17,37 +17,37 @@ ThemeData createTheme({
   required Color color,
   required ThemeMode themeMode,
 }) {
-  bool isLight = themeMode == ThemeMode.light;
-  late TextTheme textTheme;
+  final light = themeMode == ThemeMode.light;
+  final TextTheme theme;
   if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-    textTheme = TextTheme(
+    theme = TextTheme(
       /// Leading tile widgets text theme.
       headline1: TextStyle(
-        color: isLight ? Colors.black : Colors.white,
+        color: light ? Colors.black : Colors.white,
         fontSize: 16.0,
         fontWeight: FontWeight.w600,
       ),
 
       /// [AlbumTile] text theme.
       headline2: TextStyle(
-        color: isLight ? Colors.black : Colors.white,
+        color: light ? Colors.black : Colors.white,
         fontSize: 14.0,
         fontWeight: FontWeight.w600,
       ),
       headline3: TextStyle(
-        color: isLight
+        color: light
             ? Colors.black.withOpacity(0.87)
             : Colors.white.withOpacity(0.87),
         fontSize: 14.0,
         fontWeight: FontWeight.normal,
       ),
       headline4: TextStyle(
-        color: isLight ? Colors.black : Colors.white,
+        color: light ? Colors.black : Colors.white,
         fontSize: 14.0,
         fontWeight: FontWeight.normal,
       ),
       headline5: TextStyle(
-        color: isLight
+        color: light
             ? Colors.black.withOpacity(0.87)
             : Colors.white.withOpacity(0.87),
         fontSize: 12.0,
@@ -57,19 +57,19 @@ ThemeData createTheme({
       /// [ListTile] text theme.
       /// [ListTile.title]'s text theme must be overrided to headline4, if it does not contain subtitle.
       subtitle1: TextStyle(
-        color: isLight ? Colors.black : Colors.white,
+        color: light ? Colors.black : Colors.white,
         fontSize: 14.0,
         fontWeight: FontWeight.w600,
       ),
       bodyText2: TextStyle(
-        color: isLight
+        color: light
             ? Colors.black.withOpacity(0.87)
             : Colors.white.withOpacity(0.87),
         fontSize: 14.0,
         fontWeight: FontWeight.normal,
       ),
       caption: TextStyle(
-        color: isLight
+        color: light
             ? Colors.black.withOpacity(0.87)
             : Colors.white.withOpacity(0.87),
         fontSize: 14.0,
@@ -77,30 +77,30 @@ ThemeData createTheme({
       ),
     );
   } else {
-    textTheme = TextTheme(
+    theme = TextTheme(
       headline1: TextStyle(
         fontWeight: FontWeight.normal,
-        color: isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
+        color: light ? Colors.black87 : Colors.white.withOpacity(0.87),
         fontSize: 18.0,
       ),
       headline2: TextStyle(
         fontWeight: FontWeight.normal,
-        color: isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
+        color: light ? Colors.black87 : Colors.white.withOpacity(0.87),
         fontSize: 16.0,
       ),
       headline3: TextStyle(
         fontWeight: FontWeight.normal,
-        color: isLight ? Colors.black54 : Colors.white70,
+        color: light ? Colors.black54 : Colors.white70,
         fontSize: 14.0,
       ),
       headline4: TextStyle(
         fontWeight: FontWeight.normal,
-        color: isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
+        color: light ? Colors.black87 : Colors.white.withOpacity(0.87),
         fontSize: 14.0,
       ),
       headline5: TextStyle(
         fontWeight: FontWeight.normal,
-        color: isLight ? Colors.black54 : Colors.white70,
+        color: light ? Colors.black54 : Colors.white70,
         fontSize: 14.0,
       ),
     );
@@ -152,7 +152,7 @@ ThemeData createTheme({
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.resolveWith((states) {
           return states.contains(MaterialState.disabled)
-              ? isLight
+              ? light
                   ? Colors.black12
                   : Colors.white24
               : color;
@@ -168,7 +168,11 @@ ThemeData createTheme({
       ),
     ),
     textSelectionTheme: TextSelectionThemeData(
-      cursorColor: color,
+      cursorColor: (Platform.isWindows || Platform.isMacOS || Platform.isLinux)
+          ? light
+              ? Colors.black
+              : Colors.white
+          : color,
       selectionHandleColor: color,
       selectionColor: color.withOpacity(0.2),
     ),
@@ -176,9 +180,9 @@ ThemeData createTheme({
       thumbVisibility: MaterialStateProperty.all(true),
       thickness: MaterialStateProperty.all(8.0),
       trackBorderColor:
-          MaterialStateProperty.all(isLight ? Colors.black12 : Colors.white24),
+          MaterialStateProperty.all(light ? Colors.black12 : Colors.white24),
       trackColor:
-          MaterialStateProperty.all(isLight ? Colors.black12 : Colors.white24),
+          MaterialStateProperty.all(light ? Colors.black12 : Colors.white24),
       crossAxisMargin: 0.0,
       radius: Radius.zero,
       minThumbLength: 96.0,
@@ -190,9 +194,9 @@ ThemeData createTheme({
             MaterialState.focused,
             MaterialState.pressed,
           ].fold(false, (val, el) => val || states.contains(el))) {
-            return isLight ? Colors.black54 : Colors.white54;
+            return light ? Colors.black54 : Colors.white54;
           } else {
-            return isLight ? Colors.black26 : Colors.white24;
+            return light ? Colors.black26 : Colors.white24;
           }
         },
       ),
@@ -206,84 +210,83 @@ ThemeData createTheme({
     primaryColorLight: color,
     primaryColor: color,
     primaryColorDark: color,
-    scaffoldBackgroundColor: isLight ? Colors.white : Colors.black,
+    scaffoldBackgroundColor: light ? Colors.white : Colors.black,
     // ignore: deprecated_member_use
     toggleableActiveColor: color,
     snackBarTheme: SnackBarThemeData(
-      backgroundColor: isLight ? Color(0xFF202020) : Colors.white,
+      backgroundColor: light ? Color(0xFF202020) : Colors.white,
       actionTextColor: color,
-      contentTextStyle: textTheme.headline4?.copyWith(
-        color: isLight ? Colors.white : Colors.black,
+      contentTextStyle: theme.headline4?.copyWith(
+        color: light ? Colors.white : Colors.black,
       ),
     ),
-    cardColor: isLight ? Colors.white : Color(0xFF222222),
+    cardColor: light ? Colors.white : Color(0xFF222222),
     backgroundColor: color.withOpacity(0.24),
-    dividerColor: isLight ? Colors.black12 : Colors.white24,
-    disabledColor: isLight ? Colors.black38 : Colors.white38,
+    dividerColor: light ? Colors.black12 : Colors.white24,
+    disabledColor: light ? Colors.black38 : Colors.white38,
     tabBarTheme: TabBarTheme(
       labelColor: color,
       unselectedLabelColor:
-          isLight ? Colors.black54 : Colors.white.withOpacity(0.67),
+          light ? Colors.black54 : Colors.white.withOpacity(0.67),
     ),
     popupMenuTheme: PopupMenuThemeData(
       elevation: 2.0,
-      color: isLight ? Colors.white : Color(0xFF292929),
+      color: light ? Colors.white : Color(0xFF292929),
     ),
     appBarTheme: AppBarTheme(
       backgroundColor: Platform.isAndroid || Platform.isIOS
-          ? isLight
+          ? light
               ? Colors.white
               : Color(0xFF202020)
-          : isLight
+          : light
               ? Colors.white
               : Color(0xFF272727),
-      foregroundColor:
-          isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
+      foregroundColor: light ? Colors.black87 : Colors.white.withOpacity(0.87),
       systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: isLight ? Colors.white12 : Colors.black12,
-        statusBarIconBrightness: isLight ? Brightness.dark : Brightness.light,
+        statusBarColor: light ? Colors.white12 : Colors.black12,
+        statusBarIconBrightness: light ? Brightness.dark : Brightness.light,
       ),
       elevation: 4.0,
       iconTheme: IconThemeData(
-        color: isLight
+        color: light
             ? Color.lerp(Colors.white, Colors.black, 0.70)
             : Color.lerp(Colors.black, Colors.white, 1.0),
         size: 24.0,
       ),
       actionsIconTheme: IconThemeData(
-        color: isLight
+        color: light
             ? Color.lerp(Colors.white, Colors.black, 0.70)
             : Color.lerp(Colors.black, Colors.white, 1.0),
         size: 24.0,
       ),
     ),
     iconTheme: IconThemeData(
-      color: isLight
+      color: light
           ? Color.lerp(Colors.white, Colors.black, 0.54)
           : Color.lerp(Colors.black, Colors.white, 0.54),
       size: 24.0,
     ),
-    dialogBackgroundColor: isLight ? Colors.white : Color(0xFF202020),
+    dialogBackgroundColor: light ? Colors.white : Color(0xFF202020),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      backgroundColor: isLight ? color : Color(0xFF272727),
+      backgroundColor: light ? color : Color(0xFF272727),
       selectedItemColor: Colors.white.withOpacity(0.87),
       unselectedItemColor: Colors.white54,
     ),
-    textTheme: textTheme,
-    primaryTextTheme: textTheme,
+    textTheme: theme,
+    primaryTextTheme: theme,
     colorScheme: ColorScheme.fromSwatch().copyWith(
       secondary: color,
-      brightness: isLight ? Brightness.light : Brightness.dark,
+      brightness: light ? Brightness.light : Brightness.dark,
     ),
     tooltipTheme: TooltipThemeData(
       textStyle: Platform.isWindows || Platform.isLinux || Platform.isMacOS
           ? TextStyle(
               fontSize: 12.0,
-              color: isLight ? Colors.white : Colors.black,
+              color: light ? Colors.white : Colors.black,
             )
           : null,
       decoration: BoxDecoration(
-        color: isLight ? Colors.black : Colors.white,
+        color: light ? Colors.black : Colors.white,
         borderRadius: Platform.isAndroid || Platform.isIOS
             ? BorderRadius.circular(16.0)
             : BorderRadius.circular(4.0),
