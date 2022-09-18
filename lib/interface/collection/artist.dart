@@ -526,50 +526,54 @@ class ArtistTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      OpenContainer(
-                        closedElevation: 0.0,
-                        openElevation: 0.0,
-                        openColor: Colors.transparent,
-                        closedColor: Colors.transparent,
-                        openBuilder: (context, close) => ArtistScreen(
-                          artist: artist,
-                          palette: palette,
+                      Card(
+                        elevation: 4.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            width / 2.0,
+                          ),
                         ),
-                        closedBuilder: (context, open) => Card(
-                          clipBehavior: Clip.antiAlias,
-                          margin: EdgeInsets.zero,
-                          elevation: 4.0,
-                          shape: RoundedRectangleBorder(
+                        child: OpenContainer(
+                          closedElevation: 0.0,
+                          closedShape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(
                               width / 2.0,
                             ),
                           ),
-                          child: Stack(
+                          openElevation: 0.0,
+                          openColor: Colors.transparent,
+                          closedColor: Colors.transparent,
+                          openBuilder: (context, close) => ArtistScreen(
+                            artist: artist,
+                            palette: palette,
+                          ),
+                          closedBuilder: (context, open) => Stack(
                             alignment: Alignment.center,
                             children: [
-                              Hero(
-                                tag: 'artist_art_${artist.artistName}',
-                                child: ClipOval(
-                                  child: ExtendedImage(
-                                    image: getAlbumArt(
-                                      artist,
-                                      small: true,
-                                      cacheWidth: (width - 8.0) *
-                                          MediaQuery.of(context)
-                                              .devicePixelRatio ~/
-                                          1,
+                              Container(
+                                height: width,
+                                width: width,
+                                color: Theme.of(context).cardColor,
+                                alignment: Alignment.center,
+                                child: Hero(
+                                  tag: 'artist_art_${artist.artistName}',
+                                  child: ClipOval(
+                                    child: ExtendedImage(
+                                      image: getAlbumArt(
+                                        artist,
+                                        small: true,
+                                        cacheWidth: (width - 8.0) *
+                                            MediaQuery.of(context)
+                                                .devicePixelRatio ~/
+                                            1,
+                                      ),
+                                      height: width - 8.0,
+                                      width: width - 8.0,
                                     ),
-                                    height: width - 8.0,
-                                    width: width - 8.0,
                                   ),
                                 ),
                               ),
                               Material(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    width / 2.0,
-                                  ),
-                                ),
                                 color: Colors.transparent,
                                 child: InkWell(
                                   onTap: () async {
