@@ -12,7 +12,6 @@ import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
-import 'package:ytm_client/ytm_client.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
@@ -34,8 +33,6 @@ import 'package:harmonoid/interface/collection/search.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/interface/mini_now_playing_bar.dart';
 import 'package:harmonoid/constants/language.dart';
-
-import 'package:harmonoid/web/web.dart';
 
 class CollectionScreen extends StatefulWidget {
   /// Used only on Android.
