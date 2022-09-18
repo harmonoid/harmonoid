@@ -240,8 +240,7 @@ jobs:
         run: |
           cd external/harmonoid_visual_assets
           git config pull.rebase true
-          git config pull.ff only
-          git pull origin master --ff-only
+          git pull origin master --rebase
           cd ../..
           git apply google-play.patch
 
