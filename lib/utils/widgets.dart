@@ -2860,11 +2860,7 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                                       );
                                     }
                                   },
-                                  cursorColor: Theme.of(ctx).brightness ==
-                                          Brightness.light
-                                      ? Colors.black
-                                      : Colors.white,
-                                  textAlignVertical: TextAlignVertical.bottom,
+                                  textAlignVertical: TextAlignVertical.center,
                                   style: Theme.of(ctx).textTheme.headline4,
                                   decoration: inputDecoration(
                                     ctx,

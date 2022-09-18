@@ -851,34 +851,32 @@ InputDecoration inputDecoration(
   Color? fillColor,
 }) {
   return InputDecoration(
-    suffixIcon: trailingIcon == null
-        ? null
-        : Material(
-            color: Colors.transparent,
-            child: IconButton(
-              splashRadius: 14.0,
-              highlightColor: Colors.transparent,
-              onPressed: trailingIconOnPressed,
-              icon: trailingIcon,
-              iconSize: 24.0,
+    // Having a [suffixIcon] keeps the [TextField]'s content (label / text)
+    // centered for some reason at all heights. So, this is a good solution.
+    suffixIcon: Container(
+      alignment: Alignment.center,
+      height: 48.0,
+      width: 48.0,
+      child: trailingIcon == null
+          ? null
+          : Material(
+              color: Colors.transparent,
+              child: IconButton(
+                splashRadius: 12.0,
+                iconSize: 24.0,
+                highlightColor: Colors.transparent,
+                onPressed: trailingIconOnPressed,
+                icon: trailingIcon,
+              ),
             ),
-          ),
-    contentPadding: trailingIcon == null
-        ? EdgeInsets.only(
-            left: 10.0,
-            bottom: Platform.isLinux ? 18.0 : 16.0,
-            right: 10.0,
-          )
-        : EdgeInsets.only(
-            left: 10.0,
-            bottom: 10.0,
-            right: 10.0,
-          ),
+    ),
+    // No requirement for vertical padding/margin since [TextAlignVertical.center] is used now.
+    contentPadding: EdgeInsets.symmetric(horizontal: 12.0),
     hintText: hintText,
     hintStyle: isDesktop
         ? Theme.of(context).textTheme.headline3?.copyWith(
               color: Theme.of(context).brightness == Brightness.light
-                  ? Colors.black.withOpacity(0.6)
+                  ? Colors.black54
                   : Colors.white60,
             )
         : null,
@@ -902,6 +900,10 @@ InputDecoration inputDecoration(
         width: 1.8,
       ),
     ),
+    hintMaxLines: 1,
+    errorMaxLines: 1,
+    helperMaxLines: 1,
+    errorStyle: TextStyle(height: 0.0),
   );
 }
 

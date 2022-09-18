@@ -168,18 +168,11 @@ class FileInfoScreen extends StatefulWidget {
                                       timeout,
                                     );
                                   },
-                                  cursorColor: Theme.of(ctx).brightness ==
-                                          Brightness.light
-                                      ? Colors.black
-                                      : Colors.white,
-                                  textAlignVertical: TextAlignVertical.bottom,
+                                  textAlignVertical: TextAlignVertical.center,
                                   style: Theme.of(ctx).textTheme.headline4,
                                   decoration: inputDecoration(
                                     context,
                                     Language.instance.FILE_PATH_OR_URL,
-                                  ).copyWith(
-                                    errorMaxLines: 1,
-                                    errorStyle: TextStyle(height: 0),
                                   ),
                                 ),
                               ),

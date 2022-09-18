@@ -208,10 +208,7 @@ class _WebSearchBarState extends State<WebSearchBar> {
                 onSubmitted: (query) {
                   searchOrPlay(query);
                 },
-                cursorColor: Theme.of(context).brightness == Brightness.light
-                    ? Colors.black
-                    : Colors.white,
-                textAlignVertical: TextAlignVertical.bottom,
+                textAlignVertical: TextAlignVertical.center,
                 style: Theme.of(context).textTheme.headline4,
                 decoration: inputDecoration(
                   context,
@@ -334,10 +331,7 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
                         playlist?.name = value;
                         Navigator.of(ctx).maybePop();
                       },
-                      cursorColor: Theme.of(ctx).brightness == Brightness.light
-                          ? Color(0xFF212121)
-                          : Colors.white,
-                      textAlignVertical: TextAlignVertical.bottom,
+                      textAlignVertical: TextAlignVertical.center,
                       style: Theme.of(ctx).textTheme.headline4,
                       decoration: inputDecoration(
                         ctx,
@@ -469,10 +463,7 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
               controller: _controller,
               cursorWidth: 1.0,
               onSubmitted: (_) => add(),
-              cursorColor: Theme.of(context).brightness == Brightness.light
-                  ? Color(0xFF212121)
-                  : Colors.white,
-              textAlignVertical: TextAlignVertical.bottom,
+              textAlignVertical: TextAlignVertical.center,
               style: Theme.of(context).textTheme.headline4,
               decoration: inputDecoration(
                 context,

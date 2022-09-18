@@ -95,7 +95,6 @@ class PlaylistTab extends StatelessWidget {
                                 ),
                                 content: Container(
                                   height: 40.0,
-                                  width: 280.0,
                                   alignment: Alignment.center,
                                   margin:
                                       EdgeInsets.only(top: 0.0, bottom: 0.0),
@@ -121,13 +120,8 @@ class PlaylistTab extends StatelessWidget {
                                           Navigator.of(context).maybePop();
                                         }
                                       },
-                                      cursorColor:
-                                          Theme.of(context).brightness ==
-                                                  Brightness.light
-                                              ? Color(0xFF212121)
-                                              : Colors.white,
                                       textAlignVertical:
-                                          TextAlignVertical.bottom,
+                                          TextAlignVertical.center,
                                       style:
                                           Theme.of(context).textTheme.headline4,
                                       decoration: inputDecoration(
@@ -474,11 +468,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                           setState(() {});
                         }
                       },
-                      cursorColor:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Color(0xFF212121)
-                              : Colors.white,
-                      textAlignVertical: TextAlignVertical.bottom,
+                      textAlignVertical: TextAlignVertical.center,
                       style: Theme.of(context).textTheme.headline4,
                       decoration: inputDecoration(
                         context,

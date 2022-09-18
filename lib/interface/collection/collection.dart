@@ -345,7 +345,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                   children: [
                                     Container(
                                       height: 40.0,
-                                      width: 298.0,
+                                      width: 320.0,
                                       alignment: Alignment.center,
                                       margin: EdgeInsets.only(
                                         top: 0.0,
@@ -376,13 +376,8 @@ class CollectionScreenState extends State<CollectionScreen>
                                               });
                                             node.requestFocus();
                                           },
-                                          cursorColor:
-                                              Theme.of(context).brightness ==
-                                                      Brightness.light
-                                                  ? Color(0xFF212121)
-                                                  : Colors.white,
                                           textAlignVertical:
-                                              TextAlignVertical.bottom,
+                                              TextAlignVertical.center,
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline4,

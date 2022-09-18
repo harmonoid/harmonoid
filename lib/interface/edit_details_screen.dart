@@ -296,20 +296,10 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                                       ? null
                                                       : e.value.toString(),
                                                   decoration: inputDecoration(
-                                                          context, '')
-                                                      .copyWith(
-                                                    contentPadding:
-                                                        EdgeInsets.only(
-                                                      left: 10.0,
-                                                      bottom: 14.0,
-                                                    ),
+                                                    context,
+                                                    '',
                                                   ),
                                                   cursorWidth: 1.0,
-                                                  cursorColor: Theme.of(context)
-                                                              .brightness ==
-                                                          Brightness.light
-                                                      ? Color(0xFF212121)
-                                                      : Colors.white,
                                                   onChanged: (v) {
                                                     final value = v.isEmpty
                                                         ? null
@@ -630,12 +620,9 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                         initialValue: e.value == null
                                             ? null
                                             : e.value.toString(),
-                                        decoration: inputDecoration(context, '')
-                                            .copyWith(
-                                          contentPadding: EdgeInsets.only(
-                                            left: 10.0,
-                                            bottom: 14.0,
-                                          ),
+                                        decoration: inputDecoration(
+                                          context,
+                                          '',
                                         ),
                                         onChanged: (v) {
                                           final value =
