@@ -519,23 +519,23 @@ class ArtistTile extends StatelessWidget {
               )
             : Material(
                 color: Colors.transparent,
-                child: OpenContainer(
-                  closedElevation: 0.0,
-                  openElevation: 0.0,
-                  openColor: Colors.transparent,
-                  closedColor: Colors.transparent,
-                  openBuilder: (context, close) => ArtistScreen(
-                    artist: artist,
-                    palette: palette,
-                  ),
-                  closedBuilder: (context, open) => Container(
-                    height: height,
-                    width: width,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Card(
+                child: Container(
+                  height: height,
+                  width: width,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      OpenContainer(
+                        closedElevation: 0.0,
+                        openElevation: 0.0,
+                        openColor: Colors.transparent,
+                        closedColor: Colors.transparent,
+                        openBuilder: (context, close) => ArtistScreen(
+                          artist: artist,
+                          palette: palette,
+                        ),
+                        closedBuilder: (context, open) => Card(
                           clipBehavior: Clip.antiAlias,
                           margin: EdgeInsets.zero,
                           elevation: 4.0,
@@ -601,28 +601,20 @@ class ArtistTile extends StatelessWidget {
                             ],
                           ),
                         ),
-                        SizedBox(
-                          height: helper.artistElementsPerRow == 4
-                              ? 8.0
-                              : helper.artistTileNormalDensity
-                                  ? 18.0
-                                  : 10.0,
-                        ),
-                        Text(
-                          artist.artistName.overflow,
-                          style:
-                              Theme.of(context).textTheme.headline2?.copyWith(
-                                    fontSize: helper.artistTileNormalDensity
-                                        ? null
-                                        : 14.0,
-                                  ),
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const Spacer(),
-                      ],
-                    ),
+                      ),
+                      const Spacer(),
+                      Text(
+                        artist.artistName.overflow,
+                        style: Theme.of(context).textTheme.headline2?.copyWith(
+                              fontSize:
+                                  helper.artistTileNormalDensity ? null : 14.0,
+                            ),
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const Spacer(),
+                    ],
                   ),
                 ),
               );
