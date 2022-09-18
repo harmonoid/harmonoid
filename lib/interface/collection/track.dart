@@ -95,15 +95,11 @@ class _TrackTabState extends State<TrackTab> {
                             constraints: BoxConstraints(
                               maxWidth: double.infinity,
                             ),
-                            position: RelativeRect.fromRect(
-                              Offset(position.left, position.top) &
-                                  Size(228.0, 320.0),
-                              Rect.fromLTWH(
-                                0,
-                                0,
-                                MediaQuery.of(context).size.width,
-                                MediaQuery.of(context).size.height,
-                              ),
+                            position: RelativeRect.fromLTRB(
+                              position.left,
+                              position.top,
+                              MediaQuery.of(context).size.width,
+                              MediaQuery.of(context).size.width,
                             ),
                             items: trackPopupMenuItems(
                               collection.tracks[index],
@@ -175,15 +171,11 @@ class _TrackTabState extends State<TrackTab> {
                                     constraints: BoxConstraints(
                                       maxWidth: double.infinity,
                                     ),
-                                    position: RelativeRect.fromRect(
-                                      Offset(e.position.dx, e.position.dy) &
-                                          Size(228.0, 320.0),
-                                      Rect.fromLTWH(
-                                        0,
-                                        0,
-                                        MediaQuery.of(context).size.width,
-                                        MediaQuery.of(context).size.height,
-                                      ),
+                                    position: RelativeRect.fromLTRB(
+                                      e.position.dx,
+                                      e.position.dy,
+                                      MediaQuery.of(context).size.width,
+                                      MediaQuery.of(context).size.width,
                                     ),
                                     items: trackPopupMenuItems(
                                         collection.tracks[index], context),
@@ -486,14 +478,11 @@ class TrackTileState extends State<TrackTile> {
                   constraints: BoxConstraints(
                     maxWidth: double.infinity,
                   ),
-                  position: RelativeRect.fromRect(
-                    Offset(e.position.dx, e.position.dy) & Size(228.0, 320.0),
-                    Rect.fromLTWH(
-                      0,
-                      0,
-                      MediaQuery.of(context).size.width,
-                      MediaQuery.of(context).size.height,
-                    ),
+                  position: RelativeRect.fromLTRB(
+                    e.position.dx,
+                    e.position.dy,
+                    MediaQuery.of(context).size.width,
+                    MediaQuery.of(context).size.width,
                   ),
                   items: trackPopupMenuItems(
                     widget.track,
