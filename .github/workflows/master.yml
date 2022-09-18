@@ -239,8 +239,8 @@ jobs:
       - name: Apply Google Play Patch
         run: |
           cd external/harmonoid_visual_assets
-          git fetch
-          git checkout origin/google-play
+          git pull
+          git checkout google-play
           cd ../..
           git apply google-play.patch
 
