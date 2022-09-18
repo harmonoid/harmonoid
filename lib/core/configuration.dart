@@ -439,7 +439,7 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
       'useLRCFromTrackDirectory': false,
       'lookupForFallbackAlbumArt': false,
       'displayAudioFormat': true,
-      'mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen': false,
+      'mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen': true,
       'mobileEnableNowPlayingScreenRippleEffect': true,
       'mobileAlbumsGridSize': 2,
       'mobileArtistsGridSize': 3,
