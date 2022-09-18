@@ -7228,13 +7228,6 @@ diff --git a/pubspec.linux.yaml b/pubspec.linux.yaml
 index a36b3eb..216db43 100644
 --- a/pubspec.linux.yaml
 +++ b/pubspec.linux.yaml
-@@ -22,8 +22,6 @@ dependencies:
-     path: external/mpris_service.dart
-   harmonoid_visual_assets:
-     path: external/harmonoid_visual_assets
-   safe_session_storage:
-     path: external/safe_session_storage
-   windows_taskbar:
 @@ -86,7 +84,6 @@ dependencies:
    auto_size_text: ^3.0.0
    uuid: ^3.0.6
@@ -7247,13 +7240,6 @@ diff --git a/pubspec.yaml b/pubspec.yaml
 index 1b6f670..9d7f4db 100644
 --- a/pubspec.yaml
 +++ b/pubspec.yaml
-@@ -22,8 +22,6 @@ dependencies:
-     path: external/mpris_service.dart
-   harmonoid_visual_assets:
-     path: external/harmonoid_visual_assets
-   safe_session_storage:
-     path: external/safe_session_storage
-   windows_taskbar:
 @@ -87,7 +85,6 @@ dependencies:
    auto_size_text: ^3.0.0
    uuid: ^3.0.6
