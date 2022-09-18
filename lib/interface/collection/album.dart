@@ -1173,13 +1173,26 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                   .transparent,
                                                               child: IconButton(
                                                                 onPressed: () {
-                                                                  // ignore: deprecated_member_use
-                                                                  launch(
-                                                                    (getAlbumArt(widget.album)
-                                                                            as FileImage)
-                                                                        .file
-                                                                        .path,
-                                                                  );
+                                                                  final resource =
+                                                                      getAlbumArt(
+                                                                              widget.album)
+                                                                          as FileImage;
+                                                                  // See: https://github.com/harmonoid/harmonoid/issues/322#issuecomment-1236133645
+                                                                  // [Uri.parse] seems fail for some particular character sequences in the [File] path.
+                                                                  // Thus, I'm launching direct [File] paths on Windows, which apparently seems to work.
+                                                                  if (Platform
+                                                                      .isWindows) {
+                                                                    // ignore: deprecated_member_use
+                                                                    launch(
+                                                                      resource
+                                                                          .file
+                                                                          .path,
+                                                                    );
+                                                                  } else {
+                                                                    // ignore: deprecated_member_use
+                                                                    launch(
+                                                                        'file://${resource.file.path}');
+                                                                  }
                                                                 },
                                                                 icon: Icon(
                                                                   Icons.image,
