@@ -82,7 +82,7 @@ fi
       runInShell: true,
     );
     if (permission.stdout.toString().trim() != 'true' ||
-        permission.stderr.toString().isNotEmpty) {
+        permission.stderr.toString().trim().isNotEmpty) {
       final chmod = await Process.run(
         'chmod',
         [
@@ -96,11 +96,38 @@ fi
         debugPrint(chmod.stderr.toString());
         throw TaggerClientPermissionRequestException(
           [
-            if (chmod.stdout.toString().isNotEmpty) chmod.stdout.toString(),
-            if (chmod.stderr.toString().isNotEmpty) chmod.stderr.toString(),
+            if (chmod.stdout.toString().trim().isNotEmpty)
+              chmod.stdout.toString(),
+            if (chmod.stderr.toString().trim().isNotEmpty)
+              chmod.stderr.toString(),
           ].join(),
         );
       }
+    }
+    // I removed this in somewhere around v0.2.6 (?) to prevent yet another [Process.run] call before launch.
+    // However, apparently it's a quite common in Linux packaging formats to perform "stripping" which ends
+    // up just corrupting the bundled `tagger` binary executable.
+    final version = await Process.run(
+      executable,
+      [
+        '--version',
+      ],
+      runInShell: true,
+    );
+    if (
+        // Non zero exit code.
+        version.exitCode != 0 ||
+            // [stderr] was present.
+            version.stderr.toString().trim().isNotEmpty ||
+            // [stdout] didn't match the correct expected [String].
+            !version.stdout.toString().trim().startsWith('Tagger')) {
+      debugPrint(version.stdout.toString());
+      debugPrint(version.stderr.toString());
+      throw TaggerClientCorruptException(
+        'Most likely you\'ve installed incorrectly configured package or your installation of Harmonoid is corrupt.'
+        ' '
+        'You should contact the maintainer of the package/repository (which you used to install Harmonoid), to make the required corrections.',
+      );
     }
     _executable ??= executable;
     _dll ??= dynamicLibrary;
@@ -227,9 +254,9 @@ class TaggerClientPermissionRequestException extends TaggerClientException {
 
 /// Exception raised when `tagger` binary could not verified.
 ///
-class TaggerClientVerificationException extends TaggerClientException {
-  TaggerClientVerificationException(super.message);
+class TaggerClientCorruptException extends TaggerClientException {
+  TaggerClientCorruptException(super.message);
 
   @override
-  String toString() => 'TaggerClientVerificationException: $message';
+  String toString() => 'TaggerClientCorruptException: $message';
 }
