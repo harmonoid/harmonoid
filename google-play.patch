@@ -7225,28 +7225,28 @@ index f55e65f..0000000
 -  }
 -}
 diff --git a/pubspec.linux.yaml b/pubspec.linux.yaml
-index a36b3eb..216db43 100644
+index a36b3eb..b74f60c 100644
 --- a/pubspec.linux.yaml
 +++ b/pubspec.linux.yaml
-@@ -86,7 +84,6 @@ dependencies:
+@@ -86,7 +86,6 @@ dependencies:
    auto_size_text: ^3.0.0
    uuid: ^3.0.6
    synchronized: ^3.0.0+2
 -  flutter_speed_dial: ^6.0.0
    flutter_svg: ^1.1.4
- 
+
    # Third-party forked plugins & packages to meet requirements.
 diff --git a/pubspec.yaml b/pubspec.yaml
-index 1b6f670..9d7f4db 100644
+index 1b6f670..cfdf0d1 100644
 --- a/pubspec.yaml
 +++ b/pubspec.yaml
-@@ -87,7 +85,6 @@ dependencies:
+@@ -87,7 +87,6 @@ dependencies:
    auto_size_text: ^3.0.0
    uuid: ^3.0.6
    synchronized: ^3.0.0+2
 -  flutter_speed_dial: ^6.0.0
    flutter_svg: ^1.1.4
- 
+
    # Third-party forked plugins & packages to meet requirements.
 diff --git a/lib/interface/settings/settings.dart b/lib/interface/settings/settings.dart
 index fd2bc52..543188d 100644
