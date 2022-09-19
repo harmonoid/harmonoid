@@ -43,16 +43,27 @@ class MediaMetadataRetrieverExt extends MediaMetadataRetriever {
         this.uri = uri;
     }
 
+    // Just for preventing any [Exception] when reading a metadata key.
+    // Better is just to avoid, instead of crashing.
+    public String readKey(int keyCode) {
+        try {
+            return extractMetadata(keyCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public HashMap<String, Object> getMetadata() {
         HashMap<String, Object> metadata = new HashMap<>();
         metadata.put("uri", uri);
-        metadata.put("trackName", extractMetadata(METADATA_KEY_TITLE));
-        metadata.put("trackArtistNames", extractMetadata(METADATA_KEY_ARTIST));
-        metadata.put("albumName", extractMetadata(METADATA_KEY_ALBUM));
-        metadata.put("albumArtistName", extractMetadata(METADATA_KEY_ALBUMARTIST));
+        metadata.put("trackName", readKey(METADATA_KEY_TITLE));
+        metadata.put("trackArtistNames", readKey(METADATA_KEY_ARTIST));
+        metadata.put("albumName", readKey(METADATA_KEY_ALBUM));
+        metadata.put("albumArtistName", readKey(METADATA_KEY_ALBUMARTIST));
         // Read [trackNumber] & [albumLength] from the passed source.
-        final String trackNumber = extractMetadata(METADATA_KEY_CD_TRACK_NUMBER);
-        final String albumLength = extractMetadata(METADATA_KEY_NUM_TRACKS);
+        final String trackNumber = readKey(METADATA_KEY_CD_TRACK_NUMBER);
+        final String albumLength = readKey(METADATA_KEY_NUM_TRACKS);
         try {
             // If [albumLength] is non-null, insert into the final [metadata] [HashMap].
             if (albumLength != null) {
@@ -83,8 +94,8 @@ class MediaMetadataRetrieverExt extends MediaMetadataRetriever {
             metadata.put("trackNumber", null);
             metadata.put("albumLength", null);
         }
-        final String year = extractMetadata(METADATA_KEY_YEAR);
-        final String date = extractMetadata(METADATA_KEY_DATE);
+        final String year = readKey(METADATA_KEY_YEAR);
+        final String date = readKey(METADATA_KEY_DATE);
         try {
             metadata.put("year", year.trim());
         } catch (Exception exception) {
@@ -97,13 +108,13 @@ class MediaMetadataRetrieverExt extends MediaMetadataRetriever {
                 metadata.put("year", null);
             }
         }
-        metadata.put("genre", extractMetadata(METADATA_KEY_GENRE));
-        metadata.put("authorName", extractMetadata(METADATA_KEY_AUTHOR));
-        metadata.put("writerName", extractMetadata(METADATA_KEY_WRITER));
-        metadata.put("discNumber", extractMetadata(METADATA_KEY_DISC_NUMBER));
-        metadata.put("mimeType", extractMetadata(METADATA_KEY_MIMETYPE));
-        metadata.put("duration", extractMetadata(METADATA_KEY_DURATION));
-        metadata.put("bitrate", extractMetadata(METADATA_KEY_BITRATE));
+        metadata.put("genre", readKey(METADATA_KEY_GENRE));
+        metadata.put("authorName", readKey(METADATA_KEY_AUTHOR));
+        metadata.put("writerName", readKey(METADATA_KEY_WRITER));
+        metadata.put("discNumber", readKey(METADATA_KEY_DISC_NUMBER));
+        metadata.put("mimeType", readKey(METADATA_KEY_MIMETYPE));
+        metadata.put("duration", readKey(METADATA_KEY_DURATION));
+        metadata.put("bitrate", readKey(METADATA_KEY_BITRATE));
         Log.d("Harmonoid", metadata.toString());
         return metadata;
     }
