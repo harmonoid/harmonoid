@@ -114,10 +114,19 @@ jobs:
       - run: rm pubspec.yaml
       - run: mv pubspec.linux.yaml pubspec.yaml
 
+      - name: Compile Tagger
+        run: |
+          cd external/media_engine
+          dart pub get
+          cd example
+          dart compile exe cli.dart
+          cp cli.exe ../../../platform/tagger
+
       - run: flutter config --enable-linux-desktop
       - run: flutter pub upgrade
       - run: flutter pub get
       - run: flutter build linux --verbose
+
       - run: chmod +x build/linux/x64/release/bundle/data/flutter_assets/assets/platform/tagger
 
       - name: Build RPM Package
