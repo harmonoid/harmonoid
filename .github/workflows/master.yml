@@ -30,12 +30,8 @@ jobs:
 
       - run: |
           rmdir /s /q "assets/fonts"
+          mkdir "assets/fonts"
         shell: cmd
-      - run: |
-          rmdir /s /q "assets/platform"
-        shell: cmd
-      - run: mkdir "assets/fonts"
-      - run: mkdir "assets/platform"
 
       - run: flutter config --enable-windows-desktop
       - run: flutter pub get
@@ -120,7 +116,7 @@ jobs:
           dart pub get
           cd example
           dart compile exe cli.dart
-          cp cli.exe ../../../platform/tagger
+          mv cli.exe ../../../platform/tagger
 
       - run: flutter config --enable-linux-desktop
       - run: flutter pub upgrade
@@ -217,8 +213,6 @@ jobs:
       - run: mkdir "assets/fonts"
       - run: rm -r "assets/icons"
       - run: mkdir "assets/icons"
-      - run: rm -r "assets/platform"
-      - run: mkdir "assets/platform"
       - run: rm -r "assets/preloaded_visuals"
       - run: mkdir "assets/preloaded_visuals"
 
