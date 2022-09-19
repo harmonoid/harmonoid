@@ -8,9 +8,9 @@ list(APPEND FLUTTER_PLUGIN_LIST
   flutter_platform_alert
   flutter_window_close
   permission_handler_windows
-  screen_retriever
   url_launcher_windows
   window_manager
+  window_size
   windows_taskbar
 )
 
