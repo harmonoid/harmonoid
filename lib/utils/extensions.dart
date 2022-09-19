@@ -101,7 +101,8 @@ extension TrackExtension on Track {
 extension AndroidMediaFormatExtension on AndroidMediaFormat {
   String get label => [
         if (extension != null)
-          if (extension!.length < 5) extension!.toUpperCase(),
+          if (kSupportedFileTypes.contains(extension!.toUpperCase()))
+            extension!.toUpperCase(),
         if (bitrate != null && bitrate != 0.0) '${bitrate! ~/ 1000} KB/s',
         if (sampleRate != null)
           '${(sampleRate! / 1000).toStringAsFixed(1)} kHz',
@@ -132,12 +133,17 @@ extension PlaybackExtension on Playback {
         else
           '${audioParams.channelCount} Channels',
     ];
-    final ext = File(tracks[index].uri.toFilePath()).extension;
-    if (data.join().trim().isNotEmpty && ext.length < 5) {
-      data.insert(
-        0,
-        ext,
-      );
+    try {
+      final ext = File(tracks[index].uri.toFilePath()).extension;
+      if (data.join().trim().isNotEmpty && kSupportedFileTypes.contains(ext)) {
+        data.insert(
+          0,
+          ext,
+        );
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
     }
     return data.join(' • ');
   }
@@ -151,12 +157,17 @@ extension PlaybackExtension on Playback {
       if (audioParams.sampleRate != null)
         '${(audioParams.sampleRate! / 1000).toStringAsFixed(1)} kHz',
     ];
-    final ext = File(tracks[index].uri.toFilePath()).extension;
-    if (data.join().trim().isNotEmpty && ext.length < 5) {
-      data.insert(
-        0,
-        ext,
-      );
+    try {
+      final ext = File(tracks[index].uri.toFilePath()).extension;
+      if (data.join().trim().isNotEmpty && kSupportedFileTypes.contains(ext)) {
+        data.insert(
+          0,
+          ext,
+        );
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
     }
     return data.join(' • ');
   }
