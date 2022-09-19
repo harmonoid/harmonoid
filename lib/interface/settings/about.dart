@@ -6,6 +6,7 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -219,6 +220,24 @@ class _AboutPageState extends State<AboutPage> {
                               : null,
                         ),
                       ),
+                      if (Platform.isAndroid)
+                        ListTile(
+                          onTap: () => open(URL.privacy),
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            foregroundColor: Theme.of(context).iconTheme.color,
+                            child: Icon(
+                              Icons.lock_outlined,
+                              size: 26.0,
+                            ),
+                          ),
+                          title: Text(
+                            Label.privacy,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.headline4
+                                : null,
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -329,6 +348,7 @@ abstract class Label {
   static const donate_with_paypal = 'Donate with PayPal';
   static const license = 'License';
   static const translate = 'Translate';
+  static const privacy = 'Privacy';
   static const developer = 'Developer';
   static const alexmercerind = 'Hitesh Kumar Saini';
   static const follow_on_github = 'Follow on GitHub';
@@ -356,6 +376,8 @@ abstract class URL {
   static const license =
       'https://github.com/harmonoid/harmonoid/tree/master/EULA.txt?raw=true';
   static const translate = 'https://github.com/harmonoid/translations.git';
+  static const privacy =
+      'https://github.com/harmonoid/harmonoid/wiki/Privacy-Policy-%5BPlay-Store%5D';
   static const alexmercerind = 'https://alexmercerind.github.io';
   static const alexmercerind_github = 'https://github.com/alexmercerind';
   static const alexmercerind_twitter = 'https://twitter.com/alexmercerind';
