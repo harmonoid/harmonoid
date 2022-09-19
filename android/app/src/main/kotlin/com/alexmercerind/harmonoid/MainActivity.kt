@@ -24,6 +24,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import com.ryanheise.audioservice.AudioServiceActivity
+import java.math.BigInteger
+import java.security.MessageDigest
 
 private const val CHANNEL_NAME: String = "com.alexmercerind.harmonoid"
 private const val METADATA_RETRIEVER_CHANNEL_NAME: String =
@@ -176,10 +178,8 @@ class MainActivity : AudioServiceActivity() {
                     ?.replace("[^a-zA-Z0-9]".toRegex(), "")
                 Log.d("Harmonoid", fileName.toString())
                 // If file name is null, then a random integer value is used as the temporary file's name.
-                val path = "$intentFilesDirAbsolutePath/${
-                    fileName ?: Random().nextInt(Integer.MAX_VALUE).toString()
-                        .replace("[\\\\/:*?\"<>| ]".toRegex(), "")
-                }"
+                // Hashing the resulting [fileName] as MD5. This will prevent any file name too long [IOException]s.
+                val path = "$intentFilesDirAbsolutePath/${getFileNameIdentifier(fileName)}"
                 // Only create/copy the content from the [Intent] if same file does not exist.
                 if (!File(path).exists()) {
                     Log.d("Harmonoid", path)
@@ -207,6 +207,23 @@ class MainActivity : AudioServiceActivity() {
                 channel?.invokeMethod("Harmonoid", uri)
                 Log.d("Harmonoid", uri.toString())
             }
+        }
+    }
+
+    private fun getFileNameIdentifier(input: String?): String {
+        val instance = MessageDigest.getInstance("MD5")
+        return if (input != null) {
+            val result =
+                BigInteger(
+                    1,
+                    instance.digest(input.toByteArray())
+                ).toString(16).padStart(32, '0')
+            val identifier = result.replace("[^a-zA-Z0-9]".toRegex(), "")
+            Log.d("Harmonoid", identifier)
+            identifier
+        } else {
+            // Shouldn't ever happen, but still present as a fallback.
+            Random().nextInt(Integer.MAX_VALUE).toString()
         }
     }
 }
