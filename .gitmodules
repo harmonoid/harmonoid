@@ -19,3 +19,6 @@
 [submodule "external/media_engine"]
 	path = external/media_engine
 	url = https://github.com/harmonoid/media_engine.git
+[submodule "external/safe_local_storage"]
+	path = external/safe_local_storage
+	url = https://github.com/harmonoid/safe_local_storage.git

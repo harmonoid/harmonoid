@@ -24,8 +24,8 @@ dependencies:
     path: external/harmonoid_visual_assets
   ytm_client:
     path: external/ytm_client.dart
-  safe_session_storage:
-    path: external/safe_session_storage
+  safe_local_storage:
+    path: external/safe_local_storage
   windows_taskbar:
     git:
       url: https://github.com/alexmercerind/windows_taskbar.git
@@ -130,8 +130,8 @@ dependency_overrides:
   ffi: 1.1.0
   media_engine:
     path: external/media_engine
-  safe_session_storage:
-    path: external/safe_session_storage
+  safe_local_storage:
+    path: external/safe_local_storage
   permission_handler_platform_interface:
     git:
       url: https://github.com/alexmercerind/flutter-permission-handler.git

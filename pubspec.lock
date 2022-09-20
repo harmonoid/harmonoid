@@ -691,10 +691,10 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.27.3"
-  safe_session_storage:
+  safe_local_storage:
     dependency: "direct main"
     description:
-      path: "external/safe_session_storage"
+      path: "external/safe_local_storage"
       relative: true
     source: path
     version: "0.0.1"
