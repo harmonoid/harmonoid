@@ -1042,21 +1042,33 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
 
   @override
   Future<void> skipToNext() async {
-    final next = playback.index + 1;
-    await _player.seek(
-      Duration.zero,
-      index: next >= playback.tracks.length ? 0 : next,
-    );
+    // Once [LoopMode.one] is enabled, force skipping to next index when [skipToNext] is called.
+    if (_player.loopMode == LoopMode.one) {
+      final next = playback.index + 1;
+      await _player.seek(
+        Duration.zero,
+        index: next >= playback.tracks.length ? 0 : next,
+      );
+    } else {
+      // Supports shuffle.
+      _player.seekToNext();
+    }
     await play();
   }
 
   @override
   Future<void> skipToPrevious() async {
-    final previous = playback.index - 1;
-    await _player.seek(
-      Duration.zero,
-      index: previous < 0 ? playback.tracks.length - 1 : previous,
-    );
+    // Once [LoopMode.one] is enabled, force skipping to previous index when [skipToPrevious] is called.
+    if (_player.loopMode == LoopMode.one) {
+      final previous = playback.index - 1;
+      await _player.seek(
+        Duration.zero,
+        index: previous < 0 ? playback.tracks.length - 1 : previous,
+      );
+    } else {
+      // Supports shuffle.
+      _player.seekToPrevious();
+    }
     await play();
   }
 
