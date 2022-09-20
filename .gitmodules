@@ -10,9 +10,6 @@
 [submodule "external/ytm_client.dart"]
 	path = external/ytm_client.dart
 	url = https://github.com/harmonoid/ytm_client.dart
-[submodule "external/safe_session_storage"]
-	path = external/safe_session_storage
-	url = https://github.com/harmonoid/safe_session_storage.git
 [submodule "external/media_library"]
 	path = external/media_library
 	url = https://github.com/alexmercerind/media_library.git
