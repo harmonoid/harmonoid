@@ -10,7 +10,7 @@ import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:media_engine/media_engine.dart';
 import 'package:media_library/media_library.dart';
-import 'package:safe_session_storage/safe_session_storage.dart';
+import 'package:safe_local_storage/safe_local_storage.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/utils/metadata_retriever.dart';

@@ -14,7 +14,7 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:media_library/media_library.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:safe_session_storage/safe_session_storage.dart';
+import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 
 import 'package:harmonoid/core/playback.dart';

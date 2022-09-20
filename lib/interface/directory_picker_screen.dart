@@ -15,7 +15,7 @@ import 'package:flutter/foundation.dart';
 import 'package:animations/animations.dart';
 import 'package:media_library/media_library.dart';
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
-import 'package:safe_session_storage/safe_session_storage.dart';
+import 'package:safe_local_storage/safe_local_storage.dart';
 
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';

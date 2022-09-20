@@ -8,7 +8,7 @@
 
 import 'package:path/path.dart' as path;
 import 'package:media_library/media_library.dart';
-import 'package:safe_session_storage/safe_session_storage.dart';
+import 'package:safe_local_storage/safe_local_storage.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
@@ -23,8 +23,8 @@ class AppState extends AppStateKeys {
   /// [AppState] object instance.
   static late AppState instance = AppState();
 
-  /// [SafeSessionStorage] instance for cache read/write.
-  late SafeSessionStorage storage;
+  /// [SafeLocalStorage] instance for cache read/write.
+  late SafeLocalStorage storage;
 
   /// Initializes the [AppState] class.
   ///
@@ -32,7 +32,7 @@ class AppState extends AppStateKeys {
   /// Generates from scratch if no state is found.
   ///
   static Future<void> initialize() async {
-    instance.storage = SafeSessionStorage(
+    instance.storage = SafeLocalStorage(
       path.join(
         Configuration.instance.cacheDirectory.path,
         'AppState.JSON',

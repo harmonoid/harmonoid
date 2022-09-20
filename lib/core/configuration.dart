@@ -10,7 +10,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:media_library/media_library.dart';
-import 'package:safe_session_storage/safe_session_storage.dart';
+import 'package:safe_local_storage/safe_local_storage.dart';
 
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
@@ -25,8 +25,8 @@ class Configuration extends ConfigurationKeys {
   /// [Configuration] object instance.
   static late Configuration instance = Configuration();
 
-  /// [SafeSessionStorage] instance for cache read/write.
-  late SafeSessionStorage storage;
+  /// [SafeLocalStorage] instance for cache read/write.
+  late SafeLocalStorage storage;
 
   /// Returns equivalent directory on various platforms to save configuration file.
   /// Not working on iOS or macOS yet.
@@ -52,7 +52,7 @@ class Configuration extends ConfigurationKeys {
   /// Generates from scratch if no configuration is found.
   ///
   static Future<void> initialize() async {
-    instance.storage = SafeSessionStorage(
+    instance.storage = SafeLocalStorage(
       path.join(
         await instance.configurationDirectory,
         '.Harmonoid',

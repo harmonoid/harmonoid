@@ -14,7 +14,7 @@ import 'package:flutter/foundation.dart';
 import 'package:media_engine/media_engine.dart' hide Media;
 import 'package:media_engine/media_engine.dart' as engine;
 import 'package:media_library/media_library.dart';
-import 'package:safe_session_storage/safe_session_storage.dart';
+import 'package:safe_local_storage/safe_local_storage.dart';
 
 import 'package:harmonoid/utils/tagger_client.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
