@@ -192,7 +192,7 @@ public class MetadataRetriever implements MethodCallHandler {
                                         trackName,
                                         StandardCharsets.UTF_8.toString()
                                 );
-                            } catch (UnsupportedEncodingException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
@@ -263,7 +263,7 @@ public class MetadataRetriever implements MethodCallHandler {
                 }
                 // Return fallback [metadata] [HashMap], with only [uri] key present inside it.
                 // In case a [FileNotFoundException] or [IOException] was thrown.
-                catch (IOException exception) {
+                catch (Exception exception) {
                     exception.printStackTrace();
                     final HashMap<String, Object> metadata = new HashMap<>();
                     metadata.put("uri", uri[0]);
