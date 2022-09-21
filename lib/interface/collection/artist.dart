@@ -526,84 +526,71 @@ class ArtistTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Card(
-                        elevation: 4.0,
-                        shape: RoundedRectangleBorder(
+                      OpenContainer(
+                        closedElevation: 4.0,
+                        openElevation: 0.0,
+                        closedColor: Theme.of(context).cardColor,
+                        openColor: Theme.of(context).cardColor,
+                        closedShape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
                             width / 2.0,
                           ),
                         ),
-                        child: OpenContainer(
-                          closedElevation: 0.0,
-                          closedShape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                              width / 2.0,
+                        openBuilder: (context, close) => ArtistScreen(
+                          artist: artist,
+                          palette: palette,
+                        ),
+                        closedBuilder: (context, open) => Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              height: width,
+                              width: width,
+                              color: Theme.of(context).cardColor,
+                              alignment: Alignment.center,
+                              child: ClipOval(
+                                child: ExtendedImage(
+                                  image: getAlbumArt(
+                                    artist,
+                                    small: true,
+                                    cacheWidth: (width - 8.0) *
+                                        MediaQuery.of(context)
+                                            .devicePixelRatio ~/
+                                        1,
+                                  ),
+                                  height: width - 8.0,
+                                  width: width - 8.0,
+                                ),
+                              ),
                             ),
-                          ),
-                          openElevation: 0.0,
-                          openColor: Colors.transparent,
-                          closedColor: Colors.transparent,
-                          openBuilder: (context, close) => ArtistScreen(
-                            artist: artist,
-                            palette: palette,
-                          ),
-                          closedBuilder: (context, open) => Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Container(
-                                height: width,
-                                width: width,
-                                color: Theme.of(context).cardColor,
-                                alignment: Alignment.center,
-                                child: Hero(
-                                  tag: 'artist_art_${artist.artistName}',
-                                  child: ClipOval(
-                                    child: ExtendedImage(
-                                      image: getAlbumArt(
-                                        artist,
-                                        small: true,
-                                        cacheWidth: (width - 8.0) *
-                                            MediaQuery.of(context)
-                                                .devicePixelRatio ~/
-                                            1,
-                                      ),
-                                      height: width - 8.0,
-                                      width: width - 8.0,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: () async {
-                                    try {
-                                      if (palette == null) {
-                                        final result = await PaletteGenerator
-                                            .fromImageProvider(getAlbumArt(
-                                                artist,
-                                                small: true));
-                                        palette = result.colors;
-                                      }
-                                      await precacheImage(
-                                          getAlbumArt(artist), context);
-                                      MobileNowPlayingController.instance
-                                          .hide();
-                                    } catch (exception, stacktrace) {
-                                      debugPrint(exception.toString());
-                                      debugPrint(stacktrace.toString());
+                            Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                onTap: () async {
+                                  try {
+                                    if (palette == null) {
+                                      final result = await PaletteGenerator
+                                          .fromImageProvider(
+                                              getAlbumArt(artist, small: true));
+                                      palette = result.colors;
                                     }
-                                    open();
-                                  },
-                                  child: Container(
-                                    height: width,
-                                    width: width,
-                                    padding: EdgeInsets.all(4.0),
-                                  ),
+                                    await precacheImage(
+                                        getAlbumArt(artist), context);
+                                    MobileNowPlayingController.instance.hide();
+                                  } catch (exception, stacktrace) {
+                                    debugPrint(exception.toString());
+                                    debugPrint(stacktrace.toString());
+                                  }
+                                  open();
+                                },
+                                child: Container(
+                                  height: width,
+                                  width: width,
+                                  padding: EdgeInsets.all(4.0),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                       const Spacer(),
