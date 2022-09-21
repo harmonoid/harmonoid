@@ -2684,7 +2684,7 @@ class NowPlayingBarScrollHideNotifier extends StatelessWidget {
               MobileNowPlayingController.instance.hide();
             }
           }
-          return false;
+          return true;
         },
         child: child,
       );
@@ -3401,6 +3401,8 @@ class _MobileAppBarOverflowButtonState
             ),
           ],
         ).then((value) async {
+          // Prevent visual glitches when pushing a new route into the view.
+          await Future.delayed(const Duration(milliseconds: 300));
           switch (value) {
             case 0:
               {
