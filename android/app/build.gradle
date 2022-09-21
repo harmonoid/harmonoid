@@ -59,6 +59,10 @@ android {
    }
 
     buildTypes {
+        debug {
+            applicationIdSuffix ".private"
+        }
+
         release {
             signingConfig signingConfigs.release
         }

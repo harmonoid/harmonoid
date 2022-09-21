@@ -1,7 +1,7 @@
 name: harmonoid
 description: Plays & manages your music library. Looks beautiful & juicy.
 publish_to: "none"
-version: 0.3.2+5004
+version: 0.3.3+5006
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -198,17 +198,3 @@ flutter:
           weight: 800
         - asset: assets/fonts/Inter-Black.otf
           weight: 900
-
-msix_config:
-  msix_version: 0.3.2.0
-  display_name: Harmonoid
-  identity_name: com.alexmercerind.harmonoid
-  file_extension: ogg, ogx, aac, m4a, mp3, wma, wav, aiff, flac, opus
-  icons_background_color: transparent
-  architecture: x64
-  capabilities: broadFileSystemAccess, musicLibrary
-  vs_generated_images_folder_path: ./windows/msix/assets
-  publisher_display_name: Hitesh Kumar Saini
-  publisher: E=github.com/alexmercerind, CN=Hitesh Kumar Saini, OU=com.alexmercerind, O=com.alexmercerind, L=Dehradun, S=Uttarakhand, C=IN
-  certificate_path: ./windows/msix/certificate.pfx
-  store: false
