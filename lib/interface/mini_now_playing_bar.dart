@@ -226,7 +226,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
       });
       try {
         // Precache adjacent album arts for smoother swipe transitions to the next/previous track.
-        Future.wait([
+        await Future.wait([
           precacheImage(
             getAlbumArt(
               Playback.instance.tracks[Playback.instance.index - 1],
@@ -483,6 +483,16 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                       Stack(
                                         alignment: Alignment.topLeft,
                                         children: [
+                                          if (percentage == 1.0)
+                                            Container(
+                                              color: Colors.black,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              height: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                            ),
                                           percentage == 1.0
                                               ? () {
                                                   if (pageController
