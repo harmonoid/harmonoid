@@ -39,7 +39,12 @@ const String kAuthor = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
 const String kLicense = 'End-User License Agreement for Harmonoid';
 
 Future<void> main(List<String> args) async {
-  debugPrint(Platform.operatingSystemVersion);
+  try {
+    debugPrint(Platform.operatingSystemVersion);
+  } catch (exception, stacktrace) {
+    debugPrint(exception.toString());
+    debugPrint(stacktrace.toString());
+  }
   WidgetsFlutterBinding.ensureInitialized();
   try {
     HttpOverrides.global = _HttpOverrides();
