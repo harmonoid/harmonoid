@@ -23,7 +23,6 @@ import 'package:harmonoid/interface/settings/stats.dart';
 import 'package:harmonoid/interface/settings/miscellaneous.dart';
 import 'package:harmonoid/interface/settings/experimental.dart';
 import 'package:harmonoid/interface/settings/theme.dart';
-import 'package:harmonoid/interface/settings/version.dart';
 import 'package:harmonoid/interface/settings/now_playing_visuals.dart';
 import 'package:harmonoid/interface/settings/now_playing_screen.dart';
 import 'package:harmonoid/interface/settings/android_permissions.dart';
@@ -57,7 +56,6 @@ class Settings extends StatelessWidget {
                       NowPlayingVisualsSetting(),
                       NowPlayingScreenSetting(),
                       ExperimentalSetting(),
-                      VersionSetting(),
                       const SizedBox(height: 8.0),
                     ],
                   ),
@@ -158,28 +156,29 @@ class Settings extends StatelessWidget {
                   ),
                 ),
                 body: NowPlayingBarScrollHideNotifier(
-                  child: CustomListView(
-                    shrinkWrap: true,
-                    padding: EdgeInsets.symmetric(
-                      vertical: 8.0,
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 8.0,
+                      ),
+                      child: Column(
+                        children: [
+                          IndexingSetting(),
+                          Divider(thickness: 1.0),
+                          ThemeSetting(),
+                          LanguageSetting(),
+                          Divider(thickness: 1.0),
+                          StatsSetting(),
+                          if (StorageRetriever.instance.version >= 33) ...[
+                            AndroidPermissionsSetting(),
+                            Divider(thickness: 1.0),
+                          ],
+                          MiscellaneousSetting(),
+                          Divider(thickness: 1.0),
+                          ExperimentalSetting(),
+                        ],
+                      ),
                     ),
-                    children: [
-                      IndexingSetting(),
-                      Divider(thickness: 1.0),
-                      ThemeSetting(),
-                      LanguageSetting(),
-                      Divider(thickness: 1.0),
-                      StatsSetting(),
-                      if (StorageRetriever.instance.version >= 33) ...[
-                        AndroidPermissionsSetting(),
-                        Divider(thickness: 1.0),
-                      ],
-                      MiscellaneousSetting(),
-                      Divider(thickness: 1.0),
-                      ExperimentalSetting(),
-                      Divider(thickness: 1.0),
-                      VersionSetting(),
-                    ],
                   ),
                 ),
               ),

@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
 class ExperimentalSetting extends StatefulWidget {
@@ -23,9 +24,23 @@ class ExperimentalSettingState extends State<ExperimentalSetting> {
   Widget build(BuildContext context) {
     return SettingsTile(
       title: Language.instance.EXPERIMENTAL,
-      subtitle: Language.instance.EXPERIMENTAL_SUBTITLE,
+      subtitle: Language.instance.EXPERIMENTAL_SUBTITLE.replaceAll('\n', ' '),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          if (isMobile)
+            Container(
+              padding: const EdgeInsets.only(left: 16.0),
+              margin: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(
+                Language.instance.EXPERIMENTAL_SUBTITLE,
+                style: Theme.of(context)
+                    .textTheme
+                    .headline3
+                    ?.copyWith(height: 1.2),
+              ),
+            ),
           CorrectedSwitchListTile(
             title: Language.instance.AUTO_REFRESH_SETTING_TITLE,
             subtitle: Language.instance.AUTO_REFRESH_SETTING,

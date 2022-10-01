@@ -12,7 +12,7 @@ import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/core/configuration.dart';
 
 const double kAlbumTileWidth = 148.0;
-const double kAlbumTileHeight = 148.0 + 60.0;
+const double kAlbumTileHeight = 148.0 + 64.0;
 
 const double kArtistTileWidth = 142.0;
 const double kArtistTileHeight = 142.0 + 48.0;
