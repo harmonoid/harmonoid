@@ -1291,13 +1291,13 @@ class ExceptionWidget extends StatelessWidget {
               Language.instance.COLLECTION_SEARCH_LABEL:
                   VisualAssets.searchPage,
             }[title]!,
-            height: 196.0,
-            width: 196.0,
+            height: 164.0,
+            width: 164.0,
             filterQuality: FilterQuality.high,
             fit: BoxFit.contain,
           ),
           const SizedBox(
-            height: 4.0,
+            height: 12.0,
           ),
           Text(
             title!,
@@ -1308,7 +1308,7 @@ class ExceptionWidget extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(
-            height: 8.0,
+            height: 4.0,
           ),
           Text(
             subtitle!,
@@ -1317,7 +1317,7 @@ class ExceptionWidget extends StatelessWidget {
           ),
           if (title == Language.instance.NO_COLLECTION_TITLE) ...[
             const SizedBox(
-              height: 8.0,
+              height: 4.0,
             ),
             TextButton(
               onPressed: () {

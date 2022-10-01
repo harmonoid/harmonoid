@@ -188,11 +188,11 @@ class _AlbumTabState extends State<AlbumTab> {
                         ),
                       )
                     : Container(
-                        padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).padding.top +
-                              kMobileSearchBarHeight +
-                              2 * tileMargin,
-                        ),
+                        // padding: EdgeInsets.only(
+                        //   top: MediaQuery.of(context).padding.top +
+                        //       kMobileSearchBarHeight +
+                        //       2 * tileMargin,
+                        // ),
                         child: Center(
                           child: ExceptionWidget(
                             title: Language.instance.NO_COLLECTION_TITLE,

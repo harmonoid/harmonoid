@@ -768,6 +768,9 @@ class CollectionScreenState extends State<CollectionScreen>
                             return false;
                           },
                           child: PageView(
+                            physics: Collection.instance.tracks.isEmpty
+                                ? const NeverScrollableScrollPhysics()
+                                : null,
                             controller: pageController,
                             onPageChanged: (page) {
                               currentIndex = page;
