@@ -17,6 +17,7 @@
     -->
     <application
         android:name="${applicationName}"
+        android:hasFragileUserData="true"
         android:icon="@mipmap/ic_launcher"
         android:label="Music"
         android:requestLegacyExternalStorage="true"
@@ -26,7 +27,6 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:exported="true"
             android:hardwareAccelerated="true"
-            android:hasFragileUserData="true"
             android:launchMode="singleTask"
             android:theme="@style/Theme.App.Starting"
             android:windowSoftInputMode="adjustResize"
