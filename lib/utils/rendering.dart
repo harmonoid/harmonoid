@@ -537,9 +537,9 @@ Future<void> trackPopupMenuHandle(
       case 0:
         if (Platform.isAndroid) {
           final sdk = StorageRetriever.instance.version;
-          if (sdk >= 29) {
+          if (sdk >= 30) {
             // No [AlertDialog] required for confirmation.
-            // Android 10 or higher (API level 29) will ask for permissions from the user before deletion.
+            // Android 11 or higher (API level 30) will ask for permissions from the user before deletion.
             await Collection.instance.delete(track);
             if (recursivelyPopNavigatorOnDeleteIf != null) {
               if (recursivelyPopNavigatorOnDeleteIf()) {

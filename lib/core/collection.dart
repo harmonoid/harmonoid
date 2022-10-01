@@ -146,7 +146,7 @@ class Collection extends MediaLibrary with ChangeNotifier {
   /// In source code, this is done using:
   ///
   /// - `MediaStore.createDeleteRequest` on Android 11 or higher.
-  /// - `RecoverableSecurityException` and `ContentResolver.delete` on Android 10.
+  /// - `java.io.File.delete` on Android 10. Using `android:requestLegacyExternalStorage` on Android 10.
   /// - Simply using `java.io.File.delete` on Android 9 or lower. Good old days.
   ///
   /// This method is internally called by [delete] method to perform the actual delete operation & get result as `true` or `false`.
