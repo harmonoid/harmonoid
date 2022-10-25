@@ -19,7 +19,7 @@
         android:name="${applicationName}"
         android:hasFragileUserData="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="Music"
+        android:label="Harmonoid"
         android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
         <activity
