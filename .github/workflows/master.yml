@@ -122,7 +122,6 @@ jobs:
           tree ../../../assets
 
       - run: flutter config --enable-linux-desktop
-      - run: flutter pub upgrade
       - run: flutter pub get
       - run: flutter build linux --verbose
 
@@ -219,7 +218,6 @@ jobs:
       - run: rm -r "assets/preloaded_visuals"
       - run: mkdir "assets/preloaded_visuals"
 
-      - run: flutter pub upgrade
       - run: flutter pub get
       - run: flutter build apk --verbose --split-per-abi
       - run: cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk harmonoid-android-arm64-v8a-release.apk

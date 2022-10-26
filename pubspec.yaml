@@ -67,10 +67,7 @@ dependencies:
       ref: main
   # Third-party UI widgets or "pure-dart" packages.
 
-  lrc:
-    git:
-      url: https://github.com/alexmercerind/lrc
-      ref: patch-1
+  lrc: ^1.0.1
   http: ^0.13.0
   path: ^1.8.0
   provider: ^6.0.1
