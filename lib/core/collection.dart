@@ -7,17 +7,17 @@
 ///
 
 import 'dart:io';
-import 'package:harmonoid/utils/metadata_retriever.dart';
 import 'package:path/path.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
-import 'package:media_engine/media_engine.dart' hide Media;
-import 'package:media_engine/media_engine.dart' as engine;
 import 'package:media_library/media_library.dart';
+import 'package:media_engine/media_engine.dart' as engine;
+import 'package:media_engine/media_engine.dart' hide Media;
 import 'package:safe_local_storage/safe_local_storage.dart';
 
 import 'package:harmonoid/utils/tagger_client.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
+import 'package:harmonoid/utils/metadata_retriever.dart';
 
 /// Collection
 /// ----------
@@ -41,6 +41,7 @@ class Collection extends MediaLibrary with ChangeNotifier {
     required super.artistsOrderType,
     required super.genresOrderType,
     required super.minimumFileSize,
+    required super.albumHashCodeParameters,
   }) {
     if (Platform.isWindows) {
       _tagger = Tagger(verbose: false);
@@ -62,6 +63,7 @@ class Collection extends MediaLibrary with ChangeNotifier {
     required OrderType artistsOrderType,
     required OrderType genresOrderType,
     required int minimumFileSize,
+    required Set<AlbumHashCodeParameter> albumHashCodeParameters,
   }) async {
     instance = await MediaLibrary.register(
       Collection(
@@ -76,6 +78,7 @@ class Collection extends MediaLibrary with ChangeNotifier {
         artistsOrderType: artistsOrderType,
         genresOrderType: genresOrderType,
         minimumFileSize: minimumFileSize,
+        albumHashCodeParameters: albumHashCodeParameters,
       ),
     );
     if (!await instance.unknownAlbumArt.exists_()) {

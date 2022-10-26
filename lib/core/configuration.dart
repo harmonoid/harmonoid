@@ -109,6 +109,7 @@ class Configuration extends ConfigurationKeys {
     int? mobileAlbumsGridSize,
     int? mobileArtistsGridSize,
     int? mobileGenresGridSize,
+    Set<AlbumHashCodeParameter>? albumHashCodeParameters,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -224,6 +225,9 @@ class Configuration extends ConfigurationKeys {
     if (mobileGenresGridSize != null) {
       this.mobileGenresGridSize = mobileGenresGridSize;
     }
+    if (albumHashCodeParameters != null) {
+      this.albumHashCodeParameters = albumHashCodeParameters;
+    }
     await storage.write(
       {
         'collectionDirectories': this
@@ -270,6 +274,8 @@ class Configuration extends ConfigurationKeys {
         'mobileAlbumsGridSize': this.mobileAlbumsGridSize,
         'mobileArtistsGridSize': this.mobileArtistsGridSize,
         'mobileGenresGridSize': this.mobileGenresGridSize,
+        'albumHashCodeParameters':
+            this.albumHashCodeParameters.map((e) => e.index).toList(),
       },
     );
   }
@@ -333,6 +339,11 @@ class Configuration extends ConfigurationKeys {
     mobileAlbumsGridSize = current['mobileAlbumsGridSize'];
     mobileArtistsGridSize = current['mobileArtistsGridSize'];
     mobileGenresGridSize = current['mobileGenresGridSize'];
+    albumHashCodeParameters = Set<AlbumHashCodeParameter>.from(
+      current['albumHashCodeParameters'].map(
+        (i) => AlbumHashCodeParameter.values[i],
+      ),
+    );
   }
 }
 
@@ -375,12 +386,14 @@ abstract class ConfigurationKeys {
   late int mobileAlbumsGridSize;
   late int mobileArtistsGridSize;
   late int mobileGenresGridSize;
+  late Set<AlbumHashCodeParameter> albumHashCodeParameters;
 }
 
 Future<Map<String, dynamic>> get _defaultConfiguration async => {
       'collectionDirectories': <String>[
         await {
           'windows': () async =>
+              // TODO(@alexmercerind): Use `SHGetKnownFolderPath` from Win32 API.
               path.join(Platform.environment['USERPROFILE']!, 'Music'),
           'linux': () async {
             try {
@@ -404,7 +417,7 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
           },
         }[Platform.operatingSystem]!(),
       ],
-      'language': {
+      'language': const {
         'code': 'en_US',
         'name': 'English',
         'country': 'United States',
@@ -412,9 +425,9 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
       'themeMode': isDesktop ? 1 : 0,
       'automaticAccent': false,
       'notificationLyrics': true,
-      'collectionSearchRecent': [],
-      'webSearchRecent': [],
-      'webRecent': [],
+      'collectionSearchRecent': const [],
+      'webSearchRecent': const [],
+      'webRecent': const [],
       'taskbarIndicator': false,
       'seamlessPlayback': false,
       'jumpToNowPlayingScreenOnPlay': isDesktop,
@@ -444,4 +457,9 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
       'mobileAlbumsGridSize': 2,
       'mobileArtistsGridSize': 3,
       'mobileGenresGridSize': 3,
+      'albumHashCodeParameters': const [
+        0,
+        1,
+        2,
+      ],
     };

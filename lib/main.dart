@@ -136,6 +136,7 @@ Future<void> main(List<String> args) async {
       artistsOrderType: Configuration.instance.artistsOrderType,
       genresOrderType: Configuration.instance.genresOrderType,
       minimumFileSize: Configuration.instance.minimumFileSize,
+      albumHashCodeParameters: Configuration.instance.albumHashCodeParameters,
     );
     await Lyrics.initialize();
     await Collection.instance.refresh(
