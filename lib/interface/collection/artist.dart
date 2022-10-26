@@ -1195,6 +1195,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                                                     albumName: track.value.albumName,
                                                                                                     year: track.value.year,
                                                                                                     albumArtistName: track.value.albumArtistName,
+                                                                                                    albumHashCodeParameters: Collection.instance.albumHashCodeParameters,
                                                                                                   ),
                                                                                                 )!,
                                                                                               ),

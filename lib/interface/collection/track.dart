@@ -291,6 +291,10 @@ class _TrackTabState extends State<TrackTab> {
                                                               collection
                                                                   .tracks[index]
                                                                   .albumArtistName,
+                                                          albumHashCodeParameters:
+                                                              Collection
+                                                                  .instance
+                                                                  .albumHashCodeParameters,
                                                         ),
                                                       )!,
                                                     ),
