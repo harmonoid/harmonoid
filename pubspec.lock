@@ -884,7 +884,7 @@ packages:
       name: vector_math
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.2"
+    version: "2.1.4"
   win32:
     dependency: "direct main"
     description:
