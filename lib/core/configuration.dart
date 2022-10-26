@@ -1,12 +1,15 @@
 /// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
 ///
-/// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
 /// All rights reserved.
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
 import 'dart:io';
+import 'dart:ffi';
+import 'package:ffi/ffi.dart';
+import 'package:win32/win32.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:media_library/media_library.dart';
@@ -58,7 +61,7 @@ class Configuration extends ConfigurationKeys {
         '.Harmonoid',
         'Configuration.JSON',
       ),
-      fallback: await _defaultConfiguration,
+      fallback: await _getDefaultApplicationConfiguration(),
     );
     await instance.read();
     instance.cacheDirectory = Directory(
@@ -284,7 +287,7 @@ class Configuration extends ConfigurationKeys {
   ///
   Future<void> read() async {
     final current = await storage.read();
-    final conf = await _defaultConfiguration;
+    final conf = await _getDefaultApplicationConfiguration();
     // Emblace default values for the keys that not found.
     // Most likely due to update in Harmonoid's app version.
     // The Harmonoid's version update likely brought new app keys & fallback to default for those.
@@ -345,6 +348,110 @@ class Configuration extends ConfigurationKeys {
       ),
     );
   }
+
+  static Future<Map<String, dynamic>>
+      _getDefaultApplicationConfiguration() async => {
+            'collectionDirectories': <String>[
+              await {
+                'windows': () async {
+                  // `SHGetKnownFolderPath` Win32 API call.
+                  final rfid = GUIDFromString(FOLDERID_Music);
+                  final result = calloc<PWSTR>();
+                  try {
+                    final hr = SHGetKnownFolderPath(
+                      rfid,
+                      KF_FLAG_DEFAULT,
+                      NULL,
+                      result,
+                    );
+                    if (FAILED(hr)) {
+                      throw WindowsException(hr);
+                    }
+                    return path.canonicalize(result.value.toDartString());
+                  } catch (exception, stacktrace) {
+                    debugPrint(exception.toString());
+                    debugPrint(stacktrace.toString());
+                    // Fallback solution for retrieving the user's music [Directory] using environment variables.
+                    return path.join(
+                      Platform.environment['USERPROFILE']!,
+                      'Music',
+                    );
+                  } finally {
+                    calloc.free(rfid);
+                    calloc.free(result);
+                  }
+                },
+                'linux': () async {
+                  try {
+                    // Invoke `xdg-user-dir` command.
+                    final result = await Process.run(
+                      'xdg-user-dir',
+                      [
+                        'MUSIC',
+                      ],
+                    );
+                    return result.stdout.toString().trim();
+                  } catch (exception, stacktrace) {
+                    // Fallback to the user's `HOME` directory.
+                    debugPrint(exception.toString());
+                    debugPrint(stacktrace.toString());
+                    return Platform.environment['HOME']!;
+                  }
+                },
+                'android': () async {
+                  // Native Android implementation on platform channel.
+                  final volumes = await StorageRetriever.instance.volumes;
+                  debugPrint(volumes.toString());
+                  return volumes.first.path;
+                },
+              }[Platform.operatingSystem]!(),
+            ],
+            'language': const {
+              'code': 'en_US',
+              'name': 'English',
+              'country': 'United States',
+            },
+            'themeMode': isDesktop ? 1 : 0,
+            'automaticAccent': false,
+            'notificationLyrics': true,
+            'collectionSearchRecent': const [],
+            'webSearchRecent': const [],
+            'webRecent': const [],
+            'taskbarIndicator': false,
+            'seamlessPlayback': false,
+            'jumpToNowPlayingScreenOnPlay': isDesktop,
+            'automaticMusicLookup': false,
+            'dynamicNowPlayingBarColoring': isDesktop,
+            'modernNowPlayingScreen': isDesktop,
+            'modernNowPlayingScreenCarouselIndex': 0,
+            'lyricsVisible': true,
+            'discordRPC': true,
+            'highlightedLyricsSize': 24.0,
+            'unhighlightedLyricsSize': 14.0,
+            'albumsSort': isDesktop ? 3 : 0,
+            'tracksSort': 0,
+            'artistsSort': 0,
+            'genresSort': 0,
+            'albumsOrderType': 0,
+            'tracksOrderType': 0,
+            'artistsOrderType': 0,
+            'genresOrderType': 0,
+            'minimumFileSize': 1024 * 1024,
+            'libraryTab': 0,
+            'useLRCFromTrackDirectory': false,
+            'lookupForFallbackAlbumArt': false,
+            'displayAudioFormat': true,
+            'mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen': true,
+            'mobileEnableNowPlayingScreenRippleEffect': true,
+            'mobileAlbumsGridSize': 2,
+            'mobileArtistsGridSize': 3,
+            'mobileGenresGridSize': 3,
+            'albumHashCodeParameters': const [
+              0,
+              1,
+              2,
+            ],
+          };
 }
 
 abstract class ConfigurationKeys {
@@ -388,78 +495,3 @@ abstract class ConfigurationKeys {
   late int mobileGenresGridSize;
   late Set<AlbumHashCodeParameter> albumHashCodeParameters;
 }
-
-Future<Map<String, dynamic>> get _defaultConfiguration async => {
-      'collectionDirectories': <String>[
-        await {
-          'windows': () async =>
-              // TODO(@alexmercerind): Use `SHGetKnownFolderPath` from Win32 API.
-              path.join(Platform.environment['USERPROFILE']!, 'Music'),
-          'linux': () async {
-            try {
-              final result = await Process.run(
-                'xdg-user-dir',
-                [
-                  'MUSIC',
-                ],
-              );
-              return result.stdout.toString().trim();
-            } catch (exception, stacktrace) {
-              debugPrint(exception.toString());
-              debugPrint(stacktrace.toString());
-              return Platform.environment['HOME']!;
-            }
-          },
-          'android': () async {
-            final volumes = await StorageRetriever.instance.volumes;
-            debugPrint(volumes.toString());
-            return volumes.first.path;
-          },
-        }[Platform.operatingSystem]!(),
-      ],
-      'language': const {
-        'code': 'en_US',
-        'name': 'English',
-        'country': 'United States',
-      },
-      'themeMode': isDesktop ? 1 : 0,
-      'automaticAccent': false,
-      'notificationLyrics': true,
-      'collectionSearchRecent': const [],
-      'webSearchRecent': const [],
-      'webRecent': const [],
-      'taskbarIndicator': false,
-      'seamlessPlayback': false,
-      'jumpToNowPlayingScreenOnPlay': isDesktop,
-      'automaticMusicLookup': false,
-      'dynamicNowPlayingBarColoring': isDesktop,
-      'modernNowPlayingScreen': isDesktop,
-      'modernNowPlayingScreenCarouselIndex': 0,
-      'lyricsVisible': true,
-      'discordRPC': true,
-      'highlightedLyricsSize': 24.0,
-      'unhighlightedLyricsSize': 14.0,
-      'albumsSort': isDesktop ? 3 : 0,
-      'tracksSort': 0,
-      'artistsSort': 0,
-      'genresSort': 0,
-      'albumsOrderType': 0,
-      'tracksOrderType': 0,
-      'artistsOrderType': 0,
-      'genresOrderType': 0,
-      'minimumFileSize': 1024 * 1024,
-      'libraryTab': 0,
-      'useLRCFromTrackDirectory': false,
-      'lookupForFallbackAlbumArt': false,
-      'displayAudioFormat': true,
-      'mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen': true,
-      'mobileEnableNowPlayingScreenRippleEffect': true,
-      'mobileAlbumsGridSize': 2,
-      'mobileArtistsGridSize': 3,
-      'mobileGenresGridSize': 3,
-      'albumHashCodeParameters': const [
-        0,
-        1,
-        2,
-      ],
-    };
