@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,6 +25,7 @@ class Harmonoid extends StatelessWidget {
       builder: (context, _) => Consumer<Visuals>(
         builder: (context, visuals, _) => MultiProvider(
           builder: (context, _) => MaterialApp(
+            scrollBehavior: const ScrollBehavior(),
             debugShowCheckedModeBanner: false,
             theme: visuals.theme,
             darkTheme: visuals.darkTheme,
@@ -47,4 +50,15 @@ class Harmonoid extends StatelessWidget {
       ),
     );
   }
+}
+
+class ScrollBehavior extends MaterialScrollBehavior {
+  const ScrollBehavior();
+
+  @override
+  Set<PointerDeviceKind> get dragDevices =>
+      // Specifically for GNU/Linux & Android-x86 family, where touch isn't interpreted as a drag device by Flutter apparently.
+      (Platform.isLinux || Platform.isAndroid)
+          ? PointerDeviceKind.values.toSet()
+          : super.dragDevices;
 }
