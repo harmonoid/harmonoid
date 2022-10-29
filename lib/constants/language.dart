@@ -78,7 +78,7 @@ class Language extends Strings with ChangeNotifier {
     required LanguageData value,
   }) async {
     final data = await rootBundle.loadString(
-      'assets/translations/${value.code}.json',
+      'assets/translations/translations/${value.code}.json',
       cache: true,
     );
     final map = json.decode(data);
