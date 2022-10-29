@@ -308,15 +308,18 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
     if (Platform.isWindows) {
       scrollController.addListener(
         () {
-          final scrollDirection = scrollController.position.userScrollDirection;
-          if (scrollDirection != ScrollDirection.idle) {
-            var scrollEnd = scrollController.offset +
-                (scrollDirection == ScrollDirection.reverse
-                    ? kWindowsScrollDelta
-                    : -kWindowsScrollDelta);
-            scrollEnd = min(scrollController.position.maxScrollExtent,
-                max(scrollController.position.minScrollExtent, scrollEnd));
-            scrollController.jumpTo(scrollEnd);
+          final direction = scrollController.position.userScrollDirection;
+          if (direction != ScrollDirection.idle) {
+            final position = min(
+              scrollController.position.maxScrollExtent,
+              max(
+                scrollController.position.minScrollExtent,
+                scrollController.offset +
+                    kWindowsScrollDelta *
+                        (direction == ScrollDirection.reverse ? 1 : -1),
+              ),
+            );
+            scrollController.jumpTo(position);
           }
         },
       );

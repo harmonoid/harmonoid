@@ -209,16 +209,18 @@ class _WebRecommendationsState extends State<WebRecommendations>
     if (Platform.isWindows) {
       _scrollController.addListener(
         () {
-          final scrollDirection =
-              _scrollController.position.userScrollDirection;
-          if (scrollDirection != ScrollDirection.idle) {
-            var scrollEnd = _scrollController.offset +
-                (scrollDirection == ScrollDirection.reverse
-                    ? kWindowsScrollDelta
-                    : -kWindowsScrollDelta);
-            scrollEnd = min(_scrollController.position.maxScrollExtent,
-                max(_scrollController.position.minScrollExtent, scrollEnd));
-            _scrollController.jumpTo(scrollEnd);
+          final direction = _scrollController.position.userScrollDirection;
+          if (direction != ScrollDirection.idle) {
+            final position = min(
+              _scrollController.position.maxScrollExtent,
+              max(
+                _scrollController.position.minScrollExtent,
+                _scrollController.offset +
+                    kWindowsScrollDelta *
+                        (direction == ScrollDirection.reverse ? 1 : -1),
+              ),
+            );
+            _scrollController.jumpTo(position);
           }
         },
       );

@@ -82,17 +82,18 @@ class _CustomListViewState extends State<CustomListView> {
     if (Platform.isWindows) {
       controller.addListener(
         () {
-          final scrollDirection = controller.position.userScrollDirection;
-          if (scrollDirection != ScrollDirection.idle) {
-            var scrollEnd = controller.offset +
-                (scrollDirection == ScrollDirection.reverse
-                    ? kWindowsScrollDelta
-                    : -kWindowsScrollDelta);
-            scrollEnd = min(
+          final direction = controller.position.userScrollDirection;
+          if (direction != ScrollDirection.idle) {
+            final position = min(
               controller.position.maxScrollExtent,
-              max(controller.position.minScrollExtent, scrollEnd),
+              max(
+                controller.position.minScrollExtent,
+                controller.offset +
+                    kWindowsScrollDelta *
+                        (direction == ScrollDirection.reverse ? 1 : -1),
+              ),
             );
-            controller.jumpTo(scrollEnd);
+            controller.jumpTo(position);
           }
         },
       );
@@ -160,17 +161,18 @@ class _CustomListViewBuilderState extends State<CustomListViewBuilder> {
     if (Platform.isWindows) {
       controller.addListener(
         () {
-          final scrollDirection = controller.position.userScrollDirection;
-          if (scrollDirection != ScrollDirection.idle) {
-            var scrollEnd = controller.offset +
-                (scrollDirection == ScrollDirection.reverse
-                    ? kWindowsScrollDelta
-                    : -kWindowsScrollDelta);
-            scrollEnd = min(
+          final direction = controller.position.userScrollDirection;
+          if (direction != ScrollDirection.idle) {
+            final position = min(
               controller.position.maxScrollExtent,
-              max(controller.position.minScrollExtent, scrollEnd),
+              max(
+                controller.position.minScrollExtent,
+                controller.offset +
+                    kWindowsScrollDelta *
+                        (direction == ScrollDirection.reverse ? 1 : -1),
+              ),
             );
-            controller.jumpTo(scrollEnd);
+            controller.jumpTo(position);
           }
         },
       );
@@ -240,17 +242,18 @@ class _CustomListViewSeparatedState extends State<CustomListViewSeparated> {
     if (Platform.isWindows) {
       controller.addListener(
         () {
-          final scrollDirection = controller.position.userScrollDirection;
-          if (scrollDirection != ScrollDirection.idle) {
-            var scrollEnd = controller.offset +
-                (scrollDirection == ScrollDirection.reverse
-                    ? kWindowsScrollDelta
-                    : -kWindowsScrollDelta);
-            scrollEnd = min(
+          final direction = controller.position.userScrollDirection;
+          if (direction != ScrollDirection.idle) {
+            final position = min(
               controller.position.maxScrollExtent,
-              max(controller.position.minScrollExtent, scrollEnd),
+              max(
+                controller.position.minScrollExtent,
+                controller.offset +
+                    kWindowsScrollDelta *
+                        (direction == ScrollDirection.reverse ? 1 : -1),
+              ),
             );
-            controller.jumpTo(scrollEnd);
+            controller.jumpTo(position);
           }
         },
       );
@@ -310,17 +313,18 @@ class _CustomSingleChildScrollViewState
     if (Platform.isWindows) {
       controller.addListener(
         () {
-          final scrollDirection = controller.position.userScrollDirection;
-          if (scrollDirection != ScrollDirection.idle) {
-            var scrollEnd = controller.offset +
-                (scrollDirection == ScrollDirection.reverse
-                    ? kWindowsScrollDelta
-                    : -kWindowsScrollDelta);
-            scrollEnd = min(
+          final direction = controller.position.userScrollDirection;
+          if (direction != ScrollDirection.idle) {
+            final position = min(
               controller.position.maxScrollExtent,
-              max(controller.position.minScrollExtent, scrollEnd),
+              max(
+                controller.position.minScrollExtent,
+                controller.offset +
+                    kWindowsScrollDelta *
+                        (direction == ScrollDirection.reverse ? 1 : -1),
+              ),
             );
-            controller.jumpTo(scrollEnd);
+            controller.jumpTo(position);
           }
         },
       );
