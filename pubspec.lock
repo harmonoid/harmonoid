@@ -446,19 +446,17 @@ packages:
   lrc:
     dependency: "direct main"
     description:
-      path: "."
-      ref: patch-1
-      resolved-ref: e99e906759835ca9dc4ace691846d19c88d28277
-      url: "https://github.com/alexmercerind/lrc"
-    source: git
-    version: "1.0.0"
+      name: lrc
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   material_color_utilities:
     dependency: transitive
     description:
       name: material_color_utilities
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.0"
+    version: "0.1.5"
   material_floating_search_bar:
     dependency: "direct main"
     description:
@@ -884,7 +882,7 @@ packages:
       name: vector_math
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.4"
+    version: "2.1.2"
   win32:
     dependency: "direct main"
     description:
