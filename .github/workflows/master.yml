@@ -109,7 +109,10 @@ jobs:
       - run: mkdir "assets/icons"
       - run: rm pubspec.yaml
       - run: mv pubspec.linux.yaml pubspec.yaml
-
+      
+      - run: flutter config --enable-linux-desktop
+      - run: flutter pub get
+      
       - name: Compile Tagger
         run: |
           cd external/media_engine
@@ -121,8 +124,6 @@ jobs:
           mv tagger ../../../assets/platform
           tree ../../../assets
 
-      - run: flutter config --enable-linux-desktop
-      - run: flutter pub get
       - run: flutter build linux --verbose
 
       - run: chmod +x build/linux/x64/release/bundle/data/flutter_assets/assets/platform/tagger
