@@ -12,8 +12,6 @@ import java.util.HashMap;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
@@ -94,6 +92,15 @@ class MediaMetadataRetrieverExt extends MediaMetadataRetriever {
             metadata.put("trackNumber", null);
             metadata.put("albumLength", null);
         }
+        final String discNumber = readKey(METADATA_KEY_DISC_NUMBER);
+        try {
+            if (discNumber != null) {
+                final String[] discNumberData = discNumber.split("/");
+                metadata.put("discNumber", discNumberData[0]);
+            }
+        } catch (Exception exception) {
+            metadata.put("discNumber", null);
+        }
         final String year = readKey(METADATA_KEY_YEAR);
         final String date = readKey(METADATA_KEY_DATE);
         try {
@@ -111,7 +118,6 @@ class MediaMetadataRetrieverExt extends MediaMetadataRetriever {
         metadata.put("genre", readKey(METADATA_KEY_GENRE));
         metadata.put("authorName", readKey(METADATA_KEY_AUTHOR));
         metadata.put("writerName", readKey(METADATA_KEY_WRITER));
-        metadata.put("discNumber", readKey(METADATA_KEY_DISC_NUMBER));
         metadata.put("mimeType", readKey(METADATA_KEY_MIMETYPE));
         metadata.put("duration", readKey(METADATA_KEY_DURATION));
         metadata.put("bitrate", readKey(METADATA_KEY_BITRATE));

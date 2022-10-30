@@ -117,12 +117,12 @@ class AndroidMediaMetadata {
   final String? albumName;
   final String? albumArtistName;
   final int? trackNumber;
+  final int? discNumber;
   final int? albumLength;
   final int? year;
   final String? genre;
   final String? authorName;
   final String? writerName;
-  final int? discNumber;
   final String? mimeType;
   final int? duration;
   final int? bitrate;
@@ -134,12 +134,12 @@ class AndroidMediaMetadata {
     this.albumName,
     this.albumArtistName,
     this.trackNumber,
+    this.discNumber,
     this.albumLength,
     this.year,
     this.genre,
     this.authorName,
     this.writerName,
-    this.discNumber,
     this.mimeType,
     this.duration,
     this.bitrate,
@@ -154,6 +154,9 @@ class AndroidMediaMetadata {
         trackNumber: MetadataRetriever._parseInteger(
           map['trackNumber'],
         ),
+        discNumber: MetadataRetriever._parseInteger(
+          map['discNumber'],
+        ),
         albumLength: MetadataRetriever._parseInteger(
           map['albumLength'],
         ),
@@ -163,9 +166,6 @@ class AndroidMediaMetadata {
         genre: map['genre'],
         authorName: map['authorName'],
         writerName: map['writerName'],
-        discNumber: MetadataRetriever._parseInteger(
-          map['discNumber'],
-        ),
         mimeType: map['mimeType'],
         duration: MetadataRetriever._parseInteger(
           map['duration'],
@@ -182,12 +182,12 @@ class AndroidMediaMetadata {
         'albumName': albumName,
         'albumArtistName': albumArtistName,
         'trackNumber': trackNumber,
+        'discNumber': discNumber,
         'albumLength': albumLength,
         'year': year,
         'genre': genre,
         'authorName': authorName,
         'writerName': writerName,
-        'discNumber': discNumber,
         'mimeType': mimeType,
         'duration': duration,
         'bitrate': bitrate,
@@ -196,7 +196,7 @@ class AndroidMediaMetadata {
 
   @override
   String toString() =>
-      '$AndroidMediaMetadata(trackName: $trackName, trackArtistNames: $trackArtistNames, albumName: $albumName, albumArtistName: $albumArtistName, trackNumber: $trackNumber, albumLength: $albumLength, year: $year, genre: $genre, authorName: $authorName, writerName: $writerName, discNumber: $discNumber, mimeType: $mimeType, duration: $duration, bitrate: $bitrate, uri: $uri)';
+      '$AndroidMediaMetadata(trackName: $trackName, trackArtistNames: $trackArtistNames, albumName: $albumName, albumArtistName: $albumArtistName, trackNumber: $trackNumber, discNumber: $discNumber, albumLength: $albumLength, year: $year, genre: $genre, authorName: $authorName, writerName: $writerName, mimeType: $mimeType, duration: $duration, bitrate: $bitrate, uri: $uri)';
 }
 
 /// The format extracted from the media resource in object format.
