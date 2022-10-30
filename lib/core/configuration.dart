@@ -113,6 +113,7 @@ class Configuration extends ConfigurationKeys {
     int? mobileArtistsGridSize,
     int? mobileGenresGridSize,
     Set<AlbumHashCodeParameter>? albumHashCodeParameters,
+    Map<String, String>? userLibmpvOptions,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -231,6 +232,9 @@ class Configuration extends ConfigurationKeys {
     if (albumHashCodeParameters != null) {
       this.albumHashCodeParameters = albumHashCodeParameters;
     }
+    if (userLibmpvOptions != null) {
+      this.userLibmpvOptions = userLibmpvOptions;
+    }
     await storage.write(
       {
         'collectionDirectories': this
@@ -279,6 +283,7 @@ class Configuration extends ConfigurationKeys {
         'mobileGenresGridSize': this.mobileGenresGridSize,
         'albumHashCodeParameters':
             this.albumHashCodeParameters.map((e) => e.index).toList(),
+        'userLibmpvOptions': this.userLibmpvOptions,
       },
     );
   }
@@ -347,6 +352,7 @@ class Configuration extends ConfigurationKeys {
         (i) => AlbumHashCodeParameter.values[i],
       ),
     );
+    userLibmpvOptions = Map<String, String>.from(current['userLibmpvOptions']);
   }
 
   static Future<Map<String, dynamic>>
@@ -451,6 +457,7 @@ class Configuration extends ConfigurationKeys {
               1,
               2,
             ],
+            'userLibmpvOptions': <String, String>{},
           };
 }
 
@@ -494,4 +501,5 @@ abstract class ConfigurationKeys {
   late int mobileArtistsGridSize;
   late int mobileGenresGridSize;
   late Set<AlbumHashCodeParameter> albumHashCodeParameters;
+  late Map<String, String> userLibmpvOptions;
 }
