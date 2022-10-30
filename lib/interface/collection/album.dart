@@ -1051,7 +1051,8 @@ class AlbumScreenState extends State<AlbumScreen>
         final tracks = widget.album.tracks.toList();
         tracks.sort(
           (first, second) =>
-              first.trackNumber.compareTo(second.trackNumber) * 10000000 +
+              first.discNumber.compareTo(second.discNumber) * 100000000 +
+              first.trackNumber.compareTo(second.trackNumber) * 1000000 +
               first.trackName.compareTo(second.trackName) * 10000 +
               first.trackArtistNames
                       .join()
