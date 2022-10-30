@@ -553,7 +553,7 @@ class _SortBarState extends State<SortBar> {
                             contentPadding: EdgeInsets.zero,
                             dense: true,
                             title: Text(
-                              Language.instance.ARTIST,
+                              Language.instance.ALBUM_ARTIST,
                               style: Theme.of(context).textTheme.headline4,
                             ),
                           ),
@@ -707,7 +707,8 @@ class _SortBarState extends State<SortBar> {
                                 AlbumsSort.dateAdded:
                                     Language.instance.DATE_ADDED,
                                 AlbumsSort.year: Language.instance.YEAR,
-                                AlbumsSort.artist: Language.instance.ARTIST,
+                                AlbumsSort.artist:
+                                    Language.instance.ALBUM_ARTIST,
                               }[collection.albumsSort]!,
                               1: {
                                 TracksSort.aToZ: Language.instance.A_TO_Z,
@@ -2154,7 +2155,7 @@ class CollectionSortButton extends StatelessWidget {
                   contentPadding: EdgeInsets.zero,
                   dense: true,
                   title: Text(
-                    Language.instance.ARTIST,
+                    Language.instance.ALBUM_ARTIST,
                     style: Theme.of(context).textTheme.headline4,
                   ),
                 ),
@@ -2501,7 +2502,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                   //   padding: EdgeInsets.zero,
                   //   child: ListTile(
                   //     title: Text(
-                  //       Language.instance.ARTIST,
+                  //       Language.instance.ALBUM_ARTIST,
                   //     ),
                   //   ),
                   // ),
