@@ -43,11 +43,15 @@ class NowPlayingState extends State<NowPlayingScreen>
   Track? track;
 
   void listener() {
-    final update = this.track != track ||
-        tracks.length.compareTo(Playback.instance.tracks.length) != 0;
-    if (update) {
-      this.track = track;
+    if (Playback.instance.index < 0 ||
+        Playback.instance.index >= Playback.instance.tracks.length) {
+      return;
+    }
+    final current = Playback.instance.tracks[Playback.instance.index];
+    if (track != current || tracks.length != Playback.instance.tracks.length) {
       setState(() {
+        track = current;
+        index = Playback.instance.index;
         tracks = Playback.instance.tracks;
       });
     }
@@ -101,106 +105,22 @@ class NowPlayingState extends State<NowPlayingScreen>
                           clipBehavior: Clip.antiAlias,
                           elevation: 8.0,
                           child: LayoutBuilder(
-                            builder: (context, constraints) => Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                AnimatedSwitcher(
-                                  duration: const Duration(milliseconds: 300),
-                                  transitionBuilder: (child, animation) =>
-                                      FadeTransition(
-                                    opacity: animation,
-                                    child: child,
-                                  ),
-                                  child: ExtendedImage(
-                                    key: Key(index.toString()),
-                                    image: getAlbumArt(tracks[index]),
-                                    fit: BoxFit.cover,
-                                    height: min(constraints.maxHeight,
-                                        constraints.maxWidth),
-                                    width: min(constraints.maxHeight,
-                                        constraints.maxWidth),
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    AnimatedScale(
-                                      scale: scale,
-                                      duration: Duration(milliseconds: 100),
-                                      curve: Curves.easeInOut,
-                                      child: Material(
-                                        color: Colors.transparent,
-                                        borderRadius:
-                                            BorderRadius.circular(28.0),
-                                        elevation: 4.0,
-                                        child: InkWell(
-                                          borderRadius:
-                                              BorderRadius.circular(28.0),
-                                          onTap: () {
-                                            trackPopupMenuHandle(
-                                              context,
-                                              tracks[index],
-                                              2,
-                                            );
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(28.0),
-                                              color: Colors.black54,
-                                            ),
-                                            height: 56.0,
-                                            width: 56.0,
-                                            child: Icon(
-                                              Icons.add,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 12.0),
-                                    if (LibmpvPluginUtils.isSupported(
-                                        tracks[index].uri))
-                                      AnimatedScale(
-                                        scale: scale,
-                                        duration: Duration(milliseconds: 100),
-                                        curve: Curves.easeInOut,
-                                        child: Material(
-                                          color: Colors.transparent,
-                                          borderRadius:
-                                              BorderRadius.circular(28.0),
-                                          elevation: 4.0,
-                                          child: InkWell(
-                                            borderRadius:
-                                                BorderRadius.circular(28.0),
-                                            onTap: () {
-                                              launchUrl(
-                                                tracks[index].uri,
-                                                mode: LaunchMode
-                                                    .externalApplication,
-                                              );
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(28.0),
-                                                color: Colors.black54,
-                                              ),
-                                              height: 56.0,
-                                              width: 56.0,
-                                              child: Icon(
-                                                Icons.launch,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ],
+                            builder: (context, constraints) => AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 300),
+                              transitionBuilder: (child, animation) =>
+                                  FadeTransition(
+                                opacity: animation,
+                                child: child,
+                              ),
+                              child: ExtendedImage(
+                                key: Key(index.toString()),
+                                image: getAlbumArt(tracks[index]),
+                                fit: BoxFit.cover,
+                                height: min(constraints.maxHeight,
+                                    constraints.maxWidth),
+                                width: min(constraints.maxHeight,
+                                    constraints.maxWidth),
+                              ),
                             ),
                           ),
                         ),
@@ -264,7 +184,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                                             size: 24.0,
                                           )
                                         : Text(
-                                            '${index + 1}',
+                                            '${i + 1}',
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline4,
