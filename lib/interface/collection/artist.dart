@@ -718,6 +718,14 @@ class ArtistScreenState extends State<ArtistScreen>
     return Consumer<Collection>(
       builder: (context, collection, _) {
         final tracks = widget.artist.tracks.toList();
+        tracks.sort(
+          (first, second) =>
+              first.albumName.compareTo(second.albumName) * 100000000 +
+              first.discNumber.compareTo(second.discNumber) * 1000000 +
+              first.trackNumber.compareTo(second.trackNumber) * 10000 +
+              first.trackName.compareTo(second.trackName) * 100 +
+              first.uri.toString().compareTo(second.uri.toString()),
+        );
         return isDesktop
             ? Scaffold(
                 body: Container(
