@@ -58,7 +58,11 @@ final HotKey searchBarHotkey = HotKey(
   scope: HotKeyScope.inapp,
 );
 final message = Random().nextInt(100) == 50
-    ? 'Yeah! You found the easter egg. 🥚'
+    ? [
+        'Tag me on Twitter @alexmercerind with a screenshot of this. 🐦',
+        'Yeah! You found the easter egg. 🥚',
+        'You are a very lucky person. 🍀',
+      ][Random().nextInt(3)]
     : DateTime.now().day > (25 - 7) &&
             DateTime.now().day <= 25 &&
             DateTime.now().month == 12
