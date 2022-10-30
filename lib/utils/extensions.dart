@@ -103,7 +103,7 @@ extension AndroidMediaFormatExtension on AndroidMediaFormat {
         if (extension != null)
           if (kSupportedFileTypes.contains(extension!.toUpperCase()))
             extension!.toUpperCase(),
-        if (bitrate != null && bitrate != 0.0) '${bitrate! ~/ 1000} KB/s',
+        if (bitrate != null && bitrate != 0.0) '${bitrate! ~/ 1000} kb/s',
         if (sampleRate != null)
           '${(sampleRate! / 1000).toStringAsFixed(1)} kHz',
         if (channelCount != null)
@@ -122,7 +122,7 @@ extension PlaybackExtension on Playback {
     if (!tracks[index].uri.isScheme('FILE')) return '';
     final data = [
       if (audioBitrate != null && audioBitrate != 0.0)
-        '${audioBitrate! ~/ 1000} KB/s',
+        '${audioBitrate! ~/ 1000} kb/s',
       if (audioParams.sampleRate != null)
         '${(audioParams.sampleRate! / 1000).toStringAsFixed(1)} kHz',
       if (audioParams.channelCount != null)
@@ -153,7 +153,7 @@ extension PlaybackExtension on Playback {
     if (!tracks[index].uri.isScheme('FILE')) return '';
     final data = [
       if (audioBitrate != null && audioBitrate != 0.0)
-        '${audioBitrate! ~/ 1000} KB/s',
+        '${audioBitrate! ~/ 1000} kb/s',
       if (audioParams.sampleRate != null)
         '${(audioParams.sampleRate! / 1000).toStringAsFixed(1)} kHz',
     ];
