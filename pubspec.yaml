@@ -16,6 +16,8 @@ dependencies:
     path: external/media_engine
   media_library:
     path: external/media_library
+  window_plus:
+    path: external/window_plus
   system_media_transport_controls:
     path: external/smtc-win32/bindings/system_media_transport_controls.dart
   mpris_service:
@@ -38,17 +40,17 @@ dependencies:
   # Third-party plugins.
 
   ffi: ^2.0.1
-  win32: ^2.7.0
+  win32: ^3.0.0
   just_audio: ^0.9.28
   audio_service: ^0.18.7
   awesome_notifications: ^0.7.0-beta.5
   share_plus: ^2.1.4
   url_launcher: ^6.1.3
-  filepicker_windows: ^2.0.0
-  file_picker:
+  filepicker_windows:
     git:
-      url: https://github.com/alexmercerind/flutter_file_picker.git
-      ref: f4a8faac83df23506f310a1b49a1861df228a54a
+      url: https://github.com/alexmercerind/filepicker_windows.git
+      ref: master
+  file_picker: ^5.1.0
   file_selector: ^0.8.2
   permission_handler:
     git:
@@ -60,11 +62,7 @@ dependencies:
       url: https://github.com/google/flutter-desktop-embedding.git
       path: plugins/file_selector/file_selector_linux
       ref: 4bc2c310e8acf3740ea0c2b326b3ef71280391f8
-  window_size:
-    git:
-      url: https://github.com/google/flutter-desktop-embedding.git
-      path: plugins/window_size
-      ref: main
+
   # Third-party UI widgets or "pure-dart" packages.
 
   lrc: ^1.0.1
@@ -89,10 +87,6 @@ dependencies:
 
   # Third-party forked plugins & packages to meet requirements.
 
-  flutter_window_close:
-    git:
-      url: https://github.com/alexmercerind/flutter_window_close.git
-      ref: b7aca98fbefd61f7bd77b9e05535ef808a24adec
   flutter_platform_alert:
     git:
       url: https://github.com/alexmercerind/flutter_platform_alert.git
@@ -102,11 +96,6 @@ dependencies:
       url: https://github.com/alexmercerind/desktop.git
       path: desktop
       ref: f62da81ea431573ede64f0ae78de07af3f820f9b
-  bitsdojo_window:
-    git:
-      url: https://github.com/alexmercerind/bitsdojo_window.git
-      path: bitsdojo_window
-      ref: b52958dc526634836fa3563b05d9a19c7da32c80
   hotkey_manager:
     git:
       url: https://github.com/alexmercerind/hotkey_manager.git
@@ -114,10 +103,6 @@ dependencies:
   known_extents_list_view_builder:
     git:
       url: https://github.com/alexmercerind/known_extents_list_view_builder.git
-  window_manager:
-    git:
-      url: https://github.com/harmonoid/window_manager.git
-      ref: main
   flutter_lyric:
     git:
       url: https://github.com/alexmercerind/flutter_lyric.git
@@ -125,6 +110,8 @@ dependencies:
 
 dependency_overrides:
   ffi: 1.1.0
+  win32: ^3.0.0
+  platform: ^3.1.0
   media_engine:
     path: external/media_engine
   safe_local_storage:
@@ -139,22 +126,6 @@ dependency_overrides:
       url: https://github.com/alexmercerind/flutter-permission-handler.git
       path: permission_handler_android
       ref: master
-  bitsdojo_window_windows:
-    git:
-      url: https://github.com/alexmercerind/bitsdojo_window.git
-      path: bitsdojo_window_windows
-      ref: b52958dc526634836fa3563b05d9a19c7da32c80
-  bitsdojo_window_linux:
-    git:
-      url: https://github.com/alexmercerind/bitsdojo_window.git
-      path: bitsdojo_window_linux
-      ref: b52958dc526634836fa3563b05d9a19c7da32c80
-  bitsdojo_window_macos:
-    git:
-      url: https://github.com/alexmercerind/bitsdojo_window.git
-      path: bitsdojo_window_macos
-      ref: b52958dc526634836fa3563b05d9a19c7da32c80
-  platform: ^3.1.0
 
 dev_dependencies:
   lints: ^2.0.0

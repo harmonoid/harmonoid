@@ -71,49 +71,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.7.0-beta.5"
-  bitsdojo_window:
-    dependency: "direct main"
-    description:
-      path: bitsdojo_window
-      ref: b52958dc526634836fa3563b05d9a19c7da32c80
-      resolved-ref: b52958dc526634836fa3563b05d9a19c7da32c80
-      url: "https://github.com/alexmercerind/bitsdojo_window.git"
-    source: git
-    version: "0.1.1+1"
-  bitsdojo_window_linux:
-    dependency: "direct overridden"
-    description:
-      path: bitsdojo_window_linux
-      ref: b52958dc526634836fa3563b05d9a19c7da32c80
-      resolved-ref: b52958dc526634836fa3563b05d9a19c7da32c80
-      url: "https://github.com/alexmercerind/bitsdojo_window.git"
-    source: git
-    version: "0.1.1"
-  bitsdojo_window_macos:
-    dependency: "direct overridden"
-    description:
-      path: bitsdojo_window_macos
-      ref: b52958dc526634836fa3563b05d9a19c7da32c80
-      resolved-ref: b52958dc526634836fa3563b05d9a19c7da32c80
-      url: "https://github.com/alexmercerind/bitsdojo_window.git"
-    source: git
-    version: "0.1.0"
-  bitsdojo_window_platform_interface:
-    dependency: transitive
-    description:
-      name: bitsdojo_window_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0"
-  bitsdojo_window_windows:
-    dependency: "direct overridden"
-    description:
-      path: bitsdojo_window_windows
-      ref: b52958dc526634836fa3563b05d9a19c7da32c80
-      resolved-ref: b52958dc526634836fa3563b05d9a19c7da32c80
-      url: "https://github.com/alexmercerind/bitsdojo_window.git"
-    source: git
-    version: "0.1.0"
   characters:
     dependency: transitive
     description:
@@ -219,12 +176,10 @@ packages:
   file_picker:
     dependency: "direct main"
     description:
-      path: "."
-      ref: f4a8faac83df23506f310a1b49a1861df228a54a
-      resolved-ref: f4a8faac83df23506f310a1b49a1861df228a54a
-      url: "https://github.com/alexmercerind/flutter_file_picker.git"
-    source: git
-    version: "5.0.1"
+      name: file_picker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.1.0"
   file_selector:
     dependency: "direct main"
     description:
@@ -258,9 +213,11 @@ packages:
   filepicker_windows:
     dependency: "direct main"
     description:
-      name: filepicker_windows
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: master
+      resolved-ref: aab8c3ecde99de1d94f1dccfce26dc9f4389d9df
+      url: "https://github.com/alexmercerind/filepicker_windows.git"
+    source: git
     version: "2.0.2"
   fluentui_system_icons:
     dependency: "direct main"
@@ -325,15 +282,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_window_close:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: b7aca98fbefd61f7bd77b9e05535ef808a24adec
-      resolved-ref: b7aca98fbefd61f7bd77b9e05535ef808a24adec
-      url: "https://github.com/alexmercerind/flutter_window_close.git"
-    source: git
-    version: "0.2.2"
   harmonoid_visual_assets:
     dependency: "direct main"
     description:
@@ -889,25 +837,14 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.7.0"
-  window_manager:
+    version: "3.1.0"
+  window_plus:
     dependency: "direct main"
     description:
-      path: "."
-      ref: main
-      resolved-ref: "723ae4e52f9273c5f6d7dbb27a0a8d4a96b94220"
-      url: "https://github.com/harmonoid/window_manager.git"
-    source: git
-    version: "0.2.5"
-  window_size:
-    dependency: "direct main"
-    description:
-      path: "plugins/window_size"
-      ref: main
-      resolved-ref: "17d4710c17f4913137e7ec931f6e71eaef443363"
-      url: "https://github.com/google/flutter-desktop-embedding.git"
-    source: git
-    version: "0.1.0"
+      path: "external/window_plus"
+      relative: true
+    source: path
+    version: "0.0.1"
   windows_taskbar:
     dependency: "direct main"
     description:
