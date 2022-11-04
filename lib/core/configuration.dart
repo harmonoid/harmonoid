@@ -31,21 +31,50 @@ class Configuration extends ConfigurationKeys {
   /// [SafeLocalStorage] instance for cache read/write.
   late SafeLocalStorage storage;
 
-  /// Returns equivalent directory on various platforms to save configuration file.
-  /// Not working on iOS or macOS yet.
+  /// Returns equivalent directory on various platforms to save application specific data & other cache.
   ///
   Future<String> get configurationDirectory async {
     switch (Platform.operatingSystem) {
       case 'windows':
-        return Platform.environment['USERPROFILE']!;
+        {
+          // `SHGetKnownFolderPath` Win32 API call.
+          final rfid = GUIDFromString(FOLDERID_Profile);
+          final result = calloc<PWSTR>();
+          try {
+            final hr = SHGetKnownFolderPath(
+              rfid,
+              KF_FLAG_DEFAULT,
+              NULL,
+              result,
+            );
+            if (FAILED(hr)) {
+              throw WindowsException(hr);
+            }
+            return path.normalize(result.value.toDartString());
+          } catch (exception, stacktrace) {
+            debugPrint(exception.toString());
+            debugPrint(stacktrace.toString());
+            // Fallback solution for retrieving the user directory.
+            return Platform.environment['USERPROFILE']!;
+          } finally {
+            calloc.free(rfid);
+            calloc.free(result);
+          }
+        }
       case 'linux':
-        return Platform.environment['HOME']!;
+        {
+          return Platform.environment['HOME']!;
+        }
       case 'android':
-        final cache = await StorageRetriever.instance.cache;
-        debugPrint(cache.toString());
-        return cache.path;
+        {
+          final cache = await StorageRetriever.instance.cache;
+          debugPrint(cache.toString());
+          return cache.path;
+        }
       default:
-        return '';
+        {
+          return '';
+        }
     }
   }
 
@@ -373,7 +402,7 @@ class Configuration extends ConfigurationKeys {
                     if (FAILED(hr)) {
                       throw WindowsException(hr);
                     }
-                    return path.canonicalize(result.value.toDartString());
+                    return path.normalize(result.value.toDartString());
                   } catch (exception, stacktrace) {
                     debugPrint(exception.toString());
                     debugPrint(stacktrace.toString());

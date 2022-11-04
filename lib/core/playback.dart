@@ -16,7 +16,6 @@ import 'package:synchronized/synchronized.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 import 'package:media_library/media_library.dart' hide Media, Playlist;
@@ -394,9 +393,7 @@ class Playback extends ChangeNotifier {
         }
         instance.position = event;
         instance.notifyListeners();
-        if (Platform.isWindows &&
-            Configuration.instance.taskbarIndicator &&
-            appWindow.isVisible) {
+        if (Platform.isWindows && Configuration.instance.taskbarIndicator) {
           WindowsTaskbar.setProgress(
             instance.position.inMilliseconds,
             instance.duration.inMilliseconds,
@@ -499,46 +496,42 @@ class Playback extends ChangeNotifier {
           }
         }();
         if (Platform.isWindows) {
-          if (appWindow.isVisible && Configuration.instance.taskbarIndicator) {
+          if (Configuration.instance.taskbarIndicator) {
             WindowsTaskbar.setProgressMode(isBuffering
                 ? TaskbarProgressMode.indeterminate
                 : TaskbarProgressMode.normal);
           }
-          if (appWindow.isVisible) {
-            WindowsTaskbar.setWindowTitle(
-              [
-                track.trackName,
-                if (track.trackArtistNames.isNotEmpty)
-                  track.trackArtistNames.take(2).join(', '),
-                'Harmonoid',
-              ].join(' • '),
-            );
-            WindowsTaskbar.setThumbnailToolbar([
-              ThumbnailToolbarButton(
-                ThumbnailToolbarAssetIcon('assets/icons/previous.ico'),
-                Language.instance.PREVIOUS,
-                previous,
-                mode: index == 0 ? ThumbnailToolbarButtonMode.disabled : 0,
+          WindowsTaskbar.setWindowTitle(
+            [
+              track.trackName,
+              if (track.trackArtistNames.isNotEmpty)
+                track.trackArtistNames.take(2).join(', '),
+              'Harmonoid',
+            ].join(' • '),
+          );
+          WindowsTaskbar.setThumbnailToolbar([
+            ThumbnailToolbarButton(
+              ThumbnailToolbarAssetIcon('assets/icons/previous.ico'),
+              Language.instance.PREVIOUS,
+              previous,
+              mode: index == 0 ? ThumbnailToolbarButtonMode.disabled : 0,
+            ),
+            ThumbnailToolbarButton(
+              ThumbnailToolbarAssetIcon(
+                isPlaying ? 'assets/icons/pause.ico' : 'assets/icons/play.ico',
               ),
-              ThumbnailToolbarButton(
-                ThumbnailToolbarAssetIcon(
-                  isPlaying
-                      ? 'assets/icons/pause.ico'
-                      : 'assets/icons/play.ico',
-                ),
-                isPlaying ? Language.instance.PAUSE : Language.instance.PLAY,
-                isPlaying ? pause : play,
-              ),
-              ThumbnailToolbarButton(
-                ThumbnailToolbarAssetIcon('assets/icons/next.ico'),
-                Language.instance.NEXT,
-                next,
-                mode: index == tracks.length - 1
-                    ? ThumbnailToolbarButtonMode.disabled
-                    : 0,
-              ),
-            ]);
-          }
+              isPlaying ? Language.instance.PAUSE : Language.instance.PLAY,
+              isPlaying ? pause : play,
+            ),
+            ThumbnailToolbarButton(
+              ThumbnailToolbarAssetIcon('assets/icons/next.ico'),
+              Language.instance.NEXT,
+              next,
+              mode: index == tracks.length - 1
+                  ? ThumbnailToolbarButtonMode.disabled
+                  : 0,
+            ),
+          ]);
           try {
             SystemMediaTransportControls.instance.setStatus(
               isPlaying ? SMTCStatus.playing : SMTCStatus.paused,
