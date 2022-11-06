@@ -8,7 +8,6 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart' hide Intent;
-import 'package:flutter_window_close/flutter_window_close.dart';
 import 'package:system_media_transport_controls/system_media_transport_controls.dart';
 
 import 'package:harmonoid/core/collection.dart';
@@ -17,6 +16,7 @@ import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:window_plus/window_plus.dart';
 
 /// WindowCloseHandler
 /// ------------------
@@ -44,18 +44,11 @@ abstract class WindowCloseHandler {
       return;
     }
     _initialized = true;
-    FlutterWindowClose.setWindowShouldCloseHandler(onWindowClose);
-    // const channel = const MethodChannel('override_window_destroy');
-    // channel.setMethodCallHandler((call) async {
-    //   await tagger.dispose();
-    //   await Playback.instance.player.dispose();
-    //   await Playback.instance.saveAppState();
-    //   channel.invokeMethod('destroy_window');
-    // });
+    WindowPlus.instance.setWindowCloseHandler(windowCloseHandler);
   }
 
   /// Method which is invoked when a window is closed.
-  static Future<bool> onWindowClose({
+  static Future<bool> windowCloseHandler({
     bool showInterruptAlert = true,
   }) async {
     if (CollectionRefresh.instance.isOngoing) {

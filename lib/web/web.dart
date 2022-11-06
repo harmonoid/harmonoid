@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:animations/animations.dart';
+import 'package:window_plus/window_plus.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
@@ -57,7 +58,8 @@ class WebTabState extends State<WebTab> with AutomaticKeepAliveClientMixin {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(
-                      top: desktopTitleBarHeight + kDesktopAppBarHeight,
+                      top: WindowPlus.instance.captionHeight +
+                          kDesktopAppBarHeight,
                     ),
                     child: PageTransitionSwitcher(
                       transitionBuilder:
@@ -79,7 +81,8 @@ class WebTabState extends State<WebTab> with AutomaticKeepAliveClientMixin {
                   ),
                   DesktopAppBar(),
                   Container(
-                    margin: EdgeInsets.only(top: desktopTitleBarHeight),
+                    margin:
+                        EdgeInsets.only(top: WindowPlus.instance.captionHeight),
                     alignment: Alignment.center,
                     height: kDesktopAppBarHeight,
                     child: Row(
@@ -509,7 +512,8 @@ class WebSearch extends StatelessWidget {
                 ),
                 Container(
                   margin: EdgeInsets.only(
-                    top: desktopTitleBarHeight + kDesktopAppBarHeight,
+                    top: WindowPlus.instance.captionHeight +
+                        kDesktopAppBarHeight,
                   ),
                   child: CustomFutureBuilder<Map<String, List<Media>>>(
                     future: future,

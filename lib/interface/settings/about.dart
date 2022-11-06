@@ -16,6 +16,7 @@ import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
+import 'package:window_plus/window_plus.dart';
 
 class AboutPage extends StatefulWidget {
   AboutPage({Key? key}) : super(key: key);
@@ -324,7 +325,8 @@ class _AboutPageState extends State<AboutPage> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(
-                    top: desktopTitleBarHeight + kDesktopAppBarHeight,
+                    top: WindowPlus.instance.captionHeight +
+                        kDesktopAppBarHeight,
                   ),
                   child: content,
                 ),

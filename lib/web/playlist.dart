@@ -16,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:harmonoid/web/web.dart';
 import 'package:media_library/media_library.dart' as media;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:window_plus/window_plus.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -409,7 +410,8 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                     scrollController: scrollController,
                     pagingController: pagingController,
                     padding: EdgeInsets.only(
-                      top: desktopTitleBarHeight + kDesktopAppBarHeight,
+                      top: WindowPlus.instance.captionHeight +
+                          kDesktopAppBarHeight,
                     ),
                     builderDelegate: PagedChildBuilderDelegate<Track?>(
                       newPageProgressIndicatorBuilder: (_) => Container(

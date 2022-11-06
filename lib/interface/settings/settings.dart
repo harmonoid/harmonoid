@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:window_plus/window_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:harmonoid/utils/dimensions.dart';
@@ -43,7 +44,8 @@ class Settings extends StatelessWidget {
               children: [
                 Container(
                   margin: EdgeInsets.only(
-                    top: desktopTitleBarHeight + kDesktopAppBarHeight,
+                    top: WindowPlus.instance.captionHeight +
+                        kDesktopAppBarHeight,
                   ),
                   child: CustomListView(
                     shrinkWrap: true,

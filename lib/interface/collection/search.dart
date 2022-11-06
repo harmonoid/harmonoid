@@ -10,6 +10,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:window_plus/window_plus.dart';
 import 'package:media_library/media_library.dart';
 
 import 'package:harmonoid/core/collection.dart';
@@ -125,7 +126,8 @@ class SearchTabState extends State<SearchTab> {
                                             children: [
                                               Padding(
                                                 padding: EdgeInsets.only(
-                                                    top: desktopTitleBarHeight +
+                                                    top: WindowPlus.instance
+                                                            .captionHeight +
                                                         kDesktopAppBarHeight),
                                                 child: CustomListView(
                                                   padding: EdgeInsets.only(
@@ -213,7 +215,8 @@ class SearchTabState extends State<SearchTab> {
                                             children: [
                                               Padding(
                                                 padding: EdgeInsets.only(
-                                                    top: desktopTitleBarHeight +
+                                                    top: WindowPlus.instance
+                                                            .captionHeight +
                                                         kDesktopAppBarHeight),
                                                 child: CustomListView(
                                                   padding: EdgeInsets.only(

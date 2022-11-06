@@ -35,28 +35,27 @@ import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/file_system.dart';
-import 'package:harmonoid/utils/windows_info.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/constants/language.dart';
 
 export 'package:harmonoid/utils/extensions.dart';
 
-// Only global variables throughout Harmonoid's source code.
-
 const kPrimaryLightColor = Color(0xFF6200EA);
 const kPrimaryDarkColor = Color(0xFF7C4DFF);
 
+// TODO: Clean-up global variables.
+
 final isDesktop = Platform.isWindows || Platform.isLinux || Platform.isMacOS;
 final isMobile = Platform.isAndroid || Platform.isIOS;
-final desktopTitleBarHeight =
-    WindowsInfo.instance.isWindows10OrGreater ? 32.0 : 0.0;
 final tileMargin = isDesktop ? kDesktopTileMargin : kMobileTileMargin;
+
 final HotKey searchBarHotkey = HotKey(
   KeyCode.keyF,
   modifiers: [KeyModifier.control],
   scope: HotKeyScope.inapp,
 );
+
 final message = Random().nextInt(100) == 50
     ? [
         'Tag me on Twitter @alexmercerind with a screenshot of this. 🐦',

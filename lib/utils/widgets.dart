@@ -12,16 +12,16 @@ import 'dart:ui';
 import 'dart:math';
 // ignore: unnecessary_import
 import 'dart:typed_data';
-import 'package:flutter/gestures.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart'
     hide ReorderableDragStartListener, Intent;
+import 'package:flutter/rendering.dart';
+import 'package:flutter/gestures.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:animations/animations.dart';
+import 'package:window_plus/window_plus.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:media_library/media_library.dart';
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:harmonoid_visual_assets/harmonoid_visual_assets.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
@@ -36,7 +36,6 @@ import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/theme.dart';
-import 'package:harmonoid/utils/windows_info.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/interface/file_info_screen.dart';
@@ -44,6 +43,8 @@ import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/interface/settings/about.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/web/web.dart';
+
+import 'package:harmonoid/main.dart';
 
 class CustomListView extends StatefulWidget {
   final ScrollController? controller;
@@ -1077,76 +1078,71 @@ class DesktopAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        DesktopTitleBar(
-          color: color,
-        ),
-        ClipRect(
-          child: ClipRect(
-            clipBehavior: Clip.antiAlias,
-            child: Container(
-              height: (height ?? kDesktopAppBarHeight) + 8.0,
-              alignment: Alignment.topLeft,
-              padding: EdgeInsets.only(bottom: 8.0),
-              child: Material(
-                animationDuration: Duration.zero,
-                elevation: elevation ?? 4.0,
-                color: color ?? Theme.of(context).appBarTheme.backgroundColor,
-                child: Container(
-                  height: double.infinity,
-                  alignment: Alignment.topLeft,
-                  child: Container(
-                    height: kDesktopAppBarHeight,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        leading ??
-                            NavigatorPopButton(
-                              color: color != null
-                                  ? isDark
-                                      ? Theme.of(context)
-                                          .extension<IconColors>()
-                                          ?.appBarDarkIconColor
-                                      : Theme.of(context)
-                                          .extension<IconColors>()
-                                          ?.appBarLightIconColor
-                                  : null,
-                            ),
-                        SizedBox(
-                          width: 16.0,
+    return ClipRect(
+      clipBehavior: Clip.antiAlias,
+      child: Container(
+        height: (height ?? kDesktopAppBarHeight) +
+            WindowPlus.instance.captionHeight +
+            8.0,
+        alignment: Alignment.topLeft,
+        padding: EdgeInsets.only(bottom: 8.0),
+        child: Material(
+          animationDuration: Duration.zero,
+          elevation: elevation ?? 4.0,
+          color: color ?? Theme.of(context).appBarTheme.backgroundColor,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DesktopCaptionBar(
+                color: color,
+              ),
+              Container(
+                height: kDesktopAppBarHeight,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    leading ??
+                        NavigatorPopButton(
+                          color: color != null
+                              ? isDark
+                                  ? Theme.of(context)
+                                      .extension<IconColors>()
+                                      ?.appBarDarkIconColor
+                                  : Theme.of(context)
+                                      .extension<IconColors>()
+                                      ?.appBarLightIconColor
+                              : null,
                         ),
-                        if (title != null)
-                          Text(
-                            title!,
-                            style:
-                                Theme.of(context).textTheme.headline1?.copyWith(
-                                    color: color != null
-                                        ? isDark
-                                            ? Colors.white
-                                            : Colors.black
-                                        : null),
-                          ),
-                        if (actions != null) ...[
-                          const Spacer(),
-                          ...actions!,
-                          const SizedBox(width: 16.0),
-                        ] else if (child != null)
-                          Container(
-                            width: MediaQuery.of(context).size.width - 72.0,
-                            child: child!,
-                          ),
-                      ],
+                    SizedBox(
+                      width: 16.0,
                     ),
-                  ),
+                    if (title != null)
+                      Text(
+                        title!,
+                        style: Theme.of(context).textTheme.headline1?.copyWith(
+                            color: color != null
+                                ? isDark
+                                    ? Colors.white
+                                    : Colors.black
+                                : null),
+                      ),
+                    if (actions != null) ...[
+                      const Spacer(),
+                      ...actions!,
+                      const SizedBox(width: 16.0),
+                    ] else if (child != null)
+                      Container(
+                        width: MediaQuery.of(context).size.width - 72.0,
+                        child: child!,
+                      ),
+                  ],
                 ),
               ),
-            ),
+            ],
           ),
         ),
-      ],
+      ),
     );
   }
 
@@ -1322,7 +1318,7 @@ class ExceptionWidget extends StatelessWidget {
           ),
           if (title == Language.instance.NO_COLLECTION_TITLE) ...[
             const SizedBox(
-              height: 4.0,
+              height: 8.0,
             ),
             TextButton(
               onPressed: () {
@@ -1553,10 +1549,10 @@ class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
   }
 }
 
-class DesktopTitleBar extends StatelessWidget {
+class DesktopCaptionBar extends StatelessWidget {
   final hideMaximizeAndRestoreButton;
   final Color? color;
-  const DesktopTitleBar({
+  const DesktopCaptionBar({
     Key? key,
     this.color,
     this.hideMaximizeAndRestoreButton = false,
@@ -1569,17 +1565,18 @@ class DesktopTitleBar extends StatelessWidget {
         height: MediaQuery.of(context).padding.top,
         color: color ?? Theme.of(context).appBarTheme.backgroundColor,
       );
-    return WindowsInfo.instance.isWindows10OrGreater
+    return WindowPlus.instance.captionHeight > 0.0
         ? Container(
             width: MediaQuery.of(context).size.width,
-            height: desktopTitleBarHeight,
+            height: WindowPlus.instance.captionHeight,
             color: color ?? Theme.of(context).appBarTheme.backgroundColor,
             alignment: Alignment.topCenter,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: MoveWindow(
+                  child: WindowCaption(
+                    brightness: brightness ?? Theme.of(context).brightness,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -1587,14 +1584,13 @@ class DesktopTitleBar extends StatelessWidget {
                           width: 14.0,
                         ),
                         Text(
-                          'Harmonoid Music',
+                          kCaption,
                           style: TextStyle(
-                            color: (color == null
-                                    ? Theme.of(context).brightness ==
+                            color:
+                                (brightness ?? Theme.of(context).brightness) ==
                                         Brightness.dark
-                                    : isDark)
-                                ? Colors.white
-                                : Colors.black,
+                                    ? Colors.white
+                                    : Colors.black,
                             fontSize: 12.0,
                           ),
                         ),
@@ -1602,65 +1598,23 @@ class DesktopTitleBar extends StatelessWidget {
                     ),
                   ),
                 ),
-                MinimizeWindowButton(
-                  colors: windowButtonColors(context),
-                ),
-                if (!hideMaximizeAndRestoreButton)
-                  appWindow.isMaximized
-                      ? RestoreWindowButton(
-                          colors: windowButtonColors(context),
-                        )
-                      : MaximizeWindowButton(
-                          colors: windowButtonColors(context),
-                        ),
-                CloseWindowButton(
-                  colors: windowButtonColors(context)
-                    ..mouseOver = Color(0xFFC42B1C)
-                    ..mouseDown = Color(0xFFC83F31)
-                    ..iconMouseOver = Colors.white
-                    ..iconMouseDown = Colors.white,
-                ),
               ],
             ),
           )
         : Container();
   }
 
-  bool get isDark =>
-      (0.299 * (color?.red ?? 256.0)) +
-          (0.587 * (color?.green ?? 256.0)) +
-          (0.114 * (color?.blue ?? 256.0)) <
-      128.0;
-
-  WindowButtonColors windowButtonColors(BuildContext context) =>
-      WindowButtonColors(
-        iconNormal: (color == null
-                ? Theme.of(context).brightness == Brightness.dark
-                : isDark)
-            ? Colors.white
-            : Colors.black,
-        iconMouseDown: (color == null
-                ? Theme.of(context).brightness == Brightness.dark
-                : isDark)
-            ? Colors.white
-            : Colors.black,
-        iconMouseOver: (color == null
-                ? Theme.of(context).brightness == Brightness.dark
-                : isDark)
-            ? Colors.white
-            : Colors.black,
-        normal: Colors.transparent,
-        mouseOver: (color == null
-                ? Theme.of(context).brightness == Brightness.dark
-                : isDark)
-            ? Colors.white.withOpacity(0.04)
-            : Colors.black.withOpacity(0.04),
-        mouseDown: (color == null
-                ? Theme.of(context).brightness == Brightness.dark
-                : isDark)
-            ? Colors.white.withOpacity(0.04)
-            : Colors.black.withOpacity(0.04),
-      );
+  Brightness? get brightness {
+    if (color == null) {
+      return null;
+    }
+    return (0.299 * (color?.red ?? 256.0)) +
+                (0.587 * (color?.green ?? 256.0)) +
+                (0.114 * (color?.blue ?? 256.0)) <
+            128.0
+        ? Brightness.dark
+        : Brightness.light;
+  }
 }
 
 class MobileBottomNavigationBar extends StatefulWidget {

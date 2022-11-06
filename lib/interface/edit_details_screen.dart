@@ -9,6 +9,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:window_plus/window_plus.dart';
 import 'package:media_engine/media_engine.dart';
 import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
@@ -153,7 +154,8 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
               children: [
                 Container(
                   margin: EdgeInsets.only(
-                    top: desktopTitleBarHeight + kDesktopAppBarHeight,
+                    top: WindowPlus.instance.captionHeight +
+                        kDesktopAppBarHeight,
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,

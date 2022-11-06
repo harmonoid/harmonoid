@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:window_plus/window_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:media_engine/media_engine.dart';
 import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:window_manager/window_manager.dart';
 import 'package:flutter_lyric/lyrics_reader.dart';
 import 'package:flutter_lyric/lyrics_reader_model.dart';
 
@@ -151,7 +151,6 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                 color: Colors.white,
                 onTap: DesktopNowPlayingController.instance.hide,
               ),
-              height: 56.0,
             ),
             palette: colors.palette,
             images: NowPlayingVisuals.instance.preloaded
@@ -850,16 +849,15 @@ class CarouselState extends State<Carousel> {
   @override
   void initState() {
     super.initState();
-    WindowManager.instance.ensureInitialized();
   }
 
   void toggle({bool? hide}) {
     if (hide != null) {
-      WindowManager.instance.setFullScreen(!hide);
+      WindowPlus.instance.setIsFullscreen(!hide);
       _isFullscreen = !hide;
       return;
     }
-    WindowManager.instance.setFullScreen(!_isFullscreen);
+    WindowPlus.instance.setIsFullscreen(!_isFullscreen);
     _isFullscreen = !_isFullscreen;
   }
 

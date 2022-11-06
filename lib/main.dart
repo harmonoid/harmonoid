@@ -9,8 +9,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart' hide Intent;
+import 'package:window_plus/window_plus.dart';
 import 'package:media_engine/media_engine.dart';
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:system_media_transport_controls/system_media_transport_controls.dart';
@@ -33,10 +33,12 @@ import 'package:harmonoid/interface/harmonoid.dart';
 import 'package:harmonoid/interface/exception.dart';
 import 'package:harmonoid/constants/language.dart';
 
+const String kApplication = 'com.alexmercerind.harmonoid';
+const String kAuthor = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
+const String kCaption = 'Harmonoid Music';
+const String kLicense = 'End-User License Agreement for Harmonoid';
 const String kTitle = 'Harmonoid';
 const String kVersion = 'v0.3.3';
-const String kAuthor = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
-const String kLicense = 'End-User License Agreement for Harmonoid';
 
 Future<void> main(List<String> args) async {
   try {
@@ -54,14 +56,9 @@ Future<void> main(List<String> args) async {
   }
   try {
     if (Platform.isWindows) {
+      await WindowPlus.ensureInitialized(application: kApplication);
       WindowCloseHandler.initialize();
       ArgumentVectorHandler.initialize();
-      doWhenWindowReady(() {
-        appWindow.minSize = Size(960, 640);
-        appWindow.size = Size(1024, 640);
-        appWindow.alignment = Alignment.center;
-        appWindow.show();
-      });
       await Configuration.initialize();
       await AppState.initialize();
       await NowPlayingVisuals.initialize();
@@ -74,6 +71,7 @@ Future<void> main(List<String> args) async {
       DiscordRPC.initialize();
     }
     if (Platform.isLinux) {
+      await WindowPlus.ensureInitialized(application: kApplication);
       WindowCloseHandler.initialize();
       ArgumentVectorHandler.initialize();
       await Configuration.initialize();
@@ -153,10 +151,6 @@ Future<void> main(List<String> args) async {
     runApp(
       Harmonoid(),
     );
-    if (Platform.isLinux) {
-      const MethodChannel('com.alexmercerind.harmonoid/window_utils')
-          .invokeMethod('notify_run_app');
-    }
   } catch (exception, stacktrace) {
     debugPrint(exception.toString());
     debugPrint(stacktrace.toString());
@@ -168,10 +162,6 @@ Future<void> main(List<String> args) async {
         stacktrace: stacktrace,
       ),
     );
-    if (Platform.isLinux) {
-      const MethodChannel('com.alexmercerind.harmonoid/window_utils')
-          .invokeMethod('notify_run_app');
-    }
   }
 }
 

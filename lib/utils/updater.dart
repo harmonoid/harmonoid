@@ -11,12 +11,12 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_window_close/flutter_window_close.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 
 import 'package:harmonoid/main.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/window_close_handler.dart';
+import 'package:window_plus/window_plus.dart';
 
 /// Updater
 /// -------
@@ -61,9 +61,11 @@ abstract class Updater {
             Uri.parse(url),
             mode: LaunchMode.externalApplication,
           );
-          if (await WindowCloseHandler.onWindowClose(
-              showInterruptAlert: false)) {
-            FlutterWindowClose.destroyWindow();
+          final result = await WindowCloseHandler.windowCloseHandler(
+            showInterruptAlert: false,
+          );
+          if (result) {
+            WindowPlus.instance.destroy();
           }
         }
       }

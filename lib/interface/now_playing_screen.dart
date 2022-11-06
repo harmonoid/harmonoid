@@ -9,8 +9,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:media_engine/media_engine.dart';
+import 'package:window_plus/window_plus.dart';
 import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
 
@@ -81,7 +80,7 @@ class NowPlayingState extends State<NowPlayingScreen>
           ),
           Container(
             margin: EdgeInsets.only(
-              top: desktopTitleBarHeight + kDesktopAppBarHeight,
+              top: WindowPlus.instance.captionHeight + kDesktopAppBarHeight,
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,

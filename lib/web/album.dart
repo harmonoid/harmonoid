@@ -7,12 +7,13 @@
 ///
 import 'dart:async';
 import 'dart:math';
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:harmonoid/web/web.dart';
 import 'package:readmore/readmore.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:animations/animations.dart';
+import 'package:window_plus/window_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:extended_image/extended_image.dart';
@@ -410,7 +411,9 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                   CustomListView(
                     controller: controller,
                     padding: EdgeInsets.only(
-                        top: desktopTitleBarHeight + kDesktopAppBarHeight),
+                      top: WindowPlus.instance.captionHeight +
+                          kDesktopAppBarHeight,
+                    ),
                     children: [
                       TweenAnimationBuilder(
                         tween: ColorTween(

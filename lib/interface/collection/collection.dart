@@ -12,6 +12,7 @@ import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
+import 'package:window_plus/window_plus.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
@@ -142,7 +143,8 @@ class CollectionScreenState extends State<CollectionScreen>
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.only(
-                    top: desktopTitleBarHeight + kDesktopAppBarHeight,
+                    top: WindowPlus.instance.captionHeight +
+                        kDesktopAppBarHeight,
                   ),
                   child: Consumer<CollectionRefresh>(
                     builder: (context, refresh, __) => Stack(
@@ -255,68 +257,72 @@ class CollectionScreenState extends State<CollectionScreen>
                     ),
                   ),
                 ),
-                Column(
-                  children: [
-                    DesktopTitleBar(),
-                    ClipRect(
-                      clipBehavior: Clip.antiAlias,
-                      child: Container(
-                        height: kDesktopAppBarHeight + 8.0,
-                        padding: EdgeInsets.only(bottom: 8.0),
-                        child: Material(
-                          elevation: 4.0,
-                          color: Theme.of(context).appBarTheme.backgroundColor,
-                          child: Stack(
-                            alignment: Alignment.centerLeft,
-                            children: [
-                              Positioned.fill(
-                                child: Container(
-                                  height: 44.0,
-                                  padding: EdgeInsets.only(
-                                    left: 16.0,
-                                    right: 16.0,
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
+                ClipRect(
+                  clipBehavior: Clip.antiAlias,
+                  child: Container(
+                    height: kDesktopAppBarHeight +
+                        WindowPlus.instance.captionHeight +
+                        8.0,
+                    padding: EdgeInsets.only(bottom: 8.0),
+                    child: Material(
+                      elevation: 4.0,
+                      color: Theme.of(context).appBarTheme.backgroundColor,
+                      child: Stack(
+                        alignment: Alignment.centerLeft,
+                        children: [
+                          Positioned(
+                            top: 0.0,
+                            left: 0.0,
+                            right: 0.0,
+                            child: DesktopCaptionBar(),
+                          ),
+                          Positioned.fill(
+                            top: WindowPlus.instance.captionHeight,
+                            child: Container(
+                              height: 44.0,
+                              padding: EdgeInsets.only(
+                                left: 16.0,
+                                right: 16.0,
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Language.instance.ALBUM,
+                                  Language.instance.TRACK,
+                                  Language.instance.ARTIST,
+                                  Language.instance.PLAYLIST,
+                                ].map(
+                                  (tab) {
+                                    final _index = [
                                       Language.instance.ALBUM,
                                       Language.instance.TRACK,
                                       Language.instance.ARTIST,
                                       Language.instance.PLAYLIST,
-                                    ].map(
-                                      (tab) {
-                                        final _index = [
-                                          Language.instance.ALBUM,
-                                          Language.instance.TRACK,
-                                          Language.instance.ARTIST,
-                                          Language.instance.PLAYLIST,
-                                        ].indexOf(tab);
-                                        return InkWell(
-                                          borderRadius:
-                                              BorderRadius.circular(4.0),
-                                          onTap: () {
-                                            if (index.value == _index) return;
-                                            setState(() {
-                                              index.value = _index;
-                                            });
-                                          },
-                                          child: Container(
-                                            height: 40.0,
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 4.0),
-                                            alignment: Alignment.center,
-                                            margin: EdgeInsets.symmetric(
-                                                horizontal: 4.0),
-                                            child: Text(
-                                              tab.toUpperCase(),
-                                              style: TextStyle(
-                                                fontSize: 20.0,
-                                                fontWeight:
-                                                    index.value == _index
-                                                        ? FontWeight.w600
-                                                        : FontWeight.w300,
-                                                color: (Theme.of(context)
-                                                                .brightness ==
+                                    ].indexOf(tab);
+                                    return InkWell(
+                                      borderRadius: BorderRadius.circular(4.0),
+                                      onTap: () {
+                                        if (index.value == _index) return;
+                                        setState(() {
+                                          index.value = _index;
+                                        });
+                                      },
+                                      child: Container(
+                                        height: 40.0,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 4.0),
+                                        alignment: Alignment.center,
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 4.0),
+                                        child: Text(
+                                          tab.toUpperCase(),
+                                          style: TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: index.value == _index
+                                                ? FontWeight.w600
+                                                : FontWeight.w300,
+                                            color:
+                                                (Theme.of(context).brightness ==
                                                             Brightness.dark
                                                         ? Colors.white
                                                         : Colors.black)
@@ -324,157 +330,151 @@ class CollectionScreenState extends State<CollectionScreen>
                                                         index.value == _index
                                                             ? 1.0
                                                             : 0.67),
-                                              ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ).toList(),
+                              ),
+                            ),
+                          ),
+                          Positioned.fill(
+                            top: WindowPlus.instance.captionHeight,
+                            right: 0.0,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  height: 40.0,
+                                  width: 320.0,
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.only(
+                                    top: 0.0,
+                                    bottom: 0.0,
+                                  ),
+                                  padding: EdgeInsets.only(top: 2.0),
+                                  child: Focus(
+                                    onFocusChange: (hasFocus) {
+                                      if (hasFocus) {
+                                        HotKeys.instance.disableSpaceHotKey();
+                                      } else {
+                                        HotKeys.instance.enableSpaceHotKey();
+                                      }
+                                    },
+                                    child: TextField(
+                                      focusNode: node,
+                                      cursorWidth: 1.0,
+                                      onChanged: (value) {
+                                        queryStr = value;
+                                      },
+                                      onSubmitted: (value) {
+                                        query.value = value;
+                                        if (queryStr.isNotEmpty)
+                                          setState(() {
+                                            index.value = 4;
+                                          });
+                                        node.requestFocus();
+                                      },
+                                      textAlignVertical:
+                                          TextAlignVertical.center,
+                                      style:
+                                          Theme.of(context).textTheme.headline4,
+                                      decoration: inputDecoration(
+                                        context,
+                                        Language
+                                            .instance.COLLECTION_SEARCH_WELCOME,
+                                        trailingIcon: Transform.rotate(
+                                          angle: pi / 2,
+                                          child: Tooltip(
+                                            message: Language.instance.SEARCH,
+                                            child: Icon(
+                                              Icons.search,
+                                              size: 20.0,
+                                              color: Theme.of(context)
+                                                  .iconTheme
+                                                  .color,
                                             ),
                                           ),
-                                        );
-                                      },
-                                    ).toList(),
+                                        ),
+                                        trailingIconOnPressed: () {
+                                          query.value = queryStr;
+                                          if (queryStr.isNotEmpty)
+                                            setState(() {
+                                              index.value = 4;
+                                            });
+                                          node.requestFocus();
+                                        },
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Positioned(
-                                right: 0.0,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      height: 40.0,
-                                      width: 320.0,
-                                      alignment: Alignment.center,
-                                      margin: EdgeInsets.only(
-                                        top: 0.0,
-                                        bottom: 0.0,
-                                      ),
-                                      padding: EdgeInsets.only(top: 2.0),
-                                      child: Focus(
-                                        onFocusChange: (hasFocus) {
-                                          if (hasFocus) {
-                                            HotKeys.instance
-                                                .disableSpaceHotKey();
-                                          } else {
-                                            HotKeys.instance
-                                                .enableSpaceHotKey();
-                                          }
-                                        },
-                                        child: TextField(
-                                          focusNode: node,
-                                          cursorWidth: 1.0,
-                                          onChanged: (value) {
-                                            queryStr = value;
-                                          },
-                                          onSubmitted: (value) {
-                                            query.value = value;
-                                            if (queryStr.isNotEmpty)
-                                              setState(() {
-                                                index.value = 4;
-                                              });
-                                            node.requestFocus();
-                                          },
-                                          textAlignVertical:
-                                              TextAlignVertical.center,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline4,
-                                          decoration: inputDecoration(
-                                            context,
-                                            Language.instance
-                                                .COLLECTION_SEARCH_WELCOME,
-                                            trailingIcon: Transform.rotate(
-                                              angle: pi / 2,
-                                              child: Tooltip(
-                                                message:
-                                                    Language.instance.SEARCH,
-                                                child: Icon(
-                                                  Icons.search,
-                                                  size: 20.0,
-                                                  color: Theme.of(context)
-                                                      .iconTheme
-                                                      .color,
-                                                ),
-                                              ),
-                                            ),
-                                            trailingIconOnPressed: () {
-                                              query.value = queryStr;
-                                              if (queryStr.isNotEmpty)
-                                                setState(() {
-                                                  index.value = 4;
-                                                });
-                                              node.requestFocus();
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 12.0,
-                                    ),
-                                    PlayFileOrURLButton(),
-                                    // TweenAnimationBuilder<double>(
-                                    //   tween: Tween<double>(
-                                    //     begin: 0.0,
-                                    //     end: index.value == 3 ? 0.0 : 1.0,
-                                    //   ),
-                                    //   duration: Duration(milliseconds: 200),
-                                    //   child: CollectionSortButton(
-                                    //     tab: index.value,
-                                    //   ),
-                                    //   builder: (context, value, child) =>
-                                    //       Opacity(
-                                    //     opacity: value,
-                                    //     child:
-                                    //         value == 0.0 ? Container() : child,
-                                    //   ),
-                                    // ),
-                                    CollectionMoreButton(),
-                                    Tooltip(
-                                      message: Language.instance.SETTING,
-                                      child: InkWell(
-                                        onTap: () {
-                                          Navigator.of(context).push(
-                                            PageRouteBuilder(
-                                              pageBuilder: (context, animation,
-                                                      secondaryAnimation) =>
-                                                  FadeThroughTransition(
-                                                fillColor: Colors.transparent,
-                                                animation: animation,
-                                                secondaryAnimation:
-                                                    secondaryAnimation,
-                                                child: Settings(),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                        child: Container(
-                                          height: 40.0,
-                                          width: 40.0,
-                                          child: Icon(
-                                            Icons.settings,
-                                            size: 20.0,
-                                            color: Theme.of(context)
-                                                .appBarTheme
-                                                .actionsIconTheme
-                                                ?.color,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 16.0,
-                                    ),
-                                  ],
+                                SizedBox(
+                                  width: 12.0,
                                 ),
-                              ),
-                            ],
+                                PlayFileOrURLButton(),
+                                // TweenAnimationBuilder<double>(
+                                //   tween: Tween<double>(
+                                //     begin: 0.0,
+                                //     end: index.value == 3 ? 0.0 : 1.0,
+                                //   ),
+                                //   duration: Duration(milliseconds: 200),
+                                //   child: CollectionSortButton(
+                                //     tab: index.value,
+                                //   ),
+                                //   builder: (context, value, child) =>
+                                //       Opacity(
+                                //     opacity: value,
+                                //     child:
+                                //         value == 0.0 ? Container() : child,
+                                //   ),
+                                // ),
+                                CollectionMoreButton(),
+                                Tooltip(
+                                  message: Language.instance.SETTING,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        PageRouteBuilder(
+                                          pageBuilder: (context, animation,
+                                                  secondaryAnimation) =>
+                                              FadeThroughTransition(
+                                            fillColor: Colors.transparent,
+                                            animation: animation,
+                                            secondaryAnimation:
+                                                secondaryAnimation,
+                                            child: Settings(),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    child: Container(
+                                      height: 40.0,
+                                      width: 40.0,
+                                      child: Icon(
+                                        Icons.settings,
+                                        size: 20.0,
+                                        color: Theme.of(context)
+                                            .appBarTheme
+                                            .actionsIconTheme
+                                            ?.color,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 16.0,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),

@@ -10,6 +10,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:window_plus/window_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:harmonoid/utils/theme.dart';
@@ -124,7 +125,8 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                               children: [
                                 Padding(
                                   padding: EdgeInsets.only(
-                                    top: desktopTitleBarHeight + 16.0,
+                                    top: WindowPlus.instance.captionHeight +
+                                        16.0,
                                     left: 36.0,
                                     right: 36.0,
                                     bottom: 16.0,
@@ -229,7 +231,7 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                       elevation: 4.0,
                     ),
                     if (Platform.isWindows)
-                      DesktopTitleBar(
+                      DesktopCaptionBar(
                         color: Theme.of(context).primaryColor,
                         hideMaximizeAndRestoreButton: true,
                       ),
