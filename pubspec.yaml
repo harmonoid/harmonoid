@@ -56,7 +56,7 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/flutter-permission-handler.git
       path: permission_handler
-      ref: master
+      ref: 6120686e5f744e2934ca5f45deeca28df3227f5d
   file_selector_linux:
     git:
       url: https://github.com/google/flutter-desktop-embedding.git
@@ -119,12 +119,12 @@ dependency_overrides:
     git:
       url: https://github.com/alexmercerind/flutter-permission-handler.git
       path: permission_handler_platform_interface
-      ref: master
+      ref: 6120686e5f744e2934ca5f45deeca28df3227f5d
   permission_handler_android:
     git:
       url: https://github.com/alexmercerind/flutter-permission-handler.git
       path: permission_handler_android
-      ref: master
+      ref: 6120686e5f744e2934ca5f45deeca28df3227f5d
 
 dev_dependencies:
   lints: ^2.0.0
