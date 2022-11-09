@@ -6,7 +6,6 @@ add_executable(${BINARY_NAME} WIN32
   "main.cpp"
   "utils.cpp"
   "win32_window.cpp"
-  "argument_vector_handler.cpp"
   "${FLUTTER_MANAGED_DIR}/generated_plugin_registrant.cc"
   "Runner.rc"
   "runner.exe.manifest"
@@ -17,9 +16,6 @@ target_link_libraries(
   ${BINARY_NAME} PRIVATE
   flutter
   flutter_wrapper_app
-
-  # TODO (@alexmercerind): Remove unnecessary linking.
-  flutter_wrapper_plugin
 )
 target_include_directories(${BINARY_NAME} PRIVATE "${CMAKE_SOURCE_DIR}")
 add_dependencies(${BINARY_NAME} flutter_assemble)
