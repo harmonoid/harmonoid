@@ -6,11 +6,11 @@ if __name__ == "__main__":
     string = sys.argv[1]
     keys = []
     if input(f"Remove {string}?\n") in ["y", "Y"]:
-        file_names = os.listdir("assets/translations")
+        file_names = os.listdir("assets/translations/translations")
         for file_name in file_names:
             if ".json" in file_name and file_name != "index.json":
                 with open(
-                    f"assets/translations/{file_name}",
+                    f"assets/translations/translations/{file_name}",
                     "r+",
                     encoding="utf_8",
                     errors="ignore",
@@ -20,7 +20,7 @@ if __name__ == "__main__":
                     language.pop(string)
                     keys = list(language.keys())
                     with open(
-                        f"assets/translations/{file_name}",
+                        f"assets/translations/translations/{file_name}",
                         "w",
                         encoding="utf_8",
                         errors="ignore",

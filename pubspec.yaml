@@ -75,7 +75,6 @@ dependencies:
   readmore: ^2.1.0
   fluentui_system_icons: ^1.1.136
   material_floating_search_bar: ^0.3.6
-  implicitly_animated_reorderable_list: ^0.4.0-dev+4
   collection: any
   substring_highlight: ^1.0.33
   extended_image: ^6.0.2
@@ -95,7 +94,7 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/desktop.git
       path: desktop
-      ref: f62da81ea431573ede64f0ae78de07af3f820f9b
+      ref: a087d1ed4afeb61edd00e06842fa62c090f30ff5
   hotkey_manager:
     git:
       url: https://github.com/alexmercerind/hotkey_manager.git
