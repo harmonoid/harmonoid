@@ -593,7 +593,7 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
                           height: 1.0,
                         ),
                         Expanded(
-                          child: CustomSingleChildScrollView(
+                          child: SingleChildScrollView(
                             child: Column(
                               children: [
                                 if (track != null)

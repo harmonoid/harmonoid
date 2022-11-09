@@ -149,6 +149,7 @@ class Language extends Strings with ChangeNotifier {
     DONE = map['DONE']!;
     DOWNLOAD = map['DOWNLOAD']!;
     DOWNLOAD_UPDATE = map['DOWNLOAD_UPDATE']!;
+    EDIT = map['EDIT']!;
     EDIT_DETAILS = map['EDIT_DETAILS']!;
     EDIT_MINIMUM_FILE_SIZE = map['EDIT_MINIMUM_FILE_SIZE']!;
     ENABLE_125_SCALING = map['ENABLE_125_SCALING']!;

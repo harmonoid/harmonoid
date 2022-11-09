@@ -6,439 +6,140 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
-import 'package:flutter/material.dart' hide ExpansionTile;
-import 'package:provider/provider.dart';
-import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
-import 'package:implicitly_animated_reorderable_list/transitions.dart';
+import 'package:flutter/material.dart';
 
 import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/constants/language.dart';
 
-class LanguageSetting extends StatefulWidget {
-  LanguageSetting({Key? key}) : super(key: key);
-
-  @override
-  LanguageSettingState createState() => LanguageSettingState();
-}
-
-class LanguageSettingState extends State<LanguageSetting> {
-  final Set<LanguageData> available = {};
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) async {
-        if (available.isEmpty) {
-          available.addAll(await Language.instance.available);
-          if (mounted) {
-            setState(() {});
-          }
-        }
-      },
+class LanguageSetting extends StatelessWidget {
+  Future<void> action(BuildContext context) async {
+    final available = await Language.instance.available;
+    LanguageData value = Language.instance.current;
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(Language.instance.SETTING_LANGUAGE_TITLE),
+        contentPadding: EdgeInsets.only(top: 20.0),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Divider(
+              height: 1.0,
+              thickness: 1.0,
+            ),
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height / 2,
+              ),
+              child: StatefulBuilder(
+                builder: (context, setState) => Material(
+                  color: Colors.transparent,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: available
+                          .map(
+                            (data) => RadioListTile<LanguageData>(
+                              value: data,
+                              groupValue: value,
+                              onChanged: (e) {
+                                if (e != null) {
+                                  setState(() => value = e);
+                                }
+                              },
+                              title: Text(
+                                data.name,
+                                style: isDesktop
+                                    ? Theme.of(context).textTheme.headline4
+                                    : null,
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const Divider(
+              height: 1.0,
+              thickness: 1.0,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).maybePop();
+              await Language.instance.set(value: value);
+              await Configuration.instance.save(language: value);
+            },
+            child: Text(
+              Language.instance.OK,
+            ),
+          ),
+          TextButton(
+            onPressed: Navigator.of(context).maybePop,
+            child: Text(
+              Language.instance.CANCEL,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    if (isMobile) {
-      return ListTile(
-        onTap: () async {
-          LanguageData value = Language.instance.current;
-          await showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text(Language.instance.SETTING_LANGUAGE_TITLE),
-              contentPadding: EdgeInsets.only(top: 20.0),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Divider(
-                    height: 1.0,
-                    thickness: 1.0,
-                  ),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxHeight: MediaQuery.of(context).size.height / 2,
-                    ),
-                    child: StatefulBuilder(
-                      builder: (context, setState) => Material(
-                        color: Colors.transparent,
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: available
-                                .map(
-                                  (data) => RadioListTile<LanguageData>(
-                                    value: data,
-                                    groupValue: value,
-                                    onChanged: (e) {
-                                      if (e != null) {
-                                        setState(() => value = e);
-                                      }
-                                    },
-                                    title: Text(
-                                      data.name,
-                                      style: isDesktop
-                                          ? Theme.of(context)
-                                              .textTheme
-                                              .headline4
-                                          : null,
-                                    ),
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const Divider(
-                    height: 1.0,
-                    thickness: 1.0,
-                  ),
-                ],
+    if (isDesktop) {
+      return SettingsTile(
+        title: Language.instance.SETTING_LANGUAGE_TITLE,
+        subtitle: Language.instance.SETTING_LANGUAGE_SUBTITLE,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 8.0,
               ),
-              actions: [
+              child: Text(
+                [
+                  Language.instance.current.name,
+                  Language.instance.current.country,
+                ].join(' • '),
+                style: Theme.of(context).textTheme.headline3,
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            Row(
+              children: [
+                const SizedBox(width: 4.0),
                 TextButton(
-                  onPressed: () async {
-                    Navigator.of(context).maybePop();
-                    await Language.instance.set(value: value);
-                    await Configuration.instance.save(language: value);
-                  },
+                  onPressed: () => action(context),
                   child: Text(
-                    Language.instance.OK,
-                  ),
-                ),
-                TextButton(
-                  onPressed: Navigator.of(context).maybePop,
-                  child: Text(
-                    Language.instance.CANCEL,
+                    Language.instance.EDIT.toUpperCase(),
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                    ),
                   ),
                 ),
               ],
             ),
-          );
-        },
-        title: Text(Language.instance.SETTING_LANGUAGE_TITLE),
-        subtitle: Text(
-          [
-            Language.instance.current.name,
-            Language.instance.current.country,
-          ].join(' \u2022 '),
+          ],
         ),
       );
     }
-    final data = available.toList()
-      ..removeWhere(
-        (data) => data == Provider.of<Language>(context, listen: false).current,
-      )
-      ..insert(
-        0,
-        Provider.of<Language>(context, listen: false).current,
-      );
-    return Consumer<Language>(
-      builder: (context, language, _) => Container(
-        margin: EdgeInsets.symmetric(
-          horizontal: 8.0,
-          vertical: 4.0,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: ExpansionTile(
-            backgroundColor: Colors.transparent,
-            tileShape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
-            ),
-            tilePadding: EdgeInsets.only(
-              top: 8.0,
-              left: 16.0,
-              right: 16.0,
-              bottom: 4.0,
-            ),
-            title: (context, animation) => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          Language.instance.SETTING_LANGUAGE_TITLE,
-                          style:
-                              Theme.of(context).textTheme.headline1?.copyWith(
-                                    fontSize: 20.0,
-                                  ),
-                        ),
-                        SizedBox(
-                          height: 2.0,
-                        ),
-                        Text(
-                          Language.instance.SETTING_LANGUAGE_SUBTITLE,
-                          style: Theme.of(context).textTheme.headline3,
-                        ),
-                      ],
-                    ),
-                  ),
-                  RotationTransition(
-                    turns: Tween<double>(
-                      begin: 0.0,
-                      end: 0.5,
-                    ).animate(animation as Animation<double>),
-                    child: Icon(
-                      Icons.expand_more,
-                      size: 24,
-                    ),
-                  ),
-                ]),
-              ],
-            ),
-            fixedChild: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
-              child: tile(Language.instance.current),
-            ),
-            children: [
-              ImplicitlyAnimatedList<LanguageData>(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                areItemsTheSame: (a, b) => a == b,
-                items: data,
-                itemBuilder: (context, animation, e, index) {
-                  return SizeFadeTransition(
-                    sizeFraction: 0.7,
-                    curve: Curves.easeInOut,
-                    animation: animation,
-                    child: tile(e),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
+    return ListTile(
+      onTap: () => action(context),
+      title: Text(Language.instance.SETTING_LANGUAGE_TITLE),
+      subtitle: Text(
+        [
+          Language.instance.current.name,
+          Language.instance.current.country,
+        ].join(' • '),
       ),
-    );
-  }
-
-  Widget tile(
-    LanguageData data, {
-    Key? key,
-  }) {
-    return Consumer<Language>(
-      builder: (context, language, _) => RadioListTile<LanguageData>(
-        key: key,
-        value: data,
-        title: Text(
-          data.name,
-          style: TextStyle(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white
-                : Colors.black,
-            fontSize: 14.0,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        subtitle: Text(
-          data.country,
-          style: TextStyle(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white.withOpacity(0.8)
-                : Colors.black.withOpacity(0.8),
-            fontSize: 14.0,
-          ),
-        ),
-        groupValue: Language.instance.current,
-        onChanged: (value) async {
-          if (value != null) {
-            await Language.instance.set(value: value);
-            await Configuration.instance.save(language: value);
-          }
-        },
-      ),
-    );
-  }
-}
-
-const Duration _kExpand = Duration(milliseconds: 200);
-
-class ExpansionTile extends StatefulWidget {
-  const ExpansionTile({
-    Key? key,
-    this.leading,
-    required this.title,
-    this.subtitle,
-    this.backgroundColor,
-    this.onExpansionChanged,
-    this.children = const <Widget>[],
-    this.fixedChild,
-    this.trailing,
-    this.initiallyExpanded = false,
-    this.maintainState = false,
-    this.tilePadding,
-    this.tileShape,
-    this.expandedCrossAxisAlignment,
-    this.expandedAlignment,
-    this.childrenPadding,
-  })  : assert(
-          expandedCrossAxisAlignment != CrossAxisAlignment.baseline,
-          'CrossAxisAlignment.baseline is not supported since the expanded children '
-          'are aligned in a column, not a row. Try to use another constant.',
-        ),
-        super(key: key);
-
-  final Widget? leading;
-  final Widget Function(BuildContext child, Animation? animation) title;
-  final Widget? subtitle;
-  final ValueChanged<bool>? onExpansionChanged;
-  final List<Widget> children;
-  final Widget? fixedChild;
-  final Color? backgroundColor;
-  final Widget? trailing;
-  final bool initiallyExpanded;
-  final bool maintainState;
-  final EdgeInsetsGeometry? tilePadding;
-  final ShapeBorder? tileShape;
-  final Alignment? expandedAlignment;
-  final CrossAxisAlignment? expandedCrossAxisAlignment;
-  final EdgeInsetsGeometry? childrenPadding;
-
-  @override
-  _ExpansionTileState createState() => _ExpansionTileState();
-}
-
-class _ExpansionTileState extends State<ExpansionTile>
-    with SingleTickerProviderStateMixin {
-  static final Animatable<double> _easeOutTween =
-      CurveTween(curve: Curves.easeOut);
-  static final Animatable<double> _easeInTween =
-      CurveTween(curve: Curves.easeIn);
-
-  final ColorTween _borderColorTween = ColorTween();
-  final ColorTween _headerColorTween = ColorTween();
-  final ColorTween _iconColorTween = ColorTween();
-  final ColorTween _backgroundColorTween = ColorTween();
-
-  AnimationController? _controller;
-  late Animation<double> _heightFactor;
-  late Animation<Color?> _headerColor;
-  late Animation<Color?> _iconColor;
-  late Animation<Color?> _backgroundColor;
-
-  bool _isExpanded = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(duration: _kExpand, vsync: this);
-    _heightFactor = _controller!.drive(_easeInTween);
-    _headerColor = _controller!.drive(_headerColorTween.chain(_easeInTween));
-    _iconColor = _controller!.drive(_iconColorTween.chain(_easeInTween));
-    _backgroundColor =
-        _controller!.drive(_backgroundColorTween.chain(_easeOutTween));
-
-    _isExpanded = PageStorage.of(context)?.readState(context) as bool? ??
-        widget.initiallyExpanded;
-    if (_isExpanded) _controller!.value = 1.0;
-  }
-
-  @override
-  void dispose() {
-    _controller!.dispose();
-    super.dispose();
-  }
-
-  void _handleTap() {
-    setState(() {
-      _isExpanded = !_isExpanded;
-      if (_isExpanded) {
-        _controller!.forward();
-      } else {
-        _controller!.reverse().then<void>((void value) {
-          if (!mounted) return;
-          setState(() {});
-        });
-      }
-      PageStorage.of(context)?.writeState(context, _isExpanded);
-    });
-    if (widget.onExpansionChanged != null)
-      widget.onExpansionChanged!(_isExpanded);
-  }
-
-  Widget _buildChildren(BuildContext context, Widget? child) {
-    return Container(
-      decoration: BoxDecoration(
-        color: _backgroundColor.value ?? Colors.transparent,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: (<Widget>[
-          ListTileTheme.merge(
-            iconColor: _iconColor.value,
-            textColor: _headerColor.value,
-            child: ListTile(
-              onTap: _handleTap,
-              contentPadding: widget.tilePadding,
-              leading: widget.leading,
-              subtitle: widget.subtitle,
-              shape: widget.tileShape,
-              title: AnimatedBuilder(
-                animation: _controller!,
-                builder: (context, child) => widget.title(context, _controller),
-              ),
-            ),
-          ),
-          if (widget.fixedChild != null && !_isExpanded) widget.fixedChild!,
-          ClipRect(
-            child: Align(
-              alignment: widget.expandedAlignment ?? Alignment.center,
-              heightFactor: _heightFactor.value,
-              child: child,
-            ),
-          ),
-        ]),
-      ),
-    );
-  }
-
-  @override
-  void didChangeDependencies() {
-    final ThemeData theme = Theme.of(context);
-    _borderColorTween.end = theme.dividerColor;
-    _headerColorTween
-      ..begin = theme.textTheme.subtitle1!.color
-      ..end = theme.colorScheme.secondary;
-    _iconColorTween
-      ..begin = theme.unselectedWidgetColor
-      ..end = theme.colorScheme.secondary;
-    _backgroundColorTween.end = widget.backgroundColor;
-    super.didChangeDependencies();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final bool closed = !_isExpanded && _controller!.isDismissed;
-    final bool shouldRemoveChildren = closed && !widget.maintainState;
-
-    final Widget result = Offstage(
-        child: TickerMode(
-          child: Padding(
-            padding: widget.childrenPadding ?? EdgeInsets.zero,
-            child: Column(
-              crossAxisAlignment: widget.expandedCrossAxisAlignment ??
-                  CrossAxisAlignment.center,
-              children: widget.children,
-            ),
-          ),
-          enabled: !closed,
-        ),
-        offstage: closed);
-
-    return AnimatedBuilder(
-      animation: _controller!.view,
-      builder: _buildChildren,
-      child: shouldRemoveChildren ? null : result,
     );
   }
 }

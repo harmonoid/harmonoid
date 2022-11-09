@@ -56,6 +56,23 @@ class ScrollBehavior extends MaterialScrollBehavior {
   const ScrollBehavior();
 
   @override
+  ScrollPhysics getScrollPhysics(BuildContext context) {
+    switch (getPlatform(context)) {
+      case TargetPlatform.iOS:
+        return const BouncingScrollPhysics();
+      case TargetPlatform.android:
+      case TargetPlatform.fuchsia:
+        return const ClampingScrollPhysics();
+      case TargetPlatform.linux:
+      case TargetPlatform.macOS:
+      case TargetPlatform.windows:
+        return const BouncingScrollPhysics(
+          decelerationRate: ScrollDecelerationRate.fast,
+        );
+    }
+  }
+
+  @override
   Set<PointerDeviceKind> get dragDevices =>
       // Specifically for GNU/Linux & Android-x86 family, where touch isn't interpreted as a drag device by Flutter apparently.
       (Platform.isLinux || Platform.isAndroid)

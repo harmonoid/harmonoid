@@ -47,19 +47,21 @@ class Settings extends StatelessWidget {
                     top: WindowPlus.instance.captionHeight +
                         kDesktopAppBarHeight,
                   ),
-                  child: CustomListView(
-                    shrinkWrap: true,
-                    children: [
-                      IndexingSetting(),
-                      StatsSetting(),
-                      ThemeSetting(),
-                      MiscellaneousSetting(),
-                      LanguageSetting(),
-                      NowPlayingVisualsSetting(),
-                      NowPlayingScreenSetting(),
-                      ExperimentalSetting(),
-                      const SizedBox(height: 8.0),
-                    ],
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        IndexingSetting(),
+                        StatsSetting(),
+                        ThemeSetting(),
+                        MiscellaneousSetting(),
+                        LanguageSetting(),
+                        NowPlayingVisualsSetting(),
+                        NowPlayingScreenSetting(),
+                        ExperimentalSetting(),
+                        const SizedBox(height: 8.0),
+                      ],
+                    ),
                   ),
                 ),
                 DesktopAppBar(

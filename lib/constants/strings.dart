@@ -69,6 +69,7 @@ class Strings {
   late String DONE;
   late String DOWNLOAD;
   late String DOWNLOAD_UPDATE;
+  late String EDIT;
   late String EDIT_DETAILS;
   late String EDIT_MINIMUM_FILE_SIZE;
   late String ENABLE_125_SCALING;

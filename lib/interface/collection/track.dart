@@ -76,7 +76,6 @@ class _TrackTabState extends State<TrackTab> {
                     borderIndicatorColor: Theme.of(context).primaryColor,
                     borderHoverColor: Theme.of(context).primaryColor,
                   ),
-                  // TODO: MUST BE REMOVED BEFORE Flutter 3.3.x.
                   child: Stack(
                     alignment: Alignment.topRight,
                     children: [

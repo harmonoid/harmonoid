@@ -8,9 +8,6 @@
 
 import 'dart:core';
 import 'dart:async';
-import 'dart:ffi';
-import 'package:ffi/ffi.dart';
-import 'package:win32/win32.dart' hide Rect;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,22 +31,7 @@ import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/state/now_playing_color_palette.dart';
 import 'package:media_library/media_library.dart';
 import 'package:harmonoid/constants/language.dart';
-
-int enumDisplayMonitorsProc(int monitor, int _, Pointer<RECT> __, int lparam) {
-  final info = calloc<MONITORINFO>();
-  info.ref.cbSize = sizeOf<MONITORINFO>();
-  GetMonitorInfo(monitor, info);
-  final rect = Rect.fromLTRB(
-    info.ref.rcWork.left.toDouble(),
-    info.ref.rcWork.top.toDouble(),
-    info.ref.rcWork.right.toDouble(),
-    info.ref.rcWork.bottom.toDouble(),
-  );
-  debugPrint(rect.toString());
-  Pointer<Uint32>.fromAddress(lparam).value += rect.width ~/ 1;
-  calloc.free(info);
-  return TRUE;
-}
+import 'package:window_plus/window_plus.dart';
 
 class NowPlayingBar extends StatefulWidget {
   const NowPlayingBar({Key? key}) : super(key: key);
@@ -100,19 +82,11 @@ class NowPlayingBarState extends State<NowPlayingBar>
 
   void colorPaletteListener() async {
     if (horizontal == null) {
-      final width = calloc<Uint32>()..value = 0;
-      // TODO (@alexmercerind): Clean-up Win32 API consumption within [Widget].
-      EnumDisplayMonitors(
-        0,
-        nullptr,
-        Pointer.fromFunction<MonitorEnumProc>(
-          enumDisplayMonitorsProc,
-          TRUE,
-        ),
-        width.address,
-      );
-      horizontal = width.value * 1.0;
-      calloc.free(width);
+      final monitors = await WindowPlus.instance.monitors;
+      debugPrint(monitors.toString());
+      horizontal = monitors
+          .map((e) => e.bounds.width)
+          .reduce((value, element) => value + element);
     }
     final ms =
         ((1000 * (800 / (horizontal ?? MediaQuery.of(context).size.width))) ~/

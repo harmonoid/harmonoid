@@ -46,7 +46,7 @@ import 'package:harmonoid/web/web.dart';
 
 import 'package:harmonoid/main.dart';
 
-class CustomListView extends StatefulWidget {
+class CustomListView extends StatelessWidget {
   final ScrollController? controller;
   final double? cacheExtent;
   final List<Widget> children;
@@ -68,64 +68,22 @@ class CustomListView extends StatefulWidget {
   });
 
   @override
-  _CustomListViewState createState() => _CustomListViewState();
-}
-
-class _CustomListViewState extends State<CustomListView> {
-  ScrollController? controller;
-
-  @override
-  void initState() {
-    super.initState();
-    final controller = widget.controller ?? ScrollController();
-    this.controller = controller;
-    // TODO: MUST BE REMOVED BEFORE Flutter 3.3.x.
-    if (Platform.isWindows) {
-      controller.addListener(
-        () {
-          final direction = controller.position.userScrollDirection;
-          if (direction != ScrollDirection.idle) {
-            final position = min(
-              controller.position.maxScrollExtent,
-              max(
-                controller.position.minScrollExtent,
-                controller.offset +
-                    kWindowsScrollDelta *
-                        (direction == ScrollDirection.reverse ? 1 : -1),
-              ),
-            );
-            controller.jumpTo(position);
-          }
-        },
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    if (widget.controller == null) {
-      controller?.dispose();
-    }
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ListView(
-      cacheExtent: widget.cacheExtent,
-      keyboardDismissBehavior: widget.keyboardDismissBehavior ??
-          ScrollViewKeyboardDismissBehavior.onDrag,
-      padding: widget.padding ?? EdgeInsets.zero,
+      cacheExtent: cacheExtent,
+      keyboardDismissBehavior:
+          keyboardDismissBehavior ?? ScrollViewKeyboardDismissBehavior.onDrag,
+      padding: padding ?? EdgeInsets.zero,
       controller: controller,
-      scrollDirection: widget.scrollDirection ?? Axis.vertical,
-      shrinkWrap: widget.shrinkWrap ?? false,
-      children: widget.children,
-      itemExtent: widget.itemExtent,
+      scrollDirection: scrollDirection ?? Axis.vertical,
+      shrinkWrap: shrinkWrap ?? false,
+      children: children,
+      itemExtent: itemExtent,
     );
   }
 }
 
-class CustomListViewBuilder extends StatefulWidget {
+class CustomListViewBuilder extends StatelessWidget {
   final ScrollController? controller;
   final int itemCount;
   final List<double> itemExtents;
@@ -147,61 +105,19 @@ class CustomListViewBuilder extends StatefulWidget {
   });
 
   @override
-  _CustomListViewBuilderState createState() => _CustomListViewBuilderState();
-}
-
-class _CustomListViewBuilderState extends State<CustomListViewBuilder> {
-  ScrollController? controller;
-
-  @override
-  void initState() {
-    super.initState();
-    final controller = widget.controller ?? ScrollController();
-    this.controller = controller;
-    // TODO: MUST BE REMOVED BEFORE Flutter 3.3.x.
-    if (Platform.isWindows) {
-      controller.addListener(
-        () {
-          final direction = controller.position.userScrollDirection;
-          if (direction != ScrollDirection.idle) {
-            final position = min(
-              controller.position.maxScrollExtent,
-              max(
-                controller.position.minScrollExtent,
-                controller.offset +
-                    kWindowsScrollDelta *
-                        (direction == ScrollDirection.reverse ? 1 : -1),
-              ),
-            );
-            controller.jumpTo(position);
-          }
-        },
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    if (widget.controller == null) {
-      controller?.dispose();
-    }
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return KnownExtentsListView.builder(
       controller: controller,
-      itemExtents: widget.itemExtents,
-      itemCount: widget.itemCount,
-      itemBuilder: widget.itemBuilder,
-      padding: widget.padding,
-      physics: widget.physics,
+      itemExtents: itemExtents,
+      itemCount: itemCount,
+      itemBuilder: itemBuilder,
+      padding: padding,
+      physics: physics,
     );
   }
 }
 
-class CustomListViewSeparated extends StatefulWidget {
+class CustomListViewSeparated extends StatelessWidget {
   final ScrollController? controller;
   final int itemCount;
   final double separatorExtent;
@@ -227,124 +143,19 @@ class CustomListViewSeparated extends StatefulWidget {
   });
 
   @override
-  _CustomListViewSeparatedState createState() =>
-      _CustomListViewSeparatedState();
-}
-
-class _CustomListViewSeparatedState extends State<CustomListViewSeparated> {
-  ScrollController? controller;
-
-  @override
-  void initState() {
-    super.initState();
-    final controller = widget.controller ?? ScrollController();
-    this.controller = controller;
-    // TODO: MUST BE REMOVED BEFORE Flutter 3.3.x.
-    if (Platform.isWindows) {
-      controller.addListener(
-        () {
-          final direction = controller.position.userScrollDirection;
-          if (direction != ScrollDirection.idle) {
-            final position = min(
-              controller.position.maxScrollExtent,
-              max(
-                controller.position.minScrollExtent,
-                controller.offset +
-                    kWindowsScrollDelta *
-                        (direction == ScrollDirection.reverse ? 1 : -1),
-              ),
-            );
-            controller.jumpTo(position);
-          }
-        },
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    if (widget.controller == null) {
-      controller?.dispose();
-    }
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return KnownExtentsListView.builder(
       controller: controller,
       itemExtents: List.generate(
-        2 * widget.itemCount - 1,
-        (i) => i % 2 == 0 ? widget.itemExtents[i ~/ 2] : widget.separatorExtent,
+        2 * itemCount - 1,
+        (i) => i % 2 == 0 ? itemExtents[i ~/ 2] : separatorExtent,
       ),
-      itemCount: 2 * widget.itemCount - 1,
+      itemCount: 2 * itemCount - 1,
       itemBuilder: (context, i) => i % 2 == 0
-          ? widget.itemBuilder(context, i ~/ 2)
-          : widget.separatorBuilder(context, i ~/ 2),
-      padding: widget.padding,
-      physics: widget.physics,
-    );
-  }
-}
-
-class CustomSingleChildScrollView extends StatefulWidget {
-  final ScrollController? controller;
-  final Widget child;
-  CustomSingleChildScrollView({
-    Key? key,
-    this.controller,
-    required this.child,
-  }) : super(key: key);
-
-  @override
-  State<CustomSingleChildScrollView> createState() =>
-      _CustomSingleChildScrollViewState();
-}
-
-class _CustomSingleChildScrollViewState
-    extends State<CustomSingleChildScrollView> {
-  ScrollController? controller;
-
-  @override
-  void initState() {
-    super.initState();
-    final controller = widget.controller ?? ScrollController();
-    this.controller = controller;
-    // TODO: MUST BE REMOVED BEFORE Flutter 3.3.x.
-    if (Platform.isWindows) {
-      controller.addListener(
-        () {
-          final direction = controller.position.userScrollDirection;
-          if (direction != ScrollDirection.idle) {
-            final position = min(
-              controller.position.maxScrollExtent,
-              max(
-                controller.position.minScrollExtent,
-                controller.offset +
-                    kWindowsScrollDelta *
-                        (direction == ScrollDirection.reverse ? 1 : -1),
-              ),
-            );
-            controller.jumpTo(position);
-          }
-        },
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    if (widget.controller == null) {
-      controller?.dispose();
-    }
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      controller: controller,
-      child: widget.child,
+          ? itemBuilder(context, i ~/ 2)
+          : separatorBuilder(context, i ~/ 2),
+      padding: padding,
+      physics: physics,
     );
   }
 }

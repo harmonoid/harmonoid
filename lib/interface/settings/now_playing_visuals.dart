@@ -32,6 +32,7 @@ class NowPlayingVisualsSettingState extends State<NowPlayingVisualsSetting> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             GridView.count(
+              physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               crossAxisSpacing: 8.0,
               mainAxisSpacing: 8.0,
