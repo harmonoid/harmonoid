@@ -25,8 +25,8 @@ jobs:
         run: echo ${{ steps.vars.outputs.sha_short }}
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: "3.0.0"
-          channel: "stable"
+          # TODO (@alexmercerind): Revert to stable once Flutter 3.5.x rolls out.
+          channel: "master"
 
       - run: |
           rmdir /s /q "assets/fonts"
@@ -100,8 +100,9 @@ jobs:
         run: echo ${{ steps.vars.outputs.sha_short }}
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: "3.0.5"
-          channel: "stable"
+          # TODO (@alexmercerind): Revert to stable once Flutter 3.5.x rolls out.
+          channel: "master"
+
       - run: sudo apt-get update
       - run: sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev mpv libmpv-dev dpkg-dev rpm tree
 
@@ -192,8 +193,8 @@ jobs:
         run: echo ${{ steps.vars.outputs.sha_short }}
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: "3.0.5"
-          channel: "stable"
+          # TODO (@alexmercerind): Revert to stable once Flutter 3.5.x rolls out.
+          channel: "master"
 
       - name: Create Key Store
         id: create_key_store
