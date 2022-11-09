@@ -201,8 +201,8 @@ class WebRecommendations extends StatefulWidget {
 class _WebRecommendationsState extends State<WebRecommendations>
     with AutomaticKeepAliveClientMixin {
   bool shouldRefreshOnDidChangeDependencies =
-      Configuration.instance.webRecent.isEmpty;
-  late ScrollController _scrollController = ScrollController();
+      Configuration.instance.webRecent.isEmpty || isDesktop;
+  final ScrollController _scrollController = ScrollController();
   final HashMap<String, Color> colorKeys = HashMap<String, Color>();
 
   @override

@@ -270,6 +270,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
   bool reactToSecondaryPress = false;
   bool detailsVisible = false;
   bool detailsLoaded = false;
+  bool detailsExpanded = false;
   ScrollPhysics? physics = NeverScrollableScrollPhysics();
 
   bool isDark(BuildContext context) =>
@@ -513,6 +514,9 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                               SizedBox(height: 8.0),
                                               Expanded(
                                                 child: CustomListView(
+                                                  physics: detailsExpanded
+                                                      ? null
+                                                      : NeverScrollableScrollPhysics(),
                                                   padding: EdgeInsets.only(
                                                       right: 8.0),
                                                   children: [
@@ -542,6 +546,15 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                                   : Colors
                                                                       .black87,
                                                             ),
+                                                        callback: (collapsed) {
+                                                          debugPrint(
+                                                            'collapsed: $collapsed',
+                                                          );
+                                                          setState(() {
+                                                            detailsExpanded =
+                                                                !collapsed;
+                                                          });
+                                                        },
                                                       ),
                                                     const SizedBox(
                                                         height: 12.0),

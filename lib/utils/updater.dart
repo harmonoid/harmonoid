@@ -15,7 +15,7 @@ import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 
 import 'package:harmonoid/main.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/utils/window_close_handler.dart';
+import 'package:harmonoid/utils/window_lifecycle.dart';
 import 'package:window_plus/window_plus.dart';
 
 /// Updater
@@ -61,7 +61,7 @@ abstract class Updater {
             Uri.parse(url),
             mode: LaunchMode.externalApplication,
           );
-          final result = await WindowCloseHandler.windowCloseHandler(
+          final result = await WindowLifecycle.windowCloseHandler(
             showInterruptAlert: false,
           );
           if (result) {

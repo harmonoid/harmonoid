@@ -47,9 +47,10 @@ import 'package:harmonoid/web/web.dart';
 import 'package:harmonoid/main.dart';
 
 class CustomListView extends StatelessWidget {
-  final ScrollController? controller;
-  final double? cacheExtent;
   final List<Widget> children;
+  final ScrollController? controller;
+  final ScrollPhysics? physics;
+  final double? cacheExtent;
   final Axis? scrollDirection;
   final bool? shrinkWrap;
   final EdgeInsets? padding;
@@ -59,11 +60,12 @@ class CustomListView extends StatelessWidget {
   CustomListView({
     required this.children,
     this.controller,
+    this.physics,
+    this.cacheExtent,
     this.scrollDirection,
     this.shrinkWrap,
     this.padding,
     this.itemExtent,
-    this.cacheExtent,
     this.keyboardDismissBehavior,
   });
 
@@ -71,6 +73,7 @@ class CustomListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       cacheExtent: cacheExtent,
+      physics: physics,
       keyboardDismissBehavior:
           keyboardDismissBehavior ?? ScrollViewKeyboardDismissBehavior.onDrag,
       padding: padding ?? EdgeInsets.zero,
@@ -84,10 +87,10 @@ class CustomListView extends StatelessWidget {
 }
 
 class CustomListViewBuilder extends StatelessWidget {
-  final ScrollController? controller;
   final int itemCount;
   final List<double> itemExtents;
   final Widget Function(BuildContext, int) itemBuilder;
+  final ScrollController? controller;
   final Axis? scrollDirection;
   final bool? shrinkWrap;
   final EdgeInsets? padding;
@@ -107,10 +110,11 @@ class CustomListViewBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return KnownExtentsListView.builder(
-      controller: controller,
       itemExtents: itemExtents,
       itemCount: itemCount,
       itemBuilder: itemBuilder,
+      controller: controller,
+      scrollDirection: scrollDirection ?? Axis.vertical,
       padding: padding,
       physics: physics,
     );
@@ -118,12 +122,12 @@ class CustomListViewBuilder extends StatelessWidget {
 }
 
 class CustomListViewSeparated extends StatelessWidget {
-  final ScrollController? controller;
   final int itemCount;
   final double separatorExtent;
   final Widget Function(BuildContext, int) separatorBuilder;
   final List<double> itemExtents;
   final Widget Function(BuildContext, int) itemBuilder;
+  final ScrollController? controller;
   final Axis? scrollDirection;
   final bool? shrinkWrap;
   final EdgeInsets? padding;
@@ -145,7 +149,6 @@ class CustomListViewSeparated extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return KnownExtentsListView.builder(
-      controller: controller,
       itemExtents: List.generate(
         2 * itemCount - 1,
         (i) => i % 2 == 0 ? itemExtents[i ~/ 2] : separatorExtent,
@@ -154,6 +157,8 @@ class CustomListViewSeparated extends StatelessWidget {
       itemBuilder: (context, i) => i % 2 == 0
           ? itemBuilder(context, i ~/ 2)
           : separatorBuilder(context, i ~/ 2),
+      controller: controller,
+      scrollDirection: scrollDirection ?? Axis.vertical,
       padding: padding,
       physics: physics,
     );
@@ -2787,38 +2792,80 @@ class StillGIF extends StatefulWidget {
 }
 
 class _StillGIFState extends State<StillGIF> {
+  static const int _kMaximumDrawRetryCount = 5;
+
+  int count = 0;
   RawImage? image;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      Uint8List? data;
-      if (widget.image is NetworkImage) {
-        final resolved = Uri.base.resolve((widget.image as NetworkImage).url);
-        final request = await HttpClient().getUrl(resolved);
-        final HttpClientResponse response = await request.close();
-        data = await consolidateHttpClientResponseBytes(response);
-      } else if (widget.image is AssetImage) {
-        final key =
-            await (widget.image as AssetImage).obtainKey(ImageConfiguration());
-        data = (await key.bundle.load(key.name)).buffer.asUint8List();
-      } else if (widget.image is FileImage) {
-        data = await (widget.image as FileImage).file.readAsBytes();
+      // Flutter 3.3.x seems to have a bug where the image is not drawn in some rare cases.
+      while (image == null && count < _kMaximumDrawRetryCount) {
+        await draw();
+        count++;
+        debugPrint('#$count draw: ${widget.image}');
       }
+    });
+  }
+
+  Future<void> draw() async {
+    // [ImageProvider.evict] is needed since Flutter 3.3.x.
+    await widget.image.evict();
+    if (widget.image is NetworkImage) {
+      final resolved = Uri.base.resolve((widget.image as NetworkImage).url);
+      final request = await HttpClient().getUrl(resolved);
+      final HttpClientResponse response = await request.close();
+      final data = await consolidateHttpClientResponseBytes(response);
+      final buffer = await ImmutableBuffer.fromUint8List(data);
       final codec = await PaintingBinding.instance
-          // ignore: deprecated_member_use
-          .instantiateImageCodec(data!.buffer.asUint8List());
-      FrameInfo frame = await codec.getNextFrame();
+          .instantiateImageCodecFromBuffer(buffer);
+      final frame = await codec.getNextFrame();
       setState(() {
         image = RawImage(
-          image: frame.image,
+          image: frame.image.clone(),
           height: widget.height,
           width: widget.width,
           fit: BoxFit.cover,
         );
       });
-    });
+    } else if (widget.image is AssetImage) {
+      final buffer = await ImmutableBuffer.fromAsset(
+        (widget.image as AssetImage).assetName,
+      );
+      final codec = await PaintingBinding.instance
+          .instantiateImageCodecFromBuffer(buffer);
+      final frame = await codec.getNextFrame();
+      setState(() {
+        image = RawImage(
+          image: frame.image.clone(),
+          height: widget.height,
+          width: widget.width,
+          fit: BoxFit.cover,
+        );
+      });
+    } else if (widget.image is FileImage) {
+      final data = await (widget.image as FileImage).file.readAsBytes();
+      final buffer = await ImmutableBuffer.fromUint8List(data);
+      final codec = await PaintingBinding.instance
+          .instantiateImageCodecFromBuffer(buffer);
+      final frame = await codec.getNextFrame();
+      setState(() {
+        image = RawImage(
+          image: frame.image.clone(),
+          height: widget.height,
+          width: widget.width,
+          fit: BoxFit.cover,
+        );
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.image.evict();
+    super.dispose();
   }
 
   @override

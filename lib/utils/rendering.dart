@@ -874,7 +874,12 @@ InputDecoration inputDecoration(
             ),
     ),
     // No requirement for vertical padding/margin since [TextAlignVertical.center] is used now.
-    contentPadding: EdgeInsets.symmetric(horizontal: 12.0),
+    contentPadding: EdgeInsets.only(
+      left: 12.0,
+      right: 12.0,
+      // [bottom] padding is needed since Flutter v3.5.x.
+      bottom: 8.0,
+    ),
     hintText: hintText,
     hintStyle: isDesktop
         ? Theme.of(context).textTheme.headline3?.copyWith(
