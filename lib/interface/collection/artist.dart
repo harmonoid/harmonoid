@@ -146,25 +146,30 @@ class _ArtistTabState extends State<ArtistTab> {
                               {
                                 return Text(
                                   artist.artistName[0].toUpperCase(),
-                                  style: Theme.of(context).textTheme.displayLarge,
+                                  style:
+                                      Theme.of(context).textTheme.displayLarge,
                                 );
                               }
                             case ArtistsSort.dateAdded:
                               {
                                 return Text(
                                   '${artist.timeAdded.label}',
-                                  style: Theme.of(context).textTheme.headlineMedium,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium,
                                 );
                               }
 
                             default:
                               return Text(
                                 '',
-                                style: Theme.of(context).textTheme.headlineMedium,
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
                               );
                           }
                         },
-                        backgroundColor: Theme.of(context).cardColor,
+                        backgroundColor: Theme.of(context).cardTheme.color ??
+                            Theme.of(context).cardColor,
                         controller: controller,
                         child: ListView(
                           controller: controller,
@@ -267,7 +272,8 @@ class ArtistTile extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(28.0),
                           ),
-                          elevation: 4.0,
+                          elevation: Theme.of(context).cardTheme.elevation ??
+                              kDefaultCardElevation,
                           margin: EdgeInsets.zero,
                           child: Padding(
                             padding: EdgeInsets.all(2.0),
@@ -291,7 +297,8 @@ class ArtistTile extends StatelessWidget {
                                 artist.artistName.overflow,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
-                                style: Theme.of(context).textTheme.displayMedium,
+                                style:
+                                    Theme.of(context).textTheme.displayMedium,
                               ),
                               const SizedBox(
                                 height: 2.0,
@@ -329,7 +336,8 @@ class ArtistTile extends StatelessWidget {
                 Card(
                   clipBehavior: Clip.antiAlias,
                   margin: EdgeInsets.zero,
-                  elevation: 4.0,
+                  elevation: Theme.of(context).cardTheme.elevation ??
+                      kDefaultCardElevation,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
                       width / 2.0,
@@ -460,7 +468,9 @@ class ArtistTile extends StatelessWidget {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(28.0),
                                   ),
-                                  elevation: 4.0,
+                                  elevation:
+                                      Theme.of(context).cardTheme.elevation ??
+                                          kDefaultCardElevation,
                                   margin: EdgeInsets.zero,
                                   child: Padding(
                                     padding: EdgeInsets.all(2.0),
@@ -527,10 +537,14 @@ class ArtistTile extends StatelessWidget {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       OpenContainer(
-                        closedElevation: 4.0,
+                        closedElevation:
+                            Theme.of(context).cardTheme.elevation ??
+                                kDefaultCardElevation,
                         openElevation: 0.0,
-                        closedColor: Theme.of(context).cardColor,
-                        openColor: Theme.of(context).cardColor,
+                        closedColor: Theme.of(context).cardTheme.color ??
+                            Theme.of(context).cardColor,
+                        openColor: Theme.of(context).cardTheme.color ??
+                            Theme.of(context).cardColor,
                         closedShape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
                             width / 2.0,
@@ -546,7 +560,7 @@ class ArtistTile extends StatelessWidget {
                             Container(
                               height: width,
                               width: width,
-                              color: Theme.of(context).cardColor,
+                              color: Theme.of(context).cardTheme.color,
                               alignment: Alignment.center,
                               child: ClipOval(
                                 child: ExtendedImage(
@@ -596,7 +610,10 @@ class ArtistTile extends StatelessWidget {
                       const Spacer(),
                       Text(
                         artist.artistName.overflow,
-                        style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                        style: Theme.of(context)
+                            .textTheme
+                            .displayMedium
+                            ?.copyWith(
                               fontSize:
                                   helper.artistTileNormalDensity ? null : 14.0,
                             ),
@@ -730,6 +747,7 @@ class ArtistScreenState extends State<ArtistScreen>
             ? Scaffold(
                 body: Container(
                   height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
                   child: Stack(
                     children: [
                       TweenAnimationBuilder(
@@ -745,7 +763,8 @@ class ArtistScreenState extends State<ArtistScreen>
                         ),
                         builder: (context, color, _) => DesktopAppBar(
                           height: MediaQuery.of(context).size.height / 3,
-                          elevation: 4.0,
+                          elevation: Theme.of(context).cardTheme.elevation ??
+                              kDefaultCardElevation,
                           color: color as Color? ?? Colors.transparent,
                         ),
                       ),
@@ -758,7 +777,8 @@ class ArtistScreenState extends State<ArtistScreen>
                           child: Card(
                             clipBehavior: Clip.antiAlias,
                             margin: EdgeInsets.only(top: 96.0, bottom: 4.0),
-                            elevation: 4.0,
+                            elevation: Theme.of(context).cardTheme.elevation ??
+                                kDefaultCardElevation,
                             child: Container(
                               constraints: BoxConstraints(
                                 maxWidth: 12 / 6 * 720.0,
@@ -786,7 +806,8 @@ class ArtistScreenState extends State<ArtistScreen>
                                                     .backgroundColor,
                                                 end: color == null
                                                     ? Theme.of(context)
-                                                        .dividerColor
+                                                        .dividerTheme
+                                                        .color
                                                     : secondary!,
                                               ),
                                               curve: Curves.easeOut,
@@ -965,10 +986,10 @@ class ArtistScreenState extends State<ArtistScreen>
                                                             Alignment.center,
                                                         child: Text(
                                                           '#',
-                                                          style:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .displayMedium,
+                                                          style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .displayMedium,
                                                         ),
                                                       ),
                                                       Expanded(
@@ -1051,7 +1072,6 @@ class ArtistScreenState extends State<ArtistScreen>
                                                               return;
                                                             var result =
                                                                 await showMenu(
-                                                              elevation: 4.0,
                                                               context: context,
                                                               constraints:
                                                                   BoxConstraints(

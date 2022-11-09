@@ -92,7 +92,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
         ((1000 * (800 / (horizontal ?? MediaQuery.of(context).size.width))) ~/
             1);
     final color = NowPlayingColorPalette.instance.palette == null
-        ? Theme.of(context).cardColor
+        ? Theme.of(context).cardTheme.color
         : NowPlayingColorPalette.instance.palette?.first.withOpacity(1.0);
     if (color == this.color) {
       return;
@@ -180,14 +180,14 @@ class NowPlayingBarState extends State<NowPlayingBar>
                   child: Material(
                     clipBehavior: Clip.antiAlias,
                     color: Colors.transparent,
-                    elevation: 12.0,
+                    elevation: kDefaultHeavyElevation,
                     child: Stack(
                       children: [
                         Container(
                           height: kDesktopNowPlayingBarHeight,
                           width: MediaQuery.of(context).size.width,
                           alignment: Alignment.center,
-                          color: Theme.of(context).cardColor,
+                          color: Theme.of(context).cardTheme.color,
                         ),
                         Container(
                           height: kDesktopNowPlayingBarHeight,
@@ -200,7 +200,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                           clipBehavior: Clip.antiAlias,
                           color: Colors.transparent,
                           child: Container(
-                            height: 84.0,
+                            height: kDesktopNowPlayingBarHeight,
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -241,8 +241,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                         color:
                                                             (colors.palette ??
                                                                         [
-                                                                          Theme.of(context)
-                                                                              .cardColor
+                                                                          Theme.of(context).cardTheme.color ??
+                                                                              Theme.of(context).cardColor
                                                                         ])
                                                                     .first
                                                                     .isDark
@@ -307,8 +307,10 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                                       1)],
                                                           small: true,
                                                         ),
-                                                        height: 84.0,
-                                                        width: 84.0,
+                                                        height:
+                                                            kDesktopNowPlayingBarHeight,
+                                                        width:
+                                                            kDesktopNowPlayingBarHeight,
                                                         fit: BoxFit.cover,
                                                       ),
                                                     ),
@@ -333,8 +335,10 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                         },
                                                         child: Container(
                                                           color: Colors.black38,
-                                                          height: 84.0,
-                                                          width: 84.0,
+                                                          height:
+                                                              kDesktopNowPlayingBarHeight,
+                                                          width:
+                                                              kDesktopNowPlayingBarHeight,
                                                           child: Icon(
                                                             Icons.image,
                                                             color: Colors.white,
@@ -380,8 +384,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                         color:
                                                             (colors.palette ??
                                                                         [
-                                                                          Theme.of(context)
-                                                                              .cardColor
+                                                                          Theme.of(context).cardTheme.color ??
+                                                                              Theme.of(context).cardColor
                                                                         ])
                                                                     .first
                                                                     .isDark
@@ -468,7 +472,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                           color:
                                                               (colors.palette ??
                                                                           [
-                                                                            Theme.of(context).cardColor
+                                                                            Theme.of(context).cardTheme.color ??
+                                                                                Theme.of(context).cardColor
                                                                           ])
                                                                       .first
                                                                       .isDark
@@ -492,7 +497,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                           color:
                                                               (colors.palette ??
                                                                           [
-                                                                            Theme.of(context).cardColor
+                                                                            Theme.of(context).cardTheme.color ??
+                                                                                Theme.of(context).cardColor
                                                                           ])
                                                                       .first
                                                                       .isDark
@@ -533,7 +539,11 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                 color: (colors.palette ??
                                                             [
                                                               Theme.of(context)
-                                                                  .cardColor
+                                                                      .cardTheme
+                                                                      .color ??
+                                                                  Theme.of(
+                                                                          context)
+                                                                      .cardColor
                                                             ])
                                                         .first
                                                         .isDark
@@ -603,7 +613,11 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                 color: (colors.palette ??
                                                             [
                                                               Theme.of(context)
-                                                                  .cardColor
+                                                                      .cardTheme
+                                                                      .color ??
+                                                                  Theme.of(
+                                                                          context)
+                                                                      .cardColor
                                                             ])
                                                         .first
                                                         .isDark
@@ -624,7 +638,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           // Transform.rotate(
                                           //   angle: pi,
                                           //   child: Container(
-                                          //     width: 84.0,
+                                          //     width: kDesktopNowPlayingBarHeight,
                                           //     child: ScrollableSlider(
                                           //       min: 0.0,
                                           //       max: 2.0,
@@ -660,7 +674,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           //   color: (palette ??
                                           //               [
                                           //                 Theme.of(context)
-                                          //                     .cardColor
+                                          //                     .cardTheme.color
                                           //               ])
                                           //           .first
                                           //           .isDark
@@ -700,7 +714,11 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                               color: (colors.palette ??
                                                           [
                                                             Theme.of(context)
-                                                                .cardColor
+                                                                    .cardTheme
+                                                                    .color ??
+                                                                Theme.of(
+                                                                        context)
+                                                                    .cardColor
                                                           ])
                                                       .first
                                                       .isDark
@@ -717,7 +735,11 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                 ? (colors.palette ??
                                                             [
                                                               Theme.of(context)
-                                                                  .cardColor
+                                                                      .cardTheme
+                                                                      .color ??
+                                                                  Theme.of(
+                                                                          context)
+                                                                      .cardColor
                                                             ])
                                                         .first
                                                         .isDark
@@ -728,7 +750,11 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                 : (colors.palette ??
                                                             [
                                                               Theme.of(context)
-                                                                  .cardColor
+                                                                      .cardTheme
+                                                                      .color ??
+                                                                  Theme.of(
+                                                                          context)
+                                                                      .cardColor
                                                             ])
                                                         .first
                                                         .isDark
@@ -749,7 +775,10 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                             disabledColor: (colors.palette ??
                                                         [
                                                           Theme.of(context)
-                                                              .cardColor
+                                                                  .cardTheme
+                                                                  .color ??
+                                                              Theme.of(context)
+                                                                  .cardColor
                                                         ])
                                                     .first
                                                     .isDark
@@ -759,7 +788,10 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                             color: (colors.palette ??
                                                         [
                                                           Theme.of(context)
-                                                              .cardColor
+                                                                  .cardTheme
+                                                                  .color ??
+                                                              Theme.of(context)
+                                                                  .cardColor
                                                         ])
                                                     .first
                                                     .isDark
@@ -774,6 +806,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                             ),
                                           ),
                                           FloatingActionButton(
+                                            elevation: 2.0,
                                             foregroundColor: (colors.palette ??
                                                         [
                                                           Theme.of(context)
@@ -790,7 +823,6 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                     ])
                                                 .last,
                                             onPressed: playback.playOrPause,
-                                            elevation: 2.0,
                                             tooltip: playback.isPlaying
                                                 ? Language.instance.PAUSE
                                                 : Language.instance.PLAY,
@@ -808,7 +840,10 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                             disabledColor: (colors.palette ??
                                                         [
                                                           Theme.of(context)
-                                                              .cardColor
+                                                                  .cardTheme
+                                                                  .color ??
+                                                              Theme.of(context)
+                                                                  .cardColor
                                                         ])
                                                     .first
                                                     .isDark
@@ -817,7 +852,10 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                             color: (colors.palette ??
                                                         [
                                                           Theme.of(context)
-                                                              .cardColor
+                                                                  .cardTheme
+                                                                  .color ??
+                                                              Theme.of(context)
+                                                                  .cardColor
                                                         ])
                                                     .first
                                                     .isDark
@@ -854,7 +892,11 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                 ? (colors.palette ??
                                                             [
                                                               Theme.of(context)
-                                                                  .cardColor
+                                                                      .cardTheme
+                                                                      .color ??
+                                                                  Theme.of(
+                                                                          context)
+                                                                      .cardColor
                                                             ])
                                                         .first
                                                         .isDark
@@ -865,7 +907,11 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                 : (colors.palette ??
                                                             [
                                                               Theme.of(context)
-                                                                  .cardColor
+                                                                      .cardTheme
+                                                                      .color ??
+                                                                  Theme.of(
+                                                                          context)
+                                                                      .cardColor
                                                             ])
                                                         .first
                                                         .isDark
@@ -915,7 +961,11 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                               color: (colors.palette ??
                                                           [
                                                             Theme.of(context)
-                                                                .cardColor
+                                                                    .cardTheme
+                                                                    .color ??
+                                                                Theme.of(
+                                                                        context)
+                                                                    .cardColor
                                                           ])
                                                       .first
                                                       .isDark
@@ -932,7 +982,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           //   color: (palette ??
                                           //               [
                                           //                 Theme.of(context)
-                                          //                     .cardColor
+                                          //                     .cardTheme.color
                                           //               ])
                                           //           .first
                                           //           .isDark
@@ -948,7 +998,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           //   width: 12.0,
                                           // ),
                                           // Container(
-                                          //   width: 84.0,
+                                          //   width: kDesktopNowPlayingBarHeight,
                                           //   child: ScrollableSlider(
                                           //     min: 0.5,
                                           //     max: 1.5,
@@ -991,7 +1041,10 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           color: (colors.palette ??
                                                       [
                                                         Theme.of(context)
-                                                            .cardColor
+                                                                .cardTheme
+                                                                .color ??
+                                                            Theme.of(context)
+                                                                .cardColor
                                                       ])
                                                   .first
                                                   .isDark
@@ -1011,7 +1064,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           width: 4.0,
                                         ),
                                         Container(
-                                          width: 84.0,
+                                          width: kDesktopNowPlayingBarHeight,
                                           child: ScrollableSlider(
                                             min: 0,
                                             max: 100.0,
@@ -1080,7 +1133,10 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           color: (colors.palette ??
                                                       [
                                                         Theme.of(context)
-                                                            .cardColor
+                                                                .cardTheme
+                                                                .color ??
+                                                            Theme.of(context)
+                                                                .cardColor
                                                       ])
                                                   .first
                                                   .isDark
@@ -1191,16 +1247,18 @@ class _ControlPanelState extends State<ControlPanel> {
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: Theme.of(context).dividerColor,
+                        color: Theme.of(context).dividerTheme.color ??
+                            Theme.of(context).dividerColor,
                         width: 1.0,
                       ),
                     ),
                     padding: EdgeInsets.all(1.0),
                     child: Text(
                       Language.instance.BETA.toUpperCase(),
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontSize: 10.0,
-                          ),
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                fontSize: 10.0,
+                              ),
                     ),
                   ),
                 ),
@@ -1291,12 +1349,15 @@ class _ControlPanelState extends State<ControlPanel> {
                     textAlignVertical: isMobile
                         ? TextAlignVertical.bottom
                         : TextAlignVertical.center,
-                    style:
-                        isMobile ? null : Theme.of(context).textTheme.headlineMedium,
+                    style: isMobile
+                        ? null
+                        : Theme.of(context).textTheme.headlineMedium,
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor:
-                          Theme.of(context).dividerColor.withOpacity(0.04),
+                      fillColor: Theme.of(context)
+                          .dividerTheme
+                          .color
+                          ?.withOpacity(0.04),
                       contentPadding: isMobile
                           ? EdgeInsets.only(bottom: 15.6)
                           : EdgeInsets.zero,
@@ -1401,12 +1462,15 @@ class _ControlPanelState extends State<ControlPanel> {
                     textAlignVertical: isMobile
                         ? TextAlignVertical.bottom
                         : TextAlignVertical.center,
-                    style:
-                        isMobile ? null : Theme.of(context).textTheme.headlineMedium,
+                    style: isMobile
+                        ? null
+                        : Theme.of(context).textTheme.headlineMedium,
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor:
-                          Theme.of(context).dividerColor.withOpacity(0.04),
+                      fillColor: Theme.of(context)
+                          .dividerTheme
+                          .color
+                          ?.withOpacity(0.04),
                       contentPadding: isMobile
                           ? EdgeInsets.only(bottom: 15.6)
                           : EdgeInsets.zero,
@@ -1515,12 +1579,15 @@ class _ControlPanelState extends State<ControlPanel> {
                     textAlignVertical: isMobile
                         ? TextAlignVertical.bottom
                         : TextAlignVertical.center,
-                    style:
-                        isMobile ? null : Theme.of(context).textTheme.headlineMedium,
+                    style: isMobile
+                        ? null
+                        : Theme.of(context).textTheme.headlineMedium,
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor:
-                          Theme.of(context).dividerColor.withOpacity(0.04),
+                      fillColor: Theme.of(context)
+                          .dividerTheme
+                          .color
+                          ?.withOpacity(0.04),
                       contentPadding: isMobile
                           ? EdgeInsets.only(bottom: 15.6)
                           : EdgeInsets.zero,
@@ -1583,8 +1650,8 @@ class _ControlPanelState extends State<ControlPanel> {
                       builder: (context, value, child) => Transform.translate(
                         offset: Offset(0, value as double),
                         child: Card(
-                          color: Theme.of(context).cardColor,
-                          elevation: 8.0,
+                          color: Theme.of(context).cardTheme.color,
+                          elevation: kDefaultHeavyElevation,
                           margin: widget.x == null
                               ? EdgeInsets.all(16.0)
                               : EdgeInsets.only(

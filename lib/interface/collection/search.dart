@@ -159,7 +159,6 @@ class SearchTabState extends State<SearchTab> {
                                               ),
                                               DesktopAppBar(
                                                 title: Language.instance.ALBUM,
-                                                elevation: 4.0,
                                               ),
                                             ],
                                           ),
@@ -249,7 +248,6 @@ class SearchTabState extends State<SearchTab> {
                                               ),
                                               DesktopAppBar(
                                                 title: Language.instance.ARTIST,
-                                                elevation: 4.0,
                                               ),
                                             ],
                                           ),
@@ -410,7 +408,7 @@ class _FloatingSearchBarSearchTabState
         ? width * kAlbumTileHeight / kAlbumTileWidth
         : kAlbumTileHeight;
     return Card(
-      elevation: 4.0,
+      elevation: Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
       margin: EdgeInsets.zero,
       color: Theme.of(context).scaffoldBackgroundColor,
       child: SizedBox(

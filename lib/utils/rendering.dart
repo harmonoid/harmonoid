@@ -307,7 +307,8 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
               Platform.isWindows ? FluentIcons.share_16_regular : Icons.share),
           title: Text(
             Language.instance.SHARE,
-            style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+            style:
+                isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
           ),
         ),
       ),
@@ -348,7 +349,8 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
               : Icons.folder),
           title: Text(
             Language.instance.SHOW_IN_FILE_MANAGER,
-            style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+            style:
+                isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
           ),
         ),
       ),
@@ -400,7 +402,8 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
           ),
           title: Text(
             Language.instance.CLEAR_LRC_FILE,
-            style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+            style:
+                isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
           ),
         ),
       )
@@ -414,7 +417,8 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
           ),
           title: Text(
             Language.instance.SET_LRC_FILE,
-            style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+            style:
+                isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
           ),
         ),
       ),
@@ -690,7 +694,7 @@ Future<void> trackPopupMenuHandle(
             await showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                backgroundColor: Theme.of(context).cardColor,
+                backgroundColor: Theme.of(context).cardTheme.color,
                 title: Text(
                   Language.instance.ERROR,
                 ),
@@ -785,7 +789,7 @@ Future<void> showAddToPlaylistDialog(
             right: 8.0,
             bottom: kBottomNavigationBarHeight + 8.0,
           ),
-          elevation: 8.0,
+          elevation: kDefaultHeavyElevation,
           child: DraggableScrollableSheet(
             initialChildSize: 0.6,
             maxChildSize: 0.8,
@@ -885,7 +889,8 @@ InputDecoration inputDecoration(
             )
         : null,
     filled: true,
-    fillColor: fillColor ?? Theme.of(context).dividerColor.withOpacity(0.04),
+    fillColor:
+        fillColor ?? Theme.of(context).dividerTheme.color?.withOpacity(0.04),
     border: UnderlineInputBorder(
       borderSide: BorderSide(
         color: Theme.of(context).iconTheme.color!.withOpacity(0.4),

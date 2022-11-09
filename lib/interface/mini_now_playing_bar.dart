@@ -274,17 +274,20 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                           width: 28.0,
                           alignment: Alignment.center,
                           child: MiniMusicVisualizer(
-                            color: Theme.of(context).textTheme.displaySmall?.color,
+                            color:
+                                Theme.of(context).textTheme.displaySmall?.color,
                             width: 6,
                             height: 15,
                           ),
                         )
                       : Text(
                           '${e.key - Playback.instance.index <= 0 ? '' : '+'}${e.key - Playback.instance.index}',
-                          style:
-                              Theme.of(context).textTheme.displaySmall?.copyWith(
-                                    fontSize: 16.0,
-                                  ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .displaySmall
+                              ?.copyWith(
+                                fontSize: 16.0,
+                              ),
                         ),
                 ),
                 title: Text(
@@ -378,7 +381,8 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
       curve: Curves.easeInOut,
       child: Miniplayer(
         controller: controller,
-        elevation: 8.0,
+        elevation:
+            Theme.of(context).appBarTheme.elevation ?? kDefaultAppBarElevation,
         minHeight: kMobileNowPlayingBarHeight,
         maxHeight: MediaQuery.of(context).size.height,
         tapToCollapse: false,
@@ -470,7 +474,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                 Theme.of(context).primaryColor)
                                             .withOpacity(0.2)),
                                     backgroundColor:
-                                        Theme.of(context).cardColor,
+                                        Theme.of(context).cardTheme.color,
                                   ),
                                 ),
                               Positioned.fill(
@@ -791,7 +795,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                       bottom: 8.0,
                                                                                     ),
                                                                                     clipBehavior: Clip.antiAlias,
-                                                                                    elevation: 8.0,
+                                                                                    elevation: kDefaultHeavyElevation,
                                                                                     child: Container(
                                                                                       child: Column(
                                                                                         mainAxisSize: MainAxisSize.min,
@@ -1157,7 +1161,8 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                         ),
                         if (height >= MediaQuery.of(context).size.width)
                           Container(
-                            color: this.color ?? Theme.of(context).cardColor,
+                            color:
+                                this.color ?? Theme.of(context).cardTheme.color,
                             child: ClipRect(
                               child: Stack(
                                 alignment: Alignment.bottomCenter,
@@ -1215,8 +1220,8 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                         color:
                                                             (colors.palette ??
                                                                         [
-                                                                          Theme.of(context)
-                                                                              .cardColor
+                                                                          Theme.of(context).cardTheme.color ??
+                                                                              Theme.of(context).cardColor
                                                                         ])
                                                                     .first
                                                                     .isDark
@@ -1255,8 +1260,8 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                         color:
                                                             (colors.palette ??
                                                                         [
-                                                                          Theme.of(context)
-                                                                              .cardColor
+                                                                          Theme.of(context).cardTheme.color ??
+                                                                              Theme.of(context).cardColor
                                                                         ])
                                                                     .first
                                                                     .isDark
@@ -1287,7 +1292,8 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                           color:
                                                               (colors.palette ??
                                                                           [
-                                                                            Theme.of(context).cardColor
+                                                                            Theme.of(context).cardTheme.color ??
+                                                                                Theme.of(context).cardColor
                                                                           ])
                                                                       .first
                                                                       .isDark
@@ -1359,7 +1365,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                         .none)
                                                                 ? (colors.palette ??
                                                                             [
-                                                                              Theme.of(context).cardColor
+                                                                              Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
                                                                             ])
                                                                         .first
                                                                         .isDark
@@ -1377,7 +1383,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                         0.87)
                                                                 : (colors.palette ??
                                                                             [
-                                                                              Theme.of(context).cardColor
+                                                                              Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
                                                                             ])
                                                                         .first
                                                                         .isDark
@@ -1417,7 +1423,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                     .skip_previous,
                                                                 color: (colors.palette ??
                                                                             [
-                                                                              Theme.of(context).cardColor
+                                                                              Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
                                                                             ])
                                                                         .first
                                                                         .isDark
@@ -1493,7 +1499,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                 Icons.skip_next,
                                                                 color: (colors.palette ??
                                                                             [
-                                                                              Theme.of(context).cardColor
+                                                                              Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
                                                                             ])
                                                                         .first
                                                                         .isDark
@@ -1524,7 +1530,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                     .isShuffling
                                                                 ? (colors.palette ??
                                                                             [
-                                                                              Theme.of(context).cardColor
+                                                                              Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
                                                                             ])
                                                                         .first
                                                                         .isDark
@@ -1542,7 +1548,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                         0.87)
                                                                 : (colors.palette ??
                                                                             [
-                                                                              Theme.of(context).cardColor
+                                                                              Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
                                                                             ])
                                                                         .first
                                                                         .isDark
@@ -1595,7 +1601,8 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                               },
                                                               color: (colors.palette ??
                                                                           [
-                                                                            Theme.of(context).cardColor
+                                                                            Theme.of(context).cardTheme.color ??
+                                                                                Theme.of(context).cardColor
                                                                           ])
                                                                       .first
                                                                       .isDark
@@ -1690,7 +1697,8 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                               },
                                                               color: (colors.palette ??
                                                                           [
-                                                                            Theme.of(context).cardColor
+                                                                            Theme.of(context).cardTheme.color ??
+                                                                                Theme.of(context).cardColor
                                                                           ])
                                                                       .first
                                                                       .isDark
@@ -1786,8 +1794,8 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                       color:
                                                           (colors.palette ??
                                                                       [
-                                                                        Theme.of(context)
-                                                                            .cardColor
+                                                                        Theme.of(context).cardTheme.color ??
+                                                                            Theme.of(context).cardColor
                                                                       ])
                                                                   .first
                                                                   .isDark
@@ -1807,8 +1815,8 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                       color:
                                                           (colors.palette ??
                                                                       [
-                                                                        Theme.of(context)
-                                                                            .cardColor
+                                                                        Theme.of(context).cardTheme.color ??
+                                                                            Theme.of(context).cardColor
                                                                       ])
                                                                   .first
                                                                   .isDark
@@ -1877,7 +1885,8 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                   backdropTapClosesPanel: true,
                                   panelSnapping: true,
                                   backdropOpacity: 0.0,
-                                  color: Theme.of(context).cardColor,
+                                  color: Theme.of(context).cardTheme.color ??
+                                      Theme.of(context).cardColor,
                                   margin: EdgeInsets.only(
                                     left: 16.0,
                                     right: 16.0,
@@ -1910,8 +1919,9 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                   2.0,
                                                 ),
                                                 color: Theme.of(context)
-                                                    .dividerColor
-                                                    .withOpacity(0.54),
+                                                    .dividerTheme
+                                                    .color
+                                                    ?.withOpacity(0.54),
                                               ),
                                             ),
                                           ),
@@ -1977,8 +1987,9 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                         ? Container(
                                             clipBehavior: Clip.antiAlias,
                                             decoration: BoxDecoration(
-                                              color:
-                                                  Theme.of(context).cardColor,
+                                              color: Theme.of(context)
+                                                  .cardTheme
+                                                  .color,
                                               borderRadius: BorderRadius.only(
                                                 topLeft: Radius.circular(4.0),
                                                 topRight: Radius.circular(4.0),
@@ -2040,8 +2051,9 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                   2.0,
                                                 ),
                                                 color: Theme.of(context)
-                                                    .dividerColor
-                                                    .withOpacity(0.54),
+                                                    .dividerTheme
+                                                    .color
+                                                    ?.withOpacity(0.54),
                                               ),
                                             ),
                                           ),
@@ -2229,7 +2241,6 @@ class MiniNowPlayingBarRefreshCollectionButtonState
                         activeIcon: Icons.close,
                         spacing: 8.0,
                         heroTag: 'create-playlist-fab',
-                        elevation: 8.0,
                         animationCurve: Curves.easeInOut,
                         animationDuration: const Duration(milliseconds: 200),
                         children: [
@@ -2244,9 +2255,10 @@ class MiniNowPlayingBarRefreshCollectionButtonState
                                   maxHeight: double.infinity,
                                 ),
                                 context: context,
-                                elevation: 8.0,
+                                elevation: kDefaultHeavyElevation,
                                 useRootNavigator: true,
-                                backgroundColor: Theme.of(context).cardColor,
+                                backgroundColor:
+                                    Theme.of(context).cardTheme.color,
                                 builder: (context) => StatefulBuilder(
                                   builder: (context, setState) {
                                     return PlaylistImportBottomSheet();
@@ -2264,9 +2276,10 @@ class MiniNowPlayingBarRefreshCollectionButtonState
                               await showModalBottomSheet(
                                 isScrollControlled: true,
                                 context: context,
-                                elevation: 8.0,
+                                elevation: kDefaultHeavyElevation,
                                 useRootNavigator: true,
-                                backgroundColor: Theme.of(context).cardColor,
+                                backgroundColor:
+                                    Theme.of(context).cardTheme.color,
                                 builder: (context) => StatefulBuilder(
                                   builder: (context, setState) {
                                     return Container(
@@ -2602,13 +2615,17 @@ class _LyricsScreenState extends State<LyricsScreen> {
                           }).toList(),
                         position: current,
                         lyricUi: () {
-                          final colors =
-                              palette.palette ?? [Theme.of(context).cardColor];
+                          final colors = palette.palette ??
+                              [
+                                Theme.of(context).cardTheme.color ??
+                                    Theme.of(context).cardColor
+                              ];
                           return LyricsStyle(
                             color: colors.first.isDark
                                 ? Colors.white
                                 : Colors.black,
-                            primary: colors.first != Theme.of(context).cardColor
+                            primary: colors.first !=
+                                    Theme.of(context).cardTheme.color
                                 ? colors.first.isDark
                                     ? Colors.white
                                     : Colors.black

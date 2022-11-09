@@ -148,31 +148,38 @@ class _AlbumTabState extends State<AlbumTab> {
                               {
                                 return Text(
                                   album.albumName[0].toUpperCase(),
-                                  style: Theme.of(context).textTheme.displayLarge,
+                                  style:
+                                      Theme.of(context).textTheme.displayLarge,
                                 );
                               }
                             case AlbumsSort.dateAdded:
                               {
                                 return Text(
                                   '${album.timeAdded.label}',
-                                  style: Theme.of(context).textTheme.headlineMedium,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium,
                                 );
                               }
                             case AlbumsSort.year:
                               {
                                 return Text(
                                   album.year,
-                                  style: Theme.of(context).textTheme.headlineMedium,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium,
                                 );
                               }
                             default:
                               return Text(
                                 '',
-                                style: Theme.of(context).textTheme.headlineMedium,
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
                               );
                           }
                         },
-                        backgroundColor: Theme.of(context).cardColor,
+                        backgroundColor: Theme.of(context).cardTheme.color ??
+                            Theme.of(context).cardColor,
                         controller: controller,
                         child: ListView(
                           controller: controller,
@@ -535,8 +542,10 @@ class AlbumTile extends StatelessWidget {
     Iterable<Color>? palette;
     if (isMobile && forceDefaultStyleOnMobile) {
       return OpenContainer(
-        closedColor: Theme.of(context).cardColor,
-        closedElevation: 4.0,
+        closedColor:
+            Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor,
+        closedElevation:
+            Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
         openElevation: 0.0,
         openColor: Theme.of(context).scaffoldBackgroundColor,
         closedBuilder: (context, open) => InkWell(
@@ -589,11 +598,13 @@ class AlbumTile extends StatelessWidget {
                       children: [
                         Text(
                           album.albumName.overflow,
-                          style:
-                              Theme.of(context).textTheme.displayMedium?.copyWith(
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium
+                              ?.copyWith(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.w700,
+                              ),
                           textAlign: TextAlign.left,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -631,7 +642,8 @@ class AlbumTile extends StatelessWidget {
     return isDesktop
         ? Card(
             clipBehavior: Clip.antiAlias,
-            elevation: 4.0,
+            elevation:
+                Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
             margin: EdgeInsets.zero,
             child: InkWell(
               onTap: () async {
@@ -778,7 +790,9 @@ class AlbumTile extends StatelessWidget {
                               children: [
                                 const SizedBox(width: 12.0),
                                 Card(
-                                  elevation: 4.0,
+                                  elevation:
+                                      Theme.of(context).cardTheme.elevation ??
+                                          kDefaultCardElevation,
                                   margin: EdgeInsets.zero,
                                   child: Padding(
                                     padding: EdgeInsets.all(2.0),
@@ -837,8 +851,10 @@ class AlbumTile extends StatelessWidget {
                 ),
               )
             : OpenContainer(
-                closedColor: Theme.of(context).cardColor,
-                closedElevation: 4.0,
+                closedColor: Theme.of(context).cardTheme.color ??
+                    Theme.of(context).cardColor,
+                closedElevation: Theme.of(context).cardTheme.elevation ??
+                    kDefaultCardElevation,
                 openElevation: 0.0,
                 openColor: Theme.of(context).scaffoldBackgroundColor,
                 closedBuilder: (context, open) => InkWell(
@@ -921,8 +937,9 @@ class AlbumTile extends StatelessWidget {
                                             .contains(album.year))
                                           album.year,
                                       ].join(' • '),
-                                      style:
-                                          Theme.of(context).textTheme.displaySmall,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall,
                                       maxLines: 1,
                                       textAlign: TextAlign.left,
                                       overflow: TextOverflow.ellipsis,
@@ -1064,6 +1081,7 @@ class AlbumScreenState extends State<AlbumScreen>
             ? Scaffold(
                 body: Container(
                   height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
                   child: Stack(
                     children: [
                       TweenAnimationBuilder(
@@ -1079,7 +1097,6 @@ class AlbumScreenState extends State<AlbumScreen>
                         ),
                         builder: (context, color, _) => DesktopAppBar(
                           height: MediaQuery.of(context).size.height / 3,
-                          elevation: 4.0,
                           color: color as Color? ?? Colors.transparent,
                         ),
                       ),
@@ -1092,7 +1109,8 @@ class AlbumScreenState extends State<AlbumScreen>
                           child: Card(
                             clipBehavior: Clip.antiAlias,
                             margin: EdgeInsets.only(top: 96.0, bottom: 4.0),
-                            elevation: 4.0,
+                            elevation: Theme.of(context).cardTheme.elevation ??
+                                kDefaultCardElevation,
                             child: Container(
                               constraints: BoxConstraints(
                                 maxWidth: 12 / 6 * 720.0,
@@ -1118,7 +1136,8 @@ class AlbumScreenState extends State<AlbumScreen>
                                                   .backgroundColor,
                                               end: color == null
                                                   ? Theme.of(context)
-                                                      .dividerColor
+                                                      .dividerTheme
+                                                      .color
                                                   : secondary!,
                                             ),
                                             curve: Curves.easeOut,
@@ -1139,7 +1158,10 @@ class AlbumScreenState extends State<AlbumScreen>
                                                   'album_art_${widget.album.albumName}_${widget.album.albumArtistName}',
                                               child: Card(
                                                 color: Colors.white,
-                                                elevation: 4.0,
+                                                elevation: Theme.of(context)
+                                                        .cardTheme
+                                                        .elevation ??
+                                                    kDefaultCardElevation,
                                                 child: Stack(
                                                   alignment: Alignment.center,
                                                   children: [
@@ -1342,10 +1364,10 @@ class AlbumScreenState extends State<AlbumScreen>
                                                             Alignment.center,
                                                         child: Text(
                                                           '#',
-                                                          style:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .displayMedium,
+                                                          style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .displayMedium,
                                                         ),
                                                       ),
                                                       Expanded(
@@ -1425,7 +1447,6 @@ class AlbumScreenState extends State<AlbumScreen>
                                                               return;
                                                             final result =
                                                                 await showMenu(
-                                                              elevation: 4.0,
                                                               context: context,
                                                               constraints:
                                                                   BoxConstraints(

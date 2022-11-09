@@ -35,6 +35,10 @@ const int kArtistTileSubTitleThreshold = 2;
 const double kAlbumTileListViewHeight = 72.0 + 1.0;
 const double kArtistTileListViewHeight = 72.0 + 1.0;
 
+const double kDefaultCardElevation = 4.0;
+const double kDefaultAppBarElevation = 4.0;
+const double kDefaultHeavyElevation = 8.0;
+
 /// DimensionsHelper
 /// ----------------
 ///

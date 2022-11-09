@@ -109,10 +109,11 @@ class WebAlbumLargeTile extends StatelessWidget {
                     children: [
                       Text(
                         album.albumName.overflow,
-                        style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                              fontSize: isMobile ? 18.0 : null,
-                              fontWeight: isMobile ? FontWeight.w700 : null,
-                            ),
+                        style:
+                            Theme.of(context).textTheme.displayMedium?.copyWith(
+                                  fontSize: isMobile ? 18.0 : null,
+                                  fontWeight: isMobile ? FontWeight.w700 : null,
+                                ),
                         textAlign: TextAlign.left,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -126,7 +127,10 @@ class WebAlbumLargeTile extends StatelessWidget {
                             if (album.year.isNotEmpty) album.year.overflow,
                           ].join(' • '),
                           style: isDesktop
-                              ? Theme.of(context).textTheme.displaySmall?.copyWith(
+                              ? Theme.of(context)
+                                  .textTheme
+                                  .displaySmall
+                                  ?.copyWith(
                                     fontSize: 12.0,
                                   )
                               : Theme.of(context).textTheme.displaySmall,
@@ -764,7 +768,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                         color: isDark(context)
                             ? kPrimaryDarkColor
                             : kPrimaryLightColor,
-                        themeMode:
+                        mode:
                             isDark(context) ? ThemeMode.dark : ThemeMode.light,
                       ),
                       child: DesktopAppBar(

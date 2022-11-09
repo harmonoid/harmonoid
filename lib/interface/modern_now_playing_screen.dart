@@ -13,14 +13,15 @@ import 'package:flutter_lyric/lyrics_reader_model.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/interface/collection/track.dart';
 import 'package:harmonoid/interface/now_playing_bar.dart';
-import 'package:harmonoid/state/now_playing_visuals.dart';
-import 'package:harmonoid/state/desktop_now_playing_controller.dart';
-import 'package:harmonoid/state/now_playing_color_palette.dart';
 import 'package:harmonoid/state/lyrics.dart';
+import 'package:harmonoid/state/now_playing_visuals.dart';
+import 'package:harmonoid/state/now_playing_color_palette.dart';
+import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class ModernNowPlayingScreen extends StatefulWidget {
@@ -275,7 +276,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                               ),
                               color: Colors.white,
                               clipBehavior: Clip.antiAlias,
-                              elevation: 8.0,
+                              elevation: kDefaultHeavyElevation,
                               child: Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: ExtendedImage(
@@ -1153,7 +1154,10 @@ class CarouselState extends State<Carousel> {
                   itemCount: Playback.instance.tracks.length,
                   itemBuilder: (context, index) => Material(
                     color: Playback.instance.index == index
-                        ? Theme.of(context).dividerColor.withOpacity(0.12)
+                        ? Theme.of(context)
+                            .dividerTheme
+                            .color
+                            ?.withOpacity(0.12)
                         : Colors.transparent,
                     child: TrackTile(
                       leading: Playback.instance.index == index

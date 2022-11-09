@@ -13,22 +13,24 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+final desktop = Platform.isWindows || Platform.isLinux || Platform.isMacOS;
+final mobile = Platform.isAndroid || Platform.isIOS;
+
 ThemeData createTheme({
   required Color color,
-  required ThemeMode themeMode,
+  required ThemeMode mode,
 }) {
-  final light = themeMode == ThemeMode.light;
-  final TextTheme theme;
+  bool light = mode == ThemeMode.light;
+  TextTheme theme;
   if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
     theme = TextTheme(
-      /// Leading tile widgets text theme.
+      // Leading tile widgets text theme.
       displayLarge: TextStyle(
         color: light ? Colors.black : Colors.white,
         fontSize: 16.0,
         fontWeight: FontWeight.w600,
       ),
-
-      /// [AlbumTile] text theme.
+      // [AlbumTile] text theme.
       displayMedium: TextStyle(
         color: light ? Colors.black : Colors.white,
         fontSize: 14.0,
@@ -53,9 +55,8 @@ ThemeData createTheme({
         fontSize: 12.0,
         fontWeight: FontWeight.normal,
       ),
-
-      /// [ListTile] text theme.
-      /// [ListTile.title]'s text theme must be overrided to headlineMedium, if it does not contain subtitle.
+      // [ListTile] text theme.
+      // [ListTile.title]'s text theme must be overrided to [headlineMedium], if it does not contain subtitle.
       titleMedium: TextStyle(
         color: light ? Colors.black : Colors.white,
         fontSize: 14.0,
@@ -74,6 +75,18 @@ ThemeData createTheme({
             : Colors.white.withOpacity(0.87),
         fontSize: 14.0,
         fontWeight: FontWeight.normal,
+      ),
+      // Used as [DataTable]'s column title text-theme.
+      titleSmall: TextStyle(
+        color: light ? Colors.black : Colors.white,
+        fontSize: 14.0,
+        fontWeight: FontWeight.w600,
+      ),
+      // Used as [AlertDialog]'s [title] text-theme.
+      titleLarge: TextStyle(
+        color: light ? Colors.black : Colors.white,
+        fontSize: 20.0,
+        fontWeight: FontWeight.w600,
       ),
     );
   } else {
@@ -105,44 +118,44 @@ ThemeData createTheme({
       ),
     );
   }
-  return ThemeData(
+  // Enforce `Inter` font family on Linux machines.
+  theme = theme.apply(fontFamily: Platform.isLinux ? 'Inter' : null);
+  return ThemeData.from(
+    colorScheme: ColorScheme(
+      brightness: light ? Brightness.light : Brightness.dark,
+      primary: color,
+      onPrimary: color.computeLuminance() > 0.7 ? Colors.black : Colors.white,
+      secondary: color,
+      onSecondary: color.computeLuminance() > 0.7 ? Colors.black : Colors.white,
+      error: Colors.red,
+      onError: Colors.white,
+      background: light ? Colors.white : Colors.black,
+      onBackground: desktop
+          ? (light ? Colors.black : Colors.white)
+          : (light
+              ? Colors.black.withOpacity(0.87)
+              : Colors.white.withOpacity(0.87)),
+      surface: Colors.transparent,
+      onSurface: desktop
+          ? (light ? Colors.black : Colors.white)
+          : (light
+              ? Colors.black.withOpacity(0.87)
+              : Colors.white.withOpacity(0.87)),
+    ),
+    textTheme: theme,
+  ).copyWith(
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      shape: CircleBorder(),
+    ),
     // ignore: deprecated_member_use
     androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
-    // Explicitly using [ChipThemeData] on Linux since it seems to be falling back to Ubuntu's font family.
-    chipTheme: Platform.isLinux
-        ? ChipThemeData(
-            backgroundColor: color,
-            disabledColor: color.withOpacity(0.2),
-            selectedColor: color,
-            secondarySelectedColor: color,
-            padding: EdgeInsets.zero,
-            labelStyle: TextStyle(
-              color: Colors.white,
-              fontSize: 14.0,
-              fontWeight: FontWeight.normal,
-              fontFamily: 'Inter',
-            ),
-            secondaryLabelStyle: TextStyle(
-              color: Colors.white,
-              fontSize: 14.0,
-              fontWeight: FontWeight.normal,
-              fontFamily: 'Inter',
-            ),
-            brightness: Brightness.dark,
-          )
-        : null,
     textButtonTheme: TextButtonThemeData(
       style: ButtonStyle(
-        foregroundColor: MaterialStateProperty.all<Color>(color),
-        overlayColor: MaterialStateProperty.all(
-          color.withOpacity(0.05),
-        ),
-        textStyle: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-            ? MaterialStateProperty.all(
+        textStyle: desktop
+            ? MaterialStatePropertyAll(
                 TextStyle(
-                  letterSpacing: 0.8,
+                  letterSpacing: 1.0,
                   fontWeight: FontWeight.w600,
-                  fontFamily: Platform.isLinux ? 'Inter' : null,
                 ),
               )
             : null,
@@ -150,17 +163,10 @@ ThemeData createTheme({
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.resolveWith((states) {
-          return states.contains(MaterialState.disabled)
-              ? light
-                  ? Colors.black12
-                  : Colors.white24
-              : color;
-        }),
-        textStyle: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-            ? MaterialStateProperty.all(
+        textStyle: desktop
+            ? MaterialStatePropertyAll(
                 TextStyle(
-                  letterSpacing: 0.8,
+                  letterSpacing: 1.0,
                   fontWeight: FontWeight.w600,
                 ),
               )
@@ -168,7 +174,7 @@ ThemeData createTheme({
       ),
     ),
     textSelectionTheme: TextSelectionThemeData(
-      cursorColor: (Platform.isWindows || Platform.isMacOS || Platform.isLinux)
+      cursorColor: desktop
           ? light
               ? Colors.black
               : Colors.white
@@ -201,12 +207,8 @@ ThemeData createTheme({
         },
       ),
     ),
-    splashFactory: Platform.isWindows || Platform.isMacOS || Platform.isLinux
-        ? InkRipple.splashFactory
-        : InkSparkle.splashFactory,
-    highlightColor: Platform.isWindows || Platform.isMacOS || Platform.isLinux
-        ? null
-        : Colors.transparent,
+    splashFactory: desktop ? InkRipple.splashFactory : InkSparkle.splashFactory,
+    highlightColor: desktop ? null : Colors.transparent,
     primaryColorLight: color,
     primaryColor: color,
     primaryColorDark: color,
@@ -218,20 +220,38 @@ ThemeData createTheme({
         color: light ? Colors.white : Colors.black,
       ),
     ),
-    cardColor: light ? Colors.white : Color(0xFF222222),
-    dividerColor: light ? Colors.black12 : Colors.white24,
     disabledColor: light ? Colors.black38 : Colors.white38,
     tabBarTheme: TabBarTheme(
       labelColor: color,
       unselectedLabelColor:
           light ? Colors.black54 : Colors.white.withOpacity(0.67),
     ),
+    dividerTheme: DividerThemeData(
+      color: light ? Colors.black12 : Colors.white24,
+      thickness: 1.0,
+      indent: 0.0,
+      endIndent: 0.0,
+    ),
+    cardTheme: CardTheme(
+      elevation: 4.0,
+      color: light ? Colors.white : Color(0xFF222222),
+      surfaceTintColor: null,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4.0),
+      ),
+    ),
+    // Legacy.
+    cardColor: light ? Colors.white : Color(0xFF222222),
     popupMenuTheme: PopupMenuThemeData(
-      elevation: 2.0,
-      color: light ? Colors.white : Color(0xFF292929),
+      elevation: 4.0,
+      color: light ? Colors.white : Color(0xFF2F2F2F),
+      surfaceTintColor: null,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4.0),
+      ),
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: Platform.isAndroid || Platform.isIOS
+      backgroundColor: mobile
           ? light
               ? Colors.white
               : Color(0xFF202020)
@@ -272,7 +292,7 @@ ThemeData createTheme({
     textTheme: theme,
     primaryTextTheme: theme,
     tooltipTheme: TooltipThemeData(
-      textStyle: Platform.isWindows || Platform.isLinux || Platform.isMacOS
+      textStyle: desktop
           ? TextStyle(
               fontSize: 12.0,
               color: light ? Colors.white : Colors.black,
@@ -280,20 +300,14 @@ ThemeData createTheme({
           : null,
       decoration: BoxDecoration(
         color: light ? Colors.black : Colors.white,
-        borderRadius: Platform.isAndroid || Platform.isIOS
-            ? BorderRadius.circular(16.0)
-            : BorderRadius.circular(4.0),
+        borderRadius:
+            mobile ? BorderRadius.circular(16.0) : BorderRadius.circular(4.0),
       ),
-      height: Platform.isAndroid || Platform.isIOS ? 32.0 : null,
-      verticalOffset: Platform.isWindows || Platform.isLinux || Platform.isMacOS
-          ? 36.0
-          : null,
-      preferBelow: Platform.isWindows || Platform.isLinux || Platform.isMacOS
-          ? true
-          : null,
+      height: mobile ? 32.0 : null,
+      verticalOffset: desktop ? 36.0 : null,
+      preferBelow: desktop ? true : null,
       waitDuration: Duration(seconds: 1),
     ),
-    fontFamily: Platform.isLinux ? 'Inter' : null,
     extensions: {
       IconColors(
         Color.lerp(Colors.white, Colors.black, 0.54),
@@ -304,58 +318,6 @@ ThemeData createTheme({
         Color.lerp(Colors.black, Colors.white, 1.0),
       ),
     },
-    checkboxTheme: CheckboxThemeData(
-      fillColor: MaterialStateProperty.resolveWith<Color?>(
-          (Set<MaterialState> states) {
-        if (states.contains(MaterialState.disabled)) {
-          return null;
-        }
-        if (states.contains(MaterialState.selected)) {
-          return color;
-        }
-        return null;
-      }),
-    ),
-    radioTheme: RadioThemeData(
-      fillColor: MaterialStateProperty.resolveWith<Color?>(
-          (Set<MaterialState> states) {
-        if (states.contains(MaterialState.disabled)) {
-          return null;
-        }
-        if (states.contains(MaterialState.selected)) {
-          return color;
-        }
-        return null;
-      }),
-    ),
-    switchTheme: SwitchThemeData(
-      thumbColor: MaterialStateProperty.resolveWith<Color?>(
-          (Set<MaterialState> states) {
-        if (states.contains(MaterialState.disabled)) {
-          return null;
-        }
-        if (states.contains(MaterialState.selected)) {
-          return color;
-        }
-        return null;
-      }),
-      trackColor: MaterialStateProperty.resolveWith<Color?>(
-          (Set<MaterialState> states) {
-        if (states.contains(MaterialState.disabled)) {
-          return null;
-        }
-        if (states.contains(MaterialState.selected)) {
-          return color;
-        }
-        return null;
-      }),
-    ),
-    colorScheme: ColorScheme.fromSwatch()
-        .copyWith(
-          secondary: color,
-          brightness: light ? Brightness.light : Brightness.dark,
-        )
-        .copyWith(background: color.withOpacity(0.24)),
   );
 }
 

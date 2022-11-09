@@ -122,8 +122,9 @@ class PlaylistTab extends StatelessWidget {
                                       },
                                       textAlignVertical:
                                           TextAlignVertical.center,
-                                      style:
-                                          Theme.of(context).textTheme.headlineMedium,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium,
                                       decoration: inputDecoration(
                                         context,
                                         Language
@@ -235,7 +236,8 @@ class PlaylistThumbnail extends StatelessWidget {
   Widget build(BuildContext context) {
     if (encircle) {
       return Card(
-        elevation: 4.0,
+        elevation:
+            Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(width / 2),
@@ -370,7 +372,8 @@ class PlaylistTileState extends State<PlaylistTile> {
             ),
             title: Text(
               Language.instance.DELETE,
-              style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+              style:
+                  isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
             ),
           ),
         ),
@@ -385,7 +388,8 @@ class PlaylistTileState extends State<PlaylistTile> {
             ),
             title: Text(
               Language.instance.RENAME,
-              style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+              style:
+                  isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
             ),
           ),
         ),
@@ -514,9 +518,9 @@ class PlaylistTileState extends State<PlaylistTile> {
             await showModalBottomSheet(
               isScrollControlled: true,
               context: context,
-              elevation: 8.0,
+              elevation: kDefaultHeavyElevation,
               useRootNavigator: true,
-              backgroundColor: Theme.of(context).cardColor,
+              backgroundColor: Theme.of(context).cardTheme.color,
               builder: (context) => StatefulBuilder(
                 builder: (context, setState) {
                   return Container(
@@ -642,7 +646,6 @@ class PlaylistTileState extends State<PlaylistTile> {
         if (!widget.enableTrailingButton) return;
         if (widget.playlist.id < 0) return;
         final result = await showMenu(
-          elevation: 4.0,
           context: context,
           constraints: BoxConstraints(
             maxWidth: double.infinity,
@@ -778,10 +781,12 @@ class PlaylistTileState extends State<PlaylistTile> {
                                 widget.playlist.name.overflow,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style:
-                                Theme.of(context).textTheme.displayMedium?.copyWith(
-                                      letterSpacing: isDesktop ? 0.2 : 0.0,
-                                    ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium
+                                ?.copyWith(
+                                  letterSpacing: isDesktop ? 0.2 : 0.0,
+                                ),
                           ),
                           const SizedBox(
                             height: 2.0,
@@ -976,6 +981,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                   backgroundColor: color as Color? ?? Colors.transparent,
                   body: Container(
                     height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
                     child: Stack(
                       children: [
                         Container(
@@ -1183,10 +1189,10 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                             Alignment.center,
                                                         child: Text(
                                                           '#',
-                                                          style:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .displayMedium,
+                                                          style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .displayMedium,
                                                         ),
                                                       ),
                                                       Expanded(
@@ -1554,7 +1560,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                     children: [
                                       Positioned.fill(
                                         child: Container(
-                                          color: Theme.of(context).cardColor,
+                                          color:
+                                              Theme.of(context).cardTheme.color,
                                         ),
                                       ),
                                       Container(

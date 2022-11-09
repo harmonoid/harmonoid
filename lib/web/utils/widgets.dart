@@ -94,7 +94,7 @@ class _WebSearchBarState extends State<WebSearchBar> {
               height: 7 * 32.0,
               width: 280.0,
               child: Material(
-                color: Theme.of(context).cardColor,
+                color: Theme.of(context).cardTheme.color,
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(4.0),
                   bottomRight: Radius.circular(4.0),

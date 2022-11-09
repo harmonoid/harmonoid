@@ -217,9 +217,6 @@ class IndexingState extends State<IndexingSetting>
                               : showProgressDialog,
                           child: Text(
                             Language.instance.ADD_NEW_FOLDER.toUpperCase(),
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
                           ),
                         ),
                       ],
@@ -403,13 +400,14 @@ class IndexingState extends State<IndexingSetting>
                                               value: null,
                                               backgroundColor: Theme.of(context)
                                                   .colorScheme
-                                                  .secondary
+                                                  .primary
                                                   .withOpacity(0.2),
                                               valueColor:
                                                   AlwaysStoppedAnimation(
-                                                      Theme.of(context)
-                                                          .colorScheme
-                                                          .secondary),
+                                                Theme.of(context)
+                                                    .colorScheme
+                                                    .primary,
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -455,13 +453,13 @@ class IndexingState extends State<IndexingSetting>
                                                 backgroundColor:
                                                     Theme.of(context)
                                                         .colorScheme
-                                                        .secondary
+                                                        .primary
                                                         .withOpacity(0.2),
                                                 valueColor:
                                                     AlwaysStoppedAnimation(
                                                   Theme.of(context)
                                                       .colorScheme
-                                                      .secondary,
+                                                      .primary,
                                                 ),
                                               ),
                                             ),
@@ -491,9 +489,6 @@ class IndexingState extends State<IndexingSetting>
                                 },
                           child: Text(
                             Language.instance.REFRESH.toUpperCase(),
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
                           ),
                         ),
                         const SizedBox(width: 4.0),
@@ -509,9 +504,6 @@ class IndexingState extends State<IndexingSetting>
                                 },
                           child: Text(
                             Language.instance.REINDEX.toUpperCase(),
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
                           ),
                         ),
                       ],
@@ -687,7 +679,7 @@ class IndexingState extends State<IndexingSetting>
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          backgroundColor: Theme.of(context).cardColor,
+          backgroundColor: Theme.of(context).cardTheme.color,
           title: Text(
             Language.instance.INDEXING_ALREADY_GOING_ON_TITLE,
           ),
@@ -710,7 +702,7 @@ class IndexingState extends State<IndexingSetting>
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: Theme.of(context).cardColor,
+        backgroundColor: Theme.of(context).cardTheme.color,
         title: Text(
           Language.instance.WARNING,
         ),

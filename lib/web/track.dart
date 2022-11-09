@@ -237,7 +237,7 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
             clipBehavior: Clip.antiAlias,
             elevation: 4.0,
             margin: EdgeInsets.zero,
-            color: Theme.of(context).cardColor,
+            color: Theme.of(context).cardTheme.color,
             child: Material(
               color: Colors.transparent,
               child: InkWell(

@@ -68,10 +68,17 @@ class _TrackTabState extends State<TrackTab> {
           ? collection.tracks.isNotEmpty
               ? desktop.ListTableTheme(
                   data: desktop.ListTableThemeData(
-                    borderColor: Theme.of(context).dividerColor,
-                    highlightColor:
+                    borderColor: Theme.of(context).dividerTheme.color,
+                    highlightColor: Theme.of(context)
+                            .dividerTheme
+                            .color
+                            ?.withOpacity(0.4) ??
                         Theme.of(context).dividerColor.withOpacity(0.4),
-                    hoverColor: Theme.of(context).dividerColor.withOpacity(0.2),
+                    hoverColor: Theme.of(context)
+                            .dividerTheme
+                            .color
+                            ?.withOpacity(0.2) ??
+                        Theme.of(context).dividerColor.withOpacity(0.4),
                     borderHighlightColor: Theme.of(context).primaryColor,
                     borderIndicatorColor: Theme.of(context).primaryColor,
                     borderHoverColor: Theme.of(context).primaryColor,
@@ -89,7 +96,6 @@ class _TrackTabState extends State<TrackTab> {
                         },
                         onSecondaryPress: (index, position) async {
                           final result = await showMenu(
-                            elevation: 4.0,
                             context: context,
                             constraints: BoxConstraints(
                               maxWidth: double.infinity,
@@ -113,15 +119,18 @@ class _TrackTabState extends State<TrackTab> {
                         },
                         colCount: 5,
                         headerColumnBorder: BorderSide(
-                          color: Theme.of(context).dividerColor,
+                          color: Theme.of(context).dividerTheme.color ??
+                              Theme.of(context).dividerColor,
                           width: 1.0,
                         ),
                         tableBorder: desktop.TableBorder(
                           verticalInside: BorderSide(
-                            color: Theme.of(context).dividerColor,
+                            color: Theme.of(context).dividerTheme.color ??
+                                Theme.of(context).dividerColor,
                           ),
                           top: BorderSide(
-                            color: Theme.of(context).dividerColor,
+                            color: Theme.of(context).dividerTheme.color ??
+                                Theme.of(context).dividerColor,
                           ),
                         ),
                         itemCount: collection.tracks.length,
@@ -165,7 +174,6 @@ class _TrackTabState extends State<TrackTab> {
                               return ContextMenuArea(
                                 onPressed: (e) async {
                                   final result = await showMenu(
-                                    elevation: 4.0,
                                     context: context,
                                     constraints: BoxConstraints(
                                       maxWidth: double.infinity,
@@ -202,8 +210,9 @@ class _TrackTabState extends State<TrackTab> {
                                       collection.tracks[index].year.toString(),
                                     ][property],
                                     overflow: TextOverflow.ellipsis,
-                                    style:
-                                        Theme.of(context).textTheme.headlineMedium,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium,
                                   ),
                                 ),
                               );
@@ -250,14 +259,16 @@ class _TrackTabState extends State<TrackTab> {
                               });
                               elements.removeLast();
                               return HyperLink(
-                                style: Theme.of(context).textTheme.headlineMedium,
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
                                 text: TextSpan(
                                   children: elements,
                                 ),
                               );
                             } else if (property == 3) {
                               return HyperLink(
-                                style: Theme.of(context).textTheme.headlineMedium,
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
@@ -360,14 +371,16 @@ class _TrackTabState extends State<TrackTab> {
                             {
                               return Text(
                                 '${track.timeAdded.label}',
-                                style: Theme.of(context).textTheme.headlineMedium,
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
                               );
                             }
                           case TracksSort.year:
                             {
                               return Text(
                                 '${track.year}',
-                                style: Theme.of(context).textTheme.headlineMedium,
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
                               );
                             }
                           default:
@@ -377,7 +390,8 @@ class _TrackTabState extends State<TrackTab> {
                             );
                         }
                       },
-                      backgroundColor: Theme.of(context).cardColor,
+                      backgroundColor: Theme.of(context).cardTheme.color ??
+                          Theme.of(context).cardColor,
                       controller: controller,
                       child: ListView(
                         controller: controller,
@@ -476,7 +490,6 @@ class TrackTileState extends State<TrackTile> {
                 if (widget.disableContextMenu) return;
                 if (!reactToSecondaryPress) return;
                 var result = await showMenu(
-                  elevation: 4.0,
                   context: context,
                   constraints: BoxConstraints(
                     maxWidth: double.infinity,
@@ -538,7 +551,9 @@ class TrackTileState extends State<TrackTile> {
                             : widget.leading ??
                                 Text(
                                   '${widget.track.trackNumber}',
-                                  style: Theme.of(context).textTheme.headlineMedium,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium,
                                 ),
                       ),
                       Expanded(
@@ -688,8 +703,9 @@ class TrackTileState extends State<TrackTile> {
                                     widget.track.trackName.overflow,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
-                                    style:
-                                        Theme.of(context).textTheme.displayMedium,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium,
                                   ),
                               if (widget.subtitle != null) ...[
                                 const SizedBox(
@@ -704,7 +720,8 @@ class TrackTileState extends State<TrackTile> {
                                   subtitle,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
-                                  style: Theme.of(context).textTheme.displaySmall,
+                                  style:
+                                      Theme.of(context).textTheme.displaySmall,
                                 ),
                               ],
                             ],

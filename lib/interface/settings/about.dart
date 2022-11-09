@@ -63,7 +63,8 @@ class _AboutPageState extends State<AboutPage> {
                 margin: EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: Theme.of(context).dividerColor,
+                    color: Theme.of(context).dividerTheme.color ??
+                        Theme.of(context).dividerColor,
                     width: 1.0,
                   ),
                   borderRadius: BorderRadius.circular(8.0),
@@ -247,7 +248,8 @@ class _AboutPageState extends State<AboutPage> {
                 margin: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: Theme.of(context).dividerColor,
+                    color: Theme.of(context).dividerTheme.color ??
+                        Theme.of(context).dividerColor,
                     width: 1.0,
                   ),
                   borderRadius: BorderRadius.circular(8.0),

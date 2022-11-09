@@ -15,8 +15,9 @@ import 'package:media_library/media_library.dart' hide Media;
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/hotkeys.dart';
-import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/tagger_client.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -37,7 +38,6 @@ class FileInfoScreen extends StatefulWidget {
               timeout: timeout,
             ),
             clipBehavior: Clip.antiAlias,
-            elevation: 32.0,
             insetPadding: EdgeInsets.all(64.0),
           ),
         );
@@ -206,9 +206,9 @@ class FileInfoScreen extends StatefulWidget {
                   await showModalBottomSheet(
                     isScrollControlled: true,
                     context: context,
-                    elevation: 8.0,
+                    elevation: kDefaultHeavyElevation,
                     useRootNavigator: true,
-                    backgroundColor: Theme.of(context).cardColor,
+                    backgroundColor: Theme.of(context).cardTheme.color,
                     builder: (context) => StatefulBuilder(
                       builder: (context, setState) {
                         return Container(
@@ -566,8 +566,9 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
                                       !widget.uri.isScheme('FILE')
                                           ? widget.uri.toString()
                                           : basename(widget.uri.toFilePath()),
-                                      style:
-                                          Theme.of(context).textTheme.displaySmall,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall,
                                     ),
                                   ],
                                 ),

@@ -16,6 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/dimensions.dart';
 
 class ExceptionApp extends StatelessWidget {
   final Object exception;
@@ -29,7 +30,7 @@ class ExceptionApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: createTheme(
         color: Colors.red.shade800,
-        themeMode: ThemeMode.light,
+        mode: ThemeMode.light,
       ).copyWith(
         highlightColor: Colors.white10,
         splashColor: Colors.white10,
@@ -228,7 +229,8 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                           ),
                         ],
                       ),
-                      elevation: 4.0,
+                      elevation: Theme.of(context).cardTheme.elevation ??
+                          kDefaultCardElevation,
                     ),
                     if (Platform.isWindows)
                       DesktopCaptionBar(

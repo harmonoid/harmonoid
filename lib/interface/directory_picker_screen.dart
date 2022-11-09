@@ -76,7 +76,8 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
       '/',
       arguments: DraggableScrollbar.semicircle(
         heightScrollThumb: 56.0,
-        backgroundColor: Theme.of(key.currentContext!).cardColor,
+        backgroundColor: Theme.of(key.currentContext!).cardTheme.color ??
+            Theme.of(key.currentContext!).cardColor,
         controller: controller,
         child: ListView.separated(
           controller: controller,

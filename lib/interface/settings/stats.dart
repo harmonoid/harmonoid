@@ -36,7 +36,8 @@ class Table extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4.0),
         border: Border.all(
-          color: Theme.of(context).dividerColor,
+          color: Theme.of(context).dividerTheme.color ??
+              Theme.of(context).dividerColor,
           width: 1.0,
         ),
       ),

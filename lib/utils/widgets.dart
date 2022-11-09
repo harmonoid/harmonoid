@@ -756,7 +756,7 @@ class _SortBarState extends State<SortBar> {
                   ? widget.tab == 1
                       ? 28.0
                       : 0
-                  : -64.0,
+                  : -72.0,
               right: tileMargin,
               child: Card(
                 color: Theme.of(context).appBarTheme.backgroundColor,
@@ -832,7 +832,8 @@ class SubHeader extends StatelessWidget {
                   text!.toUpperCase(),
                   style: style ??
                       Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: Theme.of(context).textTheme.displaySmall?.color,
+                            color:
+                                Theme.of(context).textTheme.displaySmall?.color,
                             fontSize: 12.0,
                             fontWeight: FontWeight.w600,
                           ),
@@ -903,7 +904,8 @@ class DesktopAppBar extends StatelessWidget {
         padding: EdgeInsets.only(bottom: 8.0),
         child: Material(
           animationDuration: Duration.zero,
-          elevation: elevation ?? 4.0,
+          elevation:
+              elevation ?? Theme.of(context).appBarTheme.elevation ?? 4.0,
           color: color ?? Theme.of(context).appBarTheme.backgroundColor,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -935,12 +937,13 @@ class DesktopAppBar extends StatelessWidget {
                     if (title != null)
                       Text(
                         title!,
-                        style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                            color: color != null
-                                ? isDark
-                                    ? Colors.white
-                                    : Colors.black
-                                : null),
+                        style:
+                            Theme.of(context).textTheme.displayLarge?.copyWith(
+                                color: color != null
+                                    ? isDark
+                                        ? Colors.white
+                                        : Colors.black
+                                    : null),
                       ),
                     if (actions != null) ...[
                       const Spacer(),
@@ -988,7 +991,6 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
     return Consumer<CollectionRefresh>(
       builder: (context, refresh, _) => refresh.progress == refresh.total
           ? FloatingActionButton(
-              elevation: 8.0,
               heroTag: 'collection_refresh_button',
               backgroundColor:
                   widget.color ?? Theme.of(context).colorScheme.secondary,
@@ -1295,7 +1297,7 @@ class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
     if (items.isNotEmpty) {
       showMenu<T?>(
         context: context,
-        elevation: 4.0,
+        elevation: Theme.of(context).popupMenuTheme.elevation,
         items: items,
         initialValue: widget.initialValue,
         position: position,
@@ -1305,6 +1307,9 @@ class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
                 Radius.circular(4.0),
               ),
             ),
+        constraints: BoxConstraints(
+          maxWidth: double.infinity,
+        ),
         color: Theme.of(context).popupMenuTheme.color,
       ).then<void>((T? newValue) {
         if (!mounted) return null;
@@ -1827,7 +1832,6 @@ class CollectionSortButton extends StatelessWidget {
           Icons.sort_by_alpha,
           size: 20.0,
         ),
-        elevation: 8.0,
         onSelected: (value) async {
           if (value is AlbumsSort) {
             await Collection.instance.sort(albumsSort: value);
@@ -2156,7 +2160,8 @@ class CorrectedListTile extends StatelessWidget {
                     Text(
                       subtitle!,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).textTheme.displaySmall?.color,
+                            color:
+                                Theme.of(context).textTheme.displaySmall?.color,
                           ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -2991,7 +2996,7 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
                                   context: context,
                                   builder: (context) => AlertDialog(
                                     backgroundColor:
-                                        Theme.of(context).cardColor,
+                                        Theme.of(context).cardTheme.color,
                                     title: Text(
                                       Language.instance
                                           .INDEXING_ALREADY_GOING_ON_TITLE,
@@ -2999,8 +3004,9 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
                                     content: Text(
                                       Language.instance
                                           .INDEXING_ALREADY_GOING_ON_SUBTITLE,
-                                      style:
-                                          Theme.of(context).textTheme.displaySmall,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall,
                                     ),
                                     actions: [
                                       TextButton(
@@ -3265,9 +3271,9 @@ class _MobileAppBarOverflowButtonState
                           await showModalBottomSheet(
                             isScrollControlled: true,
                             context: context,
-                            elevation: 8.0,
+                            elevation: kDefaultHeavyElevation,
                             useRootNavigator: true,
-                            backgroundColor: Theme.of(context).cardColor,
+                            backgroundColor: Theme.of(context).cardTheme.color,
                             builder: (context) => StatefulBuilder(
                               builder: (context, setState) {
                                 return Container(

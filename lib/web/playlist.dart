@@ -671,7 +671,7 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                         color: isDark(context)
                             ? kPrimaryDarkColor
                             : kPrimaryLightColor,
-                        themeMode:
+                        mode:
                             isDark(context) ? ThemeMode.dark : ThemeMode.light,
                       ),
                       child: DesktopAppBar(

@@ -71,11 +71,11 @@ class Visuals extends ChangeNotifier {
 
   ThemeData get theme => createTheme(
         color: light,
-        themeMode: ThemeMode.light,
+        mode: ThemeMode.light,
       );
 
   ThemeData get darkTheme => createTheme(
         color: dark,
-        themeMode: ThemeMode.dark,
+        mode: ThemeMode.dark,
       );
 }

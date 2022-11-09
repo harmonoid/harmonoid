@@ -102,7 +102,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                         }),
                         child: Card(
                           clipBehavior: Clip.antiAlias,
-                          elevation: 8.0,
+                          elevation: kDefaultHeavyElevation,
                           child: LayoutBuilder(
                             builder: (context, constraints) => AnimatedSwitcher(
                               duration: const Duration(milliseconds: 300),
@@ -173,8 +173,9 @@ class NowPlayingState extends State<NowPlayingScreen>
                                 itemBuilder: (context, i) => Material(
                                   color: index == i
                                       ? Theme.of(context)
-                                          .dividerColor
-                                          .withOpacity(0.12)
+                                          .dividerTheme
+                                          .color
+                                          ?.withOpacity(0.12)
                                       : Colors.transparent,
                                   child: TrackTile(
                                     leading: index == i

@@ -175,11 +175,11 @@ class CollectionScreenState extends State<CollectionScreen>
                             child: Card(
                               clipBehavior: Clip.antiAlias,
                               margin: EdgeInsets.all(16.0),
-                              elevation: 4.0,
+                              elevation: Theme.of(context).cardTheme.elevation,
                               child: Container(
                                 width: 328.0,
                                 height: 56.0,
-                                color: Theme.of(context).cardColor,
+                                color: Theme.of(context).cardTheme.color,
                                 child: Column(
                                   mainAxisSize: MainAxisSize.max,
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -265,7 +265,8 @@ class CollectionScreenState extends State<CollectionScreen>
                         8.0,
                     padding: EdgeInsets.only(bottom: 8.0),
                     child: Material(
-                      elevation: 4.0,
+                      elevation: Theme.of(context).appBarTheme.elevation ??
+                          kDefaultAppBarElevation,
                       color: Theme.of(context).appBarTheme.backgroundColor,
                       child: Stack(
                         alignment: Alignment.centerLeft,
@@ -380,8 +381,9 @@ class CollectionScreenState extends State<CollectionScreen>
                                       },
                                       textAlignVertical:
                                           TextAlignVertical.center,
-                                      style:
-                                          Theme.of(context).textTheme.headlineMedium,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium,
                                       decoration: inputDecoration(
                                         context,
                                         Language
@@ -595,7 +597,8 @@ class CollectionScreenState extends State<CollectionScreen>
                               showMenu<int>(
                                 context: context,
                                 position: position,
-                                elevation: 4.0,
+                                elevation:
+                                    Theme.of(context).popupMenuTheme.elevation,
                                 constraints: BoxConstraints(
                                   maxWidth: double.infinity,
                                 ),
