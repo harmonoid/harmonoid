@@ -26,9 +26,8 @@ import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/now_playing_visuals.dart';
 import 'package:harmonoid/utils/updater.dart';
 import 'package:harmonoid/utils/tagger_client.dart';
+import 'package:harmonoid/utils/window_lifecycle.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
-import 'package:harmonoid/utils/window_close_handler.dart';
-import 'package:harmonoid/utils/argument_vector_handler.dart';
 import 'package:harmonoid/interface/harmonoid.dart';
 import 'package:harmonoid/interface/exception.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -57,8 +56,7 @@ Future<void> main(List<String> args) async {
   try {
     if (Platform.isWindows) {
       await WindowPlus.ensureInitialized(application: kApplication);
-      WindowCloseHandler.initialize();
-      ArgumentVectorHandler.initialize();
+      WindowLifecycle.initialize();
       await Configuration.initialize();
       await AppState.initialize();
       await NowPlayingVisuals.initialize();
@@ -72,8 +70,7 @@ Future<void> main(List<String> args) async {
     }
     if (Platform.isLinux) {
       await WindowPlus.ensureInitialized(application: kApplication);
-      WindowCloseHandler.initialize();
-      ArgumentVectorHandler.initialize();
+      WindowLifecycle.initialize();
       await Configuration.initialize();
       await AppState.initialize();
       await NowPlayingVisuals.initialize();
@@ -148,14 +145,11 @@ Future<void> main(List<String> args) async {
       language: Configuration.instance.language,
     );
     Updater.initialize();
-    runApp(
-      Harmonoid(),
-    );
+    runApp(Harmonoid());
   } catch (exception, stacktrace) {
     debugPrint(exception.toString());
     debugPrint(stacktrace.toString());
-    WindowCloseHandler.initialize();
-    ArgumentVectorHandler.initialize();
+    WindowLifecycle.initialize();
     runApp(
       ExceptionApp(
         exception: exception,
