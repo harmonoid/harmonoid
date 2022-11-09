@@ -5,8 +5,8 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
-
 import 'dart:io';
+import 'package:window_plus/window_plus.dart';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:system_media_transport_controls/system_media_transport_controls.dart';
 
@@ -16,38 +16,72 @@ import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:window_plus/window_plus.dart';
 
-/// WindowCloseHandler
-/// ------------------
+/// WindowLifecycle
+/// ---------------
+/// Windows & Linux specific. Registers callbacks from `package:window_plus`.
 ///
-/// Properly disposes instances before window close & asserts if some
-/// indexing related operation is under progress.
+/// Handles:
 ///
-/// **Previous Comments:**
+/// * Window close button interception (when some task within Harmonoid is in progress).
+/// * Argument vector receiving i.e. `List<String> args` (due to single instance of Harmonoid).
 ///
-/// Earlier this class was named `OverrideWindowDestroy` & was used to
-/// intercept `delete-event` signal specifically on GTK embedder on Linux.
-///
-/// Overrides the `delete-event` signal of Flutter's GTK window on Linux.
-/// A constantly running instance of `libmpv` causes `Segmentation Fault`
-/// upon attempting to close the window.
-///
-/// Calling [OverrideWindowDestroy.initialize] ensures that all instances of
-/// `libmpv` are properly disposed & then the same is notified to native side
-/// of the source code, which then launches another thread to send `destroy`
-/// signal to the window.
-///
-abstract class WindowCloseHandler {
+abstract class WindowLifecycle {
+  /// Initializes the window lifecycle handler.
   static void initialize() {
     if (_initialized) {
       return;
     }
+    WindowPlus.instance
+      ..setSingleInstanceArgumentsHandler(
+        singleInstanceArgumentsHandler,
+      )
+      ..setWindowCloseHandler(
+        windowCloseHandler,
+      );
     _initialized = true;
-    WindowPlus.instance.setWindowCloseHandler(windowCloseHandler);
   }
 
-  /// Method which is invoked when a window is closed.
+  /// Method invoked when user starts new instance of Harmonoid.
+  /// Used to receive argument vector i.e. `List<String> args`.
+  static void singleInstanceArgumentsHandler(List<String> args) async {
+    if (args.isNotEmpty) {
+      bool resolved = false;
+      try {
+        // Handle URIs.
+        final resource = Uri.parse(args.first);
+        if (!resolved &&
+            (resource.isScheme('FILE') ||
+                resource.isScheme('HTTP') ||
+                resource.isScheme('HTTPS') ||
+                resource.isScheme('FTP') ||
+                resource.isScheme('RSTP'))) {
+          resolved = true;
+          debugPrint(resource.toString());
+          await Intent.instance.playUri(resource);
+        }
+        // Handle [File] paths.
+        if (!resolved) {
+          resolved = true;
+          final resource = Uri.file(args.first);
+          debugPrint(resource.toString());
+          await Intent.instance.playUri(resource);
+        }
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+        if (!resolved) {
+          // Handle [File] paths.
+          resolved = true;
+          final resource = Uri.file(args.first);
+          debugPrint(resource.toString());
+          await Intent.instance.playUri(resource);
+        }
+      }
+    }
+  }
+
+  /// Method invoked when user closes the window i.e. process is about to exit.
   static Future<bool> windowCloseHandler({
     bool showInterruptAlert = true,
   }) async {
@@ -103,6 +137,6 @@ abstract class WindowCloseHandler {
     }
   }
 
-  /// Prevent registering method call handler on platform channel more than once.
+  /// Prevent calling [initialize] more than once.
   static bool _initialized = false;
 }
