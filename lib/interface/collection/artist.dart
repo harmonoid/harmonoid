@@ -146,21 +146,21 @@ class _ArtistTabState extends State<ArtistTab> {
                               {
                                 return Text(
                                   artist.artistName[0].toUpperCase(),
-                                  style: Theme.of(context).textTheme.headline1,
+                                  style: Theme.of(context).textTheme.displayLarge,
                                 );
                               }
                             case ArtistsSort.dateAdded:
                               {
                                 return Text(
                                   '${artist.timeAdded.label}',
-                                  style: Theme.of(context).textTheme.headline4,
+                                  style: Theme.of(context).textTheme.headlineMedium,
                                 );
                               }
 
                             default:
                               return Text(
                                 '',
-                                style: Theme.of(context).textTheme.headline4,
+                                style: Theme.of(context).textTheme.headlineMedium,
                               );
                           }
                         },
@@ -291,7 +291,7 @@ class ArtistTile extends StatelessWidget {
                                 artist.artistName.overflow,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
-                                style: Theme.of(context).textTheme.headline2,
+                                style: Theme.of(context).textTheme.displayMedium,
                               ),
                               const SizedBox(
                                 height: 2.0,
@@ -302,7 +302,7 @@ class ArtistTile extends StatelessWidget {
                                     .replaceAll('N', '${artist.albums.length}'),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
-                                style: Theme.of(context).textTheme.headline3,
+                                style: Theme.of(context).textTheme.displaySmall,
                               ),
                             ],
                           ),
@@ -399,7 +399,7 @@ class ArtistTile extends StatelessWidget {
                 Spacer(),
                 Text(
                   artist.artistName.overflow,
-                  style: Theme.of(context).textTheme.headline2,
+                  style: Theme.of(context).textTheme.displayMedium,
                   textAlign: TextAlign.left,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -487,7 +487,7 @@ class ArtistTile extends StatelessWidget {
                                         maxLines: 1,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline2,
+                                            .displayMedium,
                                       ),
                                       const SizedBox(
                                         height: 2.0,
@@ -502,7 +502,7 @@ class ArtistTile extends StatelessWidget {
                                         maxLines: 1,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline3,
+                                            .displaySmall,
                                       ),
                                     ],
                                   ),
@@ -596,7 +596,7 @@ class ArtistTile extends StatelessWidget {
                       const Spacer(),
                       Text(
                         artist.artistName.overflow,
-                        style: Theme.of(context).textTheme.headline2?.copyWith(
+                        style: Theme.of(context).textTheme.displayMedium?.copyWith(
                               fontSize:
                                   helper.artistTileNormalDensity ? null : 14.0,
                             ),
@@ -856,7 +856,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                     widget.artist.artistName,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline1
+                                                        .displayLarge
                                                         ?.copyWith(
                                                             fontSize: 24.0),
                                                     maxLines: 1,
@@ -868,7 +868,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                     '${Language.instance.TRACK}: ${tracks.length}\n${Language.instance.ALBUM}: ${widget.artist.albums.length}',
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline3,
+                                                        .displaySmall,
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                   ),
@@ -968,7 +968,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                           style:
                                                               Theme.of(context)
                                                                   .textTheme
-                                                                  .headline2,
+                                                                  .displayMedium,
                                                         ),
                                                       ),
                                                       Expanded(
@@ -985,7 +985,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .headline2,
+                                                                .displayMedium,
                                                           ),
                                                         ),
                                                         flex: 3,
@@ -1004,7 +1004,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .headline2,
+                                                                .displayMedium,
                                                           ),
                                                         ),
                                                         flex: 2,
@@ -1147,7 +1147,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                         : Text(
                                                                             '${track.value.trackNumber}',
                                                                             style:
-                                                                                Theme.of(context).textTheme.headline4,
+                                                                                Theme.of(context).textTheme.headlineMedium,
                                                                           ),
                                                                   ),
                                                                   Expanded(
@@ -1168,7 +1168,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                             .trackName,
                                                                         style: Theme.of(context)
                                                                             .textTheme
-                                                                            .headline4,
+                                                                            .headlineMedium,
                                                                         overflow:
                                                                             TextOverflow.ellipsis,
                                                                       ),
@@ -1183,7 +1183,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                         child: HyperLink(
                                                                           style: Theme.of(context)
                                                                               .textTheme
-                                                                              .headline4,
+                                                                              .headlineMedium,
                                                                           text:
                                                                               TextSpan(
                                                                             children: [
@@ -1343,7 +1343,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                   widget.artist.artistName.overflow,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .headline6
+                                      .titleLarge
                                       ?.copyWith(
                                         color: [
                                           Color(0xFF212121),
@@ -1426,7 +1426,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                       .overflow,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline6
+                                                      .titleLarge
                                                       ?.copyWith(
                                                         color: [
                                                           Color(0xFF212121),
@@ -1458,7 +1458,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                   maxLines: 1,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline2
+                                                      .displayMedium
                                                       ?.copyWith(
                                                         color: [
                                                           Color(0xFF363636),
@@ -1633,7 +1633,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                 '${tracks[i].trackNumber}',
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline3
+                                                    .displaySmall
                                                     ?.copyWith(fontSize: 18.0),
                                               ),
                                             ),
@@ -1655,7 +1655,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                     maxLines: 1,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline2,
+                                                        .displayMedium,
                                                   ),
                                                   const SizedBox(
                                                     height: 2.0,
@@ -1675,7 +1675,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                     maxLines: 1,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline3,
+                                                        .displaySmall,
                                                   ),
                                                 ],
                                               ),

@@ -245,13 +245,13 @@ class SettingsTile extends StatelessWidget {
                     title,
                     style: Theme.of(context)
                         .textTheme
-                        .headline1
+                        .displayLarge
                         ?.copyWith(fontSize: 20.0),
                   ),
                   SizedBox(height: 2.0),
                   Text(
                     subtitle,
-                    style: Theme.of(context).textTheme.headline3,
+                    style: Theme.of(context).textTheme.displaySmall,
                   ),
                 ],
               ),
@@ -263,8 +263,8 @@ class SettingsTile extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(16.0, 0.0, 0.0, 12.0),
               child: Text(
                 title.toUpperCase(),
-                style: Theme.of(context).textTheme.overline?.copyWith(
-                      color: Theme.of(context).textTheme.headline3?.color,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: Theme.of(context).textTheme.displaySmall?.color,
                       fontSize: 12.0,
                       fontWeight: FontWeight.w600,
                     ),

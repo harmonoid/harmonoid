@@ -6,14 +6,11 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
-import 'dart:async';
-import 'dart:io';
 import 'dart:math';
-import 'package:animations/animations.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/web/web.dart';
+import 'package:animations/animations.dart';
 import 'package:media_library/media_library.dart' as media;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:window_plus/window_plus.dart';
@@ -28,6 +25,8 @@ import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:harmonoid/state/visuals.dart';
+import 'package:harmonoid/web/web.dart';
 import 'package:harmonoid/web/utils/widgets.dart';
 import 'package:harmonoid/web/state/web.dart';
 import 'package:harmonoid/web/track.dart';
@@ -101,7 +100,7 @@ class WebPlaylistLargeTile extends StatelessWidget {
                     children: [
                       Text(
                         playlist.name.overflow,
-                        style: Theme.of(context).textTheme.headline2,
+                        style: Theme.of(context).textTheme.displayMedium,
                         textAlign: TextAlign.left,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -176,7 +175,7 @@ class WebPlaylistTile extends StatelessWidget {
                           playlist.name.overflow,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          style: Theme.of(context).textTheme.headline2,
+                          style: Theme.of(context).textTheme.displayMedium,
                         ),
                         const SizedBox(
                           height: 2.0,
@@ -185,7 +184,7 @@ class WebPlaylistTile extends StatelessWidget {
                           Language.instance.PLAYLIST_SINGLE,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          style: Theme.of(context).textTheme.headline3,
+                          style: Theme.of(context).textTheme.displaySmall,
                         ),
                       ],
                     ),
@@ -488,7 +487,7 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                                   widget.playlist.name,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline1
+                                                      .displayLarge
                                                       ?.copyWith(
                                                         fontSize: 24.0,
                                                         color: isDark(context)
@@ -684,7 +683,7 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                               elevation != 0.0 ? widget.playlist.name : '',
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline1
+                                  .displayLarge
                                   ?.copyWith(
                                     color: isDark(context)
                                         ? Colors.white
@@ -807,7 +806,7 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                         child: Text(
                           widget.playlist.name.overflow,
                           style:
-                              Theme.of(context).textTheme.headline6?.copyWith(
+                              Theme.of(context).textTheme.titleLarge?.copyWith(
                                     color: Colors.white,
                                   ),
                           maxLines: 1,
@@ -892,7 +891,7 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                       widget.playlist.name.overflow,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline6
+                                          .titleLarge
                                           ?.copyWith(
                                             color: Colors.white,
                                             fontSize: 24.0,

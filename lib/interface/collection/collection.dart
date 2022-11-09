@@ -238,7 +238,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                                 textAlign: TextAlign.center,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline4,
+                                                    .headlineMedium,
                                               ),
                                             ),
                                             SizedBox(
@@ -381,7 +381,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                       textAlignVertical:
                                           TextAlignVertical.center,
                                       style:
-                                          Theme.of(context).textTheme.headline4,
+                                          Theme.of(context).textTheme.headlineMedium,
                                       decoration: inputDecoration(
                                         context,
                                         Language
@@ -612,7 +612,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                               .toString(),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline3
+                                              .displaySmall
                                               ?.copyWith(
                                                 fontSize: 18.0,
                                               ),
@@ -636,7 +636,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                               .toString(),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline3
+                                              .displaySmall
                                               ?.copyWith(
                                                 fontSize: 18.0,
                                               ),

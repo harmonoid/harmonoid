@@ -116,7 +116,7 @@ class WebArtistLargeTile extends StatelessWidget {
           Spacer(),
           Text(
             artist.artistName.overflow,
-            style: Theme.of(context).textTheme.headline2,
+            style: Theme.of(context).textTheme.displayMedium,
             textAlign: TextAlign.left,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -205,7 +205,7 @@ class WebArtistTile extends StatelessWidget {
                           artist.artistName.overflow,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          style: Theme.of(context).textTheme.headline2,
+                          style: Theme.of(context).textTheme.displayMedium,
                         ),
                         const SizedBox(
                           height: 2.0,
@@ -214,7 +214,7 @@ class WebArtistTile extends StatelessWidget {
                           artist.subscribersCount,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          style: Theme.of(context).textTheme.headline3,
+                          style: Theme.of(context).textTheme.displaySmall,
                         ),
                       ],
                     ),
@@ -428,7 +428,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                       widget.artist.artistName.overflow,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline1
+                                          .displayLarge
                                           ?.copyWith(
                                             fontSize: 56.0,
                                             fontWeight: isMobile
@@ -445,7 +445,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                           .last
                                           .trim(),
                                       style:
-                                          Theme.of(context).textTheme.headline3,
+                                          Theme.of(context).textTheme.displaySmall,
                                     ),
                                     const SizedBox(height: 8.0),
                                     ConstrainedBox(
@@ -463,7 +463,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                             Theme.of(context).primaryColor,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline3,
+                                            .displaySmall,
                                         callback: (isTrimmed) {
                                           setState(() {});
                                         },
@@ -836,7 +836,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                               widget.artist.artistName.overflow,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline6
+                                  .titleLarge
                                   ?.copyWith(
                                     color: Colors.white,
                                   ),
@@ -948,7 +948,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                                           style:
                                                               Theme.of(context)
                                                                   .textTheme
-                                                                  .headline3,
+                                                                  .displaySmall,
                                                         ),
                                                       ),
                                                     ),
@@ -991,7 +991,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                                     .artist.artistName.overflow,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline6
+                                                    .titleLarge
                                                     ?.copyWith(
                                                       color: Colors.white,
                                                       fontSize: 24.0,
@@ -1021,7 +1021,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                                 maxLines: 2,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline3
+                                                    .displaySmall
                                                     ?.copyWith(
                                                       color: Colors.white70,
                                                     ),
@@ -1134,11 +1134,11 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                             e.key.toUpperCase(),
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .overline
+                                                .labelSmall
                                                 ?.copyWith(
                                                   color: Theme.of(context)
                                                       .textTheme
-                                                      .headline3
+                                                      .displaySmall
                                                       ?.color,
                                                   fontSize: 12.0,
                                                   fontWeight: FontWeight.w600,

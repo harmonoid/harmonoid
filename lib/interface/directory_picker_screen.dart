@@ -277,7 +277,7 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
                             alignment: Alignment.centerLeft,
                             child: Text(
                               Language.instance.AVAILABLE_STORAGES,
-                              style: Theme.of(context).textTheme.headline2,
+                              style: Theme.of(context).textTheme.displayMedium,
                             ),
                           )
                         : Theme(

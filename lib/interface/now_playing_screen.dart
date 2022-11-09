@@ -140,10 +140,10 @@ class NowPlayingState extends State<NowPlayingScreen>
                           color: Colors.transparent,
                           child: TabBar(
                             unselectedLabelColor:
-                                Theme.of(context).textTheme.headline1?.color,
+                                Theme.of(context).textTheme.displayLarge?.color,
                             labelStyle: Theme.of(context)
                                 .textTheme
-                                .headline4
+                                .headlineMedium
                                 ?.copyWith(
                                     color: Theme.of(context).primaryColor),
                             indicatorColor: Theme.of(context).primaryColor,
@@ -186,7 +186,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                                             '${i + 1}',
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline4,
+                                                .headlineMedium,
                                           ),
                                     track: tracks[i],
                                     index: 0,
@@ -210,7 +210,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                                                 lyric.words,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline4,
+                                                    .headlineMedium,
                                                 textAlign: TextAlign.start,
                                               ),
                                             )
@@ -221,7 +221,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                                           Language.instance.LYRICS_NOT_FOUND,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline4,
+                                              .headlineMedium,
                                           textAlign: TextAlign.start,
                                         ),
                                       ),

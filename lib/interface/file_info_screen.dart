@@ -87,8 +87,8 @@ class FileInfoScreen extends StatefulWidget {
               title: Text(
                 Language.instance.FILE,
                 style: isDesktop
-                    ? Theme.of(ctx).textTheme.headline4
-                    : Theme.of(ctx).textTheme.headline3?.copyWith(
+                    ? Theme.of(ctx).textTheme.headlineMedium
+                    : Theme.of(ctx).textTheme.displaySmall?.copyWith(
                           fontSize: 16.0,
                         ),
               ),
@@ -169,7 +169,7 @@ class FileInfoScreen extends StatefulWidget {
                                     );
                                   },
                                   textAlignVertical: TextAlignVertical.center,
-                                  style: Theme.of(ctx).textTheme.headline4,
+                                  style: Theme.of(ctx).textTheme.headlineMedium,
                                   decoration: inputDecoration(
                                     context,
                                     Language.instance.FILE_PATH_OR_URL,
@@ -320,8 +320,8 @@ class FileInfoScreen extends StatefulWidget {
               ),
               title: Text(Language.instance.URL,
                   style: isDesktop
-                      ? Theme.of(ctx).textTheme.headline4
-                      : Theme.of(ctx).textTheme.headline3?.copyWith(
+                      ? Theme.of(ctx).textTheme.headlineMedium
+                      : Theme.of(ctx).textTheme.displaySmall?.copyWith(
                             fontSize: 16.0,
                           )),
             ),
@@ -557,7 +557,7 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
                                       Language.instance.FILE_INFORMATION,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline1
+                                          .displayLarge
                                           ?.copyWith(
                                             fontSize: 24.0,
                                           ),
@@ -567,7 +567,7 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
                                           ? widget.uri.toString()
                                           : basename(widget.uri.toFilePath()),
                                       style:
-                                          Theme.of(context).textTheme.headline3,
+                                          Theme.of(context).textTheme.displaySmall,
                                     ),
                                   ],
                                 ),

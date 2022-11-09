@@ -63,7 +63,7 @@ class NowPlayingScreenState extends State<NowPlayingScreenSetting> {
                   const SizedBox(height: 8.0),
                   Text(
                     '${Language.instance.HIGHLIGHTED_LYRICS_SIZE}: ${Configuration.instance.highlightedLyricsSize.toStringAsFixed(1)}',
-                    style: Theme.of(context).textTheme.headline3,
+                    style: Theme.of(context).textTheme.displaySmall,
                   ),
                   const SizedBox(height: 8.0),
                   ScrollableSlider(
@@ -82,7 +82,7 @@ class NowPlayingScreenState extends State<NowPlayingScreenSetting> {
                   const SizedBox(height: 8.0),
                   Text(
                     '${Language.instance.UNHIGHLIGHTED_LYRICS_SIZE}: ${Configuration.instance.unhighlightedLyricsSize.toStringAsFixed(1)}',
-                    style: Theme.of(context).textTheme.headline3,
+                    style: Theme.of(context).textTheme.displaySmall,
                   ),
                   const SizedBox(height: 8.0),
                   ScrollableSlider(

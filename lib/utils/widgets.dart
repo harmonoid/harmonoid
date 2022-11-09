@@ -11,7 +11,6 @@ import 'dart:io';
 import 'dart:ui';
 import 'dart:math';
 // ignore: unnecessary_import
-import 'dart:typed_data';
 import 'package:flutter/material.dart'
     hide ReorderableDragStartListener, Intent;
 import 'package:flutter/rendering.dart';
@@ -243,7 +242,7 @@ class SortBarFixedHolder extends StatelessWidget {
                   ),
                   Text(
                     Language.instance.SHUFFLE,
-                    style: Theme.of(context).textTheme.headline3?.copyWith(
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
                           color: Theme.of(context).primaryColor,
                         ),
                   ),
@@ -256,7 +255,7 @@ class SortBarFixedHolder extends StatelessWidget {
         if (message.isNotEmpty)
           Text(
             message,
-            style: Theme.of(context).textTheme.headline3,
+            style: Theme.of(context).textTheme.displaySmall,
           ),
         Spacer(),
         child,
@@ -329,7 +328,7 @@ class _SortBarState extends State<SortBar> {
                             dense: true,
                             title: Text(
                               Language.instance.A_TO_Z,
-                              style: Theme.of(context).textTheme.headline4,
+                              style: Theme.of(context).textTheme.headlineMedium,
                             ),
                           ),
                         ),
@@ -343,7 +342,7 @@ class _SortBarState extends State<SortBar> {
                             dense: true,
                             title: Text(
                               Language.instance.DATE_ADDED,
-                              style: Theme.of(context).textTheme.headline4,
+                              style: Theme.of(context).textTheme.headlineMedium,
                             ),
                           ),
                         ),
@@ -357,7 +356,7 @@ class _SortBarState extends State<SortBar> {
                             dense: true,
                             title: Text(
                               Language.instance.YEAR,
-                              style: Theme.of(context).textTheme.headline4,
+                              style: Theme.of(context).textTheme.headlineMedium,
                             ),
                           ),
                         ),
@@ -371,7 +370,7 @@ class _SortBarState extends State<SortBar> {
                             dense: true,
                             title: Text(
                               Language.instance.ALBUM_ARTIST,
-                              style: Theme.of(context).textTheme.headline4,
+                              style: Theme.of(context).textTheme.headlineMedium,
                             ),
                           ),
                         ),
@@ -387,7 +386,7 @@ class _SortBarState extends State<SortBar> {
                             dense: true,
                             title: Text(
                               Language.instance.A_TO_Z,
-                              style: Theme.of(context).textTheme.headline4,
+                              style: Theme.of(context).textTheme.headlineMedium,
                             ),
                           ),
                         ),
@@ -401,7 +400,7 @@ class _SortBarState extends State<SortBar> {
                             dense: true,
                             title: Text(
                               Language.instance.DATE_ADDED,
-                              style: Theme.of(context).textTheme.headline4,
+                              style: Theme.of(context).textTheme.headlineMedium,
                             ),
                           ),
                         ),
@@ -415,7 +414,7 @@ class _SortBarState extends State<SortBar> {
                             dense: true,
                             title: Text(
                               Language.instance.YEAR,
-                              style: Theme.of(context).textTheme.headline4,
+                              style: Theme.of(context).textTheme.headlineMedium,
                             ),
                           ),
                         ),
@@ -431,7 +430,7 @@ class _SortBarState extends State<SortBar> {
                             dense: true,
                             title: Text(
                               Language.instance.A_TO_Z,
-                              style: Theme.of(context).textTheme.headline4,
+                              style: Theme.of(context).textTheme.headlineMedium,
                             ),
                           ),
                         ),
@@ -445,7 +444,7 @@ class _SortBarState extends State<SortBar> {
                             dense: true,
                             title: Text(
                               Language.instance.DATE_ADDED,
-                              style: Theme.of(context).textTheme.headline4,
+                              style: Theme.of(context).textTheme.headlineMedium,
                             ),
                           ),
                         ),
@@ -461,7 +460,7 @@ class _SortBarState extends State<SortBar> {
                             dense: true,
                             title: Text(
                               Language.instance.A_TO_Z,
-                              style: Theme.of(context).textTheme.headline4,
+                              style: Theme.of(context).textTheme.headlineMedium,
                             ),
                           ),
                         ),
@@ -475,7 +474,7 @@ class _SortBarState extends State<SortBar> {
                             dense: true,
                             title: Text(
                               Language.instance.DATE_ADDED,
-                              style: Theme.of(context).textTheme.headline4,
+                              style: Theme.of(context).textTheme.headlineMedium,
                             ),
                           ),
                         ),
@@ -515,7 +514,7 @@ class _SortBarState extends State<SortBar> {
                         children: [
                           TextSpan(
                             text: '${Language.instance.SORT_BY}: ',
-                            style: Theme.of(context).textTheme.headline4,
+                            style: Theme.of(context).textTheme.headlineMedium,
                           ),
                           TextSpan(
                             text: {
@@ -546,7 +545,7 @@ class _SortBarState extends State<SortBar> {
                             }[tab]!,
                             style: Theme.of(context)
                                 .textTheme
-                                .headline4
+                                .headlineMedium
                                 ?.copyWith(
                                   color: Theme.of(context).primaryColor,
                                   decoration:
@@ -606,7 +605,7 @@ class _SortBarState extends State<SortBar> {
                         dense: true,
                         title: Text(
                           Language.instance.ASCENDING,
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Theme.of(context).textTheme.headlineMedium,
                         ),
                       ),
                     ),
@@ -628,7 +627,7 @@ class _SortBarState extends State<SortBar> {
                         dense: true,
                         title: Text(
                           Language.instance.DESCENDING,
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Theme.of(context).textTheme.headlineMedium,
                         ),
                       ),
                     ),
@@ -682,7 +681,7 @@ class _SortBarState extends State<SortBar> {
                         children: [
                           TextSpan(
                             text: '${Language.instance.ORDER}: ',
-                            style: Theme.of(context).textTheme.headline4,
+                            style: Theme.of(context).textTheme.headlineMedium,
                           ),
                           TextSpan(
                             text: {
@@ -713,7 +712,7 @@ class _SortBarState extends State<SortBar> {
                             }[tab]!,
                             style: Theme.of(context)
                                 .textTheme
-                                .headline4
+                                .headlineMedium
                                 ?.copyWith(
                                   color: Theme.of(context).primaryColor,
                                   decoration:
@@ -822,7 +821,7 @@ class SubHeader extends StatelessWidget {
                 padding: EdgeInsets.fromLTRB(24.0, 0, 0, 0),
                 child: Text(
                   text!,
-                  style: style ?? Theme.of(context).textTheme.headline1,
+                  style: style ?? Theme.of(context).textTheme.displayLarge,
                 ),
               )
             : Container(
@@ -832,8 +831,8 @@ class SubHeader extends StatelessWidget {
                 child: Text(
                   text!.toUpperCase(),
                   style: style ??
-                      Theme.of(context).textTheme.overline?.copyWith(
-                            color: Theme.of(context).textTheme.headline3?.color,
+                      Theme.of(context).textTheme.labelSmall?.copyWith(
+                            color: Theme.of(context).textTheme.displaySmall?.color,
                             fontSize: 12.0,
                             fontWeight: FontWeight.w600,
                           ),
@@ -936,7 +935,7 @@ class DesktopAppBar extends StatelessWidget {
                     if (title != null)
                       Text(
                         title!,
-                        style: Theme.of(context).textTheme.headline1?.copyWith(
+                        style: Theme.of(context).textTheme.displayLarge?.copyWith(
                             color: color != null
                                 ? isDark
                                     ? Colors.white
@@ -1118,7 +1117,7 @@ class ExceptionWidget extends StatelessWidget {
           ),
           Text(
             title!,
-            style: Theme.of(context).textTheme.headline1?.copyWith(
+            style: Theme.of(context).textTheme.displayLarge?.copyWith(
                   fontSize: 20.0,
                   fontWeight: isDesktop ? null : FontWeight.normal,
                 ),
@@ -1129,7 +1128,7 @@ class ExceptionWidget extends StatelessWidget {
           ),
           Text(
             subtitle!,
-            style: Theme.of(context).textTheme.headline3,
+            style: Theme.of(context).textTheme.displaySmall,
             textAlign: TextAlign.center,
           ),
           if (title == Language.instance.NO_COLLECTION_TITLE) ...[
@@ -1580,7 +1579,7 @@ class ShowAllButton extends StatelessWidget {
               ),
               Text(
                 Language.instance.SEE_ALL,
-                style: Theme.of(context).textTheme.headline3?.copyWith(
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(
                       color: Theme.of(context).primaryColor,
                     ),
               ),
@@ -1887,7 +1886,7 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.A_TO_Z,
-                    style: Theme.of(context).textTheme.headline4,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                 ),
               ),
@@ -1900,7 +1899,7 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.DATE_ADDED,
-                    style: Theme.of(context).textTheme.headline4,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                 ),
               ),
@@ -1913,7 +1912,7 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.YEAR,
-                    style: Theme.of(context).textTheme.headline4,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                 ),
               ),
@@ -1926,7 +1925,7 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.ALBUM_ARTIST,
-                    style: Theme.of(context).textTheme.headline4,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                 ),
               ),
@@ -1941,7 +1940,7 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.A_TO_Z,
-                    style: Theme.of(context).textTheme.headline4,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                 ),
               ),
@@ -1954,7 +1953,7 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.DATE_ADDED,
-                    style: Theme.of(context).textTheme.headline4,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                 ),
               ),
@@ -1967,7 +1966,7 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.YEAR,
-                    style: Theme.of(context).textTheme.headline4,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                 ),
               ),
@@ -1982,7 +1981,7 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.A_TO_Z,
-                    style: Theme.of(context).textTheme.headline4,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                 ),
               ),
@@ -1996,7 +1995,7 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.DATE_ADDED,
-                    style: Theme.of(context).textTheme.headline4,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                 ),
               ),
@@ -2011,7 +2010,7 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.A_TO_Z,
-                    style: Theme.of(context).textTheme.headline4,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                 ),
               ),
@@ -2024,7 +2023,7 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.DATE_ADDED,
-                    style: Theme.of(context).textTheme.headline4,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                 ),
               ),
@@ -2046,7 +2045,7 @@ class CollectionSortButton extends StatelessWidget {
                 dense: true,
                 title: Text(
                   Language.instance.ASCENDING,
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ),
             ),
@@ -2064,7 +2063,7 @@ class CollectionSortButton extends StatelessWidget {
                 dense: true,
                 title: Text(
                   Language.instance.DESCENDING,
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ),
             ),
@@ -2094,7 +2093,7 @@ class CorrectedSwitchListTile extends StatelessWidget {
       value: value,
       title: Text(
         isDesktop ? subtitle : title,
-        style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+        style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
@@ -2148,7 +2147,7 @@ class CorrectedListTile extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: Theme.of(context).textTheme.subtitle1,
+                    style: Theme.of(context).textTheme.titleMedium,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -2156,8 +2155,8 @@ class CorrectedListTile extends StatelessWidget {
                   if (subtitle != null)
                     Text(
                       subtitle!,
-                      style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                            color: Theme.of(context).textTheme.headline3?.color,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).textTheme.displaySmall?.color,
                           ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -2514,7 +2513,7 @@ class CollectionMoreButton extends StatelessWidget {
             leading: Icon(Icons.code),
             title: Text(
               Language.instance.READ_METADATA,
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           ),
         ),
@@ -2526,7 +2525,7 @@ class CollectionMoreButton extends StatelessWidget {
             leading: Icon(Icons.waves),
             title: Text(
               Language.instance.STREAM,
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           ),
         ),
@@ -2582,8 +2581,8 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                 title: Text(
                   Language.instance.FILE,
                   style: isDesktop
-                      ? Theme.of(ctx).textTheme.headline4
-                      : Theme.of(ctx).textTheme.headline3?.copyWith(
+                      ? Theme.of(ctx).textTheme.headlineMedium
+                      : Theme.of(ctx).textTheme.displaySmall?.copyWith(
                             fontSize: 16.0,
                           ),
                 ),
@@ -2636,7 +2635,7 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                                     }
                                   },
                                   textAlignVertical: TextAlignVertical.center,
-                                  style: Theme.of(ctx).textTheme.headline4,
+                                  style: Theme.of(ctx).textTheme.headlineMedium,
                                   decoration: inputDecoration(
                                     ctx,
                                     Language.instance.PLAY_URL_SUBTITLE,
@@ -2686,8 +2685,8 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                 title: Text(
                   Language.instance.URL,
                   style: isDesktop
-                      ? Theme.of(ctx).textTheme.headline4
-                      : Theme.of(ctx).textTheme.headline3?.copyWith(
+                      ? Theme.of(ctx).textTheme.headlineMedium
+                      : Theme.of(ctx).textTheme.displaySmall?.copyWith(
                             fontSize: 16.0,
                           ),
                 ),
@@ -2940,7 +2939,7 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
                   missingDirectories.isEmpty
                       ? Language.instance.NOW_YOU_ARE_GOOD_TO_GO_BACK
                       : Language.instance.FOLDERS_NOT_FOUND,
-                  style: Theme.of(context).textTheme.headline3,
+                  style: Theme.of(context).textTheme.displaySmall,
                   textAlign: TextAlign.start,
                 ),
                 padding: EdgeInsets.only(
@@ -2979,8 +2978,8 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
                             child: Text(
                               directory.path.overflow,
                               style: isMobile
-                                  ? Theme.of(context).textTheme.subtitle1
-                                  : Theme.of(context).textTheme.headline3,
+                                  ? Theme.of(context).textTheme.titleMedium
+                                  : Theme.of(context).textTheme.displaySmall,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -3001,7 +3000,7 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
                                       Language.instance
                                           .INDEXING_ALREADY_GOING_ON_SUBTITLE,
                                       style:
-                                          Theme.of(context).textTheme.headline3,
+                                          Theme.of(context).textTheme.displaySmall,
                                     ),
                                     actions: [
                                       TextButton(
@@ -3027,7 +3026,7 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
                                           .LAST_COLLECTION_DIRECTORY_REMOVED,
                                       style: Theme.of(subContext)
                                           .textTheme
-                                          .headline3,
+                                          .displaySmall,
                                     ),
                                     actions: [
                                       TextButton(
@@ -3251,8 +3250,8 @@ class _MobileAppBarOverflowButtonState
                         title: Text(
                           Language.instance.FILE,
                           style: isDesktop
-                              ? Theme.of(ctx).textTheme.headline4
-                              : Theme.of(ctx).textTheme.headline3?.copyWith(
+                              ? Theme.of(ctx).textTheme.headlineMedium
+                              : Theme.of(ctx).textTheme.displaySmall?.copyWith(
                                     fontSize: 16.0,
                                   ),
                         ),
@@ -3392,8 +3391,8 @@ class _MobileAppBarOverflowButtonState
                         title: Text(
                           Language.instance.URL,
                           style: isDesktop
-                              ? Theme.of(ctx).textTheme.headline4
-                              : Theme.of(ctx).textTheme.headline3?.copyWith(
+                              ? Theme.of(ctx).textTheme.headlineMedium
+                              : Theme.of(ctx).textTheme.displaySmall?.copyWith(
                                     fontSize: 16.0,
                                   ),
                         ),

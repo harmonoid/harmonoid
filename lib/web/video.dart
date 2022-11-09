@@ -137,7 +137,7 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                                   style: isDesktop
                                       ? Theme.of(context)
                                           .textTheme
-                                          .headline3
+                                          .displaySmall
                                           ?.copyWith(
                                             fontSize: 14.0,
                                             fontWeight: FontWeight.w600,
@@ -145,7 +145,7 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                                           )
                                       : Theme.of(context)
                                           .textTheme
-                                          .headline1
+                                          .displayLarge
                                           ?.copyWith(
                                             fontSize: 20.0,
                                             fontWeight: FontWeight.w600,
@@ -161,7 +161,7 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                                     '${widget.track.trackArtistNames.take(2).join(', ')}',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline3
+                                        .displaySmall
                                         ?.copyWith(
                                           color: Colors.white54,
                                           fontSize: 12.0,
@@ -333,7 +333,7 @@ class VideoTile extends StatelessWidget {
                             video.videoName.overflow,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: Theme.of(context).textTheme.headline2,
+                            style: Theme.of(context).textTheme.displayMedium,
                           ),
                           const SizedBox(
                             height: 2.0,
@@ -346,7 +346,7 @@ class VideoTile extends StatelessWidget {
                             ].join(' • '),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: Theme.of(context).textTheme.headline3,
+                            style: Theme.of(context).textTheme.displaySmall,
                           ),
                         ],
                       ),

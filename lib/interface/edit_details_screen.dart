@@ -275,7 +275,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                                 e.key + ' : ',
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline2,
+                                                    .displayMedium,
                                               ),
                                             ),
                                             ConstrainedBox(
@@ -372,7 +372,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                                       TextAlignVertical.center,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline4,
+                                                      .headlineMedium,
                                                 ),
                                               ),
                                             ),
@@ -391,7 +391,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                             .USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline4,
+                                            .headlineMedium,
                                       ),
                                     ],
                                   ),
@@ -610,7 +610,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                           e.key,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline3,
+                                              .displaySmall,
                                         ),
                                         margin: EdgeInsets.only(
                                           left: 4.0,
@@ -680,7 +680,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                             TextAlignVertical.center,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline2,
+                                            .displayMedium,
                                       ),
                                     ],
                                   ),
@@ -694,7 +694,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                   .instance
                                   .USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS
                                   .overflow,
-                              style: Theme.of(context).textTheme.headline3,
+                              style: Theme.of(context).textTheme.displaySmall,
                               overflow: TextOverflow.ellipsis,
                             ),
                             const SizedBox(height: 24.0),

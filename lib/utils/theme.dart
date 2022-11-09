@@ -22,31 +22,31 @@ ThemeData createTheme({
   if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
     theme = TextTheme(
       /// Leading tile widgets text theme.
-      headline1: TextStyle(
+      displayLarge: TextStyle(
         color: light ? Colors.black : Colors.white,
         fontSize: 16.0,
         fontWeight: FontWeight.w600,
       ),
 
       /// [AlbumTile] text theme.
-      headline2: TextStyle(
+      displayMedium: TextStyle(
         color: light ? Colors.black : Colors.white,
         fontSize: 14.0,
         fontWeight: FontWeight.w600,
       ),
-      headline3: TextStyle(
+      displaySmall: TextStyle(
         color: light
             ? Colors.black.withOpacity(0.87)
             : Colors.white.withOpacity(0.87),
         fontSize: 14.0,
         fontWeight: FontWeight.normal,
       ),
-      headline4: TextStyle(
+      headlineMedium: TextStyle(
         color: light ? Colors.black : Colors.white,
         fontSize: 14.0,
         fontWeight: FontWeight.normal,
       ),
-      headline5: TextStyle(
+      headlineSmall: TextStyle(
         color: light
             ? Colors.black.withOpacity(0.87)
             : Colors.white.withOpacity(0.87),
@@ -55,20 +55,20 @@ ThemeData createTheme({
       ),
 
       /// [ListTile] text theme.
-      /// [ListTile.title]'s text theme must be overrided to headline4, if it does not contain subtitle.
-      subtitle1: TextStyle(
+      /// [ListTile.title]'s text theme must be overrided to headlineMedium, if it does not contain subtitle.
+      titleMedium: TextStyle(
         color: light ? Colors.black : Colors.white,
         fontSize: 14.0,
         fontWeight: FontWeight.w600,
       ),
-      bodyText2: TextStyle(
+      bodyMedium: TextStyle(
         color: light
             ? Colors.black.withOpacity(0.87)
             : Colors.white.withOpacity(0.87),
         fontSize: 14.0,
         fontWeight: FontWeight.normal,
       ),
-      caption: TextStyle(
+      bodySmall: TextStyle(
         color: light
             ? Colors.black.withOpacity(0.87)
             : Colors.white.withOpacity(0.87),
@@ -78,27 +78,27 @@ ThemeData createTheme({
     );
   } else {
     theme = TextTheme(
-      headline1: TextStyle(
+      displayLarge: TextStyle(
         fontWeight: FontWeight.normal,
         color: light ? Colors.black87 : Colors.white.withOpacity(0.87),
         fontSize: 18.0,
       ),
-      headline2: TextStyle(
+      displayMedium: TextStyle(
         fontWeight: FontWeight.normal,
         color: light ? Colors.black87 : Colors.white.withOpacity(0.87),
         fontSize: 16.0,
       ),
-      headline3: TextStyle(
+      displaySmall: TextStyle(
         fontWeight: FontWeight.normal,
         color: light ? Colors.black54 : Colors.white70,
         fontSize: 14.0,
       ),
-      headline4: TextStyle(
+      headlineMedium: TextStyle(
         fontWeight: FontWeight.normal,
         color: light ? Colors.black87 : Colors.white.withOpacity(0.87),
         fontSize: 14.0,
       ),
-      headline5: TextStyle(
+      headlineSmall: TextStyle(
         fontWeight: FontWeight.normal,
         color: light ? Colors.black54 : Colors.white70,
         fontSize: 14.0,
@@ -211,17 +211,14 @@ ThemeData createTheme({
     primaryColor: color,
     primaryColorDark: color,
     scaffoldBackgroundColor: light ? Colors.white : Colors.black,
-    // ignore: deprecated_member_use
-    toggleableActiveColor: color,
     snackBarTheme: SnackBarThemeData(
       backgroundColor: light ? Color(0xFF202020) : Colors.white,
       actionTextColor: color,
-      contentTextStyle: theme.headline4?.copyWith(
+      contentTextStyle: theme.headlineMedium?.copyWith(
         color: light ? Colors.white : Colors.black,
       ),
     ),
     cardColor: light ? Colors.white : Color(0xFF222222),
-    backgroundColor: color.withOpacity(0.24),
     dividerColor: light ? Colors.black12 : Colors.white24,
     disabledColor: light ? Colors.black38 : Colors.white38,
     tabBarTheme: TabBarTheme(
@@ -274,10 +271,6 @@ ThemeData createTheme({
     ),
     textTheme: theme,
     primaryTextTheme: theme,
-    colorScheme: ColorScheme.fromSwatch().copyWith(
-      secondary: color,
-      brightness: light ? Brightness.light : Brightness.dark,
-    ),
     tooltipTheme: TooltipThemeData(
       textStyle: Platform.isWindows || Platform.isLinux || Platform.isMacOS
           ? TextStyle(
@@ -311,6 +304,58 @@ ThemeData createTheme({
         Color.lerp(Colors.black, Colors.white, 1.0),
       ),
     },
+    checkboxTheme: CheckboxThemeData(
+      fillColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+        if (states.contains(MaterialState.disabled)) {
+          return null;
+        }
+        if (states.contains(MaterialState.selected)) {
+          return color;
+        }
+        return null;
+      }),
+    ),
+    radioTheme: RadioThemeData(
+      fillColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+        if (states.contains(MaterialState.disabled)) {
+          return null;
+        }
+        if (states.contains(MaterialState.selected)) {
+          return color;
+        }
+        return null;
+      }),
+    ),
+    switchTheme: SwitchThemeData(
+      thumbColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+        if (states.contains(MaterialState.disabled)) {
+          return null;
+        }
+        if (states.contains(MaterialState.selected)) {
+          return color;
+        }
+        return null;
+      }),
+      trackColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+        if (states.contains(MaterialState.disabled)) {
+          return null;
+        }
+        if (states.contains(MaterialState.selected)) {
+          return color;
+        }
+        return null;
+      }),
+    ),
+    colorScheme: ColorScheme.fromSwatch()
+        .copyWith(
+          secondary: color,
+          brightness: light ? Brightness.light : Brightness.dark,
+        )
+        .copyWith(background: color.withOpacity(0.24)),
   );
 }
 

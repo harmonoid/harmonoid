@@ -122,7 +122,7 @@ class _WebSearchBarState extends State<WebSearchBar> {
                         child: SubstringHighlight(
                           text: option,
                           term: _searchBarController.text,
-                          textStyle: Theme.of(context).textTheme.headline3!,
+                          textStyle: Theme.of(context).textTheme.displaySmall!,
                           textStyleHighlight: TextStyle(
                             color:
                                 Theme.of(context).brightness == Brightness.dark
@@ -209,7 +209,7 @@ class _WebSearchBarState extends State<WebSearchBar> {
                   searchOrPlay(query);
                 },
                 textAlignVertical: TextAlignVertical.center,
-                style: Theme.of(context).textTheme.headline4,
+                style: Theme.of(context).textTheme.headlineMedium,
                 decoration: inputDecoration(
                   context,
                   Language.instance.COLLECTION_SEARCH_WELCOME,
@@ -326,7 +326,7 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
                         Navigator.of(ctx).maybePop();
                       },
                       textAlignVertical: TextAlignVertical.center,
-                      style: Theme.of(ctx).textTheme.headline4,
+                      style: Theme.of(ctx).textTheme.headlineMedium,
                       decoration: inputDecoration(
                         ctx,
                         Language.instance.PLAYLISTS_TEXT_FIELD_HINT,
@@ -385,7 +385,7 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
               ),
               content: Text(
                 Language.instance.INTERNET_ERROR,
-                style: Theme.of(context).textTheme.headline3,
+                style: Theme.of(context).textTheme.displaySmall,
                 textAlign: TextAlign.start,
               ),
               actions: [
@@ -415,7 +415,7 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
             ),
             content: Text(
               Language.instance.INVALID_PLAYLIST_URL,
-              style: Theme.of(context).textTheme.headline3,
+              style: Theme.of(context).textTheme.displaySmall,
               textAlign: TextAlign.start,
             ),
             actions: [
@@ -458,7 +458,7 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
               cursorWidth: 1.0,
               onSubmitted: (_) => add(),
               textAlignVertical: TextAlignVertical.center,
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
               decoration: inputDecoration(
                 context,
                 Language.instance.IMPORT_PLAYLIST_SUBTITLE,
@@ -487,7 +487,7 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
             width: 360.0,
             child: Text(
               '${Language.instance.PLAYLIST_NAME}: ${playlist?.name ?? ''}',
-              style: Theme.of(context).textTheme.headline3,
+              style: Theme.of(context).textTheme.displaySmall,
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -496,7 +496,7 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
               0,
               null
             ].contains(playlist?.tracks.length) ? '' : playlist?.tracks.length}',
-            style: Theme.of(context).textTheme.headline3,
+            style: Theme.of(context).textTheme.displaySmall,
           ),
         ],
       ],
@@ -687,7 +687,7 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
               ),
               content: Text(
                 Language.instance.INTERNET_ERROR,
-                style: Theme.of(context).textTheme.headline3,
+                style: Theme.of(context).textTheme.displaySmall,
                 textAlign: TextAlign.start,
               ),
               actions: [
@@ -717,7 +717,7 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
             ),
             content: Text(
               Language.instance.INVALID_PLAYLIST_URL,
-              style: Theme.of(context).textTheme.headline3,
+              style: Theme.of(context).textTheme.displaySmall,
               textAlign: TextAlign.start,
             ),
             actions: [
@@ -797,7 +797,7 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
                       Container(
                         child: Text(
                           '${Language.instance.PLAYLIST_NAME}: ${playlist?.name ?? ''}',
-                          style: Theme.of(context).textTheme.headline3,
+                          style: Theme.of(context).textTheme.displaySmall,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -806,7 +806,7 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
                           0,
                           null
                         ].contains(playlist?.tracks.length) ? '' : playlist?.tracks.length}',
-                        style: Theme.of(context).textTheme.headline3,
+                        style: Theme.of(context).textTheme.displaySmall,
                       ),
                     ],
                   ),

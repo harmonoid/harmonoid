@@ -51,7 +51,7 @@ class LanguageSetting extends StatelessWidget {
                               title: Text(
                                 data.name,
                                 style: isDesktop
-                                    ? Theme.of(context).textTheme.headline4
+                                    ? Theme.of(context).textTheme.headlineMedium
                                     : null,
                               ),
                             ),
@@ -109,7 +109,7 @@ class LanguageSetting extends StatelessWidget {
                   Language.instance.current.name,
                   Language.instance.current.country,
                 ].join(' • '),
-                style: Theme.of(context).textTheme.headline3,
+                style: Theme.of(context).textTheme.displaySmall,
               ),
             ),
             const SizedBox(height: 8.0),

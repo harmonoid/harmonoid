@@ -144,7 +144,7 @@ class _TrackTabState extends State<TrackTab> {
                                 Language.instance.ALBUM_SINGLE,
                                 Language.instance.YEAR
                               ][index],
-                              style: Theme.of(context).textTheme.headline2,
+                              style: Theme.of(context).textTheme.displayMedium,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -203,7 +203,7 @@ class _TrackTabState extends State<TrackTab> {
                                     ][property],
                                     overflow: TextOverflow.ellipsis,
                                     style:
-                                        Theme.of(context).textTheme.headline4,
+                                        Theme.of(context).textTheme.headlineMedium,
                                   ),
                                 ),
                               );
@@ -250,14 +250,14 @@ class _TrackTabState extends State<TrackTab> {
                               });
                               elements.removeLast();
                               return HyperLink(
-                                style: Theme.of(context).textTheme.headline4,
+                                style: Theme.of(context).textTheme.headlineMedium,
                                 text: TextSpan(
                                   children: elements,
                                 ),
                               );
                             } else if (property == 3) {
                               return HyperLink(
-                                style: Theme.of(context).textTheme.headline4,
+                                style: Theme.of(context).textTheme.headlineMedium,
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
@@ -353,27 +353,27 @@ class _TrackTabState extends State<TrackTab> {
                             {
                               return Text(
                                 track.trackName[0].toUpperCase(),
-                                style: Theme.of(context).textTheme.headline1,
+                                style: Theme.of(context).textTheme.displayLarge,
                               );
                             }
                           case TracksSort.dateAdded:
                             {
                               return Text(
                                 '${track.timeAdded.label}',
-                                style: Theme.of(context).textTheme.headline4,
+                                style: Theme.of(context).textTheme.headlineMedium,
                               );
                             }
                           case TracksSort.year:
                             {
                               return Text(
                                 '${track.year}',
-                                style: Theme.of(context).textTheme.headline4,
+                                style: Theme.of(context).textTheme.headlineMedium,
                               );
                             }
                           default:
                             return Text(
                               '',
-                              style: Theme.of(context).textTheme.headline4,
+                              style: Theme.of(context).textTheme.headlineMedium,
                             );
                         }
                       },
@@ -538,7 +538,7 @@ class TrackTileState extends State<TrackTile> {
                             : widget.leading ??
                                 Text(
                                   '${widget.track.trackNumber}',
-                                  style: Theme.of(context).textTheme.headline4,
+                                  style: Theme.of(context).textTheme.headlineMedium,
                                 ),
                       ),
                       Expanded(
@@ -548,7 +548,7 @@ class TrackTileState extends State<TrackTile> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             widget.track.trackName,
-                            style: Theme.of(context).textTheme.headline4,
+                            style: Theme.of(context).textTheme.headlineMedium,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -596,7 +596,7 @@ class TrackTileState extends State<TrackTile> {
                             });
                             elements.removeLast();
                             return HyperLink(
-                              style: Theme.of(context).textTheme.headline4,
+                              style: Theme.of(context).textTheme.headlineMedium,
                               text: TextSpan(
                                 children: elements,
                               ),
@@ -612,7 +612,7 @@ class TrackTileState extends State<TrackTile> {
                           alignment: Alignment.centerRight,
                           child: Text(
                             widget.track.year.toString(),
-                            style: Theme.of(context).textTheme.headline4,
+                            style: Theme.of(context).textTheme.headlineMedium,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -689,7 +689,7 @@ class TrackTileState extends State<TrackTile> {
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                     style:
-                                        Theme.of(context).textTheme.headline2,
+                                        Theme.of(context).textTheme.displayMedium,
                                   ),
                               if (widget.subtitle != null) ...[
                                 const SizedBox(
@@ -704,7 +704,7 @@ class TrackTileState extends State<TrackTile> {
                                   subtitle,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
-                                  style: Theme.of(context).textTheme.headline3,
+                                  style: Theme.of(context).textTheme.displaySmall,
                                 ),
                               ],
                             ],

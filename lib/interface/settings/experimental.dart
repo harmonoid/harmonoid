@@ -37,7 +37,7 @@ class ExperimentalSettingState extends State<ExperimentalSetting> {
                 Language.instance.EXPERIMENTAL_SUBTITLE,
                 style: Theme.of(context)
                     .textTheme
-                    .headline3
+                    .displaySmall
                     ?.copyWith(height: 1.2),
               ),
             ),

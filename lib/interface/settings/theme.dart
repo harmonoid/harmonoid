@@ -33,7 +33,7 @@ class ThemeSetting extends StatelessWidget {
                       title: Text(
                         Language.instance.THEME_MODE_SYSTEM,
                         style: isDesktop
-                            ? Theme.of(context).textTheme.headline4
+                            ? Theme.of(context).textTheme.headlineMedium
                             : null,
                       ),
                       groupValue: visuals.themeMode,
@@ -47,7 +47,7 @@ class ThemeSetting extends StatelessWidget {
                     title: Text(
                       Language.instance.THEME_MODE_LIGHT,
                       style: isDesktop
-                          ? Theme.of(context).textTheme.headline4
+                          ? Theme.of(context).textTheme.headlineMedium
                           : null,
                     ),
                     groupValue: visuals.themeMode,
@@ -61,7 +61,7 @@ class ThemeSetting extends StatelessWidget {
                     title: Text(
                       Language.instance.THEME_MODE_DARK,
                       style: isDesktop
-                          ? Theme.of(context).textTheme.headline4
+                          ? Theme.of(context).textTheme.headlineMedium
                           : null,
                     ),
                     groupValue: visuals.themeMode,

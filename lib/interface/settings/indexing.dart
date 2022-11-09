@@ -142,7 +142,7 @@ class IndexingState extends State<IndexingSetting>
                                               style: isDesktop
                                                   ? Theme.of(context)
                                                       .textTheme
-                                                      .headline4
+                                                      .headlineMedium
                                                   : null,
                                             ),
                                           ),
@@ -233,7 +233,7 @@ class IndexingState extends State<IndexingSetting>
                       children: [
                         Text(
                           Language.instance.SELECTED_DIRECTORIES,
-                          style: Theme.of(context).textTheme.headline3,
+                          style: Theme.of(context).textTheme.displaySmall,
                         ),
                         SizedBox(
                           height: 8.0,
@@ -290,7 +290,7 @@ class IndexingState extends State<IndexingSetting>
                                           style: isMobile
                                               ? Theme.of(context)
                                                   .textTheme
-                                                  .subtitle1
+                                                  .titleMedium
                                               : null,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
@@ -319,7 +319,7 @@ class IndexingState extends State<IndexingSetting>
                                                       .LAST_COLLECTION_DIRECTORY_REMOVED,
                                                   style: Theme.of(subContext)
                                                       .textTheme
-                                                      .headline3,
+                                                      .displaySmall,
                                                 ),
                                                 actions: [
                                                   TextButton(
@@ -390,7 +390,7 @@ class IndexingState extends State<IndexingSetting>
                                             Language.instance.DISCOVERING_FILES,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline3,
+                                                .displaySmall,
                                           ),
                                           Container(
                                             margin: EdgeInsets.only(top: 6.0),
@@ -433,7 +433,7 @@ class IndexingState extends State<IndexingSetting>
                                           ),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline3,
+                                              .displaySmall,
                                         ),
                                         builder: (_, dynamic value, child) =>
                                             Column(
@@ -528,12 +528,12 @@ class IndexingState extends State<IndexingSetting>
                           const SizedBox(height: 8.0),
                           Text(
                             '${Language.instance.REFRESH.toUpperCase()}: ${Language.instance.REFRESH_INFORMATION}',
-                            style: Theme.of(context).textTheme.headline3,
+                            style: Theme.of(context).textTheme.displaySmall,
                           ),
                           const SizedBox(height: 2.0),
                           Text(
                             '${Language.instance.REINDEX.toUpperCase()}: ${Language.instance.REINDEX_INFORMATION}',
-                            style: Theme.of(context).textTheme.headline3,
+                            style: Theme.of(context).textTheme.displaySmall,
                           ),
                         ],
                       ),
@@ -588,7 +588,7 @@ class IndexingState extends State<IndexingSetting>
                                                   style: isDesktop
                                                       ? Theme.of(context)
                                                           .textTheme
-                                                          .headline4
+                                                          .headlineMedium
                                                       : null,
                                                 ),
                                               ),
@@ -647,7 +647,7 @@ class IndexingState extends State<IndexingSetting>
                           const SizedBox(height: 8.0),
                           Text(
                             Language.instance.MINIMUM_FILE_SIZE_WARNING,
-                            style: Theme.of(context).textTheme.headline3,
+                            style: Theme.of(context).textTheme.displaySmall,
                           ),
                           const SizedBox(height: 8.0),
                         ],
@@ -693,7 +693,7 @@ class IndexingState extends State<IndexingSetting>
           ),
           content: Text(
             Language.instance.INDEXING_ALREADY_GOING_ON_SUBTITLE,
-            style: Theme.of(context).textTheme.headline3,
+            style: Theme.of(context).textTheme.displaySmall,
           ),
           actions: [
             TextButton(
@@ -716,7 +716,7 @@ class IndexingState extends State<IndexingSetting>
         ),
         content: Text(
           Language.instance.MINIMUM_FILE_SIZE_WARNING,
-          style: Theme.of(context).textTheme.headline3,
+          style: Theme.of(context).textTheme.displaySmall,
         ),
         actions: [
           TextButton(

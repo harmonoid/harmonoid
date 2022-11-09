@@ -9,7 +9,6 @@ import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/state/visuals.dart';
 import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/now_playing_color_palette.dart';
-import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class Harmonoid extends StatelessWidget {
@@ -17,8 +16,6 @@ class Harmonoid extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => Visuals(
-        light: kPrimaryLightColor,
-        dark: kPrimaryDarkColor,
         themeMode: Configuration.instance.themeMode,
         context: context,
       ),
@@ -63,10 +60,10 @@ class ScrollBehavior extends MaterialScrollBehavior {
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
         return const ClampingScrollPhysics();
+      case TargetPlatform.windows:
       case TargetPlatform.linux:
       case TargetPlatform.macOS:
-      case TargetPlatform.windows:
-        return const BouncingScrollPhysics(
+        return BouncingScrollPhysics(
           decelerationRate: ScrollDecelerationRate.fast,
         );
     }

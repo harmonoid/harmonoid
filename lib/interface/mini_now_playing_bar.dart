@@ -274,7 +274,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                           width: 28.0,
                           alignment: Alignment.center,
                           child: MiniMusicVisualizer(
-                            color: Theme.of(context).textTheme.headline3?.color,
+                            color: Theme.of(context).textTheme.displaySmall?.color,
                             width: 6,
                             height: 15,
                           ),
@@ -282,7 +282,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                       : Text(
                           '${e.key - Playback.instance.index <= 0 ? '' : '+'}${e.key - Playback.instance.index}',
                           style:
-                              Theme.of(context).textTheme.headline3?.copyWith(
+                              Theme.of(context).textTheme.displaySmall?.copyWith(
                                     fontSize: 16.0,
                                   ),
                         ),
@@ -291,9 +291,9 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                   e.value.trackName,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
-                  style: Theme.of(context).textTheme.headline2?.copyWith(
+                  style: Theme.of(context).textTheme.displayMedium?.copyWith(
                         color: e.key < Playback.instance.index
-                            ? Theme.of(context).textTheme.headline3?.color
+                            ? Theme.of(context).textTheme.displaySmall?.color
                             : null,
                       ),
                 ),
@@ -301,7 +301,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                   e.value.trackArtistNames.take(1).join(', '),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
-                  style: Theme.of(context).textTheme.headline3,
+                  style: Theme.of(context).textTheme.displaySmall,
                 ),
               ),
             ),
@@ -331,13 +331,13 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                     e.trackName,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
-                    style: Theme.of(context).textTheme.headline2,
+                    style: Theme.of(context).textTheme.displayMedium,
                   ),
                   subtitle: Text(
                     e.trackArtistNames.take(1).join(', '),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
-                    style: Theme.of(context).textTheme.headline3,
+                    style: Theme.of(context).textTheme.displaySmall,
                   ),
                 ),
               ),
@@ -1089,7 +1089,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                           .overflow,
                                                       style: Theme.of(context)
                                                           .textTheme
-                                                          .headline2,
+                                                          .displayMedium,
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                     ),
@@ -1118,7 +1118,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                             .overflow,
                                                         style: Theme.of(context)
                                                             .textTheme
-                                                            .headline3,
+                                                            .displaySmall,
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                       ),
@@ -1210,7 +1210,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                       .overflow,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline6
+                                                      .titleLarge
                                                       ?.copyWith(
                                                         color:
                                                             (colors.palette ??
@@ -1250,7 +1250,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                   ].join(' • '),
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline3
+                                                      .displaySmall
                                                       ?.copyWith(
                                                         color:
                                                             (colors.palette ??
@@ -1282,7 +1282,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                         TextOverflow.ellipsis,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline3
+                                                        .displaySmall
                                                         ?.copyWith(
                                                           color:
                                                               (colors.palette ??
@@ -1781,7 +1781,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                 playback.position.label,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline3
+                                                    .displaySmall
                                                     ?.copyWith(
                                                       color:
                                                           (colors.palette ??
@@ -1802,7 +1802,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                 playback.duration.label,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline3
+                                                    .displaySmall
                                                     ?.copyWith(
                                                       color:
                                                           (colors.palette ??

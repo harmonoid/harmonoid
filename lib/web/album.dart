@@ -9,7 +9,6 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/web/web.dart';
 import 'package:readmore/readmore.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:animations/animations.dart';
@@ -27,7 +26,9 @@ import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:harmonoid/state/visuals.dart';
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/web/web.dart';
 import 'package:harmonoid/web/track.dart';
 import 'package:harmonoid/web/state/web.dart';
 
@@ -108,7 +109,7 @@ class WebAlbumLargeTile extends StatelessWidget {
                     children: [
                       Text(
                         album.albumName.overflow,
-                        style: Theme.of(context).textTheme.headline2?.copyWith(
+                        style: Theme.of(context).textTheme.displayMedium?.copyWith(
                               fontSize: isMobile ? 18.0 : null,
                               fontWeight: isMobile ? FontWeight.w700 : null,
                             ),
@@ -125,10 +126,10 @@ class WebAlbumLargeTile extends StatelessWidget {
                             if (album.year.isNotEmpty) album.year.overflow,
                           ].join(' • '),
                           style: isDesktop
-                              ? Theme.of(context).textTheme.headline3?.copyWith(
+                              ? Theme.of(context).textTheme.displaySmall?.copyWith(
                                     fontSize: 12.0,
                                   )
-                              : Theme.of(context).textTheme.headline3,
+                              : Theme.of(context).textTheme.displaySmall,
                           maxLines: 1,
                           textAlign: TextAlign.left,
                           overflow: TextOverflow.ellipsis,
@@ -212,7 +213,7 @@ class WebAlbumTile extends StatelessWidget {
                           album.albumName.overflow,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          style: Theme.of(context).textTheme.headline2,
+                          style: Theme.of(context).textTheme.displayMedium,
                         ),
                         const SizedBox(
                           height: 2.0,
@@ -226,7 +227,7 @@ class WebAlbumTile extends StatelessWidget {
                           ].join(' • '),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          style: Theme.of(context).textTheme.headline3,
+                          style: Theme.of(context).textTheme.displaySmall,
                         ),
                       ],
                     ),
@@ -487,7 +488,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                 widget.album.albumName,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline1
+                                                    .displayLarge
                                                     ?.copyWith(
                                                       fontSize: 24.0,
                                                       color: isDark(context)
@@ -502,7 +503,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                 '${widget.album.subtitle}\n${widget.album.secondSubtitle}',
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline3
+                                                    .displaySmall
                                                     ?.copyWith(
                                                       color: isDark(context)
                                                           ? Colors.white70
@@ -537,7 +538,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                                 .primaryColor,
                                                         style: Theme.of(context)
                                                             .textTheme
-                                                            .headline3
+                                                            .displaySmall
                                                             ?.copyWith(
                                                               color: isDark(
                                                                       context)
@@ -775,7 +776,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                               elevation != 0.0 ? widget.album.albumName : '',
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline1
+                                  .displayLarge
                                   ?.copyWith(
                                     color: isDark(context)
                                         ? Colors.white
@@ -903,7 +904,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                               widget.album.albumName.overflow,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline6
+                                  .titleLarge
                                   ?.copyWith(
                                     color: Colors.white,
                                   ),
@@ -1015,7 +1016,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                           style:
                                                               Theme.of(context)
                                                                   .textTheme
-                                                                  .headline3,
+                                                                  .displaySmall,
                                                         ),
                                                       ),
                                                     ),
@@ -1057,7 +1058,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                 widget.album.albumName,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline6
+                                                    .titleLarge
                                                     ?.copyWith(
                                                       color: Colors.white,
                                                       fontSize: 24.0,
@@ -1072,7 +1073,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                 maxLines: 2,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline3
+                                                    .displaySmall
                                                     ?.copyWith(
                                                       color: Colors.white70,
                                                     ),

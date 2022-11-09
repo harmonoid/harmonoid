@@ -148,27 +148,27 @@ class _AlbumTabState extends State<AlbumTab> {
                               {
                                 return Text(
                                   album.albumName[0].toUpperCase(),
-                                  style: Theme.of(context).textTheme.headline1,
+                                  style: Theme.of(context).textTheme.displayLarge,
                                 );
                               }
                             case AlbumsSort.dateAdded:
                               {
                                 return Text(
                                   '${album.timeAdded.label}',
-                                  style: Theme.of(context).textTheme.headline4,
+                                  style: Theme.of(context).textTheme.headlineMedium,
                                 );
                               }
                             case AlbumsSort.year:
                               {
                                 return Text(
                                   album.year,
-                                  style: Theme.of(context).textTheme.headline4,
+                                  style: Theme.of(context).textTheme.headlineMedium,
                                 );
                               }
                             default:
                               return Text(
                                 '',
-                                style: Theme.of(context).textTheme.headline4,
+                                style: Theme.of(context).textTheme.headlineMedium,
                               );
                           }
                         },
@@ -268,7 +268,7 @@ class _DesktopAlbumArtistTabState extends State<DesktopAlbumArtistTab> {
             height: 36.0,
             child: Text(
               key.name,
-              style: Theme.of(context).textTheme.headline1,
+              style: Theme.of(context).textTheme.displayLarge,
             ),
           ));
           itemExtents.addAll(List.generate(
@@ -334,7 +334,7 @@ class _DesktopAlbumArtistTabState extends State<DesktopAlbumArtistTab> {
             height: 36.0,
             child: Text(
               key.name,
-              style: Theme.of(context).textTheme.headline1,
+              style: Theme.of(context).textTheme.displayLarge,
             ),
           ));
           itemExtents.addAll(List.generate(
@@ -432,7 +432,7 @@ class _DesktopAlbumArtistTabState extends State<DesktopAlbumArtistTab> {
                                   collection.albumArtists.keys.length - i - 1)
                               .name
                               .overflow,
-                      style: Theme.of(context).textTheme.headline4,
+                      style: Theme.of(context).textTheme.headlineMedium,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -507,7 +507,7 @@ class AlbumTile extends StatelessWidget {
                 'NAME',
                 album.albumName,
               ),
-              style: Theme.of(ctx).textTheme.headline3,
+              style: Theme.of(ctx).textTheme.displaySmall,
             ),
             actions: [
               TextButton(
@@ -590,7 +590,7 @@ class AlbumTile extends StatelessWidget {
                         Text(
                           album.albumName.overflow,
                           style:
-                              Theme.of(context).textTheme.headline2?.copyWith(
+                              Theme.of(context).textTheme.displayMedium?.copyWith(
                                     fontSize: 18.0,
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -608,7 +608,7 @@ class AlbumTile extends StatelessWidget {
                               if (!['', kUnknownYear].contains(album.year))
                                 album.year,
                             ].join(' • '),
-                            style: Theme.of(context).textTheme.headline3,
+                            style: Theme.of(context).textTheme.displaySmall,
                             maxLines: 1,
                             textAlign: TextAlign.left,
                             overflow: TextOverflow.ellipsis,
@@ -693,7 +693,7 @@ class AlbumTile extends StatelessWidget {
                           children: [
                             Text(
                               album.albumName.overflow,
-                              style: Theme.of(context).textTheme.headline2,
+                              style: Theme.of(context).textTheme.displayMedium,
                               textAlign: TextAlign.left,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -710,7 +710,7 @@ class AlbumTile extends StatelessWidget {
                                 ].join(' • '),
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline3
+                                    .displaySmall
                                     ?.copyWith(
                                       fontSize: 12.0,
                                     ),
@@ -803,7 +803,7 @@ class AlbumTile extends StatelessWidget {
                                         maxLines: 1,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline2,
+                                            .displayMedium,
                                       ),
                                       const SizedBox(
                                         height: 2.0,
@@ -821,7 +821,7 @@ class AlbumTile extends StatelessWidget {
                                         maxLines: 1,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline3,
+                                            .displaySmall,
                                       ),
                                     ],
                                   ),
@@ -895,7 +895,7 @@ class AlbumTile extends StatelessWidget {
                                   album.albumName.overflow,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .headline2
+                                      .displayMedium
                                       ?.copyWith(
                                         fontSize: helper.albumTileNormalDensity
                                             ? 18.0
@@ -922,7 +922,7 @@ class AlbumTile extends StatelessWidget {
                                           album.year,
                                       ].join(' • '),
                                       style:
-                                          Theme.of(context).textTheme.headline3,
+                                          Theme.of(context).textTheme.displaySmall,
                                       maxLines: 1,
                                       textAlign: TextAlign.left,
                                       overflow: TextOverflow.ellipsis,
@@ -1236,7 +1236,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                     widget.album.albumName,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline1
+                                                        .displayLarge
                                                         ?.copyWith(
                                                             fontSize: 24.0),
                                                     maxLines: 1,
@@ -1248,7 +1248,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                     '${Language.instance.ARTIST}: ${widget.album.albumArtistName}\n${Language.instance.YEAR}: ${widget.album.year}\n${Language.instance.TRACK}: ${tracks.length}',
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline3,
+                                                        .displaySmall,
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                   ),
@@ -1345,7 +1345,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                           style:
                                                               Theme.of(context)
                                                                   .textTheme
-                                                                  .headline2,
+                                                                  .displayMedium,
                                                         ),
                                                       ),
                                                       Expanded(
@@ -1362,7 +1362,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .headline2,
+                                                                .displayMedium,
                                                           ),
                                                         ),
                                                       ),
@@ -1380,7 +1380,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .headline2,
+                                                                .displayMedium,
                                                           ),
                                                         ),
                                                       ),
@@ -1516,7 +1516,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                         : Text(
                                                                             '${track.value.trackNumber}',
                                                                             style:
-                                                                                Theme.of(context).textTheme.headline4,
+                                                                                Theme.of(context).textTheme.headlineMedium,
                                                                           ),
                                                                   ),
                                                                   Expanded(
@@ -1537,7 +1537,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                             .trackName,
                                                                         style: Theme.of(context)
                                                                             .textTheme
-                                                                            .headline4,
+                                                                            .headlineMedium,
                                                                         overflow:
                                                                             TextOverflow.ellipsis,
                                                                       ),
@@ -1597,7 +1597,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                         return HyperLink(
                                                                           style: Theme.of(context)
                                                                               .textTheme
-                                                                              .headline4,
+                                                                              .headlineMedium,
                                                                           text:
                                                                               TextSpan(
                                                                             children:
@@ -1749,7 +1749,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                             ),
                                             style: Theme.of(ctx)
                                                 .textTheme
-                                                .headline3,
+                                                .displaySmall,
                                           ),
                                           actions: [
                                             TextButton(
@@ -1820,7 +1820,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                   widget.album.albumName.overflow,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .headline6
+                                      .titleLarge
                                       ?.copyWith(
                                         color: [
                                           Color(0xFF212121),
@@ -1903,7 +1903,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                       .album.albumName.overflow,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline6
+                                                      .titleLarge
                                                       ?.copyWith(
                                                         color: [
                                                           Color(0xFF212121),
@@ -1931,7 +1931,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                         .overflow,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline2
+                                                        .displayMedium
                                                         ?.copyWith(
                                                           color: [
                                                             Color(0xFF363636),
@@ -1959,7 +1959,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                     '${widget.album.year}',
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline2
+                                                        .displayMedium
                                                         ?.copyWith(
                                                           color: [
                                                             Color(0xFF363636),
@@ -2139,7 +2139,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                 '${tracks[i].trackNumber}',
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline3
+                                                    .displaySmall
                                                     ?.copyWith(fontSize: 18.0),
                                               ),
                                             ),
@@ -2161,7 +2161,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                     maxLines: 1,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline2,
+                                                        .displayMedium,
                                                   ),
                                                   const SizedBox(
                                                     height: 2.0,
@@ -2184,7 +2184,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                     maxLines: 1,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline3,
+                                                        .displaySmall,
                                                   ),
                                                 ],
                                               ),

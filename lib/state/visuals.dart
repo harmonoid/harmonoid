@@ -13,6 +13,12 @@ import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/core/configuration.dart';
 
+/// Default light theme color.
+const kPrimaryLightColor = Color(0xFF6200EA);
+
+/// Default dark theme color.
+const kPrimaryDarkColor = Color(0xFF7C4DFF);
+
 /// Visuals
 /// -------
 ///
@@ -28,8 +34,8 @@ class Visuals extends ChangeNotifier {
   ThemeMode themeMode;
 
   Visuals({
-    required this.light,
-    required this.dark,
+    this.light = kPrimaryLightColor,
+    this.dark = kPrimaryDarkColor,
     required this.themeMode,
     required this.context,
   }) {

@@ -128,7 +128,7 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                                 widget.track.trackName.replaceFirst('(', '\n('),
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline3
+                                    .displaySmall
                                     ?.copyWith(
                                       fontSize: 14.0,
                                       color:
@@ -144,7 +144,7 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                                 '${widget.track.trackArtistNames.take(2).join(', ')}',
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline3
+                                    .displaySmall
                                     ?.copyWith(
                                       fontSize: isDesktop ? 12.0 : null,
                                       color: isDark
@@ -160,7 +160,7 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                                 widget.track.duration.label,
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline3
+                                    .displaySmall
                                     ?.copyWith(
                                       fontSize: isDesktop ? 12.0 : null,
                                       color: isDark
@@ -288,7 +288,7 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                           children: [
                             Text(
                               widget.track.trackName.overflow,
-                              style: Theme.of(context).textTheme.headline2,
+                              style: Theme.of(context).textTheme.displayMedium,
                               textAlign: TextAlign.left,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -299,7 +299,7 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                                   .take(2)
                                   .join(', ')
                                   .overflow,
-                              style: Theme.of(context).textTheme.headline3,
+                              style: Theme.of(context).textTheme.displaySmall,
                               maxLines: 1,
                               textAlign: TextAlign.left,
                               overflow: TextOverflow.ellipsis,
@@ -442,7 +442,7 @@ class WebTrackTile extends StatelessWidget {
                           '${track.trackNumber}',
                           style: Theme.of(context)
                               .textTheme
-                              .headline3
+                              .displaySmall
                               ?.copyWith(fontSize: 18.0),
                         ),
                         alignment: Alignment.center,
@@ -458,7 +458,7 @@ class WebTrackTile extends StatelessWidget {
                             track.trackName.overflow,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: Theme.of(context).textTheme.headline2,
+                            style: Theme.of(context).textTheme.displayMedium,
                           ),
                           const SizedBox(
                             height: 2.0,
@@ -477,7 +477,7 @@ class WebTrackTile extends StatelessWidget {
                             ].join(' • '),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: Theme.of(context).textTheme.headline3,
+                            style: Theme.of(context).textTheme.displaySmall,
                           ),
                         ],
                       ),

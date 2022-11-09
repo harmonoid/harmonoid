@@ -65,7 +65,7 @@ class PlaylistTab extends StatelessWidget {
                         Language.instance.PLAYLIST,
                         style: Theme.of(context)
                             .textTheme
-                            .headline1
+                            .displayLarge
                             ?.copyWith(fontSize: 20.0),
                         textAlign: TextAlign.start,
                       ),
@@ -123,7 +123,7 @@ class PlaylistTab extends StatelessWidget {
                                       textAlignVertical:
                                           TextAlignVertical.center,
                                       style:
-                                          Theme.of(context).textTheme.headline4,
+                                          Theme.of(context).textTheme.headlineMedium,
                                       decoration: inputDecoration(
                                         context,
                                         Language
@@ -370,7 +370,7 @@ class PlaylistTileState extends State<PlaylistTile> {
             ),
             title: Text(
               Language.instance.DELETE,
-              style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+              style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
             ),
           ),
         ),
@@ -385,7 +385,7 @@ class PlaylistTileState extends State<PlaylistTile> {
             ),
             title: Text(
               Language.instance.RENAME,
-              style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+              style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
             ),
           ),
         ),
@@ -412,7 +412,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                   'NAME',
                   '${widget.playlist.name}',
                 ),
-                style: Theme.of(subContext).textTheme.headline3,
+                style: Theme.of(subContext).textTheme.displaySmall,
               ),
               actions: [
                 TextButton(
@@ -469,7 +469,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                         }
                       },
                       textAlignVertical: TextAlignVertical.center,
-                      style: Theme.of(context).textTheme.headline4,
+                      style: Theme.of(context).textTheme.headlineMedium,
                       decoration: inputDecoration(
                         context,
                         Language.instance.PLAYLISTS_TEXT_FIELD_LABEL,
@@ -779,7 +779,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             style:
-                                Theme.of(context).textTheme.headline2?.copyWith(
+                                Theme.of(context).textTheme.displayMedium?.copyWith(
                                       letterSpacing: isDesktop ? 0.2 : 0.0,
                                     ),
                           ),
@@ -793,7 +793,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                             ),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: Theme.of(context).textTheme.headline3,
+                            style: Theme.of(context).textTheme.displaySmall,
                           ),
                         ],
                       ),
@@ -1073,7 +1073,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                             .overflow,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline1
+                                                        .displayLarge
                                                         ?.copyWith(
                                                             fontSize: 24.0),
                                                     maxLines: 1,
@@ -1085,7 +1085,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                     '${Language.instance.TRACK}: ${widget.playlist.tracks.length}',
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline3,
+                                                        .displaySmall,
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                   ),
@@ -1186,7 +1186,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                           style:
                                                               Theme.of(context)
                                                                   .textTheme
-                                                                  .headline2,
+                                                                  .displayMedium,
                                                         ),
                                                       ),
                                                       Expanded(
@@ -1203,7 +1203,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .headline2,
+                                                                .displayMedium,
                                                           ),
                                                         ),
                                                         flex: 3,
@@ -1222,7 +1222,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .headline2,
+                                                                .displayMedium,
                                                           ),
                                                         ),
                                                         flex: 2,
@@ -1305,7 +1305,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                       style: isDesktop
                                                                           ? Theme.of(context)
                                                                               .textTheme
-                                                                              .headline4
+                                                                              .headlineMedium
                                                                           : null,
                                                                     ),
                                                                   ),
@@ -1368,7 +1368,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                         : Text(
                                                                             '${track.key + 1}',
                                                                             style:
-                                                                                Theme.of(context).textTheme.headline4,
+                                                                                Theme.of(context).textTheme.headlineMedium,
                                                                           ),
                                                                   ),
                                                                   Expanded(
@@ -1389,7 +1389,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                             .trackName,
                                                                         style: Theme.of(context)
                                                                             .textTheme
-                                                                            .headline4,
+                                                                            .headlineMedium,
                                                                         overflow:
                                                                             TextOverflow.ellipsis,
                                                                       ),
@@ -1414,7 +1414,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                             .albumArtistName,
                                                                         style: Theme.of(context)
                                                                             .textTheme
-                                                                            .headline4,
+                                                                            .headlineMedium,
                                                                         overflow:
                                                                             TextOverflow.ellipsis,
                                                                       ),
@@ -1526,7 +1526,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                   widget.playlist.name.overflow,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline6
+                                  .titleLarge
                                   ?.copyWith(
                                     color: [
                                       Color(0xFF212121),
@@ -1624,7 +1624,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                               style:
                                                   Theme.of(context)
                                                       .textTheme
-                                                      .headline6
+                                                      .titleLarge
                                                       ?.copyWith(
                                                         color: [
                                                           Color(0xFF212121),
@@ -1652,7 +1652,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                               style:
                                                   Theme.of(context)
                                                       .textTheme
-                                                      .headline2
+                                                      .displayMedium
                                                       ?.copyWith(
                                                         color: [
                                                           Color(0xFF363636),
@@ -1800,7 +1800,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                 widget.playlist.name),
                                         style: Theme.of(subContext)
                                             .textTheme
-                                            .headline3,
+                                            .displaySmall,
                                       ),
                                       actions: [
                                         TextButton(
@@ -1846,7 +1846,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                               (i + 1).toString(),
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline3
+                                                  .displaySmall
                                                   ?.copyWith(fontSize: 18.0),
                                             ),
                                           ),
@@ -1866,7 +1866,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                   maxLines: 1,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline2,
+                                                      .displayMedium,
                                                 ),
                                                 if (subtitle.isNotEmpty) ...[
                                                   const SizedBox(
@@ -1879,7 +1879,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                     maxLines: 1,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline3,
+                                                        .displaySmall,
                                                   ),
                                                 ],
                                               ],
@@ -1913,7 +1913,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                       style:
                                                           Theme.of(subContext)
                                                               .textTheme
-                                                              .headline3,
+                                                              .displaySmall,
                                                     ),
                                                     actions: [
                                                       TextButton(

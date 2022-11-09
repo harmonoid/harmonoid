@@ -95,7 +95,7 @@ class _AboutPageState extends State<AboutPage> {
                                 kTitle,
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline6
+                                    .titleLarge
                                     ?.copyWith(
                                       fontSize: 24.0,
                                     ),
@@ -105,7 +105,7 @@ class _AboutPageState extends State<AboutPage> {
                                 [
                                   kVersion,
                                 ].join(' • '),
-                                style: Theme.of(context).textTheme.headline3,
+                                style: Theme.of(context).textTheme.displaySmall,
                               ),
                             ],
                           ),
@@ -128,7 +128,7 @@ class _AboutPageState extends State<AboutPage> {
                         title: Text(
                           Label.github,
                           style: isDesktop
-                              ? Theme.of(context).textTheme.headline4
+                              ? Theme.of(context).textTheme.headlineMedium
                               : null,
                         ),
                       ),
@@ -145,7 +145,7 @@ class _AboutPageState extends State<AboutPage> {
                         title: Text(
                           Label.talk_on_discord,
                           style: isDesktop
-                              ? Theme.of(context).textTheme.headline4
+                              ? Theme.of(context).textTheme.headlineMedium
                               : null,
                         ),
                       ),
@@ -164,7 +164,7 @@ class _AboutPageState extends State<AboutPage> {
                         title: Text(
                           Label.become_a_patreon,
                           style: isDesktop
-                              ? Theme.of(context).textTheme.headline4
+                              ? Theme.of(context).textTheme.headlineMedium
                               : null,
                         ),
                       ),
@@ -183,7 +183,7 @@ class _AboutPageState extends State<AboutPage> {
                         title: Text(
                           Label.donate_with_paypal,
                           style: isDesktop
-                              ? Theme.of(context).textTheme.headline4
+                              ? Theme.of(context).textTheme.headlineMedium
                               : null,
                         ),
                       ),
@@ -200,7 +200,7 @@ class _AboutPageState extends State<AboutPage> {
                         title: Text(
                           Label.license,
                           style: isDesktop
-                              ? Theme.of(context).textTheme.headline4
+                              ? Theme.of(context).textTheme.headlineMedium
                               : null,
                         ),
                       ),
@@ -217,7 +217,7 @@ class _AboutPageState extends State<AboutPage> {
                         title: Text(
                           Label.translate,
                           style: isDesktop
-                              ? Theme.of(context).textTheme.headline4
+                              ? Theme.of(context).textTheme.headlineMedium
                               : null,
                         ),
                       ),
@@ -235,7 +235,7 @@ class _AboutPageState extends State<AboutPage> {
                           title: Text(
                             Label.privacy,
                             style: isDesktop
-                                ? Theme.of(context).textTheme.headline4
+                                ? Theme.of(context).textTheme.headlineMedium
                                 : null,
                           ),
                         ),
@@ -271,7 +271,7 @@ class _AboutPageState extends State<AboutPage> {
                         title: Text(
                           Label.alexmercerind,
                           style: isDesktop
-                              ? Theme.of(context).textTheme.headline4
+                              ? Theme.of(context).textTheme.headlineMedium
                               : null,
                         ),
                       ),
@@ -288,7 +288,7 @@ class _AboutPageState extends State<AboutPage> {
                         title: Text(
                           Label.follow_on_github,
                           style: isDesktop
-                              ? Theme.of(context).textTheme.headline4
+                              ? Theme.of(context).textTheme.headlineMedium
                               : null,
                         ),
                       ),
@@ -305,7 +305,7 @@ class _AboutPageState extends State<AboutPage> {
                         title: Text(
                           Label.follow_on_twitter,
                           style: isDesktop
-                              ? Theme.of(context).textTheme.headline4
+                              ? Theme.of(context).textTheme.headlineMedium
                               : null,
                         ),
                       ),

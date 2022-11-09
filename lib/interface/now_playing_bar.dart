@@ -236,7 +236,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                               style:
                                                   Theme.of(context)
                                                       .textTheme
-                                                      .headline2
+                                                      .displayMedium
                                                       ?.copyWith(
                                                         color:
                                                             (colors.palette ??
@@ -375,7 +375,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                       .overflow,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline1
+                                                      .displayLarge
                                                       ?.copyWith(
                                                         color:
                                                             (colors.palette ??
@@ -463,7 +463,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                     ),
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline3
+                                                        .displaySmall
                                                         ?.copyWith(
                                                           color:
                                                               (colors.palette ??
@@ -487,7 +487,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                         .audioFormatLabelSmall,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline3
+                                                        .displaySmall
                                                         ?.copyWith(
                                                           color:
                                                               (colors.palette ??
@@ -1184,7 +1184,7 @@ class _ControlPanelState extends State<ControlPanel> {
                 const SizedBox(width: 20.0),
                 Text(
                   Language.instance.CONTROL_PANEL,
-                  style: Theme.of(context).textTheme.headline1,
+                  style: Theme.of(context).textTheme.displayLarge,
                 ),
                 Transform.translate(
                   offset: Offset(2.0, -6.0),
@@ -1198,7 +1198,7 @@ class _ControlPanelState extends State<ControlPanel> {
                     padding: EdgeInsets.all(1.0),
                     child: Text(
                       Language.instance.BETA.toUpperCase(),
-                      style: Theme.of(context).textTheme.headline5?.copyWith(
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                             fontSize: 10.0,
                           ),
                     ),
@@ -1218,7 +1218,7 @@ class _ControlPanelState extends State<ControlPanel> {
               ),
               child: Text(
                 Language.instance.SPEED,
-                style: Theme.of(context).textTheme.headline4,
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
             )
           else
@@ -1292,7 +1292,7 @@ class _ControlPanelState extends State<ControlPanel> {
                         ? TextAlignVertical.bottom
                         : TextAlignVertical.center,
                     style:
-                        isMobile ? null : Theme.of(context).textTheme.headline4,
+                        isMobile ? null : Theme.of(context).textTheme.headlineMedium,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor:
@@ -1332,7 +1332,7 @@ class _ControlPanelState extends State<ControlPanel> {
               ),
               child: Text(
                 Language.instance.PITCH,
-                style: Theme.of(context).textTheme.headline4,
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
             )
           else
@@ -1402,7 +1402,7 @@ class _ControlPanelState extends State<ControlPanel> {
                         ? TextAlignVertical.bottom
                         : TextAlignVertical.center,
                     style:
-                        isMobile ? null : Theme.of(context).textTheme.headline4,
+                        isMobile ? null : Theme.of(context).textTheme.headlineMedium,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor:
@@ -1442,7 +1442,7 @@ class _ControlPanelState extends State<ControlPanel> {
               ),
               child: Text(
                 Language.instance.VOLUME_BOOST,
-                style: Theme.of(context).textTheme.headline4,
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
             )
           else
@@ -1516,7 +1516,7 @@ class _ControlPanelState extends State<ControlPanel> {
                         ? TextAlignVertical.bottom
                         : TextAlignVertical.center,
                     style:
-                        isMobile ? null : Theme.of(context).textTheme.headline4,
+                        isMobile ? null : Theme.of(context).textTheme.headlineMedium,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor:

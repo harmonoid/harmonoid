@@ -95,7 +95,7 @@ abstract class WindowLifecycle {
             ),
             content: Text(
               Language.instance.COLLECTION_INDEXING_LABEL.replaceAll('\n', ' '),
-              style: Theme.of(c).textTheme.headline3,
+              style: Theme.of(c).textTheme.displaySmall,
             ),
             actions: [
               MaterialButton(

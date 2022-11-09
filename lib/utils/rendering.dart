@@ -33,16 +33,12 @@ import 'package:harmonoid/interface/directory_picker_screen.dart';
 import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/widgets.dart';
+export 'package:harmonoid/utils/extensions.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/constants/language.dart';
-
-export 'package:harmonoid/utils/extensions.dart';
-
-const kPrimaryLightColor = Color(0xFF6200EA);
-const kPrimaryDarkColor = Color(0xFF7C4DFF);
 
 // TODO: Clean-up global variables.
 
@@ -298,7 +294,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
             Platform.isWindows ? FluentIcons.delete_16_regular : Icons.delete),
         title: Text(
           Language.instance.DELETE,
-          style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+          style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
         ),
       ),
     ),
@@ -311,7 +307,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
               Platform.isWindows ? FluentIcons.share_16_regular : Icons.share),
           title: Text(
             Language.instance.SHARE,
-            style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+            style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
           ),
         ),
       ),
@@ -324,7 +320,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
             : Icons.music_note),
         title: Text(
           Language.instance.ADD_TO_NOW_PLAYING,
-          style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+          style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
         ),
       ),
     ),
@@ -337,7 +333,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
             : Icons.queue_music),
         title: Text(
           Language.instance.ADD_TO_PLAYLIST,
-          style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+          style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
         ),
       ),
     ),
@@ -352,7 +348,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
               : Icons.folder),
           title: Text(
             Language.instance.SHOW_IN_FILE_MANAGER,
-            style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+            style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
           ),
         ),
       ),
@@ -364,7 +360,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
             Icon(Platform.isWindows ? FluentIcons.edit_24_regular : Icons.edit),
         title: Text(
           Language.instance.EDIT_DETAILS,
-          style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+          style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
         ),
       ),
     ),
@@ -376,7 +372,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
             Platform.isWindows ? FluentIcons.album_24_regular : Icons.album),
         title: Text(
           Language.instance.SHOW_ALBUM,
-          style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+          style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
         ),
       ),
     ),
@@ -388,7 +384,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
             Icon(Platform.isWindows ? FluentIcons.info_24_regular : Icons.info),
         title: Text(
           Language.instance.FILE_INFORMATION,
-          style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+          style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
         ),
       ),
     ),
@@ -404,7 +400,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
           ),
           title: Text(
             Language.instance.CLEAR_LRC_FILE,
-            style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+            style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
           ),
         ),
       )
@@ -418,7 +414,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
           ),
           title: Text(
             Language.instance.SET_LRC_FILE,
-            style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+            style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
           ),
         ),
       ),
@@ -568,7 +564,7 @@ Future<void> trackPopupMenuHandle(
                 'NAME',
                 track.trackName,
               ),
-              style: Theme.of(ctx).textTheme.headline3,
+              style: Theme.of(ctx).textTheme.displaySmall,
             ),
             actions: [
               TextButton(
@@ -700,7 +696,7 @@ Future<void> trackPopupMenuHandle(
                 ),
                 content: Text(
                   Language.instance.CORRUPT_LRC_FILE,
-                  style: Theme.of(context).textTheme.headline3,
+                  style: Theme.of(context).textTheme.displaySmall,
                 ),
                 actions: [
                   TextButton(
@@ -882,7 +878,7 @@ InputDecoration inputDecoration(
     ),
     hintText: hintText,
     hintStyle: isDesktop
-        ? Theme.of(context).textTheme.headline3?.copyWith(
+        ? Theme.of(context).textTheme.displaySmall?.copyWith(
               color: Theme.of(context).brightness == Brightness.light
                   ? Colors.black54
                   : Colors.white60,

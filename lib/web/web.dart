@@ -5,11 +5,8 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
-import 'dart:io';
-import 'dart:math';
 import 'dart:collection';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:animations/animations.dart';
 import 'package:window_plus/window_plus.dart';
@@ -442,7 +439,7 @@ class WebSearch extends StatelessWidget {
                       Text(
                         Language.instance.RESULTS_FOR_QUERY
                             .replaceAll('QUERY', query.trim()),
-                        style: Theme.of(context).textTheme.headline1,
+                        style: Theme.of(context).textTheme.displayLarge,
                       ),
                       Spacer(),
                       WebSearchBar(query: this.query),

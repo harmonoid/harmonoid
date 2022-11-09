@@ -319,7 +319,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                             Language.instance.BUFFERING,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline1
+                                                .displayLarge
                                                 ?.copyWith(
                                                   color: Colors.white,
                                                   fontSize: 20.0,
@@ -344,7 +344,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                           playback.tracks[i].trackName.overflow,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline1
+                                              .displayLarge
                                               ?.copyWith(
                                             fontSize: 28.0,
                                             color: Colors.white,
@@ -387,7 +387,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                           ].join(' • '),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline3
+                                              .displaySmall
                                               ?.copyWith(
                                             color: Colors.white70,
                                             shadows: <Shadow>[
@@ -416,7 +416,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                             playback.audioFormatLabel,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline3
+                                                .displaySmall
                                                 ?.copyWith(
                                               color: Colors.white70,
                                               shadows: <Shadow>[
@@ -851,13 +851,13 @@ class CarouselState extends State<Carousel> {
     super.initState();
   }
 
-  void toggle({bool? hide}) {
+  void toggle({bool? hide}) async {
     if (hide != null) {
-      WindowPlus.instance.setIsFullscreen(!hide);
+      await WindowPlus.instance.setIsFullscreen(!hide);
       _isFullscreen = !hide;
       return;
     }
-    WindowPlus.instance.setIsFullscreen(!_isFullscreen);
+    await WindowPlus.instance.setIsFullscreen(!_isFullscreen);
     _isFullscreen = !_isFullscreen;
   }
 
@@ -1047,13 +1047,6 @@ class CarouselState extends State<Carousel> {
                       previous();
                     }
                   },
-                  onVerticalDragUpdate: (details) {
-                    const sensitivity = 20;
-                    if (details.delta.dy > sensitivity) {
-                      toggle(hide: true);
-                      widget.hide();
-                    }
-                  },
                   child: Container(
                     color: Colors.transparent,
                     width: widget.width ?? MediaQuery.of(context).size.width,
@@ -1170,7 +1163,7 @@ class CarouselState extends State<Carousel> {
                             )
                           : Text(
                               '${index + 1}',
-                              style: Theme.of(context).textTheme.headline4,
+                              style: Theme.of(context).textTheme.headlineMedium,
                             ),
                       track: Playback.instance.tracks[index],
                       index: 0,
@@ -1270,7 +1263,7 @@ class CarouselState extends State<Carousel> {
                                                   Language.instance.NOW_PLAYING,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline1
+                                                      .displayLarge
                                                       ?.copyWith(
                                                           fontSize: 24.0),
                                                   maxLines: 1,
@@ -1282,7 +1275,7 @@ class CarouselState extends State<Carousel> {
                                                   '${Language.instance.TRACK}: ${Playback.instance.tracks.length}',
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline3,
+                                                      .displaySmall,
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                 ),
