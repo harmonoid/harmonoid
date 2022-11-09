@@ -3,14 +3,12 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  bitsdojo_window_windows
+  awesome_notifications
   dart_discord_rpc
   flutter_platform_alert
-  flutter_window_close
   permission_handler_windows
   url_launcher_windows
-  window_manager
-  window_size
+  window_plus
   windows_taskbar
 )
 

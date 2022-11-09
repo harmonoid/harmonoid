@@ -13,9 +13,7 @@ bool FlutterWindow::OnCreate() {
   if (!Win32Window::OnCreate()) {
     return false;
   }
-
   RECT frame = GetClientArea();
-
   // The size here must match the window dimensions to avoid unnecessary surface
   // creation / destruction in the startup path.
   flutter_controller_ = std::make_unique<flutter::FlutterViewController>(
@@ -25,9 +23,6 @@ bool FlutterWindow::OnCreate() {
     return false;
   }
   RegisterPlugins(flutter_controller_->engine());
-  ArgumentVectorHandlerPluginRegisterWithRegistrar(
-      flutter_controller_->engine()->GetRegistrarForPlugin(
-          "ArgumentVectorHandlerPlugin"));
   SetChildContent(flutter_controller_->view()->GetNativeWindow());
   return true;
 }

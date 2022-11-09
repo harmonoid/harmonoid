@@ -7,6 +7,8 @@
 #include <memory>
 #include <string>
 
+constexpr const wchar_t kWindowClassName[] = L"HARMONOID_WIN32_WINDOW";
+
 // A class abstraction for a high DPI-aware Win32 Window. Intended to be
 // inherited from by classes that wish to specialize with custom
 // rendering and input handling

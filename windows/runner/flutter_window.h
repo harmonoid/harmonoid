@@ -6,7 +6,6 @@
 
 #include <memory>
 
-#include "argument_vector_handler.h"
 #include "win32_window.h"
 
 // A window that does nothing but host a Flutter view.
