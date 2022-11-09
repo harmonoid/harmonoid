@@ -208,26 +208,6 @@ class _WebRecommendationsState extends State<WebRecommendations>
   @override
   void initState() {
     super.initState();
-    // TODO: MUST BE REMOVED BEFORE Flutter 3.3.x.
-    if (Platform.isWindows) {
-      _scrollController.addListener(
-        () {
-          final direction = _scrollController.position.userScrollDirection;
-          if (direction != ScrollDirection.idle) {
-            final position = min(
-              _scrollController.position.maxScrollExtent,
-              max(
-                _scrollController.position.minScrollExtent,
-                _scrollController.offset +
-                    kWindowsScrollDelta *
-                        (direction == ScrollDirection.reverse ? 1 : -1),
-              ),
-            );
-            _scrollController.jumpTo(position);
-          }
-        },
-      );
-    }
     Web.instance.refreshCallback = () {
       if (mounted) {
         setState(() {});

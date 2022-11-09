@@ -305,26 +305,6 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
         }
       });
     }
-    // TODO: MUST BE REMOVED BEFORE Flutter 3.3.x.
-    if (Platform.isWindows) {
-      scrollController.addListener(
-        () {
-          final direction = scrollController.position.userScrollDirection;
-          if (direction != ScrollDirection.idle) {
-            final position = min(
-              scrollController.position.maxScrollExtent,
-              max(
-                scrollController.position.minScrollExtent,
-                scrollController.offset +
-                    kWindowsScrollDelta *
-                        (direction == ScrollDirection.reverse ? 1 : -1),
-              ),
-            );
-            scrollController.jumpTo(position);
-          }
-        },
-      );
-    }
     if (isMobile) {
       PaletteGenerator.fromImageProvider(
         ResizeImage.resizeIfNeeded(
