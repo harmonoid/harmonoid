@@ -61,6 +61,7 @@ There are no inconsistent paddings, spacings or weird alignments to make me feel
 
 - [Oleks](https://www.patreon.com/user/creators?u=28979760) • 5$ per month.
 - [Benjamin Kranz](https://twitter.com/RisuDesign) • Checkout their [YouTube](https://www.youtube.com/c/RapidzDE)! • 5$ per month.
+- [Mohammed Abutaki](https://www.patreon.com/user/creators?u=27366405) • 5$ per month.
 
 [![Patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/harmonoid)
 
