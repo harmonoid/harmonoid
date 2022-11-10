@@ -76,7 +76,7 @@ index 3f7b571..755c186 100644
  
  const kDetailsAreaHeight = 100.0;
  
-@@ -2189,158 +2187,115 @@ class MiniNowPlayingBarRefreshCollectionButtonState
+@@ -2189,159 +2187,115 @@ class MiniNowPlayingBarRefreshCollectionButtonState
                ),
                builder: (context, color, _) => Container(
                  child: widget.index.value == 3
@@ -85,7 +85,6 @@ index 3f7b571..755c186 100644
 -                        activeIcon: Icons.close,
 -                        spacing: 8.0,
 -                        heroTag: 'create-playlist-fab',
--                        elevation: 8.0,
 -                        animationCurve: Curves.easeInOut,
 -                        animationDuration: const Duration(milliseconds: 200),
 -                        children: [
@@ -100,9 +99,10 @@ index 3f7b571..755c186 100644
 -                                  maxHeight: double.infinity,
 -                                ),
 -                                context: context,
--                                elevation: 8.0,
+-                                elevation: kDefaultHeavyElevation,
 -                                useRootNavigator: true,
--                                backgroundColor: Theme.of(context).cardColor,
+-                                backgroundColor:
+-                                    Theme.of(context).cardTheme.color,
 -                                builder: (context) => StatefulBuilder(
 -                                  builder: (context, setState) {
 -                                    return PlaylistImportBottomSheet();
@@ -120,9 +120,10 @@ index 3f7b571..755c186 100644
 -                              await showModalBottomSheet(
 -                                isScrollControlled: true,
 -                                context: context,
--                                elevation: 8.0,
+-                                elevation: kDefaultHeavyElevation,
 -                                useRootNavigator: true,
--                                backgroundColor: Theme.of(context).cardColor,
+-                                backgroundColor:
+-                                    Theme.of(context).cardTheme.color,
 -                                builder: (context) => StatefulBuilder(
 -                                  builder: (context, setState) {
 -                                    return Container(
@@ -203,9 +204,9 @@ index 3f7b571..755c186 100644
 +                          await showModalBottomSheet(
 +                            isScrollControlled: true,
 +                            context: context,
-+                            elevation: 8.0,
++                            elevation: kDefaultHeavyElevation,
 +                            useRootNavigator: true,
-+                            backgroundColor: Theme.of(context).cardColor,
++                            backgroundColor: Theme.of(context).cardTheme.color,
 +                            builder: (context) => StatefulBuilder(
 +                              builder: (context, setState) {
 +                                return Container(
@@ -348,7 +349,7 @@ index 5c55c49..4f27168 100644
                                    kVersion,
 +                                  'Google Play',
                                  ].join(' • '),
-                                 style: Theme.of(context).textTheme.headline3,
+                                 style: Theme.of(context).textTheme.displaySmall,
                                ),
 @@ -147,44 +148,6 @@ class _AboutPageState extends State<AboutPage> {
                                : null,
@@ -369,7 +370,7 @@ index 5c55c49..4f27168 100644
 -                        title: Text(
 -                          Label.become_a_patreon,
 -                          style: isDesktop
--                              ? Theme.of(context).textTheme.headline4
+-                              ? Theme.of(context).textTheme.headlineMedium
 -                              : null,
 -                        ),
 -                      ),
@@ -388,7 +389,7 @@ index 5c55c49..4f27168 100644
 -                        title: Text(
 -                          Label.donate_with_paypal,
 -                          style: isDesktop
--                              ? Theme.of(context).textTheme.headline4
+-                              ? Theme.of(context).textTheme.headlineMedium
 -                              : null,
 -                        ),
 -                      ),
@@ -405,8 +406,8 @@ index 0f16cab..1b7e8ef 100644
  import 'package:harmonoid/constants/language.dart';
 -import 'package:harmonoid/web/web.dart';
  
- class CustomListView extends StatefulWidget {
-   final ScrollController? controller;
+ import 'package:harmonoid/main.dart';
+ 
 @@ -1287,7 +1286,6 @@ class ExceptionWidget extends StatelessWidget {
                Language.instance.NO_INTERNET_TITLE: VisualAssets.library,
                Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE:
@@ -468,7 +469,7 @@ index 0f16cab..1b7e8ef 100644
 -            leading: Icon(Icons.code),
 -            title: Text(
 -              Language.instance.READ_METADATA,
--              style: Theme.of(context).textTheme.headline4,
+-              style: Theme.of(context).textTheme.headlineMedium,
 -            ),
 -          ),
 -        ),
@@ -480,7 +481,7 @@ index 0f16cab..1b7e8ef 100644
 -            leading: Icon(Icons.waves),
 -            title: Text(
 -              Language.instance.STREAM,
--              style: Theme.of(context).textTheme.headline4,
+-              style: Theme.of(context).textTheme.headlineMedium,
 -            ),
 -          ),
 -        ),
@@ -534,7 +535,7 @@ index a36b3eb..b74f60c 100644
    synchronized: ^3.0.0+2
 -  flutter_speed_dial: ^6.0.0
    flutter_svg: ^1.1.4
-
+ 
    # Third-party forked plugins & packages to meet requirements.
 diff --git a/pubspec.yaml b/pubspec.yaml
 index 1b6f670..cfdf0d1 100644
@@ -546,5 +547,5 @@ index 1b6f670..cfdf0d1 100644
    synchronized: ^3.0.0+2
 -  flutter_speed_dial: ^6.0.0
    flutter_svg: ^1.1.4
-
+ 
    # Third-party forked plugins & packages to meet requirements.
