@@ -6,7 +6,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
   awesome_notifications
   dart_discord_rpc
   flutter_platform_alert
-  permission_handler_windows
   url_launcher_windows
   window_plus
   windows_taskbar

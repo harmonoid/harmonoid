@@ -37,7 +37,7 @@ const String kAuthor = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
 const String kCaption = 'Harmonoid Music';
 const String kLicense = 'End-User License Agreement for Harmonoid';
 const String kTitle = 'Harmonoid';
-const String kVersion = 'v0.3.3';
+const String kVersion = 'v0.3.4';
 
 Future<void> main(List<String> args) async {
   try {

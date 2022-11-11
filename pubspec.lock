@@ -596,8 +596,8 @@ packages:
     dependency: "direct main"
     description:
       path: permission_handler
-      ref: master
-      resolved-ref: "00684caf4a38b669f3150c5e681a977aa0b63ba3"
+      ref: "6120686e5f744e2934ca5f45deeca28df3227f5d"
+      resolved-ref: "6120686e5f744e2934ca5f45deeca28df3227f5d"
       url: "https://github.com/alexmercerind/flutter-permission-handler.git"
     source: git
     version: "10.1.0"
@@ -605,8 +605,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: permission_handler_android
-      ref: master
-      resolved-ref: "00684caf4a38b669f3150c5e681a977aa0b63ba3"
+      ref: "6120686e5f744e2934ca5f45deeca28df3227f5d"
+      resolved-ref: "6120686e5f744e2934ca5f45deeca28df3227f5d"
       url: "https://github.com/alexmercerind/flutter-permission-handler.git"
     source: git
     version: "10.1.0"
@@ -622,19 +622,11 @@ packages:
     dependency: "direct overridden"
     description:
       path: permission_handler_platform_interface
-      ref: master
-      resolved-ref: "00684caf4a38b669f3150c5e681a977aa0b63ba3"
+      ref: "6120686e5f744e2934ca5f45deeca28df3227f5d"
+      resolved-ref: "6120686e5f744e2934ca5f45deeca28df3227f5d"
       url: "https://github.com/alexmercerind/flutter-permission-handler.git"
     source: git
     version: "3.8.0"
-  permission_handler_windows:
-    dependency: transitive
-    description:
-      name: permission_handler_windows
-      sha256: f67cab14b4328574938ecea2db3475dad7af7ead6afab6338772c5f88963e38b
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.2"
   petitparser:
     dependency: transitive
     description:
