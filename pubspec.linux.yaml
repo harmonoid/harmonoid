@@ -44,7 +44,6 @@ dependencies:
   just_audio: ^0.9.28
   audio_service: ^0.18.7
   awesome_notifications: ^0.7.0-beta.5
-  external_path: ^1.0.1
   share_plus: ^2.1.4
   url_launcher: ^6.1.3
   filepicker_windows:
@@ -91,9 +90,6 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/flutter_platform_alert.git
       ref: b174a505c6c2c00bad973c2fc285e80d6a85cb7d
-  miniplayer:
-    git:
-      url: https://github.com/alexmercerind/miniplayer.git
   desktop:
     git:
       url: https://github.com/alexmercerind/desktop.git
