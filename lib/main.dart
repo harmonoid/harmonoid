@@ -6,9 +6,9 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart' hide Intent;
+import 'package:flutter/foundation.dart';
 import 'package:window_plus/window_plus.dart';
 import 'package:media_engine/media_engine.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
@@ -55,7 +55,10 @@ Future<void> main(List<String> args) async {
   }
   try {
     if (Platform.isWindows) {
-      await WindowPlus.ensureInitialized(application: kApplication);
+      await WindowPlus.ensureInitialized(
+        application: kApplication,
+        enableEventStreams: false,
+      );
       WindowLifecycle.initialize();
       await Configuration.initialize();
       await AppState.initialize();
@@ -69,7 +72,10 @@ Future<void> main(List<String> args) async {
       DiscordRPC.initialize();
     }
     if (Platform.isLinux) {
-      await WindowPlus.ensureInitialized(application: kApplication);
+      await WindowPlus.ensureInitialized(
+        application: kApplication,
+        enableEventStreams: false,
+      );
       WindowLifecycle.initialize();
       await Configuration.initialize();
       await AppState.initialize();

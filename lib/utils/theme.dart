@@ -156,6 +156,8 @@ ThemeData createTheme({
                 TextStyle(
                   letterSpacing: 1.0,
                   fontWeight: FontWeight.w600,
+                  // Enforce `Inter` font family on Linux machines.
+                  fontFamily: Platform.isLinux ? 'Inter' : null,
                 ),
               )
             : null,
@@ -168,6 +170,8 @@ ThemeData createTheme({
                 TextStyle(
                   letterSpacing: 1.0,
                   fontWeight: FontWeight.w600,
+                  // Enforce `Inter` font family on Linux machines.
+                  fontFamily: Platform.isLinux ? 'Inter' : null,
                 ),
               )
             : null,
@@ -218,6 +222,8 @@ ThemeData createTheme({
       actionTextColor: color,
       contentTextStyle: theme.headlineMedium?.copyWith(
         color: light ? Colors.white : Colors.black,
+        // Enforce `Inter` font family on Linux machines.
+        fontFamily: Platform.isLinux ? 'Inter' : null,
       ),
     ),
     disabledColor: light ? Colors.black38 : Colors.white38,
@@ -296,6 +302,8 @@ ThemeData createTheme({
           ? TextStyle(
               fontSize: 12.0,
               color: light ? Colors.white : Colors.black,
+              // Enforce `Inter` font family on Linux machines.
+              fontFamily: Platform.isLinux ? 'Inter' : null,
             )
           : null,
       decoration: BoxDecoration(
