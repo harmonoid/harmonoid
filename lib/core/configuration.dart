@@ -143,6 +143,8 @@ class Configuration extends ConfigurationKeys {
     int? mobileGenresGridSize,
     Set<AlbumHashCodeParameter>? albumHashCodeParameters,
     Map<String, String>? userLibmpvOptions,
+    bool? disableAnimations,
+    bool? loadAsPlaylistWhenPlayingFromTracksTab,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -264,6 +266,13 @@ class Configuration extends ConfigurationKeys {
     if (userLibmpvOptions != null) {
       this.userLibmpvOptions = userLibmpvOptions;
     }
+    if (disableAnimations != null) {
+      this.disableAnimations = disableAnimations;
+    }
+    if (loadAsPlaylistWhenPlayingFromTracksTab != null) {
+      this.loadAsPlaylistWhenPlayingFromTracksTab =
+          loadAsPlaylistWhenPlayingFromTracksTab;
+    }
     await storage.write(
       {
         'collectionDirectories': this
@@ -313,6 +322,9 @@ class Configuration extends ConfigurationKeys {
         'albumHashCodeParameters':
             this.albumHashCodeParameters.map((e) => e.index).toList(),
         'userLibmpvOptions': this.userLibmpvOptions,
+        'disableAnimations': this.disableAnimations,
+        'loadAsPlaylistWhenPlayingFromTracksTab':
+            this.loadAsPlaylistWhenPlayingFromTracksTab,
       },
     );
   }
@@ -322,7 +334,7 @@ class Configuration extends ConfigurationKeys {
   Future<void> read() async {
     final current = await storage.read();
     final conf = await _getDefaultApplicationConfiguration();
-    // Emblace default values for the keys that not found.
+    // Emplace default values for the keys that not found.
     // Most likely due to update in Harmonoid's app version.
     // The Harmonoid's version update likely brought new app keys & fallback to default for those.
     conf.keys.forEach(
@@ -382,6 +394,9 @@ class Configuration extends ConfigurationKeys {
       ),
     );
     userLibmpvOptions = Map<String, String>.from(current['userLibmpvOptions']);
+    disableAnimations = current['disableAnimations'];
+    loadAsPlaylistWhenPlayingFromTracksTab =
+        current['loadAsPlaylistWhenPlayingFromTracksTab'];
   }
 
   static Future<Map<String, dynamic>>
@@ -487,6 +502,8 @@ class Configuration extends ConfigurationKeys {
               2,
             ],
             'userLibmpvOptions': <String, String>{},
+            'disableAnimations': false,
+            'loadAsPlaylistWhenPlayingFromTracksTab': false,
           };
 }
 
@@ -531,4 +548,6 @@ abstract class ConfigurationKeys {
   late int mobileGenresGridSize;
   late Set<AlbumHashCodeParameter> albumHashCodeParameters;
   late Map<String, String> userLibmpvOptions;
+  late bool disableAnimations;
+  late bool loadAsPlaylistWhenPlayingFromTracksTab;
 }
