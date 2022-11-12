@@ -85,7 +85,7 @@ abstract class WindowLifecycle {
   static Future<bool> windowCloseHandler({
     bool showInterruptAlert = true,
   }) async {
-    if (CollectionRefresh.instance.isOngoing) {
+    if (!CollectionRefresh.instance.isCompleted) {
       if (showInterruptAlert) {
         await showDialog(
           context: navigatorKey.currentContext!,
