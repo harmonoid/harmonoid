@@ -1,23 +1,22 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for
-/// Harmonoid that can be found in the EULA.txt file.
-///
+// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
+//
+// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>. All
+// rights reserved.
+//
+// Use of this source code is governed by the End-User License Agreement for
+// Harmonoid that can be found in the EULA.txt file.
+//
 #include "my_application.h"
 
-#include <iostream>
+#include <flutter_linux/flutter_linux.h>
+
 #include <locale>
 #ifdef GDK_WINDOWING_X11
 #include <gdk/gdkx.h>
 #endif
-#include <flutter_linux/flutter_linux.h>
 
-#include "argument_vector_handler.h"
 #include "flutter/generated_plugin_registrant.h"
-#include "window_utils.h"
+#include "window_plus/window_plus_plugin.h"
 
 struct _MyApplication {
   GtkApplication parent_instance;
@@ -26,17 +25,27 @@ struct _MyApplication {
 
 G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
 
+// Creates a new MyApplication instance, a new window is created with a new
+// Flutter engine & Dart entry point. The entry point arguments are taken from
+// MyApplication::dart_entrypoint_arguments & passed to the Dart entry point.
+//
+// Does nothing if a window already exists.
 static void my_application_window_new(GApplication* application) {
+  std::setlocale(LC_NUMERIC, "C");
   MyApplication* self = MY_APPLICATION(application);
+  // Check for an existing window. If one exists, present it and return.
+  GList* windows = gtk_application_get_windows(GTK_APPLICATION(application));
+  if (self && windows) {
+    // Forward the argument vector to the existing window / process.
+    window_plus_plugin_handle_single_instance(self->dart_entrypoint_arguments);
+    gtk_window_present(GTK_WINDOW(windows->data));
+    return;
+  }
+  // Create a new GtkWindow, Flutter engine & execute the Dart entry point.
   GtkWindow* window =
       GTK_WINDOW(gtk_application_window_new(GTK_APPLICATION(application)));
-  // Note that |gtk_widget_set_opacity| & |gtk_widget_set_sensitive| works after
-  // |gtk_widget_show| call, thus present down below this imperative code.
-  // Apparently, they are not supported by all window managers aswell, so that's
-  // handled too. In that case, only |gtk_window_iconify| is relied upon.
-
-  // Use a header bar when running in GNOME as this is the common style used by
-  // applications and is the setup most users will be using (e.g. Ubuntu
+  // Use a header bar when running in GNOME as this is the common style used
+  // by applications and is the setup most users will be using (e.g. Ubuntu
   // desktop).
   // If running on X and not using GNOME then just use a traditional title bar
   // in case the window manager does more exotic layout, e.g. tiling.
@@ -61,30 +70,7 @@ static void my_application_window_new(GApplication* application) {
   } else {
     gtk_window_set_title(window, "Harmonoid");
   }
-  GdkRectangle workarea = {0};
-  GdkDisplay* default_display = gdk_display_get_default();
-  GdkMonitor* primary_monitor =
-      gdk_display_get_primary_monitor(default_display);
-  gdk_monitor_get_workarea(primary_monitor, &workarea);
-  gboolean is_full_hd_display = workarea.width > 1366 && workarea.height > 768;
-  gint base_width = is_full_hd_display ? 1280 : 1024,
-       base_height = is_full_hd_display ? 720 : 640;
-  // Configure default & minimum window dimensions etc.
-  gtk_window_set_default_size(window, base_width, base_height);
-  GdkGeometry geometry;
-  geometry.min_width = 960;
-  geometry.min_height = 640;
-  geometry.base_width = base_width;
-  geometry.base_height = base_height;
-  gtk_window_set_geometry_hints(
-      window, GTK_WIDGET(window), &geometry,
-      static_cast<GdkWindowHints>(GDK_HINT_MIN_SIZE | GDK_HINT_BASE_SIZE));
-  g_autoptr(GtkCssProvider) style = gtk_css_provider_new();
-  gtk_css_provider_load_from_data(GTK_CSS_PROVIDER(style),
-                                  "window { background:none; }", -1, nullptr);
-  gtk_style_context_add_provider_for_screen(
-      screen, GTK_STYLE_PROVIDER(style),
-      GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+
   g_autoptr(FlDartProject) project = fl_dart_project_new();
   fl_dart_project_set_dart_entrypoint_arguments(
       project, self->dart_entrypoint_arguments);
@@ -92,51 +78,63 @@ static void my_application_window_new(GApplication* application) {
   gtk_container_add(GTK_CONTAINER(window), GTK_WIDGET(view));
   gtk_widget_realize(GTK_WIDGET(view));
   gtk_widget_realize(GTK_WIDGET(window));
-  auto registry = FL_PLUGIN_REGISTRY(view);
-  fl_register_plugins(registry);
-  window_utils_plugin_register_with_registrar(
-      fl_plugin_registry_get_registrar_for_plugin(registry,
-                                                  "WindowUtilsPlugin"));
-  argument_vector_handler_plugin_register_with_registrar(
-      fl_plugin_registry_get_registrar_for_plugin(
-          registry, "ArgumentVectorHandlerPlugin"));
-  std::setlocale(LC_NUMERIC, "C");
+  fl_register_plugins(FL_PLUGIN_REGISTRY(view));
 }
 
+// Implements GApplication::activate.
 static void my_application_activate(GApplication* application) {
   MyApplication* self = MY_APPLICATION(application);
-  GList* list;
-  list = gtk_application_get_windows(GTK_APPLICATION(self));
-  if (list) {
-    gtk_window_present(GTK_WINDOW(list->data));
-  } else {
-    my_application_window_new(application);
+  // MyApplication::dart_entrypoint_arguments handling.
+  g_clear_pointer(&self->dart_entrypoint_arguments, g_strfreev);
+  self->dart_entrypoint_arguments = NULL;
+  if (!g_application_get_is_registered(application)) {
+    g_autoptr(GError) error = nullptr;
+    if (!g_application_register(application, nullptr, &error)) {
+      g_warning("Failed to register: %s", error->message);
+    }
   }
+  my_application_window_new(application);
 }
 
+// Implements GApplication::open.
 static void my_application_open(GApplication* application, GFile** files,
                                 gint n_files, const gchar* hint) {
   MyApplication* self = MY_APPLICATION(application);
-  GList* list;
-  if (self->dart_entrypoint_arguments) {
-    g_clear_pointer(&self->dart_entrypoint_arguments, g_strfreev);
+  // MyApplication::dart_entrypoint_arguments handling.
+  g_clear_pointer(&self->dart_entrypoint_arguments, g_strfreev);
+  self->dart_entrypoint_arguments = g_new0(gchar*, n_files + 1);
+  for (int i = 0; i < n_files; i++) {
+    self->dart_entrypoint_arguments[i] = g_file_get_path(files[i]);
   }
-  self->dart_entrypoint_arguments = g_new(gchar*, n_files + 1);
-  for (int32_t i = 0; i < n_files; i++) {
-    self->dart_entrypoint_arguments[i] = g_strdup(g_file_get_path(files[i]));
+  // For safety.
+  self->dart_entrypoint_arguments[n_files] = NULL;
+  if (!g_application_get_is_registered(application)) {
+    g_autoptr(GError) error = nullptr;
+    if (!g_application_register(application, nullptr, &error)) {
+      g_warning("Failed to register: %s", error->message);
+    }
   }
-  self->dart_entrypoint_arguments[n_files] = nullptr;
-  list = gtk_application_get_windows(GTK_APPLICATION(self));
-  if (list) {
-    gtk_window_present(GTK_WINDOW(list->data));
-    std::cout << g_argument_vector_handler_plugin << std::endl;
-    fl_method_channel_invoke_method(
-        g_argument_vector_handler_plugin->channel, "",
-        fl_value_new_string(self->dart_entrypoint_arguments[0]), nullptr,
-        nullptr, nullptr);
-  } else {
-    my_application_window_new(application);
+  my_application_window_new(application);
+}
+
+// Implements GApplication::command_line.
+static gboolean my_application_command_line(
+    GApplication* application, GApplicationCommandLine* command_line) {
+  MyApplication* self = MY_APPLICATION(application);
+  // MyApplication::dart_entrypoint_arguments handling.
+  g_clear_pointer(&self->dart_entrypoint_arguments, g_strfreev);
+  // Strip out the first argument as it is the binary name.
+  gchar** arguments =
+      g_application_command_line_get_arguments(command_line, nullptr) + 1;
+  self->dart_entrypoint_arguments = g_strdupv(arguments);
+  if (!g_application_get_is_registered(application)) {
+    g_autoptr(GError) error = nullptr;
+    if (!g_application_register(application, nullptr, &error)) {
+      g_warning("Failed to register: %s", error->message);
+    }
   }
+  my_application_window_new(application);
+  return FALSE;
 }
 
 // Implements GObject::dispose.
@@ -149,13 +147,15 @@ static void my_application_dispose(GObject* object) {
 static void my_application_class_init(MyApplicationClass* klass) {
   G_APPLICATION_CLASS(klass)->activate = my_application_activate;
   G_APPLICATION_CLASS(klass)->open = my_application_open;
+  G_APPLICATION_CLASS(klass)->command_line = my_application_command_line;
   G_OBJECT_CLASS(klass)->dispose = my_application_dispose;
 }
 
 static void my_application_init(MyApplication* self) {}
 
 MyApplication* my_application_new() {
-  return MY_APPLICATION(g_object_new(my_application_get_type(),
-                                     "application-id", APPLICATION_ID, "flags",
-                                     G_APPLICATION_HANDLES_OPEN, nullptr));
+  return MY_APPLICATION(g_object_new(
+      my_application_get_type(), "application-id", APPLICATION_ID, "flags",
+      G_APPLICATION_HANDLES_COMMAND_LINE | G_APPLICATION_HANDLES_OPEN,
+      nullptr));
 }
