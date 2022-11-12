@@ -284,7 +284,9 @@ TileGridListWidgetsData tileGridListWidgetsWithScrollbarSupport({
 }
 
 List<PopupMenuItem<int>> trackPopupMenuItems(
-    Track track, BuildContext context) {
+  Track track,
+  BuildContext context,
+) {
   return [
     PopupMenuItem<int>(
       padding: EdgeInsets.zero,
@@ -430,103 +432,68 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
   ];
 }
 
-Future<File?> pickFile({
-  required String label,
-  List<String>? extensions,
-}) async {
-  String? path;
-  if (Platform.isWindows) {
-    OpenFilePicker picker = OpenFilePicker()
-      ..filterSpecification = {
-        if (extensions != null) ...{
-          label: extensions.map((e) => '*.${e.toLowerCase()}').join(';'),
-        },
-        Language.instance.ALL_FILES: '*',
-      }
-      // Choosing first [extensions] extension as default.
-      ..defaultFilterIndex = 0
-      ..defaultExtension = extensions?.first.toLowerCase();
-    path = picker.getFile()?.path;
-  } else if (Platform.isLinux) {
-    final result = await openFile(
-      acceptedTypeGroups: [
-        XTypeGroup(
-          label: label,
-          // Case sensitive paths on GNU/Linux.
-          extensions: [
-            if (extensions != null) ...[
-              ...extensions.map((e) => e.toLowerCase()).toList(),
-              ...extensions.map((e) => e.toUpperCase()).toList(),
-            ],
-          ].toSet().toList(),
+List<PopupMenuItem<int>> albumPopupMenuItems(
+  Album album,
+  BuildContext context,
+) {
+  return [
+    PopupMenuItem<int>(
+      padding: EdgeInsets.zero,
+      value: 0,
+      child: ListTile(
+        leading: Icon(
+          Platform.isWindows ? FluentIcons.play_24_regular : Icons.play_arrow,
         ),
-        XTypeGroup(
-          label: Language.instance.ALL_FILES,
+        title: Text(
+          Language.instance.PLAY,
+          style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
         ),
-      ],
-    );
-    path = result?.path;
-  }
-  // Using `package:file_picker` on other platforms.
-  else {
-    final result = await FilePicker.platform.pickFiles(
-      // Case sensitive paths on Android.
-      allowedExtensions: extensions == null
-          ? null
-          : [
-              ...extensions.map((e) => e.toLowerCase()).toList(),
-              ...extensions.map((e) => e.toUpperCase()).toList(),
-            ].toSet().toList(),
-      // Needed for [allowedExtensions].
-      type: extensions == null ? FileType.any : FileType.custom,
-    );
-    if ((result?.count ?? 0) > 0) {
-      path = result?.files.first.path;
-    }
-  }
-  return path == null ? null : File(path);
-}
-
-/// Prompts the user to select a folder.
-///
-/// [useNativePicker] only works on Android.
-/// Modern Android SDK 30+ are strictier about file access & enforce Scoped Storage.
-/// This means that native file picker cannot pick the root phone or SD card directory & the downloads folder.
-///
-/// To address this issue with directory selection for file indexing, a custom file picker is used, which is entirely Flutter based.
-///
-Future<Directory?> pickDirectory({
-  bool useNativePicker = false,
-}) async {
-  Directory? directory;
-  if (Platform.isWindows) {
-    final picker = DirectoryPicker();
-    directory = picker.getDirectory();
-  } else if (Platform.isLinux) {
-    final path = await getDirectoryPath();
-    if (path != null) {
-      directory = Directory(path);
-    }
-  }
-  // Using `package:file_picker` on other platforms.
-  else {
-    if (useNativePicker) {
-      final path = await FilePicker.platform.getDirectoryPath();
-      if (path != null) {
-        directory = Directory(path);
-      }
-    } else {
-      return showGeneralDialog(
-        context: navigatorKey.currentContext!,
-        useRootNavigator: true,
-        barrierDismissible: false,
-        barrierColor: Colors.transparent,
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            DirectoryPickerScreen(),
-      );
-    }
-  }
-  return directory;
+      ),
+    ),
+    PopupMenuItem<int>(
+      padding: EdgeInsets.zero,
+      value: 1,
+      child: ListTile(
+        leading: Icon(
+          Platform.isWindows
+              ? FluentIcons.arrow_shuffle_24_regular
+              : Icons.shuffle,
+        ),
+        title: Text(
+          Language.instance.SHUFFLE,
+          style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+        ),
+      ),
+    ),
+    PopupMenuItem<int>(
+      padding: EdgeInsets.zero,
+      value: 2,
+      child: ListTile(
+        leading: Icon(
+          Platform.isWindows ? FluentIcons.delete_16_regular : Icons.delete,
+        ),
+        title: Text(
+          Language.instance.DELETE,
+          style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+        ),
+      ),
+    ),
+    PopupMenuItem<int>(
+      padding: EdgeInsets.zero,
+      value: 3,
+      child: ListTile(
+        leading: Icon(
+          Platform.isWindows
+              ? FluentIcons.music_note_2_16_regular
+              : Icons.queue_music,
+        ),
+        title: Text(
+          Language.instance.ADD_TO_NOW_PLAYING,
+          style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+        ),
+      ),
+    ),
+  ];
 }
 
 Future<void> trackPopupMenuHandle(
@@ -718,6 +685,189 @@ Future<void> trackPopupMenuHandle(
         break;
     }
   }
+}
+
+Future<void> albumPopupMenuHandle(
+  BuildContext context,
+  Album album,
+  int? result,
+) async {
+  final tracks = album.tracks.toList();
+  tracks.sort(
+    (first, second) =>
+        first.discNumber.compareTo(second.discNumber) * 100000000 +
+        first.trackNumber.compareTo(second.trackNumber) * 1000000 +
+        first.trackName.compareTo(second.trackName) * 10000 +
+        first.trackArtistNames
+                .join()
+                .compareTo(second.trackArtistNames.join()) *
+            100 +
+        first.uri.toString().compareTo(second.uri.toString()),
+  );
+  if (result != null) {
+    switch (result) {
+      case 0:
+        await Playback.instance.open(tracks);
+        break;
+      case 1:
+        tracks.shuffle();
+        await Playback.instance.open(tracks);
+        break;
+      case 2:
+        if (Platform.isAndroid) {
+          final sdk = StorageRetriever.instance.version;
+          if (sdk >= 30) {
+            // No [AlertDialog] required for confirmation.
+            // Android 11 or higher (API level 30) will ask for permissions from the user before deletion.
+            await Collection.instance.delete(album);
+            while (Navigator.of(context).canPop()) {
+              await Navigator.of(context).maybePop();
+            }
+            if (floatingSearchBarController.isOpen) {
+              floatingSearchBarController.close();
+            }
+            return;
+          }
+        }
+        await showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text(
+              Language.instance.COLLECTION_ALBUM_DELETE_DIALOG_HEADER,
+            ),
+            content: Text(
+              Language.instance.COLLECTION_ALBUM_DELETE_DIALOG_BODY.replaceAll(
+                'NAME',
+                album.albumName,
+              ),
+              style: Theme.of(ctx).textTheme.displaySmall,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  await Collection.instance.delete(album);
+                  await Navigator.of(ctx).maybePop();
+                  while (Navigator.of(context).canPop()) {
+                    await Navigator.of(context).maybePop();
+                  }
+                  if (floatingSearchBarController.isOpen) {
+                    floatingSearchBarController.close();
+                  }
+                },
+                child: Text(Language.instance.YES),
+              ),
+              TextButton(
+                onPressed: Navigator.of(ctx).pop,
+                child: Text(Language.instance.NO),
+              ),
+            ],
+          ),
+        );
+        break;
+      case 3:
+        await Playback.instance.add(tracks);
+        break;
+    }
+  }
+}
+
+Future<File?> pickFile({
+  required String label,
+  List<String>? extensions,
+}) async {
+  String? path;
+  if (Platform.isWindows) {
+    OpenFilePicker picker = OpenFilePicker()
+      ..filterSpecification = {
+        if (extensions != null) ...{
+          label: extensions.map((e) => '*.${e.toLowerCase()}').join(';'),
+        },
+        Language.instance.ALL_FILES: '*',
+      }
+      // Choosing first [extensions] extension as default.
+      ..defaultFilterIndex = 0
+      ..defaultExtension = extensions?.first.toLowerCase();
+    path = picker.getFile()?.path;
+  } else if (Platform.isLinux) {
+    final result = await openFile(
+      acceptedTypeGroups: [
+        XTypeGroup(
+          label: label,
+          // Case sensitive paths on GNU/Linux.
+          extensions: [
+            if (extensions != null) ...[
+              ...extensions.map((e) => e.toLowerCase()).toList(),
+              ...extensions.map((e) => e.toUpperCase()).toList(),
+            ],
+          ].toSet().toList(),
+        ),
+        XTypeGroup(
+          label: Language.instance.ALL_FILES,
+        ),
+      ],
+    );
+    path = result?.path;
+  }
+  // Using `package:file_picker` on other platforms.
+  else {
+    final result = await FilePicker.platform.pickFiles(
+      // Case sensitive paths on Android.
+      allowedExtensions: extensions == null
+          ? null
+          : [
+              ...extensions.map((e) => e.toLowerCase()).toList(),
+              ...extensions.map((e) => e.toUpperCase()).toList(),
+            ].toSet().toList(),
+      // Needed for [allowedExtensions].
+      type: extensions == null ? FileType.any : FileType.custom,
+    );
+    if ((result?.count ?? 0) > 0) {
+      path = result?.files.first.path;
+    }
+  }
+  return path == null ? null : File(path);
+}
+
+/// Prompts the user to select a folder.
+///
+/// [useNativePicker] only works on Android.
+/// Modern Android SDK 30+ are strictier about file access & enforce Scoped Storage.
+/// This means that native file picker cannot pick the root phone or SD card directory & the downloads folder.
+///
+/// To address this issue with directory selection for file indexing, a custom file picker is used, which is entirely Flutter based.
+///
+Future<Directory?> pickDirectory({
+  bool useNativePicker = false,
+}) async {
+  Directory? directory;
+  if (Platform.isWindows) {
+    final picker = DirectoryPicker();
+    directory = picker.getDirectory();
+  } else if (Platform.isLinux) {
+    final path = await getDirectoryPath();
+    if (path != null) {
+      directory = Directory(path);
+    }
+  }
+  // Using `package:file_picker` on other platforms.
+  else {
+    if (useNativePicker) {
+      final path = await FilePicker.platform.getDirectoryPath();
+      if (path != null) {
+        directory = Directory(path);
+      }
+    } else {
+      return showGeneralDialog(
+        context: navigatorKey.currentContext!,
+        useRootNavigator: true,
+        barrierDismissible: false,
+        barrierColor: Colors.transparent,
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            DirectoryPickerScreen(),
+      );
+    }
+  }
+  return directory;
 }
 
 Future<void> showAddToPlaylistDialog(

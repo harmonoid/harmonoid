@@ -645,97 +645,124 @@ class AlbumTile extends StatelessWidget {
             elevation:
                 Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
             margin: EdgeInsets.zero,
-            child: InkWell(
-              onTap: () async {
-                Playback.instance.interceptPositionChangeRebuilds = true;
-                try {
-                  await precacheImage(getAlbumArt(album), context);
-                } catch (exception, stacktrace) {
-                  debugPrint(exception.toString());
-                  debugPrint(stacktrace.toString());
-                }
-                Navigator.of(context).push(
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        FadeThroughTransition(
-                      fillColor: Colors.transparent,
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      child: AlbumScreen(
-                        album: album,
-                      ),
-                    ),
-                    transitionDuration: Duration(milliseconds: 300),
-                    reverseTransitionDuration: Duration(milliseconds: 300),
+            child: ContextMenuArea(
+              onPressed: (e) async {
+                final result = await showMenu(
+                  context: context,
+                  constraints: BoxConstraints(
+                    maxWidth: double.infinity,
+                  ),
+                  position: RelativeRect.fromLTRB(
+                    e.position.dx,
+                    e.position.dy,
+                    MediaQuery.of(context).size.width,
+                    MediaQuery.of(context).size.width,
+                  ),
+                  items: albumPopupMenuItems(
+                    album,
+                    context,
                   ),
                 );
-                Timer(const Duration(milliseconds: 400), () {
-                  Playback.instance.interceptPositionChangeRebuilds = false;
-                });
+                await albumPopupMenuHandle(
+                  context,
+                  album,
+                  result,
+                );
               },
-              child: Container(
-                height: height,
-                width: width,
-                child: Column(
-                  children: [
-                    ClipRect(
-                      child: ScaleOnHover(
-                        child: Hero(
-                          tag:
-                              'album_art_${album.albumName}_${album.albumArtistName}',
-                          child: ExtendedImage(
-                            image: getAlbumArt(album, small: true),
-                            fit: BoxFit.cover,
-                            height: width,
-                            width: width,
+              child: InkWell(
+                onTap: () async {
+                  Playback.instance.interceptPositionChangeRebuilds = true;
+                  try {
+                    await precacheImage(getAlbumArt(album), context);
+                  } catch (exception, stacktrace) {
+                    debugPrint(exception.toString());
+                    debugPrint(stacktrace.toString());
+                  }
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          FadeThroughTransition(
+                        fillColor: Colors.transparent,
+                        animation: animation,
+                        secondaryAnimation: secondaryAnimation,
+                        child: AlbumScreen(
+                          album: album,
+                        ),
+                      ),
+                      transitionDuration: Duration(milliseconds: 300),
+                      reverseTransitionDuration: Duration(milliseconds: 300),
+                    ),
+                  );
+                  Timer(const Duration(milliseconds: 400), () {
+                    Playback.instance.interceptPositionChangeRebuilds = false;
+                  });
+                },
+                child: Container(
+                  height: height,
+                  width: width,
+                  child: Column(
+                    children: [
+                      ClipRect(
+                        child: ScaleOnHover(
+                          child: Hero(
+                            tag:
+                                'album_art_${album.albumName}_${album.albumArtistName}',
+                            child: ExtendedImage(
+                              image: getAlbumArt(album, small: true),
+                              fit: BoxFit.cover,
+                              height: width,
+                              width: width,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8.0,
-                        ),
-                        width: width,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              album.albumName.overflow,
-                              style: Theme.of(context).textTheme.displayMedium,
-                              textAlign: TextAlign.left,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 2),
-                              child: Text(
-                                [
-                                  if (!['', kUnknownArtist]
-                                      .contains(album.albumArtistName))
-                                    album.albumArtistName,
-                                  if (!['', kUnknownYear].contains(album.year))
-                                    album.year,
-                                ].join(' • '),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displaySmall
-                                    ?.copyWith(
-                                      fontSize: 12.0,
-                                    ),
-                                maxLines: 1,
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.0,
+                          ),
+                          width: width,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                album.albumName.overflow,
+                                style:
+                                    Theme.of(context).textTheme.displayMedium,
                                 textAlign: TextAlign.left,
+                                maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                            ),
-                          ],
+                              Padding(
+                                padding: EdgeInsets.only(top: 2),
+                                child: Text(
+                                  [
+                                    if (!['', kUnknownArtist]
+                                        .contains(album.albumArtistName))
+                                      album.albumArtistName,
+                                    if (!['', kUnknownYear]
+                                        .contains(album.year))
+                                      album.year,
+                                  ].join(' • '),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displaySmall
+                                      ?.copyWith(
+                                        fontSize: 12.0,
+                                      ),
+                                  maxLines: 1,
+                                  textAlign: TextAlign.left,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

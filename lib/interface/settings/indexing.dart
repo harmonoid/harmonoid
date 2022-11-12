@@ -52,7 +52,6 @@ class IndexingState extends State<IndexingSetting>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 2.0),
             // Mobile specific layout.
             if (isMobile) ...[
               ListTile(

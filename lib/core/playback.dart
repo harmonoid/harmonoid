@@ -262,19 +262,19 @@ class Playback extends ChangeNotifier {
     }
   }
 
-  void add(List<Track> tracks) {
+  Future<void> add(List<Track> tracks) async {
     if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-      tracks.forEach((element) {
-        libmpv?.add(
+      for (final track in tracks) {
+        await libmpv?.add(
           Media(
-            LibmpvPluginUtils.redirect(element.uri).toString(),
-            extras: element.toJson(),
+            LibmpvPluginUtils.redirect(track.uri).toString(),
+            extras: track.toJson(),
           ),
         );
-      });
+      }
     }
     if (Platform.isAndroid || Platform.isIOS) {
-      audioService?.add(tracks);
+      await audioService?.add(tracks);
     }
   }
 
@@ -1193,21 +1193,26 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
     playback
       ..tracks = playback.tracks + tracks
       ..notify();
-    return (_player.audioSource as ConcatenatingAudioSource).addAll(
-      tracks
-          .map((e) => AudioSource.uri(LibmpvPluginUtils.redirect(e.uri),
-              tag: e.toJson()))
-          .toList(),
-    );
+    final source = _player.audioSource as ConcatenatingAudioSource;
+    final children = tracks
+        .map(
+          (e) => AudioSource.uri(
+            LibmpvPluginUtils.redirect(e.uri),
+            tag: e.toJson(),
+          ),
+        )
+        .toList();
+    return source.addAll(children);
   }
 
   @override
-  Future<void> addQueueItem(mediaItem) async {
+  Future<void> addQueueItem(MediaItem mediaItem) async {
     queue.add(queue.value + [mediaItem]);
     playback
       ..tracks = playback.tracks + [Track.fromJson(mediaItem.extras)]
       ..notify();
-    return (_player.audioSource as ConcatenatingAudioSource).add(
+    final source = _player.audioSource as ConcatenatingAudioSource;
+    return source.add(
       AudioSource.uri(
         LibmpvPluginUtils.redirect(Uri.parse(mediaItem.id)),
         tag: mediaItem.extras,
@@ -1216,7 +1221,7 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
   }
 
   @override
-  Future<void> setShuffleMode(shuffleMode) {
+  Future<void> setShuffleMode(AudioServiceShuffleMode shuffleMode) {
     return _player.setShuffleModeEnabled(
       {
         AudioServiceShuffleMode.all: true,
