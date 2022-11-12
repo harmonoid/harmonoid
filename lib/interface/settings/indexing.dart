@@ -28,7 +28,6 @@ class IndexingSetting extends StatefulWidget {
 class IndexingState extends State<IndexingSetting>
     with AutomaticKeepAliveClientMixin {
   List<Directory>? volumes;
-
   bool hovered = false;
 
   @override
@@ -53,7 +52,8 @@ class IndexingState extends State<IndexingSetting>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 2.0),
-            if (isMobile)
+            // Mobile specific layout.
+            if (isMobile) ...[
               ListTile(
                 dense: false,
                 onTap:
@@ -61,145 +61,43 @@ class IndexingState extends State<IndexingSetting>
                 title: Text(Language.instance.ADD_NEW_FOLDER),
                 subtitle: Text(Language.instance.ADD_NEW_FOLDER_SUBTITLE),
               ),
-            if (isMobile)
               ListTile(
                 dense: false,
-                onTap: controller.progress != controller.total
-                    ? showProgressDialog
-                    : () async {
+                onTap: controller.isCompleted
+                    ? () async {
                         Collection.instance.refresh(
                           onProgress: (progress, total, _) {
                             controller.set(progress, total);
                           },
                         );
-                      },
+                      }
+                    : showProgressDialog,
                 title: Text(Language.instance.REFRESH),
                 subtitle: Text(Language.instance.REFRESH_SUBTITLE),
               ),
-            if (isMobile)
               ListTile(
                 dense: false,
-                onTap: controller.progress != controller.total
-                    ? showProgressDialog
-                    : () async {
+                onTap: controller.isCompleted
+                    ? () async {
                         Collection.instance.index(
                           onProgress: (progress, total, _) {
                             controller.set(progress, total);
                           },
                         );
-                      },
+                      }
+                    : showProgressDialog,
                 title: Text(Language.instance.REINDEX),
                 subtitle: Text(Language.instance.REINDEX_SUBTITLE),
               ),
-            if (isMobile)
-              () {
-                final sizes = {
-                  0: '0 MB',
-                  512 * 1024: '512 KB',
-                  1024 * 1024: '1 MB ${Language.instance.RECOMMENDED_HINT}',
-                  2 * 1024 * 1024: '2 MB',
-                  5 * 1024 * 1024: '5 MB',
-                  10 * 1024 * 1024: '10 MB',
-                  20 * 1024 * 1024: '20 MB',
-                };
-                return ListTile(
-                  onTap: () async {
-                    int value = Configuration.instance.minimumFileSize;
-                    await showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text(Language.instance.MINIMUM_FILE_SIZE),
-                        contentPadding: EdgeInsets.only(top: 20.0),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Divider(
-                              height: 1.0,
-                              thickness: 1.0,
-                            ),
-                            ConstrainedBox(
-                              constraints: BoxConstraints(
-                                maxHeight:
-                                    MediaQuery.of(context).size.height / 2,
-                              ),
-                              child: StatefulBuilder(
-                                builder: (context, setState) =>
-                                    SingleChildScrollView(
-                                  child: Column(
-                                    children: sizes.entries
-                                        .map(
-                                          (e) => RadioListTile<int>(
-                                            groupValue: value,
-                                            value: e.key,
-                                            onChanged: (e) {
-                                              if (e != null) {
-                                                setState(() => value = e);
-                                              }
-                                            },
-                                            title: Text(
-                                              e.value,
-                                              style: isDesktop
-                                                  ? Theme.of(context)
-                                                      .textTheme
-                                                      .headlineMedium
-                                                  : null,
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const Divider(
-                              height: 1.0,
-                              thickness: 1.0,
-                            ),
-                          ],
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () async {
-                              Navigator.of(context).maybePop();
-                              if (controller.progress != controller.total) {
-                                showProgressDialog();
-                                return;
-                              }
-                              Collection.instance.minimumFileSize = value;
-                              await Configuration.instance.save(
-                                minimumFileSize: value,
-                              );
-                              setState(() {});
-                              await showShouldBeReindexedDialog();
-                            },
-                            child: Text(
-                              Language.instance.OK,
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: Navigator.of(context).maybePop,
-                            child: Text(
-                              Language.instance.CANCEL,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  dense: false,
-                  title: Text(Language.instance.MINIMUM_FILE_SIZE),
-                  subtitle: Text(
-                    '${sizes[Configuration.instance.minimumFileSize] == null ? () {
-                        if (Configuration.instance.minimumFileSize >
-                            1024 * 1024) {
-                          return '${(Configuration.instance.minimumFileSize / (1024 * 1024)).toStringAsFixed(2)} MB';
-                        } else {
-                          return '${(Configuration.instance.minimumFileSize / 1024).toStringAsFixed(2)} KB';
-                        }
-                      }() : sizes[Configuration.instance.minimumFileSize]}',
-                  ),
-                );
-              }(),
+              ListTile(
+                onTap: showEditMinimumFileSizeDialog,
+                dense: false,
+                title: Text(Language.instance.MINIMUM_FILE_SIZE),
+                subtitle: Text(
+                  Configuration.instance.minimumFileSize.asFormattedByteSize,
+                ),
+              ),
+            ],
             Container(
               margin: EdgeInsets.only(left: 8.0, right: 8.0),
               child: Column(
@@ -220,6 +118,7 @@ class IndexingState extends State<IndexingSetting>
                         ),
                       ],
                     ),
+                  // Currently selected directories.
                   SizedBox(height: 12.0),
                   Container(
                     margin: EdgeInsets.only(left: 8.0),
@@ -236,11 +135,12 @@ class IndexingState extends State<IndexingSetting>
                           ...Configuration.instance.collectionDirectories
                               .map(
                                 (directory) => Container(
-                                  width: isMobile
-                                      ? MediaQuery.of(context).size.width
-                                      : 572.0,
-                                  height: isMobile ? 56.0 : 40.0,
-                                  margin: EdgeInsets.symmetric(vertical: 2.0),
+                                  width: isDesktop
+                                      ? 572.0
+                                      : MediaQuery.of(context).size.width,
+                                  height: isDesktop ? 40.0 : 56.0,
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 2.0),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -267,11 +167,11 @@ class IndexingState extends State<IndexingSetting>
                                                     Language.instance.SD_CARD,
                                                   )
                                                   .overflow,
-                                          style: isMobile
-                                              ? Theme.of(context)
+                                          style: isDesktop
+                                              ? null
+                                              : Theme.of(context)
                                                   .textTheme
-                                                  .titleMedium
-                                              : null,
+                                                  .titleMedium,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -349,84 +249,33 @@ class IndexingState extends State<IndexingSetting>
                                 ),
                               )
                               .toList(),
-                        if (isDesktop) const SizedBox(height: 8.0),
-                        if (controller.progress != controller.total &&
-                            isDesktop)
-                          Container(
-                            height: 56.0,
-                            width: isDesktop
-                                ? 320.0
-                                : MediaQuery.of(context).size.width,
-                            alignment: Alignment.centerLeft,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                controller.progress == null
-                                    ? Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            Language.instance.DISCOVERING_FILES,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .displaySmall,
-                                          ),
-                                          Container(
-                                            margin: EdgeInsets.only(top: 6.0),
-                                            height: 4.0,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width -
-                                                32.0,
-                                            child: LinearProgressIndicator(
-                                              value: null,
-                                              backgroundColor: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary
-                                                  .withOpacity(0.2),
-                                              valueColor:
-                                                  AlwaysStoppedAnimation(
-                                                Theme.of(context)
-                                                    .colorScheme
-                                                    .primary,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    : TweenAnimationBuilder(
-                                        tween: Tween<double>(
-                                          begin: 0,
-                                          end: (controller.progress ?? 0) /
-                                              controller.total,
-                                        ),
-                                        duration: Duration(milliseconds: 400),
-                                        child: Text(
-                                          Language.instance
-                                              .SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
-                                              .replaceAll(
-                                                'NUMBER_STRING',
-                                                controller.progress.toString(),
-                                              )
-                                              .replaceAll(
-                                                'TOTAL_STRING',
-                                                controller.total.toString(),
-                                              ),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .displaySmall,
-                                        ),
-                                        builder: (_, dynamic value, child) =>
-                                            Column(
+                        // Show progress bar on desktop only.
+                        if (isDesktop) ...[
+                          const SizedBox(height: 8.0),
+                          if (!controller.isCompleted)
+                            Container(
+                              height: 56.0,
+                              width: 324.0,
+                              alignment: Alignment.centerLeft,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  controller.progress == null
+                                      ? Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            child!,
+                                            Text(
+                                              Language
+                                                  .instance.DISCOVERING_FILES,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .displaySmall,
+                                            ),
                                             Container(
-                                              margin: EdgeInsets.only(
-                                                top: 8.0,
+                                              margin: const EdgeInsets.only(
+                                                top: 6.0,
                                               ),
                                               height: 4.0,
                                               width: MediaQuery.of(context)
@@ -434,7 +283,7 @@ class IndexingState extends State<IndexingSetting>
                                                       .width -
                                                   32.0,
                                               child: LinearProgressIndicator(
-                                                value: value,
+                                                value: null,
                                                 backgroundColor:
                                                     Theme.of(context)
                                                         .colorScheme
@@ -449,56 +298,109 @@ class IndexingState extends State<IndexingSetting>
                                               ),
                                             ),
                                           ],
+                                        )
+                                      : TweenAnimationBuilder(
+                                          tween: Tween<double>(
+                                            begin: 0,
+                                            end: (controller.progress ?? 0) /
+                                                controller.total,
+                                          ),
+                                          duration: Duration(milliseconds: 400),
+                                          child: Text(
+                                            Language.instance
+                                                .SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
+                                                .replaceAll(
+                                                  'NUMBER_STRING',
+                                                  controller.progress
+                                                      .toString(),
+                                                )
+                                                .replaceAll(
+                                                  'TOTAL_STRING',
+                                                  controller.total.toString(),
+                                                ),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displaySmall,
+                                          ),
+                                          builder: (_, dynamic value, child) =>
+                                              Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              child!,
+                                              Container(
+                                                margin: const EdgeInsets.only(
+                                                  top: 8.0,
+                                                ),
+                                                height: 4.0,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width -
+                                                    32.0,
+                                                child: LinearProgressIndicator(
+                                                  value: value,
+                                                  backgroundColor:
+                                                      Theme.of(context)
+                                                          .colorScheme
+                                                          .primary
+                                                          .withOpacity(0.2),
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation(
+                                                    Theme.of(context)
+                                                        .colorScheme
+                                                        .primary,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
+                        ],
                       ],
                     ),
                   ),
-                  if (isDesktop)
+                  // Desktop specific layout.
+                  if (isDesktop) ...[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         TextButton(
-                          onPressed: controller.progress != controller.total
-                              ? showProgressDialog
-                              : () async {
+                          onPressed: controller.isCompleted
+                              ? () async {
                                   Collection.instance.refresh(
                                     onProgress: (progress, total, _) {
                                       controller.set(progress, total);
                                     },
                                   );
-                                },
+                                }
+                              : showProgressDialog,
                           child: Text(
                             Language.instance.REFRESH.toUpperCase(),
                           ),
                         ),
                         const SizedBox(width: 4.0),
                         TextButton(
-                          onPressed: controller.progress != controller.total
-                              ? showProgressDialog
-                              : () async {
+                          onPressed: controller.isCompleted
+                              ? () async {
                                   Collection.instance.index(
                                     onProgress: (progress, total, _) {
                                       controller.set(progress, total);
                                     },
                                   );
-                                },
+                                }
+                              : showProgressDialog,
                           child: Text(
                             Language.instance.REINDEX.toUpperCase(),
                           ),
                         ),
                       ],
                     ),
-                  if (isDesktop)
                     Padding(
-                      padding: EdgeInsets.only(
-                        left: 8.0,
-                        top: 0.0,
-                      ),
+                      padding: const EdgeInsets.only(left: 8.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -515,109 +417,15 @@ class IndexingState extends State<IndexingSetting>
                         ],
                       ),
                     ),
-                  if (isDesktop) ...[
                     const SizedBox(height: 8.0),
                     TextButton(
-                      onPressed: () async {
-                        final sizes = {
-                          0: '0 MB',
-                          512 * 1024: '512 KB',
-                          1024 * 1024:
-                              '1 MB ${Language.instance.RECOMMENDED_HINT}',
-                          2 * 1024 * 1024: '2 MB',
-                          5 * 1024 * 1024: '5 MB',
-                          10 * 1024 * 1024: '10 MB',
-                          20 * 1024 * 1024: '20 MB',
-                        };
-                        int value = Configuration.instance.minimumFileSize;
-                        await showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: Text(Language.instance.MINIMUM_FILE_SIZE),
-                            contentPadding: EdgeInsets.only(top: 20.0),
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Divider(
-                                  height: 1.0,
-                                  thickness: 1.0,
-                                ),
-                                ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxHeight: 420.0,
-                                  ),
-                                  child: StatefulBuilder(
-                                    builder: (context, setState) =>
-                                        SingleChildScrollView(
-                                      child: Column(
-                                        children: sizes.entries
-                                            .map(
-                                              (e) => RadioListTile<int>(
-                                                groupValue: value,
-                                                value: e.key,
-                                                onChanged: (e) {
-                                                  if (e != null) {
-                                                    setState(() => value = e);
-                                                  }
-                                                },
-                                                title: Text(
-                                                  e.value,
-                                                  style: isDesktop
-                                                      ? Theme.of(context)
-                                                          .textTheme
-                                                          .headlineMedium
-                                                      : null,
-                                                ),
-                                              ),
-                                            )
-                                            .toList(),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const Divider(
-                                  height: 1.0,
-                                  thickness: 1.0,
-                                ),
-                              ],
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () async {
-                                  Navigator.of(context).maybePop();
-                                  if (controller.progress != controller.total) {
-                                    showProgressDialog();
-                                    return;
-                                  }
-                                  Collection.instance.minimumFileSize = value;
-                                  await Configuration.instance.save(
-                                    minimumFileSize: value,
-                                  );
-                                  setState(() {});
-                                },
-                                child: Text(
-                                  Language.instance.OK,
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: Navigator.of(context).maybePop,
-                                child: Text(
-                                  Language.instance.CANCEL,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
+                      onPressed: showEditMinimumFileSizeDialog,
                       child: Text(
                         Language.instance.EDIT_MINIMUM_FILE_SIZE.toUpperCase(),
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(
-                        left: 8.0,
-                        top: 0.0,
-                      ),
+                      padding: const EdgeInsets.only(left: 8.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -659,9 +467,9 @@ class IndexingState extends State<IndexingSetting>
     }
   }
 
-  void showProgressDialog() {
+  Future<void> showProgressDialog() {
     if (!CollectionRefresh.instance.isCompleted) {
-      showDialog(
+      return showDialog(
         context: context,
         builder: (context) => AlertDialog(
           backgroundColor: Theme.of(context).cardTheme.color,
@@ -681,24 +489,109 @@ class IndexingState extends State<IndexingSetting>
         ),
       );
     }
+    return Future.value();
   }
 
-  Future<void> showShouldBeReindexedDialog() {
-    return showDialog(
+  Future<void> showEditMinimumFileSizeDialog() async {
+    int value = Configuration.instance.minimumFileSize;
+    await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: Theme.of(context).cardTheme.color,
-        title: Text(
-          Language.instance.WARNING,
-        ),
-        content: Text(
-          Language.instance.MINIMUM_FILE_SIZE_WARNING,
-          style: Theme.of(context).textTheme.displaySmall,
+        title: Text(Language.instance.MINIMUM_FILE_SIZE),
+        contentPadding: const EdgeInsets.only(top: 20.0),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Divider(
+              height: 1.0,
+              thickness: 1.0,
+            ),
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height / 2,
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: StatefulBuilder(
+                  builder: (context, setState) => SingleChildScrollView(
+                    child: Column(
+                      children: kDefaultMinimumFileSizes.entries
+                          .map(
+                            (e) => RadioListTile<int>(
+                              groupValue: value,
+                              value: e.key,
+                              onChanged: (e) {
+                                if (e != null) {
+                                  setState(() => value = e);
+                                }
+                              },
+                              title: Text(
+                                '${e.value} ${e.key == 1024 * 1024 ? Language.instance.RECOMMENDED_HINT : ''}',
+                                style: isDesktop
+                                    ? Theme.of(context).textTheme.headlineMedium
+                                    : null,
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const Divider(
+              height: 1.0,
+              thickness: 1.0,
+            ),
+          ],
         ),
         actions: [
           TextButton(
-            onPressed: Navigator.of(context).pop,
-            child: Text(Language.instance.OK),
+            onPressed: () async {
+              Navigator.of(context).maybePop();
+              // Do not proceed if some indexing related operation is going on.
+              if (CollectionRefresh.instance.progress !=
+                  CollectionRefresh.instance.total) {
+                showProgressDialog();
+                return;
+              }
+              // Save the new value to `package:media_library` & cache.
+              await Collection.instance.setMinimumFileSize(value);
+              await Configuration.instance.save(
+                minimumFileSize: value,
+              );
+              // Re-render.
+              setState(() {});
+              // Show recommendation to perform a full re-indexing.
+              await showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  backgroundColor: Theme.of(context).cardTheme.color,
+                  title: Text(
+                    Language.instance.WARNING,
+                  ),
+                  content: Text(
+                    Language.instance.MINIMUM_FILE_SIZE_WARNING,
+                    style: Theme.of(context).textTheme.displaySmall,
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: Navigator.of(context).pop,
+                      child: Text(Language.instance.OK),
+                    ),
+                  ],
+                ),
+              );
+            },
+            child: Text(
+              Language.instance.OK,
+            ),
+          ),
+          TextButton(
+            onPressed: Navigator.of(context).maybePop,
+            child: Text(
+              Language.instance.CANCEL,
+            ),
           ),
         ],
       ),
@@ -707,4 +600,35 @@ class IndexingState extends State<IndexingSetting>
 
   @override
   bool get wantKeepAlive => true;
+}
+
+/// Default values available for setting the minimum file size.
+/// For granular control, users may edit JSON directly.
+const kDefaultMinimumFileSizes = {
+  0: '0 MB',
+  512 * 1024: '512 KB',
+  1024 * 1024: '1 MB',
+  2 * 1024 * 1024: '2 MB',
+  5 * 1024 * 1024: '5 MB',
+  10 * 1024 * 1024: '10 MB',
+  20 * 1024 * 1024: '20 MB',
+};
+
+extension on int {
+  /// Formats the size in bytes to a human readable string e.g. 2 KB or 5 MB etc.
+  ///
+  /// If the value is found in [kDefaultMinimumFileSizes], then prefers that.
+  /// Otherwise, returns calculated value with truncated to 2 decimal places.
+  ///
+  String get asFormattedByteSize {
+    final result = kDefaultMinimumFileSizes[this];
+    if (result == null) {
+      if (this > 1000 * 1000) {
+        return '${(this / (1000 * 1000)).toStringAsFixed(2)} MB';
+      } else {
+        return '${(this / 1000 * 1000).toStringAsFixed(2)} KB';
+      }
+    }
+    return result;
+  }
 }
