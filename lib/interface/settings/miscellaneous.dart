@@ -25,6 +25,16 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          CorrectedSwitchListTile(
+            title: Language.instance.DISABLE_ANIMATIONS,
+            subtitle: Language.instance.DISABLE_ANIMATIONS,
+            onChanged: (_) => Configuration.instance
+                .save(
+                  disableAnimations: !Configuration.instance.disableAnimations,
+                )
+                .then((_) => setState(() {})),
+            value: Configuration.instance.disableAnimations,
+          ),
           if (isMobile)
             CorrectedSwitchListTile(
               title: Language.instance.NOTIFICATION_LYRICS_TITLE,
@@ -186,6 +196,20 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
               value: Configuration
                   .instance.mobileEnableNowPlayingScreenRippleEffect,
             ),
+          CorrectedSwitchListTile(
+            title: Language
+                .instance.ADD_LIBRARY_TO_PLAYLIST_WHEN_PLAYING_FROM_TRACKS_TAB,
+            subtitle: Language
+                .instance.ADD_LIBRARY_TO_PLAYLIST_WHEN_PLAYING_FROM_TRACKS_TAB,
+            onChanged: (_) => Configuration.instance
+                .save(
+                  addLibraryToPlaylistWhenPlayingFromTracksTab: !Configuration
+                      .instance.addLibraryToPlaylistWhenPlayingFromTracksTab,
+                )
+                .then((_) => setState(() {})),
+            value: Configuration
+                .instance.addLibraryToPlaylistWhenPlayingFromTracksTab,
+          ),
         ],
       ),
     );

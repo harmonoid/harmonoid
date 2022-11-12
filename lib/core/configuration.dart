@@ -144,7 +144,7 @@ class Configuration extends ConfigurationKeys {
     Set<AlbumHashCodeParameter>? albumHashCodeParameters,
     Map<String, String>? userLibmpvOptions,
     bool? disableAnimations,
-    bool? loadAsPlaylistWhenPlayingFromTracksTab,
+    bool? addLibraryToPlaylistWhenPlayingFromTracksTab,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -269,9 +269,9 @@ class Configuration extends ConfigurationKeys {
     if (disableAnimations != null) {
       this.disableAnimations = disableAnimations;
     }
-    if (loadAsPlaylistWhenPlayingFromTracksTab != null) {
-      this.loadAsPlaylistWhenPlayingFromTracksTab =
-          loadAsPlaylistWhenPlayingFromTracksTab;
+    if (addLibraryToPlaylistWhenPlayingFromTracksTab != null) {
+      this.addLibraryToPlaylistWhenPlayingFromTracksTab =
+          addLibraryToPlaylistWhenPlayingFromTracksTab;
     }
     await storage.write(
       {
@@ -323,8 +323,8 @@ class Configuration extends ConfigurationKeys {
             this.albumHashCodeParameters.map((e) => e.index).toList(),
         'userLibmpvOptions': this.userLibmpvOptions,
         'disableAnimations': this.disableAnimations,
-        'loadAsPlaylistWhenPlayingFromTracksTab':
-            this.loadAsPlaylistWhenPlayingFromTracksTab,
+        'addLibraryToPlaylistWhenPlayingFromTracksTab':
+            this.addLibraryToPlaylistWhenPlayingFromTracksTab,
       },
     );
   }
@@ -395,8 +395,8 @@ class Configuration extends ConfigurationKeys {
     );
     userLibmpvOptions = Map<String, String>.from(current['userLibmpvOptions']);
     disableAnimations = current['disableAnimations'];
-    loadAsPlaylistWhenPlayingFromTracksTab =
-        current['loadAsPlaylistWhenPlayingFromTracksTab'];
+    addLibraryToPlaylistWhenPlayingFromTracksTab =
+        current['addLibraryToPlaylistWhenPlayingFromTracksTab'];
   }
 
   static Future<Map<String, dynamic>>
@@ -503,7 +503,7 @@ class Configuration extends ConfigurationKeys {
             ],
             'userLibmpvOptions': <String, String>{},
             'disableAnimations': false,
-            'loadAsPlaylistWhenPlayingFromTracksTab': false,
+            'addLibraryToPlaylistWhenPlayingFromTracksTab': false,
           };
 }
 
@@ -549,5 +549,5 @@ abstract class ConfigurationKeys {
   late Set<AlbumHashCodeParameter> albumHashCodeParameters;
   late Map<String, String> userLibmpvOptions;
   late bool disableAnimations;
-  late bool loadAsPlaylistWhenPlayingFromTracksTab;
+  late bool addLibraryToPlaylistWhenPlayingFromTracksTab;
 }

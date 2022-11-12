@@ -10,6 +10,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:media_library/media_library.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/collection.dart';
@@ -419,23 +420,33 @@ class IndexingState extends State<IndexingSetting>
                     ),
                     const SizedBox(height: 8.0),
                     TextButton(
+                      onPressed: showEditAlbumParametersDialog,
+                      child: Text(
+                        Language.instance.EDIT_ALBUM_PARAMETERS_TITLE
+                            .toUpperCase(),
+                      ),
+                    ),
+                    const SizedBox(height: 8.0),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(
+                        Language.instance.EDIT_ALBUM_PARAMETERS_SUBTITLE,
+                        style: Theme.of(context).textTheme.displaySmall,
+                      ),
+                    ),
+                    const SizedBox(height: 8.0),
+                    TextButton(
                       onPressed: showEditMinimumFileSizeDialog,
                       child: Text(
                         Language.instance.EDIT_MINIMUM_FILE_SIZE.toUpperCase(),
                       ),
                     ),
+                    const SizedBox(height: 8.0),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 8.0),
-                          Text(
-                            Language.instance.MINIMUM_FILE_SIZE_WARNING,
-                            style: Theme.of(context).textTheme.displaySmall,
-                          ),
-                          const SizedBox(height: 8.0),
-                        ],
+                      child: Text(
+                        Language.instance.MINIMUM_FILE_SIZE_WARNING,
+                        style: Theme.of(context).textTheme.displaySmall,
                       ),
                     ),
                   ],
@@ -492,9 +503,9 @@ class IndexingState extends State<IndexingSetting>
     return Future.value();
   }
 
-  Future<void> showEditMinimumFileSizeDialog() async {
+  Future<void> showEditMinimumFileSizeDialog() {
     int value = Configuration.instance.minimumFileSize;
-    await showDialog(
+    return showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(Language.instance.MINIMUM_FILE_SIZE),
@@ -550,9 +561,8 @@ class IndexingState extends State<IndexingSetting>
             onPressed: () async {
               Navigator.of(context).maybePop();
               // Do not proceed if some indexing related operation is going on.
-              if (CollectionRefresh.instance.progress !=
-                  CollectionRefresh.instance.total) {
-                showProgressDialog();
+              if (!CollectionRefresh.instance.isCompleted) {
+                await showProgressDialog();
                 return;
               }
               // Save the new value to `package:media_library` & cache.
@@ -581,6 +591,111 @@ class IndexingState extends State<IndexingSetting>
                     ),
                   ],
                 ),
+              );
+            },
+            child: Text(
+              Language.instance.OK,
+            ),
+          ),
+          TextButton(
+            onPressed: Navigator.of(context).maybePop,
+            child: Text(
+              Language.instance.CANCEL,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> showEditAlbumParametersDialog() {
+    Set<AlbumHashCodeParameter> parameters =
+        Collection.instance.albumHashCodeParameters;
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(Language.instance.EDIT_ALBUM_PARAMETERS_TITLE),
+        contentPadding: const EdgeInsets.only(top: 20.0),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Divider(
+              height: 1.0,
+              thickness: 1.0,
+            ),
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height / 2,
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: StatefulBuilder(
+                  builder: (context, setState) => SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        // Always enable identification based on the album's title.
+                        ListTile(
+                          enabled: false,
+                          leading: Checkbox(
+                            value: true,
+                            onChanged: null,
+                          ),
+                          title: Text(
+                            Language.instance.TITLE,
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                        ),
+                        ...AlbumHashCodeParameter.values.skip(1).map((e) {
+                          void edit() async {
+                            if (parameters.contains(e)) {
+                              parameters = parameters.difference({e});
+                            } else {
+                              parameters = parameters.union({e});
+                            }
+                            setState(() {});
+                          }
+
+                          return ListTile(
+                            leading: Checkbox(
+                              value: parameters.contains(e),
+                              onChanged: (_) => edit(),
+                            ),
+                            onTap: edit,
+                            title: Text(
+                              {
+                                AlbumHashCodeParameter.albumArtistName:
+                                    Language.instance.ALBUM_ARTIST,
+                                AlbumHashCodeParameter.year:
+                                    Language.instance.YEAR,
+                              }[e]!,
+                              style: Theme.of(context).textTheme.headlineMedium,
+                            ),
+                          );
+                        })
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const Divider(
+              height: 1.0,
+              thickness: 1.0,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).maybePop();
+              if (!CollectionRefresh.instance.isCompleted) {
+                await showProgressDialog();
+                return;
+              }
+              debugPrint(parameters.toString());
+              await Collection.instance.setAlbumHashCodeParameters(parameters);
+              await Configuration.instance.save(
+                albumHashCodeParameters: parameters,
               );
             },
             child: Text(

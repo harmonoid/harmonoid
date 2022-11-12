@@ -25,16 +25,12 @@ class ThemeSetting extends StatelessWidget {
             child: Consumer<Visuals>(
               builder: (context, visuals, _) => Column(
                 children: [
-                  if (Platform.isAndroid ||
-                      Platform.isIOS ||
-                      Platform.isWindows)
+                  if (Platform.isWindows)
                     RadioListTile(
                       value: ThemeMode.system,
                       title: Text(
                         Language.instance.THEME_MODE_SYSTEM,
-                        style: isDesktop
-                            ? Theme.of(context).textTheme.headlineMedium
-                            : null,
+                        style: Theme.of(context).textTheme.headlineMedium,
                       ),
                       groupValue: visuals.themeMode,
                       onChanged: (dynamic themeMode) => visuals.update(
@@ -46,9 +42,7 @@ class ThemeSetting extends StatelessWidget {
                     value: ThemeMode.light,
                     title: Text(
                       Language.instance.THEME_MODE_LIGHT,
-                      style: isDesktop
-                          ? Theme.of(context).textTheme.headlineMedium
-                          : null,
+                      style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     groupValue: visuals.themeMode,
                     onChanged: (dynamic themeMode) => visuals.update(
@@ -60,9 +54,7 @@ class ThemeSetting extends StatelessWidget {
                     value: ThemeMode.dark,
                     title: Text(
                       Language.instance.THEME_MODE_DARK,
-                      style: isDesktop
-                          ? Theme.of(context).textTheme.headlineMedium
-                          : null,
+                      style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     groupValue: visuals.themeMode,
                     onChanged: (dynamic themeMode) => visuals.update(

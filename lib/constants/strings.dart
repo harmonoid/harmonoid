@@ -4,6 +4,7 @@
 class Strings {
   late String ABOUT_TITLE;
   late String ADD;
+  late String ADD_LIBRARY_TO_PLAYLIST_WHEN_PLAYING_FROM_TRACKS_TAB;
   late String ADD_NEW_FOLDER;
   late String ADD_NEW_FOLDER_SUBTITLE;
   late String ADD_THIS_FOLDER;
@@ -62,6 +63,7 @@ class Strings {
   late String DATE_ADDED;
   late String DELETE;
   late String DESCENDING;
+  late String DISABLE_ANIMATIONS;
   late String DISABLE_VOLUME_BOOST;
   late String DISCOVERING_FILES;
   late String DISPLAY_AUDIO_FORMAT;
@@ -70,6 +72,8 @@ class Strings {
   late String DOWNLOAD;
   late String DOWNLOAD_UPDATE;
   late String EDIT;
+  late String EDIT_ALBUM_PARAMETERS_SUBTITLE;
+  late String EDIT_ALBUM_PARAMETERS_TITLE;
   late String EDIT_DETAILS;
   late String EDIT_MINIMUM_FILE_SIZE;
   late String ENABLE_125_SCALING;
@@ -240,6 +244,7 @@ class Strings {
   late String THEME_MODE_DARK;
   late String THEME_MODE_LIGHT;
   late String THEME_MODE_SYSTEM;
+  late String TITLE;
   late String TRACK;
   late String TRACKS_FROM_ARTIST;
   late String TRACK_NUMBER;

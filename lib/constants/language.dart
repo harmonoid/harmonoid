@@ -84,6 +84,7 @@ class Language extends Strings with ChangeNotifier {
     final map = json.decode(data);
     ABOUT_TITLE = map['ABOUT_TITLE']!;
     ADD = map['ADD']!;
+    ADD_LIBRARY_TO_PLAYLIST_WHEN_PLAYING_FROM_TRACKS_TAB = map['ADD_LIBRARY_TO_PLAYLIST_WHEN_PLAYING_FROM_TRACKS_TAB']!;
     ADD_NEW_FOLDER = map['ADD_NEW_FOLDER']!;
     ADD_NEW_FOLDER_SUBTITLE = map['ADD_NEW_FOLDER_SUBTITLE']!;
     ADD_THIS_FOLDER = map['ADD_THIS_FOLDER']!;
@@ -142,6 +143,7 @@ class Language extends Strings with ChangeNotifier {
     DATE_ADDED = map['DATE_ADDED']!;
     DELETE = map['DELETE']!;
     DESCENDING = map['DESCENDING']!;
+    DISABLE_ANIMATIONS = map['DISABLE_ANIMATIONS']!;
     DISABLE_VOLUME_BOOST = map['DISABLE_VOLUME_BOOST']!;
     DISCOVERING_FILES = map['DISCOVERING_FILES']!;
     DISPLAY_AUDIO_FORMAT = map['DISPLAY_AUDIO_FORMAT']!;
@@ -150,6 +152,8 @@ class Language extends Strings with ChangeNotifier {
     DOWNLOAD = map['DOWNLOAD']!;
     DOWNLOAD_UPDATE = map['DOWNLOAD_UPDATE']!;
     EDIT = map['EDIT']!;
+    EDIT_ALBUM_PARAMETERS_SUBTITLE = map['EDIT_ALBUM_PARAMETERS_SUBTITLE']!;
+    EDIT_ALBUM_PARAMETERS_TITLE = map['EDIT_ALBUM_PARAMETERS_TITLE']!;
     EDIT_DETAILS = map['EDIT_DETAILS']!;
     EDIT_MINIMUM_FILE_SIZE = map['EDIT_MINIMUM_FILE_SIZE']!;
     ENABLE_125_SCALING = map['ENABLE_125_SCALING']!;
@@ -320,6 +324,7 @@ class Language extends Strings with ChangeNotifier {
     THEME_MODE_DARK = map['THEME_MODE_DARK']!;
     THEME_MODE_LIGHT = map['THEME_MODE_LIGHT']!;
     THEME_MODE_SYSTEM = map['THEME_MODE_SYSTEM']!;
+    TITLE = map['TITLE']!;
     TRACK = map['TRACK']!;
     TRACKS_FROM_ARTIST = map['TRACKS_FROM_ARTIST']!;
     TRACK_NUMBER = map['TRACK_NUMBER']!;

@@ -16,16 +16,17 @@ import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 
-import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/state/desktop_now_playing_controller.dart';
+import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/interface/collection/artist.dart';
+import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/constants/language.dart';
 
 class TrackTab extends StatefulWidget {
   TrackTab({Key? key}) : super(key: key);
@@ -88,11 +89,21 @@ class _TrackTabState extends State<TrackTab> {
                     children: [
                       desktop.ListTable(
                         controller: controller,
-                        onPressed: (index, _) {
-                          Playback.instance.open(
-                            collection.tracks,
-                            index: index,
-                          );
+                        onPressed: (i, _) {
+                          if (Configuration.instance
+                              .addLibraryToPlaylistWhenPlayingFromTracksTab) {
+                            Playback.instance.open(
+                              collection.tracks,
+                              index: i,
+                            );
+                          } else {
+                            Playback.instance.open(
+                              [
+                                collection.tracks[i],
+                              ],
+                              index: 0,
+                            );
+                          }
                         },
                         onSecondaryPress: (index, position) async {
                           final result = await showMenu(
@@ -171,50 +182,18 @@ class _TrackTabState extends State<TrackTab> {
                               : Alignment.centerLeft,
                           child: () {
                             if ([0, 1, 4].contains(property)) {
-                              return ContextMenuArea(
-                                onPressed: (e) async {
-                                  final result = await showMenu(
-                                    context: context,
-                                    constraints: BoxConstraints(
-                                      maxWidth: double.infinity,
-                                    ),
-                                    position: RelativeRect.fromLTRB(
-                                      e.position.dx,
-                                      e.position.dy,
-                                      MediaQuery.of(context).size.width,
-                                      MediaQuery.of(context).size.width,
-                                    ),
-                                    items: trackPopupMenuItems(
-                                        collection.tracks[index], context),
-                                  );
-                                  await trackPopupMenuHandle(
-                                    context,
-                                    collection.tracks[index],
-                                    result,
-                                  );
-                                },
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Playback.instance.open(
-                                      collection.tracks,
-                                      index: index,
-                                    );
-                                  },
-                                  child: Text(
-                                    [
-                                      '${collection.tracks[index].trackNumber}',
-                                      collection.tracks[index].trackName,
-                                      collection.tracks[index].trackArtistNames
-                                          .join(', '),
-                                      collection.tracks[index].albumName,
-                                      collection.tracks[index].year.toString(),
-                                    ][property],
-                                    overflow: TextOverflow.ellipsis,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineMedium,
-                                  ),
-                                ),
+                              return Text(
+                                [
+                                  '${collection.tracks[index].trackNumber}',
+                                  collection.tracks[index].trackName,
+                                  collection.tracks[index].trackArtistNames
+                                      .join(', '),
+                                  collection.tracks[index].albumName,
+                                  collection.tracks[index].year.toString(),
+                                ][property],
+                                overflow: TextOverflow.ellipsis,
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
                               );
                             } else if (property == 2) {
                               final elements = <TextSpan>[];
