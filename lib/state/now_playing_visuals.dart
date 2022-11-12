@@ -8,8 +8,8 @@
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:uuid/uuid.dart';
+import 'package:safe_local_storage/safe_local_storage.dart';
 
-import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/core/configuration.dart';
 
 /// This class handles the visuals shown in the [NowPlayingScreen].

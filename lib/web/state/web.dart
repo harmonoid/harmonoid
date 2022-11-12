@@ -11,6 +11,7 @@ import 'package:media_engine/media_engine.dart';
 import 'package:media_library/media_library.dart' as media;
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
+import 'package:harmonoid/utils/helpers.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
 
@@ -37,7 +38,9 @@ class Web {
     if (value is Track) {
       final id = LibmpvPluginUtils.redirect(value.uri).queryParameters['id']!;
       Playback.instance.open(
-        [media.Track.fromWebTrack(value.toJson())],
+        [
+          Helpers.parseWebTrack(value.toJson()),
+        ],
       );
       bool reload = Configuration.instance.webRecent.isEmpty;
       await Configuration.instance.save(
@@ -46,20 +49,19 @@ class Web {
         ],
       );
       if (reload) {
-        debugPrint('Web.open: pagingController.refresh');
         pagingController.refresh();
         refreshCallback?.call();
       }
+      final next = await YTMClient.next(id);
       Playback.instance.add(
-        (await YTMClient.next(id))
-            .sublist(1)
-            .map((e) => media.Track.fromJson(e.toJson()))
-            .toList(),
+        next.sublist(1).map((e) => media.Track.fromJson(e.toJson())).toList(),
       );
     } else if (value is Video) {
       final id = LibmpvPluginUtils.redirect(value.uri).queryParameters['id']!;
       Playback.instance.open(
-        [media.Track.fromWebVideo(value.toJson())],
+        [
+          Helpers.parseWebVideo(value.toJson()),
+        ],
       );
       bool reload = Configuration.instance.webRecent.isEmpty;
       await Configuration.instance.save(
@@ -68,7 +70,6 @@ class Web {
         ],
       );
       if (reload) {
-        debugPrint('Web.open: pagingController.refresh');
         pagingController.refresh();
         refreshCallback?.call();
       }
@@ -80,7 +81,7 @@ class Web {
       );
     } else if (value is List<Track>) {
       Playback.instance.open(
-        value.map((e) => media.Track.fromWebTrack(e.toJson())).toList(),
+        value.map((e) => Helpers.parseWebTrack(e.toJson())).toList(),
         index: index,
       );
       bool reload = Configuration.instance.webRecent.isEmpty;

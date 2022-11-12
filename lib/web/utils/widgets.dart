@@ -12,7 +12,6 @@ import 'package:flutter/services.dart';
 import 'package:animations/animations.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
-import 'package:media_library/media_library.dart' as media;
 import 'package:substring_highlight/substring_highlight.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
@@ -20,6 +19,7 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/utils/helpers.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/interface/settings/about.dart';
@@ -365,7 +365,7 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
             result,
             playlist!.tracks
                 .map(
-                  (track) => media.Track.fromWebTrack(
+                  (track) => Helpers.parseWebTrack(
                     track.toJson(),
                   ),
                 )
@@ -667,7 +667,7 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
             result,
             playlist!.tracks
                 .map(
-                  (track) => media.Track.fromWebTrack(
+                  (track) => Helpers.parseWebTrack(
                     track.toJson(),
                   ),
                 )

@@ -154,7 +154,7 @@ ThemeData createTheme({
         textStyle: desktop
             ? MaterialStatePropertyAll(
                 TextStyle(
-                  letterSpacing: 1.0,
+                  letterSpacing: Platform.isLinux ? 0.8 : 1.0,
                   fontWeight: FontWeight.w600,
                   // Enforce `Inter` font family on Linux machines.
                   fontFamily: Platform.isLinux ? 'Inter' : null,
@@ -168,7 +168,7 @@ ThemeData createTheme({
         textStyle: desktop
             ? MaterialStatePropertyAll(
                 TextStyle(
-                  letterSpacing: 1.0,
+                  letterSpacing: Platform.isLinux ? 0.8 : 1.0,
                   fontWeight: FontWeight.w600,
                   // Enforce `Inter` font family on Linux machines.
                   fontFamily: Platform.isLinux ? 'Inter' : null,

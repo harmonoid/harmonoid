@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:window_plus/window_plus.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
+import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'package:harmonoid/core/collection.dart';
@@ -25,7 +26,6 @@ import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
-import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/interface/collection/track.dart';
 import 'package:harmonoid/interface/collection/artist.dart';

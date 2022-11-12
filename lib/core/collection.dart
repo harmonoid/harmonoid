@@ -15,6 +15,7 @@ import 'package:media_engine/media_engine.dart' as engine;
 import 'package:media_engine/media_engine.dart' hide Media;
 import 'package:safe_local_storage/safe_local_storage.dart';
 
+import 'package:harmonoid/utils/helpers.dart';
 import 'package:harmonoid/utils/tagger_client.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/utils/metadata_retriever.dart';
@@ -122,7 +123,7 @@ class Collection extends MediaLibrary with ChangeNotifier {
         timeout: timeout ?? const Duration(seconds: 1),
       );
       debugPrint(metadata.toString());
-      return Track.fromTagger(metadata);
+      return Helpers.parseTaggerMetadata(metadata);
     }
     if (Platform.isLinux) {
       assert(_client != null);
@@ -132,7 +133,7 @@ class Collection extends MediaLibrary with ChangeNotifier {
         timeout: timeout ?? const Duration(seconds: 1),
       );
       debugPrint(metadata.toString());
-      return Track.fromTagger(metadata);
+      return Helpers.parseTaggerMetadata(metadata);
     }
     if (Platform.isAndroid) {
       return MetadataRetriever.instance.metadata(

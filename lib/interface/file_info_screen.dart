@@ -5,8 +5,8 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
-import 'dart:convert';
 import 'dart:io';
+import 'dart:convert';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
@@ -15,6 +15,7 @@ import 'package:media_library/media_library.dart' hide Media;
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/hotkeys.dart';
+import 'package:harmonoid/utils/helpers.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -365,7 +366,7 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
               timeout: widget.timeout,
             ),
           );
-          track = Track.fromTagger(metadata);
+          track = Helpers.parseTaggerMetadata(metadata);
           cleanup();
           setState(() {});
         } catch (exception, stacktrace) {
@@ -382,7 +383,7 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
               timeout: widget.timeout,
             ),
           );
-          track = Track.fromTagger(metadata);
+          track = Helpers.parseTaggerMetadata(metadata);
           cleanup();
           setState(() {});
         } catch (exception, stacktrace) {

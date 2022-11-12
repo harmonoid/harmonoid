@@ -18,7 +18,6 @@ import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class IndexingSetting extends StatefulWidget {
@@ -232,43 +231,27 @@ class IndexingState extends State<IndexingSetting>
                           Language.instance.SELECTED_DIRECTORIES,
                           style: Theme.of(context).textTheme.displaySmall,
                         ),
-                        SizedBox(
-                          height: 8.0,
-                        ),
+                        const SizedBox(height: 8.0),
                         if (!Platform.isAndroid || volumes != null)
                           ...Configuration.instance.collectionDirectories
                               .map(
                                 (directory) => Container(
                                   width: isMobile
                                       ? MediaQuery.of(context).size.width
-                                      : 480.0,
+                                      : 572.0,
                                   height: isMobile ? 56.0 : 40.0,
                                   margin: EdgeInsets.symmetric(vertical: 2.0),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      directory.existsSync_()
-                                          ? Container(
-                                              width: 40.0,
-                                              child: Icon(
-                                                FluentIcons.folder_32_regular,
-                                                size: 32.0,
-                                              ),
-                                            )
-                                          : Tooltip(
-                                              message: Language
-                                                  .instance.FOLDER_NOT_FOUND,
-                                              verticalOffset: 24.0,
-                                              waitDuration: Duration.zero,
-                                              child: Container(
-                                                width: 40.0,
-                                                child: Icon(
-                                                  Icons.warning,
-                                                  size: 24.0,
-                                                ),
-                                              ),
-                                            ),
+                                      Container(
+                                        width: 40.0,
+                                        child: Icon(
+                                          FluentIcons.folder_32_regular,
+                                          size: 32.0,
+                                        ),
+                                      ),
                                       SizedBox(width: isDesktop ? 2.0 : 16.0),
                                       Expanded(
                                         child: Text(
@@ -335,6 +318,7 @@ class IndexingState extends State<IndexingSetting>
                                           }
                                           await Collection.instance
                                               .removeDirectories(
+                                            refresh: false,
                                             directories: {directory},
                                             onProgress:
                                                 (progress, total, isCompleted) {
@@ -420,15 +404,16 @@ class IndexingState extends State<IndexingSetting>
                                         ),
                                         duration: Duration(milliseconds: 400),
                                         child: Text(
-                                          (Language.instance
+                                          Language.instance
                                               .SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
                                               .replaceAll(
-                                            'NUMBER_STRING',
-                                            controller.progress.toString(),
-                                          )).replaceAll(
-                                            'TOTAL_STRING',
-                                            controller.total.toString(),
-                                          ),
+                                                'NUMBER_STRING',
+                                                controller.progress.toString(),
+                                              )
+                                              .replaceAll(
+                                                'TOTAL_STRING',
+                                                controller.total.toString(),
+                                              ),
                                           style: Theme.of(context)
                                               .textTheme
                                               .displaySmall,

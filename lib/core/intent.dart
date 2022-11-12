@@ -17,6 +17,7 @@ import 'package:safe_local_storage/safe_local_storage.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/utils/helpers.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/tagger_client.dart';
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';
@@ -142,7 +143,7 @@ class Intent {
             debugPrint(exception.toString());
             debugPrint(stacktrace.toString());
           }
-          final track = Track.fromTagger(metadata);
+          final track = Helpers.parseTaggerMetadata(metadata);
           await Playback.instance.open([track]);
           DesktopNowPlayingController.instance.maximize();
         } else if (Platform.isLinux) {
@@ -155,7 +156,7 @@ class Intent {
             debugPrint(exception.toString());
             debugPrint(stacktrace.toString());
           }
-          final track = Track.fromTagger(metadata);
+          final track = Helpers.parseTaggerMetadata(metadata);
           await Playback.instance.open([track]);
           DesktopNowPlayingController.instance.maximize();
         } else {
@@ -190,7 +191,7 @@ class Intent {
                 debugPrint(exception.toString());
                 debugPrint(stacktrace.toString());
               }
-              final track = Track.fromTagger(metadata);
+              final track = Helpers.parseTaggerMetadata(metadata);
               if (!playing) {
                 await Playback.instance.open([track]);
                 DesktopNowPlayingController.instance.maximize();
@@ -208,7 +209,7 @@ class Intent {
                 debugPrint(exception.toString());
                 debugPrint(stacktrace.toString());
               }
-              final track = Track.fromTagger(metadata);
+              final track = Helpers.parseTaggerMetadata(metadata);
               if (!playing) {
                 await Playback.instance.open([track]);
                 DesktopNowPlayingController.instance.maximize();
@@ -270,9 +271,17 @@ class Intent {
   ///
   Future<void> playUri(Uri uri) async {
     if (LibmpvPluginUtils.isSupported(uri)) {
-      await Playback.instance.open([
-        Track.fromWebTrack((await YTMClient.player(uri.toString()))!.toJson())
-      ]);
+      try {
+        final response = await YTMClient.player(uri.toString());
+        await Playback.instance.open(
+          [
+            Helpers.parseWebTrack(response!.toJson()),
+          ],
+        );
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
       if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
         DesktopNowPlayingController.instance.maximize();
       } else if (Platform.isAndroid || Platform.isIOS) {
@@ -282,7 +291,7 @@ class Intent {
         uri.isScheme('HTTPS') ||
         uri.isScheme('FTP') ||
         uri.isScheme('RSTP')) {
-      final track = Track.fromTagger(
+      final track = Helpers.parseTaggerMetadata(
         <String, dynamic>{
           'uri': uri.toString(),
         },
@@ -309,7 +318,7 @@ class Intent {
           debugPrint(exception.toString());
           debugPrint(stacktrace.toString());
         }
-        final track = Track.fromTagger(metadata);
+        final track = Helpers.parseTaggerMetadata(metadata);
         await Playback.instance.open([track]);
         if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
           DesktopNowPlayingController.instance.maximize();
@@ -328,7 +337,7 @@ class Intent {
           debugPrint(exception.toString());
           debugPrint(stacktrace.toString());
         }
-        final track = Track.fromTagger(metadata);
+        final track = Helpers.parseTaggerMetadata(metadata);
         await Playback.instance.open([track]);
         if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
           DesktopNowPlayingController.instance.maximize();
@@ -369,7 +378,7 @@ class Intent {
               debugPrint(exception.toString());
               debugPrint(stacktrace.toString());
             }
-            final track = Track.fromTagger(metadata);
+            final track = Helpers.parseTaggerMetadata(metadata);
             if (!playing) {
               await Playback.instance.open([track]);
               if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
@@ -391,7 +400,7 @@ class Intent {
               debugPrint(exception.toString());
               debugPrint(stacktrace.toString());
             }
-            final track = Track.fromTagger(metadata);
+            final track = Helpers.parseTaggerMetadata(metadata);
             if (!playing) {
               await Playback.instance.open([track]);
               if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {

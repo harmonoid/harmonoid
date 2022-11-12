@@ -24,6 +24,7 @@ import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/web/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/helpers.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/state/visuals.dart';
@@ -631,9 +632,8 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                                     .albumName,
                                                               )..tracks.addAll(widget
                                                                   .album.tracks
-                                                                  .map((e) => media
-                                                                          .Track
-                                                                      .fromWebTrack(
+                                                                  .map((e) => Helpers
+                                                                      .parseWebTrack(
                                                                           e.toJson()))),
                                                             );
                                                           },

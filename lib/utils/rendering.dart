@@ -19,6 +19,7 @@ import 'package:media_engine/media_engine.dart' hide Media;
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:filepicker_windows/filepicker_windows.dart';
+import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/playback.dart';
@@ -35,7 +36,6 @@ import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/widgets.dart';
 export 'package:harmonoid/utils/extensions.dart';
 import 'package:harmonoid/utils/dimensions.dart';
-import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/constants/language.dart';

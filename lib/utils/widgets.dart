@@ -10,17 +10,17 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 import 'dart:math';
-// ignore: unnecessary_import
 import 'package:flutter/material.dart'
     hide ReorderableDragStartListener, Intent;
-import 'package:flutter/rendering.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:animations/animations.dart';
 import 'package:window_plus/window_plus.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:media_library/media_library.dart';
+import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:harmonoid_visual_assets/harmonoid_visual_assets.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
@@ -30,11 +30,10 @@ import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/utils/storage_retriever.dart';
-import 'package:harmonoid/utils/file_system.dart';
-import 'package:harmonoid/utils/dimensions.dart';
-import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/interface/file_info_screen.dart';
@@ -2911,11 +2910,10 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
   Widget build(BuildContext context) {
     return Consumer<Collection>(
       builder: (context, collection, _) {
-        Iterable<Directory> missingDirectories = collection
-            .collectionDirectories
+        Iterable<Directory> missing = collection.collectionDirectories
             .where((element) => !element.existsSync_());
         if (volumes != null) {
-          missingDirectories = missingDirectories.map(
+          missing = missing.map(
             (e) => Directory(
               e.path
                   .replaceAll(
@@ -2931,149 +2929,226 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
         }
         return AlertDialog(
           title: Text(
-            missingDirectories.isEmpty
+            missing.isEmpty
                 ? Language.instance.AWESOME
                 : Language.instance.ERROR,
           ),
           content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                child: Text(
-                  missingDirectories.isEmpty
-                      ? Language.instance.NOW_YOU_ARE_GOOD_TO_GO_BACK
-                      : Language.instance.FOLDERS_NOT_FOUND,
-                  style: Theme.of(context).textTheme.displaySmall,
-                  textAlign: TextAlign.start,
-                ),
-                padding: EdgeInsets.only(
-                  bottom: 16.0,
-                ),
+              Text(
+                missing.isEmpty
+                    ? Language.instance.NOW_YOU_ARE_GOOD_TO_GO_BACK
+                    : Language.instance.FOLDERS_NOT_FOUND,
+                style: Theme.of(context).textTheme.displaySmall,
+                textAlign: TextAlign.start,
               ),
-              ...missingDirectories
-                  .map(
-                    (directory) => Container(
-                      height: isMobile ? 56.0 : 40.0,
-                      margin: EdgeInsets.symmetric(vertical: 2.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          directory.existsSync_()
-                              ? Container(
-                                  width: 40.0,
-                                  child: Icon(
-                                    FluentIcons.folder_32_regular,
-                                    size: 32.0,
-                                  ),
-                                )
-                              : Tooltip(
-                                  message: Language.instance.FOLDER_NOT_FOUND,
-                                  verticalOffset: 24.0,
-                                  waitDuration: Duration.zero,
-                                  child: Container(
-                                    width: 40.0,
-                                    child: Icon(
-                                      Icons.warning,
-                                      size: 24.0,
+              if (missing.isNotEmpty)
+                Container(
+                  margin: const EdgeInsets.only(top: 16.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4.0),
+                    border: Border.all(
+                      color: Theme.of(context).dividerTheme.color ??
+                          Theme.of(context).dividerColor,
+                      width: 1.0,
+                    ),
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(4.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: () {
+                        final directories = missing.toList();
+                        final result = <Widget>[];
+                        for (int i = 0; i < directories.length; i++) {
+                          result.add(
+                            Container(
+                              height: 44.0,
+                              padding: EdgeInsets.only(left: 16.0),
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  directories[i].existsSync_()
+                                      ? Container(
+                                          width: 40.0,
+                                          child: Icon(
+                                            FluentIcons.folder_32_regular,
+                                            size: 32.0,
+                                          ),
+                                        )
+                                      : Tooltip(
+                                          message: Language
+                                              .instance.FOLDER_NOT_FOUND,
+                                          verticalOffset: 24.0,
+                                          waitDuration: Duration.zero,
+                                          child: Container(
+                                            width: 40.0,
+                                            child: Icon(
+                                              FluentIcons.folder_32_regular,
+                                              size: 32.0,
+                                            ),
+                                          ),
+                                        ),
+                                  const SizedBox(width: 16.0),
+                                  Expanded(
+                                    child: Text(
+                                      directories[i].path,
+                                      style: isDesktop
+                                          ? Theme.of(context)
+                                              .textTheme
+                                              .displaySmall
+                                          : Theme.of(context)
+                                              .textTheme
+                                              .titleMedium,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.start,
                                     ),
                                   ),
-                                ),
-                          Expanded(
-                            child: Text(
-                              directory.path.overflow,
-                              style: isMobile
-                                  ? Theme.of(context).textTheme.titleMedium
-                                  : Theme.of(context).textTheme.displaySmall,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () async {
-                              if (!CollectionRefresh.instance.isCompleted) {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    backgroundColor:
-                                        Theme.of(context).cardTheme.color,
-                                    title: Text(
-                                      Language.instance
-                                          .INDEXING_ALREADY_GOING_ON_TITLE,
-                                    ),
-                                    content: Text(
-                                      Language.instance
-                                          .INDEXING_ALREADY_GOING_ON_SUBTITLE,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displaySmall,
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: Navigator.of(context).pop,
-                                        child: Text(Language.instance.OK),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                                return;
-                              }
-                              if (Configuration
-                                      .instance.collectionDirectories.length ==
-                                  1) {
-                                showDialog(
-                                  context: context,
-                                  builder: (subContext) => AlertDialog(
-                                    title: Text(
-                                      Language.instance.WARNING,
-                                    ),
-                                    content: Text(
-                                      Language.instance
-                                          .LAST_COLLECTION_DIRECTORY_REMOVED,
-                                      style: Theme.of(subContext)
-                                          .textTheme
-                                          .displaySmall,
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () async {
-                                          Navigator.of(subContext).pop();
+                                  const SizedBox(width: 16.0),
+                                  InkWell(
+                                    onTap: () async {
+                                      if (!CollectionRefresh
+                                          .instance.isCompleted) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            backgroundColor: Theme.of(context)
+                                                .cardTheme
+                                                .color,
+                                            title: Text(
+                                              Language.instance
+                                                  .INDEXING_ALREADY_GOING_ON_TITLE,
+                                            ),
+                                            content: Text(
+                                              Language.instance
+                                                  .INDEXING_ALREADY_GOING_ON_SUBTITLE,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .displaySmall,
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed:
+                                                    Navigator.of(context).pop,
+                                                child:
+                                                    Text(Language.instance.OK),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                        return;
+                                      }
+                                      if (Configuration.instance
+                                              .collectionDirectories.length ==
+                                          1) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (subContext) => AlertDialog(
+                                            title: Text(
+                                              Language.instance.WARNING,
+                                            ),
+                                            content: Text(
+                                              Language.instance
+                                                  .LAST_COLLECTION_DIRECTORY_REMOVED,
+                                              style: Theme.of(subContext)
+                                                  .textTheme
+                                                  .displaySmall,
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () async {
+                                                  Navigator.of(subContext)
+                                                      .pop();
+                                                },
+                                                child:
+                                                    Text(Language.instance.OK),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                        return;
+                                      }
+                                      await Collection.instance
+                                          .removeDirectories(
+                                        refresh: false,
+                                        directories: {directories[i]},
+                                        onProgress:
+                                            (progress, total, isCompleted) {
+                                          CollectionRefresh.instance
+                                              .set(progress, total);
                                         },
-                                        child: Text(Language.instance.OK),
+                                      );
+                                      await Configuration.instance.save(
+                                        collectionDirectories: Configuration
+                                            .instance.collectionDirectories
+                                          ..remove(directories[i]),
+                                      );
+                                    },
+                                    child: Container(
+                                      height: 44.0,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 16.0,
                                       ),
-                                    ],
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        Language.instance.REMOVE.toUpperCase(),
+                                        // TODO: Remove inline styling.
+                                        style: TextStyle(
+                                          letterSpacing:
+                                              Platform.isLinux ? 0.8 : 1.0,
+                                          fontWeight: FontWeight.w600,
+                                          // Enforce `Inter` font family on Linux machines.
+                                          fontFamily:
+                                              Platform.isLinux ? 'Inter' : null,
+                                          fontSize: 14.0,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                );
-                                return;
-                              }
-                              await Collection.instance.removeDirectories(
-                                directories: {directory},
-                                onProgress: (progress, total, isCompleted) {
-                                  CollectionRefresh.instance
-                                      .set(progress, total);
-                                },
-                              );
-                              await Configuration.instance.save(
-                                collectionDirectories:
-                                    Configuration.instance.collectionDirectories
-                                      ..remove(directory),
-                              );
-                            },
-                            child: Text(
-                              Language.instance.REMOVE.toUpperCase(),
-                              style: TextStyle(
-                                color: Theme.of(context).primaryColor,
+                                ],
                               ),
                             ),
-                          ),
-                        ],
-                      ),
+                          );
+                          result.add(
+                            const Divider(
+                              height: 1.0,
+                              thickness: 1.0,
+                            ),
+                          );
+                        }
+                        if (result.isNotEmpty) {
+                          result.removeLast();
+                        }
+                        return result;
+                      }(),
                     ),
-                  )
-                  .toList(),
+                  ),
+                ),
             ],
           ),
           actions: [
+            if (missing.isNotEmpty)
+              TextButton(
+                child: Text(
+                  Language.instance.REFRESH.toUpperCase(),
+                ),
+                style: ButtonStyle(
+                  foregroundColor: _TextButtonDefaultColorCompat(
+                    Theme.of(context).primaryColor,
+                    Theme.of(context).disabledColor,
+                  ),
+                ),
+                onPressed: () {
+                  setState(() {});
+                },
+              ),
             TextButton(
               child: Text(
                 Language.instance.GO_TO_SETTINGS.toUpperCase(),
@@ -3108,9 +3183,8 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
                   Theme.of(context).disabledColor,
                 ),
               ),
-              onPressed: missingDirectories.isEmpty
-                  ? Navigator.of(context).maybePop
-                  : null,
+              onPressed:
+                  missing.isEmpty ? Navigator.of(context).maybePop : null,
             ),
           ],
         );

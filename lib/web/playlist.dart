@@ -18,19 +18,21 @@ import 'package:ytm_client/ytm_client.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/helpers.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/state/visuals.dart';
+import 'package:harmonoid/interface/settings/settings.dart';
+import 'package:harmonoid/constants/language.dart';
+
 import 'package:harmonoid/web/web.dart';
 import 'package:harmonoid/web/utils/widgets.dart';
 import 'package:harmonoid/web/state/web.dart';
 import 'package:harmonoid/web/track.dart';
-import 'package:harmonoid/constants/language.dart';
 
 class WebPlaylistLargeTile extends StatelessWidget {
   final double width;
@@ -556,9 +558,8 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                                                 .playlist.name,
                                                           )..tracks.addAll(widget
                                                               .playlist.tracks
-                                                              .map((e) => media
-                                                                      .Track
-                                                                  .fromWebTrack(
+                                                              .map((e) => Helpers
+                                                                  .parseWebTrack(
                                                                       e.toJson()))),
                                                         );
                                                       },
@@ -971,7 +972,7 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                         id: widget.playlist.name.hashCode,
                                         name: widget.playlist.name,
                                       )..tracks.addAll(widget.playlist.tracks
-                                          .map((e) => media.Track.fromWebTrack(
+                                          .map((e) => Helpers.parseWebTrack(
                                               e.toJson()))),
                                     );
                                   },

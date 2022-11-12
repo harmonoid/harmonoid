@@ -9,10 +9,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:harmonoid/utils/helpers.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:media_library/media_library.dart' as media;
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/playback.dart';
@@ -30,7 +30,8 @@ List<PopupMenuItem<int>> webTrackPopupMenuItems(BuildContext context) => [
               : Icons.queue_music),
           title: Text(
             Language.instance.ADD_TO_PLAYLIST,
-            style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+            style:
+                isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
           ),
         ),
       ),
@@ -42,7 +43,8 @@ List<PopupMenuItem<int>> webTrackPopupMenuItems(BuildContext context) => [
               Platform.isWindows ? FluentIcons.link_20_regular : Icons.link),
           title: Text(
             Language.instance.COPY_LINK,
-            style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+            style:
+                isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
           ),
         ),
       ),
@@ -54,7 +56,8 @@ List<PopupMenuItem<int>> webTrackPopupMenuItems(BuildContext context) => [
               Platform.isWindows ? FluentIcons.earth_20_regular : Icons.web),
           title: Text(
             Language.instance.OPEN_IN_BROWSER,
-            style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+            style:
+                isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
           ),
         ),
       ),
@@ -67,7 +70,8 @@ List<PopupMenuItem<int>> webTrackPopupMenuItems(BuildContext context) => [
               : Icons.music_note),
           title: Text(
             Language.instance.ADD_TO_NOW_PLAYING,
-            style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+            style:
+                isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
           ),
         ),
       ),
@@ -81,7 +85,8 @@ List<PopupMenuItem<int>> webTrackPopupMenuItems(BuildContext context) => [
                 : Icons.share),
             title: Text(
               Language.instance.SHARE,
-              style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+              style:
+                  isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
             ),
           ),
         ),
@@ -111,12 +116,12 @@ Future<void> webTrackPopupMenuHandle(
         if (item is Track) {
           await showAddToPlaylistDialog(
             context,
-            media.Track.fromWebTrack(item.toJson()),
+            Helpers.parseWebTrack(item.toJson()),
           );
         } else if (item is Video) {
           await showAddToPlaylistDialog(
             context,
-            media.Track.fromWebVideo(item.toJson()),
+            Helpers.parseWebVideo(item.toJson()),
           );
         }
         break;
@@ -129,25 +134,22 @@ Future<void> webTrackPopupMenuHandle(
     case 3:
       {
         if (item is Track) {
-          Playback.instance.add([media.Track.fromWebTrack(item.toJson())]);
+          Playback.instance.add([Helpers.parseWebTrack(item.toJson())]);
         } else if (item is Video) {
-          Playback.instance.add([media.Track.fromWebVideo(item.toJson())]);
+          Playback.instance.add([Helpers.parseWebVideo(item.toJson())]);
         }
         break;
       }
     case 4:
       {
-        media.Track? result;
+        var result;
         if (item is Track) {
-          result = media.Track.fromWebTrack(item.toJson());
+          result = Helpers.parseWebTrack(item.toJson());
         } else if (item is Video) {
-          result = media.Track.fromWebVideo(item.toJson());
+          result = Helpers.parseWebVideo(item.toJson());
         }
         if (result != null) {
-          Share.share('${result.trackName} • ${[
-            '',
-            media.kUnknownArtist,
-          ].contains(result.albumArtistName) ? result.trackArtistNames.take(2).join(', ') : result.albumArtistName} • ${result.uri.toString()}');
+          Share.share('${result.trackName} • ${result.uri.toString()}');
         }
         break;
       }

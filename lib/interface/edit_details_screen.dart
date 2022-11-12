@@ -13,12 +13,12 @@ import 'package:window_plus/window_plus.dart';
 import 'package:media_engine/media_engine.dart';
 import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:safe_local_storage/safe_local_storage.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/state/now_playing_visuals.dart';
-import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
