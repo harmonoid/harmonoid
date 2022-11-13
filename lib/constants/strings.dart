@@ -73,6 +73,7 @@ class Strings {
   late String DOWNLOAD_UPDATE;
   late String EDIT;
   late String EDIT_ALBUM_PARAMETERS_SUBTITLE;
+  late String EDIT_ALBUM_PARAMETERS_SUBTITLE_;
   late String EDIT_ALBUM_PARAMETERS_TITLE;
   late String EDIT_DETAILS;
   late String EDIT_MINIMUM_FILE_SIZE;
@@ -91,6 +92,7 @@ class Strings {
   late String FILE_INFORMATION;
   late String FILE_PATH_OR_URL;
   late String FOLDERS_NOT_FOUND;
+  late String FOLDERS_NOT_FOUND_SUBTITLE;
   late String FOLDER_NOT_FOUND;
   late String FULLSCREEN;
   late String GENRE;
