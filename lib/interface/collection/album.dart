@@ -498,43 +498,33 @@ class AlbumTile extends StatelessWidget {
     this.forceDefaultStyleOnMobile = false,
   }) : super(key: key);
 
-  Future<void> delete(BuildContext context) async {
-    if (Platform.isAndroid) {
-      final sdk = StorageRetriever.instance.version;
-      if (sdk <= 29) {
-        // Android 10 or below need an [AlertDialog] for confirmation.
-        await showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            title: Text(
-              Language.instance.COLLECTION_ALBUM_DELETE_DIALOG_HEADER,
-            ),
-            content: Text(
-              Language.instance.COLLECTION_ALBUM_DELETE_DIALOG_BODY.replaceAll(
-                'NAME',
-                album.albumName,
-              ),
-              style: Theme.of(ctx).textTheme.displaySmall,
-            ),
-            actions: [
-              TextButton(
-                onPressed: () async {
-                  await Collection.instance.delete(album);
-                  Navigator.of(ctx).pop();
-                },
-                child: Text(Language.instance.YES),
-              ),
-              TextButton(
-                onPressed: Navigator.of(ctx).pop,
-                child: Text(Language.instance.NO),
-              ),
-            ],
-          ),
-        );
-      } else if (sdk > 29) {
-        await Collection.instance.delete(album);
-      }
-    }
+  Future<void> action(BuildContext context) async {
+    var result;
+    await showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (context) => Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: albumPopupMenuItems(
+            album,
+            context,
+          )
+              .map(
+                (item) => PopupMenuItem(
+                  child: item.child,
+                  onTap: () => result = item.value,
+                ),
+              )
+              .toList(),
+        ),
+      ),
+    );
+    await albumPopupMenuHandle(
+      context,
+      album,
+      result,
+    );
   }
 
   Widget build(BuildContext context) {
@@ -549,7 +539,7 @@ class AlbumTile extends StatelessWidget {
         openElevation: 0.0,
         openColor: Theme.of(context).scaffoldBackgroundColor,
         closedBuilder: (context, open) => InkWell(
-          onLongPress: () => delete(context),
+          onLongPress: () => action(context),
           onTap: () async {
             try {
               if (palette == null) {
@@ -806,7 +796,7 @@ class AlbumTile extends StatelessWidget {
                             }
                             open();
                           },
-                          onLongPress: () => delete(context),
+                          onLongPress: () => action(context),
                           child: Container(
                             height: 64.0,
                             width: MediaQuery.of(context).size.width,
@@ -885,7 +875,7 @@ class AlbumTile extends StatelessWidget {
                 openElevation: 0.0,
                 openColor: Theme.of(context).scaffoldBackgroundColor,
                 closedBuilder: (context, open) => InkWell(
-                  onLongPress: () => delete(context),
+                  onLongPress: () => action(context),
                   onTap: () async {
                     try {
                       if (palette == null) {
