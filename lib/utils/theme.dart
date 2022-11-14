@@ -120,14 +120,14 @@ ThemeData createTheme({
   }
   // Enforce `Inter` font family on Linux machines.
   theme = theme.apply(fontFamily: Platform.isLinux ? 'Inter' : null);
-  return ThemeData.from(
+  return ThemeData(
     colorScheme: ColorScheme(
       brightness: light ? Brightness.light : Brightness.dark,
       primary: color,
       onPrimary: color.computeLuminance() > 0.7 ? Colors.black : Colors.white,
       secondary: color,
       onSecondary: color.computeLuminance() > 0.7 ? Colors.black : Colors.white,
-      error: Colors.red,
+      error: Colors.red.shade800,
       onError: Colors.white,
       background: light ? Colors.white : Colors.black,
       onBackground: desktop
@@ -143,7 +143,7 @@ ThemeData createTheme({
               : Colors.white.withOpacity(0.87)),
     ),
     textTheme: theme,
-  ).copyWith(
+    primaryTextTheme: theme,
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       shape: CircleBorder(),
     ),
@@ -151,30 +151,26 @@ ThemeData createTheme({
     androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
     textButtonTheme: TextButtonThemeData(
       style: ButtonStyle(
-        textStyle: desktop
-            ? MaterialStatePropertyAll(
-                TextStyle(
-                  letterSpacing: Platform.isLinux ? 0.8 : 1.0,
-                  fontWeight: FontWeight.w600,
-                  // Enforce `Inter` font family on Linux machines.
-                  fontFamily: Platform.isLinux ? 'Inter' : null,
-                ),
-              )
-            : null,
+        textStyle: MaterialStatePropertyAll(
+          TextStyle(
+            letterSpacing: Platform.isLinux ? 0.8 : 1.6,
+            fontWeight: FontWeight.w600,
+            // Enforce `Inter` font family on Linux machines.
+            fontFamily: Platform.isLinux ? 'Inter' : null,
+          ),
+        ),
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
-        textStyle: desktop
-            ? MaterialStatePropertyAll(
-                TextStyle(
-                  letterSpacing: Platform.isLinux ? 0.8 : 1.0,
-                  fontWeight: FontWeight.w600,
-                  // Enforce `Inter` font family on Linux machines.
-                  fontFamily: Platform.isLinux ? 'Inter' : null,
-                ),
-              )
-            : null,
+        textStyle: MaterialStatePropertyAll(
+          TextStyle(
+            letterSpacing: Platform.isLinux ? 0.8 : 1.6,
+            fontWeight: FontWeight.w600,
+            // Enforce `Inter` font family on Linux machines.
+            fontFamily: Platform.isLinux ? 'Inter' : null,
+          ),
+        ),
       ),
     ),
     textSelectionTheme: TextSelectionThemeData(
@@ -226,7 +222,9 @@ ThemeData createTheme({
         fontFamily: Platform.isLinux ? 'Inter' : null,
       ),
     ),
-    disabledColor: light ? Colors.black38 : Colors.white38,
+    disabledColor: light
+        ? Color.lerp(Colors.white, Colors.black, 0.38)
+        : Color.lerp(Colors.black, Colors.white, 0.38),
     tabBarTheme: TabBarTheme(
       labelColor: color,
       unselectedLabelColor:
@@ -250,7 +248,7 @@ ThemeData createTheme({
     cardColor: light ? Colors.white : Color(0xFF222222),
     popupMenuTheme: PopupMenuThemeData(
       elevation: 4.0,
-      color: light ? Colors.white : Color(0xFF2F2F2F),
+      color: light ? Colors.white : Color(0xFF282828),
       surfaceTintColor: null,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4.0),
@@ -295,8 +293,6 @@ ThemeData createTheme({
       selectedItemColor: Colors.white.withOpacity(0.87),
       unselectedItemColor: Colors.white54,
     ),
-    textTheme: theme,
-    primaryTextTheme: theme,
     tooltipTheme: TooltipThemeData(
       textStyle: desktop
           ? TextStyle(
