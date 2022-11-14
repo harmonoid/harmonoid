@@ -90,17 +90,14 @@ abstract class WindowLifecycle {
         await showDialog(
           context: navigatorKey.currentContext!,
           builder: (c) => AlertDialog(
-            title: Text(
-              Language.instance.WARNING,
-            ),
+            title: Text(Language.instance.WARNING),
             content: Text(
               Language.instance.COLLECTION_INDEXING_LABEL.replaceAll('\n', ' '),
               style: Theme.of(c).textTheme.displaySmall,
             ),
             actions: [
-              MaterialButton(
-                textColor: Theme.of(navigatorKey.currentContext!).primaryColor,
-                onPressed: Navigator.of(c).pop,
+              TextButton(
+                onPressed: Navigator.of(c).maybePop,
                 child: Text(Language.instance.OK),
               ),
             ],
