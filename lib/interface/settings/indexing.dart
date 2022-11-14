@@ -90,6 +90,13 @@ class IndexingState extends State<IndexingSetting>
                 subtitle: Text(Language.instance.REINDEX_SUBTITLE),
               ),
               ListTile(
+                onTap: showEditAlbumParametersDialog,
+                dense: false,
+                title: Text(Language.instance.EDIT_ALBUM_PARAMETERS_TITLE),
+                subtitle:
+                    Text(Language.instance.EDIT_ALBUM_PARAMETERS_SUBTITLE),
+              ),
+              ListTile(
                 onTap: showEditMinimumFileSizeDialog,
                 dense: false,
                 title: Text(Language.instance.MINIMUM_FILE_SIZE),
@@ -193,6 +200,13 @@ class IndexingState extends State<IndexingSetting>
                                                   AlertDialog(
                                                 title: Text(
                                                   Language.instance.WARNING,
+                                                ),
+                                                contentPadding:
+                                                    const EdgeInsets.fromLTRB(
+                                                  24.0,
+                                                  20.0,
+                                                  24.0,
+                                                  8.0,
                                                 ),
                                                 content: Text(
                                                   Language.instance
@@ -429,7 +443,7 @@ class IndexingState extends State<IndexingSetting>
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
-                        Language.instance.EDIT_ALBUM_PARAMETERS_SUBTITLE,
+                        Language.instance.EDIT_ALBUM_PARAMETERS_SUBTITLE_,
                         style: Theme.of(context).textTheme.displaySmall,
                       ),
                     ),
@@ -506,7 +520,7 @@ class IndexingState extends State<IndexingSetting>
     int value = Configuration.instance.minimumFileSize;
     return showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (ctx) => AlertDialog(
         title: Text(Language.instance.MINIMUM_FILE_SIZE),
         contentPadding: const EdgeInsets.only(top: 20.0),
         content: Column(
@@ -518,12 +532,12 @@ class IndexingState extends State<IndexingSetting>
             ),
             ConstrainedBox(
               constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height / 2,
+                maxHeight: MediaQuery.of(ctx).size.height / 2,
               ),
               child: Material(
                 color: Colors.transparent,
                 child: StatefulBuilder(
-                  builder: (context, setState) => SingleChildScrollView(
+                  builder: (ctx, setState) => SingleChildScrollView(
                     child: Column(
                       children: kDefaultMinimumFileSizes.entries
                           .map(
@@ -538,7 +552,7 @@ class IndexingState extends State<IndexingSetting>
                               title: Text(
                                 '${e.value} ${e.key == 1024 * 1024 ? Language.instance.RECOMMENDED_HINT : ''}',
                                 style: isDesktop
-                                    ? Theme.of(context).textTheme.headlineMedium
+                                    ? Theme.of(ctx).textTheme.headlineMedium
                                     : null,
                               ),
                             ),
@@ -558,7 +572,7 @@ class IndexingState extends State<IndexingSetting>
         actions: [
           TextButton(
             onPressed: () async {
-              Navigator.of(context).maybePop();
+              Navigator.of(ctx).maybePop();
               // Do not proceed if some indexing related operation is going on.
               if (!CollectionRefresh.instance.isCompleted) {
                 await showProgressDialog();
@@ -571,21 +585,31 @@ class IndexingState extends State<IndexingSetting>
               );
               // Re-render.
               setState(() {});
+              await Future.delayed(const Duration(milliseconds: 500));
               // Show recommendation to perform a full re-indexing.
               await showDialog(
                 context: context,
-                builder: (context) => AlertDialog(
-                  backgroundColor: Theme.of(context).cardTheme.color,
+                builder: (ctx) => AlertDialog(
+                  insetPadding: const EdgeInsets.symmetric(
+                    horizontal: 72.0,
+                    vertical: 24.0,
+                  ),
+                  contentPadding: const EdgeInsets.fromLTRB(
+                    24.0,
+                    20.0,
+                    24.0,
+                    8.0,
+                  ),
                   title: Text(
                     Language.instance.WARNING,
                   ),
                   content: Text(
                     Language.instance.MINIMUM_FILE_SIZE_WARNING,
-                    style: Theme.of(context).textTheme.displaySmall,
+                    style: Theme.of(ctx).textTheme.displaySmall,
                   ),
                   actions: [
                     TextButton(
-                      onPressed: Navigator.of(context).pop,
+                      onPressed: Navigator.of(ctx).pop,
                       child: Text(Language.instance.OK),
                     ),
                   ],
@@ -634,14 +658,15 @@ class IndexingState extends State<IndexingSetting>
                       children: [
                         // Always enable identification based on the album's title.
                         ListTile(
-                          enabled: false,
                           leading: Checkbox(
                             value: true,
                             onChanged: null,
                           ),
                           title: Text(
                             Language.instance.TITLE,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.headlineMedium
+                                : null,
                           ),
                         ),
                         ...AlbumHashCodeParameter.values.skip(1).map((e) {
@@ -667,7 +692,9 @@ class IndexingState extends State<IndexingSetting>
                                 AlbumHashCodeParameter.year:
                                     Language.instance.YEAR,
                               }[e]!,
-                              style: Theme.of(context).textTheme.headlineMedium,
+                              style: isDesktop
+                                  ? Theme.of(context).textTheme.headlineMedium
+                                  : null,
                             ),
                           );
                         })

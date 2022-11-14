@@ -442,7 +442,7 @@ List<PopupMenuItem<int>> albumPopupMenuItems(
       value: 0,
       child: ListTile(
         leading: Icon(
-          Platform.isWindows ? FluentIcons.play_24_regular : Icons.play_arrow,
+          Platform.isWindows ? FluentIcons.play_24_regular : Icons.play_circle,
         ),
         title: Text(
           Language.instance.PLAY,
@@ -493,6 +493,11 @@ List<PopupMenuItem<int>> albumPopupMenuItems(
         ),
       ),
     ),
+    if (!isDesktop && !MobileNowPlayingController.instance.isHidden)
+      PopupMenuItem<int>(
+        padding: EdgeInsets.zero,
+        child: SizedBox(height: kMobileNowPlayingBarHeight),
+      ),
   ];
 }
 

@@ -25,16 +25,16 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CorrectedSwitchListTile(
-            title: Language.instance.DISABLE_ANIMATIONS,
-            subtitle: Language.instance.DISABLE_ANIMATIONS,
-            onChanged: (_) => Configuration.instance
-                .save(
-                  disableAnimations: !Configuration.instance.disableAnimations,
-                )
-                .then((_) => setState(() {})),
-            value: Configuration.instance.disableAnimations,
-          ),
+          // CorrectedSwitchListTile(
+          //   title: Language.instance.DISABLE_ANIMATIONS,
+          //   subtitle: Language.instance.DISABLE_ANIMATIONS,
+          //   onChanged: (_) => Configuration.instance
+          //       .save(
+          //         disableAnimations: !Configuration.instance.disableAnimations,
+          //       )
+          //       .then((_) => setState(() {})),
+          //   value: Configuration.instance.disableAnimations,
+          // ),
           if (isMobile)
             CorrectedSwitchListTile(
               title: Language.instance.NOTIFICATION_LYRICS_TITLE,

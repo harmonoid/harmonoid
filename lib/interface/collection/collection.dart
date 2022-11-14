@@ -26,6 +26,7 @@ import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/interface/collection/track.dart';
 import 'package:harmonoid/interface/collection/artist.dart';
@@ -33,6 +34,7 @@ import 'package:harmonoid/interface/collection/playlist.dart';
 import 'package:harmonoid/interface/collection/search.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/interface/mini_now_playing_bar.dart';
+import 'package:harmonoid/interface/missing_directories_screen.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class CollectionScreen extends StatefulWidget {
@@ -95,22 +97,47 @@ class CollectionScreenState extends State<CollectionScreen>
     }
     index.addListener(saveCurrentTab);
     index.addListener(MobileNowPlayingController.instance.show);
+    // Check if any directories in the [Collection.instance.collectionDirectories]
+    // have been deleted or gone missing due to some external reason.
     WidgetsBinding.instance.addPostFrameCallback(
-      (_) {
-        if (!Collection.instance.collectionDirectories
-            .map((e) => e.existsSync_())
-            .reduce((value, element) => value = value ? element : false))
-          WidgetsBinding.instance.addPostFrameCallback(
-            (_) {
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                useRootNavigator: false,
-                builder: (context) => FoldersNotFoundDialog(),
-              );
-            },
-          );
-        Intent.instance.play();
+      (_) async {
+        // Attempt to play the [File] opened by the user via the [Intent]
+        // e.g. file manager etc. Loads previously loaded playlist if no
+        // new [File] is opened. Also see: [HomeState.didChangeDependencies].
+        // This call is only responsible for starting the first time
+        // playback, if a fresh instance of Harmonoid was started with
+        // a new intent by the user.
+        // For the intents that are received during the runtime of Harmonoid
+        // or while Harmonoid is in the background, see
+        // [HomeState.didChangeDependencies].
+        try {
+          await Intent.instance.play();
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
+        }
+        bool success = true;
+        for (final directory in Collection.instance.collectionDirectories) {
+          if (!await directory.exists_()) {
+            success = false;
+            break;
+          }
+        }
+        if (!success) {
+          // Show error screen to the user, requesting the resolution of the missing directories.
+          // This will prevent user from using Harmonoid until the missing directories are resolved.
+          final context = navigatorKey.currentContext;
+          if (context != null) {
+            await Navigator.of(
+              context,
+              rootNavigator: true,
+            ).push(
+              MaterialPageRoute(
+                builder: (context) => MissingDirectoriesScreen(),
+              ),
+            );
+          }
+        }
       },
     );
     HotKeyManager.instance.register(
@@ -506,7 +533,6 @@ class CollectionScreenState extends State<CollectionScreen>
                       child: child,
                     ),
                     child: MiniNowPlayingBarRefreshCollectionButton(
-                      key: MobileNowPlayingController.instance.fabKey,
                       index: index,
                     ),
                   ),

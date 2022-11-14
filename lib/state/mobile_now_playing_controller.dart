@@ -7,6 +7,8 @@
 ///
 import 'package:flutter/material.dart';
 
+import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/interface/mini_now_playing_bar.dart';
 
 class MobileNowPlayingController {
@@ -17,23 +19,37 @@ class MobileNowPlayingController {
 
   final GlobalKey<MiniNowPlayingBarState> barKey =
       GlobalKey<MiniNowPlayingBarState>();
-  final GlobalKey<MiniNowPlayingBarRefreshCollectionButtonState> fabKey =
-      GlobalKey<MiniNowPlayingBarRefreshCollectionButtonState>();
 
   final ValueNotifier<Iterable<Color>?> palette = ValueNotifier(null);
   final ValueNotifier<double> bottomNavigationBar =
       ValueNotifier(kBottomNavigationBarHeight);
+  final ValueNotifier<double> fabOffset = ValueNotifier<double>(0.0);
 
   bool get isHidden => barKey.currentState?.isHidden ?? true;
 
   void show() {
+    try {
+      if (Playback.instance.tracks.isEmpty) return;
+      if (fabOffset.value == 0.0) {
+        fabOffset.value = kMobileNowPlayingBarHeight;
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
     barKey.currentState?.show();
-    fabKey.currentState?.show();
   }
 
   void hide() {
+    try {
+      if (fabOffset.value != 0.0) {
+        fabOffset.value = 0.0;
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
     barKey.currentState?.hide();
-    fabKey.currentState?.hide();
   }
 
   void maximize() {

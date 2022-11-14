@@ -39,7 +39,7 @@ import 'package:synchronized/synchronized.dart';
 /// The API of this class is completely inspired & same as [Tagger] from
 /// `package:libmpv`. This has been done for obvious reasons.
 ///
-/// [ensureInitialized] must be called on supported platforms (i.e. Linux) before
+/// [initialize] must be called on supported platforms (i.e. Linux) before
 /// [runApp] from Flutter.
 ///
 class TaggerClient {

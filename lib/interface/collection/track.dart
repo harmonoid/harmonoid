@@ -384,10 +384,19 @@ class _TrackTabState extends State<TrackTab> {
                             .asMap()
                             .entries
                             .map(
-                              (track) => TrackTile(
-                                index: track.key,
-                                track: track.value,
-                              ),
+                              (track) => Configuration.instance
+                                      .addLibraryToPlaylistWhenPlayingFromTracksTab
+                                  ? TrackTile(
+                                      index: track.key,
+                                      track: track.value,
+                                    )
+                                  : TrackTile(
+                                      index: 0,
+                                      track: track.value,
+                                      group: [
+                                        track.value,
+                                      ],
+                                    ),
                             )
                             .toList(),
                       ),

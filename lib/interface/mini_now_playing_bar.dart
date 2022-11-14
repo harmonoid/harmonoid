@@ -51,6 +51,8 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
 
   bool get isHidden => _y != 0.0;
 
+  // TODO (@alexmercerind): De-couple from [BuildContext].
+
   void show() {
     if (Playback.instance.tracks.isEmpty) return;
     if (_y != 0.0) {
@@ -2180,9 +2182,6 @@ class MiniNowPlayingBarRefreshCollectionButton extends StatefulWidget {
 class MiniNowPlayingBarRefreshCollectionButtonState
     extends State<MiniNowPlayingBarRefreshCollectionButton> {
   bool refreshFAB = true;
-  double _y = MobileNowPlayingController.instance.isHidden
-      ? 0.0
-      : kMobileNowPlayingBarHeight;
 
   @override
   void initState() {
@@ -2203,19 +2202,6 @@ class MiniNowPlayingBarRefreshCollectionButtonState
     } else if (!refreshFAB && widget.index.value != 0) {
       refreshFAB = true;
       setState((() {}));
-    }
-  }
-
-  void show() {
-    if (Playback.instance.tracks.isEmpty) return;
-    if (_y == 0.0) {
-      setState(() => _y = kMobileNowPlayingBarHeight);
-    }
-  }
-
-  void hide() {
-    if (_y != 0.0) {
-      setState(() => _y = 0.0);
     }
   }
 
@@ -2396,10 +2382,14 @@ class MiniNowPlayingBarRefreshCollectionButtonState
               ),
             ),
           ),
-          AnimatedContainer(
-            height: _y,
-            duration: Duration(milliseconds: 200),
-            curve: Curves.easeInOut,
+          // Position FABs above [MiniNowPlayingBar].
+          ValueListenableBuilder<double>(
+            valueListenable: MobileNowPlayingController.instance.fabOffset,
+            builder: (context, value, child) => AnimatedContainer(
+              height: value,
+              duration: Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+            ),
           ),
         ],
       ),

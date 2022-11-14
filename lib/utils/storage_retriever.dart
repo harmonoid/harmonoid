@@ -9,6 +9,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
+import 'package:path/path.dart' as path;
 
 /// StorageRetriever
 /// ----------------
@@ -89,7 +90,10 @@ class StorageRetriever {
     assert(Platform.isAndroid);
     final result = await _channel.invokeMethod('volumes');
     assert(result is List);
-    return result.map((e) => Directory(e)).toList().cast<Directory>();
+    return result
+        .map((e) => Directory(path.normalize(e)))
+        .toList()
+        .cast<Directory>();
   }
 
   /// Returns the cache directory.
@@ -98,7 +102,7 @@ class StorageRetriever {
     assert(Platform.isAndroid);
     final result = await _channel.invokeMethod('cache');
     assert(result is String);
-    return Directory(result);
+    return Directory(path.normalize(result));
   }
 
   /// Deletes given [File]s from the user's device.
