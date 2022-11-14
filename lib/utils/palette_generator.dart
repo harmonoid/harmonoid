@@ -1,11 +1,7 @@
-// ignore_for_file: deprecated_member_use, unnecessary_import, unused_shown_name
-
 import 'dart:async';
 import 'dart:collection';
-import 'dart:typed_data';
-import 'dart:math' as math;
 import 'dart:ui' as ui;
-import 'dart:ui' show Color, ImageByteFormat;
+import 'dart:math' as math;
 
 import 'package:collection/collection.dart'
     show PriorityQueue, HeapPriorityQueue;
@@ -211,6 +207,7 @@ class PaletteGenerator with Diagnosticable {
       return b.population.compareTo(a.population);
     });
     _dominantColor = paletteColors[0];
+
     paletteColors.sort((PaletteColor a, PaletteColor b) {
       final aScore = ((a.color.red - a.color.green).abs() +
                   (a.color.green - a.color.blue).abs() +
@@ -222,6 +219,21 @@ class PaletteGenerator with Diagnosticable {
               b.color.computeLuminance();
       return aScore.compareTo(bScore);
     });
+    final data = [...paletteColors];
+    data.removeWhere((paletteColor) {
+      // Remove any colors that are too close to white or black (i.e. R, G & B values are nearly same), but not perfectly black or perfectly white.
+      final r = paletteColor.color.red,
+          g = paletteColor.color.green,
+          b = paletteColor.color.blue;
+      final d1 = (r - g).abs(), d2 = (g - b).abs(), d3 = (b - r).abs();
+      final average = (r + g + b) / 3;
+      return d1 < 16 && d2 < 16 && d3 < 16 && average >= 120 && average <= 220;
+    });
+    // Only be picky when there are enough colors.
+    if (data.length > 2) {
+      paletteColors.clear();
+      paletteColors.addAll(data);
+    }
   }
 
   void _selectSwatches() {
