@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/home.dart';
-import 'package:harmonoid/state/visuals.dart';
 import 'package:harmonoid/state/lyrics.dart';
+import 'package:harmonoid/state/visuals.dart';
+import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/now_playing_color_palette.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -31,10 +33,16 @@ class Harmonoid extends StatelessWidget {
           ),
           providers: [
             ChangeNotifierProvider(
-              create: (context) => Language.instance,
+              create: (context) => Collection.instance,
+            ),
+            ChangeNotifierProvider(
+              create: (context) => CollectionRefresh.instance,
             ),
             ChangeNotifierProvider(
               create: (_) => Playback.instance,
+            ),
+            ChangeNotifierProvider(
+              create: (context) => Language.instance,
             ),
             ChangeNotifierProvider(
               create: (_) => Lyrics.instance,

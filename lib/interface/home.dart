@@ -12,23 +12,21 @@ import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
-import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/interface/now_playing_bar.dart';
 import 'package:harmonoid/interface/now_playing_screen.dart';
 import 'package:harmonoid/interface/mini_now_playing_bar.dart';
-import 'package:harmonoid/interface/modern_now_playing_screen.dart';
 import 'package:harmonoid/interface/collection/collection.dart';
+import 'package:harmonoid/interface/modern_now_playing_screen.dart';
+import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
-import 'package:harmonoid/state/collection_refresh.dart';
-import 'package:harmonoid/state/lyrics.dart';
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/constants/language.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 final FloatingSearchBarController floatingSearchBarController =
@@ -194,12 +192,6 @@ class HomeState extends State<Home>
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (context) => Collection.instance,
-        ),
-        ChangeNotifierProvider(
-          create: (context) => CollectionRefresh.instance,
-        ),
         ChangeNotifierProvider(
           create: (context) => DesktopNowPlayingController(
             launch: () {
