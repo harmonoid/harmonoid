@@ -25,3 +25,6 @@
 [submodule "external/window_plus"]
 	path = external/window_plus
 	url = https://github.com/alexmercerind/window_plus.git
+[submodule "external/uri_parser"]
+	path = external/uri_parser
+	url = https://github.com/harmonoid/uri_parser.git
