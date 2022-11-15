@@ -44,40 +44,10 @@ abstract class WindowLifecycle {
 
   /// Method invoked when user starts new instance of Harmonoid.
   /// Used to receive argument vector i.e. `List<String> args`.
+  ///
   static void singleInstanceArgumentsHandler(List<String> args) async {
     if (args.isNotEmpty) {
-      bool resolved = false;
-      try {
-        // Handle URIs.
-        final resource = Uri.parse(args.first);
-        if (!resolved &&
-            (resource.isScheme('FILE') ||
-                resource.isScheme('HTTP') ||
-                resource.isScheme('HTTPS') ||
-                resource.isScheme('FTP') ||
-                resource.isScheme('RSTP'))) {
-          resolved = true;
-          debugPrint(resource.toString());
-          await Intent.instance.playUri(resource);
-        }
-        // Handle [File] paths.
-        if (!resolved) {
-          resolved = true;
-          final resource = Uri.file(args.first);
-          debugPrint(resource.toString());
-          await Intent.instance.playUri(resource);
-        }
-      } catch (exception, stacktrace) {
-        debugPrint(exception.toString());
-        debugPrint(stacktrace.toString());
-        if (!resolved) {
-          // Handle [File] paths.
-          resolved = true;
-          final resource = Uri.file(args.first);
-          debugPrint(resource.toString());
-          await Intent.instance.playUri(resource);
-        }
-      }
+      await Intent.instance.playURI(args.first);
     }
   }
 

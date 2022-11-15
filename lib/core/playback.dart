@@ -802,7 +802,7 @@ class MPRIS extends MPRISService {
         );
 
   @override
-  void setLoopStatus(value) {
+  void setLoopStatus(String value) {
     switch (value) {
       case 'None':
         {
@@ -823,12 +823,12 @@ class MPRIS extends MPRISService {
   }
 
   @override
-  void setRate(value) {
+  void setRate(double value) {
     Playback.instance.setRate(value);
   }
 
   @override
-  void setShuffle(value) {
+  void setShuffle(bool value) {
     if (Playback.instance.isShuffling != value) {
       Playback.instance.toggleShuffle();
     }
@@ -860,12 +860,12 @@ class MPRIS extends MPRISService {
   }
 
   @override
-  void doSeek(value) {
+  void doSeek(int value) {
     Playback.instance.seek(Duration(microseconds: value));
   }
 
   @override
-  void doSetPosition(objectPath, timeMicroseconds) {
+  void doSetPosition(String objectPath, int timeMicroseconds) {
     final index = playlist
         .map(
           (e) => '/' + e.uri.toString().hashCode.toString(),
@@ -879,8 +879,8 @@ class MPRIS extends MPRISService {
   }
 
   @override
-  void doOpenUri(uri) {
-    Intent.instance.playUri(uri);
+  void doOpenUri(Uri uri) {
+    Intent.instance.playURI(uri.toString());
   }
 }
 

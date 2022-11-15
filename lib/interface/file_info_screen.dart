@@ -8,8 +8,9 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:path/path.dart';
-import 'package:flutter/material.dart' hide Intent;
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:uri_parser/uri_parser.dart';
 import 'package:media_engine/media_engine.dart';
 import 'package:media_library/media_library.dart' hide Media;
 
@@ -35,7 +36,7 @@ class FileInfoScreen extends StatefulWidget {
           context: context,
           builder: (context) => Dialog(
             child: FileInfoScreen(
-              uri: uri!,
+              uri: uri,
               timeout: timeout,
             ),
             clipBehavior: Clip.antiAlias,
@@ -48,7 +49,7 @@ class FileInfoScreen extends StatefulWidget {
           context: context,
           pageBuilder: (context, animation, secondaryAnimation) {
             return FileInfoScreen(
-              uri: uri!,
+              uri: uri,
               timeout: timeout,
             );
           },
@@ -107,14 +108,14 @@ class FileInfoScreen extends StatefulWidget {
                 ) async {
                   if (text.isNotEmpty &&
                       (formKey.currentState?.validate() ?? false)) {
-                    uri = validate(text);
-                    if (uri != null) {
-                      debugPrint(uri.toString());
+                    final parser = URIParser(text);
+                    if (parser.validate()) {
+                      debugPrint(parser.result.toString());
                       Navigator.of(ctx).maybePop();
                       // Yeah! That's recursion.
                       await show(
                         context,
-                        uri: uri,
+                        uri: parser.result,
                         timeout: timeout,
                       );
                     }
@@ -151,13 +152,12 @@ class FileInfoScreen extends StatefulWidget {
                                 key: formKey,
                                 child: TextFormField(
                                   validator: (value) {
-                                    final error = value == null
-                                        ? null
-                                        : validate(value) == null
-                                            ? ''
-                                            : null;
-                                    debugPrint(error.toString());
-                                    return error;
+                                    final parser = URIParser(value);
+                                    if (!parser.validate()) {
+                                      debugPrint(value);
+                                      return value;
+                                    }
+                                    return null;
                                   },
                                   autofocus: true,
                                   controller: controller,
@@ -229,13 +229,12 @@ class FileInfoScreen extends StatefulWidget {
                                   autofocus: true,
                                   autocorrect: false,
                                   validator: (value) {
-                                    final error = value == null
-                                        ? null
-                                        : validate(value) == null
-                                            ? ''
-                                            : null;
-                                    debugPrint(error.toString());
-                                    return error;
+                                    final parser = URIParser(value);
+                                    if (!parser.validate()) {
+                                      debugPrint(value);
+                                      return value;
+                                    }
+                                    return null;
                                   },
                                   controller: controller,
                                   keyboardType: TextInputType.url,
@@ -443,7 +442,7 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
       if (metadata.containsKey('bitrate')) {
         try {
           metadata['bitrate'] =
-              '${(metadata['bitrate'] is int ? metadata['bitrate'] : int.parse(metadata['bitrate'])) ~/ bitrateDivisor} kbps';
+              '${(metadata['bitrate'] is int ? metadata['bitrate'] : int.parse(metadata['bitrate'])) ~/ bitrateDivisor} kb/s';
         } catch (exception, stacktrace) {
           debugPrint(exception.toString());
           debugPrint(stacktrace.toString());

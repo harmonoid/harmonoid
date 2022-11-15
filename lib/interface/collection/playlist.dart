@@ -540,15 +540,6 @@ class PlaylistTileState extends State<PlaylistTile> {
                             initialValue: widget.playlist.name,
                             autofocus: true,
                             autocorrect: false,
-                            validator: (value) {
-                              final error = value == null
-                                  ? null
-                                  : validate(value) == null
-                                      ? ''
-                                      : null;
-                              debugPrint(error.toString());
-                              return error;
-                            },
                             onChanged: (value) => input = value,
                             keyboardType: TextInputType.url,
                             textCapitalization: TextCapitalization.none,

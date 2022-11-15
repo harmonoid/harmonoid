@@ -144,9 +144,10 @@ ThemeData createTheme({
     ),
     textTheme: theme,
     primaryTextTheme: theme,
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
-      shape: CircleBorder(),
-    ),
+    // Breaks [FloatingActionButton.extended].
+    // floatingActionButtonTheme: FloatingActionButtonThemeData(
+    //   shape: CircleBorder(),
+    // ),
     // ignore: deprecated_member_use
     androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
     textButtonTheme: TextButtonThemeData(

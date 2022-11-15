@@ -9,34 +9,57 @@
 import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
+import 'package:uri_parser/uri_parser.dart';
 import 'package:media_engine/media_engine.dart';
 import 'package:synchronized/synchronized.dart';
+import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:media_library/media_library.dart' hide Media;
 import 'package:ytm_client/ytm_client.dart' hide Media, Track;
-import 'package:safe_local_storage/safe_local_storage.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/utils/helpers.dart';
-import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/tagger_client.dart';
-import 'package:harmonoid/state/desktop_now_playing_controller.dart';
+import 'package:harmonoid/utils/metadata_retriever.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
+import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 
 /// Intent
 /// ------
 ///
-/// Handles the opened audio [File] from File Explorer in [Harmonoid](https://github.com/harmonoid/harmonoid).
-/// Primary purpose being to retrieve the path, saving metadata & playback of the possibly opened file.
+/// Handles the opened audio [File] from File Explorer, command line, Android intent etc. in [Harmonoid](https://github.com/harmonoid/harmonoid).
+/// Primary purpose being to retrieve the path / URI, saving metadata / artwork & playback of the possibly opened file.
 ///
 class Intent {
   /// [Intent] object instance. Must call [Intent.initialize].
-  static late Intent instance = Intent();
+  static final Intent instance = Intent();
 
-  Intent({
-    this.file,
-    this.directory,
-  }) {
+  Intent() {
+    if (Platform.isAndroid) {
+      channel.setMethodCallHandler((call) async {
+        debugPrint(
+          'Intent/channel.setMethodCallHandler: ${call.arguments.toString()}',
+        );
+        debugPrint(
+          'Intent/_flutterSidedIntentPlayCalled: ${instance._flutterSidedIntentPlayCalled}',
+        );
+        // Prevent calls from Java/Kotlin side when Flutter side has already called [Intent.play].
+        // This happens only for the very first call i.e. Flutter engine didn't start yet & Java/Kotlin sent update through the platform channel.
+        if (!instance._flutterSidedIntentPlayCalled) {
+          return;
+        }
+        if (call.arguments is String) {
+          try {
+            argument = call.arguments;
+            // [play] is synchronized & has mutual exclusion.
+            await play();
+          } catch (exception, stacktrace) {
+            debugPrint(exception.toString());
+            debugPrint(stacktrace.toString());
+          }
+        }
+      });
+    }
     if (Platform.isWindows) {
       tagger = Tagger(verbose: false);
     }
@@ -50,41 +73,10 @@ class Intent {
   static Future<void> initialize({
     List<String> args: const [],
   }) async {
-    if (isMobile) {
-      instance = Intent();
-      instance._channel.setMethodCallHandler((call) async {
-        debugPrint(
-          'Intent/channel.setMethodCallHandler: ${call.arguments.toString()}',
-        );
-        debugPrint(
-          'Intent/_flutterSidedIntentPlayCalled: ${instance._flutterSidedIntentPlayCalled}',
-        );
-        if (!instance._flutterSidedIntentPlayCalled) {
-          return;
-        }
-        // non `null`.
-        if (call.arguments is String) {
-          try {
-            final uri = Uri.parse(call.arguments);
-            instance.file =
-                !uri.isScheme('FILE') ? null : File(uri.toFilePath());
-            // synchronized.
-            instance.play();
-          } catch (exception, stacktrace) {
-            debugPrint(exception.toString());
-            debugPrint(stacktrace.toString());
-          }
-        }
-      });
-    } else {
+    // Retrieve the argument from the command line argument vector on Windows & Linux.
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       if (args.isNotEmpty) {
-        if (FS.typeSync_(args.first) == FileSystemEntityType.file) {
-          instance = Intent(file: File(args.first));
-        } else {
-          instance = Intent(directory: Directory(args.first));
-        }
-      } else {
-        instance = Intent();
+        instance.argument = args.first;
       }
     }
   }
@@ -97,157 +89,42 @@ class Intent {
       _flutterSidedIntentPlayCalled = true;
       // On Android specifically, we need to access the opened [File] through
       // the platform channel created inside the `MainActivity.java`.
-      //
-      // On Windows & Linux however, this is handled automatically by args
-      // passed inside the main method. And, when the app is already opened &
-      // a [File] is opened in the File Explorer, [ArgumentVectorHandler] comes
-      // as a responsible to handle the opened [File] and plays it using [playUri].
-      //
       if (Platform.isAndroid) {
         try {
-          final result = await _channel.invokeMethod('');
+          final result = await channel.invokeMethod('Intent.play');
           debugPrint('Intent.play/result: $result');
           if (result != null) {
-            final uri = Uri.parse(result);
-            file = !uri.isScheme('FILE') ? null : File(uri.toFilePath());
+            argument = result;
           }
         } catch (exception, stacktrace) {
           debugPrint(exception.toString());
           debugPrint(stacktrace.toString());
         }
-        debugPrint('Intent.play/file: $file');
-        if (_file?.path == file?.path &&
-            file?.path != null /* for allowing to reach the last else */) {
-          debugPrint('Intent.play: Same file. No playback initiated.');
+        debugPrint('Intent.play/argument: $argument');
+        // `argument != null` for allowing to reach the last else.
+        if (argument == _argument && argument != null) {
+          debugPrint('Intent.play: Same argument. No playback initiated.');
           return;
         }
-        _file = file;
-        if (_file != null) {
-          debugPrint('Intent.play: New file. Playback initiated.');
+        _argument = argument;
+        if (_argument != null) {
+          debugPrint('Intent.play: New argument. Playback initiated.');
         } else {
-          debugPrint('Intent.play: No file. No playback initiated.');
+          debugPrint('Intent.play: No argument. No playback initiated.');
         }
       }
-      if (file != null) {
+      if (argument != null) {
         await Playback.instance.loadAppState(open: false);
-        final metadata = <String, dynamic>{
-          'uri': file!.uri.toString(),
-        };
-        if (Platform.isWindows) {
-          try {
-            metadata.addAll(await tagger!.parse(
-              Media(file!.uri.toString()),
-              coverDirectory: Collection.instance.albumArtDirectory,
-            ));
-          } catch (exception, stacktrace) {
-            debugPrint(exception.toString());
-            debugPrint(stacktrace.toString());
-          }
-          final track = Helpers.parseTaggerMetadata(metadata);
-          await Playback.instance.open([track]);
-          DesktopNowPlayingController.instance.maximize();
-        } else if (Platform.isLinux) {
-          try {
-            metadata.addAll(await client!.parse(
-              file!.uri.toString(),
-              coverDirectory: Collection.instance.albumArtDirectory,
-            ));
-          } catch (exception, stacktrace) {
-            debugPrint(exception.toString());
-            debugPrint(stacktrace.toString());
-          }
-          final track = Helpers.parseTaggerMetadata(metadata);
-          await Playback.instance.open([track]);
-          DesktopNowPlayingController.instance.maximize();
-        } else {
-          final _metadata = await Collection.instance.parse(
-            file!.uri,
-            Collection.instance.albumArtDirectory,
-            waitUntilAlbumArtIsSaved: true,
-          );
-          metadata.addAll(_metadata.toJson());
-          final track = Track.fromJson(metadata);
-          await Playback.instance.open([track]);
-          MobileNowPlayingController.instance.show();
-        }
-      }
-      // Never invoked on mobile devices.
-      else if (directory != null) {
-        await Playback.instance.loadAppState(open: false);
-        bool playing = false;
-        for (final file
-            in await directory!.list_(extensions: kSupportedFileTypes)) {
-          if (kSupportedFileTypes.contains(file.extension)) {
-            final metadata = <String, dynamic>{
-              'uri': file.uri.toString(),
-            };
-            if (Platform.isWindows) {
-              try {
-                metadata.addAll(await tagger!.parse(
-                  Media(file.uri.toString()),
-                  coverDirectory: Collection.instance.albumArtDirectory,
-                ));
-              } catch (exception, stacktrace) {
-                debugPrint(exception.toString());
-                debugPrint(stacktrace.toString());
-              }
-              final track = Helpers.parseTaggerMetadata(metadata);
-              if (!playing) {
-                await Playback.instance.open([track]);
-                DesktopNowPlayingController.instance.maximize();
-                playing = true;
-              } else {
-                Playback.instance.add([track]);
-              }
-            } else if (Platform.isLinux) {
-              try {
-                metadata.addAll(await client!.parse(
-                  file.uri.toString(),
-                  coverDirectory: Collection.instance.albumArtDirectory,
-                ));
-              } catch (exception, stacktrace) {
-                debugPrint(exception.toString());
-                debugPrint(stacktrace.toString());
-              }
-              final track = Helpers.parseTaggerMetadata(metadata);
-              if (!playing) {
-                await Playback.instance.open([track]);
-                DesktopNowPlayingController.instance.maximize();
-                playing = true;
-              } else {
-                Playback.instance.add([track]);
-              }
-            } else {
-              try {
-                final _metadata = await Collection.instance.parse(
-                  file.uri,
-                  Collection.instance.albumArtDirectory,
-                  waitUntilAlbumArtIsSaved: true,
-                );
-                metadata.addAll(_metadata.toJson());
-                final track = Track.fromJson(metadata);
-                if (!playing) {
-                  await Playback.instance.open([track]);
-                  MobileNowPlayingController.instance.show();
-                  playing = true;
-                } else {
-                  Playback.instance.add([track]);
-                }
-              } catch (exception, stacktrace) {
-                debugPrint(exception.toString());
-                debugPrint(stacktrace.toString());
-              }
-            }
-          }
-        }
+        await Intent.instance.playURI(argument!);
       } else {
         try {
           if (!_startupAppStateLoaded) {
+            // Load the last
             await Playback.instance.loadAppState();
             if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-              // NOOP for desktop platforms.
+              // NO;OP.
             } else if (Platform.isAndroid || Platform.isIOS) {
-              // Show the [MiniNowPlayingBar] if a playlist was opened during last running instance of the app.
+              // Display [MiniNowPlayingBar] with last loaded playlist.
               MobileNowPlayingController.instance.show();
             }
           }
@@ -260,213 +137,198 @@ class Intent {
     });
   }
 
-  /// Identifies the object represented by the [uri].
-  /// If it's recognized [Media] format, then metadata is saved & playback is started.
-  /// Currently handles:
+  /// The URI opened externally by the user e.g. via File Explorer.
   ///
-  /// * [Directory].
-  /// * [File].
-  /// * [Media] [Uri].
-  /// * Web [Media] [Uri].
+  /// It may be a:
   ///
-  Future<void> playUri(Uri uri) async {
-    if (LibmpvPluginUtils.isSupported(uri)) {
-      try {
-        final response = await YTMClient.player(uri.toString());
-        await Playback.instance.open(
-          [
-            Helpers.parseWebTrack(response!.toJson()),
-          ],
-        );
-      } catch (exception, stacktrace) {
-        debugPrint(exception.toString());
-        debugPrint(stacktrace.toString());
-      }
-      if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-        DesktopNowPlayingController.instance.maximize();
-      } else if (Platform.isAndroid || Platform.isIOS) {
-        MobileNowPlayingController.instance.show();
-      }
-    } else if (uri.isScheme('HTTP') ||
-        uri.isScheme('HTTPS') ||
-        uri.isScheme('FTP') ||
-        uri.isScheme('RSTP')) {
-      final track = Helpers.parseTaggerMetadata(
-        <String, dynamic>{
-          'uri': uri.toString(),
-        },
-      );
-      await Playback.instance.open([track]);
-      if (isDesktop) {
-        DesktopNowPlayingController.instance.maximize();
-      } else if (isMobile) {
-        MobileNowPlayingController.instance.show();
-      }
-    } else if (FS.typeSync_(uri.toFilePath()) == FileSystemEntityType.file) {
-      final metadata = <String, dynamic>{
-        'uri': uri.toString(),
-      };
-      if (Platform.isWindows) {
-        try {
-          metadata.addAll(
-            await tagger!.parse(
-              Media(uri.toString()),
-              coverDirectory: Collection.instance.albumArtDirectory,
-            ),
+  /// * [File] URI i.e. file://.
+  /// * [Directory] URI i.e. file://.
+  /// * External media URL http://, https://, ftp://, rstp:// etc.
+  /// * A URL to some external service e.g. YouTube, SoundCloud, etc.
+  ///
+  Future<void> playURI(
+    String uri,
+  ) async {
+    final parser = URIParser(uri);
+    switch (parser.type) {
+      case URIType.file:
+        {
+          final track = await parse(parser.file!.uri);
+          try {
+            await Playback.instance.open(
+              [
+                track,
+              ],
+            );
+          } catch (exception, stacktrace) {
+            debugPrint(exception.toString());
+            debugPrint(stacktrace.toString());
+          }
+          break;
+        }
+      case URIType.directory:
+        {
+          final contents = await parser.directory!.list_(
+            extensions: kSupportedFileTypes,
           );
-        } catch (exception, stacktrace) {
-          debugPrint(exception.toString());
-          debugPrint(stacktrace.toString());
-        }
-        final track = Helpers.parseTaggerMetadata(metadata);
-        await Playback.instance.open([track]);
-        if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-          DesktopNowPlayingController.instance.maximize();
-        } else if (Platform.isAndroid || Platform.isIOS) {
-          MobileNowPlayingController.instance.show();
-        }
-      } else if (Platform.isLinux) {
-        try {
-          metadata.addAll(
-            await client!.parse(
-              uri.toString(),
-              coverDirectory: Collection.instance.albumArtDirectory,
-            ),
-          );
-        } catch (exception, stacktrace) {
-          debugPrint(exception.toString());
-          debugPrint(stacktrace.toString());
-        }
-        final track = Helpers.parseTaggerMetadata(metadata);
-        await Playback.instance.open([track]);
-        if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-          DesktopNowPlayingController.instance.maximize();
-        } else if (Platform.isAndroid || Platform.isIOS) {
-          MobileNowPlayingController.instance.show();
-        }
-      } else {
-        final _metadata = await Collection.instance.parse(
-          uri,
-          Collection.instance.albumArtDirectory,
-          waitUntilAlbumArtIsSaved: true,
-        );
-        metadata.addAll(_metadata.toJson());
-        final track = Track.fromJson(metadata);
-        await Playback.instance.open([track]);
-        if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-          DesktopNowPlayingController.instance.maximize();
-        } else if (Platform.isAndroid || Platform.isIOS) {
-          MobileNowPlayingController.instance.show();
-        }
-      }
-    } else if (FS.typeSync_(uri.toFilePath()) ==
-        FileSystemEntityType.directory) {
-      bool playing = false;
-      for (final file in await Directory(uri.toFilePath())
-          .list_(extensions: kSupportedFileTypes)) {
-        if (kSupportedFileTypes.contains(file.extension)) {
-          final metadata = <String, dynamic>{
-            'uri': file.uri.toString(),
-          };
-          if (Platform.isWindows) {
+          var playing = false;
+          for (final file in contents) {
+            final track = await parse(file.uri);
             try {
-              metadata.addAll(await tagger!.parse(
-                Media(file.uri.toString()),
-                coverDirectory: Collection.instance.albumArtDirectory,
-              ));
-            } catch (exception, stacktrace) {
-              debugPrint(exception.toString());
-              debugPrint(stacktrace.toString());
-            }
-            final track = Helpers.parseTaggerMetadata(metadata);
-            if (!playing) {
-              await Playback.instance.open([track]);
-              if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-                DesktopNowPlayingController.instance.maximize();
-              } else if (Platform.isAndroid || Platform.isIOS) {
-                MobileNowPlayingController.instance.show();
-              }
-              playing = true;
-            } else {
-              Playback.instance.add([track]);
-            }
-          } else if (Platform.isLinux) {
-            try {
-              metadata.addAll(await client!.parse(
-                file.uri.toString(),
-                coverDirectory: Collection.instance.albumArtDirectory,
-              ));
-            } catch (exception, stacktrace) {
-              debugPrint(exception.toString());
-              debugPrint(stacktrace.toString());
-            }
-            final track = Helpers.parseTaggerMetadata(metadata);
-            if (!playing) {
-              await Playback.instance.open([track]);
-              if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-                DesktopNowPlayingController.instance.maximize();
-              } else if (Platform.isAndroid || Platform.isIOS) {
-                MobileNowPlayingController.instance.show();
-              }
-              playing = true;
-            } else {
-              Playback.instance.add([track]);
-            }
-          } else {
-            try {
-              final _metadata = await Collection.instance.parse(
-                file.uri,
-                Collection.instance.albumArtDirectory,
-                waitUntilAlbumArtIsSaved: true,
-              );
-              metadata.addAll(_metadata.toJson());
-              final track = Track.fromJson(metadata);
               if (!playing) {
-                await Playback.instance.open([track]);
-                if (Platform.isWindows ||
-                    Platform.isLinux ||
-                    Platform.isMacOS) {
-                  DesktopNowPlayingController.instance.maximize();
-                } else if (Platform.isAndroid || Platform.isIOS) {
-                  MobileNowPlayingController.instance.show();
-                }
+                await Playback.instance.open(
+                  [
+                    track,
+                  ],
+                );
                 playing = true;
               } else {
-                Playback.instance.add([track]);
+                await Playback.instance.add(
+                  [
+                    track,
+                  ],
+                );
               }
             } catch (exception, stacktrace) {
               debugPrint(exception.toString());
               debugPrint(stacktrace.toString());
             }
           }
+          break;
         }
-      }
+      case URIType.network:
+        {
+          final uri = parser.uri!;
+          // External network URIs.
+          if (LibmpvPluginUtils.isSupported(uri)) {
+            final response = await YTMClient.player(uri.toString());
+            await Playback.instance.open(
+              [
+                Helpers.parseWebTrack(response!.toJson()),
+              ],
+            );
+          }
+          // Direct network URIs. No metadata extraction.
+          else {
+            await Playback.instance.open(
+              [
+                Track.fromJson(
+                  {
+                    'uri': uri.toString(),
+                  },
+                )
+              ],
+            );
+          }
+          break;
+        }
+      default:
+        break;
+    }
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      DesktopNowPlayingController.instance.maximize();
+    } else if (Platform.isAndroid || Platform.isIOS) {
+      MobileNowPlayingController.instance.show();
     }
   }
 
-  /// The opened audio [File] from File Explorer.
-  /// `null` if no [File] was opened.
-  File? file;
+  /// Parses the metadata & saves cover art at local cache directory for the given [uri].
+  Future<Track> parse(
+    Uri uri, {
+    Directory? coverDirectory,
+    Duration? timeout,
+  }) async {
+    coverDirectory ??= Collection.instance.albumArtDirectory;
+    timeout ??= const Duration(seconds: 1);
+    debugPrint(uri.toString());
+    // The finally extracted metadata must have the URI to the actual media resource, before parsing to the model.
+    final result = <String, dynamic>{'uri': uri};
+    // Windows.
+    if (Platform.isWindows && tagger != null) {
+      try {
+        final metadata = await tagger!.parse(
+          Media(uri.toString()),
+          coverDirectory: coverDirectory,
+          timeout: timeout,
+        );
+        result.addAll(metadata);
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+      debugPrint(result.toString());
+      return Helpers.parseTaggerMetadata(result);
+    }
+    // GNU/Linux.
+    if (Platform.isLinux && client != null) {
+      try {
+        final metadata = await client!.parse(
+          uri.toString(),
+          coverDirectory: coverDirectory,
+          timeout: timeout,
+        );
+        result.addAll(metadata);
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+      debugPrint(result.toString());
+      return Helpers.parseTaggerMetadata(result);
+    }
+    // Android.
+    if (Platform.isAndroid) {
+      try {
+        final metadata = await MetadataRetriever.instance.metadata(
+          uri,
+          coverDirectory,
+          timeout: timeout,
+        );
+        result.addAll(metadata.toJson());
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+      debugPrint(result.toString());
+      return Track.fromJson(result);
+    }
+    // Should never be reached.
+    // No metadata could be extracted.
+    debugPrint(result.toString());
+    return Track.fromJson(result);
+  }
 
-  /// `Add to Harmonoid's Playlist` on Windows or Linux.
-  final Directory? directory;
+  /// The URI opened externally by the user e.g. via File Explorer.
+  /// It may be a:
+  /// * [File] URI i.e. file://.
+  /// * [Directory] URI i.e. file://.
+  /// * External media URL http://, https://, ftp://, rstp:// etc.
+  /// * A URL to some external service e.g. YouTube, SoundCloud, etc.
+  ///
+  String? argument;
+
+  /// For ignoring duplicate redundant calls on Android during application lifecycle changes.
+  String? _argument;
 
   /// `libmpv.dart` [Tagger] instance.
-  /// Public for disposal upon application termination inside [WindowCloseHandler].
+  /// Public for disposal upon application termination inside [WindowLifecycle].
   Tagger? tagger;
   TaggerClient? client;
 
   /// [MethodChannel] used for retrieving the media [Uri] on Android specifically.
-  final MethodChannel _channel =
-      const MethodChannel('com.alexmercerind.harmonoid');
+  ///
+  final MethodChannel channel =
+      const MethodChannel('com.alexmercerind.harmonoid.IntentRetriever');
 
   /// Android specific.
+  ///
   /// This boolean is used to identify whether the first [Intent.play] call is
-  /// received through [CollectionScreen] or not.
-  /// This is important to avoid the first redundant call through [_channel],
-  /// because Flutter Engine isn't initialized at that point.
-  /// However, future notifications of opened media files are notified through
-  /// the [_channel], while the application is still running.
+  /// made after [WidgetsBinding.addPostFrameCallback].
+  ///
+  /// This is important to avoid the first redundant call through [channel],
+  /// because Flutter Engine isn't initialized at that point. However, future
+  /// notifications of opened media files are notified through the [channel],
+  /// while the application is still running i.e. Flutter engine alive.
+  ///
   bool _flutterSidedIntentPlayCalled = false;
 
   /// Handle [Playback.instance.loadAppState].
@@ -476,8 +338,4 @@ class Intent {
 
   /// For mutual exclusion in [play] method.
   final Lock _lock = Lock();
-
-  /// [File] which is currently in middle of playback after [play] was called.
-  /// Used for redundant [play] calls, if same media was already playing.
-  File? _file;
 }

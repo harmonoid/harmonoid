@@ -16,9 +16,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
+import 'package:uri_parser/uri_parser.dart';
 import 'package:animations/animations.dart';
 import 'package:window_plus/window_plus.dart';
-import 'package:harmonoid/core/playback.dart';
 import 'package:media_library/media_library.dart';
 import 'package:harmonoid_visual_assets/harmonoid_visual_assets.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
@@ -26,6 +26,7 @@ import 'package:known_extents_list_view_builder/known_extents_list_view_builder.
 
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/hotkeys.dart';
+import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/theme.dart';
@@ -2575,7 +2576,7 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                   );
                   if (file != null) {
                     await Navigator.of(ctx).maybePop();
-                    await Intent.instance.playUri(file.uri);
+                    await Intent.instance.playURI(file.uri.toString());
                   }
                 },
                 leading: CircleAvatar(
@@ -2629,16 +2630,20 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                                   autofocus: true,
                                   cursorWidth: 1.0,
                                   onChanged: (value) => input = value,
-                                  validator: (value) =>
-                                      validate(value ?? '') == null ? '' : null,
+                                  validator: (value) {
+                                    final parser = URIParser(value);
+                                    if (!parser.validate()) {
+                                      debugPrint(value);
+                                      return value;
+                                    }
+                                    return null;
+                                  },
                                   onFieldSubmitted: (value) async {
                                     if (value.isNotEmpty &&
                                         (formKey.currentState?.validate() ??
                                             false)) {
                                       Navigator.of(ctx).maybePop();
-                                      await Intent.instance.playUri(
-                                        validate(value)!,
-                                      );
+                                      await Intent.instance.playURI(value);
                                     }
                                   },
                                   textAlignVertical: TextAlignVertical.center,
@@ -2665,7 +2670,7 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                             if (input.isNotEmpty &&
                                 (formKey.currentState?.validate() ?? false)) {
                               Navigator.of(ctx).maybePop();
-                              await Intent.instance.playUri(validate(input)!);
+                              await Intent.instance.playURI(input);
                             }
                           },
                         ),
@@ -2987,7 +2992,7 @@ class _MobileAppBarOverflowButtonState
                           );
                           if (file != null) {
                             await Navigator.of(ctx).maybePop();
-                            await Intent.instance.playUri(file.uri);
+                            await Intent.instance.playURI(file.uri.toString());
                           }
                         },
                         leading: CircleAvatar(
@@ -3040,13 +3045,12 @@ class _MobileAppBarOverflowButtonState
                                           autofocus: true,
                                           autocorrect: false,
                                           validator: (value) {
-                                            final error = value == null
-                                                ? null
-                                                : validate(value) == null
-                                                    ? ''
-                                                    : null;
-                                            debugPrint(error.toString());
-                                            return error;
+                                            final parser = URIParser(value);
+                                            if (!parser.validate()) {
+                                              debugPrint(value);
+                                              return value;
+                                            }
+                                            return null;
                                           },
                                           onChanged: (value) => input = value,
                                           keyboardType: TextInputType.url,
@@ -3060,7 +3064,7 @@ class _MobileAppBarOverflowButtonState
                                               await Navigator.of(context)
                                                   .maybePop();
                                               await Intent.instance
-                                                  .playUri(validate(value)!);
+                                                  .playURI(value);
                                             }
                                           },
                                           decoration: InputDecoration(
@@ -3110,7 +3114,7 @@ class _MobileAppBarOverflowButtonState
                                             await Navigator.of(context)
                                                 .maybePop();
                                             await Intent.instance
-                                                .playUri(validate(input)!);
+                                                .playURI(input);
                                           }
                                         },
                                         style: ButtonStyle(

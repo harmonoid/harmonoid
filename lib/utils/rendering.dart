@@ -1086,44 +1086,6 @@ enum TabRouteSender {
   systemNavigationBackButton,
 }
 
-Uri? validate(String text) {
-  // Get rid of quotes.
-  if (text.startsWith('"') && text.endsWith('"')) {
-    text = text.substring(1, text.length - 1);
-  }
-  debugPrint(text);
-  Uri? uri;
-  if (uri == null) {
-    try {
-      if (FS.typeSync_(text) == FileSystemEntityType.file) {
-        if (Platform.isWindows) {
-          text = text.replaceAll('\\', '/');
-        }
-        uri = File(text).uri;
-      }
-    } catch (exception, stacktrace) {
-      debugPrint(exception.toString());
-      debugPrint(stacktrace.toString());
-    }
-  }
-  if (uri == null) {
-    try {
-      uri = Uri.parse(text);
-      if (!(uri.isScheme('HTTP') ||
-          uri.isScheme('HTTPS') ||
-          uri.isScheme('FTP') ||
-          uri.isScheme('RSTP') ||
-          uri.isScheme('FILE'))) {
-        uri = null;
-      }
-    } catch (exception, stacktrace) {
-      debugPrint(exception.toString());
-      debugPrint(stacktrace.toString());
-    }
-  }
-  return uri;
-}
-
 /// Fetches the album art of a given [Media] either local or online.
 ///
 /// Passing [small] as `true` will result in a smaller sized image, which may be useful

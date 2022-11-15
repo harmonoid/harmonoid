@@ -11,7 +11,7 @@ import 'package:path/path.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:media_library/media_library.dart';
-import 'package:media_engine/media_engine.dart' as engine;
+import 'package:media_engine/media_engine.dart' as _;
 import 'package:media_engine/media_engine.dart' hide Media;
 import 'package:safe_local_storage/safe_local_storage.dart';
 
@@ -45,10 +45,10 @@ class Collection extends MediaLibrary with ChangeNotifier {
     required super.albumHashCodeParameters,
   }) {
     if (Platform.isWindows) {
-      _tagger = Tagger(verbose: false);
+      tagger = Tagger(verbose: false);
     }
     if (Platform.isLinux) {
-      _client = TaggerClient(verbose: false);
+      client = TaggerClient(verbose: false);
     }
   }
 
@@ -98,8 +98,8 @@ class Collection extends MediaLibrary with ChangeNotifier {
   @override
   // ignore: must_call_super
   Future<void> dispose() async {
-    await _tagger?.dispose();
-    await _client?.dispose();
+    await tagger?.dispose();
+    await client?.dispose();
   }
 
   /// Overriden [parse] to implement platform-specific metadata retrieval.
@@ -114,35 +114,63 @@ class Collection extends MediaLibrary with ChangeNotifier {
     Duration? timeout,
     bool waitUntilAlbumArtIsSaved = false,
   }) async {
+    timeout ??= const Duration(seconds: 1);
     debugPrint(uri.toString());
-    if (Platform.isWindows) {
-      assert(_tagger != null);
-      final metadata = await _tagger!.parse(
-        engine.Media(uri.toString()),
-        coverDirectory: coverDirectory,
-        timeout: timeout ?? const Duration(seconds: 1),
-      );
-      debugPrint(metadata.toString());
-      return Helpers.parseTaggerMetadata(metadata);
+    // The finally extracted metadata must have the URI to the actual media resource, before parsing to the model.
+    final result = <String, dynamic>{'uri': uri};
+    // Windows.
+    if (Platform.isWindows && tagger != null) {
+      try {
+        final metadata = await tagger!.parse(
+          _.Media(uri.toString()),
+          coverDirectory: coverDirectory,
+          timeout: timeout,
+        );
+        result.addAll(metadata);
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+      debugPrint(result.toString());
+      return Helpers.parseTaggerMetadata(result);
     }
-    if (Platform.isLinux) {
-      assert(_client != null);
-      final metadata = await _client!.parse(
-        uri.toString(),
-        coverDirectory: coverDirectory,
-        timeout: timeout ?? const Duration(seconds: 1),
-      );
-      debugPrint(metadata.toString());
-      return Helpers.parseTaggerMetadata(metadata);
+    // GNU/Linux.
+    if (Platform.isLinux && client != null) {
+      try {
+        final metadata = await client!.parse(
+          uri.toString(),
+          coverDirectory: coverDirectory,
+          timeout: timeout,
+        );
+        result.addAll(metadata);
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+      debugPrint(result.toString());
+      return Helpers.parseTaggerMetadata(result);
     }
+    // Android.
     if (Platform.isAndroid) {
-      return MetadataRetriever.instance.metadata(
-        uri,
-        coverDirectory,
-        timeout: timeout,
-        waitUntilAlbumArtIsSaved: waitUntilAlbumArtIsSaved,
-      );
+      try {
+        final metadata = await MetadataRetriever.instance.metadata(
+          uri,
+          coverDirectory,
+          timeout: timeout,
+          waitUntilAlbumArtIsSaved: waitUntilAlbumArtIsSaved,
+        );
+        result.addAll(metadata.toJson());
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+      debugPrint(result.toString());
+      return Track.fromJson(result);
     }
+    // Should never be reached.
+    // No metadata could be extracted.
+    debugPrint(result.toString());
+    return Track.fromJson(result);
   }
 
   /// This is because modern Android versions i.e. 10 or higher have stricter file access/management policies.
@@ -176,8 +204,8 @@ class Collection extends MediaLibrary with ChangeNotifier {
         ),
       );
 
-  Tagger? _tagger;
-  TaggerClient? _client;
+  Tagger? tagger;
+  TaggerClient? client;
 
   static const String _kUnknownAlbumArtRootBundle =
       'assets/images/default_album_art.png';

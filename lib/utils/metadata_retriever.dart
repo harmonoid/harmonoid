@@ -151,28 +151,16 @@ class AndroidMediaMetadata {
         trackArtistNames: map['trackArtistNames'],
         albumName: map['albumName'],
         albumArtistName: map['albumArtistName'],
-        trackNumber: MetadataRetriever._parseInteger(
-          map['trackNumber'],
-        ),
-        discNumber: MetadataRetriever._parseInteger(
-          map['discNumber'],
-        ),
-        albumLength: MetadataRetriever._parseInteger(
-          map['albumLength'],
-        ),
-        year: MetadataRetriever._parseInteger(
-          map['year'],
-        ),
+        trackNumber: MetadataRetriever._parseInteger(map['trackNumber']),
+        discNumber: MetadataRetriever._parseInteger(map['discNumber']),
+        albumLength: MetadataRetriever._parseInteger(map['albumLength']),
+        year: MetadataRetriever._parseInteger(map['year']),
         genre: map['genre'],
         authorName: map['authorName'],
         writerName: map['writerName'],
         mimeType: map['mimeType'],
-        duration: MetadataRetriever._parseInteger(
-          map['duration'],
-        ),
-        bitrate: MetadataRetriever._parseInteger(
-          map['bitrate'],
-        ),
+        duration: MetadataRetriever._parseInteger(map['duration']),
+        bitrate: MetadataRetriever._parseInteger(map['bitrate']),
         uri: map['uri'],
       );
 
@@ -196,7 +184,7 @@ class AndroidMediaMetadata {
 
   @override
   String toString() =>
-      '$AndroidMediaMetadata(trackName: $trackName, trackArtistNames: $trackArtistNames, albumName: $albumName, albumArtistName: $albumArtistName, trackNumber: $trackNumber, discNumber: $discNumber, albumLength: $albumLength, year: $year, genre: $genre, authorName: $authorName, writerName: $writerName, mimeType: $mimeType, duration: $duration, bitrate: $bitrate, uri: $uri)';
+      'AndroidMediaMetadata(trackName: $trackName, trackArtistNames: $trackArtistNames, albumName: $albumName, albumArtistName: $albumArtistName, trackNumber: $trackNumber, discNumber: $discNumber, albumLength: $albumLength, year: $year, genre: $genre, authorName: $authorName, writerName: $writerName, mimeType: $mimeType, duration: $duration, bitrate: $bitrate, uri: $uri)';
 }
 
 /// The format extracted from the media resource in object format.
@@ -238,5 +226,5 @@ class AndroidMediaFormat {
 
   @override
   String toString() =>
-      '$AndroidMediaFormat(bitrate: $bitrate, sampleRate: $sampleRate, channelCount: $channelCount, extension: $extension)';
+      'AndroidMediaFormat(bitrate: $bitrate, sampleRate: $sampleRate, channelCount: $channelCount, extension: $extension)';
 }
