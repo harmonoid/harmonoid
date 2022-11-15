@@ -27,16 +27,17 @@ import com.ryanheise.audioservice.AudioServiceActivity
 import java.math.BigInteger
 import java.security.MessageDigest
 
-private const val CHANNEL_NAME: String = "com.alexmercerind.harmonoid"
 private const val METADATA_RETRIEVER_CHANNEL_NAME: String =
     "com.alexmercerind.harmonoid.MetadataRetriever"
 private const val STORAGE_RETRIEVER_CHANNEL_NAME: String =
     "com.alexmercerind.harmonoid.StorageRetriever"
+private const val INTENT_RETRIEVER_CHANNEL_NAME: String =
+    "com.alexmercerind.harmonoid.IntentRetriever"
 
 class MainActivity : AudioServiceActivity() {
-    private var channel: MethodChannel? = null
     private var metadataRetrieverChannel: MethodChannel? = null
     private var storageRetrieverChannel: MethodChannel? = null
+    private var intentRetrieverChannel: MethodChannel? = null
     private var uri: String? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -44,10 +45,6 @@ class MainActivity : AudioServiceActivity() {
         Log.d(
             "Harmonoid",
             context.getExternalFilesDirs(null).map { file -> file.absolutePath }.toString()
-        )
-        channel = MethodChannel(
-            flutterEngine.dartExecutor.binaryMessenger,
-            CHANNEL_NAME
         )
         metadataRetrieverChannel = MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
@@ -57,9 +54,10 @@ class MainActivity : AudioServiceActivity() {
             flutterEngine.dartExecutor.binaryMessenger,
             STORAGE_RETRIEVER_CHANNEL_NAME
         )
-        channel?.setMethodCallHandler { _, result ->
-            result.success(uri)
-        }
+        intentRetrieverChannel = MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            INTENT_RETRIEVER_CHANNEL_NAME
+        )
         metadataRetrieverChannel?.setMethodCallHandler(MetadataRetriever())
         storageRetrieverChannel?.setMethodCallHandler(
             StorageRetriever(
@@ -67,6 +65,9 @@ class MainActivity : AudioServiceActivity() {
                 context
             )
         )
+        intentRetrieverChannel?.setMethodCallHandler { _, result ->
+            result.success(uri)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -180,6 +181,8 @@ class MainActivity : AudioServiceActivity() {
                 // If file name is null, then a random integer value is used as the temporary file's name.
                 // Hashing the resulting [fileName] as MD5. This will prevent any file name too long [IOException]s.
                 val path = "$intentFilesDirAbsolutePath/${getFileNameIdentifier(fileName)}"
+                result = "file://$path"
+                Log.d("Harmonoid", path)
                 // Only create/copy the content from the [Intent] if same file does not exist.
                 if (!File(path).exists()) {
                     Log.d("Harmonoid", path)
@@ -197,14 +200,12 @@ class MainActivity : AudioServiceActivity() {
                         File(path).createNewFile()
                     }
                     inputStream?.copyTo(FileOutputStream(path))
-                    result = "file://$path"
-                    Log.d("Harmonoid", path)
                 }
             }
             if (!arrayListOf(null, uri).contains(result)) {
                 // Notify the newly opened file through the platform channel.
                 uri = result
-                channel?.invokeMethod("Harmonoid", uri)
+                intentRetrieverChannel?.invokeMethod("Harmonoid", uri)
                 Log.d("Harmonoid", uri.toString())
             }
         }
