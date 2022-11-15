@@ -1,40 +1,20 @@
-diff --git a/pubspec.lock b/pubspec.lock
-index d3e7dc7..bdd1563 100644
---- a/pubspec.lock
-+++ b/pubspec.lock
-@@ -67,11 +67,9 @@ packages:
-   safe_local_storage:
-     dependency: "direct main"
-     description:
--      path: "."
--      ref: master
--      resolved-ref: "1a383fb0d4cd100dbeaa554f187b80bb98ed02cb"
--      url: "https://github.com/harmonoid/safe_local_storage.git"
--    source: git
-+      path: "../safe_local_storage"
-+      relative: true
-+    source: path
-     version: "0.0.1"
-   source_span:
-     dependency: transitive
-@@ -109,4 +107,4 @@ packages:
-     source: hosted
-     version: "1.3.0"
- sdks:
--  dart: ">=2.16.0 <3.0.0"
-+  dart: ">=2.14.0 <3.0.0"
 diff --git a/pubspec.yaml b/pubspec.yaml
-index 0c58c07..bddddb4 100644
+index 0b5b2e3..19f5837 100644
 --- a/pubspec.yaml
 +++ b/pubspec.yaml
-@@ -20,6 +20,10 @@ dependencies:
+@@ -13,13 +13,9 @@ dependencies:
+   path: ^1.8.0
+   http: ^0.13.4
+   uri_parser:
+-    git:
+-      url: https://github.com/harmonoid/uri_parser.git
+-      ref: b7bf58e856cdd787718883cd7ee2d60e0cf58080
++    path: ../uri_parser
+   safe_local_storage:
+-    git:
+-      url: https://github.com/harmonoid/safe_local_storage.git
+-      ref: master
++    path: ../safe_local_storage
+ 
  dev_dependencies:
    lints: ^1.0.0
- 
-+dependency_overrides:
-+  safe_local_storage:
-+    path: ../safe_local_storage
-+
- ffigen:
-   name: MPV
-   description: Dart bindings to libmpv.
