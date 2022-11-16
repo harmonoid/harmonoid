@@ -526,6 +526,8 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
             ),
             body: NowPlayingBarScrollHideNotifier(
               child: CustomListView(
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.manual,
                 shrinkWrap: true,
                 children: [
                   Stack(

@@ -607,7 +607,9 @@ class PlaylistTileState extends State<PlaylistTile> {
                           ),
                           child: Text(
                             Language.instance.RENAME.toUpperCase(),
-                            style: TextStyle(letterSpacing: 2.0),
+                            style: const TextStyle(
+                              letterSpacing: 2.0,
+                            ),
                           ),
                         ),
                       ],

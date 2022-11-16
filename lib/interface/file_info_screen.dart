@@ -301,7 +301,9 @@ class FileInfoScreen extends StatefulWidget {
                                 ),
                                 child: Text(
                                   Language.instance.READ.toUpperCase(),
-                                  style: TextStyle(letterSpacing: 2.0),
+                                  style: const TextStyle(
+                                    letterSpacing: 2.0,
+                                  ),
                                 ),
                               ),
                             ],

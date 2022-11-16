@@ -542,7 +542,6 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                                                   ? Colors.white
                                                                   : Colors
                                                                       .black87,
-                                                          letterSpacing: -0.1,
                                                         ),
                                                       ),
                                                     ),
@@ -591,7 +590,6 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                                           color: isDark(context)
                                                               ? Colors.white
                                                               : Colors.black87,
-                                                          letterSpacing: -0.1,
                                                         ),
                                                       ),
                                                     ),
@@ -633,7 +631,6 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                                           color: isDark(context)
                                                               ? Colors.white
                                                               : Colors.black87,
-                                                          letterSpacing: -0.1,
                                                         ),
                                                       ),
                                                     ),

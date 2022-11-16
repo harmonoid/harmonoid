@@ -2358,8 +2358,9 @@ class MiniNowPlayingBarRefreshCollectionButtonState
                                             child: Text(
                                               Language.instance.CREATE
                                                   .toUpperCase(),
-                                              style:
-                                                  TextStyle(letterSpacing: 2.0),
+                                              style: const TextStyle(
+                                                letterSpacing: 2.0,
+                                              ),
                                             ),
                                           ),
                                         ],

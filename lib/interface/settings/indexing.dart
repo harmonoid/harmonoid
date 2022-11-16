@@ -185,68 +185,105 @@ class IndexingState extends State<IndexingSetting>
                                       ),
                                       TextButton(
                                         onPressed: () async {
-                                          if (!controller.isCompleted) {
-                                            showProgressDialog();
-                                            return;
-                                          }
-                                          if (Configuration
-                                                  .instance
-                                                  .collectionDirectories
-                                                  .length ==
-                                              1) {
-                                            showDialog(
-                                              context: context,
-                                              builder: (subContext) =>
-                                                  AlertDialog(
-                                                title: Text(
-                                                  Language.instance.WARNING,
-                                                ),
-                                                contentPadding:
-                                                    const EdgeInsets.fromLTRB(
-                                                  24.0,
-                                                  20.0,
-                                                  24.0,
-                                                  8.0,
-                                                ),
-                                                content: Text(
-                                                  Language.instance
-                                                      .LAST_COLLECTION_DIRECTORY_REMOVED,
-                                                  style: Theme.of(subContext)
-                                                      .textTheme
-                                                      .displaySmall,
-                                                ),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () async {
-                                                      Navigator.of(subContext)
-                                                          .pop();
-                                                    },
-                                                    child: Text(
-                                                      Language.instance.OK,
-                                                    ),
+                                          try {
+                                            debugPrint(directory.toString());
+                                            final c = Collection.instance;
+                                            final conf = Configuration.instance;
+                                            final cr =
+                                                CollectionRefresh.instance;
+                                            if (!cr.isCompleted) {
+                                              await showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    AlertDialog(
+                                                  backgroundColor:
+                                                      Theme.of(context)
+                                                          .cardTheme
+                                                          .color,
+                                                  title: Text(
+                                                    Language.instance
+                                                        .INDEXING_ALREADY_GOING_ON_TITLE,
                                                   ),
-                                                ],
+                                                  content: Text(
+                                                    Language.instance
+                                                        .INDEXING_ALREADY_GOING_ON_SUBTITLE,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .displaySmall,
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed:
+                                                          Navigator.of(context)
+                                                              .pop,
+                                                      child: Text(
+                                                          Language.instance.OK),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                              return;
+                                            }
+                                            if (conf.collectionDirectories
+                                                    .length ==
+                                                1) {
+                                              await showDialog(
+                                                context: context,
+                                                builder: (subContext) =>
+                                                    AlertDialog(
+                                                  title: Text(
+                                                    Language.instance.WARNING,
+                                                  ),
+                                                  contentPadding:
+                                                      const EdgeInsets.fromLTRB(
+                                                    24.0,
+                                                    20.0,
+                                                    24.0,
+                                                    8.0,
+                                                  ),
+                                                  content: Text(
+                                                    Language.instance
+                                                        .LAST_COLLECTION_DIRECTORY_REMOVED,
+                                                    style: Theme.of(subContext)
+                                                        .textTheme
+                                                        .displaySmall,
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () async {
+                                                        Navigator.of(subContext)
+                                                            .pop();
+                                                      },
+                                                      child: Text(
+                                                          Language.instance.OK),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                              return;
+                                            }
+                                            await c.removeDirectories(
+                                              refresh: false,
+                                              directories: {directory},
+                                              onProgress: (progress, total,
+                                                  isCompleted) {
+                                                cr.set(progress, total);
+                                              },
+                                            );
+                                            await conf.save(
+                                              collectionDirectories: c
+                                                  .collectionDirectories
+                                                  .difference(
+                                                {
+                                                  directory,
+                                                },
                                               ),
                                             );
-                                            return;
+                                            setState(() {});
+                                          } catch (exception, stacktrace) {
+                                            debugPrint(exception.toString());
+                                            debugPrint(stacktrace.toString());
                                           }
-                                          await Collection.instance
-                                              .removeDirectories(
-                                            refresh: false,
-                                            directories: {directory},
-                                            onProgress:
-                                                (progress, total, isCompleted) {
-                                              controller.set(
-                                                progress,
-                                                total,
-                                              );
-                                            },
-                                          );
-                                          await Configuration.instance.save(
-                                            collectionDirectories: Configuration
-                                                .instance.collectionDirectories
-                                              ..remove(directory),
-                                          );
                                         },
                                         child: Text(
                                           Language.instance.REMOVE
@@ -486,7 +523,11 @@ class IndexingState extends State<IndexingSetting>
         },
       );
       await Configuration.instance.save(
-        collectionDirectories: Collection.instance.collectionDirectories,
+        collectionDirectories: Collection.instance.collectionDirectories.union(
+          {
+            directory,
+          },
+        ),
       );
     }
   }
@@ -499,6 +540,12 @@ class IndexingState extends State<IndexingSetting>
           backgroundColor: Theme.of(context).cardTheme.color,
           title: Text(
             Language.instance.INDEXING_ALREADY_GOING_ON_TITLE,
+          ),
+          contentPadding: const EdgeInsets.fromLTRB(
+            24.0,
+            20.0,
+            24.0,
+            8.0,
           ),
           content: Text(
             Language.instance.INDEXING_ALREADY_GOING_ON_SUBTITLE,

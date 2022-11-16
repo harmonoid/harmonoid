@@ -359,7 +359,9 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
                         },
                   child: Text(
                     Language.instance.ADD_THIS_FOLDER.toUpperCase(),
-                    style: TextStyle(letterSpacing: 2.0),
+                    style: const TextStyle(
+                      letterSpacing: 2.0,
+                    ),
                   ),
                 ),
               ),

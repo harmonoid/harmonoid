@@ -613,8 +613,6 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                                   ? Colors.white
                                                                   : Colors
                                                                       .black87,
-                                                              letterSpacing:
-                                                                  -0.1,
                                                             ),
                                                           ),
                                                         ),
@@ -672,8 +670,6 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                                   ? Colors.white
                                                                   : Colors
                                                                       .black87,
-                                                              letterSpacing:
-                                                                  -0.1,
                                                             ),
                                                           ),
                                                         ),
@@ -721,8 +717,6 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                                   ? Colors.white
                                                                   : Colors
                                                                       .black87,
-                                                              letterSpacing:
-                                                                  -0.1,
                                                             ),
                                                           ),
                                                         ),

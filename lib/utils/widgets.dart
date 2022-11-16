@@ -3136,7 +3136,9 @@ class _MobileAppBarOverflowButtonState
                                         ),
                                         child: Text(
                                           Language.instance.PLAY.toUpperCase(),
-                                          style: TextStyle(letterSpacing: 2.0),
+                                          style: const TextStyle(
+                                            letterSpacing: 2.0,
+                                          ),
                                         ),
                                       ),
                                     ],

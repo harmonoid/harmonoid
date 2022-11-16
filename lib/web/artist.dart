@@ -444,8 +444,9 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                           .split(' • ')
                                           .last
                                           .trim(),
-                                      style:
-                                          Theme.of(context).textTheme.displaySmall,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall,
                                     ),
                                     const SizedBox(height: 8.0),
                                     ConstrainedBox(
@@ -514,7 +515,6 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                                       Brightness.dark)
                                                   ? Colors.white
                                                   : Colors.black87,
-                                              letterSpacing: -0.1,
                                             ),
                                           ),
                                         ),
@@ -570,7 +570,6 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                                       Brightness.dark
                                                   ? Colors.white
                                                   : Colors.black87,
-                                              letterSpacing: -0.1,
                                             ),
                                           ),
                                         ),

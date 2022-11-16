@@ -158,6 +158,12 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                         title: Text(
                           Language.instance.INDEXING_ALREADY_GOING_ON_TITLE,
                         ),
+                        contentPadding: const EdgeInsets.fromLTRB(
+                          24.0,
+                          20.0,
+                          24.0,
+                          8.0,
+                        ),
                         content: Text(
                           Language.instance.INDEXING_ALREADY_GOING_ON_SUBTITLE,
                           style: Theme.of(context).textTheme.displaySmall,
@@ -203,7 +209,11 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                     },
                   );
                   await conf.save(
-                    collectionDirectories: c.collectionDirectories,
+                    collectionDirectories: c.collectionDirectories.difference(
+                      {
+                        e,
+                      },
+                    ),
                   );
                 } catch (exception, stacktrace) {
                   debugPrint(exception.toString());

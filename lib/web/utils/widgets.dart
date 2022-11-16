@@ -642,7 +642,7 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
                       ),
                       child: Text(
                         Language.instance.OK.toUpperCase(),
-                        style: TextStyle(letterSpacing: 2.0),
+                        style: const TextStyle(letterSpacing: 2.0),
                       ),
                     ),
                   ],
@@ -843,7 +843,7 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
               ),
               child: Text(
                 Language.instance.OK.toUpperCase(),
-                style: TextStyle(letterSpacing: 2.0),
+                style: const TextStyle(letterSpacing: 2.0),
               ),
             )
           else
@@ -856,7 +856,7 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
               ),
               child: Text(
                 Language.instance.ADD.toUpperCase(),
-                style: TextStyle(letterSpacing: 2.0),
+                style: const TextStyle(letterSpacing: 2.0),
               ),
             ),
         ],

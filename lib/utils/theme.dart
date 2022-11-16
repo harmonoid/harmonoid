@@ -121,6 +121,8 @@ ThemeData createTheme({
   // Enforce `Inter` font family on Linux machines.
   theme = theme.apply(fontFamily: Platform.isLinux ? 'Inter' : null);
   return ThemeData(
+    // Enforce `Inter` font family on Linux machines.
+    fontFamily: Platform.isLinux ? 'Inter' : null,
     colorScheme: ColorScheme(
       brightness: light ? Brightness.light : Brightness.dark,
       primary: color,
@@ -150,30 +152,34 @@ ThemeData createTheme({
     // ),
     // ignore: deprecated_member_use
     androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
-    textButtonTheme: TextButtonThemeData(
-      style: ButtonStyle(
-        textStyle: MaterialStatePropertyAll(
-          TextStyle(
-            letterSpacing: Platform.isLinux ? 0.8 : 1.6,
-            fontWeight: FontWeight.w600,
-            // Enforce `Inter` font family on Linux machines.
-            fontFamily: Platform.isLinux ? 'Inter' : null,
-          ),
-        ),
-      ),
-    ),
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ButtonStyle(
-        textStyle: MaterialStatePropertyAll(
-          TextStyle(
-            letterSpacing: Platform.isLinux ? 0.8 : 1.6,
-            fontWeight: FontWeight.w600,
-            // Enforce `Inter` font family on Linux machines.
-            fontFamily: Platform.isLinux ? 'Inter' : null,
-          ),
-        ),
-      ),
-    ),
+    textButtonTheme: desktop
+        ? TextButtonThemeData(
+            style: ButtonStyle(
+              textStyle: MaterialStatePropertyAll(
+                TextStyle(
+                  letterSpacing: Platform.isLinux ? 0.8 : 1.6,
+                  fontWeight: FontWeight.w600,
+                  // Enforce `Inter` font family on Linux machines.
+                  fontFamily: Platform.isLinux ? 'Inter' : null,
+                ),
+              ),
+            ),
+          )
+        : null,
+    elevatedButtonTheme: desktop
+        ? ElevatedButtonThemeData(
+            style: ButtonStyle(
+              textStyle: MaterialStatePropertyAll(
+                TextStyle(
+                  letterSpacing: Platform.isLinux ? 0.8 : 1.6,
+                  fontWeight: FontWeight.w600,
+                  // Enforce `Inter` font family on Linux machines.
+                  fontFamily: Platform.isLinux ? 'Inter' : null,
+                ),
+              ),
+            ),
+          )
+        : null,
     bottomSheetTheme: BottomSheetThemeData(
       backgroundColor: light ? Colors.white : Color(0xFF202020),
     ),
@@ -295,25 +301,24 @@ ThemeData createTheme({
       selectedItemColor: Colors.white.withOpacity(0.87),
       unselectedItemColor: Colors.white54,
     ),
-    tooltipTheme: TooltipThemeData(
-      textStyle: desktop
-          ? TextStyle(
+    tooltipTheme: desktop
+        ? TooltipThemeData(
+            textStyle: TextStyle(
               fontSize: 12.0,
               color: light ? Colors.white : Colors.black,
               // Enforce `Inter` font family on Linux machines.
               fontFamily: Platform.isLinux ? 'Inter' : null,
-            )
-          : null,
-      decoration: BoxDecoration(
-        color: light ? Colors.black : Colors.white,
-        borderRadius:
-            mobile ? BorderRadius.circular(16.0) : BorderRadius.circular(4.0),
-      ),
-      height: mobile ? 32.0 : null,
-      verticalOffset: desktop ? 36.0 : null,
-      preferBelow: desktop ? true : null,
-      waitDuration: Duration(seconds: 1),
-    ),
+            ),
+            decoration: BoxDecoration(
+              color: light ? Colors.black : Colors.white,
+              borderRadius: BorderRadius.circular(4.0),
+            ),
+            height: null,
+            verticalOffset: 36.0,
+            preferBelow: true,
+            waitDuration: const Duration(seconds: 1),
+          )
+        : null,
     extensions: {
       IconColors(
         Color.lerp(Colors.white, Colors.black, 0.54),
