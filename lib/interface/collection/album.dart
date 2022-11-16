@@ -1757,14 +1757,35 @@ class AlbumScreenState extends State<AlbumScreen>
                             ),
                             forceElevated: true,
                             actions: [
-                              // IconButton(
-                              //   onPressed: () {},
-                              //   icon: Icon(
-                              //     Icons.favorite,
-                              //   ),
-                              //   iconSize: 24.0,
-                              //   splashRadius: 20.0,
-                              // ),
+                              IconButton(
+                                onPressed: () => Playback.instance.add(tracks),
+                                tooltip: Language.instance.ADD_TO_NOW_PLAYING,
+                                icon: Icon(
+                                  Icons.queue_music,
+                                  color: detailsVisible
+                                      ? Theme.of(context)
+                                          .extension<IconColors>()
+                                          ?.appBarActionDarkIconColor
+                                      : [
+                                          Theme.of(context)
+                                              .extension<IconColors>()
+                                              ?.appBarActionLightIconColor,
+                                          Theme.of(context)
+                                              .extension<IconColors>()
+                                              ?.appBarActionDarkIconColor,
+                                        ][(color?.computeLuminance() ??
+                                                  (Theme.of(context)
+                                                              .brightness ==
+                                                          Brightness.dark
+                                                      ? 0.0
+                                                      : 1.0)) >
+                                              0.5
+                                          ? 0
+                                          : 1],
+                                ),
+                                iconSize: 24.0,
+                                splashRadius: 20.0,
+                              ),
                               IconButton(
                                 onPressed: () async {
                                   final sdk = StorageRetriever.instance.version;
@@ -1817,6 +1838,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                     }
                                   }
                                 },
+                                tooltip: Language.instance.DELETE,
                                 icon: Icon(
                                   Icons.delete,
                                   color: detailsVisible
@@ -1843,7 +1865,6 @@ class AlbumScreenState extends State<AlbumScreen>
                                 iconSize: 24.0,
                                 splashRadius: 20.0,
                               ),
-
                               const SizedBox(width: 8.0),
                             ],
                             title: TweenAnimationBuilder<double>(

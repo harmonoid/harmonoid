@@ -1354,7 +1354,38 @@ class ArtistScreenState extends State<ArtistScreen>
                               iconSize: 24.0,
                               splashRadius: 20.0,
                             ),
-                            forceElevated: true,
+                            actions: [
+                              IconButton(
+                                onPressed: () => Playback.instance.add(tracks),
+                                tooltip: Language.instance.ADD_TO_NOW_PLAYING,
+                                icon: Icon(
+                                  Icons.queue_music,
+                                  color: detailsVisible
+                                      ? Theme.of(context)
+                                          .extension<IconColors>()
+                                          ?.appBarActionDarkIconColor
+                                      : [
+                                          Theme.of(context)
+                                              .extension<IconColors>()
+                                              ?.appBarActionLightIconColor,
+                                          Theme.of(context)
+                                              .extension<IconColors>()
+                                              ?.appBarActionDarkIconColor,
+                                        ][(color?.computeLuminance() ??
+                                                  (Theme.of(context)
+                                                              .brightness ==
+                                                          Brightness.dark
+                                                      ? 0.0
+                                                      : 1.0)) >
+                                              0.5
+                                          ? 0
+                                          : 1],
+                                ),
+                                iconSize: 24.0,
+                                splashRadius: 20.0,
+                              ),
+                              const SizedBox(width: 8.0),
+                            ],
                             title: TweenAnimationBuilder<double>(
                               tween: Tween<double>(
                                 begin: 1.0,
