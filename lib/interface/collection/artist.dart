@@ -279,6 +279,7 @@ class ArtistTile extends StatelessWidget {
                             padding: EdgeInsets.all(2.0),
                             child: ClipOval(
                               child: ExtendedImage(
+                                fit: BoxFit.cover,
                                 image: getAlbumArt(artist, small: true),
                                 height: 48.0,
                                 width: 48.0,
@@ -350,6 +351,7 @@ class ArtistTile extends StatelessWidget {
                         tag: 'artist_art_${artist.artistName}',
                         child: ClipOval(
                           child: ExtendedImage(
+                            fit: BoxFit.cover,
                             image: getAlbumArt(artist, small: true),
                             height: width - 8.0,
                             width: width - 8.0,
@@ -476,6 +478,7 @@ class ArtistTile extends StatelessWidget {
                                     padding: EdgeInsets.all(2.0),
                                     child: ClipOval(
                                       child: ExtendedImage(
+                                        fit: BoxFit.cover,
                                         image: getAlbumArt(artist, small: true),
                                         height: 48.0,
                                         width: 48.0,
@@ -564,6 +567,7 @@ class ArtistTile extends StatelessWidget {
                               alignment: Alignment.center,
                               child: ClipOval(
                                 child: ExtendedImage(
+                                  fit: BoxFit.cover,
                                   image: getAlbumArt(
                                     artist,
                                     small: true,
