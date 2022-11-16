@@ -526,8 +526,6 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
             ),
             body: NowPlayingBarScrollHideNotifier(
               child: CustomListView(
-                keyboardDismissBehavior:
-                    ScrollViewKeyboardDismissBehavior.manual,
                 shrinkWrap: true,
                 children: [
                   Stack(
@@ -575,130 +573,142 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                       ),
                     ],
                   ),
-                  Form(
-                    child: CustomListView(
-                      cacheExtent: MediaQuery.of(context).size.height * 4,
-                      shrinkWrap: true,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                      ),
-                      children: <Widget>[
-                            const SizedBox(height: 8.0),
-                          ] +
-                          <String, dynamic>{
-                            Language.instance.TRACK_SINGLE: copy.trackName,
-                            Language.instance.ALBUM_SINGLE: copy.albumName,
-                            Language.instance.ALBUM_ARTIST:
-                                copy.albumArtistName,
-                            Language.instance.ARTIST:
-                                copy.trackArtistNames.join('/'),
-                            Language.instance.YEAR: copy.year,
-                            Language.instance.GENRE: copy.genre,
-                            Language.instance.TRACK_NUMBER: copy.trackNumber,
-                          }
-                              .entries
-                              .map(
-                                (e) => Container(
-                                  alignment: Alignment.topLeft,
-                                  width: double.infinity,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        child: Text(
-                                          e.key,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .displaySmall,
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Form(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                              const SizedBox(height: 8.0),
+                            ] +
+                            <String, dynamic>{
+                              Language.instance.TRACK_SINGLE: copy.trackName,
+                              Language.instance.ALBUM_SINGLE: copy.albumName,
+                              Language.instance.ALBUM_ARTIST:
+                                  copy.albumArtistName,
+                              Language.instance.ARTIST:
+                                  copy.trackArtistNames.join('/'),
+                              Language.instance.YEAR: copy.year,
+                              Language.instance.GENRE: copy.genre,
+                              Language.instance.TRACK_NUMBER: copy.trackNumber,
+                            }
+                                .entries
+                                .map(
+                                  (e) => Container(
+                                    alignment: Alignment.topLeft,
+                                    width: double.infinity,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          child: Text(
+                                            e.key,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displaySmall,
+                                          ),
+                                          margin: EdgeInsets.only(
+                                            left: 4.0,
+                                            top: 16.0,
+                                            bottom: 16.0,
+                                          ),
                                         ),
-                                        margin: EdgeInsets.only(
-                                          left: 4.0,
-                                          top: 16.0,
-                                          bottom: 8.0,
+                                        ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxHeight: 44.0,
+                                          ),
+                                          child: TextFormField(
+                                            initialValue: e.value == null
+                                                ? null
+                                                : e.value.toString(),
+                                            decoration: inputDecoration(
+                                              context,
+                                              '',
+                                            ),
+                                            onChanged: (v) {
+                                              final value =
+                                                  v.isEmpty ? null : v.trim();
+                                              edited[e.key] = value;
+                                              if (e.key ==
+                                                  Language
+                                                      .instance.TRACK_SINGLE) {
+                                                copy.trackName = value ??
+                                                    basename(widget.track.uri
+                                                        .toFilePath());
+                                              }
+                                              if (e.key ==
+                                                  Language
+                                                      .instance.ALBUM_SINGLE) {
+                                                copy.albumName =
+                                                    value ?? kUnknownAlbum;
+                                              }
+                                              if (e.key ==
+                                                  Language
+                                                      .instance.ALBUM_ARTIST) {
+                                                copy.albumArtistName =
+                                                    value ?? kUnknownArtist;
+                                              }
+                                              if (e.key ==
+                                                  Language.instance.ARTIST) {
+                                                copy.trackArtistNames =
+                                                    Tagger.splitArtists(
+                                                            value) ??
+                                                        [kUnknownArtist];
+                                              }
+                                              if (e.key ==
+                                                  Language.instance.YEAR) {
+                                                copy.year = value == null
+                                                    ? kUnknownYear
+                                                    : value;
+                                              }
+                                              if (e.key ==
+                                                  Language.instance.GENRE) {
+                                                copy.genre =
+                                                    value ?? kUnknownGenre;
+                                              }
+                                              if (e.key ==
+                                                  Language
+                                                      .instance.TRACK_NUMBER) {
+                                                copy.trackNumber =
+                                                    int.parse(value ?? '1');
+                                              }
+                                            },
+                                            inputFormatters: [
+                                              Language.instance.YEAR,
+                                              Language.instance.TRACK_NUMBER
+                                            ].contains(e.key)
+                                                ? <TextInputFormatter>[
+                                                    FilteringTextInputFormatter
+                                                        .allow(
+                                                            RegExp(r'[0-9]')),
+                                                  ]
+                                                : null,
+                                            textAlignVertical:
+                                                TextAlignVertical.center,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displayMedium,
+                                          ),
                                         ),
-                                      ),
-                                      TextFormField(
-                                        initialValue: e.value == null
-                                            ? null
-                                            : e.value.toString(),
-                                        decoration: inputDecoration(
-                                          context,
-                                          '',
-                                        ),
-                                        onChanged: (v) {
-                                          final value =
-                                              v.isEmpty ? null : v.trim();
-                                          edited[e.key] = value;
-                                          if (e.key ==
-                                              Language.instance.TRACK_SINGLE) {
-                                            copy.trackName = value ??
-                                                basename(widget.track.uri
-                                                    .toFilePath());
-                                          }
-                                          if (e.key ==
-                                              Language.instance.ALBUM_SINGLE) {
-                                            copy.albumName =
-                                                value ?? kUnknownAlbum;
-                                          }
-                                          if (e.key ==
-                                              Language.instance.ALBUM_ARTIST) {
-                                            copy.albumArtistName =
-                                                value ?? kUnknownArtist;
-                                          }
-                                          if (e.key ==
-                                              Language.instance.ARTIST) {
-                                            copy.trackArtistNames =
-                                                Tagger.splitArtists(value) ??
-                                                    [kUnknownArtist];
-                                          }
-                                          if (e.key == Language.instance.YEAR) {
-                                            copy.year = value == null
-                                                ? kUnknownYear
-                                                : value;
-                                          }
-                                          if (e.key ==
-                                              Language.instance.GENRE) {
-                                            copy.genre = value ?? kUnknownGenre;
-                                          }
-                                          if (e.key ==
-                                              Language.instance.TRACK_NUMBER) {
-                                            copy.trackNumber =
-                                                int.parse(value ?? '1');
-                                          }
-                                        },
-                                        inputFormatters: [
-                                          Language.instance.YEAR,
-                                          Language.instance.TRACK_NUMBER
-                                        ].contains(e.key)
-                                            ? <TextInputFormatter>[
-                                                FilteringTextInputFormatter
-                                                    .allow(RegExp(r'[0-9]')),
-                                              ]
-                                            : null,
-                                        textAlignVertical:
-                                            TextAlignVertical.center,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .displayMedium,
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              )
-                              .toList() +
-                          [
-                            const SizedBox(height: 24.0),
-                            Text(
-                              Language
-                                  .instance
-                                  .USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS
-                                  .overflow,
-                              style: Theme.of(context).textTheme.displaySmall,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 24.0),
-                          ],
+                                )
+                                .toList() +
+                            [
+                              const SizedBox(height: 24.0),
+                              Text(
+                                Language
+                                    .instance
+                                    .USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS
+                                    .overflow,
+                                style: Theme.of(context).textTheme.displaySmall,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 24.0),
+                            ],
+                      ),
                     ),
                   ),
                 ],

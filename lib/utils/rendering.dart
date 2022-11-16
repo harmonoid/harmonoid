@@ -1033,7 +1033,9 @@ InputDecoration inputDecoration(
       left: 12.0,
       right: 12.0,
       // [bottom] padding is needed since Flutter v3.5.x.
-      bottom: 8.0,
+      bottom: Platform.isWindows || Platform.isLinux || Platform.isMacOS
+          ? 8.0
+          : 2.0,
     ),
     hintText: hintText,
     hintStyle: isDesktop
