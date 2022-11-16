@@ -641,104 +641,126 @@ class FloatingSearchBarWebSearchTab extends StatefulWidget {
 
 class _FloatingSearchBarWebSearchTabState
     extends State<FloatingSearchBarWebSearchTab> {
-  List<String> result = [];
+  // List<String> result = [];
 
   @override
   void initState() {
     super.initState();
-    widget.query.addListener(() {
-      YTMClient.music_get_search_suggestions(widget.query.value).then((value) {
-        setState(() {
-          result = value;
-        });
-      });
-    });
+    // TODO (@alexmercerind): Broken.
+    // widget.query.addListener(() {
+    //   YTMClient.music_get_search_suggestions(widget.query.value).then((value) {
+    //     setState(() {
+    //       result = value;
+    //     });
+    //   });
+    // });
   }
 
   Widget build(BuildContext context) {
-    if (widget.query.value.isEmpty) {
-      return Card(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 4.0,
-        margin: EdgeInsets.zero,
-        child: SizedBox(
-          height: (MediaQuery.of(context).size.height -
-                  kMobileSearchBarHeight -
-                  36.0 -
-                  MediaQuery.of(context).padding.vertical -
-                  MediaQuery.of(context).viewInsets.vertical)
-              .clamp(480.0, 1 << 32)
-              .toDouble(),
-          width: MediaQuery.of(context).size.width,
-          child: Center(
-            child: ExceptionWidget(
-              title: Language.instance.COLLECTION_SEARCH_LABEL,
-              subtitle: Language.instance.COLLECTION_SEARCH_WELCOME,
-            ),
-          ),
-        ),
-      );
-    }
-    if (result.isEmpty) {
-      return Card(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 4.0,
-        margin: EdgeInsets.zero,
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height -
-              kMobileSearchBarHeight -
-              36.0 -
-              MediaQuery.of(context).padding.vertical -
-              MediaQuery.of(context).viewInsets.vertical,
-          width: MediaQuery.of(context).size.width,
-          child: Center(
-            child: ExceptionWidget(
-              title: Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE,
-              subtitle: Language.instance.WEB_NO_RESULTS,
-            ),
-          ),
-        ),
-      );
-    }
     return Card(
+      color: Theme.of(context).scaffoldBackgroundColor,
       elevation: 4.0,
       margin: EdgeInsets.zero,
       child: SizedBox(
+        height: (MediaQuery.of(context).size.height -
+                kMobileSearchBarHeight -
+                36.0 -
+                MediaQuery.of(context).padding.vertical -
+                MediaQuery.of(context).viewInsets.vertical)
+            .clamp(480.0, 1 << 32)
+            .toDouble(),
         width: MediaQuery.of(context).size.width,
-        child: Column(
-          children: result
-              .map(
-                (e) => ListTile(
-                  title: Text(
-                    e.overflow,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) =>
-                            FadeThroughTransition(
-                          fillColor: Colors.transparent,
-                          animation: animation,
-                          secondaryAnimation: secondaryAnimation,
-                          child: FloatingSearchBarWebSearchScreen(
-                            future: YTMClient.search(e),
-                            query: e,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                  leading: Icon(
-                    Icons.search,
-                  ),
-                ),
-              )
-              .toList(),
+        child: Center(
+          child: ExceptionWidget(
+            title: Language.instance.COLLECTION_SEARCH_LABEL,
+            subtitle: Language.instance.COLLECTION_SEARCH_WELCOME,
+          ),
         ),
       ),
     );
+    // if (widget.query.value.isEmpty) {
+    //   return Card(
+    //     color: Theme.of(context).scaffoldBackgroundColor,
+    //     elevation: 4.0,
+    //     margin: EdgeInsets.zero,
+    //     child: SizedBox(
+    //       height: (MediaQuery.of(context).size.height -
+    //               kMobileSearchBarHeight -
+    //               36.0 -
+    //               MediaQuery.of(context).padding.vertical -
+    //               MediaQuery.of(context).viewInsets.vertical)
+    //           .clamp(480.0, 1 << 32)
+    //           .toDouble(),
+    //       width: MediaQuery.of(context).size.width,
+    //       child: Center(
+    //         child: ExceptionWidget(
+    //           title: Language.instance.COLLECTION_SEARCH_LABEL,
+    //           subtitle: Language.instance.COLLECTION_SEARCH_WELCOME,
+    //         ),
+    //       ),
+    //     ),
+    //   );
+    // }
+    // if (result.isEmpty) {
+    //   return Card(
+    //     color: Theme.of(context).scaffoldBackgroundColor,
+    //     elevation: 4.0,
+    //     margin: EdgeInsets.zero,
+    //     child: SizedBox(
+    //       height: MediaQuery.of(context).size.height -
+    //           kMobileSearchBarHeight -
+    //           36.0 -
+    //           MediaQuery.of(context).padding.vertical -
+    //           MediaQuery.of(context).viewInsets.vertical,
+    //       width: MediaQuery.of(context).size.width,
+    //       child: Center(
+    //         child: ExceptionWidget(
+    //           title: Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE,
+    //           subtitle: Language.instance.WEB_NO_RESULTS,
+    //         ),
+    //       ),
+    //     ),
+    //   );
+    // }
+    // return Card(
+    //   elevation: 4.0,
+    //   margin: EdgeInsets.zero,
+    //   child: SizedBox(
+    //     width: MediaQuery.of(context).size.width,
+    //     child: Column(
+    //       children: result
+    //           .map(
+    //             (e) => ListTile(
+    //               title: Text(
+    //                 e.overflow,
+    //                 maxLines: 1,
+    //                 overflow: TextOverflow.ellipsis,
+    //               ),
+    //               onTap: () {
+    //                 Navigator.of(context).push(
+    //                   PageRouteBuilder(
+    //                     pageBuilder: (context, animation, secondaryAnimation) =>
+    //                         FadeThroughTransition(
+    //                       fillColor: Colors.transparent,
+    //                       animation: animation,
+    //                       secondaryAnimation: secondaryAnimation,
+    //                       child: FloatingSearchBarWebSearchScreen(
+    //                         future: YTMClient.search(e),
+    //                         query: e,
+    //                       ),
+    //                     ),
+    //                   ),
+    //                 );
+    //               },
+    //               leading: Icon(
+    //                 Icons.search,
+    //               ),
+    //             ),
+    //           )
+    //           .toList(),
+    //     ),
+    //   ),
+    // );
   }
 }
 
