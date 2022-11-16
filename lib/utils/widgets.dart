@@ -211,7 +211,7 @@ class SortBarFixedHolder extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(width: tileMargin),
+        SizedBox(width: 8.0),
         Material(
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(4.0),
