@@ -1,8 +1,8 @@
 diff --git a/pubspec.yaml b/pubspec.yaml
-index 0b5b2e3..19f5837 100644
+index 0b5b2e3..5d1bcb7 100644
 --- a/pubspec.yaml
 +++ b/pubspec.yaml
-@@ -13,13 +13,9 @@ dependencies:
+@@ -13,13 +13,15 @@ dependencies:
    path: ^1.8.0
    http: ^0.13.4
    uri_parser:
@@ -14,6 +14,12 @@ index 0b5b2e3..19f5837 100644
 -    git:
 -      url: https://github.com/harmonoid/safe_local_storage.git
 -      ref: master
++    path: ../safe_local_storage
++
++dependency_overrides:
++  uri_parser:
++    path: ../uri_parser
++  safe_local_storage:
 +    path: ../safe_local_storage
  
  dev_dependencies:
