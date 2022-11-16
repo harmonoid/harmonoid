@@ -174,6 +174,9 @@ ThemeData createTheme({
         ),
       ),
     ),
+    bottomSheetTheme: BottomSheetThemeData(
+      backgroundColor: light ? Colors.white : Color(0xFF202020),
+    ),
     textSelectionTheme: TextSelectionThemeData(
       cursorColor: desktop
           ? light
@@ -240,7 +243,6 @@ ThemeData createTheme({
     cardTheme: CardTheme(
       elevation: 4.0,
       color: light ? Colors.white : Color(0xFF222222),
-      surfaceTintColor: null,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4.0),
       ),
@@ -250,7 +252,6 @@ ThemeData createTheme({
     popupMenuTheme: PopupMenuThemeData(
       elevation: 4.0,
       color: light ? Colors.white : Color(0xFF282828),
-      surfaceTintColor: null,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4.0),
       ),

@@ -210,7 +210,6 @@ class FileInfoScreen extends StatefulWidget {
                     context: context,
                     elevation: kDefaultHeavyElevation,
                     useRootNavigator: true,
-                    backgroundColor: Theme.of(context).cardTheme.color,
                     builder: (context) => StatefulBuilder(
                       builder: (context, setState) {
                         return Container(
