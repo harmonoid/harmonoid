@@ -1011,13 +1011,13 @@ InputDecoration inputDecoration(
   return InputDecoration(
     // Having a [suffixIcon] keeps the [TextField]'s content (label / text)
     // centered for some reason at all heights. So, this is a good solution.
-    suffixIcon: Container(
-      alignment: Alignment.center,
-      height: 48.0,
-      width: 48.0,
-      child: trailingIcon == null
-          ? null
-          : Material(
+    suffixIcon: trailingIcon == null
+        ? const SizedBox(height: 48.0)
+        : Container(
+            alignment: Alignment.center,
+            height: 48.0,
+            width: 48.0,
+            child: Material(
               color: Colors.transparent,
               child: IconButton(
                 splashRadius: 12.0,
@@ -1027,7 +1027,13 @@ InputDecoration inputDecoration(
                 icon: trailingIcon,
               ),
             ),
-    ),
+          ),
+    suffixIconConstraints: trailingIcon == null
+        ? const BoxConstraints(
+            minHeight: 48.0,
+            minWidth: 0.0,
+          )
+        : null,
     // No requirement for vertical padding/margin since [TextAlignVertical.center] is used now.
     contentPadding: EdgeInsets.only(
       left: 12.0,

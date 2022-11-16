@@ -155,7 +155,8 @@ class FileInfoScreen extends StatefulWidget {
                                     final parser = URIParser(value);
                                     if (!parser.validate()) {
                                       debugPrint(value);
-                                      return value;
+                                      // Empty [String] prevents the message from showing & does not distort the UI.
+                                      return '';
                                     }
                                     return null;
                                   },
@@ -232,7 +233,8 @@ class FileInfoScreen extends StatefulWidget {
                                     final parser = URIParser(value);
                                     if (!parser.validate()) {
                                       debugPrint(value);
-                                      return value;
+                                      // Empty [String] prevents the message from showing & does not distort the UI.
+                                      return '';
                                     }
                                     return null;
                                   },

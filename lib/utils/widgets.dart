@@ -2634,7 +2634,8 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                                     final parser = URIParser(value);
                                     if (!parser.validate()) {
                                       debugPrint(value);
-                                      return value;
+                                      // Empty [String] prevents the message from showing & does not distort the UI.
+                                      return '';
                                     }
                                     return null;
                                   },
@@ -3048,7 +3049,8 @@ class _MobileAppBarOverflowButtonState
                                             final parser = URIParser(value);
                                             if (!parser.validate()) {
                                               debugPrint(value);
-                                              return value;
+                                              // Empty [String] prevents the message from showing & does not distort the UI.
+                                              return '';
                                             }
                                             return null;
                                           },
