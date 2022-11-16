@@ -52,6 +52,10 @@ dependencies:
       ref: master
   file_picker: ^5.1.0
   file_selector: ^0.8.2
+  uri_parser:
+    git:
+      url: https://github.com/harmonoid/uri_parser.git
+      ref: b7bf58e856cdd787718883cd7ee2d60e0cf58080
   permission_handler:
     git:
       url: https://github.com/alexmercerind/flutter-permission-handler.git
@@ -111,6 +115,8 @@ dependency_overrides:
   ffi: 1.1.0
   win32: ^3.0.0
   platform: ^3.1.0
+  uri_parser:
+    path: external/uri_parser
   media_engine:
     path: external/media_engine
   safe_local_storage:

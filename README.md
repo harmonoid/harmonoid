@@ -61,6 +61,9 @@ There are no inconsistent paddings, spacings or weird alignments to make me feel
 
 - [Oleks](https://www.patreon.com/user/creators?u=28979760) • 5$ per month.
 - [Benjamin Kranz](https://twitter.com/RisuDesign) • Checkout their [YouTube](https://www.youtube.com/c/RapidzDE)! • 5$ per month.
+- [Mohammed Abutaki](https://www.patreon.com/user/creators?u=27366405) • 5$ per month.
+
+[![Patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/harmonoid)
 
 ## Support
 
@@ -68,6 +71,25 @@ If you enjoy using this music player, please consider buying me a coffee.
 
 - [PayPal](https://paypal.me/alexmercerind)
 - [Patreon](https://patreon.com/harmonoid)
+
+## Planned Features
+
+- Folders view.
+- Material You / Material Design 3 implementation.
+- Genre tab.
+- Third-party themes support.
+- Equalizer.
+- Music sensitive visualizers.
+- macOS version (adaptation & dependencies-configuration).
+- Mini-window & overlay mode.
+- Minimization to system tray.
+- Last.fm scrobbling.
+- Plugin API.
+- Desktop controller app for Android.
+- Windows 11 IExplorerCommand integration.
+- Video playback & library management (???)
+- Publishing to FlatHub, Microsoft Store & other places.
+- Cross-platform syncing & mutual playlist with friends (once we are mature).
 
 ## Mobile
 
