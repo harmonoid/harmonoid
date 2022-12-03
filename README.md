@@ -48,6 +48,8 @@ https://user-images.githubusercontent.com/28951144/180613641-baf7a246-08ba-496f-
 - .LRC file compatibility (mannual loading or automatic lookup in folder).
 - Fallback cover support. e.g. `cover.jpg`, `Folder.jpg` etc.
 - Built-in YouTube Music client.
+- User specific libmpv flags & options.
+- Window position & maximize state remembering.
 
 ## Why
 
@@ -57,13 +59,17 @@ Harmonoid very strictly implements [Material Design](https://user-images.githubu
 
 There are no inconsistent paddings, spacings or weird alignments to make me feel uncomfortable. It's built with care & proper time is given to everything. Learn more about the project on [official website](https://harmonoid.com/) [until I can afford this domain].
 
-## Patreons
+## Supporters
+
+### GitHub Sponsors
+
+- [Taylor](https://github.com/tskinn) • 10$ per month.
+
+### Patreons
 
 - [Oleks](https://www.patreon.com/user/creators?u=28979760) • 5$ per month.
 - [Benjamin Kranz](https://twitter.com/RisuDesign) • Checkout their [YouTube](https://www.youtube.com/c/RapidzDE)! • 5$ per month.
 - [Mohammed Abutaki](https://www.patreon.com/user/creators?u=27366405) • 5$ per month.
-
-[![Patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/harmonoid)
 
 ## Support
 
@@ -71,6 +77,7 @@ If you enjoy using this music player, please consider buying me a coffee.
 
 - [PayPal](https://paypal.me/alexmercerind)
 - [Patreon](https://patreon.com/harmonoid)
+- [GitHub Sponsors](https://github.com/sponsors/alexmercerind)
 
 ## Planned Features
 
@@ -81,14 +88,14 @@ If you enjoy using this music player, please consider buying me a coffee.
 - Equalizer.
 - Music sensitive visualizers.
 - macOS version (adaptation & dependencies-configuration).
-- Mini-window & overlay mode.
+- Mini-window mode.
 - Minimization to system tray.
 - Last.fm scrobbling.
 - Plugin API.
-- Desktop controller app for Android.
 - Windows 11 IExplorerCommand integration.
 - Video playback & library management (???)
 - Publishing to FlatHub, Microsoft Store & other places.
+- Desktop app controller for Android.
 - Cross-platform syncing & mutual playlist with friends (once we are mature).
 
 ## Mobile
