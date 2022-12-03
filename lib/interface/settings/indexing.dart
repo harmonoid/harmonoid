@@ -668,7 +668,7 @@ class IndexingState extends State<IndexingSetting>
             ),
           ),
           TextButton(
-            onPressed: Navigator.of(context).maybePop,
+            onPressed: Navigator.of(ctx).maybePop,
             child: Text(
               Language.instance.CANCEL,
             ),
