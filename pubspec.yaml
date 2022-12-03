@@ -31,7 +31,7 @@ dependencies:
   windows_taskbar:
     git:
       url: https://github.com/alexmercerind/windows_taskbar.git
-      ref: master
+      ref: b3273d58aab9d71f61b51a84d5c6fb6cf0821529
   dart_discord_rpc:
     git:
       url: https://github.com/alexmercerind/dart_discord_rpc.git

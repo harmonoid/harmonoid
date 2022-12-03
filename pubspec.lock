@@ -928,11 +928,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: master
-      resolved-ref: "61ba88884caf85413dda646f12506c452a98bea8"
+      ref: b3273d58aab9d71f61b51a84d5c6fb6cf0821529
+      resolved-ref: b3273d58aab9d71f61b51a84d5c6fb6cf0821529
       url: "https://github.com/alexmercerind/windows_taskbar.git"
     source: git
-    version: "1.1.0+1"
+    version: "1.1.1"
   xdg_directories:
     dependency: transitive
     description:
