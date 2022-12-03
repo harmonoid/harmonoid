@@ -33,6 +33,8 @@ jobs:
           mkdir "assets/fonts"
         shell: cmd
 
+      - run: git config --system core.longpaths true
+
       - run: flutter config --enable-windows-desktop
       - run: flutter pub get
       - run: flutter build windows
