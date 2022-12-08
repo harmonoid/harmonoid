@@ -136,6 +136,7 @@ class Configuration extends ConfigurationKeys {
     bool? useLRCFromTrackDirectory,
     bool? lookupForFallbackAlbumArt,
     bool? displayAudioFormat,
+    bool? stickyMiniplayer,
     bool? mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen,
     bool? mobileEnableNowPlayingScreenRippleEffect,
     int? mobileAlbumsGridSize,
@@ -243,6 +244,9 @@ class Configuration extends ConfigurationKeys {
     if (displayAudioFormat != null) {
       this.displayAudioFormat = displayAudioFormat;
     }
+    if (stickyMiniplayer != null) {
+      this.stickyMiniplayer = stickyMiniplayer;
+    }
     if (mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen != null) {
       this.mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen =
           mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen;
@@ -312,6 +316,7 @@ class Configuration extends ConfigurationKeys {
         'useLRCFromTrackDirectory': this.useLRCFromTrackDirectory,
         'lookupForFallbackAlbumArt': this.lookupForFallbackAlbumArt,
         'displayAudioFormat': this.displayAudioFormat,
+        'stickyMiniplayer': this.stickyMiniplayer,
         'mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen':
             this.mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen,
         'mobileEnableNowPlayingScreenRippleEffect':
@@ -381,6 +386,7 @@ class Configuration extends ConfigurationKeys {
     useLRCFromTrackDirectory = current['useLRCFromTrackDirectory'];
     lookupForFallbackAlbumArt = current['lookupForFallbackAlbumArt'];
     displayAudioFormat = current['displayAudioFormat'];
+    stickyMiniplayer = current['stickyMiniplayer'];
     mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen =
         current['mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen'];
     mobileEnableNowPlayingScreenRippleEffect =
@@ -491,6 +497,7 @@ class Configuration extends ConfigurationKeys {
             'useLRCFromTrackDirectory': false,
             'lookupForFallbackAlbumArt': false,
             'displayAudioFormat': true,
+            'stickyMiniplayer': false,
             'mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen': true,
             'mobileEnableNowPlayingScreenRippleEffect': true,
             'mobileAlbumsGridSize': 2,
@@ -541,6 +548,7 @@ abstract class ConfigurationKeys {
   late bool useLRCFromTrackDirectory;
   late bool lookupForFallbackAlbumArt;
   late bool displayAudioFormat;
+  late bool stickyMiniplayer;
   late bool mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen;
   late bool mobileEnableNowPlayingScreenRippleEffect;
   late int mobileAlbumsGridSize;

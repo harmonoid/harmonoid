@@ -2472,8 +2472,12 @@ class NowPlayingBarScrollHideNotifier extends StatelessWidget {
             // Do not handle [ScrollDirection.idle].
             if (notification.direction == ScrollDirection.forward) {
               MobileNowPlayingController.instance.show();
-            } else if (notification.direction == ScrollDirection.reverse) {
+            } else if (notification.direction == ScrollDirection.reverse &&
+                Configuration.instance.stickyMiniplayer == false) {
               MobileNowPlayingController.instance.hide();
+            } else if (notification.direction == ScrollDirection.reverse &&
+                Configuration.instance.stickyMiniplayer == true) {
+              MobileNowPlayingController.instance.show();
             }
           }
           return true;

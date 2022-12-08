@@ -59,6 +59,18 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
             }),
             value: Configuration.instance.displayAudioFormat,
           ),
+          CorrectedSwitchListTile(
+            title: Language.instance.STICKY_MINIPLAYER,
+            subtitle: Language.instance.STICKY_MINIPLAYER_SUBTITLE,
+            onChanged: (_) => Configuration.instance
+                .save(
+              stickyMiniplayer: !Configuration.instance.stickyMiniplayer,
+            )
+                .then((_) {
+              setState(() {});
+            }),
+            value: Configuration.instance.stickyMiniplayer,
+          ),
           if (isMobile)
             CorrectedSwitchListTile(
               title: Language.instance.MOBILE_ENABLE_VOLUME_SLIDER,
