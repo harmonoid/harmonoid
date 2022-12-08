@@ -7,6 +7,7 @@
 ///
 
 import 'dart:async';
+import 'package:drop_shadow/drop_shadow.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -379,6 +380,10 @@ class _TrackTabState extends State<TrackTab> {
                           top: MediaQuery.of(context).padding.top +
                               kMobileSearchBarHeight +
                               2 * tileMargin,
+                          bottom:
+                              Configuration.instance.stickyMiniplayer == true
+                                  ? kMobileNowPlayingBarHeight
+                                  : 10,
                         ),
                         children: collection.tracks
                             .asMap()

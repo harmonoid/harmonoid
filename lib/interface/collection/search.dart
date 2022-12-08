@@ -9,6 +9,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:provider/provider.dart';
 import 'package:window_plus/window_plus.dart';
 import 'package:media_library/media_library.dart';
@@ -423,6 +424,11 @@ class _FloatingSearchBarSearchTabState
         child: albums.isNotEmpty || artists.isNotEmpty || tracks.isNotEmpty
             ? Consumer<Collection>(
                 builder: (context, _, __) => CustomListView(
+                  padding: EdgeInsets.only(
+                    bottom: Configuration.instance.stickyMiniplayer == true
+                        ? kMobileNowPlayingBarHeight * 1.8
+                        : 10,
+                  ),
                   shrinkWrap: true,
                   children: <Widget>[
                     if (albums.isNotEmpty)

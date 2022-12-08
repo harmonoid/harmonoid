@@ -51,6 +51,11 @@ class PlaylistTab extends StatelessWidget {
                   : kMobileSearchBarHeight +
                       2 * tileMargin +
                       MediaQuery.of(context).padding.top,
+              bottom: isDesktop
+                  ? 0.0
+                  : Configuration.instance.stickyMiniplayer == true
+                      ? kMobileNowPlayingBarHeight
+                      : 10,
             ),
             children: <Widget>[
               if (isDesktop)
