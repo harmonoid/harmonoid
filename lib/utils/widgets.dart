@@ -72,7 +72,15 @@ class CustomListView extends StatelessWidget {
       physics: physics,
       keyboardDismissBehavior:
           keyboardDismissBehavior ?? ScrollViewKeyboardDismissBehavior.onDrag,
-      padding: padding ?? EdgeInsets.zero,
+      padding: (padding ?? EdgeInsets.zero).copyWith(
+        // "Sticky miniplayer" enabled AND running on mobile AND `CustomListView` is vertical.
+        // uses an optional bottom padding, useful for some cases like in search card
+        bottom: isMobile &&
+                Configuration.instance.stickyMiniplayer &&
+                (scrollDirection ?? Axis.vertical) == Axis.vertical
+            ? kMobileNowPlayingBarHeight - (padding?.bottom ?? 0)
+            : 12.0,
+      ),
       controller: controller,
       scrollDirection: scrollDirection ?? Axis.vertical,
       shrinkWrap: shrinkWrap ?? false,
@@ -111,7 +119,13 @@ class CustomListViewBuilder extends StatelessWidget {
       itemBuilder: itemBuilder,
       controller: controller,
       scrollDirection: scrollDirection ?? Axis.vertical,
-      padding: padding,
+      padding: padding?.copyWith(
+        bottom: isMobile &&
+                Configuration.instance.stickyMiniplayer &&
+                (scrollDirection ?? Axis.vertical) == Axis.vertical
+            ? kMobileNowPlayingBarHeight
+            : 12.0,
+      ),
       physics: physics,
     );
   }
@@ -155,7 +169,13 @@ class CustomListViewSeparated extends StatelessWidget {
           : separatorBuilder(context, i ~/ 2),
       controller: controller,
       scrollDirection: scrollDirection ?? Axis.vertical,
-      padding: padding,
+      padding: padding?.copyWith(
+        bottom: isMobile &&
+                Configuration.instance.stickyMiniplayer &&
+                (scrollDirection ?? Axis.vertical) == Axis.vertical
+            ? kMobileNowPlayingBarHeight
+            : 12.0,
+      ),
       physics: physics,
     );
   }
@@ -2473,15 +2493,22 @@ class NowPlayingBarScrollHideNotifier extends StatelessWidget {
             if (notification.direction == ScrollDirection.forward) {
               MobileNowPlayingController.instance.show();
             } else if (notification.direction == ScrollDirection.reverse &&
-                Configuration.instance.stickyMiniplayer == false) {
+                !Configuration.instance.stickyMiniplayer) {
               MobileNowPlayingController.instance.hide();
             } else if (notification.direction == ScrollDirection.reverse &&
-                Configuration.instance.stickyMiniplayer == true) {
+                Configuration.instance.stickyMiniplayer) {
               MobileNowPlayingController.instance.show();
             }
           }
           return true;
         },
+        // dirty way for padding (should be implemented in lists)
+        // child: Padding(
+        //   padding: EdgeInsets.only(
+        //     bottom: isMobile && Configuration.instance.stickyMiniplayer && (Axis.vertical) == Axis.vertical ? kMobileNowPlayingBarHeight : 12.0,
+        //   ),
+        //   child: child,
+        // ),
         child: child,
       );
     }

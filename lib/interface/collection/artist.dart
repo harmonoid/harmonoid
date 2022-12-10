@@ -180,10 +180,9 @@ class _ArtistTabState extends State<ArtistTab> {
                             top: MediaQuery.of(context).padding.top +
                                 kMobileSearchBarHeight +
                                 2 * tileMargin,
-                            bottom:
-                                Configuration.instance.stickyMiniplayer == true
-                                    ? kMobileNowPlayingBarHeight
-                                    : 10,
+                            bottom: Configuration.instance.stickyMiniplayer
+                                ? kMobileNowPlayingBarHeight
+                                : 12.0,
                           ),
                           children: data.widgets,
                         ),

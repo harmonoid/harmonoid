@@ -7,7 +7,6 @@
 ///
 
 import 'package:flutter/material.dart';
-import 'package:harmonoid/core/configuration.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -161,14 +160,8 @@ class Settings extends StatelessWidget {
                   ),
                 ),
                 body: NowPlayingBarScrollHideNotifier(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: Configuration.instance.stickyMiniplayer == true
-                          ? EdgeInsets.only(
-                              top: 8.0, bottom: kMobileNowPlayingBarHeight)
-                          : EdgeInsets.symmetric(
-                              vertical: 8.0,
-                            ),
+                  child: CustomListView(children: [
+                    SingleChildScrollView(
                       child: Column(
                         children: [
                           IndexingSetting(),
@@ -187,7 +180,7 @@ class Settings extends StatelessWidget {
                         ],
                       ),
                     ),
-                  ),
+                  ]),
                 ),
               ),
               Positioned(

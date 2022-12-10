@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/main.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -315,6 +316,10 @@ class _AboutPageState extends State<AboutPage> {
                   ),
                 ),
               ),
+              if (isMobile && Configuration.instance.stickyMiniplayer)
+                SizedBox(
+                  height: kMobileNowPlayingBarHeight,
+                ),
             ],
           ),
         ),

@@ -9,11 +9,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:harmonoid/core/configuration.dart';
 import 'package:provider/provider.dart';
 import 'package:window_plus/window_plus.dart';
 import 'package:media_library/media_library.dart';
 
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -414,20 +414,24 @@ class _FloatingSearchBarSearchTabState
       color: Theme.of(context).scaffoldBackgroundColor,
       child: SizedBox(
         height: (MediaQuery.of(context).size.height -
-                kMobileSearchBarHeight -
-                36.0 -
-                MediaQuery.of(context).padding.vertical -
-                MediaQuery.of(context).viewInsets.vertical)
-            .clamp(480.0, 1 << 32)
-            .toDouble(),
+                    kMobileSearchBarHeight -
+                    36.0 -
+                    MediaQuery.of(context).padding.vertical -
+                    MediaQuery.of(context).viewInsets.vertical)
+                .clamp(480.0, 1 << 32)
+                .toDouble() -
+
+            // fixes bottom padding in search card, even when sticky miniplayer is disabled
+            (Configuration.instance.stickyMiniplayer
+                ? kMobileNowPlayingBarHeight + kBottomNavigationBarHeight
+                : kBottomNavigationBarHeight),
         width: MediaQuery.of(context).size.width,
         child: albums.isNotEmpty || artists.isNotEmpty || tracks.isNotEmpty
             ? Consumer<Collection>(
                 builder: (context, _, __) => CustomListView(
                   padding: EdgeInsets.only(
-                    bottom: Configuration.instance.stickyMiniplayer == true
-                        ? kMobileNowPlayingBarHeight * 1.8
-                        : 10,
+                    // Card bottom Border radius is clipped if this was 0
+                    bottom: kMobileNowPlayingBarHeight - 1,
                   ),
                   shrinkWrap: true,
                   children: <Widget>[

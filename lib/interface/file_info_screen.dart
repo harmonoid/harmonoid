@@ -649,43 +649,48 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
                     ),
                   )
                 : NowPlayingBarScrollHideNotifier(
-                    child: SingleChildScrollView(
-                      child: Stack(
-                        children: [
-                          Column(
+                    child: CustomListView(
+                      children: [
+                        SingleChildScrollView(
+                          child: Stack(
                             children: [
-                              if (track != null)
-                                Image(
-                                  image: getAlbumArt(track!),
-                                  height: MediaQuery.of(context).size.width,
-                                  width: MediaQuery.of(context).size.width,
-                                  fit: BoxFit.cover,
-                                ),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: data,
+                              Column(
+                                children: [
+                                  if (track != null)
+                                    Image(
+                                      image: getAlbumArt(track!),
+                                      height: MediaQuery.of(context).size.width,
+                                      width: MediaQuery.of(context).size.width,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: data,
+                                  ),
+                                ],
                               ),
+                              if (track != null)
+                                Positioned(
+                                  top: MediaQuery.of(context).size.width - 28.0,
+                                  right: 28.0,
+                                  child: FloatingActionButton(
+                                    onPressed: () {
+                                      Clipboard.setData(
+                                        ClipboardData(
+                                          text: const JsonEncoder.withIndent(
+                                                  '    ')
+                                              .convert(metadata),
+                                        ),
+                                      );
+                                    },
+                                    child: Icon(Icons.copy_all),
+                                    tooltip: Language.instance.COPY_AS_JSON,
+                                  ),
+                                ),
                             ],
                           ),
-                          if (track != null)
-                            Positioned(
-                              top: MediaQuery.of(context).size.width - 28.0,
-                              right: 28.0,
-                              child: FloatingActionButton(
-                                onPressed: () {
-                                  Clipboard.setData(
-                                    ClipboardData(
-                                      text: const JsonEncoder.withIndent('    ')
-                                          .convert(metadata),
-                                    ),
-                                  );
-                                },
-                                child: Icon(Icons.copy_all),
-                                tooltip: Language.instance.COPY_AS_JSON,
-                              ),
-                            ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
           );

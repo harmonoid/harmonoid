@@ -74,8 +74,8 @@ class ScrollBehavior extends MaterialScrollBehavior {
         return const BouncingScrollPhysics();
       case TargetPlatform.macOS:
         return BouncingScrollPhysics(
-            // decelerationRate: ScrollDecelerationRate.fast,
-            );
+          decelerationRate: ScrollDecelerationRate.fast,
+        );
     }
   }
 
@@ -177,7 +177,7 @@ class CustomScrollPhysics extends ScrollPhysics {
         leadingExtent: position.minScrollExtent,
         trailingExtent: position.maxScrollExtent,
         tolerance: tolerance,
-        // constantDeceleration: constantDeceleration,
+        constantDeceleration: constantDeceleration,
       );
     }
     return null;

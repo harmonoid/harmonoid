@@ -407,63 +407,70 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
               ),
               resizeToAvoidBottomInset: true,
               body: NowPlayingBarScrollHideNotifier(
-                child: CustomScrollView(
-                  controller: controller,
-                  slivers: [
-                    SliverAppBar(
-                      foregroundColor:
-                          Theme.of(context).appBarTheme.foregroundColor,
-                      backgroundColor:
-                          Theme.of(context).appBarTheme.backgroundColor,
-                      leading: IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.arrow_back),
-                      ),
-                      expandedHeight: 200.0,
-                      snap: false,
-                      pinned: true,
-                      floating: false,
-                      forceElevated: true,
-                      title: FadeTransition(
-                        opacity: visible,
-                        child: Text(Language.instance.FOLDERS_NOT_FOUND),
-                      ),
-                      flexibleSpace: FlexibleSpaceBar(
-                        background: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                Language.instance.FOLDERS_NOT_FOUND,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge
-                                    ?.copyWith(
-                                      fontSize: 24.0,
-                                    ),
+                child: CustomListView(
+                  children: [
+                    CustomScrollView(
+                      controller: controller,
+                      slivers: [
+                        SliverAppBar(
+                          foregroundColor:
+                              Theme.of(context).appBarTheme.foregroundColor,
+                          backgroundColor:
+                              Theme.of(context).appBarTheme.backgroundColor,
+                          leading: IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.arrow_back),
+                          ),
+                          expandedHeight: 200.0,
+                          snap: false,
+                          pinned: true,
+                          floating: false,
+                          forceElevated: true,
+                          title: FadeTransition(
+                            opacity: visible,
+                            child: Text(Language.instance.FOLDERS_NOT_FOUND),
+                          ),
+                          flexibleSpace: FlexibleSpaceBar(
+                            background: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    Language.instance.FOLDERS_NOT_FOUND,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge
+                                        ?.copyWith(
+                                          fontSize: 24.0,
+                                        ),
+                                  ),
+                                  const SizedBox(height: 12.0),
+                                  Text(
+                                    Language.instance.FOLDERS_NOT_FOUND_SUBTITLE
+                                        .replaceAll('\n', ' '),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall,
+                                  ),
+                                  const SizedBox(height: 24.0),
+                                ],
                               ),
-                              const SizedBox(height: 12.0),
-                              Text(
-                                Language.instance.FOLDERS_NOT_FOUND_SUBTITLE
-                                    .replaceAll('\n', ' '),
-                                style: Theme.of(context).textTheme.displaySmall,
-                              ),
-                              const SizedBox(height: 24.0),
+                            ),
+                          ),
+                        ),
+                        SliverList(
+                          delegate: SliverChildListDelegate.fixed(
+                            [
+                              const SizedBox(height: 16.0),
+                              ...iterable,
+                              const SizedBox(height: 16.0),
                             ],
                           ),
                         ),
-                      ),
-                    ),
-                    SliverList(
-                      delegate: SliverChildListDelegate.fixed(
-                        [
-                          const SizedBox(height: 16.0),
-                          ...iterable,
-                          const SizedBox(height: 16.0),
-                        ],
-                      ),
+                      ],
                     ),
                   ],
                 ),
