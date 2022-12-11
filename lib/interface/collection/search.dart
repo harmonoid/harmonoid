@@ -16,6 +16,7 @@ import 'package:media_library/media_library.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -421,14 +422,21 @@ class _FloatingSearchBarSearchTabState
                 .clamp(480.0, 1 << 32)
                 .toDouble() -
 
-            // fixes bottom padding in search card, even when sticky miniplayer is disabled
-            (Configuration.instance.stickyMiniplayer
-                ? kMobileNowPlayingBarHeight + kBottomNavigationBarHeight
-                : kBottomNavigationBarHeight),
+            // fixes bottom padding in search card, even when sticky miniplayer is disabled.
+            // a check wether the keyboard is shown or not, please dont try to understand this part.
+            // also the keyboard now wont hide on scroll, more convenient this way.
+            (Configuration.instance.stickyMiniplayer &&
+                    !MobileNowPlayingController.instance.isHidden
+                ? WidgetsBinding.instance.window.viewInsets.bottom > 0.0
+                    ? kMobileNowPlayingBarHeight
+                    : kMobileNowPlayingBarHeight + kBottomNavigationBarHeight
+                : kBottomNavigationBarHeight + kMobileBottomPaddingSmall),
         width: MediaQuery.of(context).size.width,
         child: albums.isNotEmpty || artists.isNotEmpty || tracks.isNotEmpty
             ? Consumer<Collection>(
                 builder: (context, _, __) => CustomListView(
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.manual,
                   padding: EdgeInsets.only(
                     // Card bottom Border radius is clipped if this was 0
                     bottom: kMobileNowPlayingBarHeight - 1,
