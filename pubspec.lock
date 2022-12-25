@@ -442,12 +442,23 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.7"
-  media_engine:
+  media_kit:
     dependency: "direct main"
     description:
-      path: "external/media_engine"
-      relative: true
-    source: path
+      path: media_kit
+      ref: HEAD
+      resolved-ref: "1e1bcdb2e3cc2f2dbcf7e0d598788d03f686864e"
+      url: "https://github.com/alexmercerind/media_kit.git"
+    source: git
+    version: "0.0.1"
+  media_kit_core_audio:
+    dependency: "direct main"
+    description:
+      path: media_kit_core_audio
+      ref: HEAD
+      resolved-ref: "1e1bcdb2e3cc2f2dbcf7e0d598788d03f686864e"
+      url: "https://github.com/alexmercerind/media_kit.git"
+    source: git
     version: "0.0.1"
   media_library:
     dependency: "direct main"
@@ -686,10 +697,11 @@ packages:
   safe_local_storage:
     dependency: "direct main"
     description:
-      path: "external/safe_local_storage"
-      relative: true
-    source: path
-    version: "0.0.1"
+      name: safe_local_storage
+      sha256: "7ca14be87040e6badfcdb9c71e963846c4e7d827dbc9f62cab7496497352f8d8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   share_plus:
     dependency: "direct main"
     description:
@@ -825,9 +837,10 @@ packages:
   uri_parser:
     dependency: "direct main"
     description:
-      path: "external/uri_parser"
-      relative: true
-    source: path
+      name: uri_parser
+      sha256: a41b242c319cdc30958963b362ad2f9c63ede569bdab106c7a926638963d53e7
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.0"
   url_launcher:
     dependency: "direct main"
@@ -965,5 +978,5 @@ packages:
     source: path
     version: "0.0.1"
 sdks:
-  dart: ">=2.18.0 <4.0.0"
+  dart: ">=2.19.0-374.0.dev <4.0.0"
   flutter: ">=3.3.0"
