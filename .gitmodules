@@ -16,15 +16,6 @@
 [submodule "assets/translations"]
 	path = assets/translations
 	url = https://github.com/harmonoid/translations.git
-[submodule "external/media_engine"]
-	path = external/media_engine
-	url = https://github.com/harmonoid/media_engine.git
-[submodule "external/safe_local_storage"]
-	path = external/safe_local_storage
-	url = https://github.com/harmonoid/safe_local_storage.git
 [submodule "external/window_plus"]
 	path = external/window_plus
 	url = https://github.com/alexmercerind/window_plus.git
-[submodule "external/uri_parser"]
-	path = external/uri_parser
-	url = https://github.com/harmonoid/uri_parser.git
