@@ -11,28 +11,30 @@ dependencies:
     sdk: flutter
 
   # Plugins maintained by github.com/alexmercerind or first-party to the Harmonoid.
-  uri_parser: ^1.0.0
-  safe_local_storage: ^1.0.0
   media_kit:
     git:
       url: https://github.com/alexmercerind/media_kit.git
+      ref: master
       path: media_kit
   media_kit_core_audio:
     git:
       url: https://github.com/alexmercerind/media_kit.git
+      ref: master
       path: media_kit_core_audio
+  media_kit_tag_reader:
+    path: external/media_kit_tag_reader
   media_library:
     path: external/media_library
   window_plus:
     path: external/window_plus
+  visual_assets:
+    path: external/visual_assets
+  mpris_service:
+    path: external/mpris_service
+  ytm_client:
+    path: external/ytm_client
   system_media_transport_controls:
     path: external/smtc-win32/bindings/system_media_transport_controls.dart
-  mpris_service:
-    path: external/mpris_service.dart
-  harmonoid_visual_assets:
-    path: external/harmonoid_visual_assets
-  ytm_client:
-    path: external/ytm_client.dart
   windows_taskbar:
     git:
       url: https://github.com/alexmercerind/windows_taskbar.git
@@ -41,6 +43,8 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/dart_discord_rpc.git
       ref: 48a15a750d9ee50c521a408c466bd681321a38e2
+  uri_parser: ^1.0.0
+  safe_local_storage: ^1.0.0
 
   # Third-party plugins.
 

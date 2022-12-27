@@ -11,31 +11,40 @@ dependencies:
     sdk: flutter
 
   # Plugins maintained by github.com/alexmercerind or first-party to the Harmonoid.
-
-  media_engine:
-    path: external/media_engine
+  media_kit:
+    git:
+      url: https://github.com/alexmercerind/media_kit.git
+      ref: master
+      path: media_kit
+  media_kit_core_audio:
+    git:
+      url: https://github.com/alexmercerind/media_kit.git
+      ref: master
+      path: media_kit_core_audio
+  media_kit_tag_reader:
+    path: external/media_kit_tag_reader
   media_library:
     path: external/media_library
   window_plus:
     path: external/window_plus
+  visual_assets:
+    path: external/visual_assets
+  mpris_service:
+    path: external/mpris_service
+  ytm_client:
+    path: external/ytm_client
   system_media_transport_controls:
     path: external/smtc-win32/bindings/system_media_transport_controls.dart
-  mpris_service:
-    path: external/mpris_service.dart
-  harmonoid_visual_assets:
-    path: external/harmonoid_visual_assets
-  ytm_client:
-    path: external/ytm_client.dart
-  safe_local_storage:
-    path: external/safe_local_storage
   windows_taskbar:
     git:
       url: https://github.com/alexmercerind/windows_taskbar.git
-      ref: master
+      ref: b3273d58aab9d71f61b51a84d5c6fb6cf0821529
   dart_discord_rpc:
     git:
       url: https://github.com/alexmercerind/dart_discord_rpc.git
       ref: 48a15a750d9ee50c521a408c466bd681321a38e2
+  uri_parser: ^1.0.0
+  safe_local_storage: ^1.0.0
 
   # Third-party plugins.
 
@@ -52,10 +61,6 @@ dependencies:
       ref: master
   file_picker: ^5.1.0
   file_selector: ^0.8.2
-  uri_parser:
-    git:
-      url: https://github.com/harmonoid/uri_parser.git
-      ref: b7bf58e856cdd787718883cd7ee2d60e0cf58080
   permission_handler:
     git:
       url: https://github.com/alexmercerind/flutter-permission-handler.git
@@ -115,12 +120,6 @@ dependency_overrides:
   ffi: 1.1.0
   win32: ^3.0.0
   platform: ^3.1.0
-  uri_parser:
-    path: external/uri_parser
-  media_engine:
-    path: external/media_engine
-  safe_local_storage:
-    path: external/safe_local_storage
   permission_handler_platform_interface:
     git:
       url: https://github.com/alexmercerind/flutter-permission-handler.git
