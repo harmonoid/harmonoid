@@ -1,15 +1,6 @@
 [submodule "external/smtc-win32"]
 	path = external/smtc-win32
 	url = https://github.com/harmonoid/smtc-win32.git
-[submodule "external/harmonoid_visual_assets"]
-	path = external/harmonoid_visual_assets
-	url = https://github.com/harmonoid/harmonoid_visual_assets
-[submodule "external/mpris_service.dart"]
-	path = external/mpris_service.dart
-	url = https://github.com/harmonoid/mpris_service.dart.git
-[submodule "external/ytm_client.dart"]
-	path = external/ytm_client.dart
-	url = https://github.com/harmonoid/ytm_client.dart
 [submodule "external/media_library"]
 	path = external/media_library
 	url = https://github.com/alexmercerind/media_library.git
