@@ -1,12 +1,27 @@
-[submodule "external/smtc-win32"]
-	path = external/smtc-win32
-	url = https://github.com/harmonoid/smtc-win32.git
 [submodule "external/media_library"]
 	path = external/media_library
 	url = https://github.com/alexmercerind/media_library.git
-[submodule "assets/translations"]
-	path = assets/translations
-	url = https://github.com/harmonoid/translations.git
+[submodule "external/media_kit_tag_reader"]
+	path = external/media_kit_tag_reader
+	url = https://github.com/alexmercerind/media_kit_tag_reader.git
+[submodule "external/smtc-win32"]
+	path = external/smtc-win32
+	url = https://github.com/harmonoid/smtc-win32.git
+[submodule "external/mpris_service"]
+	path = external/mpris_service
+	url = https://github.com/harmonoid/mpris_service.git
 [submodule "external/window_plus"]
 	path = external/window_plus
 	url = https://github.com/alexmercerind/window_plus.git
+[submodule "external/ytm_client"]
+	path = external/ytm_client
+	url = https://github.com/harmonoid/ytm_client.git
+[submodule "external/external_media_provider"]
+	path = external/external_media_provider
+	url = https://github.com/alexmercerind/external_media_provider.git
+[submodule "assets/translations"]
+	path = assets/translations
+	url = https://github.com/harmonoid/translations.git
+[submodule "external/visual_assets"]
+	path = external/visual_assets
+	url = https://github.com/harmonoid/visual_assets.git
