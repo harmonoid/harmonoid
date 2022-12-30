@@ -25,7 +25,7 @@ jobs:
         run: echo ${{ steps.vars.outputs.sha_short }}
       - uses: subosito/flutter-action@v1
         with:
-          # TODO (@alexmercerind): Revert to stable once Flutter 3.5.x rolls out.
+          # TODO (@alexmercerind): Revert to stable once Flutter 3.7.x rolls out.
           channel: "master"
 
       - run: |
@@ -61,9 +61,9 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         env:
-          GITHUB_REPOSITORY: alexmercerind2/_
+          GITHUB_REPOSITORY: alexmercerind2/harmonoid-releases
         with:
-          repository: alexmercerind2/_
+          repository: alexmercerind2/harmonoid-releases
           draft: true
           prerelease: false
           body: ""
@@ -102,7 +102,7 @@ jobs:
         run: echo ${{ steps.vars.outputs.sha_short }}
       - uses: subosito/flutter-action@v1
         with:
-          # TODO (@alexmercerind): Revert to stable once Flutter 3.5.x rolls out.
+          # TODO (@alexmercerind): Revert to stable once Flutter 3.7.x rolls out.
           channel: "master"
 
       - run: sudo apt-get update
@@ -113,16 +113,15 @@ jobs:
       - run: rm pubspec.yaml
       - run: mv pubspec.linux.yaml pubspec.yaml
 
-      - name: Compile Tagger
+      - name: Compile Tag Reader
         run: |
-          cd external/media_engine
-          git apply --reject --whitespace=fix ../../patches/media-engine.patch
+          cd external/media_kit_tag_reader
           dart pub get
           cd example
           dart compile exe cli.dart
-          mv cli.exe tagger
+          mv cli.exe tag_reader
           mkdir ../../../assets/platform
-          mv tagger ../../../assets/platform
+          mv tag_reader ../../../assets/platform
           tree ../../../assets
 
       - run: flutter config --enable-linux-desktop
@@ -158,9 +157,9 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         env:
-          GITHUB_REPOSITORY: alexmercerind2/_
+          GITHUB_REPOSITORY: alexmercerind2/harmonoid-releases
         with:
-          repository: alexmercerind2/_
+          repository: alexmercerind2/harmonoid-releases
           draft: true
           prerelease: false
           body: ""
@@ -195,7 +194,7 @@ jobs:
         run: echo ${{ steps.vars.outputs.sha_short }}
       - uses: subosito/flutter-action@v1
         with:
-          # TODO (@alexmercerind): Revert to stable once Flutter 3.5.x rolls out.
+          # TODO (@alexmercerind): Revert to stable once Flutter 3.7.x rolls out.
           channel: "master"
 
       - name: Create Key Store
@@ -231,9 +230,9 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         env:
-          GITHUB_REPOSITORY: alexmercerind2/_
+          GITHUB_REPOSITORY: alexmercerind2/harmonoid-releases
         with:
-          repository: alexmercerind2/_
+          repository: alexmercerind2/harmonoid-releases
           draft: true
           prerelease: false
           body: ""
@@ -260,9 +259,9 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         env:
-          GITHUB_REPOSITORY: alexmercerind2/_
+          GITHUB_REPOSITORY: alexmercerind2/harmonoid-releases
         with:
-          repository: alexmercerind2/_
+          repository: alexmercerind2/harmonoid-releases
           draft: true
           prerelease: false
           body: ""
