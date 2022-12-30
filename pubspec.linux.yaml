@@ -33,6 +33,8 @@ dependencies:
     path: external/mpris_service
   ytm_client:
     path: external/ytm_client
+  external_media_provider:
+    path: external/external_media_provider
   system_media_transport_controls:
     path: external/smtc-win32/bindings/system_media_transport_controls.dart
   windows_taskbar:
@@ -129,10 +131,6 @@ dependency_overrides:
 
 dev_dependencies:
   lints: ^2.0.0
-  msix:
-    git:
-      url: https://github.com/alexmercerind/msix.git
-      ref: a2c15a8662dd346b2738ea89538179f532d4f437
 
 flutter:
   uses-material-design: true

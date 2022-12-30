@@ -14,13 +14,13 @@ dependencies:
   media_kit:
     git:
       url: https://github.com/alexmercerind/media_kit.git
+      ref: master
       path: media_kit
-      ref: 96abc25e30d987632475cf3ebcec6115cbd4048c
   media_kit_core_audio:
     git:
       url: https://github.com/alexmercerind/media_kit.git
+      ref: master
       path: media_kit_core_audio
-      ref: 96abc25e30d987632475cf3ebcec6115cbd4048c
   media_kit_tag_reader:
     path: external/media_kit_tag_reader
   media_library:
@@ -131,10 +131,6 @@ dependency_overrides:
 
 dev_dependencies:
   lints: ^2.0.0
-  msix:
-    git:
-      url: https://github.com/alexmercerind/msix.git
-      ref: a2c15a8662dd346b2738ea89538179f532d4f437
 
 flutter:
   uses-material-design: true
