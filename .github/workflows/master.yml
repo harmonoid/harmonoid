@@ -128,7 +128,7 @@ jobs:
       - run: flutter pub get
       - run: flutter build linux --verbose
 
-      - run: chmod +x build/linux/x64/release/bundle/data/flutter_assets/assets/platform/tagger
+      - run: chmod +x build/linux/x64/release/bundle/data/flutter_assets/assets/platform/tag_reader
 
       - name: Build RPM Package
         run: |
