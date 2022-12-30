@@ -24,23 +24,3 @@ add_custom_command(
   TARGET ${BINARY_NAME} PRE_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/../bin/" "$<TARGET_FILE_DIR:${BINARY_NAME}>"
 )
-
-set(MPV_SHARED_LIB "${CMAKE_BINARY_DIR}/mpv-2.dll")
-
-if(NOT EXISTS "${MPV_SHARED_LIB}")
-  file(
-    DOWNLOAD
-    "https://api.github.com/repos/alexmercerind/harmonoid-custom-codec/releases/assets/56309670"
-    "${MPV_SHARED_LIB}"
-    HTTPHEADER "Authorization: token $ENV{ACCESS_TOKEN}"
-    HTTPHEADER "Accept: application/octet-stream"
-    SHOW_PROGRESS
-  )
-endif()
-
-add_custom_command(
-  TARGET ${BINARY_NAME} POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy "${MPV_SHARED_LIB}" "$<TARGET_FILE_DIR:${BINARY_NAME}>/mpv-2.dll"
-  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-  DEPENDS "${LIBMPV_ARCHIVE}"
-)
