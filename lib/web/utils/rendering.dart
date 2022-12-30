@@ -1,24 +1,17 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/utils/helpers.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/constants/language.dart';
+
+import 'package:harmonoid/web/state/parser.dart';
 
 List<PopupMenuItem<int>> webTrackPopupMenuItems(BuildContext context) => [
       PopupMenuItem(
@@ -116,12 +109,12 @@ Future<void> webTrackPopupMenuHandle(
         if (item is Track) {
           await showAddToPlaylistDialog(
             context,
-            Helpers.parseWebTrack(item.toJson()),
+            Parser.track(item),
           );
         } else if (item is Video) {
           await showAddToPlaylistDialog(
             context,
-            Helpers.parseWebVideo(item.toJson()),
+            Parser.video(item),
           );
         }
         break;
@@ -134,9 +127,9 @@ Future<void> webTrackPopupMenuHandle(
     case 3:
       {
         if (item is Track) {
-          Playback.instance.add([Helpers.parseWebTrack(item.toJson())]);
+          Playback.instance.add([Parser.track(item)]);
         } else if (item is Video) {
-          Playback.instance.add([Helpers.parseWebVideo(item.toJson())]);
+          Playback.instance.add([Parser.video(item)]);
         }
         break;
       }
@@ -144,9 +137,9 @@ Future<void> webTrackPopupMenuHandle(
       {
         var result;
         if (item is Track) {
-          result = Helpers.parseWebTrack(item.toJson());
+          result = Parser.track(item);
         } else if (item is Video) {
-          result = Helpers.parseWebVideo(item.toJson());
+          result = Parser.video(item);
         }
         if (result != null) {
           Share.share('${result.trackName} • ${result.uri.toString()}');

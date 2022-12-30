@@ -5,33 +5,34 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
-import 'dart:async';
 import 'dart:math';
-
-import 'package:animations/animations.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:readmore/readmore.dart';
+import 'package:animations/animations.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:ytm_client/ytm_client.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:extended_image/extended_image.dart';
 
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/dimensions.dart';
-import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
-import 'package:harmonoid/web/album.dart';
+import 'package:harmonoid/interface/settings/settings.dart';
+
+import 'package:harmonoid/web/utils/widgets.dart';
 import 'package:harmonoid/web/state/web.dart';
+import 'package:harmonoid/web/playlist.dart';
+import 'package:harmonoid/web/album.dart';
 import 'package:harmonoid/web/track.dart';
 import 'package:harmonoid/web/video.dart';
-import 'package:harmonoid/web/playlist.dart';
-import 'package:harmonoid/web/utils/widgets.dart';
 import 'package:harmonoid/web/web.dart';
-import 'package:harmonoid/interface/settings/settings.dart';
+
+import 'package:harmonoid/constants/language.dart';
 
 class WebArtistLargeTile extends StatelessWidget {
   final double height;
@@ -378,17 +379,50 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                               Positioned.fill(
                                 child: state.extendedImageLoadState ==
                                         LoadState.completed
-                                    ? TweenAnimationBuilder(
-                                        tween:
-                                            Tween<double>(begin: 0.0, end: 1.0),
-                                        duration:
-                                            const Duration(milliseconds: 800),
-                                        child: state.completedWidget,
-                                        builder: (context, value, child) =>
-                                            Opacity(
-                                          opacity: value as double,
-                                          child: state.completedWidget,
-                                        ),
+                                    ? Stack(
+                                        children: [
+                                          const SizedBox.shrink(),
+                                          Positioned.fill(
+                                            child: TweenAnimationBuilder(
+                                              tween: Tween<double>(
+                                                begin: 0.0,
+                                                end: 1.0,
+                                              ),
+                                              duration: const Duration(
+                                                milliseconds: 800,
+                                              ),
+                                              child: state.completedWidget,
+                                              builder:
+                                                  (context, value, child) =>
+                                                      Opacity(
+                                                opacity: value as double,
+                                                child: state.completedWidget,
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned.fill(
+                                            child: Container(
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              height: 72.0,
+                                              decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    Colors.black87,
+                                                    Colors.transparent,
+                                                  ],
+                                                  stops: [
+                                                    0.0,
+                                                    0.3,
+                                                  ],
+                                                  begin: Alignment.topCenter,
+                                                  end: Alignment.bottomCenter,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       )
                                     : SizedBox.shrink(),
                               ),

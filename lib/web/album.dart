@@ -5,8 +5,8 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
-import 'dart:async';
 import 'dart:math';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:readmore/readmore.dart';
@@ -18,20 +18,21 @@ import 'package:ytm_client/ytm_client.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:media_library/media_library.dart' as media;
 
-import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/web/utils/widgets.dart';
-import 'package:harmonoid/utils/dimensions.dart';
-import 'package:harmonoid/utils/widgets.dart';
-import 'package:harmonoid/utils/helpers.dart';
-import 'package:harmonoid/utils/theme.dart';
-import 'package:harmonoid/utils/palette_generator.dart';
-import 'package:harmonoid/state/visuals.dart';
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:harmonoid/interface/settings/settings.dart';
+import 'package:harmonoid/state/visuals.dart';
+import 'package:harmonoid/constants/language.dart';
+
 import 'package:harmonoid/web/web.dart';
 import 'package:harmonoid/web/track.dart';
 import 'package:harmonoid/web/state/web.dart';
+import 'package:harmonoid/web/utils/widgets.dart';
+import 'package:harmonoid/web/state/parser.dart';
 
 class WebAlbumLargeTile extends StatelessWidget {
   final double width;
@@ -628,11 +629,15 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                                 name: widget
                                                                     .album
                                                                     .albumName,
-                                                              )..tracks.addAll(widget
-                                                                  .album.tracks
-                                                                  .map((e) => Helpers
-                                                                      .parseWebTrack(
-                                                                          e.toJson()))),
+                                                              )..tracks.addAll(
+                                                                  widget.album
+                                                                      .tracks
+                                                                      .map(
+                                                                    (e) => Parser
+                                                                        .track(
+                                                                            e),
+                                                                  ),
+                                                                ),
                                                             );
                                                           },
                                                           style: OutlinedButton

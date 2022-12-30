@@ -4,29 +4,28 @@
 /// All rights reserved.
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
+
 import 'dart:ui';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:animations/animations.dart';
 import 'package:ytm_client/ytm_client.dart';
-import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/utils/theme.dart';
-import 'package:harmonoid/utils/helpers.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/interface/settings/about.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
+
 import 'package:harmonoid/web/web.dart';
 import 'package:harmonoid/web/state/web.dart';
+import 'package:harmonoid/web/state/parser.dart';
 
 class WebSearchBar extends StatefulWidget {
   final String? query;
@@ -43,15 +42,6 @@ class _WebSearchBarState extends State<WebSearchBar> {
   List<String> _suggestions = <String>[];
   int _highlightedSuggestionIndex = -1;
   late TextEditingController _searchBarController;
-  HotKey? _hotKey;
-
-  @override
-  void dispose() {
-    if (_hotKey != null) {
-      HotKeyManager.instance.unregister(_hotKey!);
-    }
-    super.dispose();
-  }
 
   Future<void> searchOrPlay(String value) async {
     if (value.isEmpty) return;
@@ -143,22 +133,8 @@ class _WebSearchBarState extends State<WebSearchBar> {
         ),
       ),
       fieldViewBuilder: (context, controller, node, callback) {
-        if (_hotKey == null) {
-          _hotKey = searchBarHotkey;
-          HotKeyManager.instance.register(
-            _hotKey!,
-            keyDownHandler: (_) {
-              node.requestFocus();
-            },
-          );
-        }
         _searchBarController = controller;
         return Focus(
-          onFocusChange: (hasFocus) {
-            if (!hasFocus) {
-              HotKeys.instance.enableSpaceHotKey();
-            }
-          },
           onKey: (node, event) {
             var isArrowDownPressed =
                 event.isKeyPressed(LogicalKeyboardKey.arrowDown);
@@ -183,13 +159,6 @@ class _WebSearchBarState extends State<WebSearchBar> {
             ),
             padding: EdgeInsets.only(top: 2.0),
             child: Focus(
-              onFocusChange: (hasFocus) {
-                if (hasFocus) {
-                  HotKeys.instance.disableSpaceHotKey();
-                } else {
-                  HotKeys.instance.enableSpaceHotKey();
-                }
-              },
               child: TextField(
                 autofocus: isDesktop,
                 cursorWidth: 1.0,
@@ -307,13 +276,6 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
                   margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
                   padding: EdgeInsets.only(top: 2.0),
                   child: Focus(
-                    onFocusChange: (hasFocus) {
-                      if (hasFocus) {
-                        HotKeys.instance.disableSpaceHotKey();
-                      } else {
-                        HotKeys.instance.enableSpaceHotKey();
-                      }
-                    },
                     child: TextField(
                       autofocus: true,
                       onChanged: (value) {
@@ -363,13 +325,7 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
               await Collection.instance.playlistCreateFromName(playlist!.name);
           await Collection.instance.playlistAddTracks(
             result,
-            playlist!.tracks
-                .map(
-                  (track) => Helpers.parseWebTrack(
-                    track.toJson(),
-                  ),
-                )
-                .toList(),
+            playlist!.tracks.map((e) => Parser.track(e)).toList(),
           );
           try {
             setState(() {
@@ -445,13 +401,6 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
           margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
           padding: EdgeInsets.only(top: 2.0),
           child: Focus(
-            onFocusChange: (hasFocus) {
-              if (hasFocus) {
-                HotKeys.instance.disableSpaceHotKey();
-              } else {
-                HotKeys.instance.enableSpaceHotKey();
-              }
-            },
             child: TextField(
               autofocus: true,
               controller: _controller,
@@ -665,13 +614,7 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
               await Collection.instance.playlistCreateFromName(playlist!.name);
           await Collection.instance.playlistAddTracks(
             result,
-            playlist!.tracks
-                .map(
-                  (track) => Helpers.parseWebTrack(
-                    track.toJson(),
-                  ),
-                )
-                .toList(),
+            playlist!.tracks.map((e) => Parser.track(e)).toList(),
           );
           try {
             setState(() {
