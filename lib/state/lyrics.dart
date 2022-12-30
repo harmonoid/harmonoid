@@ -24,9 +24,6 @@ import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/models/lyric.dart';
 import 'package:harmonoid/constants/language.dart';
 
-// TODO(alexmercerind): Move this to another [Isolate] for better performance.
-// Currently [ChangeNotifier] & event synchronization may interrupt this simple workflow.
-
 /// Lyrics
 /// ------
 ///
@@ -83,11 +80,6 @@ class Lyrics extends ChangeNotifier {
         ],
         debug: true,
       );
-      AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-        if (!isAllowed) {
-          AwesomeNotifications().requestPermissionToSendNotifications();
-        }
-      });
       AwesomeNotifications().setListeners(
         onActionReceivedMethod: _onNotificationActionReceived,
       );
@@ -273,13 +265,22 @@ class Lyrics extends ChangeNotifier {
               debugPrint(stacktrace.toString());
             }
             if (!trackDirectoryLRCFound) {
-              debugPrint('[Lyrics]: (API) ${track.lyricsQuery}');
+              final query = [
+                track.trackName,
+                if (!track.trackArtistNamesNotPresent)
+                  ...track.trackArtistNames.take(2)
+                else if (!track.albumArtistNameNotPresent)
+                  track.albumArtistName
+                else if (!track.albumNameNotPresent)
+                  track.albumName,
+              ].join(' ');
+              debugPrint('[Lyrics]: (API) $query');
               // Lookup for the lyrics using lambda API.
               final uri = Uri.https(
                 'harmonoid-lyrics.vercel.app',
                 '/api/lyrics',
                 {
-                  'name': track.lyricsQuery,
+                  'name': query,
                 },
               );
               final response = await http.get(uri);
@@ -360,13 +361,13 @@ class Lyrics extends ChangeNotifier {
       try {
         final lrc = Lrc(
           type: LrcTypes.simple,
-          artist: !(_track?.hasNoAvailableArtists ?? true)
+          artist: !(_track?.trackArtistNamesNotPresent ?? true)
               ? _track?.trackArtistNames.join(';')
               : null,
           album:
-              !(_track?.hasNoAvailableAlbum ?? true) ? _track?.albumName : null,
+              !(_track?.albumNameNotPresent ?? true) ? _track?.albumName : null,
           title: _track?.trackName,
-          author: !(_track?.hasNoAvailableArtists ?? true)
+          author: !(_track?.trackArtistNamesNotPresent ?? true)
               ? _track?.trackArtistNames.join(';')
               : null,
           version: '1.0.0',
