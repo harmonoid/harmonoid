@@ -20,12 +20,11 @@ import 'package:uri_parser/uri_parser.dart';
 import 'package:animations/animations.dart';
 import 'package:window_plus/window_plus.dart';
 import 'package:media_library/media_library.dart';
-import 'package:harmonoid_visual_assets/harmonoid_visual_assets.dart';
+import 'package:visual_assets/visual_assets.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:known_extents_list_view_builder/known_extents_list_view_builder.dart';
 
 import 'package:harmonoid/core/intent.dart';
-import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
@@ -261,12 +260,6 @@ class SortBarFixedHolderState extends State<SortBarFixedHolder> {
             ),
           ),
         ),
-        SizedBox(width: tileMargin),
-        if (message.isNotEmpty)
-          Text(
-            message,
-            style: Theme.of(context).textTheme.displaySmall,
-          ),
         Spacer(),
         widget.child,
       ],
@@ -2627,13 +2620,6 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                             margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
                             padding: EdgeInsets.only(top: 2.0),
                             child: Focus(
-                              onFocusChange: (hasFocus) {
-                                if (hasFocus) {
-                                  HotKeys.instance.disableSpaceHotKey();
-                                } else {
-                                  HotKeys.instance.enableSpaceHotKey();
-                                }
-                              },
                               child: Form(
                                 key: formKey,
                                 child: TextFormField(

@@ -8,12 +8,11 @@
 
 import 'dart:io';
 import 'package:flutter/widgets.dart';
-import 'package:media_engine/media_engine.dart';
 import 'package:media_library/media_library.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 
 import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/utils/metadata_retriever.dart';
+import 'package:harmonoid/utils/android_tag_reader.dart';
 
 extension IterableExtension<T> on Iterable<T> {
   /// Return distinct array by comparing hash codes.
@@ -22,7 +21,6 @@ extension IterableExtension<T> on Iterable<T> {
     this.forEach((element) {
       if (!distinct.contains(element)) distinct.add(element);
     });
-
     return distinct;
   }
 }
@@ -34,7 +32,7 @@ extension StringExtension on String {
       .toString();
 
   /// Return modified string with all illegal file system path characters removed.
-  get safePath => replaceAll(RegExp(kArtworkFileNameRegex), '');
+  get safePath => replaceAll(RegExp(kAlbumArtFileNameRegex), '');
 }
 
 extension DurationExtension on Duration {
@@ -67,7 +65,7 @@ extension DateTimeExtension on DateTime {
 
 extension TrackExtension on Track {
   /// Whether the [Track] actually has meaningful actual track artists from metadata tags.
-  bool get hasNoAvailableArtists {
+  bool get trackArtistNamesNotPresent {
     if (trackArtistNames.isEmpty) {
       return true;
     }
@@ -80,22 +78,23 @@ extension TrackExtension on Track {
   }
 
   /// Whether the [Track] actually has meaningful actual album artists from metadata tags.
-  bool get hasNoAvailableAlbumArtists =>
+  bool get albumArtistNameNotPresent =>
       ['', kUnknownArtist].contains(albumArtistName);
 
   /// Whether the [Track] actually has meaningful actual album from metadata tags.
-  bool get hasNoAvailableAlbum => ['', kUnknownAlbum].contains(albumName);
+  bool get albumNameNotPresent => ['', kUnknownAlbum].contains(albumName);
 
-  String get lyricsQuery => [
-        trackName,
-        !hasNoAvailableArtists
-            ? trackArtistNames.take(2).join(' ')
-            : !hasNoAvailableAlbumArtists
-                ? albumArtistName
-                : !hasNoAvailableAlbum
-                    ? albumName
-                    : '',
-      ].join(' ').replaceAll(RegExp(r'[\\/:*?""<>|]'), ' ');
+  bool get genresNotPresent {
+    if (genres.isEmpty) {
+      return true;
+    }
+    if (genres.length == 1) {
+      if (['', kUnknownGenre].contains(genres.first)) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
 
 extension AndroidMediaFormatExtension on AndroidMediaFormat {

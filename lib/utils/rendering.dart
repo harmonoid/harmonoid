@@ -7,7 +7,6 @@
 ///
 
 import 'dart:io';
-import 'dart:math';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
@@ -15,12 +14,11 @@ import 'package:share_plus/share_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:media_library/media_library.dart';
-import 'package:media_engine/media_engine.dart' hide Media;
-import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:filepicker_windows/filepicker_windows.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:external_media_provider/external_media_provider.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
@@ -40,31 +38,11 @@ import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/constants/language.dart';
 
-// TODO: Clean-up global variables.
+// TODO(@alexmercerind): Clean-up global variables.
 
 final isDesktop = Platform.isWindows || Platform.isLinux || Platform.isMacOS;
 final isMobile = Platform.isAndroid || Platform.isIOS;
 final tileMargin = isDesktop ? kDesktopTileMargin : kMobileTileMargin;
-
-final HotKey searchBarHotkey = HotKey(
-  KeyCode.keyF,
-  modifiers: [KeyModifier.control],
-  scope: HotKeyScope.inapp,
-);
-
-final message = Random().nextInt(100) == 50
-    ? [
-        'Tag me on Twitter @alexmercerind with a screenshot of this. 🐦',
-        'Yeah! You found the easter egg. 🥚',
-        'You are a very lucky person. 🍀',
-      ][Random().nextInt(3)]
-    : DateTime.now().day > (25 - 7) &&
-            DateTime.now().day <= 25 &&
-            DateTime.now().month == 12
-        ? 'Merry Christmas! ❄️'
-        : DateTime.now().day == 1 && DateTime.now().month == 1
-            ? 'Happy New Year! 🎈'
-            : '';
 
 // Remaining source code in this file consists of helper & utility methods used for rendering & handling some repeated tasks linked at multiple places.
 
@@ -1119,9 +1097,9 @@ ImageProvider getAlbumArt(
   ImageProvider? image;
   // Separately handle the web URLs.
   if (media is Track) {
-    if (LibmpvPluginUtils.isSupported(media.uri)) {
+    if (ExternalMedia.supported(media.uri)) {
       image = ExtendedNetworkImageProvider(
-        LibmpvPluginUtils.thumbnail(
+        ExternalMedia.thumbnail(
           media.uri,
           small: small,
         ).toString(),
