@@ -10,17 +10,15 @@ import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:uri_parser/uri_parser.dart';
-import 'package:media_engine/media_engine.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:media_library/media_library.dart' hide Media;
 import 'package:ytm_client/ytm_client.dart' hide Media, Track;
+import 'package:media_kit_tag_reader/media_kit_tag_reader.dart';
+import 'package:external_media_provider/external_media_provider.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/utils/helpers.dart';
-import 'package:harmonoid/utils/tagger_client.dart';
-import 'package:harmonoid/utils/metadata_retriever.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 
@@ -60,12 +58,6 @@ class Intent {
         }
       });
     }
-    if (Platform.isWindows) {
-      tagger = Tagger(verbose: false);
-    }
-    if (Platform.isLinux) {
-      client = TaggerClient(verbose: false);
-    }
   }
 
   /// Initializes the intent & checks for possibly opened [File].
@@ -79,6 +71,11 @@ class Intent {
         instance.argument = args.first;
       }
     }
+  }
+
+  /// Disposes the [instance]. Releases allocated resources back to the system.
+  Future<void> dispose() async {
+    await reader.dispose();
   }
 
   /// Starts playing the possibly opened file & saves its metadata before doing it.
@@ -171,7 +168,7 @@ class Intent {
           final contents = await parser.directory!.list_(
             extensions: kSupportedFileTypes,
           );
-          var playing = false;
+          bool playing = false;
           for (final file in contents) {
             final track = await parse(file.uri);
             try {
@@ -200,13 +197,9 @@ class Intent {
         {
           final uri = parser.uri!;
           // External network URIs.
-          if (LibmpvPluginUtils.isSupported(uri)) {
+          if (ExternalMedia.supported(uri)) {
             final response = await YTMClient.player(uri.toString());
-            await Playback.instance.open(
-              [
-                Helpers.parseWebTrack(response!.toJson()),
-              ],
-            );
+            await Playback.instance.open([Track.fromJson(response!.toJson())]);
           }
           // Direct network URIs. No metadata extraction.
           else {
@@ -235,67 +228,28 @@ class Intent {
   /// Parses the metadata & saves cover art at local cache directory for the given [uri].
   Future<Track> parse(
     Uri uri, {
-    Directory? coverDirectory,
-    Duration? timeout,
+    Directory? albumArtDirectory,
+    Duration timeout = const Duration(seconds: 1),
   }) async {
-    coverDirectory ??= Collection.instance.albumArtDirectory;
-    timeout ??= const Duration(seconds: 1);
+    // Use the default album art directory.
+    albumArtDirectory ??= Collection.instance.albumArtDirectory;
     debugPrint(uri.toString());
-    // The finally extracted metadata must have the URI to the actual media resource, before parsing to the model.
-    final result = <String, dynamic>{'uri': uri};
-    // Windows.
-    if (Platform.isWindows && tagger != null) {
-      try {
-        final metadata = await tagger!.parse(
-          Media(uri.toString()),
-          coverDirectory: coverDirectory,
-          timeout: timeout,
-        );
-        result.addAll(metadata);
-      } catch (exception, stacktrace) {
-        debugPrint(exception.toString());
-        debugPrint(stacktrace.toString());
-      }
-      debugPrint(result.toString());
-      return Helpers.parseTaggerMetadata(result);
-    }
-    // GNU/Linux.
-    if (Platform.isLinux && client != null) {
-      try {
-        final metadata = await client!.parse(
-          uri.toString(),
-          coverDirectory: coverDirectory,
-          timeout: timeout,
-        );
-        result.addAll(metadata);
-      } catch (exception, stacktrace) {
-        debugPrint(exception.toString());
-        debugPrint(stacktrace.toString());
-      }
-      debugPrint(result.toString());
-      return Helpers.parseTaggerMetadata(result);
-    }
-    // Android.
-    if (Platform.isAndroid) {
-      try {
-        final metadata = await MetadataRetriever.instance.metadata(
-          uri,
-          coverDirectory,
-          timeout: timeout,
-        );
-        result.addAll(metadata.toJson());
-      } catch (exception, stacktrace) {
-        debugPrint(exception.toString());
-        debugPrint(stacktrace.toString());
-      }
-      debugPrint(result.toString());
-      return Track.fromJson(result);
-    }
-    // Should never be reached.
-    // No metadata could be extracted.
+    final result = await reader.parse(
+      uri.toString(),
+      albumArtDirectory: albumArtDirectory,
+      timeout: timeout,
+    );
     debugPrint(result.toString());
-    return Track.fromJson(result);
+    return Track.fromJson(result.toJson());
   }
+
+  /// [MethodChannel] used for retrieving the media [Uri] on Android specifically.
+  ///
+  final MethodChannel channel =
+      const MethodChannel('com.alexmercerind.harmonoid.IntentRetriever');
+
+  /// Platform independent tag reader from `package:media_kit_tag_reader` for parsing & reading metadata from music files.
+  final TagReader reader = TagReader();
 
   /// The URI opened externally by the user e.g. via File Explorer.
   /// It may be a:
@@ -308,16 +262,6 @@ class Intent {
 
   /// For ignoring duplicate redundant calls on Android during application lifecycle changes.
   String? _argument;
-
-  /// `libmpv.dart` [Tagger] instance.
-  /// Public for disposal upon application termination inside [WindowLifecycle].
-  Tagger? tagger;
-  TaggerClient? client;
-
-  /// [MethodChannel] used for retrieving the media [Uri] on Android specifically.
-  ///
-  final MethodChannel channel =
-      const MethodChannel('com.alexmercerind.harmonoid.IntentRetriever');
 
   /// Android specific.
   ///

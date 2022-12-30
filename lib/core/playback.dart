@@ -6,35 +6,37 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
-import 'dart:async';
 import 'dart:io';
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:media_engine/media_engine.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
+import 'package:external_media_provider/external_media_provider.dart';
 import 'package:media_library/media_library.dart' hide Media, Playlist;
 import 'package:ytm_client/ytm_client.dart' hide Media, Track, Playlist;
 import 'package:system_media_transport_controls/system_media_transport_controls.dart';
 
 import 'package:harmonoid/core/intent.dart';
+import 'package:harmonoid/core/app_state.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/core/app_state.dart';
-import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/metadata_retriever.dart';
 import 'package:harmonoid/state/lyrics.dart';
+import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/android_tag_reader.dart';
 import 'package:harmonoid/state/now_playing_color_palette.dart';
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/constants/language.dart';
 
-import 'package:harmonoid/main.dart';
+// NOTE: This is very spaghetti code. I will attempt to refactor it sometime in the future.
+// Since it has been well tested & stable after a lot of iterations, I am not going to touch it for now.
 
 /// Playback
 /// --------
@@ -45,15 +47,15 @@ import 'package:harmonoid/main.dart';
 ///
 /// * Platform independence.
 /// * State changes.
-/// * `ITaskbarList3` & `SystemMediaTransportControls` controls on Windows.
-/// * D-Bus MPRIS controls on Linux.
-/// * Discord RPC.
 /// * [Lyrics] update.
 /// * Notification lyrics.
+/// * Discord Rich Presence.
+/// * D-Bus MPRIS controls for GNU/Linux.
+/// * `ITaskbarList3` & `SystemMediaTransportControls` controls for Windows.
 ///
 class Playback extends ChangeNotifier {
   /// [Playback] object instance. Must call [Playback.initialize].
-  static late Playback instance = Playback();
+  static final Playback instance = Playback();
 
   int index = DefaultPlaybackValues.index;
   List<Track> tracks = DefaultPlaybackValues.tracks;
@@ -68,135 +70,139 @@ class Playback extends ChangeNotifier {
   bool isBuffering = false;
   bool isCompleted = false;
   bool isShuffling = DefaultPlaybackValues.isShuffling;
-  // Only for Windows & Linux.
+  // [audioParams] and [audioBitrate] are part of `package:media_kit`.
   AudioParams audioParams = AudioParams();
   double? audioBitrate;
-  // Only for Android.
+  // [androidAudioFormat] is part of [AndroidTagReader], implemented within Harmonoid.
   AndroidMediaFormat androidAudioFormat = AndroidMediaFormat();
 
-  void play() {
-    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-      libmpv?.play();
+  Future<void> play() async {
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      await player?.play();
     }
     if (Platform.isAndroid || Platform.isIOS) {
-      audioService?.play();
+      await audioService?.play();
     }
   }
 
-  void pause() {
-    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-      libmpv?.pause();
+  Future<void> pause() async {
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      await player?.pause();
     }
     if (Platform.isAndroid || Platform.isIOS) {
-      audioService?.pause();
+      await audioService?.pause();
     }
   }
 
-  void playOrPause() {
-    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-      libmpv?.playOrPause();
+  Future<void> playOrPause() async {
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      await player?.playOrPause();
     }
     if (Platform.isAndroid || Platform.isIOS) {
       if (isPlaying) {
-        pause();
+        await pause();
       } else {
-        play();
+        await play();
       }
     }
   }
 
-  void next() {
-    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-      libmpv?.next();
-    }
-    if (Platform.isAndroid || Platform.isIOS) {
-      audioService?.skipToNext();
-    }
-  }
-
-  void previous() {
-    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-      libmpv?.previous();
-    }
-    if (Platform.isAndroid || Platform.isIOS) {
-      audioService?.skipToPrevious();
-    }
-  }
-
-  void jump(int value) {
-    if (Platform.isWindows || Platform.isLinux) {
-      libmpv?.jump(value);
-    }
-    if (Platform.isAndroid || Platform.isMacOS || Platform.isIOS) {
-      audioService?.skipToQueueItem(value);
-    }
-  }
-
-  void setRate(double value) {
+  Future<void> next() async {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      libmpv?.rate = value;
+      await player?.next();
     }
     if (Platform.isAndroid || Platform.isIOS) {
-      audioService?.setSpeed(value);
+      await audioService?.skipToNext();
+    }
+  }
+
+  Future<void> previous() async {
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      await player?.previous();
+    }
+    if (Platform.isAndroid || Platform.isIOS) {
+      await audioService?.skipToPrevious();
+    }
+  }
+
+  Future<void> jump(int index) async {
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      await player?.jump(index);
+    }
+    if (Platform.isAndroid || Platform.isIOS) {
+      await audioService?.skipToQueueItem(index);
+    }
+  }
+
+  Future<void> setRate(double value) async {
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      player?.rate = value;
+    }
+    if (Platform.isAndroid || Platform.isIOS) {
+      await audioService?.setSpeed(value);
     }
     rate = value;
     instance.mpris?.rate = value;
     notifyListeners();
   }
 
-  void setVolume(double value) {
+  Future<void> setVolume(double value) async {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      libmpv?.volume = value;
+      player?.volume = value;
     }
     if (Platform.isAndroid || Platform.isIOS) {
-      audioService?.setVolume(value / 100.0);
+      await audioService?.setVolume(value / 100.0);
     }
     volume = value;
     instance.mpris?.volume = value;
     notifyListeners();
   }
 
-  void setPitch(double value) {
+  Future<void> setPitch(double value) async {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      libmpv?.pitch = value;
+      player?.pitch = value;
     }
     if (Platform.isAndroid || Platform.isIOS) {
-      audioService?.setPitch(value);
+      await audioService?.setPitch(value);
     }
     pitch = value;
     notifyListeners();
   }
 
-  void setPlaylistLoopMode(PlaylistLoopMode value) {
+  Future<void> setPlaylistLoopMode(PlaylistLoopMode value) async {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      libmpv?.setPlaylistMode(PlaylistMode.values[value.index]);
+      await player?.setPlaylistMode(
+        PlaylistMode.values[value.index],
+      );
     }
     if (Platform.isAndroid || Platform.isIOS) {
-      audioService?.setRepeatMode(AudioServiceRepeatMode.values[value.index]);
+      await audioService?.setRepeatMode(
+        AudioServiceRepeatMode.values[value.index],
+      );
     }
     playlistLoopMode = value;
     notifyListeners();
   }
 
-  void toggleMute() {
+  Future<void> toggleMute() async {
     if (isMuted) {
-      setVolume(_volume);
+      await setVolume(_volume);
     } else {
       _volume = volume;
-      setVolume(0.0);
+      await setVolume(0.0);
     }
     isMuted = !isMuted;
     notifyListeners();
   }
 
-  void toggleShuffle() {
+  Future<void> toggleShuffle() async {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      libmpv?.shuffle = !isShuffling;
-      // Handled through stream subscription on the Android.
+      player?.shuffle = !isShuffling;
       isShuffling = !isShuffling;
     }
     if (Platform.isAndroid || Platform.isIOS) {
-      audioService?.setShuffleMode(
+      // Handled through [StreamSubscription] on the Android.
+      await audioService?.setShuffleMode(
         !isShuffling
             ? AudioServiceShuffleMode.all
             : AudioServiceShuffleMode.none,
@@ -205,13 +211,12 @@ class Playback extends ChangeNotifier {
     notifyListeners();
   }
 
-  void seek(Duration position) async {
+  Future<void> seek(Duration position) async {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      libmpv?.seek(position).then((value) {
-        Future.delayed(const Duration(milliseconds: 100), () {
-          // [endTimeStamp] update needs to be sent.
-          notifyDiscordRPC();
-        });
+      await player!.seek(position);
+      Future.delayed(const Duration(milliseconds: 100), () {
+        // Notify Discord RPC about the change in the position.
+        notifyDiscordRPC();
       });
     }
     if (Platform.isAndroid || Platform.isIOS) {
@@ -221,28 +226,26 @@ class Playback extends ChangeNotifier {
   }
 
   Future<void> open(List<Track> tracks, {int index = 0}) async {
-    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-      await libmpv?.open(
-        Playlist(
-          tracks
-              .map((e) => Media(
-                    LibmpvPluginUtils.redirect(e.uri).toString(),
-                    extras: e.toJson(),
-                  ))
-              .toList(),
-          index: index,
-        ),
-      );
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      final items = <Media>[];
+      for (final track in tracks) {
+        items.add(
+          Media(
+            ExternalMedia.redirect(track.uri).toString(),
+            extras: track.toJson(),
+          ),
+        );
+      }
+      await player?.open(Playlist(items, index: index));
+      // `package:media_kit` resets the shuffle state after loading new playlist.
       isShuffling = false;
     }
     if (Platform.isAndroid || Platform.isIOS) {
       this.tracks = tracks;
-      await audioService?.open(
-        tracks,
-        index: index,
-      );
+      await audioService?.open(tracks, index: index);
     }
-    // TODO(alexmercerind): Tighly coupled impl.
+
+    // TODO(@alexmercerind): Refactor this to be outside of this class. Tight coupling is bad.
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       if (Configuration.instance.jumpToNowPlayingScreenOnPlay) {
         Future.delayed(const Duration(milliseconds: 500), () {
@@ -263,11 +266,11 @@ class Playback extends ChangeNotifier {
   }
 
   Future<void> add(List<Track> tracks) async {
-    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       for (final track in tracks) {
-        await libmpv?.add(
+        await player?.add(
           Media(
-            LibmpvPluginUtils.redirect(track.uri).toString(),
+            ExternalMedia.redirect(track.uri).toString(),
             extras: track.toJson(),
           ),
         );
@@ -280,7 +283,7 @@ class Playback extends ChangeNotifier {
 
   /// Load the last played playback state.
   ///
-  /// Passing [open] as `false` causes file to not be opened inside [libmpv] or [audioService].
+  /// Passing [open] as `false` causes file to not be opened inside [player] or [audioService].
   ///
   Future<void> loadAppState({bool open = true}) async {
     isShuffling = AppState.instance.shuffle;
@@ -289,20 +292,20 @@ class Playback extends ChangeNotifier {
     volume = AppState.instance.volume;
     pitch = AppState.instance.pitch;
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      libmpv?.rate = rate;
-      libmpv?.volume = volume;
-      libmpv?.pitch = pitch;
-      libmpv?.setPlaylistMode(PlaylistMode.values[playlistLoopMode.index]);
-
-      // Shuffle is per-playlist, so this is meaningless for current `package:media_engine` implementation.
-      // libmpv?.shuffle = isShuffling;
-
-      // Restore the custom libmpv options set by the user.
-      for (final option in Configuration.instance.userLibmpvOptions.keys) {
-        await libmpv?.setProperty(
-          option,
-          Configuration.instance.userLibmpvOptions[option]!,
-        );
+      player?.rate = rate;
+      player?.volume = volume;
+      player?.pitch = pitch;
+      player?.setPlaylistMode(PlaylistMode.values[playlistLoopMode.index]);
+      // Shuffle is per-playlist, so this is meaningless for current `package:media_kit` implementation.
+      // player?.shuffle = isShuffling;
+      // Restore the custom player options/properties defined by the user.
+      for (final entry in Configuration.instance.userLibmpvOptions.entries) {
+        if (player?.platform is libmpvPlayer) {
+          await (player?.platform as libmpvPlayer?)?.setProperty(
+            entry.key,
+            entry.value,
+          );
+        }
       }
     }
     if (Platform.isAndroid || Platform.isIOS) {
@@ -321,16 +324,17 @@ class Playback extends ChangeNotifier {
     if (!open) return;
     tracks = AppState.instance.playlist;
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      await libmpv?.open(
-        Playlist(
-          tracks
-              .map((e) => Media(
-                    LibmpvPluginUtils.redirect(e.uri).toString(),
-                    extras: e.toJson(),
-                  ))
-              .toList(),
-          index: AppState.instance.index,
-        ),
+      final items = <Media>[];
+      for (final track in tracks) {
+        items.add(
+          Media(
+            ExternalMedia.redirect(track.uri).toString(),
+            extras: track.toJson(),
+          ),
+        );
+      }
+      await player?.open(
+        Playlist(items, index: AppState.instance.index),
         play: false,
       );
       index = AppState.instance.index;
@@ -346,83 +350,130 @@ class Playback extends ChangeNotifier {
   }
 
   static Future<void> initialize() async {
-    // `package:libmpv` specific.
-    // This is assignment is here for a reason.
-    // Don't remove it.
-    instance.libmpv = Player(video: false, osc: false, title: kTitle);
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      instance.discord = DiscordRPC(applicationId: '881480706545573918');
-      instance.libmpv?.streams.playlist.listen((event) async {
+      instance.player = Player(
+        configuration: PlayerConfiguration(
+          texture: false,
+          osd: 0,
+          vo: 'null',
+          title: 'Harmonoid',
+        ),
+      );
+      instance.player?.streams.playlist.listen((event) async {
+        // Boundary checking.
         if (event.index < 0 || event.index > event.medias.length - 1) {
           return;
         }
         instance.index = event.index;
+        // Use another [Isolate] to deserialize the [Track]s playlist.
         instance.tracks = await compute<List, List<Track>>(
-          (message) {
-            return message
-                .map((media) => Track.fromJson(media.extras))
-                .toList();
-          },
+          (message) => message.map((e) => Track.fromJson(e.extras)).toList(),
           event.medias,
         );
         instance.notifyListeners();
         instance.notifyNativeListeners();
       });
-      instance.libmpv?.streams.isPlaying.listen((event) {
+      instance.player?.streams.isPlaying.listen((event) {
         instance.isPlaying = event;
         instance.notifyListeners();
         instance.notifyNativeListeners();
       });
-      instance.libmpv?.streams.isBuffering.listen((event) {
+      instance.player?.streams.isBuffering.listen((event) {
         instance.isBuffering = event;
         instance.notifyListeners();
         instance.notifyNativeListeners();
       });
-      instance.libmpv?.streams.isCompleted.listen((event) async {
+      instance.player?.streams.isCompleted.listen((event) async {
         instance.isCompleted = event;
         instance.notifyListeners();
       });
-      instance.libmpv?.streams.position
-          .distinct(
-        (previous, next) =>
-            (next - previous).abs() < const Duration(milliseconds: 200),
-      )
+      //
+      instance.player?.streams.position
+          // In `package:media_kit`, position update rate is very high.
+          // Filter out the updates that are too close to each other.
+          // This will reduce the number of re-builds & optimize performance.
+          .distinct((a, b) => (a - b).abs() < const Duration(milliseconds: 200))
           .listen((event) {
         if (instance.interceptPositionChangeRebuilds) {
+          // Refer to the comment in [interceptPositionChangeRebuilds].
           return;
         }
         instance.position = event;
         instance.notifyListeners();
-        if (Platform.isWindows && Configuration.instance.taskbarIndicator) {
-          WindowsTaskbar.setProgress(
-            instance.position.inMilliseconds,
-            instance.duration.inMilliseconds,
-          );
+        // Windows: Update the `ITaskbarList3` progress indicator.
+        try {
+          if (Platform.isWindows && Configuration.instance.taskbarIndicator) {
+            WindowsTaskbar.setProgress(
+              instance.position.inMilliseconds,
+              instance.duration.inMilliseconds,
+            );
+          }
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
         }
-        if (Platform.isLinux) {
-          instance.mpris?.position = event;
+        // Linux: Update the MPRIS position.
+        try {
+          if (Platform.isLinux) {
+            instance.mpris?.position = event;
+          }
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
         }
-        // [PlaylistLoopMode.single] needs to update [endTimeStamp] in Discord RPC.
-        if (event == Duration.zero) {
-          instance.notifyDiscordRPC();
+        try {
+          // [PlaylistLoopMode.single] needs to update [endTimeStamp] in Discord RPC.
+          if (event == Duration.zero) {
+            instance.notifyDiscordRPC();
+          }
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
         }
       });
-      instance.libmpv?.streams.duration.listen((event) {
+      instance.player?.streams.duration.listen((event) {
         instance.duration = event;
         instance.notifyListeners();
       });
-      instance.libmpv?.streams.audioParams.listen((event) {
+      instance.player?.streams.audioParams.listen((event) {
         instance.audioParams = event;
         instance.notifyListeners();
       });
-      instance.libmpv?.streams.audioBitrate.listen((event) {
+      instance.player?.streams.audioBitrate.listen((event) {
         instance.audioBitrate = event;
         instance.notifyListeners();
       });
+      // MPRIS & System Media Transport Controls.
       try {
         // MPRIS.
         if (Platform.isLinux) {
-          instance.mpris = MPRIS(instance);
+          instance.mpris = await MPRIS.create(
+            busName: 'org.mpris.MediaPlayer2.harmonoid',
+            identity: 'Harmonoid',
+            desktopEntry: '/usr/share/applications/harmonoid',
+          );
+          instance.mpris?.setEventHandler(
+            MPRISEventHandler(
+              play: instance.play,
+              pause: instance.pause,
+              playPause: instance.playOrPause,
+              next: instance.next,
+              previous: instance.previous,
+              seek: instance.seek,
+              rate: instance.setRate,
+              // [MPRIS] operates in range [0.0, 1.0] while [Playback] operates in range [0.0, 100.0].
+              volume: (value) => instance.setVolume(value * 100.0),
+              shuffle: (value) async {
+                if (value == instance.isShuffling) return;
+                await instance.toggleShuffle();
+              },
+              setPosition: (_, value) => instance.jump(value),
+              openUri: (value) => Intent.instance.playURI(value.toString()),
+              loopStatus: (value) => instance.setPlaylistLoopMode(
+                PlaylistLoopMode.values[value.index],
+              ),
+            ),
+          );
         }
         // System Media Transport Controls.
         if (Platform.isWindows) {
@@ -456,8 +507,9 @@ class Playback extends ChangeNotifier {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
       }
+      // Discord RPC.
+      instance.discord = DiscordRPC(applicationId: '881480706545573918');
     }
-    // `package:just_audio` & `package:audio_service` specific.
     if (Platform.isAndroid || Platform.isIOS) {
       instance.audioService = await AudioService.init(
         builder: () => _HarmonoidMobilePlayer(instance),
@@ -473,6 +525,7 @@ class Playback extends ChangeNotifier {
 
   void notifyNativeListeners() async {
     try {
+      // Boundary checking.
       if (index < 0 || index > tracks.length - 1) {
         return;
       }
@@ -496,58 +549,71 @@ class Playback extends ChangeNotifier {
           }
         }();
         if (Platform.isWindows) {
-          if (Configuration.instance.taskbarIndicator) {
-            WindowsTaskbar.setProgressMode(isBuffering
-                ? TaskbarProgressMode.indeterminate
-                : TaskbarProgressMode.normal);
+          // `package:windows_taskbar`
+          try {
+            if (Configuration.instance.taskbarIndicator) {
+              WindowsTaskbar.setProgressMode(
+                isBuffering
+                    ? TaskbarProgressMode.indeterminate
+                    : TaskbarProgressMode.normal,
+              );
+            }
+            WindowsTaskbar.setWindowTitle(
+              [
+                track.trackName,
+                if (!track.trackArtistNamesNotPresent)
+                  track.trackArtistNames.take(2).join(', '),
+                'Harmonoid',
+              ].join(' • '),
+            );
+            WindowsTaskbar.setThumbnailToolbar(
+              [
+                ThumbnailToolbarButton(
+                  ThumbnailToolbarAssetIcon('assets/icons/previous.ico'),
+                  Language.instance.PREVIOUS,
+                  previous,
+                  mode: index == 0 ? ThumbnailToolbarButtonMode.disabled : 0,
+                ),
+                ThumbnailToolbarButton(
+                  ThumbnailToolbarAssetIcon(
+                    isPlaying
+                        ? 'assets/icons/pause.ico'
+                        : 'assets/icons/play.ico',
+                  ),
+                  isPlaying ? Language.instance.PAUSE : Language.instance.PLAY,
+                  isPlaying ? pause : play,
+                ),
+                ThumbnailToolbarButton(
+                  ThumbnailToolbarAssetIcon('assets/icons/next.ico'),
+                  Language.instance.NEXT,
+                  next,
+                  mode: index == tracks.length - 1
+                      ? ThumbnailToolbarButtonMode.disabled
+                      : 0,
+                ),
+              ],
+            );
+          } catch (exception, stacktrace) {
+            debugPrint(exception.toString());
+            debugPrint(stacktrace.toString());
           }
-          WindowsTaskbar.setWindowTitle(
-            [
-              track.trackName,
-              if (track.trackArtistNames.isNotEmpty)
-                track.trackArtistNames.take(2).join(', '),
-              'Harmonoid',
-            ].join(' • '),
-          );
-          WindowsTaskbar.setThumbnailToolbar([
-            ThumbnailToolbarButton(
-              ThumbnailToolbarAssetIcon('assets/icons/previous.ico'),
-              Language.instance.PREVIOUS,
-              previous,
-              mode: index == 0 ? ThumbnailToolbarButtonMode.disabled : 0,
-            ),
-            ThumbnailToolbarButton(
-              ThumbnailToolbarAssetIcon(
-                isPlaying ? 'assets/icons/pause.ico' : 'assets/icons/play.ico',
-              ),
-              isPlaying ? Language.instance.PAUSE : Language.instance.PLAY,
-              isPlaying ? pause : play,
-            ),
-            ThumbnailToolbarButton(
-              ThumbnailToolbarAssetIcon('assets/icons/next.ico'),
-              Language.instance.NEXT,
-              next,
-              mode: index == tracks.length - 1
-                  ? ThumbnailToolbarButtonMode.disabled
-                  : 0,
-            ),
-          ]);
+          // `package:system_media_transport_controls`
           try {
             SystemMediaTransportControls.instance.setStatus(
               isPlaying ? SMTCStatus.playing : SMTCStatus.paused,
             );
             SystemMediaTransportControls.instance.setMusicData(
               title: track.trackName,
-              artist: track.hasNoAvailableArtists
+              artist: track.trackArtistNamesNotPresent
                   ? null
                   : track.trackArtistNames.take(2).join(', '),
-              albumArtist: track.hasNoAvailableAlbumArtists
+              albumArtist: track.albumArtistNameNotPresent
                   ? null
                   : track.albumArtistName,
               albumTitle: track.albumName,
               trackNumber: track.trackNumber,
             );
-            if (LibmpvPluginUtils.isSupported(track.uri)) {
+            if (ExternalMedia.supported(track.uri)) {
               final artwork = getAlbumArt(track, small: true);
               SystemMediaTransportControls.instance.setArtwork(
                 (artwork as ExtendedNetworkImageProvider).url,
@@ -565,43 +631,51 @@ class Playback extends ChangeNotifier {
         }
         if (Platform.isLinux) {
           Uri? image;
-          if (LibmpvPluginUtils.isSupported(track.uri)) {
+          if (ExternalMedia.supported(track.uri)) {
             final artwork = getAlbumArt(track, small: true);
             image = Uri.parse((artwork as ExtendedNetworkImageProvider).url);
           } else {
             final artwork = getAlbumArt(track);
             image = (artwork as ExtendedFileImageProvider).file.uri;
           }
-          instance.mpris
-            ?..isPlaying = isPlaying
-            ..isCompleted = isCompleted
-            ..index = index
-            ..playlist = tracks.map((e) {
-              final data = e.toJson();
-              data['artworkUri'] = image.toString();
-              return MPRISMedia.fromJson(data);
-            }).toList();
+          instance.mpris?.metadata = MPRISMetadata(
+            track.uri,
+            artUrl: image,
+            length: duration,
+            title: track.trackName,
+            album: track.albumArtistNameNotPresent ? null : track.albumName,
+            artist: track.trackArtistNamesNotPresent
+                ? null
+                : track.trackArtistNames,
+            albumArtist: track.albumArtistNameNotPresent
+                ? null
+                : [track.albumArtistName],
+            trackNumber: track.trackNumber,
+            discNumber: track.discNumber,
+            firstUsed: track.timeAdded,
+            genre: track.genresNotPresent ? null : track.genres,
+          );
         }
+        // Discord RPC gibberish.
         if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
           // Fetch [largeImageKey] if the current [track] was changed.
           if (track != _discordPreviousTrack) {
-            _discordPreviousLargeImageKey = LibmpvPluginUtils.isSupported(
-                    track.uri)
-                ? LibmpvPluginUtils.thumbnail(track.uri, small: true).toString()
+            _discordPreviousLargeImageKey = ExternalMedia.supported(track.uri)
+                ? ExternalMedia.thumbnail(track.uri, small: true).toString()
                 : await (() async {
                     // Chances are file has no tagged metadata, thus fallback to the default album art.
-                    if (track.hasNoAvailableAlbum &&
-                        track.hasNoAvailableArtists &&
-                        track.hasNoAvailableAlbumArtists) {
+                    if (track.albumNameNotPresent &&
+                        track.trackArtistNamesNotPresent &&
+                        track.albumArtistNameNotPresent) {
                       return 'default_album_art';
                     }
                     final search = [
                       track.trackName,
-                      if (!track.hasNoAvailableArtists)
+                      if (!track.trackArtistNamesNotPresent)
                         track.trackArtistNames.take(1).join('')
-                      else if (!track.hasNoAvailableAlbumArtists)
+                      else if (!track.albumArtistNameNotPresent)
                         track.albumArtistName
-                      else if (!track.hasNoAvailableAlbum)
+                      else if (!track.albumNameNotPresent)
                         track.albumName,
                     ].join(' ');
                     try {
@@ -661,30 +735,29 @@ class Playback extends ChangeNotifier {
           final track = tracks[index];
           final search = [
             track.trackName,
-            if (!track.hasNoAvailableArtists)
+            if (!track.trackArtistNamesNotPresent)
               track.trackArtistNames.take(1).join('')
-            else if (!track.hasNoAvailableAlbumArtists)
+            else if (!track.albumArtistNameNotPresent)
               track.albumArtistName,
           ].join(' ');
           if (!isCompleted) {
             discord?.start(autoRegister: true);
             discord?.updatePresence(
               DiscordPresence(
-                state: !track.hasNoAvailableArtists
+                state: !track.trackArtistNamesNotPresent
                     ? track.trackArtistNames.join(', ')
-                    : !track.hasNoAvailableAlbumArtists
+                    : !track.albumArtistNameNotPresent
                         ? track.albumArtistName
                         : null,
                 details: track.trackName,
                 largeImageKey: _discordPreviousLargeImageKey,
                 largeImageText:
-                    !track.hasNoAvailableAlbum ? track.albumName : null,
+                    !track.albumNameNotPresent ? track.albumName : null,
                 smallImageKey: isPlaying ? 'play' : 'pause',
                 smallImageText: isPlaying ? 'Playing' : 'Paused',
-                button1Label: LibmpvPluginUtils.isSupported(track.uri)
-                    ? 'Listen'
-                    : 'Find',
-                button1Url: LibmpvPluginUtils.isSupported(track.uri)
+                button1Label:
+                    ExternalMedia.supported(track.uri) ? 'Listen' : 'Find',
+                button1Url: ExternalMedia.supported(track.uri)
                     ? track.uri.toString()
                     : 'https://www.google.com/search?q=${Uri.encodeComponent(search)}',
                 endTimeStamp: isPlaying
@@ -711,27 +784,26 @@ class Playback extends ChangeNotifier {
   void notify() => notifyListeners();
 
   /// Save the current playback state.
-  Future<void> saveAppState() {
-    return AppState.instance.save(
-      tracks,
-      index,
-      rate,
-      isShuffling,
-      playlistLoopMode,
-      volume,
-      pitch,
-    );
-  }
+  Future<void> saveAppState() => AppState.instance.save(
+        tracks,
+        index,
+        rate,
+        isShuffling,
+        playlistLoopMode,
+        volume,
+        pitch,
+      );
 
   @override
   // ignore: must_call_super
-  void dispose() async {}
+  Future<void> dispose() async {
+    await player?.dispose();
+  }
 
-  /// `package:libmpv` [Player] instance used on Windows, Linux & macOS.
-  Player? libmpv;
+  /// `package:player` [Player] instance used on Windows, Linux & macOS.
+  Player? player;
 
-  ///`package:just_audio` & `package:audio_service` based [_HarmonoidMobilePlayer] instance
-  /// used on Android & iOS.
+  /// `package:just_audio` & `package:audio_service` based [_HarmonoidMobilePlayer] instance used on Android & iOS.
   _HarmonoidMobilePlayer? audioService;
 
   /// `package:dart_discord_rpc` based [DiscordRPC] instance used on Windows, Linux & macOS.
@@ -743,13 +815,13 @@ class Playback extends ChangeNotifier {
   /// Current [Track] being used in the Discord RPC.
   Track? _discordPreviousTrack;
 
+  /// For synchronizing Discord RPC calls.
   final Lock _discordLock = Lock();
 
   /// MPRIS controls for Linux.
   MPRIS? mpris;
 
   /// The volume that is restored to, before the unmute.
-  /// See [toggleMute].
   double _volume = 0.0;
 
   /// Public getter.
@@ -758,16 +830,10 @@ class Playback extends ChangeNotifier {
   /// Public getter.
   bool get isLastTrack => index == tracks.length - 1;
 
-  /// NOTE: Only applicable on desktop.
-  /// In current analysis, I have observed that rebuilds in the seekbar [Slider] present on
-  /// [NowPlayingBar] causes substantial lag in the hero animations.
-  /// This causes experience to be jittery.
-  ///
-  /// By setting [interceptPositionChangeRebuilds] to `true`, whenever a [Route] is in the
-  /// middle of transition, the [NowPlayingBar] will not rebuild.
-  ///
-  /// Since, the transition is only visible for 300 ~ 400ms, this should be fine. While,
-  /// the animation will be buttery smooth to the user's eyes.
+  /// NOTE: Only for Windows / GNU/Linux / macOS.
+  /// In current analysis, I have observed that rebuilds in the seekbar [Slider] present on [NowPlayingBar] causes substantial lag in the hero animations.
+  /// By setting [interceptPositionChangeRebuilds] to `true`, whenever a [Route] is in the middle of transition, the [NowPlayingBar] will not rebuild. This causes experience to be jittery.
+  /// Since, the transition is only visible for 300 ~ 400ms, this should be fine. While, the animation will be buttery smooth to the user's eyes.
   bool interceptPositionChangeRebuilds = false;
 }
 
@@ -789,110 +855,12 @@ abstract class DefaultPlaybackValues {
   static bool isShuffling = false;
 }
 
-/// Implements `org.mpris.MediaPlayer2` & `org.mpris.MediaPlayer2.Player`.
-class MPRIS extends MPRISService {
-  /// The [Playback] object present as composition in this class.
-  final Playback playback;
-
-  MPRIS(this.playback)
-      : super(
-          'harmonoid',
-          identity: 'Harmonoid',
-          desktopEntry: '/usr/share/applications/harmonoid.desktop',
-        );
-
-  @override
-  void setLoopStatus(String value) {
-    switch (value) {
-      case 'None':
-        {
-          Playback.instance.setPlaylistLoopMode(PlaylistLoopMode.none);
-          break;
-        }
-      case 'Track':
-        {
-          Playback.instance.setPlaylistLoopMode(PlaylistLoopMode.single);
-          break;
-        }
-      case 'Playlist':
-        {
-          Playback.instance.setPlaylistLoopMode(PlaylistLoopMode.loop);
-          break;
-        }
-    }
-  }
-
-  @override
-  void setRate(double value) {
-    Playback.instance.setRate(value);
-  }
-
-  @override
-  void setShuffle(bool value) {
-    if (Playback.instance.isShuffling != value) {
-      Playback.instance.toggleShuffle();
-    }
-  }
-
-  @override
-  void doNext() {
-    Playback.instance.next();
-  }
-
-  @override
-  void doPrevious() {
-    Playback.instance.previous();
-  }
-
-  @override
-  void doPause() {
-    Playback.instance.pause();
-  }
-
-  @override
-  void doPlay() {
-    Playback.instance.play();
-  }
-
-  @override
-  void doPlayPause() {
-    Playback.instance.playOrPause();
-  }
-
-  @override
-  void doSeek(int value) {
-    Playback.instance.seek(Duration(microseconds: value));
-  }
-
-  @override
-  void doSetPosition(String objectPath, int timeMicroseconds) {
-    final index = playlist
-        .map(
-          (e) => '/' + e.uri.toString().hashCode.toString(),
-        )
-        .toList()
-        .indexOf(objectPath);
-    if (index >= 0 && index != this.index) {
-      Playback.instance.jump(index);
-    }
-    Playback.instance.seek(Duration(microseconds: timeMicroseconds));
-  }
-
-  @override
-  void doOpenUri(Uri uri) {
-    Intent.instance.playURI(uri.toString());
-  }
-}
-
 /// Android/iOS specific implementation for audio playback & media notification.
+///
 /// Completely based around the `package:just_audio` and `package:audio_service` packages.
 ///
-/// This class is used in composition with the parent [Playback] class & can be accessed
-/// from its singleton available as [Playback.instance].
-///
-/// Takes existing [Playback] reference as [playback]. This is tightly coupled with the
-/// parent [Playback] class. But, I guess it's the best approach for now.
-///
+/// This class is used in composition with the parent [Playback] class & can be accessed from its singleton available as [Playback.instance].
+/// Takes existing [Playback] reference as [playback]. This is tightly coupled with the parent [Playback] class.
 class _HarmonoidMobilePlayer extends BaseAudioHandler
     with SeekHandler, QueueHandler {
   _HarmonoidMobilePlayer(this.playback) {
@@ -931,8 +899,7 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
             queue.value[e].copyWith(
               artUri: () {
                 Uri? image;
-                if (LibmpvPluginUtils.isSupported(
-                    Uri.parse(queue.value[e].id))) {
+                if (ExternalMedia.supported(Uri.parse(queue.value[e].id))) {
                   final artwork = getAlbumArt(
                     Track.fromJson(queue.value[e].extras),
                     small: true,
@@ -1141,16 +1108,15 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
     ));
     // Stop existing playback.
     await _player.stop();
-    // This has been done to safely handle the issues with media notification, UI update when
-    // handling the intent from Android.
-    final playlist = ConcatenatingAudioSource(
-      children: tracks
-          .map((e) => AudioSource.uri(
-                LibmpvPluginUtils.redirect(e.uri),
-                tag: e.toJson(),
-              ))
-          .toList(),
-    );
+    // This has been done to safely handle the issues with media notification, UI update when handling the intent from Android.
+    final children = <AudioSource>[];
+    for (final track in tracks) {
+      children.add(AudioSource.uri(
+        ExternalMedia.redirect(track.uri),
+        tag: track.toJson(),
+      ));
+    }
+    final playlist = ConcatenatingAudioSource(children: children);
     queue.add(tracks.map((e) => _trackToMediaItem(e)).toList());
     playback
       ..tracks = tracks
@@ -1166,7 +1132,7 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
         _trackToMediaItem(tracks[index]).copyWith(
           artUri: () {
             Uri? image;
-            if (LibmpvPluginUtils.isSupported(tracks[index].uri)) {
+            if (ExternalMedia.supported(tracks[index].uri)) {
               final artwork = getAlbumArt(
                 tracks[index],
                 small: true,
@@ -1194,14 +1160,13 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
       ..tracks = playback.tracks + tracks
       ..notify();
     final source = _player.audioSource as ConcatenatingAudioSource;
-    final children = tracks
-        .map(
-          (e) => AudioSource.uri(
-            LibmpvPluginUtils.redirect(e.uri),
-            tag: e.toJson(),
-          ),
-        )
-        .toList();
+    final children = <AudioSource>[];
+    for (final track in tracks) {
+      children.add(AudioSource.uri(
+        ExternalMedia.redirect(track.uri),
+        tag: track.toJson(),
+      ));
+    }
     return source.addAll(children);
   }
 
@@ -1214,7 +1179,7 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
     final source = _player.audioSource as ConcatenatingAudioSource;
     return source.add(
       AudioSource.uri(
-        LibmpvPluginUtils.redirect(Uri.parse(mediaItem.id)),
+        ExternalMedia.redirect(Uri.parse(mediaItem.id)),
         tag: mediaItem.extras,
       ),
     );
@@ -1274,13 +1239,12 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
   static MediaItem _trackToMediaItem(Track track) => MediaItem(
         id: track.uri.toString(),
         title: track.trackName,
-        album: !track.hasNoAvailableAlbum ? track.albumName : null,
-        artist: !track.hasNoAvailableArtists
+        album: !track.albumNameNotPresent ? track.albumName : null,
+        artist: !track.trackArtistNamesNotPresent
             ? track.trackArtistNames.take(2).join(', ')
-            : !track.hasNoAvailableAlbumArtists
+            : !track.albumArtistNameNotPresent
                 ? track.albumArtistName
                 : null,
-        genre: track.genre,
         duration: track.duration,
         extras: track.toJson(),
       );
@@ -1304,15 +1268,15 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
       ..androidAudioFormat = AndroidMediaFormat()
       ..notify();
     // Update [Playback.format] using [MetadataRetriever].
-    return _lock.synchronized(
+    return _fetchFormatLock.synchronized(
       () async {
         playback
-          ..androidAudioFormat = await MetadataRetriever.instance.format(uri)
+          ..androidAudioFormat = await AndroidTagReader.instance.format(uri)
           ..notify();
       },
     );
   }
 
   /// This is used to maintain synchronization with [MetadataRetriever.format] calls.
-  final Lock _lock = Lock();
+  final Lock _fetchFormatLock = Lock();
 }
