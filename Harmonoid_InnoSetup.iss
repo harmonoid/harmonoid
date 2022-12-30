@@ -24,6 +24,7 @@ DisableProgramGroupPage=yes
 LicenseFile=EULA.txt
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
+PrivilegesRequiredOverridesAllowed=dialog commandline
 OutputBaseFilename=harmonoid-windows-setup
 Compression=lzma
 SolidCompression=yes
@@ -68,181 +69,181 @@ Source: "build/windows/runner/Release/*"; DestDir: "{app}"; Flags: ignoreversion
 [Registry]
 
 ; Create the application capability key.
-Root: HKLM; Subkey: "Software\Harmonoid"; Flags: uninsdeletekeyifempty
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid"; Flags: uninsdeletekeyifempty
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability"; ValueType: string; ValueName: "ApplicationDescription"; ValueData: "Plays & manages your music library. Looks beautiful & juicy."; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability"; ValueType: string; ValueName: "ApplicationName"; ValueData: "Harmonoid"; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "Software\RegisteredApplications"; ValueType: string; ValueName: "Harmonoid"; ValueData: "Software\Harmonoid\Harmonoid\Capability"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Harmonoid"; Flags: uninsdeletekeyifempty
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid"; Flags: uninsdeletekeyifempty
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid\Capability"; ValueType: string; ValueName: "ApplicationDescription"; ValueData: "Plays & manages your music library. Looks beautiful & juicy."; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid\Capability"; ValueType: string; ValueName: "ApplicationName"; ValueData: "Harmonoid"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\RegisteredApplications"; ValueType: string; ValueName: "Harmonoid"; ValueData: "Software\Harmonoid\Harmonoid\Capability"; Flags: uninsdeletevalue
 
 ; .ogg .oga .ogx .aac .m4a .mp3 .wma .wav .flac .opus .aiff .ac3 .adt .adts .amr .ec3 .m3u .m4r .wpl .zpl
 
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".ogg"; ValueData: "Harmonoid.ogg"; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".oga"; ValueData: "Harmonoid.oga"; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".ogx"; ValueData: "Harmonoid.ogx"; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".aac"; ValueData: "Harmonoid.aac"; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".m4a"; ValueData: "Harmonoid.m4a"; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".mp3"; ValueData: "Harmonoid.mp3"; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".wma"; ValueData: "Harmonoid.wma"; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".wav"; ValueData: "Harmonoid.wav"; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".flac"; ValueData: "Harmonoid.flac"; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".opus"; ValueData: "Harmonoid.opus"; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".aiff"; ValueData: "Harmonoid.aiff"; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".ac3"; ValueData: "Harmonoid.ac3"; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".adt"; ValueData: "Harmonoid.adt"; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".adts"; ValueData: "Harmonoid.adts"; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".amr"; ValueData: "Harmonoid.amr"; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".ec3"; ValueData: "Harmonoid.ec3"; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".m3u"; ValueData: "Harmonoid.m3u"; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".m4r"; ValueData: "Harmonoid.m4r"; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".wpl"; ValueData: "Harmonoid.wpl"; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".zpl"; ValueData: "Harmonoid.zpl"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".ogg"; ValueData: "Harmonoid.ogg"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".oga"; ValueData: "Harmonoid.oga"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".ogx"; ValueData: "Harmonoid.ogx"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".aac"; ValueData: "Harmonoid.aac"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".m4a"; ValueData: "Harmonoid.m4a"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".mp3"; ValueData: "Harmonoid.mp3"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".wma"; ValueData: "Harmonoid.wma"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".wav"; ValueData: "Harmonoid.wav"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".flac"; ValueData: "Harmonoid.flac"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".opus"; ValueData: "Harmonoid.opus"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".aiff"; ValueData: "Harmonoid.aiff"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".ac3"; ValueData: "Harmonoid.ac3"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".adt"; ValueData: "Harmonoid.adt"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".adts"; ValueData: "Harmonoid.adts"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".amr"; ValueData: "Harmonoid.amr"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".ec3"; ValueData: "Harmonoid.ec3"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".m3u"; ValueData: "Harmonoid.m3u"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".m4r"; ValueData: "Harmonoid.m4r"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".wpl"; ValueData: "Harmonoid.wpl"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Harmonoid\Harmonoid\Capability\FileAssociations"; ValueType: string; ValueName: ".zpl"; ValueData: "Harmonoid.zpl"; Flags: uninsdeletevalue
 
 
 ; .ogg
-Root: HKCR; Subkey: ".ogg\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.ogg"; ValueData: ""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "Harmonoid.ogg"; ValueType: string; ValueName: ""; ValueData: "OGG File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Harmonoid.ogg\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
-Root: HKCR; Subkey: "Harmonoid.ogg\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
-Root: HKCR; Subkey: "Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".ogg"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\.ogg\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.ogg"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\Harmonoid.ogg"; ValueType: string; ValueName: ""; ValueData: "OGG File"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Harmonoid.ogg\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKA; Subkey: "Software\Classes\Harmonoid.ogg\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".ogg"; ValueData: ""
 
 ; .oga
-Root: HKCR; Subkey: ".oga\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.oga"; ValueData: ""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "Harmonoid.oga"; ValueType: string; ValueName: ""; ValueData: "OGA File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Harmonoid.oga\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
-Root: HKCR; Subkey: "Harmonoid.oga\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
-Root: HKCR; Subkey: "Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".oga"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\.oga\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.oga"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\Harmonoid.oga"; ValueType: string; ValueName: ""; ValueData: "OGA File"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Harmonoid.oga\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKA; Subkey: "Software\Classes\Harmonoid.oga\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".oga"; ValueData: ""
 
 ; .ogx
-Root: HKCR; Subkey: ".ogx\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.ogx"; ValueData: ""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "Harmonoid.ogx"; ValueType: string; ValueName: ""; ValueData: "OGX File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Harmonoid.ogx\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
-Root: HKCR; Subkey: "Harmonoid.ogx\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
-Root: HKCR; Subkey: "Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".ogx"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\.ogx\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.ogx"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\Harmonoid.ogx"; ValueType: string; ValueName: ""; ValueData: "OGX File"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Harmonoid.ogx\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKA; Subkey: "Software\Classes\Harmonoid.ogx\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".ogx"; ValueData: ""
 
 ; .aac
-Root: HKCR; Subkey: ".aac\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.aac"; ValueData: ""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "Harmonoid.aac"; ValueType: string; ValueName: ""; ValueData: "AAC File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Harmonoid.aac\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
-Root: HKCR; Subkey: "Harmonoid.aac\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
-Root: HKCR; Subkey: "Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".aac"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\.aac\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.aac"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\Harmonoid.aac"; ValueType: string; ValueName: ""; ValueData: "AAC File"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Harmonoid.aac\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKA; Subkey: "Software\Classes\Harmonoid.aac\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".aac"; ValueData: ""
 
 ; .m4a
-Root: HKCR; Subkey: ".m4a\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.m4a"; ValueData: ""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "Harmonoid.m4a"; ValueType: string; ValueName: ""; ValueData: "M4A File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Harmonoid.m4a\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
-Root: HKCR; Subkey: "Harmonoid.m4a\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
-Root: HKCR; Subkey: "Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".m4a"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\.m4a\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.m4a"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\Harmonoid.m4a"; ValueType: string; ValueName: ""; ValueData: "M4A File"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Harmonoid.m4a\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKA; Subkey: "Software\Classes\Harmonoid.m4a\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".m4a"; ValueData: ""
 
 ; .mp3
-Root: HKCR; Subkey: ".mp3\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.mp3"; ValueData: ""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "Harmonoid.mp3"; ValueType: string; ValueName: ""; ValueData: "MP3 File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Harmonoid.mp3\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
-Root: HKCR; Subkey: "Harmonoid.mp3\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
-Root: HKCR; Subkey: "Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".mp3"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\.mp3\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.mp3"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\Harmonoid.mp3"; ValueType: string; ValueName: ""; ValueData: "MP3 File"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Harmonoid.mp3\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKA; Subkey: "Software\Classes\Harmonoid.mp3\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".mp3"; ValueData: ""
 
 ; .wma
-Root: HKCR; Subkey: ".wma\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.wma"; ValueData: ""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "Harmonoid.wma"; ValueType: string; ValueName: ""; ValueData: "WMA File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Harmonoid.wma\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
-Root: HKCR; Subkey: "Harmonoid.wma\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
-Root: HKCR; Subkey: "Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".wma"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\.wma\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.wma"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\Harmonoid.wma"; ValueType: string; ValueName: ""; ValueData: "WMA File"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Harmonoid.wma\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKA; Subkey: "Software\Classes\Harmonoid.wma\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".wma"; ValueData: ""
 
 ; .wav
-Root: HKCR; Subkey: ".wav\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.wav"; ValueData: ""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "Harmonoid.wav"; ValueType: string; ValueName: ""; ValueData: "WAV File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Harmonoid.wav\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
-Root: HKCR; Subkey: "Harmonoid.wav\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
-Root: HKCR; Subkey: "Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".wav"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\.wav\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.wav"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\Harmonoid.wav"; ValueType: string; ValueName: ""; ValueData: "WAV File"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Harmonoid.wav\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKA; Subkey: "Software\Classes\Harmonoid.wav\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".wav"; ValueData: ""
 
 ; .flac
-Root: HKCR; Subkey: ".flac\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.flac"; ValueData: ""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "Harmonoid.flac"; ValueType: string; ValueName: ""; ValueData: "FLAC File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Harmonoid.flac\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
-Root: HKCR; Subkey: "Harmonoid.flac\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
-Root: HKCR; Subkey: "Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".flac"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\.flac\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.flac"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\Harmonoid.flac"; ValueType: string; ValueName: ""; ValueData: "FLAC File"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Harmonoid.flac\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKA; Subkey: "Software\Classes\Harmonoid.flac\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".flac"; ValueData: ""
 
 ; .opus
-Root: HKCR; Subkey: ".opus\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.opus"; ValueData: ""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "Harmonoid.opus"; ValueType: string; ValueName: ""; ValueData: "OPUS File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Harmonoid.opus\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
-Root: HKCR; Subkey: "Harmonoid.opus\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
-Root: HKCR; Subkey: "Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".opus"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\.opus\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.opus"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\Harmonoid.opus"; ValueType: string; ValueName: ""; ValueData: "OPUS File"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Harmonoid.opus\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKA; Subkey: "Software\Classes\Harmonoid.opus\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".opus"; ValueData: ""
 
 ; .aiff
-Root: HKCR; Subkey: ".aiff\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.aiff"; ValueData: ""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "Harmonoid.aiff"; ValueType: string; ValueName: ""; ValueData: "AIFF File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Harmonoid.aiff\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
-Root: HKCR; Subkey: "Harmonoid.aiff\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
-Root: HKCR; Subkey: "Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".aiff"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\.aiff\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.aiff"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\Harmonoid.aiff"; ValueType: string; ValueName: ""; ValueData: "AIFF File"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Harmonoid.aiff\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKA; Subkey: "Software\Classes\Harmonoid.aiff\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".aiff"; ValueData: ""
 
 ; .ac3
-Root: HKCR; Subkey: ".ac3\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.ac3"; ValueData: ""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "Harmonoid.ac3"; ValueType: string; ValueName: ""; ValueData: "AC3 File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Harmonoid.ac3\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
-Root: HKCR; Subkey: "Harmonoid.ac3\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
-Root: HKCR; Subkey: "Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".ac3"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\.ac3\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.ac3"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\Harmonoid.ac3"; ValueType: string; ValueName: ""; ValueData: "AC3 File"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Harmonoid.ac3\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKA; Subkey: "Software\Classes\Harmonoid.ac3\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".ac3"; ValueData: ""
 
 ; .adt
-Root: HKCR; Subkey: ".adt\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.adt"; ValueData: ""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "Harmonoid.adt"; ValueType: string; ValueName: ""; ValueData: "ADT File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Harmonoid.adt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
-Root: HKCR; Subkey: "Harmonoid.adt\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
-Root: HKCR; Subkey: "Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".adt"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\.adt\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.adt"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\Harmonoid.adt"; ValueType: string; ValueName: ""; ValueData: "ADT File"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Harmonoid.adt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKA; Subkey: "Software\Classes\Harmonoid.adt\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".adt"; ValueData: ""
 
 ; .adts
-Root: HKCR; Subkey: ".adts\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.adts"; ValueData: ""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "Harmonoid.adts"; ValueType: string; ValueName: ""; ValueData: "ADTS File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Harmonoid.adts\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
-Root: HKCR; Subkey: "Harmonoid.adts\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
-Root: HKCR; Subkey: "Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".adts"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\.adts\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.adts"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\Harmonoid.adts"; ValueType: string; ValueName: ""; ValueData: "ADTS File"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Harmonoid.adts\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKA; Subkey: "Software\Classes\Harmonoid.adts\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".adts"; ValueData: ""
 
 ; .amr
-Root: HKCR; Subkey: ".amr\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.amr"; ValueData: ""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "Harmonoid.amr"; ValueType: string; ValueName: ""; ValueData: "AMR File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Harmonoid.amr\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
-Root: HKCR; Subkey: "Harmonoid.amr\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
-Root: HKCR; Subkey: "Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".amr"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\.amr\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.amr"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\Harmonoid.amr"; ValueType: string; ValueName: ""; ValueData: "AMR File"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Harmonoid.amr\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKA; Subkey: "Software\Classes\Harmonoid.amr\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".amr"; ValueData: ""
 
 ; .ec3
-Root: HKCR; Subkey: ".ec3\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.ec3"; ValueData: ""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "Harmonoid.ec3"; ValueType: string; ValueName: ""; ValueData: "EC3 File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Harmonoid.ec3\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
-Root: HKCR; Subkey: "Harmonoid.ec3\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
-Root: HKCR; Subkey: "Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".ec3"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\.ec3\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.ec3"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\Harmonoid.ec3"; ValueType: string; ValueName: ""; ValueData: "EC3 File"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Harmonoid.ec3\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKA; Subkey: "Software\Classes\Harmonoid.ec3\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".ec3"; ValueData: ""
 
 ; .m3u
-Root: HKCR; Subkey: ".m3u\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.m3u"; ValueData: ""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "Harmonoid.m3u"; ValueType: string; ValueName: ""; ValueData: "M3U File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Harmonoid.m3u\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
-Root: HKCR; Subkey: "Harmonoid.m3u\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
-Root: HKCR; Subkey: "Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".m3u"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\.m3u\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.m3u"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\Harmonoid.m3u"; ValueType: string; ValueName: ""; ValueData: "M3U File"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Harmonoid.m3u\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKA; Subkey: "Software\Classes\Harmonoid.m3u\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".m3u"; ValueData: ""
 
 ; .m4r
-Root: HKCR; Subkey: ".m4r\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.m4r"; ValueData: ""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "Harmonoid.m4r"; ValueType: string; ValueName: ""; ValueData: "M4R File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Harmonoid.m4r\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
-Root: HKCR; Subkey: "Harmonoid.m4r\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
-Root: HKCR; Subkey: "Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".m4r"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\.m4r\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.m4r"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\Harmonoid.m4r"; ValueType: string; ValueName: ""; ValueData: "M4R File"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Harmonoid.m4r\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKA; Subkey: "Software\Classes\Harmonoid.m4r\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".m4r"; ValueData: ""
 
 ; .wpl
-Root: HKCR; Subkey: ".wpl\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.wpl"; ValueData: ""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "Harmonoid.wpl"; ValueType: string; ValueName: ""; ValueData: "WPL File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Harmonoid.wpl\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
-Root: HKCR; Subkey: "Harmonoid.wpl\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
-Root: HKCR; Subkey: "Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".wpl"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\.wpl\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.wpl"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\Harmonoid.wpl"; ValueType: string; ValueName: ""; ValueData: "WPL File"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Harmonoid.wpl\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKA; Subkey: "Software\Classes\Harmonoid.wpl\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".wpl"; ValueData: ""
 
 ; .zpl
-Root: HKCR; Subkey: ".zpl\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.zpl"; ValueData: ""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "Harmonoid.zpl"; ValueType: string; ValueName: ""; ValueData: "ZPL File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Harmonoid.zpl\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
-Root: HKCR; Subkey: "Harmonoid.zpl\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
-Root: HKCR; Subkey: "Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".zpl"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\.zpl\OpenWithProgids"; ValueType: string; ValueName: "Harmonoid.zpl"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\Harmonoid.zpl"; ValueType: string; ValueName: ""; ValueData: "ZPL File"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Harmonoid.zpl\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKA; Subkey: "Software\Classes\Harmonoid.zpl\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".zpl"; ValueData: ""
 
 
 
-Root: HKCR; Subkey: "Directory\shell\HarmonoidAddToPlaylist"; ValueType: string; ValueName: ""; ValueData: "Add to Harmonoid's Playlist"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Directory\shell\HarmonoidAddToPlaylist"; ValueType: string; ValueName: "Icon"; ValueData: """{app}\{#MyAppExeName}"",0"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Directory\shell\HarmonoidAddToPlaylist\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}""  ""%1"""; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Directory\shell\HarmonoidAddToPlaylist"; ValueType: string; ValueName: ""; ValueData: "Add to Harmonoid's Playlist"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Directory\shell\HarmonoidAddToPlaylist"; ValueType: string; ValueName: "Icon"; ValueData: """{app}\{#MyAppExeName}"",0"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Directory\shell\HarmonoidAddToPlaylist\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}""  ""%1"""; Flags: uninsdeletekey
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -250,6 +251,3 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
-
-[UninstallDelete]
-Type: filesandordirs; Name: "{%USERPROFILE}\.harmonoid"
