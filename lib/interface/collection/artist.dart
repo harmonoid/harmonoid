@@ -1215,28 +1215,27 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                                 text: track.value.albumName,
                                                                                 recognizer: TapGestureRecognizer()
                                                                                   ..onTap = () {
-                                                                                    Playback.instance.interceptPositionChangeRebuilds = true;
-                                                                                    Navigator.of(context).push(
-                                                                                      PageRouteBuilder(
-                                                                                        pageBuilder: ((context, animation, secondaryAnimation) => FadeThroughTransition(
-                                                                                              animation: animation,
-                                                                                              secondaryAnimation: secondaryAnimation,
-                                                                                              child: AlbumScreen(
-                                                                                                album: Collection.instance.albumsSet.lookup(
-                                                                                                  Album(
-                                                                                                    albumName: track.value.albumName,
-                                                                                                    year: track.value.year,
-                                                                                                    albumArtistName: track.value.albumArtistName,
-                                                                                                    albumHashCodeParameters: Collection.instance.albumHashCodeParameters,
-                                                                                                  ),
-                                                                                                )!,
-                                                                                              ),
-                                                                                            )),
+                                                                                    final album = Collection.instance.albumsSet.lookup(
+                                                                                      Album(
+                                                                                        albumName: track.value.albumName,
+                                                                                        year: track.value.year,
+                                                                                        albumArtistName: track.value.albumArtistName,
+                                                                                        albumHashCodeParameters: Collection.instance.albumHashCodeParameters,
                                                                                       ),
                                                                                     );
-                                                                                    Timer(const Duration(milliseconds: 400), () {
-                                                                                      Playback.instance.interceptPositionChangeRebuilds = false;
-                                                                                    });
+                                                                                    if (album != null) {
+                                                                                      Playback.instance.interceptPositionChangeRebuilds = true;
+                                                                                      Navigator.of(context).push(
+                                                                                        MaterialPageRoute(
+                                                                                          builder: (context) => AlbumScreen(
+                                                                                            album: album,
+                                                                                          ),
+                                                                                        ),
+                                                                                      );
+                                                                                      Timer(const Duration(milliseconds: 400), () {
+                                                                                        Playback.instance.interceptPositionChangeRebuilds = false;
+                                                                                      });
+                                                                                    }
                                                                                   },
                                                                               ),
                                                                             ],

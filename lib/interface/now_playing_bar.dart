@@ -430,20 +430,24 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                                   ? (TapGestureRecognizer()
                                                                     ..onTap =
                                                                         () {
-                                                                      navigatorKey
-                                                                          .currentState
-                                                                          ?.push(
-                                                                        PageRouteBuilder(
-                                                                          pageBuilder: ((context, animation, secondaryAnimation) =>
-                                                                              FadeThroughTransition(
-                                                                                animation: animation,
-                                                                                secondaryAnimation: secondaryAnimation,
-                                                                                child: ArtistScreen(
-                                                                                  artist: Collection.instance.artistsSet.lookup(Artist(artistName: e))!,
-                                                                                ),
-                                                                              )),
-                                                                        ),
-                                                                      );
+                                                                      final artist = Collection
+                                                                          .instance
+                                                                          .artistsSet
+                                                                          .lookup(
+                                                                              Artist(artistName: e));
+                                                                      if (artist !=
+                                                                          null) {
+                                                                        navigatorKey
+                                                                            .currentState
+                                                                            ?.push(
+                                                                          MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                ArtistScreen(
+                                                                              artist: artist,
+                                                                            ),
+                                                                          ),
+                                                                        );
+                                                                      }
                                                                     })
                                                                   : null,
                                                             ),

@@ -203,32 +203,27 @@ class _TrackTabState extends State<TrackTab> {
                                   text: e,
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      Playback.instance
-                                              .interceptPositionChangeRebuilds =
-                                          true;
-                                      navigatorKey.currentState?.push(
-                                        PageRouteBuilder(
-                                          pageBuilder: ((context, animation,
-                                                  secondaryAnimation) =>
-                                              FadeThroughTransition(
-                                                animation: animation,
-                                                secondaryAnimation:
-                                                    secondaryAnimation,
-                                                child: ArtistScreen(
-                                                  artist: Collection
-                                                      .instance.artistsSet
-                                                      .lookup(Artist(
-                                                          artistName: e))!,
-                                                ),
-                                              )),
-                                        ),
-                                      );
-                                      Timer(const Duration(milliseconds: 400),
-                                          () {
+                                      final artist = Collection
+                                          .instance.artistsSet
+                                          .lookup(Artist(artistName: e));
+                                      if (artist != null) {
                                         Playback.instance
                                                 .interceptPositionChangeRebuilds =
-                                            false;
-                                      });
+                                            true;
+                                        navigatorKey.currentState?.push(
+                                          MaterialPageRoute(
+                                            builder: (context) => ArtistScreen(
+                                              artist: artist,
+                                            ),
+                                          ),
+                                        );
+                                        Timer(const Duration(milliseconds: 400),
+                                            () {
+                                          Playback.instance
+                                                  .interceptPositionChangeRebuilds =
+                                              false;
+                                        });
+                                      }
                                     },
                                 ),
                               )
@@ -254,49 +249,42 @@ class _TrackTabState extends State<TrackTab> {
                                       text: collection.tracks[index].albumName,
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
-                                          Playback.instance
-                                                  .interceptPositionChangeRebuilds =
-                                              true;
-                                          navigatorKey.currentState?.push(
-                                            PageRouteBuilder(
-                                              pageBuilder: ((context, animation,
-                                                      secondaryAnimation) =>
-                                                  FadeThroughTransition(
-                                                    animation: animation,
-                                                    secondaryAnimation:
-                                                        secondaryAnimation,
-                                                    child: AlbumScreen(
-                                                      album: Collection
-                                                          .instance.albumsSet
-                                                          .lookup(
-                                                        Album(
-                                                          albumName: collection
-                                                              .tracks[index]
-                                                              .albumName,
-                                                          year: collection
-                                                              .tracks[index]
-                                                              .year,
-                                                          albumArtistName:
-                                                              collection
-                                                                  .tracks[index]
-                                                                  .albumArtistName,
-                                                          albumHashCodeParameters:
-                                                              Collection
-                                                                  .instance
-                                                                  .albumHashCodeParameters,
-                                                        ),
-                                                      )!,
-                                                    ),
-                                                  )),
+                                          final album = Collection
+                                              .instance.albumsSet
+                                              .lookup(
+                                            Album(
+                                              albumName: collection
+                                                  .tracks[index].albumName,
+                                              year:
+                                                  collection.tracks[index].year,
+                                              albumArtistName: collection
+                                                  .tracks[index]
+                                                  .albumArtistName,
+                                              albumHashCodeParameters:
+                                                  Collection.instance
+                                                      .albumHashCodeParameters,
                                             ),
                                           );
-                                          Timer(
-                                              const Duration(milliseconds: 400),
-                                              () {
+                                          if (album != null) {
                                             Playback.instance
                                                     .interceptPositionChangeRebuilds =
-                                                false;
-                                          });
+                                                true;
+                                            navigatorKey.currentState?.push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AlbumScreen(
+                                                  album: album,
+                                                ),
+                                              ),
+                                            );
+                                            Timer(
+                                                const Duration(
+                                                    milliseconds: 400), () {
+                                              Playback.instance
+                                                      .interceptPositionChangeRebuilds =
+                                                  false;
+                                            });
+                                          }
                                         },
                                     ),
                                   ],
@@ -570,25 +558,21 @@ class TrackTileState extends State<TrackTile> {
                                 recognizer: widget.track.uri.isScheme('FILE')
                                     ? (TapGestureRecognizer()
                                       ..onTap = () {
-                                        DesktopNowPlayingController.instance
-                                            .hide();
-                                        navigatorKey.currentState?.push(
-                                          PageRouteBuilder(
-                                            pageBuilder: ((context, animation,
-                                                    secondaryAnimation) =>
-                                                FadeThroughTransition(
-                                                  animation: animation,
-                                                  secondaryAnimation:
-                                                      secondaryAnimation,
-                                                  child: ArtistScreen(
-                                                    artist: Collection
-                                                        .instance.artistsSet
-                                                        .lookup(Artist(
-                                                            artistName: e))!,
-                                                  ),
-                                                )),
-                                          ),
-                                        );
+                                        final artist = Collection
+                                            .instance.artistsSet
+                                            .lookup(Artist(artistName: e));
+                                        if (artist != null) {
+                                          DesktopNowPlayingController.instance
+                                              .hide();
+                                          navigatorKey.currentState?.push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ArtistScreen(
+                                                artist: artist,
+                                              ),
+                                            ),
+                                          );
+                                        }
                                       })
                                     : null,
                               ),

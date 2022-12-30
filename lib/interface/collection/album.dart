@@ -1606,21 +1606,20 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                                 e,
                                                                             recognizer: TapGestureRecognizer()
                                                                               ..onTap = () {
-                                                                                Playback.instance.interceptPositionChangeRebuilds = true;
-                                                                                Navigator.of(context).push(
-                                                                                  PageRouteBuilder(
-                                                                                    pageBuilder: ((context, animation, secondaryAnimation) => FadeThroughTransition(
-                                                                                          animation: animation,
-                                                                                          secondaryAnimation: secondaryAnimation,
-                                                                                          child: ArtistScreen(
-                                                                                            artist: Collection.instance.artistsSet.lookup(Artist(artistName: e))!,
-                                                                                          ),
-                                                                                        )),
-                                                                                  ),
-                                                                                );
-                                                                                Timer(const Duration(milliseconds: 400), () {
-                                                                                  Playback.instance.interceptPositionChangeRebuilds = false;
-                                                                                });
+                                                                                final artist = Collection.instance.artistsSet.lookup(Artist(artistName: e));
+                                                                                if (artist != null) {
+                                                                                  Playback.instance.interceptPositionChangeRebuilds = true;
+                                                                                  Navigator.of(context).push(
+                                                                                    MaterialPageRoute(
+                                                                                      builder: (context) => ArtistScreen(
+                                                                                        artist: artist,
+                                                                                      ),
+                                                                                    ),
+                                                                                  );
+                                                                                  Timer(const Duration(milliseconds: 400), () {
+                                                                                    Playback.instance.interceptPositionChangeRebuilds = false;
+                                                                                  });
+                                                                                }
                                                                               },
                                                                           ),
                                                                         )

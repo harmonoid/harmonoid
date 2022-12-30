@@ -217,6 +217,15 @@ ThemeData createTheme({
         },
       ),
     ),
+    pageTransitionsTheme: PageTransitionsTheme(
+      builders: {
+        TargetPlatform.windows: OpenUpwardsPageTransitionsBuilder(),
+        TargetPlatform.linux: OpenUpwardsPageTransitionsBuilder(),
+        TargetPlatform.android: ZoomPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+      },
+    ),
     splashFactory: desktop ? InkRipple.splashFactory : InkSparkle.splashFactory,
     highlightColor: desktop ? null : Colors.transparent,
     primaryColorLight: color,
