@@ -552,7 +552,8 @@ class AlbumTile extends StatelessWidget {
                 palette = result.colors;
               }
               await precacheImage(getAlbumArt(album), context);
-              MobileNowPlayingController.instance.hide();
+              if (!Configuration.instance.stickyMiniplayer)
+                MobileNowPlayingController.instance.hide();
             } catch (exception, stacktrace) {
               debugPrint(exception.toString());
               debugPrint(stacktrace.toString());
@@ -789,7 +790,8 @@ class AlbumTile extends StatelessWidget {
                                 palette = result.colors;
                               }
                               await precacheImage(getAlbumArt(album), context);
-                              MobileNowPlayingController.instance.hide();
+                              if (!Configuration.instance.stickyMiniplayer)
+                                MobileNowPlayingController.instance.hide();
                             } catch (exception, stacktrace) {
                               debugPrint(exception.toString());
                               debugPrint(stacktrace.toString());
@@ -888,7 +890,8 @@ class AlbumTile extends StatelessWidget {
                         palette = result.colors;
                       }
                       await precacheImage(getAlbumArt(album), context);
-                      MobileNowPlayingController.instance.hide();
+                      if (!Configuration.instance.stickyMiniplayer)
+                        MobileNowPlayingController.instance.hide();
                     } catch (exception, stacktrace) {
                       debugPrint(exception.toString());
                       debugPrint(stacktrace.toString());

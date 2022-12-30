@@ -255,7 +255,8 @@ class ArtistTile extends StatelessWidget {
                         palette = result.colors;
                       }
                       await precacheImage(getAlbumArt(artist), context);
-                      MobileNowPlayingController.instance.hide();
+                      if (!Configuration.instance.stickyMiniplayer)
+                        MobileNowPlayingController.instance.hide();
                     } catch (exception, stacktrace) {
                       debugPrint(exception.toString());
                       debugPrint(stacktrace.toString());
@@ -453,7 +454,8 @@ class ArtistTile extends StatelessWidget {
                                 palette = result.colors;
                               }
                               await precacheImage(getAlbumArt(artist), context);
-                              MobileNowPlayingController.instance.hide();
+                              if (!Configuration.instance.stickyMiniplayer)
+                                MobileNowPlayingController.instance.hide();
                             } catch (exception, stacktrace) {
                               debugPrint(exception.toString());
                               debugPrint(stacktrace.toString());
@@ -597,7 +599,10 @@ class ArtistTile extends StatelessWidget {
                                     }
                                     await precacheImage(
                                         getAlbumArt(artist), context);
-                                    MobileNowPlayingController.instance.hide();
+                                    if (!Configuration
+                                        .instance.stickyMiniplayer)
+                                      MobileNowPlayingController.instance
+                                          .hide();
                                   } catch (exception, stacktrace) {
                                     debugPrint(exception.toString());
                                     debugPrint(stacktrace.toString());

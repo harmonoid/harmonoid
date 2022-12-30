@@ -682,7 +682,8 @@ class PlaylistTileState extends State<PlaylistTile> {
                     );
                     palette = result.colors;
                   }
-                  MobileNowPlayingController.instance.hide();
+                  if (!Configuration.instance.stickyMiniplayer)
+                    MobileNowPlayingController.instance.hide();
                 } catch (exception, stacktrace) {
                   debugPrint(exception.toString());
                   debugPrint(stacktrace.toString());

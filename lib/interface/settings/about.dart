@@ -32,7 +32,8 @@ class _AboutPageState extends State<AboutPage> {
     super.initState();
     if (isMobile) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        MobileNowPlayingController.instance.hide();
+        if (!Configuration.instance.stickyMiniplayer)
+          MobileNowPlayingController.instance.hide();
       });
     }
   }
@@ -316,7 +317,9 @@ class _AboutPageState extends State<AboutPage> {
                   ),
                 ),
               ),
-              if (isMobile && Configuration.instance.stickyMiniplayer)
+              if (isMobile &&
+                  Configuration.instance.stickyMiniplayer &&
+                  !MobileNowPlayingController.instance.isHidden)
                 SizedBox(
                   height: kMobileNowPlayingBarHeight,
                 ),
