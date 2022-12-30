@@ -14,13 +14,13 @@ dependencies:
   media_kit:
     git:
       url: https://github.com/alexmercerind/media_kit.git
-      ref: master
       path: media_kit
+      ref: 96abc25e30d987632475cf3ebcec6115cbd4048c
   media_kit_core_audio:
     git:
       url: https://github.com/alexmercerind/media_kit.git
-      ref: master
       path: media_kit_core_audio
+      ref: 96abc25e30d987632475cf3ebcec6115cbd4048c
   media_kit_tag_reader:
     path: external/media_kit_tag_reader
   media_library:
@@ -33,6 +33,8 @@ dependencies:
     path: external/mpris_service
   ytm_client:
     path: external/ytm_client
+  external_media_provider:
+    path: external/external_media_provider
   system_media_transport_controls:
     path: external/smtc-win32/bindings/system_media_transport_controls.dart
   windows_taskbar:
@@ -104,10 +106,6 @@ dependencies:
       url: https://github.com/alexmercerind/desktop.git
       path: desktop
       ref: a087d1ed4afeb61edd00e06842fa62c090f30ff5
-  hotkey_manager:
-    git:
-      url: https://github.com/alexmercerind/hotkey_manager.git
-      ref: main
   known_extents_list_view_builder:
     git:
       url: https://github.com/alexmercerind/known_extents_list_view_builder.git

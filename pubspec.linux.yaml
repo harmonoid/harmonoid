@@ -104,10 +104,6 @@ dependencies:
       url: https://github.com/alexmercerind/desktop.git
       path: desktop
       ref: a087d1ed4afeb61edd00e06842fa62c090f30ff5
-  hotkey_manager:
-    git:
-      url: https://github.com/alexmercerind/hotkey_manager.git
-      ref: main
   known_extents_list_view_builder:
     git:
       url: https://github.com/alexmercerind/known_extents_list_view_builder.git
