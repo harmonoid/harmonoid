@@ -7,6 +7,7 @@
 ///
 
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:uri_parser/uri_parser.dart';
@@ -62,9 +63,7 @@ class Intent {
 
   /// Initializes the intent & checks for possibly opened [File].
   ///
-  static Future<void> initialize({
-    List<String> args: const [],
-  }) async {
+  static Future<void> initialize({List<String> args = const []}) async {
     // Retrieve the argument from the command line argument vector on Windows & Linux.
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       if (args.isNotEmpty) {
@@ -143,101 +142,111 @@ class Intent {
   /// * External media URL http://, https://, ftp://, rstp:// etc.
   /// * A URL to some external service e.g. YouTube, SoundCloud, etc.
   ///
-  Future<void> playURI(
-    String uri,
-  ) async {
-    final parser = URIParser(uri);
-    switch (parser.type) {
-      case URIType.file:
-        {
-          final track = await parse(parser.file!.uri);
-          try {
-            await Playback.instance.open(
-              [
-                track,
-              ],
-            );
-          } catch (exception, stacktrace) {
-            debugPrint(exception.toString());
-            debugPrint(stacktrace.toString());
-          }
-          break;
-        }
-      case URIType.directory:
-        {
-          final contents = await parser.directory!.list_(
-            extensions: kSupportedFileTypes,
-          );
-          bool playing = false;
-          for (final file in contents) {
-            final track = await parse(file.uri);
-            try {
-              if (!playing) {
+  Future<void> playURI(String uri) async {
+    _playURIOperationID = Random().nextInt(1 << 32);
+    return _playURIOperationLock.synchronized(
+      () async {
+        final parser = URIParser(uri);
+        switch (parser.type) {
+          case URIType.file:
+            {
+              final track = await parse(parser.file!.uri);
+              try {
                 await Playback.instance.open(
                   [
                     track,
                   ],
                 );
-                playing = true;
-              } else {
-                await Playback.instance.add(
+              } catch (exception, stacktrace) {
+                debugPrint(exception.toString());
+                debugPrint(stacktrace.toString());
+              }
+              break;
+            }
+          case URIType.directory:
+            {
+              final id = _playURIOperationID;
+              final contents = await parser.directory!.list_(
+                extensions: kSupportedFileTypes,
+              );
+              bool playing = false;
+              for (final file in contents) {
+                if (id != _playURIOperationID) {
+                  // A new call to [playURI] has been made.
+                  // Preempt the current execution.
+                  _playURIOperationID = -1;
+                  return;
+                }
+                final track = await parse(file.uri);
+                try {
+                  if (!playing) {
+                    await Playback.instance.open(
+                      [
+                        track,
+                      ],
+                    );
+                    playing = true;
+                  } else {
+                    await Playback.instance.add(
+                      [
+                        track,
+                      ],
+                    );
+                  }
+                } catch (exception, stacktrace) {
+                  debugPrint(exception.toString());
+                  debugPrint(stacktrace.toString());
+                }
+              }
+              _playURIOperationID = -1;
+              break;
+            }
+          case URIType.network:
+            {
+              final uri = parser.uri!;
+              // External network URIs.
+              if (ExternalMedia.supported(uri)) {
+                final response = await YTMClient.player(uri.toString());
+                await Playback.instance
+                    .open([Track.fromJson(response!.toJson())]);
+              }
+              // Direct network URIs. No metadata extraction.
+              else {
+                await Playback.instance.open(
                   [
-                    track,
+                    Track.fromJson(
+                      {
+                        'uri': uri.toString(),
+                      },
+                    )
                   ],
                 );
               }
-            } catch (exception, stacktrace) {
-              debugPrint(exception.toString());
-              debugPrint(stacktrace.toString());
+              break;
             }
-          }
-          break;
+          default:
+            break;
         }
-      case URIType.network:
-        {
-          final uri = parser.uri!;
-          // External network URIs.
-          if (ExternalMedia.supported(uri)) {
-            final response = await YTMClient.player(uri.toString());
-            await Playback.instance.open([Track.fromJson(response!.toJson())]);
-          }
-          // Direct network URIs. No metadata extraction.
-          else {
-            await Playback.instance.open(
-              [
-                Track.fromJson(
-                  {
-                    'uri': uri.toString(),
-                  },
-                )
-              ],
-            );
-          }
-          break;
+        // TODO(@alexmercerind): Refactor this to be outside of this class. Tight coupling is bad.
+        if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+          DesktopNowPlayingController.instance.maximize();
+        } else if (Platform.isAndroid || Platform.isIOS) {
+          MobileNowPlayingController.instance.show();
         }
-      default:
-        break;
-    }
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      DesktopNowPlayingController.instance.maximize();
-    } else if (Platform.isAndroid || Platform.isIOS) {
-      MobileNowPlayingController.instance.show();
-    }
+      },
+    );
   }
 
+  /// Notify [Intent] to fucking preempt the current [playURI] operation & stop iterating over the directory & parsing the [File]s.
+  void preemptPlayURI() => _playURIOperationID = -1;
+
   /// Parses the metadata & saves cover art at local cache directory for the given [uri].
-  Future<Track> parse(
-    Uri uri, {
-    Directory? albumArtDirectory,
-    Duration timeout = const Duration(seconds: 1),
-  }) async {
-    // Use the default album art directory.
-    albumArtDirectory ??= Collection.instance.albumArtDirectory;
+  Future<Track> parse(Uri uri) async {
     debugPrint(uri.toString());
     final result = await reader.parse(
       uri.toString(),
-      albumArtDirectory: albumArtDirectory,
-      timeout: timeout,
+      albumArtDirectory: Collection.instance.albumArtDirectory,
+      timeout: const Duration(seconds: 1),
     );
     debugPrint(result.toString());
     return Track.fromJson(result.toJson());
@@ -262,6 +271,13 @@ class Intent {
 
   /// For ignoring duplicate redundant calls on Android during application lifecycle changes.
   String? _argument;
+
+  /// When opening a [Directory] with [playURI], the [Directory] is parsed recursively & all the files are added to queue in background.
+  ///
+  /// This value is used to stop the recursive parsing, in case a new [playURI] call is made.
+  /// Preempting the current execution of [playURI] is important to avoid the app from loading the same [Directory] again & again.
+  int _playURIOperationID = -1;
+  final Lock _playURIOperationLock = Lock();
 
   /// Android specific.
   ///

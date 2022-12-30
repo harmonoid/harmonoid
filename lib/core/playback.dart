@@ -1102,6 +1102,7 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
     int index = 0,
     bool play = true,
   }) async {
+    Intent.instance.preemptPlayURI();
     // Cause notification to be dismissed.
     playbackState.add(playbackState.value.copyWith(
       processingState: AudioProcessingState.idle,
