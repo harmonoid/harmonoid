@@ -4,23 +4,19 @@
 /// All rights reserved.
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-import 'dart:io';
+
 import 'dart:convert';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:uri_parser/uri_parser.dart';
-import 'package:media_engine/media_engine.dart';
-import 'package:media_library/media_library.dart' hide Media;
+import 'package:media_library/media_library.dart';
+import 'package:media_kit_tag_reader/media_kit_tag_reader.dart';
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/core/hotkeys.dart';
-import 'package:harmonoid/utils/helpers.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
-import 'package:harmonoid/utils/tagger_client.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class FileInfoScreen extends StatefulWidget {
@@ -140,42 +136,33 @@ class FileInfoScreen extends StatefulWidget {
                             alignment: Alignment.center,
                             margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
                             padding: EdgeInsets.only(top: 2.0),
-                            child: Focus(
-                              onFocusChange: (hasFocus) {
-                                if (hasFocus) {
-                                  HotKeys.instance.disableSpaceHotKey();
-                                } else {
-                                  HotKeys.instance.enableSpaceHotKey();
-                                }
-                              },
-                              child: Form(
-                                key: formKey,
-                                child: TextFormField(
-                                  validator: (value) {
-                                    final parser = URIParser(value);
-                                    if (!parser.validate()) {
-                                      debugPrint(value);
-                                      // Empty [String] prevents the message from showing & does not distort the UI.
-                                      return '';
-                                    }
-                                    return null;
-                                  },
-                                  autofocus: true,
-                                  controller: controller,
-                                  cursorWidth: 1.0,
-                                  onFieldSubmitted: (String value) async {
-                                    await showFileInfoScreen(
-                                      context,
-                                      value,
-                                      timeout,
-                                    );
-                                  },
-                                  textAlignVertical: TextAlignVertical.center,
-                                  style: Theme.of(ctx).textTheme.headlineMedium,
-                                  decoration: inputDecoration(
+                            child: Form(
+                              key: formKey,
+                              child: TextFormField(
+                                validator: (value) {
+                                  final parser = URIParser(value);
+                                  if (!parser.validate()) {
+                                    debugPrint(value);
+                                    // Empty [String] prevents the message from showing & does not distort the UI.
+                                    return '';
+                                  }
+                                  return null;
+                                },
+                                autofocus: true,
+                                controller: controller,
+                                cursorWidth: 1.0,
+                                onFieldSubmitted: (String value) async {
+                                  await showFileInfoScreen(
                                     context,
-                                    Language.instance.FILE_PATH_OR_URL,
-                                  ),
+                                    value,
+                                    timeout,
+                                  );
+                                },
+                                textAlignVertical: TextAlignVertical.center,
+                                style: Theme.of(ctx).textTheme.headlineMedium,
+                                decoration: inputDecoration(
+                                  context,
+                                  Language.instance.FILE_PATH_OR_URL,
                                 ),
                               ),
                             ),
@@ -348,116 +335,41 @@ class FileInfoScreen extends StatefulWidget {
 
 class _FileInfoScreenState extends State<FileInfoScreen> {
   Track? track;
-  Tagger? tagger;
-  TaggerClient? client;
   Map<String, dynamic> metadata = {};
+  TagReader reader = TagReader(
+    configuration: TagReaderConfiguration(verbose: true),
+  );
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (Platform.isWindows) {
-        tagger = Tagger(verbose: true);
+      try {
+        final result = await reader.metadata(
+          widget.uri.toString(),
+          albumArtDirectory: Collection.instance.albumArtDirectory,
+          waitUntilAlbumArtIsSaved: true,
+          timeout: widget.timeout,
+        );
+        metadata.addAll(result);
         try {
-          metadata.addAll(
-            await tagger!.parse(
-              Media(
-                widget.uri.toString(),
-              ),
-              coverDirectory: Collection.instance.albumArtDirectory,
-              timeout: widget.timeout,
-            ),
-          );
-          track = Helpers.parseTaggerMetadata(metadata);
-          cleanup();
-          setState(() {});
+          // Convert `package:media_kit_tag_reader` model to `package:media_library` model.
+          track = Track.fromJson(reader.platform?.serialize(metadata).toJson());
         } catch (exception, stacktrace) {
           debugPrint(exception.toString());
           debugPrint(stacktrace.toString());
         }
-      } else if (Platform.isLinux) {
-        client = TaggerClient(verbose: true);
-        try {
-          metadata.addAll(
-            await client!.parse(
-              widget.uri.toString(),
-              coverDirectory: Collection.instance.albumArtDirectory,
-              timeout: widget.timeout,
-            ),
-          );
-          track = Helpers.parseTaggerMetadata(metadata);
-          cleanup();
-          setState(() {});
-        } catch (exception, stacktrace) {
-          debugPrint(exception.toString());
-          debugPrint(stacktrace.toString());
-        }
-      } else if (Platform.isAndroid) {
-        try {
-          final metadata = await Collection.instance.parse(
-            widget.uri,
-            Collection.instance.albumArtDirectory,
-            timeout: widget.timeout,
-            waitUntilAlbumArtIsSaved: true,
-          );
-          this.metadata.addAll(metadata.toJson());
-          track = Track.fromJson(this.metadata);
-          cleanup();
-          setState(() {});
-        } catch (exception, stacktrace) {
-          debugPrint(exception.toString());
-          debugPrint(stacktrace.toString());
-        }
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
       }
-      debugPrint(metadata.toString());
-      metadata.addAll(
-        {
-          'uri': widget.uri.toString(),
-          if (widget.uri.isScheme('FILE') &&
-              widget.uri.toFilePath().contains('.')) ...{
-            'file_format':
-                basename(widget.uri.path).split('.').last.toUpperCase(),
-          },
-        },
-      );
       setState(() {});
     });
   }
 
-  void cleanup() {
-    final durationDivisor = isDesktop ? 1000 : 1;
-    final bitrateDivisor = isDesktop ? 1e9 : 1000;
-    metadata.removeWhere((key, value) => key.toUpperCase() == key);
-    if (metadata.isNotEmpty) {
-      if (metadata.containsKey('duration')) {
-        try {
-          metadata['duration'] = Duration(
-            milliseconds: (metadata['duration'] is int
-                    ? metadata['duration']
-                    : int.parse(metadata['duration'])) ~/
-                durationDivisor,
-          ).toString();
-        } catch (exception, stacktrace) {
-          debugPrint(exception.toString());
-          debugPrint(stacktrace.toString());
-        }
-      }
-      if (metadata.containsKey('bitrate')) {
-        try {
-          metadata['bitrate'] =
-              '${(metadata['bitrate'] is int ? metadata['bitrate'] : int.parse(metadata['bitrate'])) ~/ bitrateDivisor} kb/s';
-        } catch (exception, stacktrace) {
-          debugPrint(exception.toString());
-          debugPrint(stacktrace.toString());
-        }
-      }
-    }
-  }
-
   @override
   void dispose() {
-    tagger?.dispose();
-    client?.dispose();
+    reader.dispose();
     super.dispose();
   }
 

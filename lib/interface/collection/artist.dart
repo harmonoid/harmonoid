@@ -1722,7 +1722,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                               ?.label ??
                                                           Duration.zero.label,
                                                       if (!tracks[i]
-                                                          .hasNoAvailableAlbum)
+                                                          .albumNameNotPresent)
                                                         tracks[i].albumName,
                                                     ].join(' • '),
                                                     overflow:

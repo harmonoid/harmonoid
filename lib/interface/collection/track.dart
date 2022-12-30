@@ -453,8 +453,8 @@ class TrackTileState extends State<TrackTile> {
   Widget build(BuildContext context) {
     final group = widget.group ?? Collection.instance.tracks;
     final subtitle = [
-      if (!widget.track.hasNoAvailableAlbum) widget.track.albumName.overflow,
-      if (!widget.track.hasNoAvailableArtists)
+      if (!widget.track.albumNameNotPresent) widget.track.albumName.overflow,
+      if (!widget.track.trackArtistNamesNotPresent)
         widget.track.trackArtistNames.take(2).join(', ')
     ].join(' • ');
     return isDesktop

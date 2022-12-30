@@ -10,18 +10,16 @@ import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:window_plus/window_plus.dart';
-import 'package:media_engine/media_engine.dart';
 import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/interface/home.dart';
-import 'package:harmonoid/state/now_playing_visuals.dart';
-import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/state/now_playing_visuals.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class EditDetailsScreen extends StatefulWidget {
@@ -257,7 +255,8 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                   Language.instance.ARTIST:
                                       copy.trackArtistNames.join('/'),
                                   Language.instance.YEAR: copy.year,
-                                  Language.instance.GENRE: copy.genre,
+                                  Language.instance.GENRE:
+                                      copy.genres.join('/'),
                                   Language.instance.TRACK_NUMBER:
                                       copy.trackNumber,
                                 }
@@ -283,97 +282,104 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                                 maxWidth: 360.0,
                                                 maxHeight: 36.0,
                                               ),
-                                              child: Focus(
-                                                onFocusChange: (hasFocus) {
-                                                  if (hasFocus) {
-                                                    HotKeys.instance
-                                                        .disableSpaceHotKey();
-                                                  } else {
-                                                    HotKeys.instance
-                                                        .enableSpaceHotKey();
+                                              child: TextFormField(
+                                                initialValue: e.value == null
+                                                    ? null
+                                                    : e.value.toString(),
+                                                decoration: inputDecoration(
+                                                  context,
+                                                  '',
+                                                ),
+                                                cursorWidth: 1.0,
+                                                onChanged: (v) {
+                                                  final value = v.isEmpty
+                                                      ? null
+                                                      : v.trim();
+                                                  edited[e.key] = value;
+                                                  if (e.key ==
+                                                      Language.instance
+                                                          .TRACK_SINGLE) {
+                                                    copy = copy.copyWith(
+                                                      trackName: value ??
+                                                          value ??
+                                                          basename(
+                                                            widget.track.uri
+                                                                .toFilePath(),
+                                                          ),
+                                                    );
+                                                  }
+                                                  if (e.key ==
+                                                      Language.instance
+                                                          .ALBUM_SINGLE) {
+                                                    copy = copy.copyWith(
+                                                      albumName: value ??
+                                                          kUnknownAlbum,
+                                                    );
+                                                  }
+                                                  if (e.key ==
+                                                      Language.instance
+                                                          .ALBUM_ARTIST) {
+                                                    copy = copy.copyWith(
+                                                      albumArtistName: value ??
+                                                          kUnknownArtist,
+                                                    );
+                                                  }
+                                                  if (e.key ==
+                                                      Language
+                                                          .instance.ARTIST) {
+                                                    copy = copy.copyWith(
+                                                      trackArtistNames:
+                                                          Utils.splitTagValue(
+                                                                value,
+                                                              ) ??
+                                                              [kUnknownArtist],
+                                                    );
+                                                  }
+                                                  if (e.key ==
+                                                      Language.instance.YEAR) {
+                                                    copy = copy.copyWith(
+                                                      year: Utils
+                                                              .splitDateTagValue(
+                                                            value,
+                                                          ) ??
+                                                          kUnknownYear,
+                                                    );
+                                                  }
+                                                  if (e.key ==
+                                                      Language.instance.GENRE) {
+                                                    copy = copy.copyWith(
+                                                      genres:
+                                                          Utils.splitTagValue(
+                                                                value,
+                                                              ) ??
+                                                              [kUnknownGenre],
+                                                    );
+                                                  }
+                                                  if (e.key ==
+                                                      Language.instance
+                                                          .TRACK_NUMBER) {
+                                                    copy = copy.copyWith(
+                                                      trackNumber: int.tryParse(
+                                                        value ?? '1',
+                                                      ),
+                                                    );
                                                   }
                                                 },
-                                                child: TextFormField(
-                                                  initialValue: e.value == null
-                                                      ? null
-                                                      : e.value.toString(),
-                                                  decoration: inputDecoration(
-                                                    context,
-                                                    '',
-                                                  ),
-                                                  cursorWidth: 1.0,
-                                                  onChanged: (v) {
-                                                    final value = v.isEmpty
-                                                        ? null
-                                                        : v.trim();
-                                                    edited[e.key] = value;
-                                                    if (e.key ==
-                                                        Language.instance
-                                                            .TRACK_SINGLE) {
-                                                      copy.trackName = value ??
-                                                          basename(widget
-                                                              .track.uri
-                                                              .toFilePath());
-                                                    }
-                                                    if (e.key ==
-                                                        Language.instance
-                                                            .ALBUM_SINGLE) {
-                                                      copy.albumName = value ??
-                                                          kUnknownAlbum;
-                                                    }
-                                                    if (e.key ==
-                                                        Language.instance
-                                                            .ALBUM_ARTIST) {
-                                                      copy.albumArtistName =
-                                                          value ??
-                                                              kUnknownArtist;
-                                                    }
-                                                    if (e.key ==
-                                                        Language
-                                                            .instance.ARTIST) {
-                                                      copy.trackArtistNames =
-                                                          Tagger.splitArtists(
-                                                                  value) ??
-                                                              [kUnknownArtist];
-                                                    }
-                                                    if (e.key ==
-                                                        Language
-                                                            .instance.YEAR) {
-                                                      copy.year = value == null
-                                                          ? kUnknownYear
-                                                          : value;
-                                                    }
-                                                    if (e.key ==
-                                                        Language
-                                                            .instance.GENRE) {
-                                                      copy.genre = value ??
-                                                          kUnknownGenre;
-                                                    }
-                                                    if (e.key ==
-                                                        Language.instance
-                                                            .TRACK_NUMBER) {
-                                                      copy.trackNumber =
-                                                          int.parse(
-                                                              value ?? '1');
-                                                    }
-                                                  },
-                                                  inputFormatters: [
-                                                    Language.instance.YEAR,
-                                                    Language
-                                                        .instance.TRACK_NUMBER
-                                                  ].contains(e.key)
-                                                      ? <TextInputFormatter>[
-                                                          FilteringTextInputFormatter
-                                                              .allow(RegExp(
-                                                                  r'[0-9]')),
-                                                        ]
-                                                      : null,
-                                                  textAlignVertical:
-                                                      TextAlignVertical.center,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headlineMedium,
-                                                ),
+                                                inputFormatters: [
+                                                  Language.instance.YEAR,
+                                                  Language.instance.TRACK_NUMBER
+                                                ].contains(e.key)
+                                                    ? <TextInputFormatter>[
+                                                        FilteringTextInputFormatter
+                                                            .allow(RegExp(
+                                                                r'[0-9]')),
+                                                      ]
+                                                    : null,
+                                                textAlignVertical:
+                                                    TextAlignVertical.center,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headlineMedium,
                                               ),
                                             ),
                                           ],
@@ -591,7 +597,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                               Language.instance.ARTIST:
                                   copy.trackArtistNames.join('/'),
                               Language.instance.YEAR: copy.year,
-                              Language.instance.GENRE: copy.genre,
+                              Language.instance.GENRE: copy.genres.join('/'),
                               Language.instance.TRACK_NUMBER: copy.trackNumber,
                             }
                                 .entries
@@ -635,45 +641,67 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                               if (e.key ==
                                                   Language
                                                       .instance.TRACK_SINGLE) {
-                                                copy.trackName = value ??
-                                                    basename(widget.track.uri
-                                                        .toFilePath());
+                                                copy = copy.copyWith(
+                                                  trackName: value ??
+                                                      value ??
+                                                      basename(
+                                                        widget.track.uri
+                                                            .toFilePath(),
+                                                      ),
+                                                );
                                               }
                                               if (e.key ==
                                                   Language
                                                       .instance.ALBUM_SINGLE) {
-                                                copy.albumName =
-                                                    value ?? kUnknownAlbum;
+                                                copy = copy.copyWith(
+                                                  albumName:
+                                                      value ?? kUnknownAlbum,
+                                                );
                                               }
                                               if (e.key ==
                                                   Language
                                                       .instance.ALBUM_ARTIST) {
-                                                copy.albumArtistName =
-                                                    value ?? kUnknownArtist;
+                                                copy = copy.copyWith(
+                                                  albumArtistName:
+                                                      value ?? kUnknownArtist,
+                                                );
                                               }
                                               if (e.key ==
                                                   Language.instance.ARTIST) {
-                                                copy.trackArtistNames =
-                                                    Tagger.splitArtists(
-                                                            value) ??
-                                                        [kUnknownArtist];
+                                                copy = copy.copyWith(
+                                                  trackArtistNames:
+                                                      Utils.splitTagValue(
+                                                            value,
+                                                          ) ??
+                                                          [kUnknownArtist],
+                                                );
                                               }
                                               if (e.key ==
                                                   Language.instance.YEAR) {
-                                                copy.year = value == null
-                                                    ? kUnknownYear
-                                                    : value;
+                                                copy = copy.copyWith(
+                                                  year: Utils.splitDateTagValue(
+                                                        value,
+                                                      ) ??
+                                                      kUnknownYear,
+                                                );
                                               }
                                               if (e.key ==
                                                   Language.instance.GENRE) {
-                                                copy.genre =
-                                                    value ?? kUnknownGenre;
+                                                copy = copy.copyWith(
+                                                  genres: Utils.splitTagValue(
+                                                        value,
+                                                      ) ??
+                                                      [kUnknownGenre],
+                                                );
                                               }
                                               if (e.key ==
                                                   Language
                                                       .instance.TRACK_NUMBER) {
-                                                copy.trackNumber =
-                                                    int.parse(value ?? '1');
+                                                copy = copy.copyWith(
+                                                  trackNumber: int.tryParse(
+                                                    value ?? '1',
+                                                  ),
+                                                );
                                               }
                                             },
                                             inputFormatters: [

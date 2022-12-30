@@ -167,9 +167,7 @@ class CustomScrollPhysics extends ScrollPhysics {
   @override
   Simulation? createBallisticSimulation(
       ScrollMetrics position, double velocity) {
-    final Tolerance tolerance = this.tolerance;
     if (velocity.abs() >= tolerance.velocity || position.outOfRange) {
-      double constantDeceleration = 1400;
       return BouncingScrollSimulation(
         spring: spring,
         position: position.pixels,
@@ -177,7 +175,7 @@ class CustomScrollPhysics extends ScrollPhysics {
         leadingExtent: position.minScrollExtent,
         trailingExtent: position.maxScrollExtent,
         tolerance: tolerance,
-        constantDeceleration: constantDeceleration,
+        constantDeceleration: 1400.0,
       );
     }
     return null;

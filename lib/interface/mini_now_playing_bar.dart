@@ -11,13 +11,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:media_engine/media_engine.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter_lyric/lyrics_reader.dart';
 import 'package:flutter_lyric/lyrics_reader_model.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:external_media_provider/external_media_provider.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
@@ -582,7 +582,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                     case LoadState
                                                                         .failed:
                                                                       {
-                                                                        if (LibmpvPluginUtils.isSupported(Playback
+                                                                        if (ExternalMedia.supported(Playback
                                                                             .instance
                                                                             .tracks[i]
                                                                             .uri)) {
@@ -810,7 +810,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                           //     title: Text(Language.instance.CONTROL_PANEL),
                                                                                           //   ),
                                                                                           // ),
-                                                                                          if (LibmpvPluginUtils.isSupported(track.uri))
+                                                                                          if (ExternalMedia.supported(track.uri))
                                                                                             PopupMenuItem(
                                                                                               onTap: () => result = 1,
                                                                                               value: 1,
@@ -819,7 +819,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                                 title: Text(Language.instance.COPY_LINK),
                                                                                               ),
                                                                                             ),
-                                                                                          if (LibmpvPluginUtils.isSupported(track.uri))
+                                                                                          if (ExternalMedia.supported(track.uri))
                                                                                             PopupMenuItem(
                                                                                               onTap: () => result = 2,
                                                                                               value: 2,
@@ -1018,7 +1018,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                               case LoadState
                                                                   .failed:
                                                                 {
-                                                                  if (LibmpvPluginUtils.isSupported(playback
+                                                                  if (ExternalMedia.supported(playback
                                                                       .tracks[playback
                                                                           .index]
                                                                       .uri)) {
@@ -1105,7 +1105,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                     .instance
                                                     .tracks[
                                                         Playback.instance.index]
-                                                    .hasNoAvailableArtists)
+                                                    .trackArtistNamesNotPresent)
                                                   Opacity(
                                                     opacity:
                                                         (1 - percentage * 5)
@@ -1240,7 +1240,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                   [
                                                     if (!playback
                                                         .tracks[playback.index]
-                                                        .hasNoAvailableArtists)
+                                                        .trackArtistNamesNotPresent)
                                                       playback
                                                           .tracks[
                                                               playback.index]
@@ -1249,7 +1249,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                           .join(', '),
                                                     if (!playback
                                                         .tracks[playback.index]
-                                                        .hasNoAvailableAlbum)
+                                                        .trackArtistNamesNotPresent)
                                                       playback
                                                           .tracks[
                                                               playback.index]

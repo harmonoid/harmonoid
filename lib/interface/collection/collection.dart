@@ -13,14 +13,12 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:window_plus/window_plus.dart';
-import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
-import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -140,17 +138,10 @@ class CollectionScreenState extends State<CollectionScreen>
         }
       },
     );
-    HotKeyManager.instance.register(
-      searchBarHotkey,
-      keyDownHandler: (_) {
-        node.requestFocus();
-      },
-    );
   }
 
   @override
   void dispose() {
-    HotKeyManager.instance.unregister(searchBarHotkey);
     index.removeListener(saveCurrentTab);
     index.removeListener(MobileNowPlayingController.instance.show);
     super.dispose();
@@ -384,59 +375,49 @@ class CollectionScreenState extends State<CollectionScreen>
                                     bottom: 0.0,
                                   ),
                                   padding: EdgeInsets.only(top: 2.0),
-                                  child: Focus(
-                                    onFocusChange: (hasFocus) {
-                                      if (hasFocus) {
-                                        HotKeys.instance.disableSpaceHotKey();
-                                      } else {
-                                        HotKeys.instance.enableSpaceHotKey();
-                                      }
+                                  child: TextField(
+                                    focusNode: node,
+                                    cursorWidth: 1.0,
+                                    onChanged: (value) {
+                                      queryStr = value;
                                     },
-                                    child: TextField(
-                                      focusNode: node,
-                                      cursorWidth: 1.0,
-                                      onChanged: (value) {
-                                        queryStr = value;
-                                      },
-                                      onSubmitted: (value) {
-                                        query.value = value;
+                                    onSubmitted: (value) {
+                                      query.value = value;
+                                      if (queryStr.isNotEmpty)
+                                        setState(() {
+                                          index.value = 4;
+                                        });
+                                      node.requestFocus();
+                                    },
+                                    textAlignVertical: TextAlignVertical.center,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium,
+                                    decoration: inputDecoration(
+                                      context,
+                                      Language
+                                          .instance.COLLECTION_SEARCH_WELCOME,
+                                      trailingIcon: Transform.rotate(
+                                        angle: pi / 2,
+                                        child: Tooltip(
+                                          message: Language.instance.SEARCH,
+                                          child: Icon(
+                                            Icons.search,
+                                            size: 20.0,
+                                            color: Theme.of(context)
+                                                .iconTheme
+                                                .color,
+                                          ),
+                                        ),
+                                      ),
+                                      trailingIconOnPressed: () {
+                                        query.value = queryStr;
                                         if (queryStr.isNotEmpty)
                                           setState(() {
                                             index.value = 4;
                                           });
                                         node.requestFocus();
                                       },
-                                      textAlignVertical:
-                                          TextAlignVertical.center,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headlineMedium,
-                                      decoration: inputDecoration(
-                                        context,
-                                        Language
-                                            .instance.COLLECTION_SEARCH_WELCOME,
-                                        trailingIcon: Transform.rotate(
-                                          angle: pi / 2,
-                                          child: Tooltip(
-                                            message: Language.instance.SEARCH,
-                                            child: Icon(
-                                              Icons.search,
-                                              size: 20.0,
-                                              color: Theme.of(context)
-                                                  .iconTheme
-                                                  .color,
-                                            ),
-                                          ),
-                                        ),
-                                        trailingIconOnPressed: () {
-                                          query.value = queryStr;
-                                          if (queryStr.isNotEmpty)
-                                            setState(() {
-                                              index.value = 4;
-                                            });
-                                          node.requestFocus();
-                                        },
-                                      ),
                                     ),
                                   ),
                                 ),

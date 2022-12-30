@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:window_plus/window_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:media_engine/media_engine.dart';
 import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter_lyric/lyrics_reader.dart';
@@ -371,14 +370,14 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                         Text(
                                           [
                                             if (!playback.tracks[i]
-                                                .hasNoAvailableArtists)
+                                                .trackArtistNamesNotPresent)
                                               playback
                                                   .tracks[i].trackArtistNames
                                                   .take(2)
                                                   .join(', ')
                                                   .overflow,
                                             if (!playback
-                                                .tracks[i].hasNoAvailableAlbum)
+                                                .tracks[i].albumNameNotPresent)
                                               playback.tracks[i].albumName,
                                             if (![
                                               kUnknownYear,
@@ -647,8 +646,8 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                       Colors.black, Colors.white, 0.54),
                               tooltip: Language.instance.SHOW_LYRICS,
                             ),
-                            if (LibmpvPluginUtils.isSupported(
-                                playback.tracks[playback.index].uri))
+                            if (!playback.tracks[playback.index].uri
+                                .isScheme('FILE'))
                               IconButton(
                                 splashRadius: 20.0,
                                 iconSize: 20.0,
@@ -664,8 +663,8 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 color: Colors.white,
                                 tooltip: Language.instance.OPEN_IN_BROWSER,
                               ),
-                            if (LibmpvPluginUtils.isSupported(
-                                playback.tracks[playback.index].uri))
+                            if (!playback.tracks[playback.index].uri
+                                .isScheme('FILE'))
                               IconButton(
                                 splashRadius: 20.0,
                                 iconSize: 20.0,

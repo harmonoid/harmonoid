@@ -2232,7 +2232,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                               ?.label ??
                                                           Duration.zero.label,
                                                       if (!tracks[i]
-                                                          .hasNoAvailableArtists)
+                                                          .trackArtistNamesNotPresent)
                                                         tracks[i]
                                                             .trackArtistNames
                                                             .take(2)

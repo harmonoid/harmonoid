@@ -13,14 +13,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
-import 'package:media_engine/media_engine.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/interface/collection/artist.dart';
@@ -403,7 +401,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                             playback.tracks
                                                                     .length -
                                                                 1)]
-                                                    .hasNoAvailableArtists)
+                                                    .trackArtistNamesNotPresent)
                                                   HyperLink(
                                                     text: TextSpan(
                                                       children: playback
@@ -418,14 +416,17 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                           .map(
                                                             (e) => TextSpan(
                                                               text: e,
-                                                              recognizer: !LibmpvPluginUtils.isSupported(playback
+                                                              recognizer: playback
                                                                       .tracks[playback
                                                                           .index
                                                                           .clamp(
                                                                               0,
                                                                               playback.tracks.length -
                                                                                   1)]
-                                                                      .uri)
+                                                                      .uri
+                                                                      .isScheme(
+                                                                'FILE',
+                                                              )
                                                                   ? (TapGestureRecognizer()
                                                                     ..onTap =
                                                                         () {
@@ -688,16 +689,13 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           //   ),
                                           // ),
                                           if (playback.tracks.isNotEmpty &&
-                                              LibmpvPluginUtils.isSupported(
-                                                  playback
-                                                      .tracks[playback
-                                                          .index
-                                                          .clamp(
-                                                              0,
-                                                              playback.tracks
-                                                                      .length -
-                                                                  1)]
-                                                      .uri))
+                                              !playback
+                                                  .tracks[playback.index.clamp(
+                                                      0,
+                                                      playback.tracks.length -
+                                                          1)]
+                                                  .uri
+                                                  .isScheme('FILE'))
                                             IconButton(
                                               splashRadius: 20.0,
                                               iconSize: 20.0,
@@ -928,16 +926,13 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                             ),
                                           ),
                                           if (playback.tracks.isNotEmpty &&
-                                              LibmpvPluginUtils.isSupported(
-                                                  playback
-                                                      .tracks[playback
-                                                          .index
-                                                          .clamp(
-                                                              0,
-                                                              playback.tracks
-                                                                      .length -
-                                                                  1)]
-                                                      .uri))
+                                              !playback
+                                                  .tracks[playback.index.clamp(
+                                                      0,
+                                                      playback.tracks.length -
+                                                          1)]
+                                                  .uri
+                                                  .isScheme('FILE'))
                                             IconButton(
                                               splashRadius: 20.0,
                                               iconSize: 18.0,
@@ -1324,59 +1319,47 @@ class _ControlPanelState extends State<ControlPanel> {
               Container(
                 width: isMobile ? 52.0 : 42.0,
                 height: isMobile ? 38.0 : 32.0,
-                child: Focus(
-                  onFocusChange: (hasFocus) {
-                    focused = hasFocus;
-                    if (hasFocus) {
-                      HotKeys.instance.disableSpaceHotKey();
-                    } else {
-                      HotKeys.instance.enableSpaceHotKey();
-                    }
+                child: TextField(
+                  controller: controllers[0],
+                  scrollPhysics: NeverScrollableScrollPhysics(),
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]|.')),
+                  ],
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    playback.setRate(
+                      double.tryParse(value) ?? playback.rate,
+                    );
                   },
-                  child: TextField(
-                    controller: controllers[0],
-                    scrollPhysics: NeverScrollableScrollPhysics(),
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]|.')),
-                    ],
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {
-                      playback.setRate(
-                        double.tryParse(value) ?? playback.rate,
-                      );
-                    },
-                    textAlign: TextAlign.center,
-                    textAlignVertical: isMobile
-                        ? TextAlignVertical.bottom
-                        : TextAlignVertical.center,
-                    style: isMobile
-                        ? null
-                        : Theme.of(context).textTheme.headlineMedium,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Theme.of(context)
-                          .dividerTheme
-                          .color
-                          ?.withOpacity(0.04),
-                      contentPadding: isMobile
-                          ? EdgeInsets.only(bottom: 15.6)
-                          : EdgeInsets.zero,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                        borderSide: BorderSide.none,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                        borderSide: BorderSide.none,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                        borderSide: BorderSide.none,
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                        borderSide: BorderSide.none,
-                      ),
+                  textAlign: TextAlign.center,
+                  textAlignVertical: isMobile
+                      ? TextAlignVertical.bottom
+                      : TextAlignVertical.center,
+                  style: isMobile
+                      ? null
+                      : Theme.of(context).textTheme.headlineMedium,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor:
+                        Theme.of(context).dividerTheme.color?.withOpacity(0.04),
+                    contentPadding: isMobile
+                        ? EdgeInsets.only(bottom: 15.6)
+                        : EdgeInsets.zero,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide.none,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide.none,
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide.none,
                     ),
                   ),
                 ),
@@ -1437,59 +1420,47 @@ class _ControlPanelState extends State<ControlPanel> {
               Container(
                 width: isMobile ? 52.0 : 42.0,
                 height: isMobile ? 38.0 : 32.0,
-                child: Focus(
-                  onFocusChange: (hasFocus) {
-                    focused = hasFocus;
-                    if (hasFocus) {
-                      HotKeys.instance.disableSpaceHotKey();
-                    } else {
-                      HotKeys.instance.enableSpaceHotKey();
-                    }
+                child: TextField(
+                  controller: controllers[1],
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]|.')),
+                  ],
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    playback.setPitch(
+                      double.tryParse(value) ?? playback.pitch,
+                    );
                   },
-                  child: TextField(
-                    controller: controllers[1],
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]|.')),
-                    ],
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {
-                      playback.setPitch(
-                        double.tryParse(value) ?? playback.pitch,
-                      );
-                    },
-                    scrollPhysics: NeverScrollableScrollPhysics(),
-                    textAlign: TextAlign.center,
-                    textAlignVertical: isMobile
-                        ? TextAlignVertical.bottom
-                        : TextAlignVertical.center,
-                    style: isMobile
-                        ? null
-                        : Theme.of(context).textTheme.headlineMedium,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Theme.of(context)
-                          .dividerTheme
-                          .color
-                          ?.withOpacity(0.04),
-                      contentPadding: isMobile
-                          ? EdgeInsets.only(bottom: 15.6)
-                          : EdgeInsets.zero,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                        borderSide: BorderSide.none,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                        borderSide: BorderSide.none,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                        borderSide: BorderSide.none,
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                        borderSide: BorderSide.none,
-                      ),
+                  scrollPhysics: NeverScrollableScrollPhysics(),
+                  textAlign: TextAlign.center,
+                  textAlignVertical: isMobile
+                      ? TextAlignVertical.bottom
+                      : TextAlignVertical.center,
+                  style: isMobile
+                      ? null
+                      : Theme.of(context).textTheme.headlineMedium,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor:
+                        Theme.of(context).dividerTheme.color?.withOpacity(0.04),
+                    contentPadding: isMobile
+                        ? EdgeInsets.only(bottom: 15.6)
+                        : EdgeInsets.zero,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide.none,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide.none,
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide.none,
                     ),
                   ),
                 ),
@@ -1554,59 +1525,47 @@ class _ControlPanelState extends State<ControlPanel> {
               Container(
                 width: isMobile ? 52.0 : 42.0,
                 height: isMobile ? 38.0 : 32.0,
-                child: Focus(
-                  onFocusChange: (hasFocus) {
-                    focused = hasFocus;
-                    if (hasFocus) {
-                      HotKeys.instance.disableSpaceHotKey();
-                    } else {
-                      HotKeys.instance.enableSpaceHotKey();
-                    }
+                child: TextField(
+                  controller: controllers[2],
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]|')),
+                  ],
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    playback.setVolume(
+                      double.tryParse(value) ?? playback.volume,
+                    );
                   },
-                  child: TextField(
-                    controller: controllers[2],
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]|')),
-                    ],
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {
-                      playback.setVolume(
-                        double.tryParse(value) ?? playback.volume,
-                      );
-                    },
-                    scrollPhysics: NeverScrollableScrollPhysics(),
-                    textAlign: TextAlign.center,
-                    textAlignVertical: isMobile
-                        ? TextAlignVertical.bottom
-                        : TextAlignVertical.center,
-                    style: isMobile
-                        ? null
-                        : Theme.of(context).textTheme.headlineMedium,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Theme.of(context)
-                          .dividerTheme
-                          .color
-                          ?.withOpacity(0.04),
-                      contentPadding: isMobile
-                          ? EdgeInsets.only(bottom: 15.6)
-                          : EdgeInsets.zero,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                        borderSide: BorderSide.none,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                        borderSide: BorderSide.none,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                        borderSide: BorderSide.none,
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                        borderSide: BorderSide.none,
-                      ),
+                  scrollPhysics: NeverScrollableScrollPhysics(),
+                  textAlign: TextAlign.center,
+                  textAlignVertical: isMobile
+                      ? TextAlignVertical.bottom
+                      : TextAlignVertical.center,
+                  style: isMobile
+                      ? null
+                      : Theme.of(context).textTheme.headlineMedium,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor:
+                        Theme.of(context).dividerTheme.color?.withOpacity(0.04),
+                    contentPadding: isMobile
+                        ? EdgeInsets.only(bottom: 15.6)
+                        : EdgeInsets.zero,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide.none,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide.none,
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide.none,
                     ),
                   ),
                 ),

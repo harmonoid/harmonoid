@@ -22,7 +22,6 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -99,37 +98,27 @@ class PlaylistTab extends StatelessWidget {
                                   margin:
                                       EdgeInsets.only(top: 0.0, bottom: 0.0),
                                   padding: EdgeInsets.only(top: 2.0),
-                                  child: Focus(
-                                    onFocusChange: (hasFocus) {
-                                      if (hasFocus) {
-                                        HotKeys.instance.disableSpaceHotKey();
-                                      } else {
-                                        HotKeys.instance.enableSpaceHotKey();
+                                  child: TextField(
+                                    autofocus: true,
+                                    controller: _controller,
+                                    cursorWidth: 1.0,
+                                    onSubmitted: (String value) async {
+                                      if (value.isNotEmpty) {
+                                        FocusScope.of(context).unfocus();
+                                        await Collection.instance
+                                            .playlistCreateFromName(value);
+                                        _controller.clear();
+                                        Navigator.of(context).maybePop();
                                       }
                                     },
-                                    child: TextField(
-                                      autofocus: true,
-                                      controller: _controller,
-                                      cursorWidth: 1.0,
-                                      onSubmitted: (String value) async {
-                                        if (value.isNotEmpty) {
-                                          FocusScope.of(context).unfocus();
-                                          await Collection.instance
-                                              .playlistCreateFromName(value);
-                                          _controller.clear();
-                                          Navigator.of(context).maybePop();
-                                        }
-                                      },
-                                      textAlignVertical:
-                                          TextAlignVertical.center,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headlineMedium,
-                                      decoration: inputDecoration(
-                                        context,
-                                        Language
-                                            .instance.PLAYLISTS_TEXT_FIELD_HINT,
-                                      ),
+                                    textAlignVertical: TextAlignVertical.center,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium,
+                                    decoration: inputDecoration(
+                                      context,
+                                      Language
+                                          .instance.PLAYLISTS_TEXT_FIELD_HINT,
                                     ),
                                   ),
                                 ),
@@ -451,33 +440,26 @@ class PlaylistTileState extends State<PlaylistTile> {
                   alignment: Alignment.center,
                   margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
                   padding: EdgeInsets.only(top: 2.0),
-                  child: Focus(
-                    onFocusChange: (hasFocus) {
-                      if (hasFocus) {
-                        HotKeys.instance.disableSpaceHotKey();
-                      } else {
-                        HotKeys.instance.enableSpaceHotKey();
+                  child: TextFormField(
+                    initialValue: widget.playlist.name,
+                    autofocus: true,
+                    cursorWidth: 1.0,
+                    onChanged: (value) => rename = value,
+                    onFieldSubmitted: (String value) async {
+                      if (value.isNotEmpty && value != widget.playlist.name) {
+                        await Collection.instance.playlistRename(
+                          widget.playlist,
+                          value,
+                        );
+                        Navigator.of(context).maybePop();
+                        setState(() {});
                       }
                     },
-                    child: TextFormField(
-                      initialValue: widget.playlist.name,
-                      autofocus: true,
-                      cursorWidth: 1.0,
-                      onChanged: (value) => rename = value,
-                      onFieldSubmitted: (String value) async {
-                        if (value.isNotEmpty && value != widget.playlist.name) {
-                          widget.playlist.name = value;
-                          Collection.instance.playlistsSaveToCache();
-                          Navigator.of(context).maybePop();
-                          setState(() {});
-                        }
-                      },
-                      textAlignVertical: TextAlignVertical.center,
-                      style: Theme.of(context).textTheme.headlineMedium,
-                      decoration: inputDecoration(
-                        context,
-                        Language.instance.PLAYLISTS_TEXT_FIELD_LABEL,
-                      ),
+                    textAlignVertical: TextAlignVertical.center,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                    decoration: inputDecoration(
+                      context,
+                      Language.instance.PLAYLISTS_TEXT_FIELD_LABEL,
                     ),
                   ),
                 ),
@@ -491,8 +473,10 @@ class PlaylistTileState extends State<PlaylistTile> {
                     ),
                     onPressed: () async {
                       if (rename.isNotEmpty && rename != widget.playlist.name) {
-                        widget.playlist.name = rename;
-                        Collection.instance.playlistsSaveToCache();
+                        await Collection.instance.playlistRename(
+                          widget.playlist,
+                          rename,
+                        );
                         Navigator.of(context).maybePop();
                         setState(() {});
                       }
@@ -546,8 +530,10 @@ class PlaylistTileState extends State<PlaylistTile> {
                             onFieldSubmitted: (value) async {
                               if (value.isNotEmpty &&
                                   value != widget.playlist.name) {
-                                widget.playlist.name = value;
-                                Collection.instance.playlistsSaveToCache();
+                                await Collection.instance.playlistRename(
+                                  widget.playlist,
+                                  value,
+                                );
                                 Navigator.of(context).maybePop();
                                 setState(() {});
                               }
@@ -594,8 +580,10 @@ class PlaylistTileState extends State<PlaylistTile> {
                           onPressed: () async {
                             if (input.isNotEmpty &&
                                 input != widget.playlist.name) {
-                              widget.playlist.name = input;
-                              Collection.instance.playlistsSaveToCache();
+                              await Collection.instance.playlistRename(
+                                widget.playlist,
+                                input,
+                              );
                               Navigator.of(context).maybePop();
                               setState(() {});
                             }
@@ -1764,9 +1752,9 @@ class PlaylistScreenState extends State<PlaylistScreen>
                         delegate: SliverChildBuilderDelegate(
                           (context, i) {
                             final subtitle = [
-                              if (!tracks[i].hasNoAvailableAlbum)
+                              if (!tracks[i].albumNameNotPresent)
                                 tracks[i].albumName.overflow,
-                              if (!tracks[i].hasNoAvailableArtists)
+                              if (!tracks[i].trackArtistNamesNotPresent)
                                 tracks[i].trackArtistNames.take(2).join(', ')
                             ].join(' • ');
                             return Material(
