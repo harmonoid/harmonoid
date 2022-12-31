@@ -89,7 +89,7 @@ jobs:
 
   build_linux:
     name: Harmonoid Linux
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
         with:
