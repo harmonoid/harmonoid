@@ -1085,15 +1085,28 @@ ImageProvider getAlbumArt(
   int? cacheWidth,
   bool small = false,
   bool? lookupForFallbackAlbumArt,
+  List<String>? fallbackAlbumArtFileNames,
 }) {
-  bool fallback = false;
+  bool _lookupForFallbackAlbumArt = false;
   try {
-    fallback = Configuration.instance.lookupForFallbackAlbumArt;
+    _lookupForFallbackAlbumArt =
+        Configuration.instance.lookupForFallbackAlbumArt;
   } catch (exception, stacktrace) {
     debugPrint(exception.toString());
     debugPrint(stacktrace.toString());
   }
-  lookupForFallbackAlbumArt ??= fallback;
+  lookupForFallbackAlbumArt ??= _lookupForFallbackAlbumArt;
+
+  List<String> _fallbackAlbumArtFileNames = kDefaultFallbackAlbumArtFileNames;
+  try {
+    _fallbackAlbumArtFileNames =
+        Configuration.instance.fallbackAlbumArtFileNames;
+  } catch (exception, stacktrace) {
+    debugPrint(exception.toString());
+    debugPrint(stacktrace.toString());
+  }
+  fallbackAlbumArtFileNames ??= _fallbackAlbumArtFileNames;
+
   ImageProvider? image;
   // Separately handle the web URLs.
   if (media is Track) {
@@ -1116,6 +1129,7 @@ ImageProvider getAlbumArt(
     final file = Collection.instance.getAlbumArt(
       media,
       lookupForFallbackAlbumArt: lookupForFallbackAlbumArt,
+      fallbackAlbumArtFileNames: fallbackAlbumArtFileNames,
     );
     if (file != null) {
       // An album art is found.
