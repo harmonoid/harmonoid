@@ -396,7 +396,8 @@ class Configuration extends ConfigurationKeys {
     disableAnimations = current['disableAnimations'];
     addLibraryToPlaylistWhenPlayingFromTracksTab =
         current['addLibraryToPlaylistWhenPlayingFromTracksTab'];
-    fallbackAlbumArtFileNames = current['fallbackAlbumArtFileNames'];
+    fallbackAlbumArtFileNames =
+        current['fallbackAlbumArtFileNames'].cast<String>();
   }
 
   static Future<Map<String, dynamic>>
