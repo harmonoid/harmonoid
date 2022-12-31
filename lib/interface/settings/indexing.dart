@@ -239,7 +239,7 @@ class IndexingState extends State<IndexingSetting>
                                                     24.0,
                                                     20.0,
                                                     24.0,
-                                                    8.0,
+                                                    12.0,
                                                   ),
                                                   content: Text(
                                                     Language.instance
@@ -545,7 +545,7 @@ class IndexingState extends State<IndexingSetting>
             24.0,
             20.0,
             24.0,
-            8.0,
+            12.0,
           ),
           content: Text(
             Language.instance.INDEXING_ALREADY_GOING_ON_SUBTITLE,
@@ -645,7 +645,7 @@ class IndexingState extends State<IndexingSetting>
                     24.0,
                     20.0,
                     24.0,
-                    8.0,
+                    12.0,
                   ),
                   title: Text(
                     Language.instance.WARNING,

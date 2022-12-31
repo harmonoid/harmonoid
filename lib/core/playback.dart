@@ -142,7 +142,14 @@ class Playback extends ChangeNotifier {
       await audioService?.setSpeed(value);
     }
     rate = value;
-    instance.mpris?.rate = value;
+    try {
+      if (Platform.isLinux) {
+        instance.mpris?.rate = value;
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
     notifyListeners();
   }
 
@@ -154,7 +161,14 @@ class Playback extends ChangeNotifier {
       await audioService?.setVolume(value / 100.0);
     }
     volume = value;
-    instance.mpris?.volume = value;
+    try {
+      if (Platform.isLinux) {
+        instance.mpris?.volume = value / 100.0;
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
     notifyListeners();
   }
 
@@ -181,6 +195,15 @@ class Playback extends ChangeNotifier {
       );
     }
     playlistLoopMode = value;
+    try {
+      if (Platform.isLinux) {
+        instance.mpris?.loopStatus =
+            MPRISLoopStatus.values[instance.playlistLoopMode.index];
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
     notifyListeners();
   }
 
@@ -452,6 +475,8 @@ class Playback extends ChangeNotifier {
             identity: 'Harmonoid',
             desktopEntry: '/usr/share/applications/harmonoid',
           );
+          instance.mpris?.minimumRate = 0.5;
+          instance.mpris?.maximumRate = 2.0;
           instance.mpris?.setEventHandler(
             MPRISEventHandler(
               play: instance.play,
@@ -629,6 +654,7 @@ class Playback extends ChangeNotifier {
             debugPrint(stacktrace.toString());
           }
         }
+        // `package:mpris_service`
         if (Platform.isLinux) {
           Uri? image;
           if (ExternalMedia.supported(track.uri)) {
@@ -638,6 +664,11 @@ class Playback extends ChangeNotifier {
             final artwork = getAlbumArt(track);
             image = (artwork as ExtendedFileImageProvider).file.uri;
           }
+          instance.mpris?.playbackStatus = instance.isCompleted
+              ? MPRISPlaybackStatus.stopped
+              : instance.isPlaying
+                  ? MPRISPlaybackStatus.playing
+                  : MPRISPlaybackStatus.paused;
           instance.mpris?.metadata = MPRISMetadata(
             track.uri,
             artUrl: image,
@@ -741,25 +772,31 @@ class Playback extends ChangeNotifier {
               track.albumArtistName,
           ].join(' ');
           if (!isCompleted) {
-            discord?.start(autoRegister: true);
-            discord?.updatePresence(
-              DiscordPresence(
-                state: !track.trackArtistNamesNotPresent
+            final title = track.trackName,
+                subtitle = !track.trackArtistNamesNotPresent
                     ? track.trackArtistNames.join(', ')
                     : !track.albumArtistNameNotPresent
                         ? track.albumArtistName
-                        : null,
-                details: track.trackName,
+                        : '';
+            final details = track.uri.isScheme('FILE')
+                ? [title, subtitle].join(' • ')
+                : track.trackName;
+            final state =
+                track.uri.isScheme('FILE') ? audioFormatLabelSmall : subtitle;
+            discord?.start(autoRegister: true);
+            discord?.updatePresence(
+              DiscordPresence(
+                details: details,
+                state: state,
                 largeImageKey: _discordPreviousLargeImageKey,
                 largeImageText:
                     !track.albumNameNotPresent ? track.albumName : null,
                 smallImageKey: isPlaying ? 'play' : 'pause',
                 smallImageText: isPlaying ? 'Playing' : 'Paused',
-                button1Label:
-                    ExternalMedia.supported(track.uri) ? 'Listen' : 'Find',
-                button1Url: ExternalMedia.supported(track.uri)
-                    ? track.uri.toString()
-                    : 'https://www.google.com/search?q=${Uri.encodeComponent(search)}',
+                button1Label: track.uri.isScheme('FILE') ? 'Find' : 'Listen',
+                button1Url: track.uri.isScheme('FILE')
+                    ? 'https://www.google.com/search?q=${Uri.encodeComponent(search)}'
+                    : track.uri.toString(),
                 endTimeStamp: isPlaying
                     ? DateTime.now().millisecondsSinceEpoch +
                         duration.inMilliseconds -
