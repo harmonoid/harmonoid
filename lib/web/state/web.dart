@@ -17,18 +17,20 @@ class Web {
   Future<void> open(dynamic value, {int index = 0}) async {
     // WARNING: Gibberish code ahead.
     bool reload = Configuration.instance.webRecent.isEmpty;
-    final id = ExternalMedia.redirect(value.uri).queryParameters['id']!;
     if (value is Track) {
+      final id = ExternalMedia.redirect(value.uri).queryParameters['id']!;
       Playback.instance.open([Parser.track(value)]);
       await Configuration.instance.save(webRecent: [id]);
       final next = await YTMClient.next(id);
       Playback.instance.add(next.sublist(1).map(Parser.track).toList());
     } else if (value is Video) {
+      final id = ExternalMedia.redirect(value.uri).queryParameters['id']!;
       Playback.instance.open([Parser.video(value)]);
       await Configuration.instance.save(webRecent: [id]);
       final next = await YTMClient.next(id);
       Playback.instance.add(next.sublist(1).map(Parser.track).toList());
     } else if (value is List<Track>) {
+      final id = ExternalMedia.redirect(value.first.uri).queryParameters['id']!;
       Playback.instance.open(value.map(Parser.track).toList(), index: index);
       await Configuration.instance.save(webRecent: [id]);
     }

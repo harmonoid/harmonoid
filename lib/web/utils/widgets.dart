@@ -49,10 +49,6 @@ class _WebSearchBarState extends State<WebSearchBar> {
     if (track != null) {
       Web.instance.open(track);
     } else {
-      Configuration.instance.save(
-        webSearchRecent:
-            ([value] + Configuration.instance.webRecent).take(10).toList(),
-      );
       Navigator.of(context).push(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>

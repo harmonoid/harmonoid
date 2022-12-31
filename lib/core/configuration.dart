@@ -22,7 +22,7 @@ import 'package:harmonoid/constants/language.dart';
 /// Configuration
 /// -------------
 ///
-/// App configuration & settings persistence management for [Harmonoid](https://github.com/harmonoid/harmonoid).
+/// Application configuration & settings persistence management for Harmonoid.
 ///
 class Configuration extends ConfigurationKeys {
   /// [Configuration] object instance.
@@ -110,7 +110,6 @@ class Configuration extends ConfigurationKeys {
     bool? automaticAccent,
     bool? notificationLyrics,
     List<String>? collectionSearchRecent,
-    List<String>? webSearchRecent,
     List<String>? webRecent,
     bool? taskbarIndicator,
     bool? seamlessPlayback,
@@ -145,6 +144,7 @@ class Configuration extends ConfigurationKeys {
     Map<String, String>? userLibmpvOptions,
     bool? disableAnimations,
     bool? addLibraryToPlaylistWhenPlayingFromTracksTab,
+    List<String>? fallbackAlbumArtFileNames,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -157,9 +157,6 @@ class Configuration extends ConfigurationKeys {
     }
     if (collectionSearchRecent != null) {
       this.collectionSearchRecent = collectionSearchRecent;
-    }
-    if (webSearchRecent != null) {
-      this.webSearchRecent = webSearchRecent;
     }
     if (webRecent != null) {
       this.webRecent = webRecent;
@@ -273,6 +270,9 @@ class Configuration extends ConfigurationKeys {
       this.addLibraryToPlaylistWhenPlayingFromTracksTab =
           addLibraryToPlaylistWhenPlayingFromTracksTab;
     }
+    if (fallbackAlbumArtFileNames != null) {
+      this.fallbackAlbumArtFileNames = fallbackAlbumArtFileNames;
+    }
     await storage.write(
       {
         'collectionDirectories': this
@@ -285,7 +285,6 @@ class Configuration extends ConfigurationKeys {
         'automaticAccent': this.automaticAccent,
         'notificationLyrics': this.notificationLyrics,
         'collectionSearchRecent': this.collectionSearchRecent,
-        'webSearchRecent': this.webSearchRecent,
         'webRecent': this.webRecent,
         'taskbarIndicator': this.taskbarIndicator,
         'seamlessPlayback': this.seamlessPlayback,
@@ -325,6 +324,7 @@ class Configuration extends ConfigurationKeys {
         'disableAnimations': this.disableAnimations,
         'addLibraryToPlaylistWhenPlayingFromTracksTab':
             this.addLibraryToPlaylistWhenPlayingFromTracksTab,
+        'fallbackAlbumArtFileNames': this.fallbackAlbumArtFileNames,
       },
     );
   }
@@ -354,7 +354,6 @@ class Configuration extends ConfigurationKeys {
     automaticAccent = current['automaticAccent'];
     notificationLyrics = current['notificationLyrics'];
     collectionSearchRecent = current['collectionSearchRecent'].cast<String>();
-    webSearchRecent = current['webSearchRecent'].cast<String>();
     webRecent = current['webRecent'].cast<String>();
     taskbarIndicator = current['taskbarIndicator'];
     seamlessPlayback = current['seamlessPlayback'];
@@ -397,6 +396,7 @@ class Configuration extends ConfigurationKeys {
     disableAnimations = current['disableAnimations'];
     addLibraryToPlaylistWhenPlayingFromTracksTab =
         current['addLibraryToPlaylistWhenPlayingFromTracksTab'];
+    fallbackAlbumArtFileNames = current['fallbackAlbumArtFileNames'];
   }
 
   static Future<Map<String, dynamic>>
@@ -465,7 +465,6 @@ class Configuration extends ConfigurationKeys {
             'automaticAccent': false,
             'notificationLyrics': true,
             'collectionSearchRecent': const [],
-            'webSearchRecent': const [],
             'webRecent': const [],
             'taskbarIndicator': false,
             'seamlessPlayback': false,
@@ -504,6 +503,7 @@ class Configuration extends ConfigurationKeys {
             'userLibmpvOptions': <String, String>{},
             'disableAnimations': false,
             'addLibraryToPlaylistWhenPlayingFromTracksTab': false,
+            'fallbackAlbumArtFileNames': kDefaultFallbackAlbumArtFileNames,
           };
 }
 
@@ -515,7 +515,6 @@ abstract class ConfigurationKeys {
   late bool automaticAccent;
   late bool notificationLyrics;
   late List<String> collectionSearchRecent;
-  late List<String> webSearchRecent;
   late List<String> webRecent;
   late bool taskbarIndicator;
   late bool seamlessPlayback;
@@ -550,4 +549,5 @@ abstract class ConfigurationKeys {
   late Map<String, String> userLibmpvOptions;
   late bool disableAnimations;
   late bool addLibraryToPlaylistWhenPlayingFromTracksTab;
+  late List<String> fallbackAlbumArtFileNames;
 }

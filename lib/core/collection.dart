@@ -19,7 +19,7 @@ import 'package:harmonoid/utils/storage_retriever.dart';
 /// Collection
 /// ----------
 ///
-/// Primary music library handler & indexer of [Harmonoid](https://github.com/harmonoid/harmonoid).
+/// Primary music library handler & indexer of Harmonoid.
 ///
 class Collection extends MediaLibrary with ChangeNotifier {
   /// [Collection] object instance. Must call [Collection.initialize].

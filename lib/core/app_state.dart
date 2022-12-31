@@ -13,18 +13,23 @@ import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
 
-/// App State
+/// AppState
 /// ---------
 ///
-/// App state persistence for [Harmonoid](https://github.com/harmonoid/harmonoid).
-/// Used to resume the state of the app after a restart.
+/// Current playback state persistence management for Harmonoid.
 ///
 class AppState extends AppStateKeys {
   /// [AppState] object instance.
   static late AppState instance = AppState();
 
   /// [SafeLocalStorage] instance for cache read/write.
-  late SafeLocalStorage storage;
+  final SafeLocalStorage storage = SafeLocalStorage(
+    path.join(
+      Configuration.instance.cacheDirectory.path,
+      'AppState.JSON',
+    ),
+    fallback: _defaultAppState,
+  );
 
   /// Initializes the [AppState] class.
   ///
@@ -32,13 +37,6 @@ class AppState extends AppStateKeys {
   /// Generates from scratch if no state is found.
   ///
   static Future<void> initialize() async {
-    instance.storage = SafeLocalStorage(
-      path.join(
-        Configuration.instance.cacheDirectory.path,
-        'AppState.JSON',
-      ),
-      fallback: _defaultAppState,
-    );
     await instance.read();
   }
 
