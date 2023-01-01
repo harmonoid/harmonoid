@@ -6,6 +6,7 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
+import 'dart:io';
 import 'dart:core';
 import 'dart:async';
 import 'package:flutter/gestures.dart';
@@ -1226,360 +1227,6 @@ class _ControlPanelState extends State<ControlPanel> {
 
   @override
   Widget build(BuildContext context) {
-    final content = Consumer<Playback>(
-      builder: (context, playback, _) => Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (isDesktop) ...[
-            const SizedBox(height: 16.0),
-            Row(
-              children: [
-                const SizedBox(width: 20.0),
-                Text(
-                  Language.instance.CONTROL_PANEL,
-                  style: Theme.of(context).textTheme.displayLarge,
-                ),
-                Transform.translate(
-                  offset: Offset(2.0, -6.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Theme.of(context).dividerTheme.color ??
-                            Theme.of(context).dividerColor,
-                        width: 1.0,
-                      ),
-                    ),
-                    padding: EdgeInsets.all(1.0),
-                    child: Text(
-                      Language.instance.BETA.toUpperCase(),
-                      style:
-                          Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                fontSize: 10.0,
-                              ),
-                    ),
-                  ),
-                ),
-                const Spacer(),
-              ],
-            ),
-          ],
-          const SizedBox(height: 12.0),
-          if (isDesktop)
-            Padding(
-              padding: EdgeInsets.only(
-                left: 20.0,
-                bottom: 8.0,
-                top: 4.0,
-              ),
-              child: Text(
-                Language.instance.SPEED,
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-            )
-          else
-            const SizedBox(height: 16.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(width: 12.0),
-              IconButton(
-                padding: EdgeInsets.all(8.0),
-                onPressed: () {
-                  playback.setRate(1.0);
-                },
-                iconSize: isMobile ? 28.0 : 20.0,
-                splashRadius: isMobile ? null : 18.0,
-                tooltip: Language.instance.RESET_SPEED,
-                icon: Icon(
-                  Icons.speed,
-                ),
-              ),
-              const SizedBox(width: 12.0),
-              Expanded(
-                child: ScrollableSlider(
-                  mobile: true,
-                  min: 0.5,
-                  max: 2.0,
-                  value: playback.rate.clamp(0.5, 2.0),
-                  onScrolledUp: () {
-                    playback.setRate(
-                      (playback.rate + 0.05).clamp(0.0, 2.0),
-                    );
-                  },
-                  onScrolledDown: () {
-                    playback.setRate(
-                      (playback.rate - 0.05).clamp(0.0, 2.0),
-                    );
-                  },
-                  onChanged: (value) {
-                    playback.setRate(value);
-                  },
-                ),
-              ),
-              const SizedBox(width: 16.0),
-              Container(
-                width: isMobile ? 52.0 : 42.0,
-                height: isMobile ? 38.0 : 32.0,
-                child: TextField(
-                  controller: controllers[0],
-                  scrollPhysics: NeverScrollableScrollPhysics(),
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]|.')),
-                  ],
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    playback.setRate(
-                      double.tryParse(value) ?? playback.rate,
-                    );
-                  },
-                  textAlign: TextAlign.center,
-                  textAlignVertical: isMobile
-                      ? TextAlignVertical.bottom
-                      : TextAlignVertical.center,
-                  style: isMobile
-                      ? null
-                      : Theme.of(context).textTheme.headlineMedium,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor:
-                        Theme.of(context).dividerTheme.color?.withOpacity(0.04),
-                    contentPadding: isMobile
-                        ? EdgeInsets.only(bottom: 15.6)
-                        : EdgeInsets.zero,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide.none,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide.none,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide.none,
-                    ),
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16.0),
-            ],
-          ),
-          if (isDesktop)
-            Padding(
-              padding: EdgeInsets.only(
-                left: 20.0,
-                bottom: 8.0,
-                top: 4.0,
-              ),
-              child: Text(
-                Language.instance.PITCH,
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-            )
-          else
-            const SizedBox(height: 16.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(width: 12.0),
-              IconButton(
-                padding: EdgeInsets.all(8.0),
-                onPressed: () => playback.setPitch(1.0),
-                iconSize: isMobile ? 28.0 : 20.0,
-                splashRadius: isMobile ? null : 18.0,
-                tooltip: Language.instance.RESET_PITCH,
-                icon: Icon(FluentIcons.pulse_20_filled),
-              ),
-              const SizedBox(width: 12.0),
-              Expanded(
-                child: ScrollableSlider(
-                  mobile: true,
-                  min: 0.5,
-                  max: 1.5,
-                  value: playback.pitch.clamp(0.5, 1.5),
-                  onScrolledUp: () {
-                    playback.setPitch(
-                      (playback.pitch + 0.05).clamp(0.5, 1.5),
-                    );
-                  },
-                  onScrolledDown: () {
-                    playback.setPitch(
-                      (playback.pitch - 0.05).clamp(0.5, 1.5),
-                    );
-                  },
-                  onChanged: (value) {
-                    playback.setPitch(value);
-                  },
-                ),
-              ),
-              const SizedBox(width: 16.0),
-              Container(
-                width: isMobile ? 52.0 : 42.0,
-                height: isMobile ? 38.0 : 32.0,
-                child: TextField(
-                  controller: controllers[1],
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]|.')),
-                  ],
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    playback.setPitch(
-                      double.tryParse(value) ?? playback.pitch,
-                    );
-                  },
-                  scrollPhysics: NeverScrollableScrollPhysics(),
-                  textAlign: TextAlign.center,
-                  textAlignVertical: isMobile
-                      ? TextAlignVertical.bottom
-                      : TextAlignVertical.center,
-                  style: isMobile
-                      ? null
-                      : Theme.of(context).textTheme.headlineMedium,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor:
-                        Theme.of(context).dividerTheme.color?.withOpacity(0.04),
-                    contentPadding: isMobile
-                        ? EdgeInsets.only(bottom: 15.6)
-                        : EdgeInsets.zero,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide.none,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide.none,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide.none,
-                    ),
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16.0),
-            ],
-          ),
-          if (isDesktop)
-            Padding(
-              padding: EdgeInsets.only(
-                left: 20.0,
-                bottom: 8.0,
-                top: 4.0,
-              ),
-              child: Text(
-                Language.instance.VOLUME_BOOST,
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-            )
-          else
-            const SizedBox(height: 16.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(width: 12.0),
-              IconButton(
-                padding: EdgeInsets.all(8.0),
-                onPressed: () {
-                  if (playback.volume > 100.0) {
-                    playback.setVolume(100.0);
-                  }
-                },
-                iconSize: isMobile ? 28.0 : 20.0,
-                splashRadius: isMobile ? null : 18.0,
-                tooltip: Language.instance.DISABLE_VOLUME_BOOST,
-                icon: Icon(Icons.volume_up),
-              ),
-              const SizedBox(width: 12.0),
-              Expanded(
-                child: ScrollableSlider(
-                  mobile: true,
-                  min: 100.0,
-                  max: 200.0,
-                  value: playback.volume.clamp(100.0, 200.0),
-                  onScrolledUp: () {
-                    playback.setVolume(
-                      (playback.volume + 5.0).clamp(100.0, 200.0),
-                    );
-                  },
-                  onScrolledDown: () {
-                    playback.setVolume(
-                      (playback.volume - 5.0).clamp(100.0, 200.0),
-                    );
-                  },
-                  onChanged: (value) {
-                    playback.setVolume(value);
-                  },
-                ),
-              ),
-              const SizedBox(width: 16.0),
-              Container(
-                width: isMobile ? 52.0 : 42.0,
-                height: isMobile ? 38.0 : 32.0,
-                child: TextField(
-                  controller: controllers[2],
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]|')),
-                  ],
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    playback.setVolume(
-                      double.tryParse(value) ?? playback.volume,
-                    );
-                  },
-                  scrollPhysics: NeverScrollableScrollPhysics(),
-                  textAlign: TextAlign.center,
-                  textAlignVertical: isMobile
-                      ? TextAlignVertical.bottom
-                      : TextAlignVertical.center,
-                  style: isMobile
-                      ? null
-                      : Theme.of(context).textTheme.headlineMedium,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor:
-                        Theme.of(context).dividerTheme.color?.withOpacity(0.04),
-                    contentPadding: isMobile
-                        ? EdgeInsets.only(bottom: 15.6)
-                        : EdgeInsets.zero,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide.none,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide.none,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide.none,
-                    ),
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16.0),
-            ],
-          ),
-          const SizedBox(height: 16.0),
-        ],
-      ),
-    );
     return isDesktop
         ? Semantics(
             scopesRoute: true,
@@ -1608,7 +1255,373 @@ class _ControlPanelState extends State<ControlPanel> {
                       ),
                       curve: Curves.easeInOut,
                       duration: Duration(milliseconds: 160),
-                      child: content,
+                      child: Consumer<Playback>(
+                        builder: (context, playback, _) => Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 16.0),
+                            Row(
+                              children: [
+                                const SizedBox(width: 20.0),
+                                Text(
+                                  Language.instance.CONTROL_PANEL,
+                                  style:
+                                      Theme.of(context).textTheme.displayLarge,
+                                ),
+                                Transform.translate(
+                                  offset: Offset(2.0, -6.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Theme.of(context)
+                                                .dividerTheme
+                                                .color ??
+                                            Theme.of(context).dividerColor,
+                                        width: 1.0,
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.all(1.0),
+                                    child: Text(
+                                      Language.instance.BETA.toUpperCase(),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineSmall
+                                          ?.copyWith(
+                                            fontSize: 10.0,
+                                          ),
+                                    ),
+                                  ),
+                                ),
+                                const Spacer(),
+                              ],
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                left: 20.0,
+                                bottom: 8.0,
+                                top: 16.0,
+                              ),
+                              child: Text(
+                                Language.instance.SPEED,
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const SizedBox(width: 12.0),
+                                IconButton(
+                                  padding: EdgeInsets.all(8.0),
+                                  onPressed: () {
+                                    playback.setRate(1.0);
+                                  },
+                                  iconSize: 20.0,
+                                  splashRadius: 18.0,
+                                  tooltip: Language.instance.RESET_SPEED,
+                                  icon: Icon(
+                                    Icons.speed,
+                                  ),
+                                ),
+                                const SizedBox(width: 12.0),
+                                Expanded(
+                                  child: ScrollableSlider(
+                                    mobile: true,
+                                    min: 0.5,
+                                    max: 2.0,
+                                    value: playback.rate.clamp(0.5, 2.0),
+                                    onScrolledUp: () {
+                                      playback.setRate(
+                                        (playback.rate + 0.05).clamp(0.0, 2.0),
+                                      );
+                                    },
+                                    onScrolledDown: () {
+                                      playback.setRate(
+                                        (playback.rate - 0.05).clamp(0.0, 2.0),
+                                      );
+                                    },
+                                    onChanged: (value) {
+                                      playback.setRate(value);
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 16.0),
+                                Container(
+                                  width: 42.0,
+                                  height: 32.0,
+                                  child: TextField(
+                                    controller: controllers[0],
+                                    scrollPhysics:
+                                        NeverScrollableScrollPhysics(),
+                                    inputFormatters: <TextInputFormatter>[
+                                      FilteringTextInputFormatter.allow(
+                                          RegExp(r'[0-9]|.')),
+                                    ],
+                                    keyboardType: TextInputType.number,
+                                    onChanged: (value) {
+                                      playback.setRate(
+                                        double.tryParse(value) ?? playback.rate,
+                                      );
+                                    },
+                                    textAlign: TextAlign.center,
+                                    textAlignVertical: TextAlignVertical.center,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium,
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Theme.of(context)
+                                          .dividerTheme
+                                          .color
+                                          ?.withOpacity(0.04),
+                                      contentPadding: EdgeInsets.zero,
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      errorBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 16.0),
+                              ],
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                left: 20.0,
+                                bottom: 8.0,
+                                top: 4.0,
+                              ),
+                              child: Text(
+                                Language.instance.PITCH,
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const SizedBox(width: 12.0),
+                                IconButton(
+                                  padding: EdgeInsets.all(8.0),
+                                  onPressed: () => playback.setPitch(1.0),
+                                  iconSize: 20.0,
+                                  splashRadius: 18.0,
+                                  tooltip: Language.instance.RESET_PITCH,
+                                  icon: Icon(FluentIcons.pulse_20_filled),
+                                ),
+                                const SizedBox(width: 12.0),
+                                Expanded(
+                                  child: ScrollableSlider(
+                                    mobile: true,
+                                    min: 0.5,
+                                    max: 1.5,
+                                    value: playback.pitch.clamp(0.5, 1.5),
+                                    onScrolledUp: () {
+                                      playback.setPitch(
+                                        (playback.pitch + 0.05).clamp(0.5, 1.5),
+                                      );
+                                    },
+                                    onScrolledDown: () {
+                                      playback.setPitch(
+                                        (playback.pitch - 0.05).clamp(0.5, 1.5),
+                                      );
+                                    },
+                                    onChanged: (value) {
+                                      playback.setPitch(value);
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 16.0),
+                                Container(
+                                  width: 42.0,
+                                  height: 32.0,
+                                  child: TextField(
+                                    controller: controllers[1],
+                                    inputFormatters: <TextInputFormatter>[
+                                      FilteringTextInputFormatter.allow(
+                                          RegExp(r'[0-9]|.')),
+                                    ],
+                                    keyboardType: TextInputType.number,
+                                    onChanged: (value) {
+                                      playback.setPitch(
+                                        double.tryParse(value) ??
+                                            playback.pitch,
+                                      );
+                                    },
+                                    scrollPhysics:
+                                        NeverScrollableScrollPhysics(),
+                                    textAlign: TextAlign.center,
+                                    textAlignVertical: TextAlignVertical.center,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium,
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Theme.of(context)
+                                          .dividerTheme
+                                          .color
+                                          ?.withOpacity(0.04),
+                                      contentPadding: EdgeInsets.zero,
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      errorBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 16.0),
+                              ],
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                left: 20.0,
+                                bottom: 8.0,
+                                top: 4.0,
+                              ),
+                              child: Text(
+                                Language.instance.VOLUME_BOOST,
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const SizedBox(width: 12.0),
+                                IconButton(
+                                  padding: EdgeInsets.all(8.0),
+                                  onPressed: () {
+                                    if (playback.volume > 100.0) {
+                                      playback.setVolume(100.0);
+                                    }
+                                  },
+                                  iconSize: 20.0,
+                                  splashRadius: 18.0,
+                                  tooltip:
+                                      Language.instance.DISABLE_VOLUME_BOOST,
+                                  icon: Icon(Icons.volume_up),
+                                ),
+                                const SizedBox(width: 12.0),
+                                Expanded(
+                                  child: ScrollableSlider(
+                                    mobile: true,
+                                    min: 100.0,
+                                    max: 200.0,
+                                    value: playback.volume.clamp(100.0, 200.0),
+                                    onScrolledUp: () {
+                                      playback.setVolume(
+                                        (playback.volume + 5.0)
+                                            .clamp(100.0, 200.0),
+                                      );
+                                    },
+                                    onScrolledDown: () {
+                                      playback.setVolume(
+                                        (playback.volume - 5.0)
+                                            .clamp(100.0, 200.0),
+                                      );
+                                    },
+                                    onChanged: (value) {
+                                      playback.setVolume(value);
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 16.0),
+                                Container(
+                                  width: 42.0,
+                                  height: 32.0,
+                                  child: TextField(
+                                    controller: controllers[2],
+                                    inputFormatters: <TextInputFormatter>[
+                                      FilteringTextInputFormatter.allow(
+                                          RegExp(r'[0-9]|')),
+                                    ],
+                                    keyboardType: TextInputType.number,
+                                    onChanged: (value) {
+                                      playback.setVolume(
+                                        double.tryParse(value) ??
+                                            playback.volume,
+                                      );
+                                    },
+                                    scrollPhysics:
+                                        NeverScrollableScrollPhysics(),
+                                    textAlign: TextAlign.center,
+                                    textAlignVertical: TextAlignVertical.center,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium,
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Theme.of(context)
+                                          .dividerTheme
+                                          .color
+                                          ?.withOpacity(0.04),
+                                      contentPadding: EdgeInsets.zero,
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      errorBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 16.0),
+                              ],
+                            ),
+                            const SizedBox(height: 16.0),
+                          ],
+                        ),
+                      ),
                       builder: (context, value, child) => Transform.translate(
                         offset: Offset(0, value as double),
                         child: Card(
@@ -1645,7 +1658,274 @@ class _ControlPanelState extends State<ControlPanel> {
               },
             ),
           )
-        : content;
+        : Consumer<Playback>(
+            builder: (context, playback, _) => Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(width: 12.0),
+                    IconButton(
+                      padding: EdgeInsets.all(8.0),
+                      onPressed: () {
+                        playback.setRate(1.0);
+                      },
+                      iconSize: 28.0,
+                      tooltip: Language.instance.RESET_SPEED,
+                      icon: Icon(
+                        Icons.speed,
+                      ),
+                    ),
+                    const SizedBox(width: 12.0),
+                    Expanded(
+                      child: ScrollableSlider(
+                        mobile: true,
+                        min: 0.5,
+                        max: 2.0,
+                        value: playback.rate.clamp(0.5, 2.0),
+                        onScrolledUp: () {
+                          playback.setRate(
+                            (playback.rate + 0.05).clamp(0.0, 2.0),
+                          );
+                        },
+                        onScrolledDown: () {
+                          playback.setRate(
+                            (playback.rate - 0.05).clamp(0.0, 2.0),
+                          );
+                        },
+                        onChanged: (value) {
+                          playback.setRate(value);
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 16.0),
+                    Container(
+                      width: 52.0,
+                      height: 38.0,
+                      child: TextField(
+                        controller: controllers[0],
+                        scrollPhysics: NeverScrollableScrollPhysics(),
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]|.')),
+                        ],
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) {
+                          playback.setRate(
+                            double.tryParse(value) ?? playback.rate,
+                          );
+                        },
+                        textAlign: TextAlign.center,
+                        textAlignVertical: TextAlignVertical.bottom,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Theme.of(context)
+                              .dividerTheme
+                              .color
+                              ?.withOpacity(0.04),
+                          contentPadding: const EdgeInsets.only(bottom: 15.6),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                            borderSide: BorderSide.none,
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16.0),
+                  ],
+                ),
+                const SizedBox(height: 16.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(width: 12.0),
+                    IconButton(
+                      padding: EdgeInsets.all(8.0),
+                      onPressed: () => playback.setPitch(1.0),
+                      iconSize: 28.0,
+                      tooltip: Language.instance.RESET_PITCH,
+                      icon: Icon(FluentIcons.pulse_20_filled),
+                    ),
+                    const SizedBox(width: 12.0),
+                    Expanded(
+                      child: ScrollableSlider(
+                        mobile: true,
+                        min: 0.5,
+                        max: 1.5,
+                        value: playback.pitch.clamp(0.5, 1.5),
+                        onScrolledUp: () {
+                          playback.setPitch(
+                            (playback.pitch + 0.05).clamp(0.5, 1.5),
+                          );
+                        },
+                        onScrolledDown: () {
+                          playback.setPitch(
+                            (playback.pitch - 0.05).clamp(0.5, 1.5),
+                          );
+                        },
+                        onChanged: (value) {
+                          playback.setPitch(value);
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 16.0),
+                    Container(
+                      width: 52.0,
+                      height: 38.0,
+                      child: TextField(
+                        controller: controllers[1],
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]|.')),
+                        ],
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) {
+                          playback.setPitch(
+                            double.tryParse(value) ?? playback.pitch,
+                          );
+                        },
+                        scrollPhysics: NeverScrollableScrollPhysics(),
+                        textAlign: TextAlign.center,
+                        textAlignVertical: TextAlignVertical.bottom,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Theme.of(context)
+                              .dividerTheme
+                              .color
+                              ?.withOpacity(0.04),
+                          contentPadding: const EdgeInsets.only(bottom: 15.6),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                            borderSide: BorderSide.none,
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16.0),
+                  ],
+                ),
+                if (Platform.isAndroid &&
+                    Configuration.instance.androidEnableVolumeBoostFilter)
+                  const SizedBox(height: 16.0),
+                if ((Platform.isAndroid &&
+                    Configuration.instance.androidEnableVolumeBoostFilter))
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(width: 12.0),
+                      IconButton(
+                        padding: EdgeInsets.all(8.0),
+                        onPressed: () {
+                          if (playback.volume > 100.0) {
+                            playback.setVolume(100.0);
+                          }
+                        },
+                        iconSize: 28.0,
+                        tooltip: Language.instance.DISABLE_VOLUME_BOOST,
+                        icon: Icon(Icons.volume_up),
+                      ),
+                      const SizedBox(width: 12.0),
+                      Expanded(
+                        child: ScrollableSlider(
+                          mobile: true,
+                          min: 100.0,
+                          max: 200.0,
+                          value: playback.volume.clamp(100.0, 200.0),
+                          onScrolledUp: () {
+                            playback.setVolume(
+                              (playback.volume + 5.0).clamp(100.0, 200.0),
+                            );
+                          },
+                          onScrolledDown: () {
+                            playback.setVolume(
+                              (playback.volume - 5.0).clamp(100.0, 200.0),
+                            );
+                          },
+                          onChanged: (value) {
+                            playback.setVolume(value);
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 16.0),
+                      Container(
+                        width: 52.0,
+                        height: 38.0,
+                        child: TextField(
+                          controller: controllers[2],
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'[0-9]|')),
+                          ],
+                          keyboardType: TextInputType.number,
+                          onChanged: (value) {
+                            playback.setVolume(
+                              double.tryParse(value) ?? playback.volume,
+                            );
+                          },
+                          scrollPhysics: NeverScrollableScrollPhysics(),
+                          textAlign: TextAlign.center,
+                          textAlignVertical: TextAlignVertical.bottom,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Theme.of(context)
+                                .dividerTheme
+                                .color
+                                ?.withOpacity(0.04),
+                            contentPadding: const EdgeInsets.only(bottom: 15.6),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16.0),
+                    ],
+                  ),
+                const SizedBox(height: 16.0),
+              ],
+            ),
+          );
   }
 }
 

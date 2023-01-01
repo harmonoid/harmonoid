@@ -145,6 +145,7 @@ class Configuration extends ConfigurationKeys {
     bool? disableAnimations,
     bool? addLibraryToPlaylistWhenPlayingFromTracksTab,
     List<String>? fallbackAlbumArtFileNames,
+    bool? androidEnableVolumeBoostFilter,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -273,6 +274,9 @@ class Configuration extends ConfigurationKeys {
     if (fallbackAlbumArtFileNames != null) {
       this.fallbackAlbumArtFileNames = fallbackAlbumArtFileNames;
     }
+    if (androidEnableVolumeBoostFilter != null) {
+      this.androidEnableVolumeBoostFilter = androidEnableVolumeBoostFilter;
+    }
     await storage.write(
       {
         'collectionDirectories': this
@@ -325,6 +329,7 @@ class Configuration extends ConfigurationKeys {
         'addLibraryToPlaylistWhenPlayingFromTracksTab':
             this.addLibraryToPlaylistWhenPlayingFromTracksTab,
         'fallbackAlbumArtFileNames': this.fallbackAlbumArtFileNames,
+        'androidEnableVolumeBoostFilter': this.androidEnableVolumeBoostFilter,
       },
     );
   }
@@ -398,6 +403,7 @@ class Configuration extends ConfigurationKeys {
         current['addLibraryToPlaylistWhenPlayingFromTracksTab'];
     fallbackAlbumArtFileNames =
         current['fallbackAlbumArtFileNames'].cast<String>();
+    androidEnableVolumeBoostFilter = current['androidEnableVolumeBoostFilter'];
   }
 
   static Future<Map<String, dynamic>>
@@ -505,6 +511,7 @@ class Configuration extends ConfigurationKeys {
             'disableAnimations': false,
             'addLibraryToPlaylistWhenPlayingFromTracksTab': false,
             'fallbackAlbumArtFileNames': kDefaultFallbackAlbumArtFileNames,
+            'androidEnableVolumeBoostFilter': false,
           };
 }
 
@@ -551,4 +558,5 @@ abstract class ConfigurationKeys {
   late bool disableAnimations;
   late bool addLibraryToPlaylistWhenPlayingFromTracksTab;
   late List<String> fallbackAlbumArtFileNames;
+  late bool androidEnableVolumeBoostFilter;
 }

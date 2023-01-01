@@ -903,11 +903,10 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
   _HarmonoidMobilePlayer(this.playback) {
     _player = AudioPlayer(
       audioPipeline: AudioPipeline(
-        androidAudioEffects: [
-          // TODO: Missing implementation for [AndroidEqualizer].
-          // _playerAndroidEqualizer,
-          _playerAndroidLoudnessEnhancer,
-        ],
+        androidAudioEffects:
+            Configuration.instance.androidEnableVolumeBoostFilter
+                ? [_androidLoudnessEnhancer]
+                : null,
       ),
     );
     _player.playbackEventStream.listen((e) {
@@ -1097,11 +1096,11 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
   Future<void> setVolume(volume) async {
     if (volume <= 1.0) {
       await _player.setVolume(volume);
-      await _playerAndroidLoudnessEnhancer.setEnabled(false);
+      await _androidLoudnessEnhancer.setEnabled(false);
     } else {
       _player.setVolume(1.0);
-      await _playerAndroidLoudnessEnhancer.setEnabled(true);
-      await _playerAndroidLoudnessEnhancer.setTargetGain(20.0 * (volume - 1.0));
+      await _androidLoudnessEnhancer.setEnabled(true);
+      await _androidLoudnessEnhancer.setTargetGain(20.0 * (volume - 1.0));
     }
   }
 
@@ -1289,11 +1288,9 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
 
   /// [AudioPlayer] instance from `package:just_audio`.
   late final AudioPlayer _player;
-
-  /// TODO: Missing implementation for [AndroidEqualizer].
-  /// final AndroidEqualizer _playerAndroidEqualizer = AndroidEqualizer();
-  final AndroidLoudnessEnhancer _playerAndroidLoudnessEnhancer =
+  final AndroidLoudnessEnhancer _androidLoudnessEnhancer =
       AndroidLoudnessEnhancer();
+
   final Playback playback;
 
   /// Encapsulated private attributes which are used to maintain & restore the mute state.

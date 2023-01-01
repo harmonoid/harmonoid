@@ -20,6 +20,35 @@ class ExperimentalSetting extends StatefulWidget {
 }
 
 class ExperimentalSettingState extends State<ExperimentalSetting> {
+  Future<void> showAndroidVolumeBoostWarningDialog() async {
+    await Future.delayed(Duration(milliseconds: 500));
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Theme.of(context).cardTheme.color,
+        title: Text(
+          Language.instance.WARNING,
+        ),
+        contentPadding: const EdgeInsets.fromLTRB(
+          24.0,
+          20.0,
+          24.0,
+          12.0,
+        ),
+        content: Text(
+          Language.instance.ENABLE_VOLUME_BOOST_FILTER_WARNING,
+          style: Theme.of(context).textTheme.displaySmall,
+        ),
+        actions: [
+          TextButton(
+            onPressed: Navigator.of(context).pop,
+            child: Text(Language.instance.OK),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SettingsTile(
@@ -52,6 +81,23 @@ class ExperimentalSettingState extends State<ExperimentalSetting> {
                 .then((value) => setState(() {})),
             value: Configuration.instance.automaticMusicLookup,
           ),
+          if (isMobile)
+            CorrectedSwitchListTile(
+              title: Language.instance.ENABLE_VOLUME_BOOST_FILTER,
+              subtitle: Language.instance.ENABLE_VOLUME_BOOST_FILTER,
+              onChanged: (_) => Configuration.instance
+                  .save(
+                androidEnableVolumeBoostFilter:
+                    !Configuration.instance.androidEnableVolumeBoostFilter,
+              )
+                  .then((value) {
+                setState(() {});
+                if (Configuration.instance.androidEnableVolumeBoostFilter) {
+                  showAndroidVolumeBoostWarningDialog();
+                }
+              }),
+              value: Configuration.instance.androidEnableVolumeBoostFilter,
+            ),
           CorrectedSwitchListTile(
             title: Language.instance.FALLBACK_ALBUM_ARTS,
             subtitle: Language.instance.FALLBACK_ALBUM_ARTS,

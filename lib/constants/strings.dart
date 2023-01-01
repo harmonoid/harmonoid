@@ -80,6 +80,8 @@ class Strings {
   late String ENABLE_125_SCALING;
   late String ENABLE_ACRYLIC_BLUR;
   late String ENABLE_DISCORD_RPC;
+  late String ENABLE_VOLUME_BOOST_FILTER;
+  late String ENABLE_VOLUME_BOOST_FILTER_WARNING;
   late String ERROR;
   late String EXIT_FULLSCREEN;
   late String EXIT_NOW_PLAYING;

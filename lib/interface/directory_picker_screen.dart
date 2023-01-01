@@ -292,7 +292,8 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
                               child: ListView.separated(
                                 physics: ClampingScrollPhysics(),
                                 key: ValueKey(
-                                    'directory_screen_picker/address_bar'),
+                                  'directory_screen_picker/address_bar',
+                                ),
                                 controller: controller,
                                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                                 scrollDirection: Axis.horizontal,
