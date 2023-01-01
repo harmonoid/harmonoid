@@ -8,6 +8,7 @@
 
 package com.alexmercerind.harmonoid;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.io.File;
 import java.io.FileInputStream;
@@ -73,6 +74,8 @@ class MediaMetadataRetrieverExt extends MediaMetadataRetriever {
         metadata.put("METADATA_KEY_VIDEO_HEIGHT", readKey(METADATA_KEY_VIDEO_HEIGHT));
         metadata.put("METADATA_KEY_BITRATE", readKey(METADATA_KEY_BITRATE));
         Log.d("Harmonoid", metadata.toString());
+        // Remove all entries having `null` value from the `metadata`.
+        metadata.values().removeAll(Collections.singleton(null));
         return metadata;
     }
 }
@@ -82,11 +85,11 @@ public class MetadataRetriever implements MethodCallHandler {
     @Override
     public void onMethodCall(@NonNull final MethodCall call, @NonNull final Result result) {
         // Passed [uri] inside the arguments must be a String interpretation of a URI, which follows
-        // a scheme such as `file://` or `http://` etc. Where as, [coverDirectory] must be a direct
+        // a scheme such as `file://` or `http://` etc. Where as, [albumArtDirectory] must be a direct
         // path to the file system directory where the cover art will be extracted (not a URI).
         if (call.method.equals("metadata")) {
             final String[] uri = {call.argument("uri")};
-            final String[] coverDirectory = {call.argument("coverDirectory")};
+            final String[] albumArtDirectory = {call.argument("albumArtDirectory")};
             final Boolean[] waitUntilAlbumArtIsSaved = {call.argument("waitUntilAlbumArtIsSaved")};
             if (waitUntilAlbumArtIsSaved[0] == null) {
                 waitUntilAlbumArtIsSaved[0] = false;
@@ -153,16 +156,15 @@ public class MetadataRetriever implements MethodCallHandler {
                     if (albumArtistName == null) {
                         albumArtistName = "Unknown Artist";
                     }
-                    // Remove trailing `/` from [coverDirectory] path.
-                    if (coverDirectory[0].endsWith("/")) {
-                        coverDirectory[0] = coverDirectory[0].substring(0, coverDirectory[0].length() - 1);
+                    // Remove trailing `/` from `albumArtDirectory` path.
+                    if (albumArtDirectory[0].endsWith("/")) {
+                        albumArtDirectory[0] = albumArtDirectory[0].substring(0, albumArtDirectory[0].length() - 1);
                     }
                     // Final album art [File].
                     final File file = new File(
                             String.format(
                                     "%s/%s.PNG",
-                                    coverDirectory[0],
-                                    // See [albumArtFileName] getter on [Track] inside Harmonoid and [kAlbumArtFileNameRegex].
+                                    albumArtDirectory[0],
                                     String.format(
                                             "%s%s%s",
                                             trackName,
@@ -180,7 +182,7 @@ public class MetadataRetriever implements MethodCallHandler {
                         if (embeddedPicture != null) {
                             // Recursively create directories to the specified album art [File] &
                             // also create the [File] if not already present at the location.
-                            final boolean mkdirs = new File(coverDirectory[0]).mkdirs();
+                            final boolean mkdirs = new File(albumArtDirectory[0]).mkdirs();
                             if (!file.exists()) {
                                 final boolean created = file.createNewFile();
                             }
