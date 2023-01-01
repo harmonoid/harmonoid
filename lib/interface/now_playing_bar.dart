@@ -12,7 +12,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:animations/animations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -1279,7 +1278,7 @@ class _ControlPanelState extends State<ControlPanel> {
               ),
             )
           else
-            const SizedBox(height: 8.0),
+            const SizedBox(height: 16.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -1384,7 +1383,7 @@ class _ControlPanelState extends State<ControlPanel> {
               ),
             )
           else
-            const SizedBox(height: 8.0),
+            const SizedBox(height: 16.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -1485,7 +1484,7 @@ class _ControlPanelState extends State<ControlPanel> {
               ),
             )
           else
-            const SizedBox(height: 8.0),
+            const SizedBox(height: 16.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
