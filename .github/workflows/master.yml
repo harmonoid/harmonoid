@@ -248,8 +248,8 @@ jobs:
           cd external/harmonoid_visual_assets
           git fetch && git reset --hard origin/master
           cd ../..
-          git apply --reject --whitespace=fix patches/google-play.patch
           rm -r lib/web
+          git apply --reject --whitespace=fix patches/google-play.patch
 
       - run: flutter build apk --verbose --split-per-abi
       - run: cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk harmonoid-android-google-play-arm64-v8a-release.apk
