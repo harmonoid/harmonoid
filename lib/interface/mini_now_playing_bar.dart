@@ -1249,7 +1249,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                           .join(', '),
                                                     if (!playback
                                                         .tracks[playback.index]
-                                                        .trackArtistNamesNotPresent)
+                                                        .albumNameNotPresent)
                                                       playback
                                                           .tracks[
                                                               playback.index]
@@ -1693,7 +1693,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                           5.0)
                                                                       .clamp(
                                                                     0.0,
-                                                                    200.0,
+                                                                    100.0,
                                                                   ),
                                                                 );
                                                               },
@@ -2693,7 +2693,7 @@ class LyricsStyle extends LyricUI {
   TextStyle getPlayingMainTextStyle() => TextStyle(
         color: primary,
         fontSize: defaultSize,
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w600,
         height: 1.2,
       );
 
