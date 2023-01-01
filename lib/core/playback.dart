@@ -461,10 +461,22 @@ class Playback extends ChangeNotifier {
       instance.player?.streams.audioParams.listen((event) {
         instance.audioParams = event;
         instance.notifyListeners();
+        try {
+          instance.notifyDiscordRPC();
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
+        }
       });
       instance.player?.streams.audioBitrate.listen((event) {
         instance.audioBitrate = event;
         instance.notifyListeners();
+        try {
+          instance.notifyDiscordRPC();
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
+        }
       });
       // MPRIS & System Media Transport Controls.
       try {
