@@ -280,7 +280,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                             ConstrainedBox(
                                               constraints: BoxConstraints(
                                                 maxWidth: 360.0,
-                                                maxHeight: 36.0,
+                                                maxHeight: 40.0,
                                               ),
                                               child: TextFormField(
                                                 initialValue: e.value == null

@@ -54,9 +54,7 @@ class PlaylistTab extends StatelessWidget {
             children: <Widget>[
               if (isDesktop)
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 24.0,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -78,7 +76,7 @@ class PlaylistTab extends StatelessWidget {
                 ),
               if (isDesktop)
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Flex(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     direction: Axis.horizontal,
@@ -94,10 +92,9 @@ class PlaylistTab extends StatelessWidget {
                                 ),
                                 content: Container(
                                   height: 40.0,
+                                  width: 360.0,
                                   alignment: Alignment.center,
-                                  margin:
-                                      EdgeInsets.only(top: 0.0, bottom: 0.0),
-                                  padding: EdgeInsets.only(top: 2.0),
+                                  padding: const EdgeInsets.only(top: 2.0),
                                   child: TextField(
                                     autofocus: true,
                                     controller: _controller,
@@ -340,7 +337,7 @@ class PlaylistTile extends StatefulWidget {
   PlaylistTile({
     Key? key,
     required this.playlist,
-    this.enableTrailingButton: false,
+    this.enableTrailingButton = false,
     this.onTap,
   }) : super(key: key);
 
@@ -438,8 +435,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                   height: 40.0,
                   width: 280.0,
                   alignment: Alignment.center,
-                  margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
-                  padding: EdgeInsets.only(top: 2.0),
+                  padding: const EdgeInsets.only(top: 2.0),
                   child: TextFormField(
                     initialValue: widget.playlist.name,
                     autofocus: true,
@@ -511,7 +507,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                       bottom: MediaQuery.of(context).viewInsets.bottom -
                           MediaQuery.of(context).padding.bottom,
                     ),
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -539,7 +535,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                               }
                             },
                             decoration: InputDecoration(
-                              contentPadding: EdgeInsets.fromLTRB(
+                              contentPadding: const EdgeInsets.fromLTRB(
                                 12,
                                 30,
                                 12,
@@ -980,8 +976,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                         Container(
                           alignment: Alignment.center,
                           child: Container(
-                            margin: EdgeInsets.only(top: 72.0),
-                            constraints: BoxConstraints(
+                            margin: const EdgeInsets.only(top: 72.0),
+                            constraints: const BoxConstraints(
                               maxWidth: 1280.0,
                               maxHeight: 720.0,
                             ),
@@ -1038,7 +1034,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                           children: [
                                             Container(
                                               height: 156.0,
-                                              padding: EdgeInsets.all(16.0),
+                                              padding:
+                                                  const EdgeInsets.all(16.0),
                                               alignment: Alignment.centerLeft,
                                               child: Column(
                                                 crossAxisAlignment:
@@ -1079,7 +1076,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                               ),
                                             ),
                                             Padding(
-                                              padding: EdgeInsets.all(12.0),
+                                              padding:
+                                                  const EdgeInsets.all(12.0),
                                               child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
@@ -1163,8 +1161,10 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                         width: 64.0,
                                                         height: 56.0,
                                                         padding:
-                                                            EdgeInsets.only(
-                                                                right: 8.0),
+                                                            const EdgeInsets
+                                                                .only(
+                                                          right: 8.0,
+                                                        ),
                                                         alignment:
                                                             Alignment.center,
                                                         child: Text(
@@ -1180,7 +1180,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                           height: 56.0,
                                                           padding:
                                                               EdgeInsets.only(
-                                                                  right: 8.0),
+                                                            right: 8.0,
+                                                          ),
                                                           alignment: Alignment
                                                               .centerLeft,
                                                           child: Text(
@@ -1198,8 +1199,10 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                         child: Container(
                                                           height: 56.0,
                                                           padding:
-                                                              EdgeInsets.only(
-                                                                  right: 8.0),
+                                                              const EdgeInsets
+                                                                  .only(
+                                                            right: 8.0,
+                                                          ),
                                                           alignment: Alignment
                                                               .centerLeft,
                                                           child: Text(
@@ -1330,9 +1333,12 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                     width: 64.0,
                                                                     height:
                                                                         48.0,
-                                                                    padding: EdgeInsets.only(
-                                                                        right:
-                                                                            8.0),
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .only(
+                                                                      right:
+                                                                          8.0,
+                                                                    ),
                                                                     alignment:
                                                                         Alignment
                                                                             .center,
@@ -1362,9 +1368,12 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                         Container(
                                                                       height:
                                                                           48.0,
-                                                                      padding: EdgeInsets.only(
-                                                                          right:
-                                                                              8.0),
+                                                                      padding:
+                                                                          const EdgeInsets
+                                                                              .only(
+                                                                        right:
+                                                                            8.0,
+                                                                      ),
                                                                       alignment:
                                                                           Alignment
                                                                               .centerLeft,
@@ -1387,9 +1396,12 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                         Container(
                                                                       height:
                                                                           48.0,
-                                                                      padding: EdgeInsets.only(
-                                                                          right:
-                                                                              8.0),
+                                                                      padding:
+                                                                          const EdgeInsets
+                                                                              .only(
+                                                                        right:
+                                                                            8.0,
+                                                                      ),
                                                                       alignment:
                                                                           Alignment
                                                                               .centerLeft,
@@ -1591,7 +1603,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                         height: mobileSliverLabelHeight,
                                         width:
                                             MediaQuery.of(context).size.width,
-                                        padding: EdgeInsets.all(16.0),
+                                        padding: const EdgeInsets.all(16.0),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
                                           mainAxisAlignment:
@@ -1744,9 +1756,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                         ),
                       ),
                       SliverPadding(
-                        padding: EdgeInsets.only(
-                          top: 12.0,
-                        ),
+                        padding: const EdgeInsets.only(top: 12.0),
                       ),
                       SliverList(
                         delegate: SliverChildBuilderDelegate(
@@ -1819,7 +1829,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                       height: 64.0,
                                       alignment: Alignment.center,
                                       margin: const EdgeInsets.symmetric(
-                                          vertical: 4.0),
+                                        vertical: 4.0,
+                                      ),
                                       child: Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,

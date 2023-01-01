@@ -1016,7 +1016,7 @@ InputDecoration inputDecoration(
     contentPadding: EdgeInsets.only(
       left: 12.0,
       right: 12.0,
-      // [bottom] padding is needed since Flutter v3.5.x.
+      // [bottom] padding is needed since Flutter v3.7.x.
       bottom: Platform.isWindows || Platform.isLinux || Platform.isMacOS
           ? 8.0
           : 2.0,
