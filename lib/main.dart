@@ -6,15 +6,15 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'dart:io';
-import 'package:external_media_provider/external_media_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/foundation.dart';
-import 'package:harmonoid/utils/android_tag_reader.dart';
-import 'package:media_kit_tag_reader/media_kit_tag_reader.dart';
 import 'package:window_plus/window_plus.dart';
+import 'package:harmonoid/utils/android_tag_reader.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:media_kit_tag_reader/media_kit_tag_reader.dart';
+import 'package:external_media_provider/external_media_provider.dart';
 import 'package:system_media_transport_controls/system_media_transport_controls.dart';
 
 import 'package:harmonoid/core/intent.dart';
@@ -41,7 +41,7 @@ const String kAuthor = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
 const String kCaption = 'Harmonoid Music';
 const String kLicense = 'End-User License Agreement for Harmonoid';
 const String kTitle = 'Harmonoid';
-const String kVersion = 'v0.3.4';
+const String kVersion = 'v0.3.5';
 
 Future<void> main(List<String> args) async {
   try {
