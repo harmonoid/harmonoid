@@ -771,7 +771,9 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                             ),
                                           ),
                                           IconButton(
-                                            onPressed: playback.isFirstTrack
+                                            onPressed: playback.isFirstTrack &&
+                                                    playback.playlistLoopMode !=
+                                                        PlaylistLoopMode.loop
                                                 ? null
                                                 : playback.previous,
                                             disabledColor: (colors.palette ??
@@ -835,7 +837,9 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                             ),
                                           ),
                                           IconButton(
-                                            onPressed: playback.isLastTrack
+                                            onPressed: playback.isLastTrack &&
+                                                    playback.playlistLoopMode !=
+                                                        PlaylistLoopMode.loop
                                                 ? null
                                                 : playback.next,
                                             iconSize: 24.0,
