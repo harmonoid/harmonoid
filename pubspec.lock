@@ -9,14 +9,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.7"
-  ansicolor:
-    dependency: transitive
-    description:
-      name: ansicolor
-      sha256: "607f8fa9786f392043f169898923e6c59b4518242b68b8862eb8a8b7d9c30b4a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
   args:
     dependency: transitive
     description:
@@ -81,6 +73,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.4+1"
+  base_x:
+    dependency: transitive
+    description:
+      name: base_x
+      sha256: "3f1043679659f1759c651f900da6f24f0a8062c28daa6f9625e8d580002e187b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   characters:
     dependency: transitive
     description:
@@ -344,14 +344,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.0"
-  injector:
-    dependency: transitive
-    description:
-      name: injector
-      sha256: "2a683124c716e93b45521794f55bfe770e069cb3d871fc4fbc65b5acef78e832"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
   intl:
     dependency: transitive
     description:
@@ -437,8 +429,8 @@ packages:
     dependency: "direct main"
     description:
       path: media_kit
-      ref: "96abc25e30d987632475cf3ebcec6115cbd4048c"
-      resolved-ref: "96abc25e30d987632475cf3ebcec6115cbd4048c"
+      ref: master
+      resolved-ref: df25e797b052c1a97582f868627632a2f4e08959
       url: "https://github.com/alexmercerind/media_kit.git"
     source: git
     version: "0.0.1"
@@ -446,8 +438,8 @@ packages:
     dependency: "direct main"
     description:
       path: media_kit_core_audio
-      ref: "96abc25e30d987632475cf3ebcec6115cbd4048c"
-      resolved-ref: "96abc25e30d987632475cf3ebcec6115cbd4048c"
+      ref: master
+      resolved-ref: df25e797b052c1a97582f868627632a2f4e08959
       url: "https://github.com/alexmercerind/media_kit.git"
     source: git
     version: "0.0.1"
@@ -488,15 +480,6 @@ packages:
       relative: true
     source: path
     version: "1.0.0"
-  msix:
-    dependency: "direct dev"
-    description:
-      path: "."
-      ref: a2c15a8662dd346b2738ea89538179f532d4f437
-      resolved-ref: a2c15a8662dd346b2738ea89538179f532d4f437
-      url: "https://github.com/alexmercerind/msix.git"
-    source: git
-    version: "2.1.2"
   nested:
     dependency: transitive
     description:
@@ -505,14 +488,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  package_config:
-    dependency: transitive
-    description:
-      name: package_config
-      sha256: "1c5b77ccc91e4823a5af61ee74e6b972db1ef98c2ff5a18d3161c982a55448bd"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
   path:
     dependency: "direct main"
     description:
@@ -967,14 +942,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.2.1"
-  yaml:
-    dependency: transitive
-    description:
-      name: yaml
-      sha256: "23812a9b125b48d4007117254bca50abb6c712352927eece9e155207b1db2370"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.1"
   ytm_client:
     dependency: "direct main"
     description:
