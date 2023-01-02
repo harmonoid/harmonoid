@@ -251,6 +251,7 @@ class Language extends Strings with ChangeNotifier {
     PLAYLIST_NAME = map['PLAYLIST_NAME']!;
     PLAYLIST_SINGLE = map['PLAYLIST_SINGLE']!;
     PLAYLIST_TRACKS_SUBHEADER = map['PLAYLIST_TRACKS_SUBHEADER']!;
+    PLAY_ALL = map['PLAY_ALL']!;
     PLAY_INTERNET = map['PLAY_INTERNET']!;
     PLAY_NOW = map['PLAY_NOW']!;
     PLAY_URL = map['PLAY_URL']!;
@@ -324,6 +325,7 @@ class Language extends Strings with ChangeNotifier {
     STARTING_PLAYBACK = map['STARTING_PLAYBACK']!;
     STATS_SUBTITLE = map['STATS_SUBTITLE']!;
     STATS_TITLE = map['STATS_TITLE']!;
+    STICKY_MINIPLAYER = map['STICKY_MINIPLAYER']!;
     STREAM = map['STREAM']!;
     THEME_MODE_DARK = map['THEME_MODE_DARK']!;
     THEME_MODE_LIGHT = map['THEME_MODE_LIGHT']!;

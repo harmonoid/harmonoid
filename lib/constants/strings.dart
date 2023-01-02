@@ -171,6 +171,7 @@ class Strings {
   late String PLAYLIST_NAME;
   late String PLAYLIST_SINGLE;
   late String PLAYLIST_TRACKS_SUBHEADER;
+  late String PLAY_ALL;
   late String PLAY_INTERNET;
   late String PLAY_NOW;
   late String PLAY_URL;
@@ -244,6 +245,7 @@ class Strings {
   late String STARTING_PLAYBACK;
   late String STATS_SUBTITLE;
   late String STATS_TITLE;
+  late String STICKY_MINIPLAYER;
   late String STREAM;
   late String THEME_MODE_DARK;
   late String THEME_MODE_LIGHT;
