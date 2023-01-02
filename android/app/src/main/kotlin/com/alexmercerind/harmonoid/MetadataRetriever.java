@@ -84,9 +84,8 @@ public class MetadataRetriever implements MethodCallHandler {
     @SuppressWarnings("UnusedDeclaration")
     @Override
     public void onMethodCall(@NonNull final MethodCall call, @NonNull final Result result) {
-        // Passed [uri] inside the arguments must be a String interpretation of a URI, which follows
-        // a scheme such as `file://` or `http://` etc. Where as, [albumArtDirectory] must be a direct
-        // path to the file system directory where the cover art will be extracted (not a URI).
+        // Passed [uri] inside the arguments must be a String interpretation of a URI, which follows a scheme such as `file://` or `http://` etc.
+        // Where as, [albumArtDirectory] must be a direct path to the file system directory where the cover art will be extracted (not a URI).
         if (call.method.equals("metadata")) {
             final String[] uri = {call.argument("uri")};
             final String[] albumArtDirectory = {call.argument("albumArtDirectory")};
@@ -97,8 +96,7 @@ public class MetadataRetriever implements MethodCallHandler {
             if (uri[0] != null) {
                 Log.d("Harmonoid", uri[0]);
             }
-            // Run [MediaMetadataRetriever] on another thread. Extracting metadata of a [File] is
-            // a heavy operation & causes substantial jitter in the UI.
+            // Run [MediaMetadataRetriever] on another thread. Extracting metadata of a [File] is a heavy operation & causes substantial jitter in the UI.
             CompletableFuture.runAsync(() -> {
                 final MediaMetadataRetrieverExt retriever = new MediaMetadataRetrieverExt();
                 // Try to get the [FileInputStream] from the passed [uri].
@@ -130,8 +128,7 @@ public class MetadataRetriever implements MethodCallHandler {
                     String trackName = metadata.get("METADATA_KEY_TITLE");
                     // NOTE: Following same contract as Harmonoid. Only used to save the album art locally.
                     if (trackName == null) {
-                        // If [trackName] is found null, we extract a human-understandable [String]
-                        // from the [File]'s original name.
+                        // If [trackName] is found null, we extract a human-understandable [String] from the [File]'s original name.
                         if (uri[0].endsWith("/")) {
                             // Remove trailing `/`.
                             uri[0] = uri[0].substring(0, uri[0].length() - 1);
@@ -180,8 +177,7 @@ public class MetadataRetriever implements MethodCallHandler {
                     try {
                         byte[] embeddedPicture = retriever.getEmbeddedPicture();
                         if (embeddedPicture != null) {
-                            // Recursively create directories to the specified album art [File] &
-                            // also create the [File] if not already present at the location.
+                            // Recursively create directories to the specified album art [File] & also create the [File] if not already present at the location.
                             final boolean mkdirs = new File(albumArtDirectory[0]).mkdirs();
                             if (!file.exists()) {
                                 final boolean created = file.createNewFile();
@@ -206,6 +202,13 @@ public class MetadataRetriever implements MethodCallHandler {
                         e.printStackTrace();
                     }
                     if (waitUntilAlbumArtIsSaved[0]) {
+                        // Adding some voluntary delay to ensure presence of saved album art on storage.
+                        // There seems to be some race condition.
+                        try {
+                            Thread.sleep(100);
+                        } catch(Exception e) {
+                            e.printStackTrace();
+                        }
                         HashMap<String, String> response = metadata;
                         new Handler(Looper.getMainLooper()).post(() -> result.success(response));
                     }
