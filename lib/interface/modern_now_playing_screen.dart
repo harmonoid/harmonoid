@@ -539,7 +539,11 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                           children: [
                             IconButton(
                               splashRadius: 20.0,
-                              onPressed: playback.previous,
+                              onPressed: playback.isFirstTrack &&
+                                      playback.playlistLoopMode !=
+                                          PlaylistLoopMode.loop
+                                  ? null
+                                  : playback.previous,
                               icon: Icon(
                                 Icons.skip_previous,
                               ),
@@ -560,7 +564,11 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                             ),
                             IconButton(
                               splashRadius: 20.0,
-                              onPressed: playback.next,
+                              onPressed: playback.isLastTrack &&
+                                      playback.playlistLoopMode !=
+                                          PlaylistLoopMode.loop
+                                  ? null
+                                  : playback.next,
                               icon: Icon(
                                 Icons.skip_next,
                               ),
