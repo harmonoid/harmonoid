@@ -246,6 +246,8 @@ class Intent {
     final result = await reader.parse(
       uri.toString(),
       albumArtDirectory: Collection.instance.albumArtDirectory,
+      // Ensure that the album art is saved to storage before returning the result on Android.
+      waitUntilAlbumArtIsSaved: true,
       timeout: const Duration(seconds: 1),
     );
     debugPrint(result.toString());

@@ -1,6 +1,6 @@
 /// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
 ///
-/// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
 /// All rights reserved.
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
@@ -157,13 +157,11 @@ class MainActivity : AudioServiceActivity() {
                         intent.data, Intent.FLAG_GRANT_READ_URI_PERMISSION
                     )
                 }
-                // In general, the idea is to copy the file to a local temporary file with unique
-                // URI received through intent, inside app's cache directory.
+                // In general, the idea is to copy the file to a local temporary file with unique URI received through intent, inside app's cache directory.
                 //
                 // Get reference to the InputStream from this content:// URI.
                 val inputStream: InputStream? = contentResolver.openInputStream(intent.data!!)
-                // The cache directory of the application. Equivalent to getExternalStorageDirectory
-                // in package:path_provider of Flutter.
+                // The cache directory of the application. Equivalent to getExternalStorageDirectory in package:path_provider of Flutter.
                 var externalFilesDirAbsolutePath = context.getExternalFilesDir(null)?.absolutePath!!
                 if (externalFilesDirAbsolutePath.endsWith("/")) {
                     externalFilesDirAbsolutePath = externalFilesDirAbsolutePath.substring(
@@ -186,8 +184,7 @@ class MainActivity : AudioServiceActivity() {
                 // Only create/copy the content from the [Intent] if same file does not exist.
                 if (!File(path).exists()) {
                     Log.d("Harmonoid", path)
-                    // Delete the directory where the temporary files are placed. This is because
-                    // some previous intent handling would've resulted in file creations here.
+                    // Delete the directory where the temporary files are placed. This is because some previous intent handling would've resulted in file creations here.
                     // This wastage of space can quickly get out of hands.
                     if (File(intentFilesDirAbsolutePath).exists()
                         && File(intentFilesDirAbsolutePath).isDirectory
