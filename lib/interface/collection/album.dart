@@ -98,8 +98,9 @@ class _AlbumTabState extends State<AlbumTab> {
                             ),
                         itemBuilder: (context, i) => i == 0
                             ? SortBarFixedHolder(
+                                index: kAlbumTabIndex,
                                 child: SortBar(
-                                  tab: 0,
+                                  tab: kAlbumTabIndex,
                                   hover: hover,
                                   fixed: true,
                                 ),
@@ -107,7 +108,7 @@ class _AlbumTabState extends State<AlbumTab> {
                             : data.widgets[i - 1],
                       ),
                       SortBar(
-                        tab: 0,
+                        tab: kAlbumTabIndex,
                         hover: hover,
                         fixed: false,
                       ),
@@ -462,8 +463,9 @@ class _DesktopAlbumArtistTabState extends State<DesktopAlbumArtistTab> {
                       itemExtents,
                   itemBuilder: (context, i) => i == 0
                       ? SortBarFixedHolder(
+                          index: kAlbumTabIndex,
                           child: SortBar(
-                            tab: 0,
+                            tab: kAlbumTabIndex,
                             hover: hover,
                             fixed: true,
                           ),
@@ -471,7 +473,7 @@ class _DesktopAlbumArtistTabState extends State<DesktopAlbumArtistTab> {
                       : children[i - 1],
                 ),
                 SortBar(
-                  tab: 0,
+                  tab: kAlbumTabIndex,
                   hover: hover,
                   fixed: false,
                 ),

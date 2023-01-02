@@ -199,9 +199,11 @@ class _CustomFutureBuilderState<T> extends State<CustomFutureBuilder<T>> {
 }
 
 class SortBarFixedHolder extends StatefulWidget {
+  final int index;
   final Widget child;
   const SortBarFixedHolder({
     Key? key,
+    required this.index,
     required this.child,
   }) : super(key: key);
 
@@ -209,7 +211,8 @@ class SortBarFixedHolder extends StatefulWidget {
 }
 
 class SortBarFixedHolderState extends State<SortBarFixedHolder> {
-  bool hover = false;
+  bool hover0 = false;
+  bool hover1 = false;
 
   @override
   Widget build(BuildContext context) {
@@ -219,6 +222,64 @@ class SortBarFixedHolderState extends State<SortBarFixedHolder> {
         SizedBox(width: 8.0),
         GestureDetector(
           onTap: () {
+            if (widget.index == kAlbumTabIndex) {
+              Playback.instance.open(
+                Collection.instance.albums.expand((e) => e.tracks).toList(),
+              );
+            } else if (widget.index == kTrackTabIndex) {
+              Playback.instance.open(
+                Collection.instance.tracks,
+              );
+            } else if (widget.index == kArtistTabIndex) {
+              Playback.instance.open(
+                Collection.instance.artists.expand((e) => e.tracks).toList(),
+              );
+            } else if (widget.index == kGenreTabIndex) {
+              Playback.instance.open(
+                Collection.instance.genres.expand((e) => e.tracks).toList(),
+              );
+            }
+          },
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            onEnter: (_) => setState(() {
+              hover1 = true;
+            }),
+            onExit: (_) => setState(() {
+              hover1 = false;
+            }),
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 6.0,
+                vertical: 2.0,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.play_arrow,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  const SizedBox(
+                    width: 4.0,
+                  ),
+                  Text(
+                    Language.instance.PLAY_ALL,
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                          color: Theme.of(context).primaryColor,
+                          decoration: hover1
+                              ? TextDecoration.underline
+                              : TextDecoration.none,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 4.0),
+        GestureDetector(
+          onTap: () {
             Playback.instance.open(
               [...Collection.instance.tracks]..shuffle(),
             );
@@ -226,10 +287,10 @@ class SortBarFixedHolderState extends State<SortBarFixedHolder> {
           child: MouseRegion(
             cursor: SystemMouseCursors.click,
             onEnter: (_) => setState(() {
-              hover = true;
+              hover0 = true;
             }),
             onExit: (_) => setState(() {
-              hover = false;
+              hover0 = false;
             }),
             child: Container(
               padding: EdgeInsets.symmetric(
@@ -250,7 +311,7 @@ class SortBarFixedHolderState extends State<SortBarFixedHolder> {
                     Language.instance.SHUFFLE,
                     style: Theme.of(context).textTheme.displaySmall?.copyWith(
                           color: Theme.of(context).primaryColor,
-                          decoration: hover
+                          decoration: hover0
                               ? TextDecoration.underline
                               : TextDecoration.none,
                         ),

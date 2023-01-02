@@ -95,8 +95,9 @@ class _ArtistTabState extends State<ArtistTab> {
                               ),
                           itemBuilder: (context, i) => i == 0
                               ? SortBarFixedHolder(
+                                  index: kArtistTabIndex,
                                   child: SortBar(
-                                    tab: 2,
+                                    tab: kArtistTabIndex,
                                     hover: hover,
                                     fixed: true,
                                   ),
@@ -104,7 +105,7 @@ class _ArtistTabState extends State<ArtistTab> {
                               : data.widgets[i - 1],
                         ),
                         SortBar(
-                          tab: 2,
+                          tab: kArtistTabIndex,
                           hover: hover,
                           fixed: false,
                         ),

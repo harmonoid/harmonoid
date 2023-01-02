@@ -9,6 +9,7 @@
 import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:desktop/desktop.dart' as desktop;
@@ -295,9 +296,41 @@ class _TrackTabState extends State<TrackTab> {
                         ),
                       ),
                       SortBar(
-                        tab: 1,
+                        tab: kTrackTabIndex,
                         fixed: false,
                         hover: hover,
+                      ),
+                      Positioned(
+                        right: 24.0,
+                        bottom: 24.0 + 48.0 + 12.0 + 40.0 + 12.0,
+                        child: FloatingActionButton(
+                          onPressed: () {
+                            Playback.instance.open(Collection.instance.tracks);
+                          },
+                          mini: true,
+                          tooltip: Language.instance.PLAY_ALL,
+                          child: Icon(Icons.play_arrow),
+                          foregroundColor:
+                              Theme.of(context).appBarTheme.iconTheme?.color,
+                          backgroundColor: Theme.of(context).cardColor,
+                        ),
+                      ),
+                      Positioned(
+                        right: 24.0,
+                        bottom: 24.0 + 48.0 + 12.0,
+                        child: FloatingActionButton(
+                          onPressed: () {
+                            Playback.instance.open(
+                              [...Collection.instance.tracks]..shuffle(),
+                            );
+                          },
+                          mini: true,
+                          tooltip: Language.instance.SHUFFLE,
+                          child: Icon(Icons.shuffle),
+                          foregroundColor:
+                              Theme.of(context).appBarTheme.iconTheme?.color,
+                          backgroundColor: Theme.of(context).cardColor,
+                        ),
                       ),
                     ],
                   ),
