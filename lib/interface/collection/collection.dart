@@ -66,9 +66,9 @@ class CollectionScreenState extends State<CollectionScreen>
   bool get wantKeepAlive => true;
 
   FutureOr<void> saveCurrentTab() {
-    // [index.value] at 4 is the [SearchTab] on desktop, which should not be saved in cache as a starting point for the next session.
+    // [index.value] at -1 is the [SearchTab] on desktop, which should not be saved in cache as a starting point for the next session.
     // It is only meant to be accessed via the search [TextField].
-    if (isDesktop && index.value == 4) {
+    if (isDesktop && index.value == -1) {
       return Future.value();
     }
     if (index.value != Configuration.instance.libraryTab) {
@@ -154,7 +154,7 @@ class CollectionScreenState extends State<CollectionScreen>
         ? Scaffold(
             resizeToAvoidBottomInset: false,
             floatingActionButton:
-                index.value != 4 ? RefreshCollectionButton() : null,
+                index.value != -1 ? RefreshCollectionButton() : null,
             body: Stack(
               children: [
                 Container(
@@ -169,13 +169,14 @@ class CollectionScreenState extends State<CollectionScreen>
                       alignment: Alignment.bottomLeft,
                       children: <Widget>[
                         PageTransitionSwitcher(
-                          child: [
-                            AlbumTab(),
-                            TrackTab(),
-                            ArtistTab(),
-                            PlaylistTab(),
-                            SearchTab(query: query),
-                          ][index.value],
+                          child: index.value == -1
+                              ? SearchTab(query: query)
+                              : [
+                                  AlbumTab(),
+                                  TrackTab(),
+                                  ArtistTab(),
+                                  PlaylistTab(),
+                                ][index.value],
                           transitionBuilder:
                               (child, animation, secondaryAnimation) =>
                                   SharedAxisTransition(
@@ -385,7 +386,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                       query.value = value;
                                       if (queryStr.isNotEmpty)
                                         setState(() {
-                                          index.value = 4;
+                                          index.value = -1;
                                         });
                                       node.requestFocus();
                                     },
@@ -414,7 +415,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                         query.value = queryStr;
                                         if (queryStr.isNotEmpty)
                                           setState(() {
-                                            index.value = 4;
+                                            index.value = -1;
                                           });
                                         node.requestFocus();
                                       },

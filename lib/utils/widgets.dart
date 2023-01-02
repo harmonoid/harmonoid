@@ -316,7 +316,7 @@ class _SortBarState extends State<SortBar> {
                 ),
                 items: <PopupMenuEntry>[
                   ...{
-                    0: <PopupMenuItem>[
+                    kAlbumTabIndex: <PopupMenuItem>[
                       CheckedPopupMenuItem(
                         checked:
                             Collection.instance.albumsSort == AlbumsSort.aToZ,
@@ -374,7 +374,7 @@ class _SortBarState extends State<SortBar> {
                         ),
                       ),
                     ],
-                    1: <PopupMenuItem>[
+                    kTrackTabIndex: <PopupMenuItem>[
                       CheckedPopupMenuItem(
                         checked:
                             Collection.instance.tracksSort == TracksSort.aToZ,
@@ -418,7 +418,7 @@ class _SortBarState extends State<SortBar> {
                         ),
                       ),
                     ],
-                    2: <PopupMenuItem>[
+                    kArtistTabIndex: <PopupMenuItem>[
                       CheckedPopupMenuItem(
                         checked:
                             Collection.instance.artistsSort == ArtistsSort.aToZ,
@@ -448,36 +448,6 @@ class _SortBarState extends State<SortBar> {
                         ),
                       ),
                     ],
-                    3: <PopupMenuItem>[
-                      CheckedPopupMenuItem(
-                        checked:
-                            Collection.instance.genresSort == GenresSort.aToZ,
-                        value: GenresSort.aToZ,
-                        padding: EdgeInsets.zero,
-                        child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          dense: true,
-                          title: Text(
-                            Language.instance.A_TO_Z,
-                            style: Theme.of(context).textTheme.headlineMedium,
-                          ),
-                        ),
-                      ),
-                      CheckedPopupMenuItem(
-                        checked: Collection.instance.genresSort ==
-                            GenresSort.dateAdded,
-                        value: GenresSort.dateAdded,
-                        padding: EdgeInsets.zero,
-                        child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          dense: true,
-                          title: Text(
-                            Language.instance.DATE_ADDED,
-                            style: Theme.of(context).textTheme.headlineMedium,
-                          ),
-                        ),
-                      ),
-                    ],
                   }[tab]!,
                 ],
               );
@@ -492,10 +462,6 @@ class _SortBarState extends State<SortBar> {
               if (value is ArtistsSort) {
                 await Collection.instance.sort(artistsSort: value);
                 await Configuration.instance.save(artistsSort: value);
-              }
-              if (value is GenresSort) {
-                await Collection.instance.sort(genresSort: value);
-                await Configuration.instance.save(genresSort: value);
               }
             },
             child: MouseRegion(
@@ -521,7 +487,7 @@ class _SortBarState extends State<SortBar> {
                           ),
                           TextSpan(
                             text: {
-                              0: {
+                              kAlbumTabIndex: {
                                 AlbumsSort.aToZ: Language.instance.A_TO_Z,
                                 AlbumsSort.dateAdded:
                                     Language.instance.DATE_ADDED,
@@ -529,22 +495,17 @@ class _SortBarState extends State<SortBar> {
                                 AlbumsSort.artist:
                                     Language.instance.ALBUM_ARTIST,
                               }[collection.albumsSort]!,
-                              1: {
+                              kTrackTabIndex: {
                                 TracksSort.aToZ: Language.instance.A_TO_Z,
                                 TracksSort.dateAdded:
                                     Language.instance.DATE_ADDED,
                                 TracksSort.year: Language.instance.YEAR,
                               }[collection.tracksSort]!,
-                              2: {
+                              kArtistTabIndex: {
                                 ArtistsSort.aToZ: Language.instance.A_TO_Z,
                                 ArtistsSort.dateAdded:
                                     Language.instance.DATE_ADDED,
                               }[collection.artistsSort]!,
-                              3: {
-                                GenresSort.aToZ: Language.instance.A_TO_Z,
-                                GenresSort.dateAdded:
-                                    Language.instance.DATE_ADDED,
-                              }[collection.genresSort]!,
                             }[tab]!,
                             style: Theme.of(context)
                                 .textTheme
@@ -588,13 +549,11 @@ class _SortBarState extends State<SortBar> {
                 items: <PopupMenuEntry>[
                   CheckedPopupMenuItem(
                     checked: {
-                      0: Collection.instance.albumsOrderType ==
+                      kAlbumTabIndex: Collection.instance.albumsOrderType ==
                           OrderType.ascending,
-                      1: Collection.instance.tracksOrderType ==
+                      kTrackTabIndex: Collection.instance.tracksOrderType ==
                           OrderType.ascending,
-                      2: Collection.instance.artistsOrderType ==
-                          OrderType.ascending,
-                      3: Collection.instance.genresOrderType ==
+                      kArtistTabIndex: Collection.instance.artistsOrderType ==
                           OrderType.ascending,
                     }[tab]!,
                     value: OrderType.ascending,
@@ -610,13 +569,11 @@ class _SortBarState extends State<SortBar> {
                   ),
                   CheckedPopupMenuItem(
                     checked: {
-                      0: Collection.instance.albumsOrderType ==
+                      kAlbumTabIndex: Collection.instance.albumsOrderType ==
                           OrderType.descending,
-                      1: Collection.instance.tracksOrderType ==
+                      kTrackTabIndex: Collection.instance.tracksOrderType ==
                           OrderType.descending,
-                      2: Collection.instance.artistsOrderType ==
-                          OrderType.descending,
-                      3: Collection.instance.genresOrderType ==
+                      kArtistTabIndex: Collection.instance.artistsOrderType ==
                           OrderType.descending,
                     }[tab]!,
                     value: OrderType.descending,
@@ -634,29 +591,23 @@ class _SortBarState extends State<SortBar> {
               );
               if (value is OrderType) {
                 switch (tab) {
-                  case 0:
+                  case kAlbumTabIndex:
                     {
                       await Collection.instance.sort(albumsOrderType: value);
                       await Configuration.instance.save(albumsOrderType: value);
                       break;
                     }
-                  case 1:
+                  case kTrackTabIndex:
                     {
                       await Collection.instance.sort(tracksOrderType: value);
                       await Configuration.instance.save(tracksOrderType: value);
                       break;
                     }
-                  case 2:
+                  case kArtistTabIndex:
                     {
                       await Collection.instance.sort(artistsOrderType: value);
                       await Configuration.instance
                           .save(artistsOrderType: value);
-                      break;
-                    }
-                  case 3:
-                    {
-                      await Collection.instance.sort(genresOrderType: value);
-                      await Configuration.instance.save(genresOrderType: value);
                       break;
                     }
                 }
@@ -685,30 +636,24 @@ class _SortBarState extends State<SortBar> {
                           ),
                           TextSpan(
                             text: {
-                              0: {
+                              kAlbumTabIndex: {
                                 OrderType.ascending:
                                     Language.instance.ASCENDING,
                                 OrderType.descending:
                                     Language.instance.DESCENDING,
                               }[collection.albumsOrderType]!,
-                              1: {
+                              kTrackTabIndex: {
                                 OrderType.ascending:
                                     Language.instance.ASCENDING,
                                 OrderType.descending:
                                     Language.instance.DESCENDING,
                               }[collection.tracksOrderType]!,
-                              2: {
+                              kArtistTabIndex: {
                                 OrderType.ascending:
                                     Language.instance.ASCENDING,
                                 OrderType.descending:
                                     Language.instance.DESCENDING,
                               }[collection.artistsOrderType]!,
-                              3: {
-                                OrderType.ascending:
-                                    Language.instance.ASCENDING,
-                                OrderType.descending:
-                                    Language.instance.DESCENDING,
-                              }[collection.genresOrderType]!,
                             }[tab]!,
                             style: Theme.of(context)
                                 .textTheme
@@ -1851,34 +1796,24 @@ class CollectionSortButton extends StatelessWidget {
             await Collection.instance.sort(artistsSort: value);
             await Configuration.instance.save(artistsSort: value);
           }
-          if (value is GenresSort) {
-            await Collection.instance.sort(genresSort: value);
-            await Configuration.instance.save(genresSort: value);
-          }
           if (value is OrderType) {
             switch (tab) {
-              case 0:
+              case kAlbumTabIndex:
                 {
                   await Collection.instance.sort(albumsOrderType: value);
                   await Configuration.instance.save(albumsOrderType: value);
                   break;
                 }
-              case 1:
+              case kTrackTabIndex:
                 {
                   await Collection.instance.sort(tracksOrderType: value);
                   await Configuration.instance.save(tracksOrderType: value);
                   break;
                 }
-              case 2:
+              case kArtistTabIndex:
                 {
                   await Collection.instance.sort(artistsOrderType: value);
                   await Configuration.instance.save(artistsOrderType: value);
-                  break;
-                }
-              case 3:
-                {
-                  await Collection.instance.sort(genresOrderType: value);
-                  await Configuration.instance.save(genresOrderType: value);
                   break;
                 }
             }
@@ -1886,7 +1821,7 @@ class CollectionSortButton extends StatelessWidget {
         },
         itemBuilder: (context) => [
           ...{
-            0: <PopupMenuItem>[
+            kAlbumTabIndex: <PopupMenuItem>[
               CheckedPopupMenuItem(
                 checked: Collection.instance.albumsSort == AlbumsSort.aToZ,
                 value: AlbumsSort.aToZ,
@@ -1940,7 +1875,7 @@ class CollectionSortButton extends StatelessWidget {
                 ),
               ),
             ],
-            1: <PopupMenuItem>[
+            kTrackTabIndex: <PopupMenuItem>[
               CheckedPopupMenuItem(
                 checked: Collection.instance.tracksSort == TracksSort.aToZ,
                 value: TracksSort.aToZ,
@@ -1981,7 +1916,7 @@ class CollectionSortButton extends StatelessWidget {
                 ),
               ),
             ],
-            2: <PopupMenuItem>[
+            kArtistTabIndex: <PopupMenuItem>[
               CheckedPopupMenuItem(
                 checked: Collection.instance.artistsSort == ArtistsSort.aToZ,
                 value: ArtistsSort.aToZ,
@@ -2010,43 +1945,17 @@ class CollectionSortButton extends StatelessWidget {
                 ),
               ),
             ],
-            3: <PopupMenuItem>[
-              CheckedPopupMenuItem(
-                checked: Collection.instance.genresSort == GenresSort.aToZ,
-                value: GenresSort.aToZ,
-                padding: EdgeInsets.zero,
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
-                  title: Text(
-                    Language.instance.A_TO_Z,
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                ),
-              ),
-              CheckedPopupMenuItem(
-                checked: Collection.instance.genresSort == GenresSort.dateAdded,
-                value: GenresSort.dateAdded,
-                padding: EdgeInsets.zero,
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
-                  title: Text(
-                    Language.instance.DATE_ADDED,
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                ),
-              ),
-            ],
           }[tab]!,
           PopupMenuDivider(),
           ...[
             CheckedPopupMenuItem(
               checked: {
-                0: Collection.instance.albumsOrderType == OrderType.ascending,
-                1: Collection.instance.tracksOrderType == OrderType.ascending,
-                2: Collection.instance.artistsOrderType == OrderType.ascending,
-                3: Collection.instance.genresOrderType == OrderType.ascending,
+                kAlbumTabIndex:
+                    Collection.instance.albumsOrderType == OrderType.ascending,
+                kTrackTabIndex:
+                    Collection.instance.tracksOrderType == OrderType.ascending,
+                kArtistTabIndex:
+                    Collection.instance.artistsOrderType == OrderType.ascending,
               }[tab]!,
               value: OrderType.ascending,
               padding: EdgeInsets.zero,
@@ -2061,10 +1970,12 @@ class CollectionSortButton extends StatelessWidget {
             ),
             CheckedPopupMenuItem(
               checked: {
-                0: Collection.instance.albumsOrderType == OrderType.descending,
-                1: Collection.instance.tracksOrderType == OrderType.descending,
-                2: Collection.instance.artistsOrderType == OrderType.descending,
-                3: Collection.instance.genresOrderType == OrderType.descending,
+                kAlbumTabIndex:
+                    Collection.instance.albumsOrderType == OrderType.descending,
+                kTrackTabIndex:
+                    Collection.instance.tracksOrderType == OrderType.descending,
+                kArtistTabIndex: Collection.instance.artistsOrderType ==
+                    OrderType.descending,
               }[tab]!,
               value: OrderType.descending,
               padding: EdgeInsets.zero,

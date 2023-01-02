@@ -27,8 +27,6 @@ const double kDesktopTileMargin = 16.0;
 const double kDesktopAppBarHeight = 64.0;
 const double kDesktopNowPlayingBarHeight = 84.0;
 
-const double kWindowsScrollDelta = 40.0;
-
 const int kAlbumTileSubTitleThreshold = 2;
 const int kArtistTileSubTitleThreshold = 2;
 
@@ -38,6 +36,18 @@ const double kArtistTileListViewHeight = 72.0 + 1.0;
 const double kDefaultCardElevation = 4.0;
 const double kDefaultAppBarElevation = 4.0;
 const double kDefaultHeavyElevation = 8.0;
+
+const int kAlbumTabIndex = 0;
+const int kTrackTabIndex = 1;
+const int kArtistTabIndex = 2;
+const int kPlaylistTabIndex = 3;
+// TODO(@alexmercerind): Missing implementation.
+const int kGenreTabIndex = -1;
+// TODO(@alexmercerind): Missing implementation.
+const int kFolderTabIndex = -1;
+
+// Not used since Flutter 3.7.x after trackpad smooth scrolling was introduced.
+// const double kWindowsScrollDelta = 40.0;
 
 /// DimensionsHelper
 /// ----------------
