@@ -45,7 +45,7 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/dart_discord_rpc.git
       ref: 48a15a750d9ee50c521a408c466bd681321a38e2
-  uri_parser: ^1.0.0
+  uri_parser: ^2.0.0
   safe_local_storage: ^1.0.0
 
   # Third-party plugins.
@@ -118,6 +118,7 @@ dependency_overrides:
   ffi: 1.1.0
   win32: ^3.0.0
   platform: ^3.1.0
+  uri_parser: ^2.0.0
   permission_handler_platform_interface:
     git:
       url: https://github.com/alexmercerind/flutter-permission-handler.git
