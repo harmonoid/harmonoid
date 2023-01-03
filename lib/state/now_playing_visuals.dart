@@ -25,7 +25,7 @@ class NowPlayingVisuals {
 
   final List<String> preloaded = List.generate(
     kPreloadedNowPlayingVisualsCount,
-    (index) => 'assets/preloaded_visuals/$index.gif',
+    (index) => 'assets/preloaded_visuals/$index.webp',
   );
 
   final List<String> user = <String>[];
