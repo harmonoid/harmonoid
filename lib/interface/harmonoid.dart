@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:math' as math;
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/playback.dart';
@@ -12,6 +12,7 @@ import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/visuals.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/now_playing_color_palette.dart';
+import 'package:harmonoid/utils/keyboard_shortcuts.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class Harmonoid extends StatelessWidget {
@@ -24,13 +25,15 @@ class Harmonoid extends StatelessWidget {
       ),
       builder: (context, _) => Consumer<Visuals>(
         builder: (context, visuals, _) => MultiProvider(
-          builder: (context, _) => MaterialApp(
-            scrollBehavior: const ScrollBehavior(),
-            debugShowCheckedModeBanner: false,
-            theme: visuals.theme,
-            darkTheme: visuals.darkTheme,
-            themeMode: visuals.themeMode,
-            home: Home(),
+          builder: (context, _) => KeyboardShortcutsListener(
+            child: MaterialApp(
+              scrollBehavior: const ScrollBehavior(),
+              debugShowCheckedModeBanner: false,
+              theme: visuals.theme,
+              darkTheme: visuals.darkTheme,
+              themeMode: visuals.themeMode,
+              home: Home(),
+            ),
           ),
           providers: [
             ChangeNotifierProvider(

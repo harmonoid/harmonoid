@@ -1188,8 +1188,7 @@ class ControlPanel extends StatefulWidget {
 
 class _ControlPanelState extends State<ControlPanel> {
   double end = 0.0;
-  bool focused = false;
-  List<TextEditingController> controllers = [
+  final List<TextEditingController> controllers = [
     TextEditingController(
       text: Playback.instance.rate.toStringAsFixed(2),
     ),
@@ -1200,29 +1199,43 @@ class _ControlPanelState extends State<ControlPanel> {
       text: Playback.instance.volume.toInt().toString(),
     ),
   ];
+  final List<FocusNode> nodes = [
+    FocusNode(),
+    FocusNode(),
+    FocusNode(),
+  ];
 
   @override
   void initState() {
     super.initState();
     Playback.instance.addListener(listener);
+    for (final node in nodes) {
+      node.addListener(() {
+        listener();
+      });
+    }
   }
 
   @override
   void dispose() {
     Playback.instance.removeListener(listener);
     controllers.forEach((controller) => controller.dispose());
-
+    nodes.forEach((node) => node.dispose());
     super.dispose();
   }
 
   void listener() {
-    if (!focused) {
+    if (!nodes[0].hasFocus) {
       if (Playback.instance.rate.toStringAsFixed(2) != controllers[0].text) {
         controllers[0].text = Playback.instance.rate.toStringAsFixed(2);
       }
+    }
+    if (!nodes[1].hasFocus) {
       if (Playback.instance.pitch.toStringAsFixed(2) != controllers[1].text) {
         controllers[1].text = Playback.instance.pitch.toStringAsFixed(2);
       }
+    }
+    if (!nodes[2].hasFocus) {
       if (Playback.instance.volume.toInt().toString() != controllers[2].text) {
         controllers[2].text = Playback.instance.volume.toInt().toString();
       }
@@ -1355,8 +1368,9 @@ class _ControlPanelState extends State<ControlPanel> {
                                 Container(
                                   width: 42.0,
                                   height: 32.0,
-                                  child: TextField(
+                                  child: CustomTextField(
                                     controller: controllers[0],
+                                    focusNode: nodes[0],
                                     scrollPhysics:
                                         NeverScrollableScrollPhysics(),
                                     inputFormatters: <TextInputFormatter>[
@@ -1458,8 +1472,9 @@ class _ControlPanelState extends State<ControlPanel> {
                                 Container(
                                   width: 42.0,
                                   height: 32.0,
-                                  child: TextField(
+                                  child: CustomTextField(
                                     controller: controllers[1],
+                                    focusNode: nodes[1],
                                     inputFormatters: <TextInputFormatter>[
                                       FilteringTextInputFormatter.allow(
                                           RegExp(r'[0-9]|.')),
@@ -1569,8 +1584,9 @@ class _ControlPanelState extends State<ControlPanel> {
                                 Container(
                                   width: 42.0,
                                   height: 32.0,
-                                  child: TextField(
+                                  child: CustomTextField(
                                     controller: controllers[2],
+                                    focusNode: nodes[2],
                                     inputFormatters: <TextInputFormatter>[
                                       FilteringTextInputFormatter.allow(
                                           RegExp(r'[0-9]|')),
@@ -1710,8 +1726,9 @@ class _ControlPanelState extends State<ControlPanel> {
                     Container(
                       width: 52.0,
                       height: 38.0,
-                      child: TextField(
+                      child: CustomTextField(
                         controller: controllers[0],
+                        focusNode: nodes[0],
                         scrollPhysics: NeverScrollableScrollPhysics(),
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.allow(RegExp(r'[0-9]|.')),
@@ -1792,8 +1809,9 @@ class _ControlPanelState extends State<ControlPanel> {
                     Container(
                       width: 52.0,
                       height: 38.0,
-                      child: TextField(
+                      child: CustomTextField(
                         controller: controllers[1],
+                        focusNode: nodes[1],
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.allow(RegExp(r'[0-9]|.')),
                         ],
@@ -1882,8 +1900,9 @@ class _ControlPanelState extends State<ControlPanel> {
                       Container(
                         width: 52.0,
                         height: 38.0,
-                        child: TextField(
+                        child: CustomTextField(
                           controller: controllers[2],
+                          focusNode: nodes[2],
                           inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.allow(
                                 RegExp(r'[0-9]|')),
