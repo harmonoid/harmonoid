@@ -2280,7 +2280,7 @@ class MiniNowPlayingBarRefreshCollectionButtonState
                                             CrossAxisAlignment.stretch,
                                         children: [
                                           const SizedBox(height: 4.0),
-                                          TextField(
+                                          CustomTextField(
                                             textCapitalization:
                                                 TextCapitalization.words,
                                             textInputAction:

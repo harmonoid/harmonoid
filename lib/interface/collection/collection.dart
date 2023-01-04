@@ -67,7 +67,7 @@ class CollectionScreenState extends State<CollectionScreen>
 
   FutureOr<void> saveCurrentTab() {
     // [index.value] at -1 is the [SearchTab] on desktop, which should not be saved in cache as a starting point for the next session.
-    // It is only meant to be accessed via the search [TextField].
+    // It is only meant to be accessed via the search [CustomTextField].
     if (isDesktop && index.value == -1) {
       return Future.value();
     }
@@ -376,7 +376,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                     bottom: 0.0,
                                   ),
                                   padding: EdgeInsets.only(top: 2.0),
-                                  child: TextField(
+                                  child: CustomTextField(
                                     focusNode: node,
                                     cursorWidth: 1.0,
                                     onChanged: (value) {

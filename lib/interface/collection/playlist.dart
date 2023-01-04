@@ -95,7 +95,7 @@ class PlaylistTab extends StatelessWidget {
                                   width: 360.0,
                                   alignment: Alignment.center,
                                   padding: const EdgeInsets.only(top: 2.0),
-                                  child: TextField(
+                                  child: CustomTextField(
                                     autofocus: true,
                                     controller: _controller,
                                     cursorWidth: 1.0,
@@ -436,7 +436,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                   width: 280.0,
                   alignment: Alignment.center,
                   padding: const EdgeInsets.only(top: 2.0),
-                  child: TextFormField(
+                  child: CustomTextFormField(
                     initialValue: widget.playlist.name,
                     autofocus: true,
                     cursorWidth: 1.0,
@@ -515,7 +515,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                         const SizedBox(height: 4.0),
                         Form(
                           key: formKey,
-                          child: TextFormField(
+                          child: CustomTextFormField(
                             initialValue: widget.playlist.name,
                             autofocus: true,
                             autocorrect: false,

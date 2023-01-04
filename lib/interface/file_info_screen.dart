@@ -138,7 +138,7 @@ class FileInfoScreen extends StatefulWidget {
                             padding: EdgeInsets.only(top: 2.0),
                             child: Form(
                               key: formKey,
-                              child: TextFormField(
+                              child: CustomTextFormField(
                                 validator: (value) {
                                   final parser = URIParser(value);
                                   if (!parser.validate()) {
@@ -212,7 +212,7 @@ class FileInfoScreen extends StatefulWidget {
                               const SizedBox(height: 4.0),
                               Form(
                                 key: formKey,
-                                child: TextFormField(
+                                child: CustomTextFormField(
                                   autofocus: true,
                                   autocorrect: false,
                                   validator: (value) {

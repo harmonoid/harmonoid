@@ -14,6 +14,7 @@ import 'package:flutter/material.dart'
     hide ReorderableDragStartListener, Intent;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uri_parser/uri_parser.dart';
@@ -31,6 +32,7 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/keyboard_shortcuts.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/interface/file_info_screen.dart';
@@ -195,6 +197,150 @@ class _CustomFutureBuilderState<T> extends State<CustomFutureBuilder<T>> {
     return data == null
         ? widget.loadingBuilder(context)
         : widget.builder(context, data);
+  }
+}
+
+/// Wraps vanilla [TextField] inside [KeyboardShortcutsInterceptor] to prevent keyboard shortcuts from being triggered while the text field is focused.
+class CustomTextField extends StatelessWidget {
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final double? cursorWidth;
+  final void Function(String)? onChanged;
+  final void Function(String)? onSubmitted;
+  final void Function()? onEditingComplete;
+  final InputDecoration? decoration;
+  final TextAlignVertical? textAlignVertical;
+  final bool? autofocus;
+  final bool? autocorrect;
+  final bool? readOnly;
+  final TextStyle? style;
+  final TextInputType? keyboardType;
+  final TextCapitalization? textCapitalization;
+  final TextInputAction? textInputAction;
+  final List<TextInputFormatter>? inputFormatters;
+  final ScrollPhysics? scrollPhysics;
+  final TextAlign? textAlign;
+  const CustomTextField({
+    Key? key,
+    this.controller,
+    this.focusNode,
+    this.cursorWidth,
+    this.onChanged,
+    this.onSubmitted,
+    this.onEditingComplete,
+    this.decoration,
+    this.textAlignVertical,
+    this.autofocus,
+    this.autocorrect,
+    this.readOnly,
+    this.style,
+    this.keyboardType,
+    this.textCapitalization,
+    this.textInputAction,
+    this.inputFormatters,
+    this.scrollPhysics,
+    this.textAlign,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyboardShortcutsInterceptor(
+      child: TextField(
+        controller: controller,
+        focusNode: focusNode,
+        cursorWidth: cursorWidth ?? 2.0,
+        onChanged: onChanged,
+        onSubmitted: onSubmitted,
+        onEditingComplete: onEditingComplete,
+        decoration: decoration,
+        textAlignVertical: textAlignVertical,
+        autofocus: autofocus ?? false,
+        autocorrect: autocorrect ?? true,
+        readOnly: readOnly ?? false,
+        style: style,
+        keyboardType: keyboardType,
+        textCapitalization: textCapitalization ?? TextCapitalization.none,
+        textInputAction: textInputAction,
+        inputFormatters: inputFormatters,
+        scrollPhysics: scrollPhysics,
+        textAlign: textAlign ?? TextAlign.start,
+      ),
+    );
+  }
+}
+
+/// Wraps vanilla [TextFormField] inside [KeyboardShortcutsInterceptor] to prevent keyboard shortcuts from being triggered while the text field is focused.
+class CustomTextFormField extends StatelessWidget {
+  final String? initialValue;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final double? cursorWidth;
+  final String? Function(String?)? validator;
+  final void Function(String)? onChanged;
+  final void Function(String)? onFieldSubmitted;
+  final void Function()? onEditingComplete;
+  final InputDecoration? decoration;
+  final TextAlignVertical? textAlignVertical;
+  final bool? autofocus;
+  final bool? autocorrect;
+  final bool? readOnly;
+  final TextStyle? style;
+  final TextInputType? keyboardType;
+  final TextCapitalization? textCapitalization;
+  final TextInputAction? textInputAction;
+  final List<TextInputFormatter>? inputFormatters;
+  final ScrollPhysics? scrollPhysics;
+  final TextAlign? textAlign;
+  const CustomTextFormField({
+    Key? key,
+    this.initialValue,
+    this.controller,
+    this.focusNode,
+    this.cursorWidth,
+    this.validator,
+    this.onChanged,
+    this.onFieldSubmitted,
+    this.onEditingComplete,
+    this.decoration,
+    this.textAlignVertical,
+    this.autofocus,
+    this.autocorrect,
+    this.readOnly,
+    this.style,
+    this.keyboardType,
+    this.textCapitalization,
+    this.textInputAction,
+    this.inputFormatters,
+    this.scrollPhysics,
+    this.textAlign,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyboardShortcutsInterceptor(
+      child: TextFormField(
+        initialValue: initialValue,
+        controller: controller,
+        focusNode: focusNode,
+        cursorWidth: cursorWidth ?? 2.0,
+        validator: validator,
+        onChanged: onChanged,
+        onFieldSubmitted: onFieldSubmitted,
+        onEditingComplete: onEditingComplete,
+        decoration: decoration,
+        textAlignVertical: textAlignVertical,
+        autofocus: autofocus ?? false,
+        autocorrect: autocorrect ?? true,
+        readOnly: readOnly ?? false,
+        style: style,
+        keyboardType: keyboardType,
+        textCapitalization: textCapitalization ?? TextCapitalization.none,
+        textInputAction: textInputAction,
+        inputFormatters: inputFormatters,
+        scrollPhysics: scrollPhysics,
+        textAlign: textAlign ?? TextAlign.start,
+      ),
+    );
   }
 }
 
@@ -2594,7 +2740,7 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                             child: Focus(
                               child: Form(
                                 key: formKey,
-                                child: TextFormField(
+                                child: CustomTextFormField(
                                   autofocus: true,
                                   cursorWidth: 1.0,
                                   onChanged: (value) => input = value,
@@ -3009,7 +3155,7 @@ class _MobileAppBarOverflowButtonState
                                       const SizedBox(height: 4.0),
                                       Form(
                                         key: formKey,
-                                        child: TextFormField(
+                                        child: CustomTextFormField(
                                           autofocus: true,
                                           autocorrect: false,
                                           validator: (value) {

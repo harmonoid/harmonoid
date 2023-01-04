@@ -104,6 +104,8 @@ class SearchTabState extends State<SearchTab> {
           resizeToAvoidBottomInset: false,
           body: albums.isNotEmpty || artists.isNotEmpty || tracks.isNotEmpty
               ? CustomListView(
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.manual,
                   children: <Widget>[
                         if (albums.isNotEmpty)
                           Row(

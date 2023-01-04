@@ -987,7 +987,7 @@ InputDecoration inputDecoration(
   Color? fillColor,
 }) {
   return InputDecoration(
-    // Having a [suffixIcon] keeps the [TextField]'s content (label / text)
+    // Having a [suffixIcon] keeps the [CustomTextField]'s content (label / text)
     // centered for some reason at all heights. So, this is a good solution.
     suffixIcon: trailingIcon == null
         ? const SizedBox(height: 48.0)

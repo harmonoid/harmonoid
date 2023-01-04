@@ -282,7 +282,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                                 maxWidth: 360.0,
                                                 maxHeight: 40.0,
                                               ),
-                                              child: TextFormField(
+                                              child: CustomTextFormField(
                                                 initialValue: e.value == null
                                                     ? null
                                                     : e.value.toString(),
@@ -626,7 +626,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                           constraints: const BoxConstraints(
                                             maxHeight: 44.0,
                                           ),
-                                          child: TextFormField(
+                                          child: CustomTextFormField(
                                             initialValue: e.value == null
                                                 ? null
                                                 : e.value.toString(),

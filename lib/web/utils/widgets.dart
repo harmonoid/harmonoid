@@ -15,8 +15,8 @@ import 'package:substring_highlight/substring_highlight.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/interface/settings/about.dart';
@@ -155,7 +155,7 @@ class _WebSearchBarState extends State<WebSearchBar> {
             ),
             padding: EdgeInsets.only(top: 2.0),
             child: Focus(
-              child: TextField(
+              child: CustomTextField(
                 autofocus: isDesktop,
                 cursorWidth: 1.0,
                 focusNode: node,
@@ -272,7 +272,7 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
                   margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
                   padding: EdgeInsets.only(top: 2.0),
                   child: Focus(
-                    child: TextField(
+                    child: CustomTextField(
                       autofocus: true,
                       onChanged: (value) {
                         playlist?.name = value;
@@ -397,7 +397,7 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
           margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
           padding: EdgeInsets.only(top: 2.0),
           child: Focus(
-            child: TextField(
+            child: CustomTextField(
               autofocus: true,
               controller: _controller,
               cursorWidth: 1.0,
@@ -534,7 +534,7 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const SizedBox(height: 4.0),
-                    TextField(
+                    CustomTextField(
                       textCapitalization: TextCapitalization.none,
                       keyboardType: TextInputType.name,
                       textInputAction: TextInputAction.done,
@@ -689,7 +689,7 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: 4.0),
-          TextField(
+          CustomTextField(
             textCapitalization: TextCapitalization.none,
             keyboardType: TextInputType.url,
             textInputAction: TextInputAction.done,
