@@ -115,7 +115,7 @@ Future<void> main(List<String> args) async {
       // Android 13 or higher.
       else {
         if (await Permission.audio.isDenied ||
-            await Permission.storage.isPermanentlyDenied) {
+            await Permission.audio.isPermanentlyDenied) {
           final state = await Permission.audio.request();
           if (!state.isGranted) {
             await SystemNavigator.pop(
