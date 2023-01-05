@@ -107,6 +107,7 @@ class Configuration extends ConfigurationKeys {
     Set<Directory>? collectionDirectories,
     LanguageData? language,
     ThemeMode? themeMode,
+    ThemeMode? themeModeModern,
     bool? automaticAccent,
     bool? notificationLyrics,
     List<String>? collectionSearchRecent,
@@ -123,6 +124,32 @@ class Configuration extends ConfigurationKeys {
     bool? discordRPC,
     double? highlightedLyricsSize,
     double? unhighlightedLyricsSize,
+    double? trackThumbnailSizeinList,
+    double? trackListTileHeight,
+    double? albumThumbnailSizeinList,
+    double? albumListTileHeight,
+    double? queueSheetMinHeight,
+    double? queueSheetMaxHeight,
+    double? nowPlayingImageContainerHeight,
+    double? borderRadiusMultiplier,
+    double? fontScaleFactor,
+    String? dateTimeFormat,
+    bool? hourFormat12,
+    String? trackTileFirstRowFirstItem,
+    String? trackTileFirstRowSecondItem,
+    String? trackTileFirstRowThirdItem,
+    String? trackTileSecondRowFirstItem,
+    String? trackTileSecondRowSecondItem,
+    String? trackTileSecondRowThirdItem,
+    bool? trackTileDisplayThirdItemInRows,
+    bool? trackTileDisplayThirdRow,
+    String? trackTileThirdRowFirstItem,
+    String? trackTileThirdRowSecondItem,
+    String? trackTileThirdRowThirdItem,
+    String? trackTileRightFirstItem,
+    String? trackTileRightSecondItem,
+    String? trackTileSeparator,
+    int? searchResultsPlayMode,
     AlbumsSort? albumsSort,
     TracksSort? tracksSort,
     ArtistsSort? artistsSort,
@@ -136,7 +163,16 @@ class Configuration extends ConfigurationKeys {
     bool? useLRCFromTrackDirectory,
     bool? lookupForFallbackAlbumArt,
     bool? displayAudioFormat,
+    bool? isModernLayout,
     bool? stickyMiniplayer,
+    bool? enableVolumeFadeOnPlayPause,
+    bool? displayTrackNumberinAlbumPage,
+    bool? albumCardTopRightDate,
+    bool? forceSquaredTrackThumbnail,
+    bool? forceSquaredAlbumThumbnail,
+    bool? useAlbumStaggeredGridView,
+    bool? enableBlurEffect,
+    bool? enableGlowEffect,
     bool? mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen,
     bool? mobileEnableNowPlayingScreenRippleEffect,
     int? mobileAlbumsGridSize,
@@ -155,6 +191,9 @@ class Configuration extends ConfigurationKeys {
     }
     if (themeMode != null) {
       this.themeMode = themeMode;
+    }
+    if (themeModeModern != null) {
+      this.themeModeModern = themeModeModern;
     }
     if (collectionSearchRecent != null) {
       this.collectionSearchRecent = collectionSearchRecent;
@@ -205,6 +244,85 @@ class Configuration extends ConfigurationKeys {
     if (unhighlightedLyricsSize != null) {
       this.unhighlightedLyricsSize = unhighlightedLyricsSize;
     }
+    if (trackThumbnailSizeinList != null) {
+      this.trackThumbnailSizeinList = trackThumbnailSizeinList;
+    }
+    if (trackListTileHeight != null) {
+      this.trackListTileHeight = trackListTileHeight;
+    }
+
+    if (albumThumbnailSizeinList != null) {
+      this.albumThumbnailSizeinList = albumThumbnailSizeinList;
+    }
+    if (albumListTileHeight != null) {
+      this.albumListTileHeight = albumListTileHeight;
+    }
+    if (queueSheetMinHeight != null) {
+      this.queueSheetMinHeight = queueSheetMinHeight;
+    }
+    if (queueSheetMaxHeight != null) {
+      this.queueSheetMaxHeight = queueSheetMaxHeight;
+    }
+    if (nowPlayingImageContainerHeight != null) {
+      this.nowPlayingImageContainerHeight = nowPlayingImageContainerHeight;
+    }
+    if (borderRadiusMultiplier != null) {
+      this.borderRadiusMultiplier = borderRadiusMultiplier;
+    }
+    if (fontScaleFactor != null) {
+      this.fontScaleFactor = fontScaleFactor;
+    }
+    if (dateTimeFormat != null) {
+      this.dateTimeFormat = dateTimeFormat;
+    }
+    if (hourFormat12 != null) {
+      this.hourFormat12 = hourFormat12;
+    }
+    if (trackTileFirstRowFirstItem != null) {
+      this.trackTileFirstRowFirstItem = trackTileFirstRowFirstItem;
+    }
+    if (trackTileFirstRowSecondItem != null) {
+      this.trackTileFirstRowSecondItem = trackTileFirstRowSecondItem;
+    }
+    if (trackTileFirstRowThirdItem != null) {
+      this.trackTileFirstRowThirdItem = trackTileFirstRowThirdItem;
+    }
+    if (trackTileSecondRowFirstItem != null) {
+      this.trackTileSecondRowFirstItem = trackTileSecondRowFirstItem;
+    }
+    if (trackTileSecondRowSecondItem != null) {
+      this.trackTileSecondRowSecondItem = trackTileSecondRowSecondItem;
+    }
+    if (trackTileSecondRowThirdItem != null) {
+      this.trackTileSecondRowThirdItem = trackTileSecondRowThirdItem;
+    }
+    if (trackTileDisplayThirdItemInRows != null) {
+      this.trackTileDisplayThirdItemInRows = trackTileDisplayThirdItemInRows;
+    }
+    if (trackTileDisplayThirdRow != null) {
+      this.trackTileDisplayThirdRow = trackTileDisplayThirdRow;
+    }
+    if (trackTileThirdRowFirstItem != null) {
+      this.trackTileThirdRowFirstItem = trackTileThirdRowFirstItem;
+    }
+    if (trackTileThirdRowSecondItem != null) {
+      this.trackTileThirdRowSecondItem = trackTileThirdRowSecondItem;
+    }
+    if (trackTileThirdRowThirdItem != null) {
+      this.trackTileThirdRowThirdItem = trackTileThirdRowThirdItem;
+    }
+    if (trackTileRightFirstItem != null) {
+      this.trackTileRightFirstItem = trackTileRightFirstItem;
+    }
+    if (trackTileRightSecondItem != null) {
+      this.trackTileRightSecondItem = trackTileRightSecondItem;
+    }
+    if (trackTileSeparator != null) {
+      this.trackTileSeparator = trackTileSeparator;
+    }
+    if (searchResultsPlayMode != null) {
+      this.searchResultsPlayMode = searchResultsPlayMode;
+    }
     if (albumsSort != null) {
       this.albumsSort = albumsSort;
     }
@@ -244,8 +362,35 @@ class Configuration extends ConfigurationKeys {
     if (displayAudioFormat != null) {
       this.displayAudioFormat = displayAudioFormat;
     }
+    if (isModernLayout != null) {
+      this.isModernLayout = isModernLayout;
+    }
     if (stickyMiniplayer != null) {
       this.stickyMiniplayer = stickyMiniplayer;
+    }
+    if (enableVolumeFadeOnPlayPause != null) {
+      this.enableVolumeFadeOnPlayPause = enableVolumeFadeOnPlayPause;
+    }
+    if (displayTrackNumberinAlbumPage != null) {
+      this.displayTrackNumberinAlbumPage = displayTrackNumberinAlbumPage;
+    }
+    if (albumCardTopRightDate != null) {
+      this.albumCardTopRightDate = albumCardTopRightDate;
+    }
+    if (forceSquaredTrackThumbnail != null) {
+      this.forceSquaredTrackThumbnail = forceSquaredTrackThumbnail;
+    }
+    if (forceSquaredAlbumThumbnail != null) {
+      this.forceSquaredAlbumThumbnail = forceSquaredAlbumThumbnail;
+    }
+    if (useAlbumStaggeredGridView != null) {
+      this.useAlbumStaggeredGridView = useAlbumStaggeredGridView;
+    }
+    if (enableBlurEffect != null) {
+      this.enableBlurEffect = enableBlurEffect;
+    }
+    if (enableGlowEffect != null) {
+      this.enableGlowEffect = enableGlowEffect;
     }
     if (mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen != null) {
       this.mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen =
@@ -286,6 +431,7 @@ class Configuration extends ConfigurationKeys {
             .cast<String>(),
         'language': this.language.toJson(),
         'themeMode': this.themeMode.index,
+        'themeModeModern': this.themeModeModern.index,
         'automaticAccent': this.automaticAccent,
         'notificationLyrics': this.notificationLyrics,
         'collectionSearchRecent': this.collectionSearchRecent,
@@ -303,6 +449,32 @@ class Configuration extends ConfigurationKeys {
         'discordRPC': this.discordRPC,
         'highlightedLyricsSize': this.highlightedLyricsSize,
         'unhighlightedLyricsSize': this.unhighlightedLyricsSize,
+        'trackThumbnailSizeinList': this.trackThumbnailSizeinList,
+        'trackListTileHeight': this.trackListTileHeight,
+        'albumThumbnailSizeinList': this.albumThumbnailSizeinList,
+        'albumListTileHeight': this.albumListTileHeight,
+        'queueSheetMinHeight': this.queueSheetMinHeight,
+        'queueSheetMaxHeight': this.queueSheetMaxHeight,
+        'nowPlayingImageContainerHeight': this.nowPlayingImageContainerHeight,
+        'borderRadiusMultiplier': this.borderRadiusMultiplier,
+        'fontScaleFactor': this.fontScaleFactor,
+        'dateTimeFormat': this.dateTimeFormat,
+        'hourFormat12': this.hourFormat12,
+        'trackTileFirstRowFirstItem': this.trackTileFirstRowFirstItem,
+        'trackTileFirstRowSecondItem': this.trackTileFirstRowSecondItem,
+        'trackTileFirstRowThirdItem': this.trackTileFirstRowThirdItem,
+        'trackTileSecondRowFirstItem': this.trackTileSecondRowFirstItem,
+        'trackTileSecondRowSecondItem': this.trackTileSecondRowSecondItem,
+        'trackTileSecondRowThirdItem': this.trackTileSecondRowThirdItem,
+        'trackTileDisplayThirdItemInRows': this.trackTileDisplayThirdItemInRows,
+        'trackTileDisplayThirdRow': this.trackTileDisplayThirdRow,
+        'trackTileThirdRowFirstItem': this.trackTileThirdRowFirstItem,
+        'trackTileThirdRowSecondItem': this.trackTileThirdRowSecondItem,
+        'trackTileThirdRowThirdItem': this.trackTileThirdRowThirdItem,
+        'trackTileRightFirstItem': this.trackTileRightFirstItem,
+        'trackTileRightSecondItem': this.trackTileRightSecondItem,
+        'trackTileSeparator': this.trackTileSeparator,
+        'searchResultsPlayMode': this.searchResultsPlayMode,
         'albumsSort': this.albumsSort.index,
         'tracksSort': this.tracksSort.index,
         'artistsSort': this.artistsSort.index,
@@ -316,7 +488,16 @@ class Configuration extends ConfigurationKeys {
         'useLRCFromTrackDirectory': this.useLRCFromTrackDirectory,
         'lookupForFallbackAlbumArt': this.lookupForFallbackAlbumArt,
         'displayAudioFormat': this.displayAudioFormat,
+        'isModernLayout': this.isModernLayout,
         'stickyMiniplayer': this.stickyMiniplayer,
+        'enableVolumeFadeOnPlayPause': this.enableVolumeFadeOnPlayPause,
+        'displayTrackNumberinAlbumPage': this.displayTrackNumberinAlbumPage,
+        'albumCardTopRightDate': this.albumCardTopRightDate,
+        'forceSquaredTrackThumbnail': this.forceSquaredTrackThumbnail,
+        'forceSquaredAlbumThumbnail': this.forceSquaredAlbumThumbnail,
+        'useAlbumStaggeredGridView': this.useAlbumStaggeredGridView,
+        'enableBlurEffect': this.enableBlurEffect,
+        'enableGlowEffect': this.enableGlowEffect,
         'mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen':
             this.mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen,
         'mobileEnableNowPlayingScreenRippleEffect':
@@ -356,6 +537,7 @@ class Configuration extends ConfigurationKeys {
         .toSet();
     language = LanguageData.fromJson(current['language']);
     themeMode = ThemeMode.values[current['themeMode']];
+    themeModeModern = ThemeMode.values[current['themeModeModern']];
     automaticAccent = current['automaticAccent'];
     notificationLyrics = current['notificationLyrics'];
     collectionSearchRecent = current['collectionSearchRecent'].cast<String>();
@@ -373,6 +555,33 @@ class Configuration extends ConfigurationKeys {
     discordRPC = current['discordRPC'];
     highlightedLyricsSize = current['highlightedLyricsSize'];
     unhighlightedLyricsSize = current['unhighlightedLyricsSize'];
+    trackThumbnailSizeinList = current['trackThumbnailSizeinList'];
+    trackListTileHeight = current['trackListTileHeight'];
+    albumThumbnailSizeinList = current['albumThumbnailSizeinList'];
+    albumListTileHeight = current['albumListTileHeight'];
+    queueSheetMinHeight = current['queueSheetMinHeight'];
+    queueSheetMaxHeight = current['queueSheetMaxHeight'];
+    nowPlayingImageContainerHeight = current['nowPlayingImageContainerHeight'];
+    borderRadiusMultiplier = current['borderRadiusMultiplier'];
+    fontScaleFactor = current['fontScaleFactor'];
+    dateTimeFormat = current['dateTimeFormat'];
+    hourFormat12 = current['hourFormat12'];
+    trackTileFirstRowFirstItem = current['trackTileFirstRowFirstItem'];
+    trackTileFirstRowSecondItem = current['trackTileFirstRowSecondItem'];
+    trackTileFirstRowThirdItem = current['trackTileFirstRowThirdItem'];
+    trackTileSecondRowFirstItem = current['trackTileSecondRowFirstItem'];
+    trackTileSecondRowSecondItem = current['trackTileSecondRowSecondItem'];
+    trackTileSecondRowThirdItem = current['trackTileSecondRowThirdItem'];
+    trackTileDisplayThirdItemInRows =
+        current['trackTileDisplayThirdItemInRows'];
+    trackTileDisplayThirdRow = current['trackTileDisplayThirdRow'];
+    trackTileThirdRowFirstItem = current['trackTileThirdRowFirstItem'];
+    trackTileThirdRowSecondItem = current['trackTileThirdRowSecondItem'];
+    trackTileThirdRowThirdItem = current['trackTileThirdRowThirdItem'];
+    trackTileRightFirstItem = current['trackTileRightFirstItem'];
+    trackTileRightSecondItem = current['trackTileRightSecondItem'];
+    trackTileSeparator = current['trackTileSeparator'];
+    searchResultsPlayMode = current['searchResultsPlayMode'];
     albumsSort = AlbumsSort.values[current['albumsSort']];
     tracksSort = TracksSort.values[current['tracksSort']];
     artistsSort = ArtistsSort.values[current['artistsSort']];
@@ -386,7 +595,16 @@ class Configuration extends ConfigurationKeys {
     useLRCFromTrackDirectory = current['useLRCFromTrackDirectory'];
     lookupForFallbackAlbumArt = current['lookupForFallbackAlbumArt'];
     displayAudioFormat = current['displayAudioFormat'];
+    isModernLayout = current['isModernLayout'];
     stickyMiniplayer = current['stickyMiniplayer'];
+    enableVolumeFadeOnPlayPause = current['enableVolumeFadeOnPlayPause'];
+    displayTrackNumberinAlbumPage = current['displayTrackNumberinAlbumPage'];
+    albumCardTopRightDate = current['albumCardTopRightDate'];
+    forceSquaredTrackThumbnail = current['forceSquaredTrackThumbnail'];
+    forceSquaredAlbumThumbnail = current['forceSquaredAlbumThumbnail'];
+    useAlbumStaggeredGridView = current['useAlbumStaggeredGridView'];
+    enableBlurEffect = current['enableBlurEffect'];
+    enableGlowEffect = current['enableGlowEffect'];
     mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen =
         current['mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen'];
     mobileEnableNowPlayingScreenRippleEffect =
@@ -468,6 +686,7 @@ class Configuration extends ConfigurationKeys {
               'country': 'United States',
             },
             'themeMode': isDesktop ? 1 : 0,
+            'themeModeModern': isDesktop ? 1 : 0,
             'automaticAccent': false,
             'notificationLyrics': true,
             'collectionSearchRecent': const [],
@@ -484,6 +703,32 @@ class Configuration extends ConfigurationKeys {
             'discordRPC': true,
             'highlightedLyricsSize': 24.0,
             'unhighlightedLyricsSize': 14.0,
+            'trackThumbnailSizeinList': 70.0,
+            'trackListTileHeight': 70.0,
+            'albumThumbnailSizeinList': 90.0,
+            'albumListTileHeight': 90.0,
+            'queueSheetMinHeight': 25.0,
+            'queueSheetMaxHeight': 500.0,
+            'nowPlayingImageContainerHeight': 400.0,
+            'borderRadiusMultiplier': 1.0,
+            'fontScaleFactor': 1.0,
+            'dateTimeFormat': 'MMM yyyy',
+            'hourFormat12': true,
+            'trackTileFirstRowFirstItem': 'trackName',
+            'trackTileFirstRowSecondItem': 'none',
+            'trackTileFirstRowThirdItem': 'none',
+            'trackTileSecondRowFirstItem': 'artistNames',
+            'trackTileSecondRowSecondItem': 'albumName',
+            'trackTileSecondRowThirdItem': 'none',
+            'trackTileDisplayThirdItemInRows': false,
+            'trackTileDisplayThirdRow': false,
+            'trackTileThirdRowFirstItem': 'none',
+            'trackTileThirdRowSecondItem': 'none',
+            'trackTileThirdRowThirdItem': 'none',
+            'trackTileRightFirstItem': 'duration',
+            'trackTileRightSecondItem': 'none',
+            'trackTileSeparator': '•',
+            'searchResultsPlayMode': 1,
             'albumsSort': isDesktop ? 3 : 0,
             'tracksSort': 0,
             'artistsSort': 0,
@@ -497,7 +742,16 @@ class Configuration extends ConfigurationKeys {
             'useLRCFromTrackDirectory': false,
             'lookupForFallbackAlbumArt': false,
             'displayAudioFormat': true,
+            'isModernLayout': false,
             'stickyMiniplayer': false,
+            'enableVolumeFadeOnPlayPause': true,
+            'displayTrackNumberinAlbumPage': true,
+            'albumCardTopRightDate': true,
+            'forceSquaredTrackThumbnail': false,
+            'forceSquaredAlbumThumbnail': false,
+            'useAlbumStaggeredGridView': false,
+            'enableBlurEffect': true,
+            'enableGlowEffect': true,
             'mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen': true,
             'mobileEnableNowPlayingScreenRippleEffect': true,
             'mobileAlbumsGridSize': 2,
@@ -510,7 +764,7 @@ class Configuration extends ConfigurationKeys {
             ],
             'userLibmpvOptions': <String, String>{},
             'disableAnimations': false,
-            'addLibraryToPlaylistWhenPlayingFromTracksTab': false,
+            'addLibraryToPlaylistWhenPlayingFromTracksTab': true,
           };
 }
 
@@ -519,6 +773,7 @@ abstract class ConfigurationKeys {
   late Directory cacheDirectory;
   late LanguageData language;
   late ThemeMode themeMode;
+  late ThemeMode themeModeModern;
   late bool automaticAccent;
   late bool notificationLyrics;
   late List<String> collectionSearchRecent;
@@ -535,6 +790,32 @@ abstract class ConfigurationKeys {
   late bool discordRPC;
   late double highlightedLyricsSize;
   late double unhighlightedLyricsSize;
+  late double trackThumbnailSizeinList;
+  late double trackListTileHeight;
+  late double albumThumbnailSizeinList;
+  late double albumListTileHeight;
+  late double queueSheetMinHeight;
+  late double queueSheetMaxHeight;
+  late double nowPlayingImageContainerHeight;
+  late double borderRadiusMultiplier;
+  late double fontScaleFactor;
+  late String dateTimeFormat;
+  late bool hourFormat12;
+  late String trackTileFirstRowFirstItem;
+  late String trackTileFirstRowSecondItem;
+  late String trackTileFirstRowThirdItem;
+  late String trackTileSecondRowFirstItem;
+  late String trackTileSecondRowSecondItem;
+  late String trackTileSecondRowThirdItem;
+  late bool trackTileDisplayThirdItemInRows;
+  late bool trackTileDisplayThirdRow;
+  late String trackTileThirdRowFirstItem;
+  late String trackTileThirdRowSecondItem;
+  late String trackTileThirdRowThirdItem;
+  late String trackTileRightFirstItem;
+  late String trackTileRightSecondItem;
+  late String trackTileSeparator;
+  late int searchResultsPlayMode;
   late AlbumsSort albumsSort;
   late TracksSort tracksSort;
   late ArtistsSort artistsSort;
@@ -548,7 +829,16 @@ abstract class ConfigurationKeys {
   late bool useLRCFromTrackDirectory;
   late bool lookupForFallbackAlbumArt;
   late bool displayAudioFormat;
+  late bool isModernLayout;
   late bool stickyMiniplayer;
+  late bool enableVolumeFadeOnPlayPause;
+  late bool displayTrackNumberinAlbumPage;
+  late bool albumCardTopRightDate;
+  late bool forceSquaredTrackThumbnail;
+  late bool forceSquaredAlbumThumbnail;
+  late bool useAlbumStaggeredGridView;
+  late bool enableBlurEffect;
+  late bool enableGlowEffect;
   late bool mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen;
   late bool mobileEnableNowPlayingScreenRippleEffect;
   late int mobileAlbumsGridSize;

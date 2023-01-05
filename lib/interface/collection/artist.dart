@@ -182,7 +182,7 @@ class _ArtistTabState extends State<ArtistTab> {
                                 2 * tileMargin,
                             bottom: Configuration.instance.stickyMiniplayer
                                 ? kMobileNowPlayingBarHeight
-                                : kMobileBottomPaddingSmall,
+                                : kMobileBottomPaddingStickyMiniplayer,
                           ),
                           children: data.widgets,
                         ),

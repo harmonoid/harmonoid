@@ -430,7 +430,8 @@ class _FloatingSearchBarSearchTabState
                 ? WidgetsBinding.instance.window.viewInsets.bottom > 0.0
                     ? kMobileNowPlayingBarHeight
                     : kMobileNowPlayingBarHeight + kBottomNavigationBarHeight
-                : kBottomNavigationBarHeight + kMobileBottomPaddingSmall),
+                : kBottomNavigationBarHeight +
+                    kMobileBottomPaddingStickyMiniplayer),
         width: MediaQuery.of(context).size.width,
         child: albums.isNotEmpty || artists.isNotEmpty || tracks.isNotEmpty
             ? Consumer<Collection>(

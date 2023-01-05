@@ -9,14 +9,17 @@
 import 'dart:math';
 import 'dart:async';
 import 'package:flutter/material.dart' hide Intent;
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:window_plus/window_plus.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:searchbar_animation/searchbar_animation.dart';
 
+import 'package:harmonoid/interface/modern_layout/settings_modern/settings_modern.dart';
+import 'package:harmonoid/interface/modern_layout/utils_modern/broken_icons.dart';
+import 'package:harmonoid/interface/modern_layout/utils_modern/widgets_modern.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
@@ -27,32 +30,30 @@ import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/interface/home.dart';
-import 'package:harmonoid/interface/collection/album.dart';
-import 'package:harmonoid/interface/collection/track.dart';
-import 'package:harmonoid/interface/collection/artist.dart';
-import 'package:harmonoid/interface/collection/playlist.dart';
-import 'package:harmonoid/interface/collection/search.dart';
-import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:harmonoid/interface/mini_now_playing_bar.dart';
 import 'package:harmonoid/interface/missing_directories_screen.dart';
+import 'package:harmonoid/interface/modern_layout/modern_collection/modern_album.dart';
+import 'package:harmonoid/interface/modern_layout/modern_collection/modern_track.dart';
+import 'package:harmonoid/interface/modern_layout/modern_collection/modern_artist.dart';
+import 'package:harmonoid/interface/modern_layout/modern_collection/modern_playlist.dart';
+import 'package:harmonoid/interface/modern_layout/modern_collection/modern_search.dart';
 import 'package:harmonoid/constants/language.dart';
 
-class CollectionScreen extends StatefulWidget {
+class CollectionScreenModern extends StatefulWidget {
   /// Used only on Android.
   /// Since a [PageView] is used for enabling horizontal swiping, it makes [BottomNavigationBar] from [Home] able to control the pages.
   /// It was necessary to use this to support Android's back button to jump back to previous tabs.
   ///
   final ValueNotifier<TabRoute> tabControllerNotifier;
   final FloatingSearchBarController floatingSearchBarController;
-  const CollectionScreen({
+  const CollectionScreenModern({
     Key? key,
     required this.tabControllerNotifier,
     required this.floatingSearchBarController,
   }) : super(key: key);
-  CollectionScreenState createState() => CollectionScreenState();
+  CollectionScreenModernState createState() => CollectionScreenModernState();
 }
 
-class CollectionScreenState extends State<CollectionScreen>
+class CollectionScreenModernState extends State<CollectionScreenModern>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   final FocusNode node = FocusNode();
   final PageController pageController =
@@ -63,7 +64,8 @@ class CollectionScreenState extends State<CollectionScreen>
     Configuration.instance.libraryTab,
   );
   int currentIndex = Configuration.instance.libraryTab;
-
+  TextEditingController searchTextEditingController = TextEditingController();
+  late bool showSearchCard;
   @override
   bool get wantKeepAlive => true;
 
@@ -81,6 +83,7 @@ class CollectionScreenState extends State<CollectionScreen>
   @override
   void initState() {
     super.initState();
+    showSearchCard = false;
     widget.tabControllerNotifier.addListener(() {
       if (index.value != widget.tabControllerNotifier.value.index) {
         pageController.animateToPage(
@@ -179,11 +182,11 @@ class CollectionScreenState extends State<CollectionScreen>
                       children: <Widget>[
                         PageTransitionSwitcher(
                           child: [
-                            AlbumTab(),
-                            TrackTab(),
-                            ArtistTab(),
-                            PlaylistTab(),
-                            SearchTab(query: query),
+                            AlbumTabModern(),
+                            TrackTabModern(),
+                            ArtistTabModern(),
+                            PlaylistTabModern(),
+                            SearchTabModern(query: query),
                           ][index.value],
                           transitionBuilder:
                               (child, animation, secondaryAnimation) =>
@@ -474,7 +477,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                             animation: animation,
                                             secondaryAnimation:
                                                 secondaryAnimation,
-                                            child: Settings(),
+                                            child: SettingsModern(),
                                           ),
                                         ),
                                       );
@@ -508,315 +511,325 @@ class CollectionScreenState extends State<CollectionScreen>
               ],
             ),
           )
-        : AnnotatedRegion<SystemUiOverlayStyle>(
-            value: SystemUiOverlayStyle(
-              statusBarColor: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.black12
-                  : Colors.white12,
-              statusBarIconBrightness:
-                  Theme.of(context).brightness == Brightness.dark
-                      ? Brightness.light
-                      : Brightness.dark,
-            ),
-            child: Consumer<CollectionRefresh>(
-              builder: (context, refresh, _) => Scaffold(
-                resizeToAvoidBottomInset: false,
-                floatingActionButton: ValueListenableBuilder(
-                  valueListenable: index,
-                  builder: (context, value, child) => AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 200),
-                    reverseDuration: const Duration(milliseconds: 200),
-                    switchInCurve: Curves.easeInOut,
-                    switchOutCurve: Curves.easeInOut,
-                    transitionBuilder: (child, value) => FadeTransition(
-                      opacity: value,
-                      child: child,
-                    ),
-                    child: MiniNowPlayingBarRefreshCollectionButton(
-                      index: index,
+        : Consumer<CollectionRefresh>(
+            builder: (context, refresh, _) => Scaffold(
+              resizeToAvoidBottomInset: true,
+              // floatingActionButton: ValueListenableBuilder(
+              //   valueListenable: index,
+              //   builder: (context, value, child) => AnimatedSwitcher(
+              //     duration: const Duration(milliseconds: 200),
+              //     reverseDuration: const Duration(milliseconds: 200),
+              //     switchInCurve: Curves.easeInOut,
+              //     switchOutCurve: Curves.easeInOut,
+              //     transitionBuilder: (child, value) => FadeTransition(
+              //       opacity: value,
+              //       child: child,
+              //     ),
+              //     child: MiniNowPlayingBarRefreshCollectionButton(
+              //       index: index,
+              //     ),
+              //   ),
+              // ),
+              drawer: Drawer(
+                width: 200,
+              ),
+              appBar: AppBar(
+                elevation: 1,
+                bottom: PreferredSize(
+                  preferredSize: Size.fromHeight(4.0),
+                  child: MobileIndexingProgressIndicatorModern(),
+                ),
+                titleSpacing: 0,
+                title: SearchBarAnimation(
+                  isSearchBoxOnRightSide: true,
+                  textAlignToRight: false,
+                  textEditingController: searchTextEditingController,
+                  durationInMilliSeconds: 300,
+                  enableKeyboardFocus: true,
+                  isOriginalAnimation: false,
+                  onPressButton: (isOpen) {
+                    setState(() {
+                      showSearchCard = isOpen;
+                      searchTextEditingController.clear();
+                      query.value = '';
+                    });
+                  },
+                  onChanged: (String value) {
+                    setState(() {
+                      if (!showSearchCard) {
+                        showSearchCard = true;
+                      }
+                      query.value = value;
+                    });
+                  },
+                  buttonColour: Colors.transparent,
+                  buttonShadowColour: Theme.of(context).colorScheme.surface,
+                  hintTextColour: Theme.of(context).colorScheme.onSurface,
+                  searchBoxColour: Theme.of(context).colorScheme.background,
+                  enteredTextStyle: Theme.of(context).textTheme.displayMedium,
+                  cursorColour: Theme.of(context).colorScheme.onBackground,
+                  buttonBorderColour: Colors.black45,
+                  hintText: refresh.isCompleted
+                      ? Language.instance.SEARCH_WELCOME
+                      : Language.instance.COLLECTION_INDEXING_HINT,
+                  buttonWidget: Icon(
+                    Broken.search_normal,
+                    color:
+                        Theme.of(context).appBarTheme.actionsIconTheme?.color,
+                  ),
+                  secondaryButtonWidget: Icon(
+                    Broken.search_status_1,
+                    color:
+                        Theme.of(context).appBarTheme.actionsIconTheme?.color,
+                  ),
+                  trailingWidget: GestureDetector(
+                    onTap: () {
+                      searchTextEditingController.clear();
+                      query.value = '';
+                    },
+                    child: Icon(
+                      Broken.close_circle,
+                      color:
+                          Theme.of(context).appBarTheme.actionsIconTheme?.color,
                     ),
                   ),
                 ),
-                body: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    FloatingSearchBar(
-                      controller: widget.floatingSearchBarController,
-                      automaticallyImplyBackButton: false,
-                      hint: refresh.isCompleted
-                          ? Language.instance.SEARCH_WELCOME
-                          : Language.instance.COLLECTION_INDEXING_HINT,
-                      progress: refresh.isCompleted
-                          ? null
-                          : refresh.progress == null
-                              ? true
-                              : refresh.total == 0
-                                  ? 1.0
-                                  : (refresh.progress ?? 0.0) / refresh.total,
-                      transitionCurve: Curves.easeInOut,
-                      width: MediaQuery.of(context).size.width - 2 * tileMargin,
-                      height: kMobileSearchBarHeight,
-                      margins: EdgeInsets.only(
-                        top: MediaQuery.of(context).padding.top + tileMargin,
+                actions: [
+                  if (!showSearchCard)
+                    MobileSortByButton(
+                      value: index,
+                      icon: Broken.filter,
+                      topPadding: kToolbarHeight +
+                          MediaQuery.of(context).padding.top +
+                          kMobileTileMargin * 2,
+                    ),
+                  if (!showSearchCard)
+                    CircularButton(
+                      icon: Icon(
+                        Broken.grid_1,
+                        size: 20.0,
+                        color: Theme.of(context)
+                            .appBarTheme
+                            .actionsIconTheme
+                            ?.color,
                       ),
-                      accentColor: Theme.of(context).primaryColor,
-                      onQueryChanged: (value) => query.value = value,
-                      clearQueryOnClose: true,
-                      transition: CircularFloatingSearchBarTransition(),
-                      leadingActions: [
-                        FloatingSearchBarAction(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(
-                              Icons.search,
-                              size: 24.0,
-                              color: Theme.of(context)
-                                  .appBarTheme
-                                  .iconTheme
-                                  ?.color,
-                            ),
+                      onPressed: () async {
+                        final position = RelativeRect.fromRect(
+                          Offset(
+                                MediaQuery.of(context).size.width -
+                                    tileMargin -
+                                    48.0,
+                                MediaQuery.of(context).padding.top +
+                                    kToolbarHeight +
+                                    2 * tileMargin,
+                              ) &
+                              Size(228.0, 320.0),
+                          Rect.fromLTWH(
+                            0,
+                            0,
+                            MediaQuery.of(context).size.width,
+                            MediaQuery.of(context).size.height,
                           ),
-                          showIfOpened: false,
-                        ),
-                        FloatingSearchBarAction.back(
-                          color: Theme.of(context).appBarTheme.iconTheme?.color,
-                        ),
-                      ],
-                      actions: [
-                        FloatingSearchBarAction(
-                          showIfOpened: false,
-                          showIfClosed: true,
-                          child: MobileSortByButton(
-                            value: index,
-                            icon: Icons.sort_by_alpha,
+                        );
+                        showMenu<int>(
+                          context: context,
+                          position: position,
+                          elevation: Theme.of(context).popupMenuTheme.elevation,
+                          constraints: BoxConstraints(
+                            maxWidth: double.infinity,
                           ),
-                        ),
-                        FloatingSearchBarAction(
-                          showIfOpened: false,
-                          showIfClosed: true,
-                          child: CircularButton(
-                            icon: Icon(
-                              Icons.grid_on,
-                              size: 20.0,
-                              color: Theme.of(context)
-                                  .appBarTheme
-                                  .actionsIconTheme
-                                  ?.color,
-                            ),
-                            onPressed: () async {
-                              final position = RelativeRect.fromRect(
-                                Offset(
-                                      MediaQuery.of(context).size.width -
-                                          tileMargin -
-                                          48.0,
-                                      MediaQuery.of(context).padding.top +
-                                          kMobileSearchBarHeight +
-                                          2 * tileMargin,
-                                    ) &
-                                    Size(228.0, 320.0),
-                                Rect.fromLTWH(
-                                  0,
-                                  0,
-                                  MediaQuery.of(context).size.width,
-                                  MediaQuery.of(context).size.height,
-                                ),
-                              );
-                              showMenu<int>(
-                                context: context,
-                                position: position,
-                                elevation:
-                                    Theme.of(context).popupMenuTheme.elevation,
-                                constraints: BoxConstraints(
-                                  maxWidth: double.infinity,
-                                ),
-                                items: [
-                                  PopupMenuItem(
-                                    padding: EdgeInsets.zero,
-                                    value: 0,
-                                    child: ListTile(
-                                      leading: CircleAvatar(
-                                        backgroundColor: Colors.transparent,
-                                        child: Text(
-                                          Configuration
-                                              .instance.mobileAlbumsGridSize
-                                              .toString(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .displaySmall
-                                              ?.copyWith(
-                                                fontSize: 18.0,
-                                              ),
+                          items: [
+                            PopupMenuItem(
+                              padding: EdgeInsets.zero,
+                              value: 0,
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  child: Text(
+                                    Configuration.instance.mobileAlbumsGridSize
+                                        .toString(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall
+                                        ?.copyWith(
+                                          fontSize: 18.0,
                                         ),
-                                      ),
+                                  ),
+                                ),
+                                title: Text(
+                                  Language.instance.MOBILE_ALBUM_GRID_SIZE,
+                                ),
+                              ),
+                            ),
+                            PopupMenuItem(
+                              padding: EdgeInsets.zero,
+                              value: 1,
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  child: Text(
+                                    Configuration.instance.mobileArtistsGridSize
+                                        .toString(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall
+                                        ?.copyWith(
+                                          fontSize: 18.0,
+                                        ),
+                                  ),
+                                ),
+                                title: Text(
+                                  Language.instance.MOBILE_ARTIST_GRID_SIZE,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ).then((value) async {
+                          switch (value) {
+                            case 0:
+                              {
+                                int result =
+                                    Configuration.instance.mobileAlbumsGridSize;
+                                await showDialog(
+                                  context: context,
+                                  builder: (context) => StatefulBuilder(
+                                    builder: (context, setState) =>
+                                        SimpleDialog(
                                       title: Text(
                                         Language
                                             .instance.MOBILE_ALBUM_GRID_SIZE,
                                       ),
+                                      children: [1, 2, 3, 4]
+                                          .map(
+                                            (e) => RadioListTile<int>(
+                                              activeColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .secondary,
+                                              title: Text(e.toString()),
+                                              groupValue: result,
+                                              onChanged: (e) {
+                                                if (e != null) {
+                                                  result = e;
+                                                  Navigator.of(context)
+                                                      .maybePop();
+                                                }
+                                              },
+                                              value: e,
+                                            ),
+                                          )
+                                          .toList(),
                                     ),
                                   ),
-                                  PopupMenuItem(
-                                    padding: EdgeInsets.zero,
-                                    value: 1,
-                                    child: ListTile(
-                                      leading: CircleAvatar(
-                                        backgroundColor: Colors.transparent,
-                                        child: Text(
-                                          Configuration
-                                              .instance.mobileArtistsGridSize
-                                              .toString(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .displaySmall
-                                              ?.copyWith(
-                                                fontSize: 18.0,
-                                              ),
-                                        ),
-                                      ),
+                                );
+                                if (result !=
+                                    Configuration
+                                        .instance.mobileAlbumsGridSize) {
+                                  await Configuration.instance.save(
+                                    mobileAlbumsGridSize: result,
+                                  );
+                                  setState(() {});
+                                }
+                                break;
+                              }
+                            case 1:
+                              {
+                                int result = Configuration
+                                    .instance.mobileArtistsGridSize;
+                                await showDialog(
+                                  context: context,
+                                  builder: (context) => StatefulBuilder(
+                                    builder: (context, setState) =>
+                                        SimpleDialog(
                                       title: Text(
                                         Language
                                             .instance.MOBILE_ARTIST_GRID_SIZE,
                                       ),
+                                      children: [1, 2, 3, 4]
+                                          .map(
+                                            (e) => RadioListTile<int>(
+                                              activeColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .secondary,
+                                              title: Text(e.toString()),
+                                              groupValue: result,
+                                              onChanged: (e) {
+                                                if (e != null) {
+                                                  result = e;
+                                                  Navigator.of(context)
+                                                      .maybePop();
+                                                }
+                                              },
+                                              value: e,
+                                            ),
+                                          )
+                                          .toList(),
                                     ),
                                   ),
-                                ],
-                              ).then((value) async {
-                                switch (value) {
-                                  case 0:
-                                    {
-                                      int result = Configuration
-                                          .instance.mobileAlbumsGridSize;
-                                      await showDialog(
-                                        context: context,
-                                        builder: (context) => StatefulBuilder(
-                                          builder: (context, setState) =>
-                                              SimpleDialog(
-                                            title: Text(
-                                              Language.instance
-                                                  .MOBILE_ALBUM_GRID_SIZE,
-                                            ),
-                                            children: [1, 2, 3, 4]
-                                                .map(
-                                                  (e) => RadioListTile<int>(
-                                                    title: Text(e.toString()),
-                                                    groupValue: result,
-                                                    onChanged: (e) {
-                                                      if (e != null) {
-                                                        result = e;
-                                                        Navigator.of(context)
-                                                            .maybePop();
-                                                      }
-                                                    },
-                                                    value: e,
-                                                  ),
-                                                )
-                                                .toList(),
-                                          ),
-                                        ),
-                                      );
-                                      if (result !=
-                                          Configuration
-                                              .instance.mobileAlbumsGridSize) {
-                                        await Configuration.instance.save(
-                                          mobileAlbumsGridSize: result,
-                                        );
-                                        setState(() {});
-                                      }
-                                      break;
-                                    }
-                                  case 1:
-                                    {
-                                      int result = Configuration
-                                          .instance.mobileArtistsGridSize;
-                                      await showDialog(
-                                        context: context,
-                                        builder: (context) => StatefulBuilder(
-                                          builder: (context, setState) =>
-                                              SimpleDialog(
-                                            title: Text(
-                                              Language.instance
-                                                  .MOBILE_ARTIST_GRID_SIZE,
-                                            ),
-                                            children: [1, 2, 3, 4]
-                                                .map(
-                                                  (e) => RadioListTile<int>(
-                                                    title: Text(e.toString()),
-                                                    groupValue: result,
-                                                    onChanged: (e) {
-                                                      if (e != null) {
-                                                        result = e;
-                                                        Navigator.of(context)
-                                                            .maybePop();
-                                                      }
-                                                    },
-                                                    value: e,
-                                                  ),
-                                                )
-                                                .toList(),
-                                          ),
-                                        ),
-                                      );
-                                      if (result !=
-                                          Configuration
-                                              .instance.mobileArtistsGridSize) {
-                                        await Configuration.instance.save(
-                                          mobileArtistsGridSize: result,
-                                        );
-                                        setState(() {});
-                                      }
-                                      break;
-                                    }
+                                );
+                                if (result !=
+                                    Configuration
+                                        .instance.mobileArtistsGridSize) {
+                                  await Configuration.instance.save(
+                                    mobileArtistsGridSize: result,
+                                  );
+                                  setState(() {});
                                 }
-                              });
-                            },
-                          ),
-                        ),
-                        FloatingSearchBarAction(
-                          showIfOpened: false,
-                          child: MobileAppBarOverflowButton(),
-                        ),
-                        FloatingSearchBarAction.searchToClear(
-                          showIfClosed: false,
-                          color: Theme.of(context)
-                              .appBarTheme
-                              .actionsIconTheme
-                              ?.color,
-                        ),
-                      ],
-                      builder: (context, transition) {
-                        return FloatingSearchBarSearchTab(query: query);
+                                break;
+                              }
+                          }
+                        });
                       },
-                      body: FloatingSearchBarScrollNotifier(
-                        child: NotificationListener<ScrollNotification>(
-                          onNotification: (ScrollNotification notification) {
-                            if (notification.depth == 0 &&
-                                notification is ScrollEndNotification &&
-                                notification.metrics.axis == Axis.horizontal) {
-                              index.value = currentIndex;
-                              widget.tabControllerNotifier.value = TabRoute(
-                                  currentIndex, TabRouteSender.pageView);
-                            }
-                            return false;
-                          },
-                          child: PageView(
-                            physics: Collection.instance.tracks.isEmpty
-                                ? const NeverScrollableScrollPhysics()
-                                : null,
-                            controller: pageController,
-                            onPageChanged: (page) {
-                              currentIndex = page;
-                            },
-                            children: [
-                              AlbumTab(),
-                              TrackTab(),
-                              ArtistTab(),
-                              PlaylistTab(),
-                            ],
-                          ),
-                        ),
+                    ),
+                  PopupMainMenuModern()
+                ],
+              ),
+              body: Stack(
+                fit: StackFit.expand,
+                children: [
+                  FloatingSearchBarScrollNotifier(
+                    child: NotificationListener<ScrollNotification>(
+                      onNotification: (ScrollNotification notification) {
+                        if (notification.depth == 0 &&
+                            notification is ScrollEndNotification &&
+                            notification.metrics.axis == Axis.horizontal) {
+                          index.value = currentIndex;
+                          widget.tabControllerNotifier.value =
+                              TabRoute(currentIndex, TabRouteSender.pageView);
+                        }
+                        return false;
+                      },
+                      child: PageView(
+                        physics: Collection.instance.tracks.isEmpty
+                            ? const NeverScrollableScrollPhysics()
+                            : null,
+                        controller: pageController,
+                        onPageChanged: (page) {
+                          currentIndex = page;
+                          setState(() {
+                            showSearchCard = false;
+                            // searchTextEditingController.clear();
+                            // query.value = '';
+                          });
+                        },
+                        children: [
+                          AlbumTabModern(),
+                          TrackTabModern(),
+                          ArtistTabModern(),
+                          PlaylistTabModern(),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  AnimatedSwitcher(
+                    duration: Duration(milliseconds: 200),
+                    child: showSearchCard
+                        ? FloatingSearchBarSearchTabModern(
+                            query: query,
+                            key: Key("searchbar"),
+                          )
+                        : null,
+                  ),
+                ],
               ),
             ),
           );

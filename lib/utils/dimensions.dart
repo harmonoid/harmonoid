@@ -20,8 +20,9 @@ const double kArtistTileHeight = 142.0 + 48.0;
 const double kMobileArtistTileHeight = 64.0 + 8.0 + 1.0;
 const double kMobileTrackTileHeight = 64.0 + 8.0 + 1.0;
 const double kMobileTileMargin = 8.0;
-const double kMobileBottomPaddingSmall = 12.0;
+const double kMobileBottomPaddingStickyMiniplayer = 12.0;
 const double kMobileSearchBarHeight = 56.0;
+const double kMobileSearchBarHeightModern = 0.0;
 const double kMobileNowPlayingBarHeight = 66.0;
 
 const double kDesktopTileMargin = 16.0;

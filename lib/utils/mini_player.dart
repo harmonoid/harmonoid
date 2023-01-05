@@ -33,6 +33,9 @@ class Miniplayer extends StatefulWidget {
   final MiniplayerBuilder builder;
   final Curve curve;
   final Color backgroundColor;
+
+  /// list of border radius values [topLeft, topRight, bottomLeft, bottomRight], the list should be complete
+  final List<double>? borderRadiusValues;
   final Duration duration;
   final ValueNotifier<double>? valueNotifier;
   final Function? onDismissed;
@@ -47,12 +50,15 @@ class Miniplayer extends StatefulWidget {
     this.curve = Curves.easeOut,
     this.elevation = 0,
     this.backgroundColor = const Color(0x70000000),
+    this.borderRadiusValues,
     this.valueNotifier,
     this.duration = const Duration(milliseconds: 300),
     this.onDismissed,
     this.controller,
     this.tapToCollapse = true,
-  }) : super(key: key);
+  })  : assert((borderRadiusValues?.length ?? 0) >= 4,
+            "borderRadiusValues should have at least 4 values"),
+        super(key: key);
 
   @override
   _MiniplayerState createState() => _MiniplayerState();
@@ -147,8 +153,21 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
                 ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: SizedBox(
+                child: Container(
                   height: height,
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(
+                          widget.borderRadiusValues![0] * (1 - _percentage)),
+                      topRight: Radius.circular(
+                          widget.borderRadiusValues![1] * (1 - _percentage)),
+                      bottomLeft: Radius.circular(
+                          widget.borderRadiusValues![2] * (1 - _percentage)),
+                      bottomRight: Radius.circular(
+                          widget.borderRadiusValues![3] * (1 - _percentage)),
+                    ),
+                  ),
                   child: GestureDetector(
                     child: ValueListenableBuilder(
                       valueListenable: dragDownPercentage,

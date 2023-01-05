@@ -10,6 +10,7 @@ import 'package:harmonoid/state/now_playing_color_palette.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/interface/modern_layout/settings_modern/enable_new_layout.dart';
 
 class MiscellaneousSetting extends StatefulWidget {
   MiscellaneousSetting({Key? key}) : super(key: key);
@@ -35,6 +36,7 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
           //       .then((_) => setState(() {})),
           //   value: Configuration.instance.disableAnimations,
           // ),
+          if (isMobile) EnableNewLayoutSetting(),
           if (isMobile)
             CorrectedSwitchListTile(
               title: Language.instance.NOTIFICATION_LYRICS_TITLE,
@@ -59,6 +61,7 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
             }),
             value: Configuration.instance.displayAudioFormat,
           ),
+          // Sticky Miniplayer
           if (isMobile)
             CorrectedSwitchListTile(
               title: Language.instance.STICKY_MINIPLAYER,

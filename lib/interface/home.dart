@@ -8,6 +8,7 @@
 
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
+import 'package:harmonoid/interface/modern_layout/utils_modern/widgets_modern.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
@@ -20,6 +21,7 @@ import 'package:harmonoid/interface/now_playing_screen.dart';
 import 'package:harmonoid/interface/mini_now_playing_bar.dart';
 import 'package:harmonoid/interface/collection/collection.dart';
 import 'package:harmonoid/interface/modern_now_playing_screen.dart';
+import 'package:harmonoid/interface/modern_layout/modern_collection/modern_collection.dart';
 import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
@@ -247,12 +249,19 @@ class HomeState extends State<Home>
                               if (routeSettings.name == '/collection_screen') {
                                 route = MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      CollectionScreen(
-                                    tabControllerNotifier:
-                                        tabControllerNotifier,
-                                    floatingSearchBarController:
-                                        floatingSearchBarController,
-                                  ),
+                                      Configuration.instance.isModernLayout
+                                          ? CollectionScreenModern(
+                                              tabControllerNotifier:
+                                                  tabControllerNotifier,
+                                              floatingSearchBarController:
+                                                  floatingSearchBarController,
+                                            )
+                                          : CollectionScreen(
+                                              tabControllerNotifier:
+                                                  tabControllerNotifier,
+                                              floatingSearchBarController:
+                                                  floatingSearchBarController,
+                                            ),
                                 );
                               }
                               if (routeSettings.name == '/now_playing') {
@@ -300,12 +309,19 @@ class HomeState extends State<Home>
                               route = MaterialPageRoute(
                                 builder: (BuildContext context) =>
                                     NowPlayingBarScrollHideNotifier(
-                                  child: CollectionScreen(
-                                    tabControllerNotifier:
-                                        tabControllerNotifier,
-                                    floatingSearchBarController:
-                                        floatingSearchBarController,
-                                  ),
+                                  child: Configuration.instance.isModernLayout
+                                      ? CollectionScreenModern(
+                                          tabControllerNotifier:
+                                              tabControllerNotifier,
+                                          floatingSearchBarController:
+                                              floatingSearchBarController,
+                                        )
+                                      : CollectionScreen(
+                                          tabControllerNotifier:
+                                              tabControllerNotifier,
+                                          floatingSearchBarController:
+                                              floatingSearchBarController,
+                                        ),
                                 ),
                               );
                             }
@@ -321,9 +337,13 @@ class HomeState extends State<Home>
                   bottomNavigationBar: ValueListenableBuilder<double>(
                     valueListenable:
                         MobileNowPlayingController.instance.bottomNavigationBar,
-                    child: MobileBottomNavigationBar(
-                      tabControllerNotifier: tabControllerNotifier,
-                    ),
+                    child: Configuration.instance.isModernLayout
+                        ? MobileBottomNavigationBarModern(
+                            tabControllerNotifier: tabControllerNotifier,
+                          )
+                        : MobileBottomNavigationBar(
+                            tabControllerNotifier: tabControllerNotifier,
+                          ),
                     builder: (context, height, child) => Container(
                       height: (
                               // [MobileBottomNavigationBar] only visible on mobile.

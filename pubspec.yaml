@@ -111,6 +111,23 @@ dependencies:
       url: https://github.com/alexmercerind/flutter_lyric.git
       ref: master
 
+  #MSOB7YY
+  flutter_staggered_grid_view: ^0.6.2
+  blurrycontainer: ^1.0.2
+  drop_shadow: ^0.0.2+1
+  intl: ^0.17.0
+  iconsax: ^0.0.8
+  flutter_switch: ^0.3.2
+  searchbar_animation: ^0.0.4
+  flutter_animated_theme: ^1.0.0
+  carousel_slider: ^4.2.1
+  animated_list_plus: ^0.4.5
+  flutter_keyboard_visibility: ^5.4.0
+  auto_animated: ^3.1.0
+  restart_app: ^1.1.1
+  
+  
+
 dependency_overrides:
   ffi: 1.1.0
   win32: ^3.0.0
@@ -144,7 +161,43 @@ flutter:
   assets:
     - assets/fonts/
     - assets/icons/
+    - assets/modern_fonts/
     - assets/images/
     - assets/translations/
     - assets/translations/translations/
     - assets/preloaded_visuals/
+  fonts:
+    - family: broken
+      fonts:
+        - asset: assets/modern_fonts/broken.ttf
+    - family: LexendDeca
+      fonts:
+        - asset: assets/modern_fonts/LexendDeca/LexendDeca-Black.ttf
+        - asset: assets/modern_fonts/LexendDeca/LexendDeca-Bold.ttf
+        - asset: assets/modern_fonts/LexendDeca/LexendDeca-ExtraBold.ttf
+        - asset: assets/modern_fonts/LexendDeca/LexendDeca-ExtraLight.ttf
+        - asset: assets/modern_fonts/LexendDeca/LexendDeca-Light.ttf
+        - asset: assets/modern_fonts/LexendDeca/LexendDeca-Medium.ttf
+        - asset: assets/modern_fonts/LexendDeca/LexendDeca-Regular.ttf
+        - asset: assets/modern_fonts/LexendDeca/LexendDeca-SemiBold.ttf
+        - asset: assets/modern_fonts/LexendDeca/LexendDeca-Thin.ttf
+    # - family: Montserrat
+    #   fonts:
+    #     - asset: assets/modern_fonts/Montserrat/Montserrat-Black.ttf
+    #     - asset: assets/modern_fonts/Montserrat/Montserrat-BlackItalic.ttf
+    #     - asset: assets/modern_fonts/Montserrat/Montserrat-Bold.ttf
+    #     - asset: assets/modern_fonts/Montserrat/Montserrat-BoldItalic.ttf
+    #     - asset: assets/modern_fonts/Montserrat/Montserrat-ExtraBold.ttf
+    #     - asset: assets/modern_fonts/Montserrat/Montserrat-ExtraBoldItalic.ttf
+    #     - asset: assets/modern_fonts/Montserrat/Montserrat-ExtraLight.ttf
+    #     - asset: assets/modern_fonts/Montserrat/Montserrat-ExtraLightItalic.ttf
+    #     - asset: assets/modern_fonts/Montserrat/Montserrat-Italic.ttf
+    #     - asset: assets/modern_fonts/Montserrat/Montserrat-Light.ttf
+    #     - asset: assets/modern_fonts/Montserrat/Montserrat-LightItalic.ttf
+    #     - asset: assets/modern_fonts/Montserrat/Montserrat-Medium.ttf
+    #     - asset: assets/modern_fonts/Montserrat/Montserrat-MediumItalic.ttf
+    #     - asset: assets/modern_fonts/Montserrat/Montserrat-Regular.ttf
+    #     - asset: assets/modern_fonts/Montserrat/Montserrat-SemiBold.ttf
+    #     - asset: assets/modern_fonts/Montserrat/Montserrat-SemiBoldItalic.ttf
+    #     - asset: assets/modern_fonts/Montserrat/Montserrat-Thin.ttf
+    #     - asset: assets/modern_fonts/Montserrat/Montserrat-ThinItalic.ttf

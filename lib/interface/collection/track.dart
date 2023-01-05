@@ -381,7 +381,7 @@ class _TrackTabState extends State<TrackTab> {
                               2 * tileMargin,
                           bottom: Configuration.instance.stickyMiniplayer
                               ? kMobileNowPlayingBarHeight
-                              : kMobileBottomPaddingSmall,
+                              : kMobileBottomPaddingStickyMiniplayer,
                         ),
                         children: collection.tracks
                             .asMap()

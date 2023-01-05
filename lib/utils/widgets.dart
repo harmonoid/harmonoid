@@ -77,9 +77,10 @@ class CustomListView extends StatelessWidget {
         // uses an optional bottom padding, useful for some cases like in search card
         bottom: isMobile &&
                 Configuration.instance.stickyMiniplayer &&
+                !MobileNowPlayingController.instance.isHidden &&
                 (scrollDirection ?? Axis.vertical) == Axis.vertical
             ? kMobileNowPlayingBarHeight - (padding?.bottom ?? 0)
-            : kMobileBottomPaddingSmall,
+            : kMobileBottomPaddingStickyMiniplayer,
       ),
       controller: controller,
       scrollDirection: scrollDirection ?? Axis.vertical,
@@ -124,7 +125,7 @@ class CustomListViewBuilder extends StatelessWidget {
                 Configuration.instance.stickyMiniplayer &&
                 (scrollDirection ?? Axis.vertical) == Axis.vertical
             ? kMobileNowPlayingBarHeight
-            : kMobileBottomPaddingSmall,
+            : kMobileBottomPaddingStickyMiniplayer,
       ),
       physics: physics,
     );
@@ -174,7 +175,7 @@ class CustomListViewSeparated extends StatelessWidget {
                 Configuration.instance.stickyMiniplayer &&
                 (scrollDirection ?? Axis.vertical) == Axis.vertical
             ? kMobileNowPlayingBarHeight
-            : kMobileBottomPaddingSmall,
+            : kMobileBottomPaddingStickyMiniplayer,
       ),
       physics: physics,
     );
@@ -1651,6 +1652,7 @@ class ScrollableSlider extends StatelessWidget {
   final VoidCallback onScrolledUp;
   final VoidCallback onScrolledDown;
   final void Function(double) onChanged;
+  final void Function(double)? onChangedEnd;
   final bool inferSliderInactiveTrackColor;
   final bool mobile;
 
@@ -1664,6 +1666,7 @@ class ScrollableSlider extends StatelessWidget {
     required this.onScrolledUp,
     required this.onScrolledDown,
     required this.onChanged,
+    this.onChangedEnd,
     this.inferSliderInactiveTrackColor: true,
     this.mobile: false,
   }) : super(key: key);
@@ -1712,6 +1715,7 @@ class ScrollableSlider extends StatelessWidget {
         child: Slider(
           value: value,
           onChanged: onChanged,
+          onChangeEnd: onChangedEnd,
           min: min,
           max: max,
         ),
@@ -2147,6 +2151,7 @@ class CorrectedListTile extends StatelessWidget {
   final String title;
   final String? subtitle;
   final double? height;
+  final bool iconOnRight;
   CorrectedListTile({
     Key? key,
     this.iconData,
@@ -2154,6 +2159,7 @@ class CorrectedListTile extends StatelessWidget {
     this.subtitle,
     this.onTap,
     this.height,
+    this.iconOnRight = false,
   }) : super(key: key);
 
   @override
@@ -2169,7 +2175,7 @@ class CorrectedListTile extends StatelessWidget {
               ? CrossAxisAlignment.center
               : CrossAxisAlignment.start,
           children: [
-            if (iconData != null)
+            if (iconData != null && !iconOnRight)
               Container(
                 margin: EdgeInsets.only(
                     top: subtitle == null ? 0.0 : 16.0, right: 16.0),
@@ -2203,6 +2209,14 @@ class CorrectedListTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 16.0),
+            if (iconData != null && iconOnRight)
+              Container(
+                margin: EdgeInsets.only(
+                    top: subtitle == null ? 0.0 : 16.0, right: 16.0),
+                width: 40.0,
+                height: 40.0,
+                child: Icon(iconData),
+              ),
           ],
         ),
       ),
@@ -2212,9 +2226,13 @@ class CorrectedListTile extends StatelessWidget {
 
 class MobileSortByButton extends StatefulWidget {
   final ValueNotifier<int> value;
+  final IconData icon;
+  final double? topPadding;
   MobileSortByButton({
     Key? key,
     required this.value,
+    required this.icon,
+    this.topPadding,
   }) : super(key: key);
 
   @override
@@ -2249,7 +2267,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
       duration: Duration(milliseconds: 50),
       child: CircularButton(
         icon: Icon(
-          Icons.sort_by_alpha,
+          widget.icon,
           color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
         ),
         onPressed: () async {
@@ -2257,9 +2275,10 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
           final position = RelativeRect.fromRect(
             Offset(
                   MediaQuery.of(context).size.width - tileMargin - 48.0,
-                  MediaQuery.of(context).padding.top +
-                      kMobileSearchBarHeight +
-                      2 * tileMargin,
+                  widget.topPadding ??
+                      MediaQuery.of(context).padding.top +
+                          kMobileSearchBarHeight +
+                          2 * tileMargin,
                 ) &
                 Size(240.0, 240.0),
             Rect.fromLTWH(
@@ -2502,13 +2521,6 @@ class NowPlayingBarScrollHideNotifier extends StatelessWidget {
           }
           return true;
         },
-        // dirty way for padding (should be implemented in lists)
-        // child: Padding(
-        //   padding: EdgeInsets.only(
-        //     bottom: isMobile && Configuration.instance.stickyMiniplayer && (Axis.vertical) == Axis.vertical ? kMobileNowPlayingBarHeight : kMobileBottomPaddingSmall,
-        //   ),
-        //   child: child,
-        // ),
         child: child,
       );
     }

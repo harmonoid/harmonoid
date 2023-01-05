@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_animated_theme/animated_theme_app.dart' as themeanim;
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
@@ -13,10 +14,66 @@ import 'package:harmonoid/state/visuals.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/now_playing_color_palette.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/interface/modern_layout/state_modern/visuals_modern.dart';
 
 class Harmonoid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    if (Configuration.instance.isModernLayout) {
+      return ChangeNotifierProvider(
+        create: (_) => NowPlayingColorPalette.instance,
+        child: Consumer<NowPlayingColorPalette>(
+          builder: (context, palette, _) {
+            return ChangeNotifierProvider(
+              create: (context) => VisualsModern(
+                themeMode: Configuration.instance.themeModeModern,
+                context: context,
+              ),
+              builder: (context, _) => Consumer<VisualsModern>(
+                builder: (context, visuals, _) => MultiProvider(
+                  builder: (context, _) => themeanim.AnimatedThemeApp(
+                    animationDuration: Duration(milliseconds: 500),
+                    scrollBehavior: const ScrollBehavior(),
+                    debugShowCheckedModeBanner: false,
+                    theme: visuals.dynamicLightTheme,
+                    darkTheme: visuals.dynamicDarkTheme,
+                    themeMode: visuals.themeMode,
+                    home: MediaQuery(
+                        data: MediaQueryData.fromWindow(
+                                WidgetsBinding.instance.window)
+                            .copyWith(
+                          textScaleFactor:
+                              Configuration.instance.fontScaleFactor,
+                        ),
+                        child: Home()),
+                  ),
+                  providers: [
+                    ChangeNotifierProvider(
+                      create: (context) => Collection.instance,
+                    ),
+                    ChangeNotifierProvider(
+                      create: (context) => CollectionRefresh.instance,
+                    ),
+                    ChangeNotifierProvider(
+                      create: (_) => Playback.instance,
+                    ),
+                    ChangeNotifierProvider(
+                      create: (context) => Language.instance,
+                    ),
+                    ChangeNotifierProvider(
+                      create: (_) => Lyrics.instance,
+                    ),
+                    ChangeNotifierProvider(
+                      create: (_) => NowPlayingColorPalette.instance,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    }
     return ChangeNotifierProvider(
       create: (context) => Visuals(
         themeMode: Configuration.instance.themeMode,
@@ -74,8 +131,8 @@ class ScrollBehavior extends MaterialScrollBehavior {
         return const BouncingScrollPhysics();
       case TargetPlatform.macOS:
         return BouncingScrollPhysics(
-          decelerationRate: ScrollDecelerationRate.fast,
-        );
+            // decelerationRate: ScrollDecelerationRate.fast,
+            );
     }
   }
 
@@ -177,7 +234,7 @@ class CustomScrollPhysics extends ScrollPhysics {
         leadingExtent: position.minScrollExtent,
         trailingExtent: position.maxScrollExtent,
         tolerance: tolerance,
-        constantDeceleration: constantDeceleration,
+        // constantDeceleration: constantDeceleration,
       );
     }
     return null;

@@ -41,3 +41,6 @@ app.*.symbols
 
 # Obfuscation related
 app.*.map.json
+lib/interface/harmonoid.dart
+pubspec.lock
+.gitignore

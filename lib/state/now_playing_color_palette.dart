@@ -6,13 +6,16 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:harmonoid/interface/modern_layout/state_modern/visuals_modern.dart';
 import 'package:media_library/media_library.dart';
 
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
+import 'package:harmonoid/interface/modern_layout/rendering_modern.dart';
 
 /// NowPlayingColorPalette
 /// ----------------------
@@ -31,6 +34,7 @@ class NowPlayingColorPalette extends ChangeNotifier {
 
   /// [Color]s extracted from currently playing [Track].
   List<Color>? palette;
+  Color modernColor = kPrimaryDarkColor;
 
   NowPlayingColorPalette() {
     // Run as asynchronous suspension.
@@ -50,6 +54,13 @@ class NowPlayingColorPalette extends ChangeNotifier {
               final image = getAlbumArt(track, small: true);
               final result = await PaletteGenerator.fromImageProvider(image);
               palette = result.colors?.toList();
+
+              if (Configuration.instance.isModernLayout) {
+                // await Future.delayed(Duration(milliseconds: 300), () {
+                //   modernColor = getAlbumColorModifiedModern(palette);
+                // });
+                modernColor = getAlbumColorModifiedModern(palette);
+              }
             }
             if (Configuration.instance.dynamicNowPlayingBarColoring) {
               MobileNowPlayingController.instance.palette.value = palette;

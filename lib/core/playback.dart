@@ -9,9 +9,11 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:media_engine/media_engine.dart';
+import 'package:provider/provider.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:mpris_service/mpris_service.dart';
@@ -105,21 +107,21 @@ class Playback extends ChangeNotifier {
     }
   }
 
-  void next() {
+  void next({bool skipAndPlay = true}) {
     if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
       libmpv?.next();
     }
     if (Platform.isAndroid || Platform.isIOS) {
-      audioService?.skipToNext();
+      audioService?.skipToNext(seekAndPlay: skipAndPlay);
     }
   }
 
-  void previous() {
+  void previous({bool skipAndPlay = true}) {
     if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
       libmpv?.previous();
     }
     if (Platform.isAndroid || Platform.isIOS) {
-      audioService?.skipToPrevious();
+      audioService?.skipToPrevious(seekAndPlay: skipAndPlay);
     }
   }
 
@@ -205,7 +207,7 @@ class Playback extends ChangeNotifier {
     notifyListeners();
   }
 
-  void seek(Duration position) async {
+  void seek(Duration position, {bool seekAndPlay = true}) async {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       libmpv?.seek(position).then((value) {
         Future.delayed(const Duration(milliseconds: 100), () {
@@ -216,7 +218,9 @@ class Playback extends ChangeNotifier {
     }
     if (Platform.isAndroid || Platform.isIOS) {
       await audioService?.seek(position);
-      await audioService?.play();
+      if (seekAndPlay) {
+        await audioService?.play();
+      }
     }
   }
 
@@ -276,6 +280,55 @@ class Playback extends ChangeNotifier {
     if (Platform.isAndroid || Platform.isIOS) {
       await audioService?.add(tracks);
     }
+  }
+
+  Future<void> insertAt(List<Track> tracks, int index) async {
+    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+      // await libmpv?.remove(
+      //   index,
+      // );
+    }
+    if (Platform.isAndroid || Platform.isIOS) {
+      await audioService?.insertAt(tracks, index);
+    }
+  }
+
+  Future<void> removeAt(int index) async {
+    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+      await libmpv?.remove(
+        index,
+      );
+    }
+    if (Platform.isAndroid || Platform.isIOS) {
+      await audioService?.removeAt(index);
+    }
+  }
+
+  Future<void> removeRange(int first, int last) async {
+    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+      await libmpv?.remove(
+        index,
+      );
+    }
+    if (Platform.isAndroid || Platform.isIOS) {
+      await audioService?.removeRange(first, last);
+    }
+  }
+
+  Future<void> removeAndInsertAt(
+      List<Track> tracks, int oldIndex, int newIndex) async {
+    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+      // await libmpv?.remove(
+      //   index,
+      // );
+    }
+    if (Platform.isAndroid || Platform.isIOS) {
+      await audioService?.removeAndInsertAt(tracks, oldIndex, newIndex);
+    }
+  }
+
+  void updateFadeVolume() {
+    audioService?.updateFadeVolume();
   }
 
   /// Load the last played playback state.
@@ -471,6 +524,76 @@ class Playback extends ChangeNotifier {
     }
   }
 
+  // void addToTopSongPlaylist() {
+  //   var currentValue = Playback.instance;
+  //   int elapsedTime = 0;
+  //   int firstTime = 0;
+  //   firstTime = DateTime.now().millisecondsSinceEpoch;
+  //   currentValue.addListener(() {
+  //     if (currentValue.isPlaying) {
+  //       if (elapsedTime == firstTime + 5000) {
+  //         print("STOPWATCH ADDEDDDDD");
+  //       } else {
+  //         print("STOPWATCH ffffffffffffffffffff$firstTime");
+  //         elapsedTime = DateTime.now().millisecondsSinceEpoch;
+  //       }
+  //       // debugPrint("STOPWATCH $elapsedTime");
+  //     }
+  //   });
+  // }
+
+  // void addToTopSongPlaylist() {
+  //   Stopwatch stopwatch = new Stopwatch();
+  //   var currentValue = Playback.instance;
+  //   currentValue.addListener(() {
+  //     if (currentValue.isPlaying) {
+  //       stopwatch.start();
+  //     } else {
+  //       stopwatch.stop();
+  //       var timeSpent = stopwatch.elapsed;
+  //       print("Time spent: $timeSpent");
+  //       stopwatch.reset();
+  //     }
+  //   });
+  // }
+  // void addToTopSongPlaylist() {
+  //   var currentValue = Playback.instance;
+
+  //   int? playStart;
+  //   int totalElapsedTime = 0;
+  //   int threshold = 10 * 1000; // 30 seconds in milliseconds
+
+  //   currentValue.addListener(() {
+  //     if (currentValue.isPlaying) {
+  //       print("valueeee ${totalElapsedTime}");
+  //       if (playStart == null) {
+  //         playStart = DateTime.now().millisecondsSinceEpoch;
+  //       } else {
+  //         totalElapsedTime +=
+  //             DateTime.now().millisecondsSinceEpoch - playStart!;
+  //         playStart = DateTime.now().millisecondsSinceEpoch;
+  //       }
+  //       if (totalElapsedTime >= threshold) {
+  //         Collection.instance.playlistAddTrack(
+  //           Collection.instance.topSongsPlaylist,
+  //           tracks[index],
+  //         );
+  //         totalElapsedTime = 0;
+  //       }
+  //     } else {
+  //       totalElapsedTime += DateTime.now().millisecondsSinceEpoch - playStart!;
+  //       playStart = null;
+  //     }
+  //   });
+
+  //   // Future.delayed(Duration(seconds: 4), () {
+  //   //   Collection.instance.playlistAddTrack(
+  //   //     Collection.instance.topSongsPlaylist,
+  //   //     tracks[index],
+  //   //   );
+  //   // });
+  // }
+
   void notifyNativeListeners() async {
     try {
       if (index < 0 || index > tracks.length - 1) {
@@ -494,6 +617,7 @@ class Playback extends ChangeNotifier {
               track,
             );
           }
+          // addToTopSongPlaylist();
         }();
         if (Platform.isWindows) {
           if (Configuration.instance.taskbarIndicator) {
@@ -1013,6 +1137,29 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
     await stop();
   }
 
+  double _fadeVolume = 1.0;
+
+  void updateFadeVolume() {
+    _fadeVolume = _player.volume;
+  }
+
+  void playWithFadeEffect() {
+    fadeVolumeFromTo(0, _fadeVolume, 250);
+    _player.play();
+    playback..isPlaying = true;
+  }
+
+  void pauseWithFadeEffect() {
+    updateFadeVolume();
+    fadeVolumeFromTo(_fadeVolume, 0, 250);
+    Future.delayed(Duration(milliseconds: 250), () {
+      _player.pause();
+      playback
+        ..isPlaying = false
+        ..notify();
+    });
+  }
+
   @override
   Future<void> play() async {
     // If [play] is called after the playback was finished.
@@ -1020,18 +1167,60 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
     if (_player.processingState == ProcessingState.completed) {
       await _player.seek(Duration.zero, index: 0);
     }
-    _player.play();
-    playback
-      ..isPlaying = true
-      ..notify();
+
+    if (Configuration.instance.enableVolumeFadeOnPlayPause) {
+      playWithFadeEffect();
+    } else {
+      // this step is useful for the case when the user pauses while [enableFade] is true, then set it to false then play again
+      _player.setVolume(_fadeVolume);
+
+      _player.play();
+      playback
+        ..isPlaying = true
+        ..notify();
+    }
   }
 
   @override
   Future<void> pause() async {
-    _player.pause();
-    playback
-      ..isPlaying = false
-      ..notify();
+    if (Configuration.instance.enableVolumeFadeOnPlayPause) {
+      pauseWithFadeEffect();
+    } else {
+      _player.pause();
+      playback
+        ..isPlaying = false
+        ..notify();
+    }
+  }
+
+  void fadeVolumeFromTo(double from, double to, int len) {
+    double vol = from;
+    double diff = to - from;
+    double steps = (diff / 0.01).abs();
+    int stepLen = max(4, (steps > 0) ? len ~/ steps : len);
+    int lastTick = DateTime.now().millisecondsSinceEpoch;
+
+    // // Update the volume value on each interval ticks
+    Timer.periodic(new Duration(milliseconds: stepLen), (Timer? t) {
+      var now = DateTime.now().millisecondsSinceEpoch;
+      var tick = (now - lastTick) / len;
+      lastTick = now;
+      vol += diff * tick;
+
+      vol = max(0, vol);
+      vol = min(1, vol);
+      vol = (vol * 100).round() / 100;
+
+      _player.setVolume(vol);
+
+      if ((to < from && vol <= to) || (to > from && vol >= to)) {
+        if (t != null) {
+          t.cancel();
+          t = null;
+        }
+        _player.setVolume(vol);
+      }
+    });
   }
 
   @override
@@ -1043,7 +1232,7 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
   Future<void> stop() => _player.stop();
 
   @override
-  Future<void> skipToNext() async {
+  Future<void> skipToNext({bool seekAndPlay = true}) async {
     // Once [LoopMode.one] is enabled, force skipping to next index when [skipToNext] is called.
     if (_player.loopMode == LoopMode.one) {
       final next = playback.index + 1;
@@ -1055,11 +1244,13 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
       // Supports shuffle.
       _player.seekToNext();
     }
-    await play();
+    if (seekAndPlay) {
+      await play();
+    }
   }
 
   @override
-  Future<void> skipToPrevious() async {
+  Future<void> skipToPrevious({bool seekAndPlay = true}) async {
     // Once [LoopMode.one] is enabled, force skipping to previous index when [skipToPrevious] is called.
     if (_player.loopMode == LoopMode.one) {
       final previous = playback.index - 1;
@@ -1071,7 +1262,9 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
       // Supports shuffle.
       _player.seekToPrevious();
     }
-    await play();
+    if (seekAndPlay) {
+      await play();
+    }
   }
 
   @override
@@ -1203,6 +1396,68 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
         )
         .toList();
     return source.addAll(children);
+  }
+
+  Future<void> insertAt(List<Track> tracks, int index) {
+    queue.value.insertAll(index, tracks.map(_trackToMediaItem).toList());
+    playback.tracks.insertAll(index, tracks);
+    playback
+      ..tracks
+      ..notify();
+    final source = _player.audioSource as ConcatenatingAudioSource;
+    final children = tracks
+        .map(
+          (e) => AudioSource.uri(
+            LibmpvPluginUtils.redirect(e.uri),
+            tag: e.toJson(),
+          ),
+        )
+        .toList();
+    return source.insertAll(index, children);
+  }
+
+  Future<void> removeAt(int index) {
+    queue.value.removeAt(index);
+    playback.tracks.removeAt(index);
+    playback
+      ..tracks
+      ..notify();
+    final source = _player.audioSource as ConcatenatingAudioSource;
+    return source.removeAt(index);
+  }
+
+  Future<void> removeRange(int first, int last) {
+    queue.value.removeRange(first, last);
+    playback.tracks.removeRange(first, last);
+    playback
+      ..tracks
+      ..notify();
+    final source = _player.audioSource as ConcatenatingAudioSource;
+    return source.removeRange(first, last);
+  }
+
+  Future<void> removeAndInsertAt(
+      List<Track> tracks, int oldIndex, int newIndex) {
+    queue.value.insert(newIndex,
+        playback.tracks.map(_trackToMediaItem).toList().removeAt(oldIndex));
+    playback.tracks.insert(newIndex, playback.tracks.removeAt(oldIndex));
+    playback
+      ..tracks
+      ..notify();
+    final source = _player.audioSource as ConcatenatingAudioSource;
+    final children = tracks
+        .map(
+          (e) => AudioSource.uri(
+            LibmpvPluginUtils.redirect(e.uri),
+            tag: e.toJson(),
+          ),
+        )
+        .toList();
+    // didnt use move() because wont be useful when inserting numbers of tracks
+    return source
+        .removeAt(oldIndex)
+        .then((value) => source.insertAll(newIndex, children))
+        .then((value) => source.removeAt(playback.tracks.length));
   }
 
   @override
