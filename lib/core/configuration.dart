@@ -504,12 +504,10 @@ class Configuration extends ConfigurationKeys {
             'mobileGenresGridSize': 3,
             'albumHashCodeParameters': const [
               0,
-              1,
-              2,
             ],
             'userLibmpvOptions': <String, String>{},
             'disableAnimations': false,
-            'addLibraryToPlaylistWhenPlayingFromTracksTab': false,
+            'addLibraryToPlaylistWhenPlayingFromTracksTab': isMobile,
             'fallbackAlbumArtFileNames': kDefaultFallbackAlbumArtFileNames,
             'androidEnableVolumeBoostFilter': false,
           };
