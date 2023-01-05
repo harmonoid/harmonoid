@@ -138,7 +138,7 @@ index b0b4bec..661179f 100644
 -                                            CrossAxisAlignment.stretch,
 -                                        children: [
 -                                          const SizedBox(height: 4.0),
--                                          TextField(
+-                                          CustomTextField(
 -                                            textCapitalization:
 -                                                TextCapitalization.words,
 -                                            textInputAction:
@@ -218,7 +218,7 @@ index b0b4bec..661179f 100644
 +                                        CrossAxisAlignment.stretch,
 +                                    children: [
 +                                      const SizedBox(height: 4.0),
-+                                      TextField(
++                                      CustomTextField(
 +                                        textCapitalization:
 +                                            TextCapitalization.words,
 +                                        textInputAction: TextInputAction.done,
