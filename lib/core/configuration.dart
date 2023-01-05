@@ -482,7 +482,7 @@ class Configuration extends ConfigurationKeys {
             'modernNowPlayingScreenCarouselIndex': 0,
             'lyricsVisible': true,
             'discordRPC': true,
-            'highlightedLyricsSize': 24.0,
+            'highlightedLyricsSize': 38.0,
             'unhighlightedLyricsSize': 14.0,
             'albumsSort': isDesktop ? 3 : 0,
             'tracksSort': 0,
