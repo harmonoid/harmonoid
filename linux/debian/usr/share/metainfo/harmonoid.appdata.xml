@@ -11,10 +11,9 @@
 		<control>touch</control>
 	</recommends>
 	<developer_name>Hitesh Kumar Saini</developer_name>
-	<!-- TODO: Update details. -->
-	<!-- <url type="homepage">https://github.com/harmonoid/harmonoid</url>
-	<url type="donation">https://alexmercerind.github.io/donate</url>
-	<url type="contact">https://discord.gg/2Rc3edFWd8</url>
+	<!-- <url type="homepage"></url>
+	<url type="donation"></url>
+	<url type="contact"></url>
 	<description>
 		<p>Plays &amp; manages your music library. Looks beautiful & juicy.</p>
 		<p></p>
@@ -30,16 +29,13 @@
 	</description>
 	<screenshots>
 		<screenshot>
-			<image type="source">https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_W8Oi1qPZ0O.webp?raw=true</image>
-			<image type="source">https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_MOnywQpgPB.webp?raw=true</image>
-			<image type="source">https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_BRfMT0wIX6.webp?raw=true</image>
-			<image type="source">https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_zZZ1d0yO5G.webp?raw=true</image>
-			<image type="source">https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_yFdqibq6DF.webp?raw=true</image>
+			<image type="source"></image>
 		</screenshot>
 	</screenshots> -->
 	<launchable type="desktop-id">harmonoid.desktop</launchable>
 	<releases>
-		<release version="0.3.5" date="2023-01-02" />
+		<release version="0.3.6" date="2023-02-05" />
+		<release version="0.3.5" date="2023-01-05" />
 		<release version="0.3.4" date="2022-11-16" />
 		<release version="0.3.3" date="2022-09-21" />
 		<release version="0.3.2" date="2022-09-19" />
