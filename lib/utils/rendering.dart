@@ -8,6 +8,7 @@
 
 import 'dart:io';
 import 'dart:async';
+import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:share_plus/share_plus.dart';
@@ -1072,6 +1073,11 @@ enum TabRouteSender {
   systemNavigationBackButton,
 }
 
+/// Caches the resolved album arts once requested by [getAlbumArt].
+/// This prevents redundant I/O operations.
+HashMap<Media, ImageProvider> resolvedAlbumArts =
+    HashMap<Media, ImageProvider>();
+
 /// Fetches the album art of a given [Media] either local or online.
 ///
 /// Passing [small] as `true` will result in a smaller sized image, which may be useful
@@ -1107,39 +1113,51 @@ ImageProvider getAlbumArt(
   }
   fallbackAlbumArtFileNames ??= _fallbackAlbumArtFileNames;
 
+  // Result.
   ImageProvider? image;
-  // Separately handle the web URLs.
-  if (media is Track) {
-    if (ExternalMedia.supported(media.uri)) {
-      image = ExtendedNetworkImageProvider(
-        ExternalMedia.thumbnail(
-          media.uri,
-          small: small,
-        ).toString(),
-        cache: true,
+
+  // Already resolved by previous [getAlbumArt] calls.
+  if (resolvedAlbumArts.containsKey(media)) {
+    image = resolvedAlbumArts[media]!;
+  }
+  // Fresh request.
+  else {
+    // Separately handle the web URLs.
+    if (media is Track) {
+      if (ExternalMedia.supported(media.uri)) {
+        image = ExtendedNetworkImageProvider(
+          ExternalMedia.thumbnail(
+            media.uri,
+            small: small,
+          ).toString(),
+          cache: true,
+        );
+      } else if (!media.uri.isScheme('FILE')) {
+        // Album arts are not supported for online [Media] URLs.
+        image = ExtendedFileImageProvider(Collection.instance.unknownAlbumArt);
+      }
+    }
+    if (image == null) {
+      // The passed [media] wasn't a web entity, fetch album art for the locally stored media.
+      // Automatically checks for fallback album arts e.g. `Folder.jpg` or `cover.jpg` etc.
+      final file = Collection.instance.getAlbumArt(
+        media,
+        lookupForFallbackAlbumArt: lookupForFallbackAlbumArt,
+        fallbackAlbumArtFileNames: fallbackAlbumArtFileNames,
       );
-    } else if (!media.uri.isScheme('FILE')) {
-      // Album arts are not supported for online [Media] URLs.
+      if (file != null) {
+        // An album art is found.
+        image = ExtendedFileImageProvider(file);
+      }
+    }
+    if (image == null) {
+      // No album art found, use the default album art.
       image = ExtendedFileImageProvider(Collection.instance.unknownAlbumArt);
     }
+    // Cache the resolved album art.
+    resolvedAlbumArts[media] = image;
   }
-  if (image == null) {
-    // The passed [media] wasn't a web entity, fetch album art for the locally stored media.
-    // Automatically checks for fallback album arts e.g. `Folder.jpg` or `cover.jpg` etc.
-    final file = Collection.instance.getAlbumArt(
-      media,
-      lookupForFallbackAlbumArt: lookupForFallbackAlbumArt,
-      fallbackAlbumArtFileNames: fallbackAlbumArtFileNames,
-    );
-    if (file != null) {
-      // An album art is found.
-      image = ExtendedFileImageProvider(file);
-    }
-  }
-  if (image == null) {
-    // No album art found, use the default album art.
-    image = ExtendedFileImageProvider(Collection.instance.unknownAlbumArt);
-  }
+
   // [ResizeImage.resizeIfNeeded] is only needed for local images.
   if (small && !(image is ExtendedNetworkImageProvider)) {
     return ResizeImage.resizeIfNeeded(null, cacheWidth ?? 200, image);
