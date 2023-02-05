@@ -376,9 +376,8 @@ class Playback extends ChangeNotifier {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       instance.player = Player(
         configuration: PlayerConfiguration(
-          texture: false,
-          osd: 0,
-          vo: 'null',
+          vid: false,
+          osc: false,
           title: 'Harmonoid',
         ),
       );

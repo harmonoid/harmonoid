@@ -9,6 +9,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/foundation.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:window_plus/window_plus.dart';
 import 'package:harmonoid/utils/android_tag_reader.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
@@ -64,6 +65,7 @@ Future<void> main(List<String> args) async {
         enableEventStreams: false,
       );
       WindowLifecycle.initialize();
+      await libmpvNativeLibrary.find();
       await Configuration.initialize();
       await TagReader.initialize();
       await ExternalMediaProvider.create();
@@ -81,6 +83,7 @@ Future<void> main(List<String> args) async {
         enableEventStreams: false,
       );
       WindowLifecycle.initialize();
+      await libmpvNativeLibrary.find();
       await Configuration.initialize();
       await TagReader.initialize();
       await ExternalMediaProvider.create();
