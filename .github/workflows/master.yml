@@ -72,16 +72,16 @@ jobs:
             Output/harmonoid-windows-setup.exe
             harmonoid-windows-exe.zip
           token: ${{ secrets.ACCESS_TOKEN_2 }}
-      - name: Release Nightly
+      - name: Release Snapshot
         uses: softprops/action-gh-release@v1
         env:
-          GITHUB_REPOSITORY: harmonoid/harmonoid-nightly
+          GITHUB_REPOSITORY: harmonoid/harmonoid-snapshots
         with:
-          repository: harmonoid/harmonoid-nightly
+          repository: harmonoid/harmonoid-snapshots
           draft: false
           prerelease: true
           body: ${{ github.sha }}
-          tag_name: nightly
+          tag_name: snapshot
           files: |
             Output/harmonoid-windows-setup.exe
             harmonoid-windows-exe.zip
@@ -166,16 +166,16 @@ jobs:
           tag_name: "vnext"
           files: harmonoid-linux-*
           token: ${{ secrets.ACCESS_TOKEN_2 }}
-      - name: Release Nightly
+      - name: Release Snapshot
         uses: softprops/action-gh-release@v1
         env:
-          GITHUB_REPOSITORY: harmonoid/harmonoid-nightly
+          GITHUB_REPOSITORY: harmonoid/harmonoid-snapshots
         with:
-          repository: harmonoid/harmonoid-nightly
+          repository: harmonoid/harmonoid-snapshots
           draft: false
           prerelease: true
           body: ${{ github.sha }}
-          tag_name: nightly
+          tag_name: snapshot
           files: harmonoid-linux-*
           token: ${{ secrets.ACCESS_TOKEN_2 }}
 
