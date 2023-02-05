@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - master
-      - stable
   workflow_dispatch:
 
 jobs:
@@ -25,8 +24,7 @@ jobs:
         run: echo ${{ steps.vars.outputs.sha_short }}
       - uses: subosito/flutter-action@v1
         with:
-          # TODO (@alexmercerind): Revert to stable once Flutter 3.7.x rolls out.
-          channel: "beta"
+          channel: "stable"
 
       - run: |
           rmdir /s /q "assets/fonts"
@@ -102,8 +100,7 @@ jobs:
         run: echo ${{ steps.vars.outputs.sha_short }}
       - uses: subosito/flutter-action@v1
         with:
-          # TODO (@alexmercerind): Revert to stable once Flutter 3.7.x rolls out.
-          channel: "beta"
+          channel: "stable"
 
       - run: sudo apt-get update
       - run: sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev mpv libmpv-dev dpkg-dev rpm tree
@@ -194,8 +191,7 @@ jobs:
         run: echo ${{ steps.vars.outputs.sha_short }}
       - uses: subosito/flutter-action@v1
         with:
-          # TODO (@alexmercerind): Revert to stable once Flutter 3.7.x rolls out.
-          channel: "beta"
+          channel: "stable"
 
       - name: Create Key Store
         id: create_key_store
