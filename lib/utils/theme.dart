@@ -9,196 +9,680 @@
 // DO NOT IMPORT ANYTHING FROM `package:harmonoid` IN THIS FILE.
 
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-final desktop = Platform.isWindows || Platform.isLinux || Platform.isMacOS;
-final mobile = Platform.isAndroid || Platform.isIOS;
 
 ThemeData createTheme({
   required Color color,
   required ThemeMode mode,
 }) {
-  bool light = mode == ThemeMode.light;
-  TextTheme theme;
-  if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-    theme = TextTheme(
-      // Leading tile widgets text theme.
-      displayLarge: TextStyle(
-        color: light ? Colors.black : Colors.white,
-        fontSize: 16.0,
-        fontWeight: FontWeight.w600,
-      ),
-      // [AlbumTile] text theme.
-      displayMedium: TextStyle(
-        color: light ? Colors.black : Colors.white,
-        fontSize: 14.0,
-        fontWeight: FontWeight.w600,
-      ),
-      displaySmall: TextStyle(
-        color: light
-            ? Colors.black.withOpacity(0.87)
-            : Colors.white.withOpacity(0.87),
-        fontSize: 14.0,
-        fontWeight: FontWeight.normal,
-      ),
-      headlineMedium: TextStyle(
-        color: light ? Colors.black : Colors.white,
-        fontSize: 14.0,
-        fontWeight: FontWeight.normal,
-      ),
-      headlineSmall: TextStyle(
-        color: light
-            ? Colors.black.withOpacity(0.87)
-            : Colors.white.withOpacity(0.87),
-        fontSize: 12.0,
-        fontWeight: FontWeight.normal,
-      ),
-      // [ListTile] text theme.
-      // [ListTile.title]'s text theme must be overrided to [headlineMedium], if it does not contain subtitle.
-      titleMedium: TextStyle(
-        color: light ? Colors.black : Colors.white,
-        fontSize: 14.0,
-        fontWeight: FontWeight.w600,
-      ),
-      bodyMedium: TextStyle(
-        color: light
-            ? Colors.black.withOpacity(0.87)
-            : Colors.white.withOpacity(0.87),
-        fontSize: 14.0,
-        fontWeight: FontWeight.normal,
-      ),
-      bodySmall: TextStyle(
-        color: light
-            ? Colors.black.withOpacity(0.87)
-            : Colors.white.withOpacity(0.87),
-        fontSize: 14.0,
-        fontWeight: FontWeight.normal,
-      ),
-      // Used as [DataTable]'s column title text-theme.
-      titleSmall: TextStyle(
-        color: light ? Colors.black : Colors.white,
-        fontSize: 14.0,
-        fontWeight: FontWeight.w600,
-      ),
-      // Used as [AlertDialog]'s [title] text-theme.
-      titleLarge: TextStyle(
-        color: light ? Colors.black : Colors.white,
-        fontSize: 20.0,
-        fontWeight: FontWeight.w600,
-      ),
-    );
-  } else {
-    theme = TextTheme(
-      displayLarge: TextStyle(
-        fontWeight: FontWeight.normal,
-        color: light ? Colors.black87 : Colors.white.withOpacity(0.87),
-        fontSize: 18.0,
-      ),
-      displayMedium: TextStyle(
-        fontWeight: FontWeight.normal,
-        color: light ? Colors.black87 : Colors.white.withOpacity(0.87),
-        fontSize: 16.0,
-      ),
-      displaySmall: TextStyle(
-        fontWeight: FontWeight.normal,
-        color: light ? Colors.black54 : Colors.white70,
-        fontSize: 14.0,
-      ),
-      headlineMedium: TextStyle(
-        fontWeight: FontWeight.normal,
-        color: light ? Colors.black87 : Colors.white.withOpacity(0.87),
-        fontSize: 14.0,
-      ),
-      headlineSmall: TextStyle(
-        fontWeight: FontWeight.normal,
-        color: light ? Colors.black54 : Colors.white70,
-        fontSize: 14.0,
-      ),
-    );
-  }
-  // Enforce `Inter` font family on Linux machines.
-  theme = theme.apply(fontFamily: Platform.isLinux ? 'Inter' : null);
-  return ThemeData(
-    // Enforce `Inter` font family on Linux machines.
-    fontFamily: Platform.isLinux ? 'Inter' : null,
-    colorScheme: ColorScheme(
-      brightness: light ? Brightness.light : Brightness.dark,
-      primary: color,
-      onPrimary: color.computeLuminance() > 0.7 ? Colors.black : Colors.white,
-      secondary: color,
-      onSecondary: color.computeLuminance() > 0.7 ? Colors.black : Colors.white,
-      error: Colors.red.shade800,
-      onError: Colors.white,
-      background: light ? Colors.white : Colors.black,
-      onBackground: desktop
-          ? (light ? Colors.black : Colors.white)
-          : (light
-              ? Colors.black.withOpacity(0.87)
-              : Colors.white.withOpacity(0.87)),
-      surface: Colors.transparent,
-      onSurface: desktop
-          ? (light ? Colors.black : Colors.white)
-          : (light
-              ? Colors.black.withOpacity(0.87)
-              : Colors.white.withOpacity(0.87)),
+  final isLightMode = mode == ThemeMode.light;
+  final isDesktopPlatform =
+      Platform.isWindows || Platform.isLinux || Platform.isMacOS;
+
+  // TYPOGRAPHY
+
+  // Material Design 2014 typography.
+  TextTheme theme = TextTheme(
+    displayLarge: TextStyle(
+      fontSize: 112.0,
+      fontWeight: FontWeight.w100,
+      letterSpacing: 0.0,
     ),
+    displayMedium: TextStyle(
+      fontSize: 56.0,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0.0,
+    ),
+    displaySmall: TextStyle(
+      fontSize: 45.0,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0.0,
+    ),
+    headlineLarge: TextStyle(
+      fontSize: 40.0,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0.0,
+    ),
+    headlineMedium: TextStyle(
+      fontSize: 34.0,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0.0,
+    ),
+    headlineSmall: TextStyle(
+      fontSize: 24.0,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0.0,
+    ),
+    titleLarge: TextStyle(
+      fontSize: 20.0,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.0,
+    ),
+    titleMedium: TextStyle(
+      fontSize: 16.0,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0.0,
+    ),
+    titleSmall: TextStyle(
+      fontSize: 14.0,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.1,
+    ),
+    bodyLarge: TextStyle(
+      fontSize: 14.0,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.0,
+    ),
+    bodyMedium: TextStyle(
+      fontSize: 14.0,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0.0,
+    ),
+    bodySmall: TextStyle(
+      fontSize: 12.0,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0.0,
+    ),
+    labelLarge: TextStyle(
+      fontSize: 14.0,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.0,
+    ),
+    labelMedium: TextStyle(
+      fontSize: 12.0,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0.0,
+    ),
+    labelSmall: TextStyle(
+      fontSize: 10.0,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 1.5,
+    ),
+  );
+  // Apply the modifications to the original Material Design 2014 typography.
+  final primaryTextColor = isDesktopPlatform
+      ? isLightMode
+          ? Colors.black
+          : Colors.white
+      : isLightMode
+          ? Colors.black.withOpacity(0.87)
+          : Colors.white.withOpacity(0.87);
+  final secondaryTextColor = isDesktopPlatform
+      ? isLightMode
+          ? Colors.black.withOpacity(0.87)
+          : Colors.white.withOpacity(0.87)
+      : isLightMode
+          ? Colors.black.withOpacity(0.54)
+          : Colors.white.withOpacity(0.70);
+  theme = theme.merge(
+    isDesktopPlatform
+        ? TextTheme(
+            // Leading tile widgets text theme.
+            displayLarge: TextStyle(
+              color: primaryTextColor,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
+            ),
+            // [AlbumTile] text theme.
+            displayMedium: TextStyle(
+              color: primaryTextColor,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w600,
+            ),
+            displaySmall: TextStyle(
+              color: secondaryTextColor,
+              fontSize: 14.0,
+              fontWeight: FontWeight.normal,
+            ),
+            headlineMedium: TextStyle(
+              color: primaryTextColor,
+              fontSize: 14.0,
+              fontWeight: FontWeight.normal,
+            ),
+            headlineSmall: TextStyle(
+              color: secondaryTextColor,
+              fontSize: 12.0,
+              fontWeight: FontWeight.normal,
+            ),
+            // [ListTile] text theme.
+            // [ListTile.title]'s text theme must be overrided to [headlineMedium], if it does not contain subtitle.
+            titleMedium: TextStyle(
+              color: primaryTextColor,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w600,
+            ),
+            bodySmall: TextStyle(
+              color: secondaryTextColor,
+              fontSize: 14.0,
+              fontWeight: FontWeight.normal,
+            ),
+            // Normal text shown everywhere.
+            bodyMedium: TextStyle(
+              color: secondaryTextColor,
+              fontSize: 14.0,
+              fontWeight: FontWeight.normal,
+            ),
+            // Used as [DataTable]'s column title text-theme.
+            titleSmall: TextStyle(
+              color: primaryTextColor,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w600,
+            ),
+            // Used as [AlertDialog]'s [title] text-theme.
+            titleLarge: TextStyle(
+              color: primaryTextColor,
+              fontSize: 20.0,
+              fontWeight: FontWeight.w600,
+            ),
+            // Modify button text theme on desktop to be more consistent.
+            labelLarge: TextStyle(
+              letterSpacing: Platform.isLinux ? 0.8 : 1.6,
+              fontWeight: FontWeight.w600,
+              // Enforce `Inter` font family on GNU/Linux.
+              fontFamily: Platform.isLinux ? 'Inter' : null,
+            ),
+          )
+        : TextTheme(
+            displayLarge: TextStyle(
+              fontWeight: FontWeight.normal,
+              color: primaryTextColor,
+              fontSize: 18.0,
+            ),
+            displayMedium: TextStyle(
+              fontWeight: FontWeight.normal,
+              color: primaryTextColor,
+              fontSize: 16.0,
+            ),
+            displaySmall: TextStyle(
+              fontWeight: FontWeight.normal,
+              color: secondaryTextColor,
+              fontSize: 14.0,
+            ),
+            headlineMedium: TextStyle(
+              fontWeight: FontWeight.normal,
+              color: primaryTextColor,
+              fontSize: 14.0,
+            ),
+            headlineSmall: TextStyle(
+              fontWeight: FontWeight.normal,
+              color: secondaryTextColor,
+              fontSize: 14.0,
+            ),
+            // [ListTile] text theme. Exactly same as 2014's except color.
+            titleMedium: TextStyle(color: primaryTextColor),
+            bodySmall: TextStyle(color: secondaryTextColor),
+          ),
+  );
+  // Enforce `Inter` font family on GNU/Linux.
+  final fontFamily = Platform.isLinux ? 'Inter' : null;
+  theme = theme.apply(fontFamily: fontFamily);
+
+  // COLORS
+
+  // Material Design 2 color scheme based on single primary color.
+  final colorScheme = ColorScheme(
+    brightness: isLightMode ? Brightness.light : Brightness.dark,
+    // Assign all these fucks to the primary color.
+    primary: color,
+    onPrimary: color.computeLuminance() > 0.7 ? Colors.black : Colors.white,
+    secondary: color,
+    onSecondary: color.computeLuminance() > 0.7 ? Colors.black : Colors.white,
+    tertiary: color,
+    onTertiary: color.computeLuminance() > 0.7 ? Colors.black : Colors.white,
+    error: Colors.red.shade800,
+    onError: Colors.white,
+    background: isLightMode ? Colors.white : Colors.black,
+    onBackground: primaryTextColor,
+    // [Card] color.
+    surface: isLightMode ? Colors.white : const Color(0xFF222222),
+    onSurface: primaryTextColor,
+    surfaceVariant: isLightMode ? Colors.white : const Color(0xFF222222),
+    onSurfaceVariant: primaryTextColor,
+    // Remove the fucking tint from popup menus, bottom sheets etc.
+    surfaceTint: Colors.transparent,
+    // Keep the Material Design 2 shadow.
+    shadow: Colors.black,
+  );
+  // Additional colors based on official Material Design 2 guidelines.
+  final focusColor = isLightMode
+      ? Colors.black.withOpacity(0.12)
+      : Colors.white.withOpacity(0.12);
+  final hoverColor = isLightMode
+      ? Colors.black.withOpacity(0.04)
+      : Colors.white.withOpacity(0.04);
+  final splashColor = isLightMode ? const Color(0x40CCCCCC) : Color(0x40CCCCCC);
+  final disabledColor = isLightMode
+      ? Color.lerp(Colors.white, Colors.black, 0.38)
+      : Color.lerp(Colors.black, Colors.white, 0.38);
+  // Keep the Material Design 2 shadow.
+  final shadowColor = Colors.black;
+  final highlightColor = isDesktopPlatform
+      ? isLightMode
+          ? const Color(0x66BCBCBC)
+          : const Color(0x40CCCCCC)
+      :
+      // Disable highlight on mobile devices.
+      Colors.transparent;
+  final cardColor = isLightMode ? Colors.white : const Color(0xFF222222);
+  final scaffoldBackgroundColor = isLightMode ? Colors.white : Colors.black;
+  final dialogBackgroundColor =
+      isLightMode ? Colors.white : const Color(0xFF202020);
+  final unselectedWidgetColor = isLightMode ? Colors.black54 : Colors.white70;
+  final popupMenuColor = isLightMode ? Colors.white : const Color(0xFF282828);
+  final snackBarColor = isLightMode ? Colors.white : const Color(0xFF282828);
+  final iconColors = IconColors(
+    Color.lerp(Colors.white, Colors.black, 0.54),
+    Color.lerp(Colors.black, Colors.white, 0.54),
+    Color.lerp(Colors.white, Colors.black, 0.70),
+    Color.lerp(Colors.black, Colors.white, 1.0),
+    Color.lerp(Colors.white, Colors.black, 0.70),
+    Color.lerp(Colors.black, Colors.white, 1.0),
+  );
+
+  return ThemeData(
+    // TYPOGRAPHY
+
     textTheme: theme,
     primaryTextTheme: theme,
-    // Breaks [FloatingActionButton.extended].
-    // floatingActionButtonTheme: FloatingActionButtonThemeData(
-    //   shape: CircleBorder(),
-    // ),
-    // ignore: deprecated_member_use
-    androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
-    textButtonTheme: desktop
-        ? TextButtonThemeData(
-            style: ButtonStyle(
-              textStyle: MaterialStatePropertyAll(
-                TextStyle(
-                  letterSpacing: Platform.isLinux ? 0.8 : 1.6,
-                  fontWeight: FontWeight.w600,
-                  // Enforce `Inter` font family on Linux machines.
-                  fontFamily: Platform.isLinux ? 'Inter' : null,
-                ),
-              ),
-            ),
-          )
-        : null,
-    elevatedButtonTheme: desktop
-        ? ElevatedButtonThemeData(
-            style: ButtonStyle(
-              textStyle: MaterialStatePropertyAll(
-                TextStyle(
-                  letterSpacing: Platform.isLinux ? 0.8 : 1.6,
-                  fontWeight: FontWeight.w600,
-                  // Enforce `Inter` font family on Linux machines.
-                  fontFamily: Platform.isLinux ? 'Inter' : null,
-                ),
-              ),
-            ),
-          )
-        : null,
-    bottomSheetTheme: BottomSheetThemeData(
-      backgroundColor: light ? Colors.white : Color(0xFF202020),
+    fontFamily: fontFamily,
+
+    // COLORS
+
+    primaryColor: color,
+
+    colorScheme: colorScheme,
+
+    focusColor: focusColor,
+    hoverColor: hoverColor,
+    splashColor: splashColor,
+    disabledColor: disabledColor,
+    shadowColor: shadowColor,
+    highlightColor: highlightColor,
+    cardColor: cardColor,
+    scaffoldBackgroundColor: scaffoldBackgroundColor,
+    dialogBackgroundColor: dialogBackgroundColor,
+    unselectedWidgetColor: unselectedWidgetColor,
+
+    splashFactory: InkRipple.splashFactory,
+    iconTheme: IconThemeData(
+      color: isLightMode ? iconColors.lightIconColor : iconColors.darkIconColor,
+      size: 24.0,
     ),
+
+    // BUTTONS
+
+    // Keep FABs circular as in Material Design 2.
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      elevation: 6,
+      focusElevation: 6,
+      hoverElevation: 8,
+      highlightElevation: 12,
+      enableFeedback: true,
+      sizeConstraints: const BoxConstraints.tightFor(
+        width: 56.0,
+        height: 56.0,
+      ),
+      smallSizeConstraints: const BoxConstraints.tightFor(
+        width: 40.0,
+        height: 40.0,
+      ),
+      largeSizeConstraints: const BoxConstraints.tightFor(
+        width: 96.0,
+        height: 96.0,
+      ),
+      extendedSizeConstraints: const BoxConstraints.tightFor(
+        height: 48.0,
+      ),
+      extendedIconLabelSpacing: 8.0,
+      foregroundColor: colorScheme.onSecondary,
+      backgroundColor: colorScheme.secondary,
+      // NOTE: [FloatingActionButton.extended] have stadium border & needs to be handled separately.
+      shape: CircleBorder(),
+      iconSize: 24.0,
+      extendedPadding: EdgeInsetsDirectional.only(start: 16.0, end: 20.0),
+      extendedTextStyle: theme.labelLarge?.copyWith(letterSpacing: 1.2),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: ButtonStyle(
+        // Keep the Material Design 2 color.
+        backgroundColor: MaterialStatePropertyAll(Colors.transparent),
+        foregroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.disabled)) {
+            return colorScheme.onSurface.withOpacity(0.38);
+          }
+          return colorScheme.primary;
+        }),
+        overlayColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.hovered)) {
+            return colorScheme.primary.withOpacity(0.04);
+          }
+          if (states.contains(MaterialState.focused)) {
+            return colorScheme.primary.withOpacity(0.12);
+          }
+          if (states.contains(MaterialState.pressed)) {
+            return colorScheme.primary.withOpacity(0.12);
+          }
+        }),
+        // Keep the Material Design 2 side.
+        side: MaterialStatePropertyAll(BorderSide.none),
+        // Keep the Material Design 2 rounded rectangle shape.
+        shape: MaterialStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0),
+          ),
+        ),
+        padding: MaterialStatePropertyAll(
+          ButtonStyleButton.scaledPadding(
+            const EdgeInsets.all(8),
+            const EdgeInsets.symmetric(horizontal: 8),
+            const EdgeInsets.symmetric(horizontal: 4),
+            window.textScaleFactor,
+          ),
+        ),
+        // Keep the Material Design 2 shadow.
+        shadowColor: const MaterialStatePropertyAll(Colors.transparent),
+        elevation: const MaterialStatePropertyAll(0.0),
+        minimumSize: MaterialStatePropertyAll(const Size(64.0, 36.0)),
+        fixedSize: null,
+        maximumSize: MaterialStatePropertyAll(Size.infinite),
+        alignment: Alignment.center,
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        // Keep the Material Design 2 color.
+        backgroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.disabled)) {
+            return colorScheme.onSurface.withOpacity(0.12);
+          }
+          return colorScheme.primary;
+        }),
+        foregroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.disabled)) {
+            return colorScheme.onSurface.withOpacity(0.38);
+          }
+          return colorScheme.onPrimary;
+        }),
+        overlayColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.hovered)) {
+            return colorScheme.onPrimary.withOpacity(0.08);
+          }
+          if (states.contains(MaterialState.focused)) {
+            return colorScheme.onPrimary.withOpacity(0.24);
+          }
+          if (states.contains(MaterialState.pressed)) {
+            return colorScheme.onPrimary.withOpacity(0.24);
+          }
+        }),
+        // Keep the Material Design 2 shadow.
+        shadowColor: const MaterialStatePropertyAll(Colors.transparent),
+        elevation: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.disabled)) {
+            return 0.0;
+          }
+          if (states.contains(MaterialState.hovered)) {
+            return 4.0;
+          }
+          if (states.contains(MaterialState.focused)) {
+            return 4.0;
+          }
+          if (states.contains(MaterialState.pressed)) {
+            return 8.0;
+          }
+          return 2.0;
+        }),
+        // Keep the Material Design 2 side.
+        side: MaterialStatePropertyAll(BorderSide.none),
+        // Keep the Material Design 2 rounded rectangle shape.
+        shape: MaterialStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0),
+          ),
+        ),
+        padding: MaterialStatePropertyAll(
+          ButtonStyleButton.scaledPadding(
+            const EdgeInsets.symmetric(horizontal: 16),
+            const EdgeInsets.symmetric(horizontal: 8),
+            const EdgeInsets.symmetric(horizontal: 4),
+            window.textScaleFactor,
+          ),
+        ),
+        minimumSize: MaterialStatePropertyAll(const Size(64.0, 36.0)),
+        fixedSize: null,
+        maximumSize: MaterialStatePropertyAll(Size.infinite),
+        alignment: Alignment.center,
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: ButtonStyle(
+        // Keep the Material Design 2 color.
+        backgroundColor: MaterialStatePropertyAll(Colors.transparent),
+        foregroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.disabled)) {
+            return colorScheme.onSurface.withOpacity(0.38);
+          }
+          return colorScheme.primary;
+        }),
+        overlayColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.hovered)) {
+            return colorScheme.primary.withOpacity(0.04);
+          }
+          if (states.contains(MaterialState.focused)) {
+            return colorScheme.primary.withOpacity(0.12);
+          }
+          if (states.contains(MaterialState.pressed)) {
+            return colorScheme.primary.withOpacity(0.12);
+          }
+        }),
+        // Keep the Material Design 2 side.
+        side: MaterialStatePropertyAll(
+          BorderSide(
+            width: 1,
+            color: colorScheme.onSurface.withOpacity(0.12),
+          ),
+        ),
+        // Keep the Material Design 2 rounded rectangle shape.
+        shape: MaterialStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0),
+          ),
+        ),
+        padding: MaterialStatePropertyAll(
+          ButtonStyleButton.scaledPadding(
+            const EdgeInsets.all(8),
+            const EdgeInsets.symmetric(horizontal: 8),
+            const EdgeInsets.symmetric(horizontal: 4),
+            window.textScaleFactor,
+          ),
+        ),
+        shadowColor: const MaterialStatePropertyAll(Colors.transparent),
+        elevation: const MaterialStatePropertyAll(0.0),
+        minimumSize: MaterialStatePropertyAll(const Size(64.0, 36.0)),
+        fixedSize: null,
+        maximumSize: MaterialStatePropertyAll(Size.infinite),
+        alignment: Alignment.center,
+      ),
+    ),
+
     textSelectionTheme: TextSelectionThemeData(
-      cursorColor: desktop
-          ? light
+      cursorColor: isDesktopPlatform
+          ? isLightMode
               ? Colors.black
               : Colors.white
-          : color,
-      selectionHandleColor: color,
-      selectionColor: color.withOpacity(0.2),
+          : colorScheme.primary,
+      selectionHandleColor: colorScheme.primary,
+      selectionColor: colorScheme.primary.withOpacity(0.2),
     ),
+
+    // CARD, POPUP MENU & APP BAR
+
+    cardTheme: CardTheme(
+      elevation: 4.0,
+      color: cardColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+    ),
+    popupMenuTheme: PopupMenuThemeData(
+      elevation: 4.0,
+      color: popupMenuColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+    ),
+    appBarTheme: AppBarTheme(
+      // Keep the Material Design 2 shadow.
+      shadowColor: Colors.black,
+      backgroundColor: isDesktopPlatform
+          ? isLightMode
+              ? Colors.white
+              : const Color(0xFF272727)
+          : isLightMode
+              ? Colors.white
+              : const Color(0xFF202020),
+      foregroundColor: primaryTextColor,
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: isLightMode ? Colors.white12 : Colors.black12,
+        statusBarIconBrightness:
+            isLightMode ? Brightness.dark : Brightness.light,
+      ),
+      elevation: 4.0,
+      iconTheme: IconThemeData(
+        color: isLightMode
+            ? iconColors.appBarLightIconColor
+            : iconColors.appBarDarkIconColor,
+        size: 24.0,
+      ),
+      actionsIconTheme: IconThemeData(
+        color: isLightMode
+            ? iconColors.appBarActionLightIconColor
+            : iconColors.appBarActionDarkIconColor,
+        size: 24.0,
+      ),
+    ),
+
+    pageTransitionsTheme: PageTransitionsTheme(
+      builders: {
+        TargetPlatform.windows: OpenUpwardsPageTransitionsBuilder(),
+        TargetPlatform.linux: OpenUpwardsPageTransitionsBuilder(),
+        TargetPlatform.android: ZoomPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+      },
+    ),
+
+    // DIVIDER
+
+    dividerTheme: DividerThemeData(
+      color: isLightMode ? Colors.black12 : Colors.white24,
+      thickness: 1.0,
+      indent: 0.0,
+      endIndent: 0.0,
+    ),
+
+    // RADIO BUTTON & CHECKBOX
+
+    radioTheme: () {
+      final fillColor = MaterialStateProperty.resolveWith(
+        (states) {
+          if (states.contains(MaterialState.disabled)) {
+            return disabledColor;
+          }
+          if (states.contains(MaterialState.selected)) {
+            return colorScheme.secondary;
+          }
+          return unselectedWidgetColor;
+        },
+      );
+      return RadioThemeData(
+        fillColor: fillColor,
+        overlayColor: MaterialStateProperty.resolveWith(
+          (states) {
+            if (states.contains(MaterialState.pressed)) {
+              return fillColor.resolve(states)?.withAlpha(0x1F);
+            }
+            if (states.contains(MaterialState.focused)) {
+              return focusColor;
+            }
+            if (states.contains(MaterialState.hovered)) {
+              return hoverColor;
+            }
+            return Colors.transparent;
+          },
+        ),
+      );
+    }(),
+    checkboxTheme: () {
+      final fillColor = MaterialStateProperty.resolveWith(
+        (states) {
+          if (states.contains(MaterialState.disabled)) {
+            return disabledColor;
+          }
+          if (states.contains(MaterialState.selected)) {
+            return colorScheme.secondary;
+          }
+          return unselectedWidgetColor;
+        },
+      );
+      return CheckboxThemeData(
+        fillColor: fillColor,
+        overlayColor: MaterialStateProperty.resolveWith(
+          (states) {
+            if (states.contains(MaterialState.pressed)) {
+              return fillColor.resolve(states)?.withAlpha(0x1F);
+            }
+            if (states.contains(MaterialState.focused)) {
+              return focusColor;
+            }
+            if (states.contains(MaterialState.hovered)) {
+              return hoverColor;
+            }
+            return Colors.transparent;
+          },
+        ),
+      );
+    }(),
+
+    // DIALOG
+
+    // [DialogTheme] is extensively different in Material Design 2.
+    dialogTheme: DialogTheme(
+      alignment: Alignment.center,
+      // Keep the Material Design 2 shadow.
+      elevation: 24.0,
+      shadowColor: Colors.black,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4.0),
+      ),
+      backgroundColor: dialogBackgroundColor,
+      titleTextStyle: theme.titleLarge?.copyWith(color: primaryTextColor),
+      contentTextStyle: theme.titleMedium?.copyWith(color: secondaryTextColor),
+      actionsPadding: EdgeInsets.zero.add(const EdgeInsets.all(8.0)),
+    ),
+
+    // BOTTOM SHEET
+
+    bottomSheetTheme: BottomSheetThemeData(
+      // Keep the Material Design 2 shadow.
+      elevation: 24.0,
+      shape: RoundedRectangleBorder(
+        // Disable rounded corners as in Material Design 2.
+        borderRadius: BorderRadius.zero,
+      ),
+      backgroundColor: isLightMode ? Colors.white : const Color(0xFF202020),
+    ),
+
+    // SCROLLBAR
+
+    // Modify the default scrollbar theme on desktop.
+    // This scrollbar feels more "Material" than the default one.
+    // Thanks to @HrX03 for the this: https://github.com/PotatoProject/Leaflet/blob/11f87a85c8b49192a31fb069066bf9fdfdd755b0/lib/internal/theme/data.dart#L138-L154.
     scrollbarTheme: ScrollbarThemeData(
-      thumbVisibility: MaterialStateProperty.all(true),
-      thickness: MaterialStateProperty.all(8.0),
-      trackBorderColor:
-          MaterialStateProperty.all(light ? Colors.black12 : Colors.white24),
-      trackColor:
-          MaterialStateProperty.all(light ? Colors.black12 : Colors.white24),
+      thumbVisibility: MaterialStatePropertyAll(true),
+      thickness: MaterialStatePropertyAll(8.0),
+      trackBorderColor: MaterialStatePropertyAll(
+          isLightMode ? Colors.black12 : Colors.white24),
+      trackColor: MaterialStatePropertyAll(
+          isLightMode ? Colors.black12 : Colors.white24),
       crossAxisMargin: 0.0,
       radius: Radius.zero,
       minThumbLength: 96.0,
@@ -210,116 +694,26 @@ ThemeData createTheme({
             MaterialState.focused,
             MaterialState.pressed,
           ].fold(false, (val, el) => val || states.contains(el))) {
-            return light ? Colors.black54 : Colors.white54;
+            return isLightMode ? Colors.black54 : Colors.white54;
           } else {
-            return light ? Colors.black26 : Colors.white24;
+            return isLightMode ? Colors.black26 : Colors.white24;
           }
         },
       ),
     ),
-    pageTransitionsTheme: PageTransitionsTheme(
-      builders: {
-        TargetPlatform.windows: OpenUpwardsPageTransitionsBuilder(),
-        TargetPlatform.linux: OpenUpwardsPageTransitionsBuilder(),
-        TargetPlatform.android: ZoomPageTransitionsBuilder(),
-        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-        TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
-      },
-    ),
-    splashFactory: desktop ? InkRipple.splashFactory : InkSparkle.splashFactory,
-    highlightColor: desktop ? null : Colors.transparent,
-    primaryColorLight: color,
-    primaryColor: color,
-    primaryColorDark: color,
-    scaffoldBackgroundColor: light ? Colors.white : Colors.black,
-    snackBarTheme: SnackBarThemeData(
-      backgroundColor: light ? Color(0xFF202020) : Colors.white,
-      actionTextColor: color,
-      contentTextStyle: theme.headlineMedium?.copyWith(
-        color: light ? Colors.white : Colors.black,
-        // Enforce `Inter` font family on Linux machines.
-        fontFamily: Platform.isLinux ? 'Inter' : null,
-      ),
-    ),
-    disabledColor: light
-        ? Color.lerp(Colors.white, Colors.black, 0.38)
-        : Color.lerp(Colors.black, Colors.white, 0.38),
-    tabBarTheme: TabBarTheme(
-      labelColor: color,
-      unselectedLabelColor:
-          light ? Colors.black54 : Colors.white.withOpacity(0.67),
-    ),
-    dividerTheme: DividerThemeData(
-      color: light ? Colors.black12 : Colors.white24,
-      thickness: 1.0,
-      indent: 0.0,
-      endIndent: 0.0,
-    ),
-    cardTheme: CardTheme(
-      elevation: 4.0,
-      color: light ? Colors.white : Color(0xFF222222),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4.0),
-      ),
-    ),
-    // Legacy.
-    cardColor: light ? Colors.white : Color(0xFF222222),
-    popupMenuTheme: PopupMenuThemeData(
-      elevation: 4.0,
-      color: light ? Colors.white : Color(0xFF282828),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4.0),
-      ),
-    ),
-    appBarTheme: AppBarTheme(
-      backgroundColor: mobile
-          ? light
-              ? Colors.white
-              : Color(0xFF202020)
-          : light
-              ? Colors.white
-              : Color(0xFF272727),
-      foregroundColor: light ? Colors.black87 : Colors.white.withOpacity(0.87),
-      systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: light ? Colors.white12 : Colors.black12,
-        statusBarIconBrightness: light ? Brightness.dark : Brightness.light,
-      ),
-      elevation: 4.0,
-      iconTheme: IconThemeData(
-        color: light
-            ? Color.lerp(Colors.white, Colors.black, 0.70)
-            : Color.lerp(Colors.black, Colors.white, 1.0),
-        size: 24.0,
-      ),
-      actionsIconTheme: IconThemeData(
-        color: light
-            ? Color.lerp(Colors.white, Colors.black, 0.70)
-            : Color.lerp(Colors.black, Colors.white, 1.0),
-        size: 24.0,
-      ),
-    ),
-    iconTheme: IconThemeData(
-      color: light
-          ? Color.lerp(Colors.white, Colors.black, 0.54)
-          : Color.lerp(Colors.black, Colors.white, 0.54),
-      size: 24.0,
-    ),
-    dialogBackgroundColor: light ? Colors.white : Color(0xFF202020),
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      backgroundColor: light ? color : Color(0xFF272727),
-      selectedItemColor: Colors.white.withOpacity(0.87),
-      unselectedItemColor: Colors.white54,
-    ),
-    tooltipTheme: desktop
+
+    // TOOLTIP
+
+    // Modify default tooltip theme on desktop.
+    tooltipTheme: isDesktopPlatform
         ? TooltipThemeData(
             textStyle: TextStyle(
               fontSize: 12.0,
-              color: light ? Colors.white : Colors.black,
-              // Enforce `Inter` font family on Linux machines.
-              fontFamily: Platform.isLinux ? 'Inter' : null,
+              color: isLightMode ? Colors.white : Colors.black,
+              fontFamily: fontFamily,
             ),
             decoration: BoxDecoration(
-              color: light ? Colors.black : Colors.white,
+              color: isLightMode ? Colors.black : Colors.white,
               borderRadius: BorderRadius.circular(4.0),
             ),
             height: null,
@@ -328,15 +722,35 @@ ThemeData createTheme({
             waitDuration: const Duration(seconds: 1),
           )
         : null,
+
+    // TAB BAR & BOTTOM NAVIGATION BAR
+
+    tabBarTheme: TabBarTheme(
+      // Use the color as selected label color on non-desktop platforms.
+      labelColor: isDesktopPlatform ? primaryTextColor : colorScheme.primary,
+      unselectedLabelColor: secondaryTextColor,
+    ),
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: colorScheme.primary,
+      selectedItemColor: color.computeLuminance() > 0.7
+          ? Colors.black.withOpacity(0.87)
+          : Colors.white.withOpacity(0.87),
+      unselectedItemColor: color.computeLuminance() > 0.7
+          ? Colors.black.withOpacity(0.54)
+          : Colors.white.withOpacity(0.54),
+    ),
+
+    // MAY NEED REVIEW
+
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: snackBarColor,
+      actionTextColor: colorScheme.primary,
+    ),
+
+    // EXTENSIONS
+
     extensions: {
-      IconColors(
-        Color.lerp(Colors.white, Colors.black, 0.54),
-        Color.lerp(Colors.black, Colors.white, 0.54),
-        Color.lerp(Colors.white, Colors.black, 0.70),
-        Color.lerp(Colors.black, Colors.white, 1.0),
-        Color.lerp(Colors.white, Colors.black, 0.70),
-        Color.lerp(Colors.black, Colors.white, 1.0),
-      ),
+      iconColors,
     },
   );
 }
