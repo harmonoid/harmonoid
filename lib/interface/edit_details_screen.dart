@@ -55,7 +55,8 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 FloatingActionButton.extended(
-                  heroTag: -1,
+                  heroTag: 'save_button',
+                  shape: const StadiumBorder(),
                   onPressed: () async {
                     if (!edited.isNotEmpty || loading) {
                       Navigator.of(context).maybePop();
@@ -109,7 +110,8 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                 ),
                 const SizedBox(height: 16.0),
                 FloatingActionButton.extended(
-                  heroTag: -2,
+                  heroTag: 'restore_button',
+                  shape: const StadiumBorder(),
                   onPressed: () async {
                     if (loading) {
                       return;

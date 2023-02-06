@@ -329,11 +329,13 @@ class CollectionScreenState extends State<CollectionScreen>
                                       },
                                       child: Container(
                                         height: 40.0,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 4.0),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 4.0,
+                                        ),
                                         alignment: Alignment.center,
-                                        margin: EdgeInsets.symmetric(
-                                            horizontal: 4.0),
+                                        margin: const EdgeInsets.symmetric(
+                                          horizontal: 4.0,
+                                        ),
                                         child: Text(
                                           tab.toUpperCase(),
                                           style: TextStyle(
@@ -341,15 +343,13 @@ class CollectionScreenState extends State<CollectionScreen>
                                             fontWeight: index.value == _index
                                                 ? FontWeight.w600
                                                 : FontWeight.w300,
-                                            color:
-                                                (Theme.of(context).brightness ==
-                                                            Brightness.dark
-                                                        ? Colors.white
-                                                        : Colors.black)
-                                                    .withOpacity(
-                                                        index.value == _index
-                                                            ? 1.0
-                                                            : 0.67),
+                                            color: index.value == _index
+                                                ? Theme.of(context)
+                                                    .tabBarTheme
+                                                    .labelColor
+                                                : Theme.of(context)
+                                                    .tabBarTheme
+                                                    .unselectedLabelColor,
                                           ),
                                         ),
                                       ),
@@ -491,15 +491,7 @@ class CollectionScreenState extends State<CollectionScreen>
             ),
           )
         : AnnotatedRegion<SystemUiOverlayStyle>(
-            value: SystemUiOverlayStyle(
-              statusBarColor: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.black12
-                  : Colors.white12,
-              statusBarIconBrightness:
-                  Theme.of(context).brightness == Brightness.dark
-                      ? Brightness.light
-                      : Brightness.dark,
-            ),
+            value: Theme.of(context).appBarTheme.systemOverlayStyle!,
             child: Consumer<CollectionRefresh>(
               builder: (context, refresh, _) => Scaffold(
                 resizeToAvoidBottomInset: false,

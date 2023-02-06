@@ -9,10 +9,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/constants/language.dart';
+
+import 'package:harmonoid/interface/settings/settings.dart';
 
 class ExperimentalSetting extends StatefulWidget {
   ExperimentalSetting({Key? key}) : super(key: key);
@@ -60,7 +61,7 @@ class ExperimentalSettingState extends State<ExperimentalSetting> {
         children: [
           if (isMobile)
             Container(
-              padding: const EdgeInsets.only(left: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               margin: const EdgeInsets.symmetric(vertical: 8.0),
               child: Text(
                 Language.instance.EXPERIMENTAL_SUBTITLE,
