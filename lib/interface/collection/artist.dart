@@ -1386,6 +1386,7 @@ class ArtistScreenState extends State<ArtistScreen>
                               ),
                               const SizedBox(width: 8.0),
                             ],
+                            forceElevated: true,
                             title: TweenAnimationBuilder<double>(
                               tween: Tween<double>(
                                 begin: 1.0,
