@@ -97,11 +97,6 @@ dependencies:
   flutter_svg: ^1.1.4
 
   # Third-party forked plugins & packages to meet requirements.
-
-  flutter_platform_alert:
-    git:
-      url: https://github.com/alexmercerind/flutter_platform_alert.git
-      ref: b174a505c6c2c00bad973c2fc285e80d6a85cb7d
   desktop:
     git:
       url: https://github.com/alexmercerind/desktop.git

@@ -298,15 +298,6 @@ packages:
       url: "https://github.com/alexmercerind/flutter_lyric.git"
     source: git
     version: "2.0.4"
-  flutter_platform_alert:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: b174a505c6c2c00bad973c2fc285e80d6a85cb7d
-      resolved-ref: b174a505c6c2c00bad973c2fc285e80d6a85cb7d
-      url: "https://github.com/alexmercerind/flutter_platform_alert.git"
-    source: git
-    version: "0.2.8"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
