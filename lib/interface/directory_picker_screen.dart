@@ -9,7 +9,7 @@
 // ignore_for_file: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
 
 import 'dart:io';
-import 'package:path/path.dart';
+import 'package:path/path.dart' hide context;
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:animations/animations.dart';
@@ -18,6 +18,7 @@ import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -46,26 +47,37 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
     return root;
   }
 
-  Future<void> pushDirectoryIntoStack(Directory directory) async {
+  Future<void> scrollAddressBarToRight() async {
+    final duration = Theme.of(context).extension<AnimationDurations>()?.fast ??
+        Duration.zero;
+    try {
+      if (controller.hasClients) {
+        if (duration == Duration.zero) {
+          controller.jumpTo(controller.position.maxScrollExtent);
+        } else {
+          Future.delayed(const Duration(milliseconds: 400));
+          controller.animateTo(
+            controller.position.maxScrollExtent,
+            duration: duration,
+            curve: Curves.easeInOut,
+          );
+        }
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
+  }
+
+  Future<void> pushDirectoryIntoStack(
+      BuildContext context, Directory directory) async {
     if (stack.value.length == 1) {
       stack.value.add(directory.path);
     } else {
       stack.value.add(basename(directory.path));
     }
     stack.notifyListeners();
-    try {
-      if (this.controller.hasClients) {
-        Future.delayed(const Duration(milliseconds: 400), () {
-          this.controller.animateTo(
-                this.controller.position.maxScrollExtent,
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.easeInOut,
-              );
-        });
-      }
-    } catch (exception) {
-      //
-    }
+    scrollAddressBarToRight();
     debugPrint(stack.value.toString());
     final root = await compute(dir, directory);
     final controller = ScrollController();
@@ -93,19 +105,7 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
                     stack.value.removeLast();
                     stack.notifyListeners();
                     await Navigator.of(key.currentContext!).maybePop();
-                    try {
-                      if (this.controller.hasClients) {
-                        Future.delayed(const Duration(milliseconds: 400), () {
-                          this.controller.animateTo(
-                                this.controller.position.maxScrollExtent,
-                                duration: const Duration(milliseconds: 200),
-                                curve: Curves.easeInOut,
-                              );
-                        });
-                      }
-                    } catch (exception) {
-                      //
-                    }
+                    scrollAddressBarToRight();
                   },
                   leading: CircleAvatar(
                     child: const Icon(
@@ -130,7 +130,8 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
                   dense: false,
                   enabled: root[i] is Directory,
                   onTap: root[i] is Directory
-                      ? () => pushDirectoryIntoStack(root[i] as Directory)
+                      ? () =>
+                          pushDirectoryIntoStack(context, root[i] as Directory)
                       : null,
                   leading: CircleAvatar(
                     child: root[i] is Directory
@@ -179,7 +180,7 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
         setState(() {});
         if (volumes!.length == 1) {
           // Only internal storage is available.
-          await pushDirectoryIntoStack(volumes![0]);
+          await pushDirectoryIntoStack(context, volumes![0]);
         } else {
           await Navigator.of(key.currentContext!).pushNamed(
             '/',
@@ -188,7 +189,7 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
                 color: Colors.transparent,
                 child: ListTile(
                   dense: false,
-                  onTap: () => pushDirectoryIntoStack(volumes![i]),
+                  onTap: () => pushDirectoryIntoStack(context, volumes![i]),
                   leading: CircleAvatar(
                     child: i == 0
                         ? const Icon(
@@ -328,8 +329,14 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
               child: Navigator(
                 key: key,
                 onGenerateRoute: (settings) => PageRouteBuilder(
-                  transitionDuration: const Duration(milliseconds: 300),
-                  reverseTransitionDuration: const Duration(milliseconds: 300),
+                  transitionDuration: Theme.of(context)
+                          .extension<AnimationDurations>()
+                          ?.medium ??
+                      Duration.zero,
+                  reverseTransitionDuration: Theme.of(context)
+                          .extension<AnimationDurations>()
+                          ?.medium ??
+                      Duration.zero,
                   pageBuilder: (_, animation, secondaryAnimation) =>
                       SharedAxisTransition(
                     fillColor: Theme.of(context).scaffoldBackgroundColor,

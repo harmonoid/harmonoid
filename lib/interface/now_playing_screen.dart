@@ -16,9 +16,10 @@ import 'package:extended_image/extended_image.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';
-import 'package:harmonoid/utils/dimensions.dart';
-import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/interface/collection/track.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -105,7 +106,10 @@ class NowPlayingState extends State<NowPlayingScreen>
                           elevation: kDefaultHeavyElevation,
                           child: LayoutBuilder(
                             builder: (context, constraints) => AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 300),
+                              duration: Theme.of(context)
+                                      .extension<AnimationDurations>()
+                                      ?.medium ??
+                                  Duration.zero,
                               transitionBuilder: (child, animation) =>
                                   FadeTransition(
                                 opacity: animation,

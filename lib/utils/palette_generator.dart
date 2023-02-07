@@ -229,6 +229,27 @@ class PaletteGenerator with Diagnosticable {
       final average = (r + g + b) / 3;
       return d1 < 16 && d2 < 16 && d3 < 16 && average >= 120 && average <= 220;
     });
+
+    // If the first & last colors are too similar, push the black or white color to the end based on contrast.
+    final first = data.first, last = data.last;
+    final d1 = (first.color.red - last.color.red).abs(),
+        d2 = (first.color.green - last.color.green).abs(),
+        d3 = (first.color.blue - last.color.blue).abs();
+    if (d1 < 16 && d2 < 16 && d3 < 16) {
+      data.removeLast();
+      data.add(
+        PaletteColor(
+          Color.lerp(
+                Color(0xFFFFFFFF),
+                Color(0xFF000000),
+                first.color.computeLuminance() > 0.5 ? 0.87 : 0.13,
+              ) ??
+              Color(0xFFFFFFFF),
+          0,
+        ),
+      );
+    }
+
     // Only be picky when there are enough colors.
     if (data.length > 2) {
       paletteColors.clear();

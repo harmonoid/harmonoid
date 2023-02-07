@@ -22,6 +22,7 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/interface/collection/artist.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -56,7 +57,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
     super.initState();
     playOrPause = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
     );
     listener = () async {
       if (Playback.instance.isPlaying) {
@@ -79,73 +80,78 @@ class NowPlayingBarState extends State<NowPlayingBar>
   }
 
   void colorPaletteListener() async {
-    if (horizontal == null) {
-      final monitors = await WindowPlus.instance.monitors;
-      debugPrint(monitors.toString());
-      horizontal = monitors
-          .map((e) => e.bounds.width)
-          .reduce((value, element) => value + element);
-    }
-    final ms =
-        ((1000 * (800 / (horizontal ?? MediaQuery.of(context).size.width))) ~/
-            1);
     final color = NowPlayingColorPalette.instance.palette == null
         ? Theme.of(context).cardTheme.color
         : NowPlayingColorPalette.instance.palette?.first.withOpacity(1.0);
-    if (color == this.color) {
-      return;
-    }
-    if (timer?.isActive ?? true) {
-      timer?.cancel();
-    }
-    timer = Timer(
-      Duration(milliseconds: ms + 100),
-      () async {
-        setState(() {
-          this.color = color;
-        });
-        await Future.delayed(const Duration(milliseconds: 100));
-        setState(() {
-          debugPrint(
-            '[NowPlayingBar] Freed ${fills.length} [Color] [TweenAnimationBuilder] fill(s).',
-          );
-          fills.clear();
-        });
-      },
-    );
-    setState(() {
-      fills.add(
-        TweenAnimationBuilder(
-          tween: Tween<double>(
-            begin: 0.0,
-            end: 2 * MediaQuery.of(context).size.width / 4.0,
-          ),
-          duration: Duration(
-            milliseconds: ms,
-          ),
-          curve: Curves.easeInOut,
-          child: Container(
-            height: kDesktopNowPlayingBarHeight,
-            width: MediaQuery.of(context).size.width,
-            alignment: Alignment.center,
-            child: ClipRect(
-              child: Container(
-                height: 4.0,
-                width: 4.0,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
+    if (Theme.of(context).extension<AnimationDurations>()?.fast ==
+        Duration.zero) {
+      setState(() => this.color = color);
+    } else {
+      if (horizontal == null) {
+        final monitors = await WindowPlus.instance.monitors;
+        debugPrint(monitors.toString());
+        horizontal = monitors
+            .map((e) => e.bounds.width)
+            .reduce((value, element) => value + element);
+      }
+      final ms =
+          (1000 * (800 / (horizontal ?? MediaQuery.of(context).size.width))) ~/
+              1;
+      if (color == this.color) {
+        return;
+      }
+      if (timer?.isActive ?? true) {
+        timer?.cancel();
+      }
+      timer = Timer(
+        Duration(milliseconds: ms + 100),
+        () async {
+          setState(() {
+            this.color = color;
+          });
+          await Future.delayed(const Duration(milliseconds: 100));
+          setState(() {
+            debugPrint(
+              '[NowPlayingBar] Freed ${fills.length} [Color] [TweenAnimationBuilder] fill(s).',
+            );
+            fills.clear();
+          });
+        },
+      );
+      setState(() {
+        fills.add(
+          TweenAnimationBuilder(
+            tween: Tween<double>(
+              begin: 0.0,
+              end: 2 * MediaQuery.of(context).size.width / 4.0,
+            ),
+            duration: Duration(
+              milliseconds: ms,
+            ),
+            curve: Curves.easeInOut,
+            child: Container(
+              height: kDesktopNowPlayingBarHeight,
+              width: MediaQuery.of(context).size.width,
+              alignment: Alignment.center,
+              child: ClipRect(
+                child: Container(
+                  height: 4.0,
+                  width: 4.0,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                  ),
                 ),
               ),
             ),
+            builder: (context, value, child) => Transform.scale(
+              scale: value as double,
+              child: child,
+            ),
           ),
-          builder: (context, value, child) => Transform.scale(
-            scale: value as double,
-            child: child,
-          ),
-        ),
-      );
-    });
+        );
+      });
+    }
   }
 
   @override
@@ -284,8 +290,12 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                         BorderRadius.circular(
                                                             0.0),
                                                     child: AnimatedSwitcher(
-                                                      duration: const Duration(
-                                                          milliseconds: 300),
+                                                      duration: Theme.of(
+                                                                  context)
+                                                              .extension<
+                                                                  AnimationDurations>()
+                                                              ?.fast ??
+                                                          Duration.zero,
                                                       transitionBuilder:
                                                           (child, animation) =>
                                                               FadeTransition(
@@ -320,8 +330,11 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                           ? 1.0
                                                           : 0.0,
                                                     ),
-                                                    duration: Duration(
-                                                        milliseconds: 100),
+                                                    duration: Theme.of(context)
+                                                            .extension<
+                                                                AnimationDurations>()
+                                                            ?.fast ??
+                                                        Duration.zero,
                                                     curve: Curves.easeInOut,
                                                     child: Material(
                                                       color: Colors.transparent,
@@ -440,7 +453,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                                         navigatorKey
                                                                             .currentState
                                                                             ?.push(
-                                                                          MaterialPageRoute(
+                                                                          MaterialRoute(
                                                                             builder: (context) =>
                                                                                 ArtistScreen(
                                                                               artist: artist,
@@ -1249,6 +1262,18 @@ class _ControlPanelState extends State<ControlPanel> {
             scopesRoute: true,
             explicitChildNodes: true,
             child: WillPopScope(
+              onWillPop: () async {
+                widget.onPop();
+                setState(() {
+                  end = 156.0;
+                });
+                final duration =
+                    Theme.of(context).extension<AnimationDurations>()?.fast;
+                if (duration != null) {
+                  await Future.delayed(duration);
+                }
+                return true;
+              },
               child: Stack(
                 children: [
                   Positioned.fill(
@@ -1271,7 +1296,10 @@ class _ControlPanelState extends State<ControlPanel> {
                         end: end,
                       ),
                       curve: Curves.easeInOut,
-                      duration: Duration(milliseconds: 160),
+                      duration: Theme.of(context)
+                              .extension<AnimationDurations>()
+                              ?.fast ??
+                          Duration.zero,
                       child: Consumer<Playback>(
                         builder: (context, playback, _) => Column(
                           mainAxisSize: MainAxisSize.min,
@@ -1668,14 +1696,6 @@ class _ControlPanelState extends State<ControlPanel> {
                   ),
                 ],
               ),
-              onWillPop: () async {
-                widget.onPop();
-                setState(() {
-                  end = 156.0;
-                });
-                await Future.delayed(const Duration(milliseconds: 100));
-                return Future.value(true);
-              },
             ),
           )
         : Consumer<Playback>(

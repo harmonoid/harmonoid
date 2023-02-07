@@ -12,6 +12,7 @@ import 'package:flutter_lyric/lyrics_reader_model.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -107,7 +108,9 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
             if (pageController.hasClients) {
               pageController.animateToPage(
                 Playback.instance.index,
-                duration: Duration(milliseconds: 400),
+                duration:
+                    Theme.of(context).extension<AnimationDurations>()?.medium ??
+                        Duration.zero,
                 curve: Curves.easeInOut,
               );
             }
@@ -126,7 +129,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
     super.initState();
     playOrPause = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
     );
     Playback.instance.addListener(listener);
   }
@@ -173,7 +176,9 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
               );
             },
             hide: DesktopNowPlayingController.instance.hide,
-            duration: const Duration(milliseconds: 300),
+            duration:
+                Theme.of(context).extension<AnimationDurations>()?.medium ??
+                    Duration.zero,
             content: Column(
               children: [
                 Expanded(
@@ -195,7 +200,10 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                   ? 1.0
                                   : 0.0,
                             ),
-                            duration: Duration(milliseconds: 200),
+                            duration: Theme.of(context)
+                                    .extension<AnimationDurations>()
+                                    ?.fast ??
+                                Duration.zero,
                             curve: Curves.easeInOut,
                             builder: (context, opacity, _) => Opacity(
                               opacity: opacity,
@@ -217,7 +225,8 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                   blendMode: BlendMode.dstOut,
                                   child: LyricsReader(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 12.0),
+                                      horizontal: 12.0,
+                                    ),
                                     model: LyricsReaderModel()
                                       ..lyrics = Lyrics.instance.current
                                           .asMap()
@@ -851,7 +860,7 @@ class CarouselState extends State<Carousel> {
         NowPlayingVisuals.instance.preloaded.length,
   );
   bool _isFullscreen = false;
-  Timer _timer = Timer(const Duration(milliseconds: 400), () {});
+  Timer _timer = Timer(Duration.zero, () {});
   Color? get color => _current == -1 ? widget.palette?.first : null;
 
   @override
@@ -871,7 +880,10 @@ class CarouselState extends State<Carousel> {
 
   void previous() {
     if (_timer.isActive) return;
-    _timer = Timer(const Duration(milliseconds: 400), () {});
+    _timer = Timer(
+        Theme.of(context).extension<AnimationDurations>()?.medium ??
+            Duration.zero,
+        () {});
     setState(() {
       _current = _current + 1 == widget.images.length ? -1 : _current + 1;
       Configuration.instance.save(
@@ -884,13 +896,17 @@ class CarouselState extends State<Carousel> {
             setState(() {
               widgets.removeAt(0);
             });
-            _timer = Timer(const Duration(milliseconds: 400), () {});
+            _timer = Timer(
+                Theme.of(context).extension<AnimationDurations>()?.medium ??
+                    Duration.zero,
+                () {});
           },
           tween: Tween<Offset>(
             begin: Offset(MediaQuery.of(context).size.width, 0),
             end: Offset.zero,
           ),
-          duration: const Duration(milliseconds: 400),
+          duration: Theme.of(context).extension<AnimationDurations>()?.medium ??
+              Duration.zero,
           curve: Curves.easeInOut,
           builder: (context, value, child) => Transform.translate(
             offset: value as Offset,
@@ -918,7 +934,10 @@ class CarouselState extends State<Carousel> {
 
   void next() {
     if (_timer.isActive) return;
-    _timer = Timer(const Duration(milliseconds: 400), () {});
+    _timer = Timer(
+        Theme.of(context).extension<AnimationDurations>()?.medium ??
+            Duration.zero,
+        () {});
     setState(() {
       _current = _current - 1 == -2 ? widget.images.length - 1 : _current - 1;
       Configuration.instance.save(
@@ -936,7 +955,8 @@ class CarouselState extends State<Carousel> {
             begin: Offset(-MediaQuery.of(context).size.width, 0),
             end: Offset.zero,
           ),
-          duration: const Duration(milliseconds: 400),
+          duration: Theme.of(context).extension<AnimationDurations>()?.medium ??
+              Duration.zero,
           curve: Curves.easeInOut,
           builder: (context, value, child) => Transform.translate(
             offset: value as Offset,
@@ -971,7 +991,8 @@ class CarouselState extends State<Carousel> {
             begin: Offset.zero,
             end: Offset.zero,
           ),
-          duration: const Duration(milliseconds: 400),
+          duration: Theme.of(context).extension<AnimationDurations>()?.medium ??
+              Duration.zero,
           curve: Curves.easeInOut,
           builder: (context, value, child) => Material(
             color: Colors.black,
@@ -1047,14 +1068,6 @@ class CarouselState extends State<Carousel> {
                 ),
                 GestureDetector(
                   onDoubleTap: toggle,
-                  onHorizontalDragUpdate: (details) {
-                    const sensitivity = 4;
-                    if (details.delta.dx > sensitivity) {
-                      next();
-                    } else if (details.delta.dx < -sensitivity) {
-                      previous();
-                    }
-                  },
                   child: Container(
                     color: Colors.transparent,
                     width: widget.width ?? MediaQuery.of(context).size.width,
@@ -1191,7 +1204,9 @@ class CarouselState extends State<Carousel> {
                 begin: Colors.transparent,
                 end: playlistVisible ? Colors.black38 : Colors.transparent,
               ),
-              duration: Duration(milliseconds: 300),
+              duration:
+                  Theme.of(context).extension<AnimationDurations>()?.medium ??
+                      Duration.zero,
               curve: Curves.easeInOut,
               builder: (context, color, child) => GestureDetector(
                 onTap: () {
@@ -1219,7 +1234,10 @@ class CarouselState extends State<Carousel> {
                                     MediaQuery.of(context).size.height,
                                   ),
                           ),
-                          duration: Duration(milliseconds: 300),
+                          duration: Theme.of(context)
+                                  .extension<AnimationDurations>()
+                                  ?.medium ??
+                              Duration.zero,
                           curve: Curves.easeInOut,
                           builder: (context, offset, _) => Transform.translate(
                             offset: offset,
@@ -1332,7 +1350,8 @@ class _ProminentColorWidgetState extends State<ProminentColorWidget> {
           begin: color.palette?.first,
           end: color.palette?.first ?? Colors.transparent,
         ),
-        duration: Duration(milliseconds: 400),
+        duration: Theme.of(context).extension<AnimationDurations>()?.medium ??
+            Duration.zero,
         builder: (context, color, _) => Container(
           color: Colors.black,
           child: Container(

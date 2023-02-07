@@ -8,25 +8,25 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:animations/animations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:window_plus/window_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:harmonoid/utils/dimensions.dart';
-import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
+import 'package:harmonoid/interface/settings/stats.dart';
+import 'package:harmonoid/interface/settings/theme.dart';
 import 'package:harmonoid/interface/settings/about.dart';
 import 'package:harmonoid/interface/settings/indexing.dart';
 import 'package:harmonoid/interface/settings/language.dart';
-import 'package:harmonoid/interface/settings/stats.dart';
-import 'package:harmonoid/interface/settings/miscellaneous.dart';
 import 'package:harmonoid/interface/settings/experimental.dart';
-import 'package:harmonoid/interface/settings/theme.dart';
-import 'package:harmonoid/interface/settings/now_playing_visuals.dart';
+import 'package:harmonoid/interface/settings/miscellaneous.dart';
 import 'package:harmonoid/interface/settings/now_playing_screen.dart';
 import 'package:harmonoid/interface/settings/android_permissions.dart';
+import 'package:harmonoid/interface/settings/now_playing_visuals.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -114,15 +114,8 @@ class Settings extends StatelessWidget {
                       child: InkWell(
                         onTap: () {
                           Navigator.of(context).push(
-                            PageRouteBuilder(
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      FadeThroughTransition(
-                                fillColor: Colors.transparent,
-                                animation: animation,
-                                secondaryAnimation: secondaryAnimation,
-                                child: AboutPage(),
-                              ),
+                            MaterialRoute(
+                              builder: (context) => AboutPage(),
                             ),
                           );
                         },

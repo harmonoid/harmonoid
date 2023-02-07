@@ -7,7 +7,6 @@
 ///
 
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:media_library/media_library.dart';
@@ -17,8 +16,9 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
-import 'package:harmonoid/utils/storage_retriever.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class IndexingSetting extends StatefulWidget {
@@ -356,7 +356,11 @@ class IndexingState extends State<IndexingSetting>
                                             end: (controller.progress ?? 0) /
                                                 controller.total,
                                           ),
-                                          duration: Duration(milliseconds: 400),
+                                          duration: Theme.of(context)
+                                                  .extension<
+                                                      AnimationDurations>()
+                                                  ?.medium ??
+                                              Duration.zero,
                                           child: Text(
                                             Language.instance
                                                 .SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR

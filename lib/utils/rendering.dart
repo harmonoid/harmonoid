@@ -10,7 +10,6 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:collection';
 import 'package:flutter/material.dart';
-import 'package:animations/animations.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_selector/file_selector.dart';
@@ -32,6 +31,7 @@ import 'package:harmonoid/interface/edit_details_screen.dart';
 import 'package:harmonoid/interface/directory_picker_screen.dart';
 import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
 export 'package:harmonoid/utils/extensions.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -589,15 +589,10 @@ Future<void> trackPopupMenuHandle(
           }
           Playback.instance.interceptPositionChangeRebuilds = true;
           Navigator.of(context).push(
-            PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) =>
-                  FadeThroughTransition(
-                animation: animation,
-                secondaryAnimation: secondaryAnimation,
-                child: AlbumScreen(
-                  album: album,
-                  palette: palette,
-                ),
+            MaterialRoute(
+              builder: (context) => AlbumScreen(
+                album: album,
+                palette: palette,
               ),
             ),
           );
@@ -614,13 +609,8 @@ Future<void> trackPopupMenuHandle(
         break;
       case 6:
         await Navigator.of(context).push(
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                FadeThroughTransition(
-              animation: animation,
-              secondaryAnimation: secondaryAnimation,
-              child: EditDetailsScreen(track: track),
-            ),
+          MaterialRoute(
+            builder: (context) => EditDetailsScreen(track: track),
           ),
         );
         break;

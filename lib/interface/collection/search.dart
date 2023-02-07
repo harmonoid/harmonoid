@@ -15,6 +15,7 @@ import 'package:media_library/media_library.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -117,7 +118,7 @@ class SearchTabState extends State<SearchTab> {
                                   Playback.instance
                                       .interceptPositionChangeRebuilds = true;
                                   Navigator.of(context).push(
-                                    MaterialPageRoute(
+                                    MaterialRoute(
                                       builder: (context) => Scaffold(
                                         resizeToAvoidBottomInset: false,
                                         body: Container(
@@ -205,7 +206,7 @@ class SearchTabState extends State<SearchTab> {
                                   Playback.instance
                                       .interceptPositionChangeRebuilds = true;
                                   Navigator.of(context).push(
-                                    MaterialPageRoute(
+                                    MaterialRoute(
                                       builder: (context) => Scaffold(
                                         resizeToAvoidBottomInset: false,
                                         body: Container(
@@ -435,7 +436,7 @@ class _FloatingSearchBarSearchTabState
                           ShowAllButton(
                             onPressed: () {
                               Navigator.of(context).push(
-                                MaterialPageRoute(
+                                MaterialRoute(
                                   builder: (context) => Scaffold(
                                     resizeToAvoidBottomInset: false,
                                     appBar: AppBar(
@@ -502,7 +503,7 @@ class _FloatingSearchBarSearchTabState
                           ShowAllButton(
                             onPressed: () {
                               Navigator.of(context).push(
-                                MaterialPageRoute(
+                                MaterialRoute(
                                   builder: (context) => Scaffold(
                                     resizeToAvoidBottomInset: false,
                                     appBar: AppBar(

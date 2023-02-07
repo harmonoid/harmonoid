@@ -1,10 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-
 import 'dart:ui';
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -51,6 +44,12 @@ class _WebSearchBarState extends State<WebSearchBar> {
     } else {
       Navigator.of(context).push(
         PageRouteBuilder(
+          transitionDuration:
+              Theme.of(context).extension<AnimationDurations>()?.medium ??
+                  Duration.zero,
+          reverseTransitionDuration:
+              Theme.of(context).extension<AnimationDurations>()?.medium ??
+                  Duration.zero,
           pageBuilder: (context, animation, secondaryAnimation) =>
               SharedAxisTransition(
             animation: animation,
@@ -156,7 +155,7 @@ class _WebSearchBarState extends State<WebSearchBar> {
             padding: EdgeInsets.only(top: 2.0),
             child: Focus(
               child: CustomTextField(
-                autofocus: isDesktop,
+                autofocus: true,
                 cursorWidth: 1.0,
                 focusNode: node,
                 controller: controller,
@@ -886,13 +885,8 @@ class _WebMobileAppBarOverflowButtonState
               {
                 Navigator.push(
                   context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        FadeThroughTransition(
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      child: Settings(),
-                    ),
+                  MaterialRoute(
+                    builder: (context) => Settings(),
                   ),
                 );
                 break;
@@ -901,13 +895,8 @@ class _WebMobileAppBarOverflowButtonState
               {
                 Navigator.push(
                   context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        FadeThroughTransition(
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      child: AboutPage(),
-                    ),
+                  MaterialRoute(
+                    builder: (context) => AboutPage(),
                   ),
                 );
                 break;

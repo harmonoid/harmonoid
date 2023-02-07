@@ -28,7 +28,6 @@ import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/now_playing_visuals.dart';
 
-import 'package:harmonoid/utils/updater.dart';
 import 'package:harmonoid/utils/window_lifecycle.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
 
@@ -162,7 +161,6 @@ Future<void> main(List<String> args) async {
     await Language.initialize(
       language: Configuration.instance.language,
     );
-    Updater.initialize();
     runApp(Harmonoid());
   } catch (exception, stacktrace) {
     debugPrint(exception.toString());

@@ -21,8 +21,9 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
-import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/interface/collection/album.dart';
@@ -81,11 +82,18 @@ class CollectionScreenState extends State<CollectionScreen>
     super.initState();
     widget.tabControllerNotifier.addListener(() {
       if (index.value != widget.tabControllerNotifier.value.index) {
-        pageController.animateToPage(
-          widget.tabControllerNotifier.value.index,
-          duration: Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-        );
+        final duration =
+            Theme.of(context).extension<AnimationDurations>()?.fast ??
+                Duration.zero;
+        if (duration == Duration.zero) {
+          pageController.jumpToPage(widget.tabControllerNotifier.value.index);
+        } else {
+          pageController.animateToPage(
+            widget.tabControllerNotifier.value.index,
+            duration: duration,
+            curve: Curves.easeInOut,
+          );
+        }
       }
     });
     if (isMobile) {
@@ -130,7 +138,7 @@ class CollectionScreenState extends State<CollectionScreen>
               context,
               rootNavigator: true,
             ).push(
-              MaterialPageRoute(
+              MaterialRoute(
                 builder: (context) => MissingDirectoriesScreen(),
               ),
             );
@@ -169,6 +177,10 @@ class CollectionScreenState extends State<CollectionScreen>
                       alignment: Alignment.bottomLeft,
                       children: <Widget>[
                         PageTransitionSwitcher(
+                          duration: Theme.of(context)
+                                  .extension<AnimationDurations>()
+                                  ?.medium ??
+                              Duration.zero,
                           child: index.value == -1
                               ? SearchTab(query: query)
                               : [
@@ -426,38 +438,14 @@ class CollectionScreenState extends State<CollectionScreen>
                                   width: 12.0,
                                 ),
                                 PlayFileOrURLButton(),
-                                // TweenAnimationBuilder<double>(
-                                //   tween: Tween<double>(
-                                //     begin: 0.0,
-                                //     end: index.value == 3 ? 0.0 : 1.0,
-                                //   ),
-                                //   duration: Duration(milliseconds: 200),
-                                //   child: CollectionSortButton(
-                                //     tab: index.value,
-                                //   ),
-                                //   builder: (context, value, child) =>
-                                //       Opacity(
-                                //     opacity: value,
-                                //     child:
-                                //         value == 0.0 ? Container() : child,
-                                //   ),
-                                // ),
                                 CollectionMoreButton(),
                                 Tooltip(
                                   message: Language.instance.SETTING,
                                   child: InkWell(
                                     onTap: () {
                                       Navigator.of(context).push(
-                                        PageRouteBuilder(
-                                          pageBuilder: (context, animation,
-                                                  secondaryAnimation) =>
-                                              FadeThroughTransition(
-                                            fillColor: Colors.transparent,
-                                            animation: animation,
-                                            secondaryAnimation:
-                                                secondaryAnimation,
-                                            child: Settings(),
-                                          ),
+                                        MaterialRoute(
+                                          builder: (context) => Settings(),
                                         ),
                                       );
                                     },
@@ -498,8 +486,14 @@ class CollectionScreenState extends State<CollectionScreen>
                 floatingActionButton: ValueListenableBuilder(
                   valueListenable: index,
                   builder: (context, value, child) => AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 200),
-                    reverseDuration: const Duration(milliseconds: 200),
+                    duration: Theme.of(context)
+                            .extension<AnimationDurations>()
+                            ?.medium ??
+                        Duration.zero,
+                    reverseDuration: Theme.of(context)
+                            .extension<AnimationDurations>()
+                            ?.medium ??
+                        Duration.zero,
                     switchInCurve: Curves.easeInOut,
                     switchOutCurve: Curves.easeInOut,
                     transitionBuilder: (child, value) => FadeTransition(

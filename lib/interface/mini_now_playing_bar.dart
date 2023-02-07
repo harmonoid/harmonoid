@@ -108,7 +108,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
         window.devicePixelRatio;
     playOrPause = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
     );
     Playback.instance.addListener(listener);
     NowPlayingColorPalette.instance.addListener(colorPaletteListener);
@@ -126,63 +126,67 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
       color = Theme.of(context).scaffoldBackgroundColor;
       setState(() {});
     } else {
-      final ms = ((1000 * (400 / MediaQuery.of(context).size.width)) ~/ 1);
-      final color =
-          NowPlayingColorPalette.instance.palette?.first.withOpacity(1.0);
-      if (color == this.color) {
-        return;
-      }
-      if (timer?.isActive ?? true) {
-        timer?.cancel();
-      }
-      timer = Timer(
-        Duration(milliseconds: ms + 100),
-        () async {
-          setState(() {
-            this.color = color;
-          });
-          await Future.delayed(const Duration(milliseconds: 100));
-          setState(() {
-            debugPrint(
-              '[MiniNowPlayingBar] Freed ${fills.length} [Color] [TweenAnimationBuilder] fill(s).',
-            );
-            fills.clear();
-          });
-        },
-      );
-      setState(() {
-        fills.add(
-          TweenAnimationBuilder(
-            tween: Tween<double>(
-              begin: 0.0,
-              end: 2 * MediaQuery.of(context).size.width / 4.0,
-            ),
-            duration: Duration(
-              milliseconds: ms,
-            ),
-            curve: Curves.easeInOut,
-            child: Container(
-              height: kDesktopNowPlayingBarHeight,
-              width: MediaQuery.of(context).size.width,
-              alignment: Alignment.center,
-              child: ClipRect(
-                child: Container(
-                  height: 4.0,
-                  width: 4.0,
-                  decoration: BoxDecoration(
-                    color: color,
-                    shape: BoxShape.circle,
+      final color = NowPlayingColorPalette.instance.palette == null
+          ? Theme.of(context).cardTheme.color
+          : NowPlayingColorPalette.instance.palette?.first.withOpacity(1.0);
+      if (Theme.of(context).extension<AnimationDurations>()?.fast ==
+          Duration.zero) {
+        setState(() => this.color = color);
+      } else {
+        final ms = ((1000 * (400 / MediaQuery.of(context).size.width)) ~/ 1);
+        if (color == this.color) {
+          return;
+        }
+        if (timer?.isActive ?? true) {
+          timer?.cancel();
+        }
+        timer = Timer(
+          Duration(milliseconds: ms + 100),
+          () async {
+            setState(() {
+              this.color = color;
+            });
+            await Future.delayed(const Duration(milliseconds: 100));
+            setState(() {
+              debugPrint(
+                '[MiniNowPlayingBar] Freed ${fills.length} [Color] [TweenAnimationBuilder] fill(s).',
+              );
+              fills.clear();
+            });
+          },
+        );
+        setState(() {
+          fills.add(
+            TweenAnimationBuilder(
+              tween: Tween<double>(
+                begin: 0.0,
+                end: 2 * MediaQuery.of(context).size.width / 4.0,
+              ),
+              duration: Duration(milliseconds: ms),
+              curve: Curves.easeInOut,
+              child: Container(
+                height: kDesktopNowPlayingBarHeight,
+                width: MediaQuery.of(context).size.width,
+                alignment: Alignment.center,
+                child: ClipRect(
+                  child: Container(
+                    height: 4.0,
+                    width: 4.0,
+                    decoration: BoxDecoration(
+                      color: color,
+                      shape: BoxShape.circle,
+                    ),
                   ),
                 ),
               ),
+              builder: (context, value, child) => Transform.scale(
+                scale: value as double,
+                child: child,
+              ),
             ),
-            builder: (context, value, child) => Transform.scale(
-              scale: value as double,
-              child: child,
-            ),
-          ),
-        );
-      });
+          );
+        });
+      }
     }
   }
 
@@ -214,7 +218,8 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
       if (pageController.hasClients) {
         pageController.animateToPage(
           Playback.instance.index,
-          duration: Duration(milliseconds: 400),
+          duration: Theme.of(context).extension<AnimationDurations>()?.medium ??
+              Duration.zero,
           curve: Curves.easeInOut,
         );
       } else {
@@ -379,7 +384,8 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
 
     return AnimatedSlide(
       offset: Offset(0, _y),
-      duration: Duration(milliseconds: 200),
+      duration: Theme.of(context).extension<AnimationDurations>()?.fast ??
+          Duration.zero,
       curve: Curves.easeInOut,
       child: Miniplayer(
         controller: controller,
@@ -844,35 +850,12 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                               title: Text(Language.instance.SHARE),
                                                                                             ),
                                                                                           ),
-                                                                                          // if (Lyrics.instance.current.length > 1)
-                                                                                          //   PopupMenuItem(
-                                                                                          //     onTap: () => result = 4,
-                                                                                          //     value: 4,
-                                                                                          //     child: ListTile(
-                                                                                          //       leading: Icon(Icons.text_format),
-                                                                                          //       title: Text(Language.instance.SHOW_LYRICS),
-                                                                                          //     ),
-                                                                                          //   ),
                                                                                         ],
                                                                                       ),
                                                                                     ),
                                                                                   ),
                                                                                 );
                                                                                 switch (result) {
-                                                                                  // case 0:
-                                                                                  //   {
-                                                                                  //     await Future.delayed(const Duration(milliseconds: 200));
-                                                                                  //     await showDialog(
-                                                                                  //       context: context,
-                                                                                  //       builder: (context) => AlertDialog(
-                                                                                  //         contentPadding: EdgeInsets.zero,
-                                                                                  //         content: ControlPanel(
-                                                                                  //           onPop: () {},
-                                                                                  //         ),
-                                                                                  //       ),
-                                                                                  //     );
-                                                                                  //     break;
-                                                                                  //   }
                                                                                   case 1:
                                                                                     {
                                                                                       Clipboard.setData(ClipboardData(text: track.uri.toString()));
@@ -943,11 +926,12 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                   ),
                                                                 ],
                                                               ),
-                                                              duration:
-                                                                  Duration(
-                                                                milliseconds:
-                                                                    400,
-                                                              ),
+                                                              duration: Theme.of(
+                                                                          context)
+                                                                      .extension<
+                                                                          AnimationDurations>()
+                                                                      ?.medium ??
+                                                                  Duration.zero,
                                                               builder: (
                                                                 context,
                                                                 value,
@@ -2215,7 +2199,9 @@ class MiniNowPlayingBarRefreshCollectionButtonState
           ValueListenableBuilder<Iterable<Color>?>(
             valueListenable: MobileNowPlayingController.instance.palette,
             builder: (context, value, _) => TweenAnimationBuilder(
-              duration: Duration(milliseconds: 400),
+              duration:
+                  Theme.of(context).extension<AnimationDurations>()?.medium ??
+                      Duration.zero,
               tween: ColorTween(
                 begin: Theme.of(context).primaryColor,
                 end: value?.first ?? Theme.of(context).primaryColor,
@@ -2228,7 +2214,10 @@ class MiniNowPlayingBarRefreshCollectionButtonState
                         spacing: 8.0,
                         heroTag: 'create-playlist-fab',
                         animationCurve: Curves.easeInOut,
-                        animationDuration: const Duration(milliseconds: 200),
+                        animationDuration: Theme.of(context)
+                                .extension<AnimationDurations>()
+                                ?.fast ??
+                            Duration.zero,
                         children: [
                           SpeedDialChild(
                             child: const Icon(Icons.downloading),
@@ -2384,7 +2373,9 @@ class MiniNowPlayingBarRefreshCollectionButtonState
             valueListenable: MobileNowPlayingController.instance.fabOffset,
             builder: (context, value, child) => AnimatedContainer(
               height: value,
-              duration: Duration(milliseconds: 200),
+              duration:
+                  Theme.of(context).extension<AnimationDurations>()?.fast ??
+                      Duration.zero,
               curve: Curves.easeInOut,
             ),
           ),
@@ -2550,11 +2541,13 @@ class _LyricsScreenState extends State<LyricsScreen> {
           end: palette.palette?.first ??
               Theme.of(context).scaffoldBackgroundColor,
         ),
-        duration: Duration(milliseconds: 400),
+        duration: Theme.of(context).extension<AnimationDurations>()?.medium ??
+            Duration.zero,
         curve: Curves.easeInOut,
         builder: (context, value, _) => AnimatedContainer(
           color: value,
-          duration: Duration(milliseconds: 400),
+          duration: Theme.of(context).extension<AnimationDurations>()?.medium ??
+              Duration.zero,
           curve: Curves.easeInOut,
           alignment: Alignment.center,
           child: Consumer<Lyrics>(
@@ -2568,7 +2561,9 @@ class _LyricsScreenState extends State<LyricsScreen> {
                         ? 1.0
                         : 0.0,
                   ),
-                  duration: Duration(milliseconds: 200),
+                  duration:
+                      Theme.of(context).extension<AnimationDurations>()?.fast ??
+                          Duration.zero,
                   curve: Curves.easeInOut,
                   builder: (context, opacity, _) => Opacity(
                     opacity: opacity,

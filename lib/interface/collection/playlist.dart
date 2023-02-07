@@ -643,21 +643,8 @@ class PlaylistTileState extends State<PlaylistTile> {
               () async {
                 Playback.instance.interceptPositionChangeRebuilds = true;
                 Iterable<Color>? palette;
-                // try {
-                //   for (final track in widget.playlist.tracks.take(3)) {
-                //     await precacheImage(
-                //       getAlbumArt(
-                //         track,
-                //       ),
-                //       context,
-                //     );
-                //   }
-                // } catch (exception, stacktrace) {
-                //   debugPrint(exception.toString());
-                //   debugPrint(stacktrace.toString());
-                // }
                 try {
-                  if (isMobile && widget.playlist.tracks.isNotEmpty) {
+                  if (widget.playlist.tracks.isNotEmpty) {
                     final result = await PaletteGenerator.fromImageProvider(
                       getAlbumArt(
                         widget.playlist.tracks.first,
@@ -672,15 +659,10 @@ class PlaylistTileState extends State<PlaylistTile> {
                   debugPrint(stacktrace.toString());
                 }
                 Navigator.of(context).push(
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        FadeThroughTransition(
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      child: PlaylistScreen(
-                        playlist: widget.playlist,
-                        palette: palette,
-                      ),
+                  MaterialRoute(
+                    builder: (context) => PlaylistScreen(
+                      playlist: widget.playlist,
+                      palette: palette,
                     ),
                   ),
                 );
@@ -864,57 +846,14 @@ class PlaylistScreenState extends State<PlaylistScreen>
   @override
   void initState() {
     super.initState();
-    if (isDesktop && widget.playlist.tracks.isNotEmpty) {
-      Timer(
-        Duration(milliseconds: 300),
-        () {
-          if (widget.palette == null) {
-            PaletteGenerator.fromImageProvider(
-                    getAlbumArt(widget.playlist.tracks.last, small: true))
-                .then((palette) {
-              setState(() {
-                if (palette.colors != null) {
-                  color = palette.colors!.first;
-                  secondary = palette.colors!.last;
-                }
-                detailsVisible = true;
-              });
-            });
-          } else {
+    if (isMobile) {
+      controller.addListener(() {
+        if (controller.offset < 36.0) {
+          if (!detailsVisible) {
             setState(() {
               detailsVisible = true;
             });
           }
-        },
-      );
-    }
-    if (isMobile) {
-      Timer(Duration(milliseconds: 100), () {
-        this
-            .controller
-            .animateTo(
-              0.0,
-              duration: Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            )
-            .then((_) {
-          Timer(Duration(milliseconds: 50), () {
-            setState(() {
-              detailsLoaded = true;
-              physics = null;
-            });
-          });
-        });
-      });
-      if (widget.palette != null) {
-        color = widget.palette?.first;
-        secondary = widget.palette?.last;
-      }
-      controller.addListener(() {
-        if (controller.offset == 0.0) {
-          setState(() {
-            detailsVisible = true;
-          });
         } else if (detailsVisible) {
           setState(() {
             detailsVisible = false;
@@ -922,6 +861,43 @@ class PlaylistScreenState extends State<PlaylistScreen>
         }
       });
     }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final duration =
+          Theme.of(context).extension<AnimationDurations>()?.medium ??
+              Duration.zero;
+      if (duration == Duration.zero) {
+        setState(() {
+          color = widget.palette?.first;
+          secondary = widget.palette?.last;
+          detailsLoaded = true;
+          physics = null;
+        });
+      } else {
+        if (isDesktop) {
+          await Future.delayed(duration);
+          setState(() {
+            color = widget.palette?.first;
+            secondary = widget.palette?.last;
+          });
+        }
+        if (isMobile) {
+          setState(() {
+            color = widget.palette?.first;
+            secondary = widget.palette?.last;
+          });
+          await controller.animateTo(
+            0.0,
+            duration: duration,
+            curve: Curves.easeInOut,
+          );
+          await Future.delayed(const Duration(milliseconds: 100));
+          setState(() {
+            detailsLoaded = true;
+            physics = null;
+          });
+        }
+      }
+    });
   }
 
   @override
@@ -952,7 +928,9 @@ class PlaylistScreenState extends State<PlaylistScreen>
                       : color!,
                 ),
                 curve: Curves.easeOut,
-                duration: Duration(milliseconds: 400),
+                duration:
+                    Theme.of(context).extension<AnimationDurations>()?.medium ??
+                        Duration.zero,
                 builder: (context, color, _) => Scaffold(
                   backgroundColor: color as Color? ?? Colors.transparent,
                   body: Container(
@@ -1512,7 +1490,10 @@ class PlaylistScreenState extends State<PlaylistScreen>
                             begin: 1.0,
                             end: detailsVisible ? 0.0 : 1.0,
                           ),
-                          duration: Duration(milliseconds: 200),
+                          duration: Theme.of(context)
+                                  .extension<AnimationDurations>()
+                                  ?.fast ??
+                              Duration.zero,
                           builder: (context, value, _) => Opacity(
                             opacity: value,
                             child: Text(
@@ -1595,7 +1576,10 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                       begin: 1.0,
                                       end: detailsVisible ? 1.0 : 0.0,
                                     ),
-                                    duration: Duration(milliseconds: 200),
+                                    duration: Theme.of(context)
+                                            .extension<AnimationDurations>()
+                                            ?.fast ??
+                                        Duration.zero,
                                     builder: (context, value, _) => Opacity(
                                       opacity: value,
                                       child: Container(
@@ -1685,7 +1669,10 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                 tween: Tween<double>(
                                     begin: 0.0,
                                     end: detailsVisible ? 1.0 : 0.0),
-                                duration: Duration(milliseconds: 200),
+                                duration: Theme.of(context)
+                                        .extension<AnimationDurations>()
+                                        ?.fast ??
+                                    Duration.zero,
                                 builder: (context, value, _) => Transform.scale(
                                   scale: value as double,
                                   child: Transform.rotate(
@@ -1725,7 +1712,10 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                 tween: Tween<double>(
                                     begin: 0.0,
                                     end: detailsVisible ? 1.0 : 0.0),
-                                duration: Duration(milliseconds: 200),
+                                duration: Theme.of(context)
+                                        .extension<AnimationDurations>()
+                                        ?.fast ??
+                                    Duration.zero,
                                 builder: (context, value, _) => Transform.scale(
                                   scale: value as double,
                                   child: Transform.rotate(

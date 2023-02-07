@@ -9,9 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:extended_image/extended_image.dart';
 
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/constants/language.dart';
+
 import 'package:harmonoid/web/state/web.dart';
 import 'package:harmonoid/web/utils/rendering.dart';
 
@@ -55,7 +57,9 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
               Hero(
                 tag: widget.track.hashCode,
                 child: TweenAnimationBuilder(
-                  duration: const Duration(milliseconds: 100),
+                  duration:
+                      Theme.of(context).extension<AnimationDurations>()?.fast ??
+                          Duration.zero,
                   tween: Tween<double>(begin: 1.0, end: scale),
                   builder: (BuildContext context, double value, _) {
                     return Transform.scale(
@@ -134,23 +138,14 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                               children: [
                                 Text(
                                   widget.track.trackName.overflow,
-                                  style: isDesktop
-                                      ? Theme.of(context)
-                                          .textTheme
-                                          .displaySmall
-                                          ?.copyWith(
-                                            fontSize: 14.0,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.white,
-                                          )
-                                      : Theme.of(context)
-                                          .textTheme
-                                          .displayLarge
-                                          ?.copyWith(
-                                            fontSize: 20.0,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.white,
-                                          ),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displaySmall
+                                      ?.copyWith(
+                                        fontSize: 14.0,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
                                   textAlign: TextAlign.left,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -192,51 +187,20 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
               Positioned(
                 top: 4.0,
                 right: 4.0,
-                child: isMobile
-                    ? IconButton(
-                        splashRadius: 20.0,
-                        icon: Icon(
-                          Icons.more_vert,
-                          color: Colors.white54,
-                        ),
-                        onPressed: () async {
-                          int? result;
-                          await showModalBottomSheet(
-                            isScrollControlled: true,
-                            context: context,
-                            builder: (context) => Container(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: webTrackPopupMenuItems(context)
-                                    .map(
-                                      (item) => PopupMenuItem(
-                                        child: item.child,
-                                        onTap: () => result = item.value,
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
-                            ),
-                          );
-                          webTrackPopupMenuHandle(
-                              context, widget.track, result);
-                        },
-                      )
-                    : ContextMenuButton(
-                        itemBuilder: (BuildContext context) =>
-                            webTrackPopupMenuItems(
-                          context,
-                        ),
-                        onSelected: (result) async {
-                          webTrackPopupMenuHandle(
-                              context, widget.track, result as int?);
-                        },
-                        icon: Icon(
-                          Icons.more_vert,
-                          size: 16.0,
-                          color: Colors.white54,
-                        ),
-                      ),
+                child: ContextMenuButton(
+                  itemBuilder: (BuildContext context) => webTrackPopupMenuItems(
+                    context,
+                  ),
+                  onSelected: (result) async {
+                    webTrackPopupMenuHandle(
+                        context, widget.track, result as int?);
+                  },
+                  icon: Icon(
+                    Icons.more_vert,
+                    size: 16.0,
+                    color: Colors.white54,
+                  ),
+                ),
               ),
             ],
           ),
@@ -355,45 +319,13 @@ class VideoTile extends StatelessWidget {
                     Container(
                       width: 64.0,
                       height: 64.0,
-                      child: isMobile
-                          ? IconButton(
-                              splashRadius: 20.0,
-                              icon: Icon(
-                                Icons.more_vert,
-                              ),
-                              onPressed: () async {
-                                int? result;
-                                await showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  context: context,
-                                  builder: (context) => Container(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: webTrackPopupMenuItems(context)
-                                          .map(
-                                            (item) => PopupMenuItem(
-                                              child: item.child,
-                                              onTap: () => result = item.value,
-                                            ),
-                                          )
-                                          .toList(),
-                                    ),
-                                  ),
-                                );
-                                webTrackPopupMenuHandle(
-                                  context,
-                                  video,
-                                  result,
-                                );
-                              },
-                            )
-                          : ContextMenuButton<int>(
-                              onSelected: (result) {
-                                webTrackPopupMenuHandle(context, video, result);
-                              },
-                              itemBuilder: (context) =>
-                                  webTrackPopupMenuItems(context),
-                            ),
+                      child: ContextMenuButton<int>(
+                        onSelected: (result) {
+                          webTrackPopupMenuHandle(context, video, result);
+                        },
+                        itemBuilder: (context) =>
+                            webTrackPopupMenuItems(context),
+                      ),
                     ),
                   ],
                 ),

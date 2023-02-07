@@ -23,7 +23,7 @@ class FileInfoScreen extends StatefulWidget {
   static Future<void> show(
     BuildContext context, {
     Uri? uri,
-    Duration timeout: const Duration(days: 1),
+    Duration timeout = const Duration(days: 1),
   }) async {
     if (uri != null) {
       // Show [Dialog] on desktop & use [showGeneralDialog] on mobile.

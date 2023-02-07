@@ -903,7 +903,9 @@ class _SortBarState extends State<SortBar> {
             child: child,
             builder: (context, hover, child) => AnimatedPositioned(
               curve: Curves.easeInOut,
-              duration: const Duration(milliseconds: 200),
+              duration:
+                  Theme.of(context).extension<AnimationDurations>()?.fast ??
+                      Duration.zero,
               top: hover
                   ? widget.tab == 1
                       ? 28.0
@@ -947,7 +949,8 @@ class _ScaleOnHoverState extends State<ScaleOnHover> {
         scale = 1.00;
       }),
       child: TweenAnimationBuilder(
-        duration: const Duration(milliseconds: 100),
+        duration: Theme.of(context).extension<AnimationDurations>()?.fast ??
+            Duration.zero,
         tween: Tween<double>(begin: 1.0, end: scale),
         builder: (BuildContext context, double value, _) {
           return Transform.scale(scale: value, child: widget.child);
@@ -1298,14 +1301,8 @@ class ExceptionWidget extends StatelessWidget {
             TextButton(
               onPressed: () {
                 Navigator.of(context).push(
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        FadeThroughTransition(
-                      fillColor: Colors.transparent,
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      child: Settings(),
-                    ),
+                  MaterialRoute(
+                    builder: (context) => Settings(),
                   ),
                 );
               },
@@ -1636,7 +1633,8 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
     return ValueListenableBuilder<Iterable<Color>?>(
       valueListenable: MobileNowPlayingController.instance.palette,
       builder: (context, value, _) => TweenAnimationBuilder<Color?>(
-        duration: Duration(milliseconds: 400),
+        duration: Theme.of(context).extension<AnimationDurations>()?.medium ??
+            Duration.zero,
         tween: ColorTween(
           begin: Theme.of(context).primaryColor,
           end: value?.first ?? Theme.of(context).primaryColor,
@@ -1935,7 +1933,10 @@ class _HorizontalListState extends State<HorizontalList> {
                       controller.animateTo(
                         controller.offset +
                             MediaQuery.of(context).size.width / 2,
-                        duration: Duration(milliseconds: 200),
+                        duration: Theme.of(context)
+                                .extension<AnimationDurations>()
+                                ?.fast ??
+                            Duration.zero,
                         curve: Curves.easeInOut,
                       );
                     },
@@ -1957,7 +1958,10 @@ class _HorizontalListState extends State<HorizontalList> {
                       controller.animateTo(
                         controller.offset -
                             MediaQuery.of(context).size.width / 2,
-                        duration: Duration(milliseconds: 200),
+                        duration: Theme.of(context)
+                                .extension<AnimationDurations>()
+                                ?.fast ??
+                            Duration.zero,
                         curve: Curves.easeInOut,
                       );
                     },
@@ -2337,7 +2341,8 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
     final tab = index;
     return AnimatedOpacity(
       opacity: [0, 1, 2].contains(tab) ? 1.0 : 0.0,
-      duration: Duration(milliseconds: 50),
+      duration: Theme.of(context).extension<AnimationDurations>()?.fast ??
+          Duration.zero,
       child: CircularButton(
         icon: Icon(
           Icons.sort_by_alpha,
@@ -2619,14 +2624,8 @@ class CollectionMoreButton extends StatelessWidget {
           case 1:
             {
               Navigator.of(context).push(
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                      FadeThroughTransition(
-                    fillColor: Colors.transparent,
-                    animation: animation,
-                    secondaryAnimation: secondaryAnimation,
-                    child: WebTab(),
-                  ),
+                MaterialRoute(
+                  builder: (context) => WebTab(),
                 ),
               );
               break;
@@ -3282,13 +3281,8 @@ class _MobileAppBarOverflowButtonState
               {
                 await Navigator.push(
                   context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        FadeThroughTransition(
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      child: WebTab(),
-                    ),
+                  MaterialRoute(
+                    builder: (context) => WebTab(),
                   ),
                 );
                 break;
@@ -3297,13 +3291,8 @@ class _MobileAppBarOverflowButtonState
               {
                 await Navigator.push(
                   context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        FadeThroughTransition(
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      child: Settings(),
-                    ),
+                  MaterialRoute(
+                    builder: (context) => Settings(),
                   ),
                 );
                 break;
@@ -3312,13 +3301,8 @@ class _MobileAppBarOverflowButtonState
               {
                 await Navigator.push(
                   context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        FadeThroughTransition(
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      child: AboutPage(),
-                    ),
+                  MaterialRoute(
+                    builder: (context) => AboutPage(),
                   ),
                 );
                 break;

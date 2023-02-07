@@ -43,7 +43,6 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
     visible = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 200),
-      reverseDuration: const Duration(milliseconds: 200),
     );
     WidgetsBinding.instance.addPostFrameCallback((_) => refresh());
     controller.addListener(listener);
@@ -327,17 +326,9 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                                           heroTag: 'settings',
                                           onPressed: () {
                                             Navigator.of(context).push(
-                                              PageRouteBuilder(
-                                                pageBuilder: (context,
-                                                        animation,
-                                                        secondaryAnimation) =>
-                                                    FadeThroughTransition(
-                                                  fillColor: Colors.transparent,
-                                                  animation: animation,
-                                                  secondaryAnimation:
-                                                      secondaryAnimation,
-                                                  child: Settings(),
-                                                ),
+                                              MaterialRoute(
+                                                builder: (context) =>
+                                                    Settings(),
                                               ),
                                             );
                                           },
@@ -379,15 +370,8 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                     heroTag: 'settings',
                     onPressed: () {
                       Navigator.of(context).push(
-                        PageRouteBuilder(
-                          pageBuilder:
-                              (context, animation, secondaryAnimation) =>
-                                  FadeThroughTransition(
-                            fillColor: Colors.transparent,
-                            animation: animation,
-                            secondaryAnimation: secondaryAnimation,
-                            child: Settings(),
-                          ),
+                        MaterialRoute(
+                          builder: (context) => Settings(),
                         ),
                       );
                     },

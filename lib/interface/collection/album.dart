@@ -416,7 +416,8 @@ class _DesktopAlbumArtistTabState extends State<DesktopAlbumArtistTab> {
                                       i -
                                       1)]! +
                           28.0,
-                      duration: Duration(milliseconds: 100),
+                      // MUST BE GREATER THAN 0 OTHERWISE IT WILL NOT SCROLL.
+                      duration: const Duration(milliseconds: 100),
                       curve: Curves.easeInOut,
                     );
                   },
@@ -670,19 +671,26 @@ class AlbumTile extends StatelessWidget {
                     debugPrint(exception.toString());
                     debugPrint(stacktrace.toString());
                   }
-                  Navigator.of(context).push(
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) =>
-                          FadeThroughTransition(
-                        fillColor: Colors.transparent,
-                        animation: animation,
-                        secondaryAnimation: secondaryAnimation,
-                        child: AlbumScreen(
-                          album: album,
+                  try {
+                    if (palette == null) {
+                      final result = await PaletteGenerator.fromImageProvider(
+                        getAlbumArt(
+                          album,
+                          small: true,
                         ),
+                      );
+                      palette = result.colors;
+                    }
+                  } catch (exception, stacktrace) {
+                    debugPrint(exception.toString());
+                    debugPrint(stacktrace.toString());
+                  }
+                  Navigator.of(context).push(
+                    MaterialRoute(
+                      builder: (context) => AlbumScreen(
+                        album: album,
+                        palette: palette,
                       ),
-                      transitionDuration: Duration(milliseconds: 300),
-                      reverseTransitionDuration: Duration(milliseconds: 300),
                     ),
                   );
                   Timer(const Duration(milliseconds: 400), () {
@@ -1005,51 +1013,7 @@ class AlbumScreenState extends State<AlbumScreen>
   @override
   void initState() {
     super.initState();
-    if (isDesktop) {
-      Timer(
-        Duration(milliseconds: 300),
-        () {
-          if (widget.palette == null) {
-            PaletteGenerator.fromImageProvider(
-                    getAlbumArt(widget.album, small: true))
-                .then((palette) {
-              setState(() {
-                if (palette.colors != null) {
-                  color = palette.colors!.first;
-                  secondary = palette.colors!.last;
-                }
-                detailsVisible = true;
-              });
-            });
-          } else {
-            setState(() {
-              detailsVisible = true;
-            });
-          }
-        },
-      );
-    }
     if (isMobile) {
-      Timer(Duration(milliseconds: 100), () {
-        controller
-            .animateTo(
-          0.0,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        )
-            .then((_) {
-          Timer(Duration(milliseconds: 50), () {
-            setState(() {
-              detailsLoaded = true;
-              physics = null;
-            });
-          });
-        });
-      });
-      if (widget.palette != null) {
-        color = widget.palette?.first;
-        secondary = widget.palette?.last;
-      }
       controller.addListener(() {
         if (controller.offset < 36.0) {
           if (!detailsVisible) {
@@ -1064,6 +1028,43 @@ class AlbumScreenState extends State<AlbumScreen>
         }
       });
     }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final duration =
+          Theme.of(context).extension<AnimationDurations>()?.medium ??
+              Duration.zero;
+      if (duration == Duration.zero) {
+        setState(() {
+          color = widget.palette?.first;
+          secondary = widget.palette?.last;
+          detailsLoaded = true;
+          physics = null;
+        });
+      } else {
+        if (isDesktop) {
+          await Future.delayed(duration);
+          setState(() {
+            color = widget.palette?.first;
+            secondary = widget.palette?.last;
+          });
+        }
+        if (isMobile) {
+          setState(() {
+            color = widget.palette?.first;
+            secondary = widget.palette?.last;
+          });
+          await controller.animateTo(
+            0.0,
+            duration: duration,
+            curve: Curves.easeInOut,
+          );
+          await Future.delayed(const Duration(milliseconds: 100));
+          setState(() {
+            detailsLoaded = true;
+            physics = null;
+          });
+        }
+      }
+    });
   }
 
   @override
@@ -1086,15 +1087,24 @@ class AlbumScreenState extends State<AlbumScreen>
       builder: (context, value, child) {
         final tracks = widget.album.tracks.toList();
         tracks.sort(
-          (first, second) =>
-              first.discNumber.compareTo(second.discNumber) * 100000000 +
-              first.trackNumber.compareTo(second.trackNumber) * 1000000 +
-              first.trackName.compareTo(second.trackName) * 10000 +
-              first.trackArtistNames
-                      .join()
-                      .compareTo(second.trackArtistNames.join()) *
-                  100 +
-              first.uri.toString().compareTo(second.uri.toString()),
+          (first, second) {
+            if (first.discNumber != second.discNumber) {
+              return first.discNumber.compareTo(second.discNumber);
+            }
+            if (first.trackNumber != second.trackNumber) {
+              return first.trackNumber.compareTo(second.trackNumber);
+            }
+            if (first.trackName != second.trackName) {
+              return first.trackName.compareTo(second.trackName);
+            }
+            if (first.trackArtistNames.join(' ') !=
+                second.trackArtistNames.join(' ')) {
+              return first.trackArtistNames
+                  .join(' ')
+                  .compareTo(second.trackArtistNames.join(' '));
+            }
+            return first.uri.toString().compareTo(second.uri.toString());
+          },
         );
         return isDesktop
             ? Scaffold(
@@ -1111,9 +1121,10 @@ class AlbumScreenState extends State<AlbumScreen>
                               : color!,
                         ),
                         curve: Curves.easeOut,
-                        duration: Duration(
-                          milliseconds: 400,
-                        ),
+                        duration: Theme.of(context)
+                                .extension<AnimationDurations>()
+                                ?.medium ??
+                            Duration.zero,
                         builder: (context, color, _) => DesktopAppBar(
                           height: MediaQuery.of(context).size.height / 3,
                           color: color as Color? ?? Colors.transparent,
@@ -1160,9 +1171,11 @@ class AlbumScreenState extends State<AlbumScreen>
                                                   : secondary!,
                                             ),
                                             curve: Curves.easeOut,
-                                            duration: Duration(
-                                              milliseconds: 600,
-                                            ),
+                                            duration: Theme.of(context)
+                                                    .extension<
+                                                        AnimationDurations>()
+                                                    ?.slow ??
+                                                Duration.zero,
                                             builder: (context, color, _) =>
                                                 Positioned.fill(
                                               child: Container(
@@ -1612,7 +1625,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                                 if (artist != null) {
                                                                                   Playback.instance.interceptPositionChangeRebuilds = true;
                                                                                   Navigator.of(context).push(
-                                                                                    MaterialPageRoute(
+                                                                                    MaterialRoute(
                                                                                       builder: (context) => ArtistScreen(
                                                                                         artist: artist,
                                                                                       ),
@@ -1873,7 +1886,10 @@ class AlbumScreenState extends State<AlbumScreen>
                                 begin: 1.0,
                                 end: detailsVisible ? 0.0 : 1.0,
                               ),
-                              duration: Duration(milliseconds: 200),
+                              duration: Theme.of(context)
+                                      .extension<AnimationDurations>()
+                                      ?.fast ??
+                                  Duration.zero,
                               builder: (context, value, _) => Opacity(
                                 opacity: value,
                                 child: Text(
@@ -1941,7 +1957,10 @@ class AlbumScreenState extends State<AlbumScreen>
                                           begin: 1.0,
                                           end: detailsVisible ? 1.0 : 0.0,
                                         ),
-                                        duration: Duration(milliseconds: 200),
+                                        duration: Theme.of(context)
+                                                .extension<AnimationDurations>()
+                                                ?.fast ??
+                                            Duration.zero,
                                         builder: (context, value, _) => Opacity(
                                           opacity: value,
                                           child: Container(
@@ -2055,7 +2074,10 @@ class AlbumScreenState extends State<AlbumScreen>
                                     tween: Tween<double>(
                                         begin: 0.0,
                                         end: detailsVisible ? 1.0 : 0.0),
-                                    duration: Duration(milliseconds: 200),
+                                    duration: Theme.of(context)
+                                            .extension<AnimationDurations>()
+                                            ?.fast ??
+                                        Duration.zero,
                                     builder: (context, value, _) =>
                                         Transform.scale(
                                       scale: value as double,
@@ -2096,7 +2118,10 @@ class AlbumScreenState extends State<AlbumScreen>
                                     tween: Tween<double>(
                                         begin: 0.0,
                                         end: detailsVisible ? 1.0 : 0.0),
-                                    duration: Duration(milliseconds: 200),
+                                    duration: Theme.of(context)
+                                            .extension<AnimationDurations>()
+                                            ?.fast ??
+                                        Duration.zero,
                                     builder: (context, value, _) =>
                                         Transform.scale(
                                       scale: value as double,

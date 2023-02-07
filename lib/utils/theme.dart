@@ -282,6 +282,10 @@ ThemeData createTheme({
     Color.lerp(Colors.black, Colors.white, 1.0),
   );
 
+  final animationDurations = AnimationDurations();
+  // For access inside page route transitions.
+  MaterialRoute.animationDurations = animationDurations;
+
   return ThemeData(
     // TYPOGRAPHY
 
@@ -560,10 +564,12 @@ ThemeData createTheme({
       ),
     ),
 
+    // PAGE TRANSITIONS
+
     pageTransitionsTheme: PageTransitionsTheme(
       builders: {
-        TargetPlatform.windows: OpenUpwardsPageTransitionsBuilder(),
-        TargetPlatform.linux: OpenUpwardsPageTransitionsBuilder(),
+        TargetPlatform.windows: ZoomPageTransitionsBuilder(),
+        TargetPlatform.linux: ZoomPageTransitionsBuilder(),
         TargetPlatform.android: ZoomPageTransitionsBuilder(),
         TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
         TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
@@ -751,8 +757,70 @@ ThemeData createTheme({
 
     extensions: {
       iconColors,
+      animationDurations,
     },
   );
+}
+
+class MaterialRoute extends MaterialPageRoute {
+  MaterialRoute({required WidgetBuilder builder}) : super(builder: builder);
+
+  // A simple "hack" to access the animation duration from the [ThemeExtension] without using [BuildContext].
+  static AnimationDurations? animationDurations;
+  static const kDefaultTransitionDuration = Duration(milliseconds: 300);
+
+  @override
+  Duration get transitionDuration =>
+      animationDurations?.medium ?? kDefaultTransitionDuration;
+}
+
+class AnimationDurations extends ThemeExtension<AnimationDurations> {
+  final Duration fast;
+  final Duration medium;
+  final Duration slow;
+
+  const AnimationDurations({
+    this.fast = const Duration(milliseconds: 150),
+    this.medium = const Duration(milliseconds: 300),
+    this.slow = const Duration(milliseconds: 450),
+  });
+
+  factory AnimationDurations.disabled() {
+    return AnimationDurations(
+      fast: Duration.zero,
+      medium: Duration.zero,
+      slow: Duration.zero,
+    );
+  }
+
+  @override
+  ThemeExtension<AnimationDurations> copyWith({
+    bool? enabled,
+    Duration? fast,
+    Duration? medium,
+    Duration? slow,
+  }) {
+    return AnimationDurations(
+      fast: fast ?? this.fast,
+      medium: medium ?? this.medium,
+      slow: slow ?? this.slow,
+    );
+  }
+
+  @override
+  ThemeExtension<AnimationDurations> lerp(
+    ThemeExtension<AnimationDurations>? other,
+    double t,
+  ) {
+    if (other is! AnimationDurations) {
+      return this;
+    }
+    return AnimationDurations(
+      fast: fast * (1 - t) + other.fast * t,
+      medium: medium * (1 - t) + other.medium * t,
+      slow: slow * (1 - t) + other.slow * t,
+    );
+  }
 }
 
 class IconColors extends ThemeExtension<IconColors> {
@@ -763,7 +831,7 @@ class IconColors extends ThemeExtension<IconColors> {
   final Color? appBarActionLightIconColor;
   final Color? appBarActionDarkIconColor;
 
-  IconColors(
+  const IconColors(
     this.lightIconColor,
     this.darkIconColor,
     this.appBarLightIconColor,

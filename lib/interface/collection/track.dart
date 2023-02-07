@@ -212,7 +212,7 @@ class _TrackTabState extends State<TrackTab> {
                                                 .interceptPositionChangeRebuilds =
                                             true;
                                         navigatorKey.currentState?.push(
-                                          MaterialPageRoute(
+                                          MaterialRoute(
                                             builder: (context) => ArtistScreen(
                                               artist: artist,
                                             ),
@@ -271,7 +271,7 @@ class _TrackTabState extends State<TrackTab> {
                                                     .interceptPositionChangeRebuilds =
                                                 true;
                                             navigatorKey.currentState?.push(
-                                              MaterialPageRoute(
+                                              MaterialRoute(
                                                 builder: (context) =>
                                                     AlbumScreen(
                                                   album: album,
@@ -598,7 +598,7 @@ class TrackTileState extends State<TrackTile> {
                                           DesktopNowPlayingController.instance
                                               .hide();
                                           navigatorKey.currentState?.push(
-                                            MaterialPageRoute(
+                                            MaterialRoute(
                                               builder: (context) =>
                                                   ArtistScreen(
                                                 artist: artist,
