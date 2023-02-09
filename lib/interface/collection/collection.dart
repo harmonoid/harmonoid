@@ -530,6 +530,15 @@ class CollectionScreenState extends State<CollectionScreen>
                       accentColor: Theme.of(context).primaryColor,
                       onQueryChanged: (value) => query.value = value,
                       clearQueryOnClose: true,
+                      hintStyle:
+                          Theme.of(context).textTheme.titleMedium?.copyWith(
+                                color: Theme.of(context).hintColor,
+                              ),
+                      queryStyle: Theme.of(context).textTheme.titleMedium,
+                      transitionDuration: Theme.of(context)
+                              .extension<AnimationDurations>()
+                              ?.medium ??
+                          Duration.zero,
                       transition: CircularFloatingSearchBarTransition(),
                       leadingActions: [
                         FloatingSearchBarAction(

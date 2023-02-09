@@ -77,11 +77,8 @@ class AndroidPermissionsSettingState extends State<AndroidPermissionsSetting> {
       subtitle: Language.instance.PERMISSIONS_SUBTITLE,
       child: Column(
         children: [
-          CheckboxListTile(
+          SwitchListTile(
             value: music,
-            checkboxShape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.0),
-            ),
             onChanged: (_) async {
               if (!music) {
                 if (StorageRetriever.instance.version >= 33) {
@@ -103,11 +100,8 @@ class AndroidPermissionsSettingState extends State<AndroidPermissionsSetting> {
           ),
           // Notifications permission is only required by Android 13 or higher.
           if (StorageRetriever.instance.version >= 33)
-            CheckboxListTile(
+            SwitchListTile(
               value: notification,
-              checkboxShape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0),
-              ),
               onChanged: (_) async {
                 if (!notification) {
                   if (StorageRetriever.instance.version >= 33) {
@@ -135,11 +129,8 @@ class AndroidPermissionsSettingState extends State<AndroidPermissionsSetting> {
             ),
           // Photos & images permission is only required by Android 13 or higher.
           if (StorageRetriever.instance.version >= 33)
-            CheckboxListTile(
+            SwitchListTile(
               value: photos,
-              checkboxShape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0),
-              ),
               onChanged: (_) async {
                 if (!photos) {
                   if (StorageRetriever.instance.version >= 33) {

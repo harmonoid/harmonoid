@@ -103,9 +103,9 @@ class _AboutPageState extends State<AboutPage> {
                               ),
                               const SizedBox(height: 2.0),
                               Text(
-                                [
-                                  kVersion,
-                                ].join(' • '),
+                                Platform.isAndroid
+                                    ? '$kVersion • Google Play'
+                                    : kVersion,
                                 style: Theme.of(context).textTheme.displaySmall,
                               ),
                             ],
@@ -150,44 +150,47 @@ class _AboutPageState extends State<AboutPage> {
                               : null,
                         ),
                       ),
-                      ListTile(
-                        onTap: () => open(URL.patreon),
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          foregroundColor: Theme.of(context).iconTheme.color,
-                          child: SvgPicture.string(
-                            SVG.patreon,
-                            height: 20.0,
-                            width: 20.0,
-                            color: Theme.of(context).iconTheme.color,
+                      // Hide Patreon & PayPal from Android.
+                      if (!Platform.isAndroid)
+                        ListTile(
+                          onTap: () => open(URL.patreon),
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            foregroundColor: Theme.of(context).iconTheme.color,
+                            child: SvgPicture.string(
+                              SVG.patreon,
+                              height: 20.0,
+                              width: 20.0,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
+                          ),
+                          title: Text(
+                            Label.become_a_patreon,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.headlineMedium
+                                : null,
                           ),
                         ),
-                        title: Text(
-                          Label.become_a_patreon,
-                          style: isDesktop
-                              ? Theme.of(context).textTheme.headlineMedium
-                              : null,
-                        ),
-                      ),
-                      ListTile(
-                        onTap: () => open(URL.paypal),
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          foregroundColor: Theme.of(context).iconTheme.color,
-                          child: SvgPicture.string(
-                            SVG.paypal,
-                            height: 20.0,
-                            width: 20.0,
-                            color: Theme.of(context).iconTheme.color,
+                      if (!Platform.isAndroid)
+                        ListTile(
+                          onTap: () => open(URL.paypal),
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            foregroundColor: Theme.of(context).iconTheme.color,
+                            child: SvgPicture.string(
+                              SVG.paypal,
+                              height: 20.0,
+                              width: 20.0,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
+                          ),
+                          title: Text(
+                            Label.donate_with_paypal,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.headlineMedium
+                                : null,
                           ),
                         ),
-                        title: Text(
-                          Label.donate_with_paypal,
-                          style: isDesktop
-                              ? Theme.of(context).textTheme.headlineMedium
-                              : null,
-                        ),
-                      ),
                       ListTile(
                         onTap: () => open(URL.license),
                         leading: CircleAvatar(
@@ -347,7 +350,7 @@ class _AboutPageState extends State<AboutPage> {
 abstract class Label {
   static const about = 'About';
   static const github = 'GitHub';
-  static const talk_on_discord = 'Talk on Discord';
+  static const talk_on_discord = 'Discord';
   static const become_a_patreon = 'Become a Patreon';
   static const donate_with_paypal = 'Donate with PayPal';
   static const license = 'License';

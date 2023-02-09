@@ -16,7 +16,6 @@ import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter_lyric/lyrics_reader.dart';
 import 'package:flutter_lyric/lyrics_reader_model.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:external_media_provider/external_media_provider.dart';
 
 import 'package:harmonoid/core/playback.dart';
@@ -2208,159 +2207,116 @@ class MiniNowPlayingBarRefreshCollectionButtonState
               ),
               builder: (context, color, _) => Container(
                 child: widget.index.value == 3
-                    ? SpeedDial(
-                        icon: Icons.add,
-                        activeIcon: Icons.close,
-                        spacing: 8.0,
-                        heroTag: 'create-playlist-fab',
-                        animationCurve: Curves.easeInOut,
-                        animationDuration: Theme.of(context)
-                                .extension<AnimationDurations>()
-                                ?.fast ??
-                            Duration.zero,
-                        children: [
-                          SpeedDialChild(
-                            child: const Icon(Icons.downloading),
-                            label: Language.instance.IMPORT,
-                            visible: true,
-                            onTap: () {
-                              showModalBottomSheet(
-                                isScrollControlled: true,
-                                constraints: BoxConstraints(
-                                  maxHeight: double.infinity,
-                                ),
-                                context: context,
-                                elevation: kDefaultHeavyElevation,
-                                useRootNavigator: true,
-                                builder: (context) => StatefulBuilder(
-                                  builder: (context, setState) {
-                                    return PlaylistImportBottomSheet();
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                          SpeedDialChild(
-                            child: const Icon(Icons.edit),
-                            label: Language.instance.CREATE,
-                            visible: true,
-                            onTap: () async {
-                              String text = '';
-                              await showModalBottomSheet(
-                                isScrollControlled: true,
-                                context: context,
-                                elevation: kDefaultHeavyElevation,
-                                useRootNavigator: true,
-                                builder: (context) => StatefulBuilder(
-                                  builder: (context, setState) {
-                                    return Container(
-                                      margin: EdgeInsets.only(
-                                        bottom: MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom -
-                                            MediaQuery.of(context)
-                                                .padding
-                                                .bottom,
-                                      ),
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
-                                        children: [
-                                          const SizedBox(height: 4.0),
-                                          CustomTextField(
-                                            textCapitalization:
-                                                TextCapitalization.words,
-                                            textInputAction:
-                                                TextInputAction.done,
-                                            autofocus: true,
-                                            onChanged: (value) => text = value,
-                                            onSubmitted: (String value) async {
-                                              if (value.isNotEmpty) {
-                                                FocusScope.of(context)
-                                                    .unfocus();
-                                                await Collection.instance
-                                                    .playlistCreateFromName(
-                                                        value);
-                                                Navigator.of(context)
-                                                    .maybePop();
-                                              }
-                                            },
-                                            decoration: InputDecoration(
-                                              contentPadding:
-                                                  EdgeInsets.fromLTRB(
-                                                12,
-                                                30,
-                                                12,
-                                                6,
-                                              ),
-                                              hintText: Language.instance
-                                                  .PLAYLISTS_TEXT_FIELD_LABEL,
-                                              border: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .iconTheme
-                                                      .color!
-                                                      .withOpacity(0.4),
-                                                  width: 1.8,
-                                                ),
-                                              ),
-                                              enabledBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .iconTheme
-                                                      .color!
-                                                      .withOpacity(0.4),
-                                                  width: 1.8,
-                                                ),
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                  width: 1.8,
-                                                ),
-                                              ),
+                    ? FloatingActionButton(
+                        tooltip: Language.instance.CREATE,
+                        child: const Icon(Icons.edit),
+                        backgroundColor: color as Color?,
+                        onPressed: () async {
+                          String text = '';
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            context: context,
+                            elevation: kDefaultHeavyElevation,
+                            useRootNavigator: true,
+                            builder: (context) => StatefulBuilder(
+                              builder: (context, setState) {
+                                return Container(
+                                  margin: EdgeInsets.only(
+                                    bottom: MediaQuery.of(context)
+                                            .viewInsets
+                                            .bottom -
+                                        MediaQuery.of(context).padding.bottom,
+                                  ),
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      const SizedBox(height: 4.0),
+                                      CustomTextField(
+                                        textCapitalization:
+                                            TextCapitalization.words,
+                                        textInputAction: TextInputAction.done,
+                                        autofocus: true,
+                                        onChanged: (value) => text = value,
+                                        onSubmitted: (String value) async {
+                                          if (value.isNotEmpty) {
+                                            FocusScope.of(context).unfocus();
+                                            await Collection.instance
+                                                .playlistCreateFromName(value);
+                                            Navigator.of(context).maybePop();
+                                          }
+                                        },
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.fromLTRB(
+                                            12,
+                                            30,
+                                            12,
+                                            6,
+                                          ),
+                                          hintText: Language.instance
+                                              .PLAYLISTS_TEXT_FIELD_LABEL,
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .iconTheme
+                                                  .color!
+                                                  .withOpacity(0.4),
+                                              width: 1.8,
                                             ),
                                           ),
-                                          const SizedBox(height: 4.0),
-                                          ElevatedButton(
-                                            onPressed: () async {
-                                              if (text.isNotEmpty) {
-                                                FocusScope.of(context)
-                                                    .unfocus();
-                                                await Collection.instance
-                                                    .playlistCreateFromName(
-                                                  text,
-                                                );
-                                                Navigator.of(context)
-                                                    .maybePop();
-                                              }
-                                            },
-                                            style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                Theme.of(context).primaryColor,
-                                              ),
-                                            ),
-                                            child: Text(
-                                              Language.instance.CREATE
-                                                  .toUpperCase(),
-                                              style: const TextStyle(
-                                                letterSpacing: 2.0,
-                                              ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .iconTheme
+                                                  .color!
+                                                  .withOpacity(0.4),
+                                              width: 1.8,
                                             ),
                                           ),
-                                        ],
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              width: 1.8,
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                        ],
+                                      const SizedBox(height: 4.0),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          if (text.isNotEmpty) {
+                                            FocusScope.of(context).unfocus();
+                                            await Collection.instance
+                                                .playlistCreateFromName(
+                                              text,
+                                            );
+                                            Navigator.of(context).maybePop();
+                                          }
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                            Theme.of(context).primaryColor,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          Language.instance.CREATE
+                                              .toUpperCase(),
+                                          style: const TextStyle(
+                                            letterSpacing: 2.0,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        },
                       )
                     : RefreshCollectionButton(
                         color: color as Color?,

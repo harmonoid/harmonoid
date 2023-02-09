@@ -7,7 +7,6 @@
 ///
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:animations/animations.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
@@ -248,7 +247,7 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                           : Theme.of(context)
                               .extension<IconColors>()
                               ?.appBarDarkIconColor,
-                      onTap: () {},
+                      onTap: refresh,
                     ),
                     color: Theme.of(context).colorScheme.error,
                     height: MediaQuery.of(context).size.height / 3,

@@ -3066,19 +3066,12 @@ class _MobileAppBarOverflowButtonState
             PopupMenuItem(
               value: 2,
               child: ListTile(
-                leading: Icon(Icons.waves),
-                title: Text(Language.instance.STREAM),
-              ),
-            ),
-            PopupMenuItem(
-              value: 3,
-              child: ListTile(
                 leading: Icon(Icons.settings),
                 title: Text(Language.instance.SETTING),
               ),
             ),
             PopupMenuItem(
-              value: 4,
+              value: 3,
               child: ListTile(
                 leading: Icon(Icons.info),
                 title: Text(Language.instance.ABOUT_TITLE),
@@ -3282,22 +3275,12 @@ class _MobileAppBarOverflowButtonState
                 await Navigator.push(
                   context,
                   MaterialRoute(
-                    builder: (context) => WebTab(),
-                  ),
-                );
-                break;
-              }
-            case 3:
-              {
-                await Navigator.push(
-                  context,
-                  MaterialRoute(
                     builder: (context) => Settings(),
                   ),
                 );
                 break;
               }
-            case 4:
+            case 3:
               {
                 await Navigator.push(
                   context,
