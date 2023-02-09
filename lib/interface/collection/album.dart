@@ -721,7 +721,7 @@ class AlbumTile extends StatelessWidget {
                         child: ScaleOnHover(
                           child: Hero(
                             tag:
-                                'album_art_${album.albumName}_${album.albumArtistName}',
+                                'album_art_${album.albumName}_${album.albumArtistName}_${album.year}',
                             child: ExtendedImage(
                               image: getAlbumArt(album, small: true),
                               fit: BoxFit.cover,
@@ -1257,7 +1257,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                             padding: EdgeInsets.all(20.0),
                                             child: Hero(
                                               tag:
-                                                  'album_art_${widget.album.albumName}_${widget.album.albumArtistName}',
+                                                  'album_art_${widget.album.albumName}_${widget.album.albumArtistName}_${widget.album.year}',
                                               child: Card(
                                                 color: Colors.white,
                                                 elevation: Theme.of(context)
