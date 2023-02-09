@@ -93,7 +93,6 @@ dependencies:
   auto_size_text: ^3.0.0
   uuid: ^3.0.6
   synchronized: ^3.0.0+2
-  flutter_speed_dial: ^6.0.0
   flutter_svg: ^1.1.4
 
   # Third-party forked plugins & packages to meet requirements.
