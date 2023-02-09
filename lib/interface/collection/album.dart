@@ -535,6 +535,9 @@ class AlbumTile extends StatelessWidget {
     Iterable<Color>? palette;
     if (isMobile && forceDefaultStyleOnMobile) {
       return OpenContainer(
+        transitionDuration:
+            Theme.of(context).extension<AnimationDurations>()?.medium ??
+                Duration.zero,
         closedColor:
             Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor,
         closedElevation:
@@ -560,7 +563,19 @@ class AlbumTile extends StatelessWidget {
               debugPrint(exception.toString());
               debugPrint(stacktrace.toString());
             }
-            open();
+            if (Theme.of(context).extension<AnimationDurations>()?.medium ==
+                Duration.zero) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => AlbumScreen(
+                    album: album,
+                    palette: palette,
+                  ),
+                ),
+              );
+            } else {
+              open();
+            }
           },
           child: Container(
             height: height,
@@ -771,6 +786,10 @@ class AlbumTile extends StatelessWidget {
             ? Material(
                 color: Colors.transparent,
                 child: OpenContainer(
+                  transitionDuration: Theme.of(context)
+                          .extension<AnimationDurations>()
+                          ?.medium ??
+                      Duration.zero,
                   closedColor: Colors.transparent,
                   closedElevation: 0.0,
                   openColor: Colors.transparent,
@@ -804,7 +823,21 @@ class AlbumTile extends StatelessWidget {
                               debugPrint(exception.toString());
                               debugPrint(stacktrace.toString());
                             }
-                            open();
+                            if (Theme.of(context)
+                                    .extension<AnimationDurations>()
+                                    ?.medium ==
+                                Duration.zero) {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => AlbumScreen(
+                                    album: album,
+                                    palette: palette,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              open();
+                            }
                           },
                           onLongPress: () => action(context),
                           child: Container(
@@ -878,6 +911,9 @@ class AlbumTile extends StatelessWidget {
                 ),
               )
             : OpenContainer(
+                transitionDuration:
+                    Theme.of(context).extension<AnimationDurations>()?.medium ??
+                        Duration.zero,
                 closedColor: Theme.of(context).cardTheme.color ??
                     Theme.of(context).cardColor,
                 closedElevation: Theme.of(context).cardTheme.elevation ??
@@ -903,7 +939,21 @@ class AlbumTile extends StatelessWidget {
                       debugPrint(exception.toString());
                       debugPrint(stacktrace.toString());
                     }
-                    open();
+                    if (Theme.of(context)
+                            .extension<AnimationDurations>()
+                            ?.medium ==
+                        Duration.zero) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => AlbumScreen(
+                            album: album,
+                            palette: palette,
+                          ),
+                        ),
+                      );
+                    } else {
+                      open();
+                    }
                   },
                   child: Container(
                     height: height,
@@ -1007,12 +1057,25 @@ class AlbumScreenState extends State<AlbumScreen>
   bool reactToSecondaryPress = false;
   bool detailsVisible = false;
   bool detailsLoaded = false;
-  ScrollController controller = ScrollController(initialScrollOffset: 136.0);
   ScrollPhysics? physics = NeverScrollableScrollPhysics();
+
+  ScrollController get controller {
+    final duration = MaterialRoute.animationDurations?.medium ?? Duration.zero;
+    return duration > Duration.zero ? sc0 : sc1;
+  }
+
+  final sc0 =
+      ScrollController(initialScrollOffset: kMobileLayoutInitialScrollOffset);
+  final sc1 = ScrollController(initialScrollOffset: 0.0);
+
+  static const double kMobileLayoutInitialScrollOffset = 136.0;
 
   @override
   void initState() {
     super.initState();
+    final duration = MaterialRoute.animationDurations?.medium ?? Duration.zero;
+
+    // [ScrollController] is only needed on mobile for animation.
     if (isMobile) {
       controller.addListener(() {
         if (controller.offset < 36.0) {
@@ -1028,23 +1091,23 @@ class AlbumScreenState extends State<AlbumScreen>
         }
       });
     }
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final duration =
-          Theme.of(context).extension<AnimationDurations>()?.medium ??
-              Duration.zero;
-      if (duration == Duration.zero) {
-        setState(() {
-          color = widget.palette?.first;
-          secondary = widget.palette?.last;
-          detailsLoaded = true;
-          physics = null;
-        });
-      } else {
+
+    // No animation, assign values at mount.
+    if (duration == Duration.zero) {
+      color = widget.palette?.first;
+      secondary = widget.palette?.last;
+      detailsVisible = true;
+      detailsLoaded = true;
+    }
+    // Animation, assign values with some delay or animate with [ScrollController].
+    else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         if (isDesktop) {
-          await Future.delayed(duration);
-          setState(() {
-            color = widget.palette?.first;
-            secondary = widget.palette?.last;
+          Future.delayed(duration, () {
+            setState(() {
+              color = widget.palette?.first;
+              secondary = widget.palette?.last;
+            });
           });
         }
         if (isMobile) {
@@ -1052,19 +1115,26 @@ class AlbumScreenState extends State<AlbumScreen>
             color = widget.palette?.first;
             secondary = widget.palette?.last;
           });
-          await controller.animateTo(
+          controller.animateTo(
             0.0,
             duration: duration,
             curve: Curves.easeInOut,
           );
-          await Future.delayed(const Duration(milliseconds: 100));
+          Future.delayed(duration + const Duration(milliseconds: 100));
           setState(() {
             detailsLoaded = true;
             physics = null;
           });
         }
-      }
-    });
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    sc0.dispose();
+    sc1.dispose();
+    super.dispose();
   }
 
   @override
