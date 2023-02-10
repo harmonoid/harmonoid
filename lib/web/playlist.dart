@@ -341,7 +341,7 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                         ),
                         curve: Curves.easeOut,
                         duration: Theme.of(context)
-                                .extension<AnimationDurations>()
+                                .extension<AnimationDuration>()
                                 ?.medium ??
                             Duration.zero,
                         builder: (context, color, _) => Transform.translate(
@@ -564,12 +564,13 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
               ),
               curve: Curves.easeOut,
               duration:
-                  Theme.of(context).extension<AnimationDurations>()?.medium ??
+                  Theme.of(context).extension<AnimationDuration>()?.medium ??
                       Duration.zero,
               builder: (context, color, _) => Theme(
-                data: createTheme(
-                  color:
-                      isDark(context) ? kPrimaryDarkColor : kPrimaryLightColor,
+                data: createM2Theme(
+                  color: isDark(context)
+                      ? kDefaultDarkPrimaryColorM2
+                      : kDefaultLightPrimaryColorM2,
                   mode: isDark(context) ? ThemeMode.dark : ThemeMode.light,
                 ),
                 child: DesktopAppBar(

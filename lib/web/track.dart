@@ -96,7 +96,7 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                       tag: widget.track.hashCode,
                       child: TweenAnimationBuilder(
                         duration: Theme.of(context)
-                                .extension<AnimationDurations>()
+                                .extension<AnimationDuration>()
                                 ?.fast ??
                             Duration.zero,
                         tween: Tween<double>(begin: 1.0, end: scale),

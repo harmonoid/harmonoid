@@ -286,7 +286,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                           end: 1.0,
                                         ),
                                         duration: Theme.of(context)
-                                                .extension<AnimationDurations>()
+                                                .extension<AnimationDuration>()
                                                 ?.medium ??
                                             Duration.zero,
                                         child: state.completedWidget,
@@ -495,13 +495,14 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                           height: height + 8.0,
                           child: HorizontalList(
                             padding: EdgeInsets.only(
-                              left: tileMargin,
+                              left: tileMargin(context),
                               bottom: 8.0,
                             ),
                             children: e.value.elements
                                 .map(
                                   (f) => Padding(
-                                    padding: EdgeInsets.only(right: tileMargin),
+                                    padding: EdgeInsets.only(
+                                        right: tileMargin(context)),
                                     child: WebAlbumLargeTile(
                                       album: f as Album,
                                       width: width,
@@ -518,13 +519,14 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                           height: height + 8.0,
                           child: HorizontalList(
                             padding: EdgeInsets.only(
-                              left: tileMargin,
+                              left: tileMargin(context),
                               bottom: 8.0,
                             ),
                             children: e.value.elements
                                 .map(
                                   (f) => Padding(
-                                    padding: EdgeInsets.only(right: tileMargin),
+                                    padding: EdgeInsets.only(
+                                        right: tileMargin(context)),
                                     child: WebVideoLargeTile(
                                       track: Track.fromWebVideo(f.toJson()),
                                       width: height * 16 / 9,
@@ -541,13 +543,14 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                           height: height + 8.0,
                           child: HorizontalList(
                             padding: EdgeInsets.only(
-                              left: tileMargin,
+                              left: tileMargin(context),
                               bottom: 8.0,
                             ),
                             children: e.value.elements
                                 .map(
                                   (f) => Padding(
-                                    padding: EdgeInsets.only(right: tileMargin),
+                                    padding: EdgeInsets.only(
+                                        right: tileMargin(context)),
                                     child: WebPlaylistLargeTile(
                                       playlist: f as Playlist,
                                       width: width,
@@ -564,13 +567,14 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                           height: width + 28.0 + 8.0,
                           child: HorizontalList(
                             padding: EdgeInsets.only(
-                              left: tileMargin,
+                              left: tileMargin(context),
                               bottom: 8.0,
                             ),
                             children: e.value.elements
                                 .map(
                                   (f) => Padding(
-                                    padding: EdgeInsets.only(right: tileMargin),
+                                    padding: EdgeInsets.only(
+                                        right: tileMargin(context)),
                                     child: WebArtistLargeTile(
                                       artist: f as Artist,
                                       width: width,
@@ -636,7 +640,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                 child: child,
               );
             },
-            duration: Theme.of(context).extension<AnimationDurations>()?.fast ??
+            duration: Theme.of(context).extension<AnimationDuration>()?.fast ??
                 Duration.zero,
             tween: ColorTween(
               begin: Colors.transparent,

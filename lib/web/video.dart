@@ -58,7 +58,7 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                 tag: widget.track.hashCode,
                 child: TweenAnimationBuilder(
                   duration:
-                      Theme.of(context).extension<AnimationDurations>()?.fast ??
+                      Theme.of(context).extension<AnimationDuration>()?.fast ??
                           Duration.zero,
                   tween: Tween<double>(begin: 1.0, end: scale),
                   builder: (BuildContext context, double value, _) {

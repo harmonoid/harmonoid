@@ -56,7 +56,7 @@ class WebTabState extends State<WebTab> with AutomaticKeepAliveClientMixin {
               ),
               child: PageTransitionSwitcher(
                 duration:
-                    Theme.of(context).extension<AnimationDurations>()?.medium ??
+                    Theme.of(context).extension<AnimationDuration>()?.medium ??
                         Duration.zero,
                 transitionBuilder:
                     (child, primaryAnimation, secondaryAnimation) =>
@@ -240,8 +240,9 @@ class _WebRecommendationsState extends State<WebRecommendations>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final elementsPerRow = (MediaQuery.of(context).size.width - tileMargin) ~/
-        (kLargeTileWidth + tileMargin);
+    final elementsPerRow =
+        (MediaQuery.of(context).size.width - tileMargin(context)) ~/
+            (kLargeTileWidth + tileMargin(context));
     final double width = kLargeTileWidth;
     final double height = kLargeTileHeight;
 
@@ -269,13 +270,13 @@ class _WebRecommendationsState extends State<WebRecommendations>
                   padding: EdgeInsets.only(
                     left: (MediaQuery.of(context).size.width -
                             (elementsPerRow * kLargeTileWidth +
-                                (elementsPerRow - 1) * tileMargin)) /
+                                (elementsPerRow - 1) * tileMargin(context))) /
                         2,
                     right: (MediaQuery.of(context).size.width -
                             (elementsPerRow * kLargeTileWidth +
-                                (elementsPerRow - 1) * tileMargin)) /
+                                (elementsPerRow - 1) * tileMargin(context))) /
                         2,
-                    top: tileMargin,
+                    top: tileMargin(context),
                   ),
                   showNewPageProgressIndicatorAsGridChild: false,
                   pagingController: Web.instance.pagingController,
@@ -314,8 +315,8 @@ class _WebRecommendationsState extends State<WebRecommendations>
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: elementsPerRow,
                     childAspectRatio: width / height,
-                    mainAxisSpacing: tileMargin,
-                    crossAxisSpacing: tileMargin,
+                    mainAxisSpacing: tileMargin(context),
+                    crossAxisSpacing: tileMargin(context),
                   ),
                 ),
               ),

@@ -45,10 +45,10 @@ class _WebSearchBarState extends State<WebSearchBar> {
       Navigator.of(context).push(
         PageRouteBuilder(
           transitionDuration:
-              Theme.of(context).extension<AnimationDurations>()?.medium ??
+              Theme.of(context).extension<AnimationDuration>()?.medium ??
                   Duration.zero,
           reverseTransitionDuration:
-              Theme.of(context).extension<AnimationDurations>()?.medium ??
+              Theme.of(context).extension<AnimationDuration>()?.medium ??
                   Duration.zero,
           pageBuilder: (context, animation, secondaryAnimation) =>
               SharedAxisTransition(
@@ -832,14 +832,14 @@ class _WebMobileAppBarOverflowButtonState
       onPressed: () {
         final position = RelativeRect.fromRect(
           Offset(
-                MediaQuery.of(context).size.width - tileMargin - 48.0,
+                MediaQuery.of(context).size.width - tileMargin(context) - 48.0,
                 widget.withinScreen
                     ? (MediaQueryData.fromWindow(window).padding.top +
                         kMobileSearchBarHeight +
-                        2 * tileMargin)
+                        2 * tileMargin(context))
                     : (MediaQuery.of(context).padding.top +
                         kToolbarHeight +
-                        2 * tileMargin),
+                        2 * tileMargin(context)),
               ) &
               Size(double.infinity, double.infinity),
           Rect.fromLTWH(
