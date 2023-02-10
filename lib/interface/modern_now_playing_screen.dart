@@ -109,7 +109,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
               pageController.animateToPage(
                 Playback.instance.index,
                 duration:
-                    Theme.of(context).extension<AnimationDurations>()?.medium ??
+                    Theme.of(context).extension<AnimationDuration>()?.medium ??
                         Duration.zero,
                 curve: Curves.easeInOut,
               );
@@ -177,7 +177,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
             },
             hide: DesktopNowPlayingController.instance.hide,
             duration:
-                Theme.of(context).extension<AnimationDurations>()?.medium ??
+                Theme.of(context).extension<AnimationDuration>()?.medium ??
                     Duration.zero,
             content: Column(
               children: [
@@ -201,7 +201,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                   : 0.0,
                             ),
                             duration: Theme.of(context)
-                                    .extension<AnimationDurations>()
+                                    .extension<AnimationDuration>()
                                     ?.fast ??
                                 Duration.zero,
                             curve: Curves.easeInOut,
@@ -881,7 +881,7 @@ class CarouselState extends State<Carousel> {
   void previous() {
     if (_timer.isActive) return;
     _timer = Timer(
-        Theme.of(context).extension<AnimationDurations>()?.medium ??
+        Theme.of(context).extension<AnimationDuration>()?.medium ??
             Duration.zero,
         () {});
     setState(() {
@@ -897,7 +897,7 @@ class CarouselState extends State<Carousel> {
               widgets.removeAt(0);
             });
             _timer = Timer(
-                Theme.of(context).extension<AnimationDurations>()?.medium ??
+                Theme.of(context).extension<AnimationDuration>()?.medium ??
                     Duration.zero,
                 () {});
           },
@@ -905,7 +905,7 @@ class CarouselState extends State<Carousel> {
             begin: Offset(MediaQuery.of(context).size.width, 0),
             end: Offset.zero,
           ),
-          duration: Theme.of(context).extension<AnimationDurations>()?.medium ??
+          duration: Theme.of(context).extension<AnimationDuration>()?.medium ??
               Duration.zero,
           curve: Curves.easeInOut,
           builder: (context, value, child) => Transform.translate(
@@ -935,7 +935,7 @@ class CarouselState extends State<Carousel> {
   void next() {
     if (_timer.isActive) return;
     _timer = Timer(
-        Theme.of(context).extension<AnimationDurations>()?.medium ??
+        Theme.of(context).extension<AnimationDuration>()?.medium ??
             Duration.zero,
         () {});
     setState(() {
@@ -955,7 +955,7 @@ class CarouselState extends State<Carousel> {
             begin: Offset(-MediaQuery.of(context).size.width, 0),
             end: Offset.zero,
           ),
-          duration: Theme.of(context).extension<AnimationDurations>()?.medium ??
+          duration: Theme.of(context).extension<AnimationDuration>()?.medium ??
               Duration.zero,
           curve: Curves.easeInOut,
           builder: (context, value, child) => Transform.translate(
@@ -991,7 +991,7 @@ class CarouselState extends State<Carousel> {
             begin: Offset.zero,
             end: Offset.zero,
           ),
-          duration: Theme.of(context).extension<AnimationDurations>()?.medium ??
+          duration: Theme.of(context).extension<AnimationDuration>()?.medium ??
               Duration.zero,
           curve: Curves.easeInOut,
           builder: (context, value, child) => Material(
@@ -1205,7 +1205,7 @@ class CarouselState extends State<Carousel> {
                 end: playlistVisible ? Colors.black38 : Colors.transparent,
               ),
               duration:
-                  Theme.of(context).extension<AnimationDurations>()?.medium ??
+                  Theme.of(context).extension<AnimationDuration>()?.medium ??
                       Duration.zero,
               curve: Curves.easeInOut,
               builder: (context, color, child) => GestureDetector(
@@ -1235,7 +1235,7 @@ class CarouselState extends State<Carousel> {
                                   ),
                           ),
                           duration: Theme.of(context)
-                                  .extension<AnimationDurations>()
+                                  .extension<AnimationDuration>()
                                   ?.medium ??
                               Duration.zero,
                           curve: Curves.easeInOut,
@@ -1350,7 +1350,7 @@ class _ProminentColorWidgetState extends State<ProminentColorWidget> {
           begin: color.palette?.first,
           end: color.palette?.first ?? Colors.transparent,
         ),
-        duration: Theme.of(context).extension<AnimationDurations>()?.medium ??
+        duration: Theme.of(context).extension<AnimationDuration>()?.medium ??
             Duration.zero,
         builder: (context, color, _) => Container(
           color: Colors.black,

@@ -200,11 +200,11 @@ class HomeState extends State<Home>
                 Navigator.of(context).push(
                   PageRouteBuilder(
                     transitionDuration: Theme.of(context)
-                            .extension<AnimationDurations>()
+                            .extension<AnimationDuration>()
                             ?.slow ??
                         Duration.zero,
                     reverseTransitionDuration: Theme.of(context)
-                            .extension<AnimationDurations>()
+                            .extension<AnimationDuration>()
                             ?.medium ??
                         Duration.zero,
                     pageBuilder: (context, animation, secondaryAnimation) =>
@@ -265,11 +265,11 @@ class HomeState extends State<Home>
                               if (routeSettings.name == '/now_playing') {
                                 route = PageRouteBuilder(
                                   transitionDuration: Theme.of(context)
-                                          .extension<AnimationDurations>()
+                                          .extension<AnimationDuration>()
                                           ?.slow ??
                                       Duration.zero,
                                   reverseTransitionDuration: Theme.of(context)
-                                          .extension<AnimationDurations>()
+                                          .extension<AnimationDuration>()
                                           ?.medium ??
                                       Duration.zero,
                                   pageBuilder: (context, animation,
@@ -324,15 +324,15 @@ class HomeState extends State<Home>
                           },
                         ),
                       ),
-                      MiniNowPlayingBar(
-                        key: MobileNowPlayingController.instance.barKey,
-                      ),
+                      // MiniNowPlayingBar(
+                      //   key: MobileNowPlayingController.instance.barKey,
+                      // ),
                     ],
                   ),
                   bottomNavigationBar: ValueListenableBuilder<double>(
                     valueListenable:
                         MobileNowPlayingController.instance.bottomNavigationBar,
-                    child: MobileBottomNavigationBar(
+                    child: M2MobileBottomNavigationBar(
                       tabControllerNotifier: tabControllerNotifier,
                     ),
                     builder: (context, height, child) => Container(
@@ -342,7 +342,7 @@ class HomeState extends State<Home>
                                   // On-screen keyboard is hidden (not visible).
                                   MediaQuery.of(context).viewInsets.bottom <
                                       180.0)
-                          ? height
+                          ? height * navigationBarHeight(context)
                           : 0.0,
                       child: SingleChildScrollView(
                         physics: NeverScrollableScrollPhysics(),

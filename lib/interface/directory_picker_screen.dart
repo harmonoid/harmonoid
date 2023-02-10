@@ -48,8 +48,8 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
   }
 
   Future<void> scrollAddressBarToRight() async {
-    final duration = Theme.of(context).extension<AnimationDurations>()?.fast ??
-        Duration.zero;
+    final duration =
+        Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero;
     try {
       if (controller.hasClients) {
         if (duration == Duration.zero) {
@@ -330,11 +330,11 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
                 key: key,
                 onGenerateRoute: (settings) => PageRouteBuilder(
                   transitionDuration: Theme.of(context)
-                          .extension<AnimationDurations>()
+                          .extension<AnimationDuration>()
                           ?.medium ??
                       Duration.zero,
                   reverseTransitionDuration: Theme.of(context)
-                          .extension<AnimationDurations>()
+                          .extension<AnimationDuration>()
                           ?.medium ??
                       Duration.zero,
                   pageBuilder: (_, animation, secondaryAnimation) =>

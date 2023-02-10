@@ -21,8 +21,7 @@ import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 /// Managing [Color]s this way has two benefits:
 /// * No need to run `package:palette_generator` redundantly everywhere we need to access the palette.
 ///   `package:palette_generator` runs on main thread & causes substantial frame drop every time a palette is extracted.
-/// * This avoids race condition that caused palette of previous [Track] to be still visible even after new [Track]
-///   started playing.
+/// * This avoids race condition that caused palette of previous [Track] to be still visible even after new [Track] started playing.
 ///   Since, palette generation is `async` operation previous song's palette could be calculated faster than the next one, somehow resulting in the overlap.
 ///
 class NowPlayingColorPalette extends ChangeNotifier {

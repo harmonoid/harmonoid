@@ -42,8 +42,9 @@ class Table extends StatelessWidget {
         ),
       ),
       margin: isDesktop
-          ? EdgeInsets.only(top: tileMargin)
-          : EdgeInsets.only(top: tileMargin, bottom: 2 * tileMargin),
+          ? EdgeInsets.only(top: tileMargin(context))
+          : EdgeInsets.only(
+              top: tileMargin(context), bottom: 2 * tileMargin(context)),
       child: Consumer<Collection>(
         builder: (context, collection, _) => DataTable(
           headingRowHeight: isDesktop ? 44.0 : 52.0,

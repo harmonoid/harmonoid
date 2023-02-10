@@ -33,10 +33,8 @@ class ThemeSetting extends StatelessWidget {
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
                       groupValue: visuals.themeMode,
-                      onChanged: (dynamic themeMode) => visuals.update(
-                        themeMode: themeMode,
-                        context: context,
-                      ),
+                      onChanged: (ThemeMode? themeMode) =>
+                          visuals.update(themeMode: themeMode),
                     ),
                   RadioListTile(
                     value: ThemeMode.light,
@@ -45,10 +43,8 @@ class ThemeSetting extends StatelessWidget {
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     groupValue: visuals.themeMode,
-                    onChanged: (dynamic themeMode) => visuals.update(
-                      themeMode: themeMode,
-                      context: context,
-                    ),
+                    onChanged: (ThemeMode? themeMode) =>
+                        visuals.update(themeMode: themeMode),
                   ),
                   RadioListTile(
                     value: ThemeMode.dark,
@@ -57,10 +53,8 @@ class ThemeSetting extends StatelessWidget {
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     groupValue: visuals.themeMode,
-                    onChanged: (dynamic themeMode) => visuals.update(
-                      themeMode: themeMode,
-                      context: context,
-                    ),
+                    onChanged: (ThemeMode? themeMode) =>
+                        visuals.update(themeMode: themeMode),
                   ),
                 ],
               ),
@@ -90,10 +84,7 @@ class ThemeSetting extends StatelessWidget {
                               groupValue: visuals.themeMode,
                               onChanged: (e) {
                                 if (e != null) {
-                                  visuals.update(
-                                    context: context,
-                                    themeMode: e,
-                                  );
+                                  visuals.update(themeMode: e);
                                   Navigator.of(context).maybePop();
                                 }
                               },

@@ -28,7 +28,7 @@ class ExceptionApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: createTheme(
+      theme: createM2Theme(
         color: Colors.red.shade800,
         mode: ThemeMode.light,
       ).copyWith(

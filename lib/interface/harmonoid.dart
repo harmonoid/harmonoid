@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/visuals.dart';
@@ -19,10 +18,8 @@ class Harmonoid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => Visuals(
-        themeMode: Configuration.instance.themeMode,
-        context: context,
-      ),
+      lazy: true,
+      create: (context) => Visuals.instance..update(context: context),
       builder: (context, _) => Consumer<Visuals>(
         builder: (context, visuals, _) => MultiProvider(
           builder: (context, _) => KeyboardShortcutsListener(

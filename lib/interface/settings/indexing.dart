@@ -358,7 +358,7 @@ class IndexingState extends State<IndexingSetting>
                                           ),
                                           duration: Theme.of(context)
                                                   .extension<
-                                                      AnimationDurations>()
+                                                      AnimationDuration>()
                                                   ?.medium ??
                                               Duration.zero,
                                           child: Text(

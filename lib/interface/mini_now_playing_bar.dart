@@ -128,7 +128,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
       final color = NowPlayingColorPalette.instance.palette == null
           ? Theme.of(context).cardTheme.color
           : NowPlayingColorPalette.instance.palette?.first.withOpacity(1.0);
-      if (Theme.of(context).extension<AnimationDurations>()?.fast ==
+      if (Theme.of(context).extension<AnimationDuration>()?.fast ==
           Duration.zero) {
         setState(() => this.color = color);
       } else {
@@ -217,7 +217,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
       if (pageController.hasClients) {
         pageController.animateToPage(
           Playback.instance.index,
-          duration: Theme.of(context).extension<AnimationDurations>()?.medium ??
+          duration: Theme.of(context).extension<AnimationDuration>()?.medium ??
               Duration.zero,
           curve: Curves.easeInOut,
         );
@@ -383,7 +383,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
 
     return AnimatedSlide(
       offset: Offset(0, _y),
-      duration: Theme.of(context).extension<AnimationDurations>()?.fast ??
+      duration: Theme.of(context).extension<AnimationDuration>()?.fast ??
           Duration.zero,
       curve: Curves.easeInOut,
       child: Miniplayer(
@@ -412,8 +412,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
             WidgetsBinding.instance.addPostFrameCallback(
               (_) {
                 MobileNowPlayingController.instance.bottomNavigationBar.value =
-                    (1.0 - (percentage * 1.4).clamp(0.0, 1.0)) *
-                        kBottomNavigationBarHeight;
+                    (1.0 - (percentage * 1.4).clamp(0.0, 1.0));
               },
             );
           } catch (exception, stacktrace) {
@@ -928,7 +927,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                               duration: Theme.of(
                                                                           context)
                                                                       .extension<
-                                                                          AnimationDurations>()
+                                                                          AnimationDuration>()
                                                                       ?.medium ??
                                                                   Duration.zero,
                                                               builder: (
@@ -1446,9 +1445,10 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                       .instance
                                                                       .play,
                                                               backgroundColor:
-                                                                  (colors.palette ??
+                                                                  (colors.palette?.cast<
+                                                                              Color?>() ??
                                                                           [
-                                                                            Theme.of(context).primaryColor
+                                                                            Theme.of(context).floatingActionButtonTheme.backgroundColor
                                                                           ])
                                                                       .last,
                                                               child:
@@ -2199,11 +2199,13 @@ class MiniNowPlayingBarRefreshCollectionButtonState
             valueListenable: MobileNowPlayingController.instance.palette,
             builder: (context, value, _) => TweenAnimationBuilder(
               duration:
-                  Theme.of(context).extension<AnimationDurations>()?.medium ??
+                  Theme.of(context).extension<AnimationDuration>()?.medium ??
                       Duration.zero,
               tween: ColorTween(
-                begin: Theme.of(context).primaryColor,
-                end: value?.first ?? Theme.of(context).primaryColor,
+                begin:
+                    Theme.of(context).floatingActionButtonTheme.backgroundColor,
+                end: value?.first ??
+                    Theme.of(context).floatingActionButtonTheme.backgroundColor,
               ),
               builder: (context, color, _) => Container(
                 child: widget.index.value == 3
@@ -2328,9 +2330,9 @@ class MiniNowPlayingBarRefreshCollectionButtonState
           ValueListenableBuilder<double>(
             valueListenable: MobileNowPlayingController.instance.fabOffset,
             builder: (context, value, child) => AnimatedContainer(
-              height: value,
+              height: 0,
               duration:
-                  Theme.of(context).extension<AnimationDurations>()?.fast ??
+                  Theme.of(context).extension<AnimationDuration>()?.fast ??
                       Duration.zero,
               curve: Curves.easeInOut,
             ),
@@ -2497,12 +2499,12 @@ class _LyricsScreenState extends State<LyricsScreen> {
           end: palette.palette?.first ??
               Theme.of(context).scaffoldBackgroundColor,
         ),
-        duration: Theme.of(context).extension<AnimationDurations>()?.medium ??
+        duration: Theme.of(context).extension<AnimationDuration>()?.medium ??
             Duration.zero,
         curve: Curves.easeInOut,
         builder: (context, value, _) => AnimatedContainer(
           color: value,
-          duration: Theme.of(context).extension<AnimationDurations>()?.medium ??
+          duration: Theme.of(context).extension<AnimationDuration>()?.medium ??
               Duration.zero,
           curve: Curves.easeInOut,
           alignment: Alignment.center,
@@ -2518,7 +2520,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                         : 0.0,
                   ),
                   duration:
-                      Theme.of(context).extension<AnimationDurations>()?.fast ??
+                      Theme.of(context).extension<AnimationDuration>()?.fast ??
                           Duration.zero,
                   curve: Curves.easeInOut,
                   builder: (context, opacity, _) => Opacity(
@@ -2538,7 +2540,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                       },
                       blendMode: BlendMode.dstOut,
                       child: LyricsReader(
-                        padding: EdgeInsets.all(tileMargin * 2),
+                        padding: EdgeInsets.all(tileMargin(context) * 2),
                         model: LyricsReaderModel()
                           ..lyrics =
                               Lyrics.instance.current.asMap().entries.map((e) {

@@ -107,7 +107,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                           child: LayoutBuilder(
                             builder: (context, constraints) => AnimatedSwitcher(
                               duration: Theme.of(context)
-                                      .extension<AnimationDurations>()
+                                      .extension<AnimationDuration>()
                                       ?.medium ??
                                   Duration.zero,
                               transitionBuilder: (child, animation) =>

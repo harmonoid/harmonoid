@@ -83,7 +83,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
     final color = NowPlayingColorPalette.instance.palette == null
         ? Theme.of(context).cardTheme.color
         : NowPlayingColorPalette.instance.palette?.first.withOpacity(1.0);
-    if (Theme.of(context).extension<AnimationDurations>()?.fast ==
+    if (Theme.of(context).extension<AnimationDuration>()?.fast ==
         Duration.zero) {
       setState(() => this.color = color);
     } else {
@@ -293,7 +293,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                       duration: Theme.of(
                                                                   context)
                                                               .extension<
-                                                                  AnimationDurations>()
+                                                                  AnimationDuration>()
                                                               ?.fast ??
                                                           Duration.zero,
                                                       transitionBuilder:
@@ -332,7 +332,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                     ),
                                                     duration: Theme.of(context)
                                                             .extension<
-                                                                AnimationDurations>()
+                                                                AnimationDuration>()
                                                             ?.fast ??
                                                         Duration.zero,
                                                     curve: Curves.easeInOut,
@@ -1268,7 +1268,7 @@ class _ControlPanelState extends State<ControlPanel> {
                   end = 156.0;
                 });
                 final duration =
-                    Theme.of(context).extension<AnimationDurations>()?.fast;
+                    Theme.of(context).extension<AnimationDuration>()?.fast;
                 if (duration != null) {
                   await Future.delayed(duration);
                 }
@@ -1297,7 +1297,7 @@ class _ControlPanelState extends State<ControlPanel> {
                       ),
                       curve: Curves.easeInOut,
                       duration: Theme.of(context)
-                              .extension<AnimationDurations>()
+                              .extension<AnimationDuration>()
                               ?.fast ??
                           Duration.zero,
                       child: Consumer<Playback>(

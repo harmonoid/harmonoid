@@ -22,7 +22,7 @@ class ExperimentalSetting extends StatefulWidget {
 
 class ExperimentalSettingState extends State<ExperimentalSetting> {
   Future<void> showAndroidVolumeBoostWarningDialog() async {
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 500));
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
