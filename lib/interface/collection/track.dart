@@ -352,7 +352,7 @@ class _TrackTabState extends State<TrackTab> {
                       labelTextBuilder: (offset) {
                         final index = (offset -
                                 (kMobileSearchBarHeight +
-                                    2 * tileMargin +
+                                    2 * tileMargin(context) +
                                     MediaQuery.of(context).padding.top)) ~/
                             kMobileTrackTileHeight;
                         final track = collection.tracks[index.clamp(
@@ -399,7 +399,7 @@ class _TrackTabState extends State<TrackTab> {
                         padding: EdgeInsets.only(
                           top: MediaQuery.of(context).padding.top +
                               kMobileSearchBarHeight +
-                              2 * tileMargin,
+                              tileMargin(context),
                         ),
                         children: collection.tracks
                             .asMap()
@@ -423,11 +423,11 @@ class _TrackTabState extends State<TrackTab> {
                       ),
                     )
                   : Container(
-                      // padding: EdgeInsets.only(
-                      //   top: MediaQuery.of(context).padding.top +
-                      //       kMobileSearchBarHeight +
-                      //       2 * tileMargin,
-                      // ),
+                      padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).padding.top +
+                            kMobileSearchBarHeight +
+                            tileMargin(context),
+                      ),
                       child: Center(
                         child: ExceptionWidget(
                           title: Language.instance.NO_COLLECTION_TITLE,

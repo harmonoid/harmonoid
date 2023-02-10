@@ -83,7 +83,7 @@ class CollectionScreenState extends State<CollectionScreen>
     widget.tabControllerNotifier.addListener(() {
       if (index.value != widget.tabControllerNotifier.value.index) {
         final duration =
-            Theme.of(context).extension<AnimationDurations>()?.fast ??
+            Theme.of(context).extension<AnimationDuration>()?.fast ??
                 Duration.zero;
         if (duration == Duration.zero) {
           pageController.jumpToPage(widget.tabControllerNotifier.value.index);
@@ -178,7 +178,7 @@ class CollectionScreenState extends State<CollectionScreen>
                       children: <Widget>[
                         PageTransitionSwitcher(
                           duration: Theme.of(context)
-                                  .extension<AnimationDurations>()
+                                  .extension<AnimationDuration>()
                                   ?.medium ??
                               Duration.zero,
                           child: index.value == -1
@@ -479,7 +479,8 @@ class CollectionScreenState extends State<CollectionScreen>
             ),
           )
         : AnnotatedRegion<SystemUiOverlayStyle>(
-            value: Theme.of(context).appBarTheme.systemOverlayStyle!,
+            value: Theme.of(context).appBarTheme.systemOverlayStyle ??
+                SystemUiOverlayStyle(),
             child: Consumer<CollectionRefresh>(
               builder: (context, refresh, _) => Scaffold(
                 resizeToAvoidBottomInset: false,
@@ -487,11 +488,11 @@ class CollectionScreenState extends State<CollectionScreen>
                   valueListenable: index,
                   builder: (context, value, child) => AnimatedSwitcher(
                     duration: Theme.of(context)
-                            .extension<AnimationDurations>()
+                            .extension<AnimationDuration>()
                             ?.medium ??
                         Duration.zero,
                     reverseDuration: Theme.of(context)
-                            .extension<AnimationDurations>()
+                            .extension<AnimationDuration>()
                             ?.medium ??
                         Duration.zero,
                     switchInCurve: Curves.easeInOut,
@@ -522,21 +523,42 @@ class CollectionScreenState extends State<CollectionScreen>
                                   ? 1.0
                                   : (refresh.progress ?? 0.0) / refresh.total,
                       transitionCurve: Curves.easeInOut,
-                      width: MediaQuery.of(context).size.width - 2 * tileMargin,
-                      height: kMobileSearchBarHeight,
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       margins: EdgeInsets.only(
-                        top: MediaQuery.of(context).padding.top + tileMargin,
+                        top: tileMargin(context) +
+                            MediaQuery.of(context).padding.top,
                       ),
-                      accentColor: Theme.of(context).primaryColor,
+                      height: kMobileSearchBarHeight,
+                      width: MediaQuery.of(context).size.width -
+                          (isMaterial3(context)
+                              ? 4 * tileMargin(context)
+                              : 2 * tileMargin(context)),
+                      borderRadius: Theme.of(context)
+                          .extension<SearchBarThemeData>()
+                          ?.borderRadius,
+                      accentColor: Theme.of(context)
+                          .extension<SearchBarThemeData>()
+                          ?.accentColor,
+                      backgroundColor: Theme.of(context)
+                          .extension<SearchBarThemeData>()
+                          ?.backgroundColor,
+                      shadowColor: Theme.of(context)
+                          .extension<SearchBarThemeData>()
+                          ?.shadowColor,
+                      elevation: Theme.of(context)
+                              .extension<SearchBarThemeData>()
+                              ?.elevation ??
+                          kDefaultCardElevation,
                       onQueryChanged: (value) => query.value = value,
                       clearQueryOnClose: true,
-                      hintStyle:
-                          Theme.of(context).textTheme.titleMedium?.copyWith(
-                                color: Theme.of(context).hintColor,
-                              ),
-                      queryStyle: Theme.of(context).textTheme.titleMedium,
+                      hintStyle: Theme.of(context)
+                          .extension<SearchBarThemeData>()
+                          ?.hintStyle,
+                      queryStyle: Theme.of(context)
+                          .extension<SearchBarThemeData>()
+                          ?.queryStyle,
                       transitionDuration: Theme.of(context)
-                              .extension<AnimationDurations>()
+                              .extension<AnimationDuration>()
                               ?.medium ??
                           Duration.zero,
                       transition: CircularFloatingSearchBarTransition(),
@@ -563,17 +585,9 @@ class CollectionScreenState extends State<CollectionScreen>
                         FloatingSearchBarAction(
                           showIfOpened: false,
                           showIfClosed: true,
-                          child: MobileSortByButton(
-                            value: index,
-                          ),
-                        ),
-                        FloatingSearchBarAction(
-                          showIfOpened: false,
-                          showIfClosed: true,
                           child: CircularButton(
                             icon: Icon(
-                              Icons.grid_on,
-                              size: 20.0,
+                              Icons.view_list_outlined,
                               color: Theme.of(context)
                                   .appBarTheme
                                   .actionsIconTheme
@@ -583,11 +597,11 @@ class CollectionScreenState extends State<CollectionScreen>
                               final position = RelativeRect.fromRect(
                                 Offset(
                                       MediaQuery.of(context).size.width -
-                                          tileMargin -
+                                          tileMargin(context) -
                                           48.0,
                                       MediaQuery.of(context).padding.top +
                                           kMobileSearchBarHeight +
-                                          2 * tileMargin,
+                                          2 * tileMargin(context),
                                     ) &
                                     Size(228.0, 320.0),
                                 Rect.fromLTWH(

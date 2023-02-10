@@ -68,7 +68,7 @@ class _ArtistTabState extends State<ArtistTab> {
           context: context,
           tileWidth: helper.artistTileWidth,
           tileHeight: helper.artistTileHeight,
-          margin: tileMargin,
+          margin: tileMargin(context),
           elementsPerRow: helper.artistElementsPerRow,
           widgetCount: collection.artists.length,
           builder: (BuildContext context, int index) => ArtistTile(
@@ -87,11 +87,13 @@ class _ArtistTabState extends State<ArtistTab> {
                           controller: controller,
                           itemCount: 1 + data.widgets.length,
                           itemExtents: [
-                                28.0 + tileMargin,
+                                28.0 + tileMargin(context),
                               ] +
                               List.generate(
                                 data.widgets.length,
-                                (index) => helper.artistTileHeight + tileMargin,
+                                (index) =>
+                                    helper.artistTileHeight +
+                                    tileMargin(context),
                               ),
                           itemBuilder: (context, i) => i == 0
                               ? SortBarFixedHolder(
@@ -129,11 +131,11 @@ class _ArtistTabState extends State<ArtistTab> {
                         ),
                         labelTextBuilder: (offset) {
                           final perTileHeight = helper.artistElementsPerRow > 1
-                              ? (helper.artistTileHeight + tileMargin)
+                              ? (helper.artistTileHeight + tileMargin(context))
                               : kArtistTileListViewHeight;
                           final index = (offset -
                                   (kMobileSearchBarHeight +
-                                      2 * tileMargin +
+                                      2 * tileMargin(context) +
                                       MediaQuery.of(context).padding.top)) ~/
                               perTileHeight;
                           final artist = data
@@ -175,22 +177,22 @@ class _ArtistTabState extends State<ArtistTab> {
                         child: ListView(
                           controller: controller,
                           itemExtent: helper.artistElementsPerRow > 1
-                              ? (helper.artistTileHeight + tileMargin)
+                              ? (helper.artistTileHeight + tileMargin(context))
                               : kArtistTileListViewHeight,
                           padding: EdgeInsets.only(
                             top: MediaQuery.of(context).padding.top +
                                 kMobileSearchBarHeight +
-                                2 * tileMargin,
+                                tileMargin(context),
                           ),
                           children: data.widgets,
                         ),
                       )
                     : Container(
-                        // padding: EdgeInsets.only(
-                        //   top: MediaQuery.of(context).padding.top +
-                        //       kMobileSearchBarHeight +
-                        //       2 * tileMargin,
-                        // ),
+                        padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).padding.top +
+                              kMobileSearchBarHeight +
+                              tileMargin(context),
+                        ),
                         child: Center(
                           child: ExceptionWidget(
                             title: Language.instance.NO_COLLECTION_TITLE,
@@ -259,7 +261,7 @@ class ArtistTile extends StatelessWidget {
                       debugPrint(stacktrace.toString());
                     }
                     if (Theme.of(context)
-                            .extension<AnimationDurations>()
+                            .extension<AnimationDuration>()
                             ?.medium ==
                         Duration.zero) {
                       Navigator.of(context).push(
@@ -478,7 +480,7 @@ class ArtistTile extends StatelessWidget {
                               debugPrint(stacktrace.toString());
                             }
                             if (Theme.of(context)
-                                    .extension<AnimationDurations>()
+                                    .extension<AnimationDuration>()
                                     ?.medium ==
                                 Duration.zero) {
                               Navigator.of(context).push(
@@ -636,7 +638,7 @@ class ArtistTile extends StatelessWidget {
                                     debugPrint(stacktrace.toString());
                                   }
                                   if (Theme.of(context)
-                                          .extension<AnimationDurations>()
+                                          .extension<AnimationDuration>()
                                           ?.medium ==
                                       Duration.zero) {
                                     Navigator.of(context).push(
@@ -706,7 +708,7 @@ class ArtistScreenState extends State<ArtistScreen>
   ScrollPhysics? physics = NeverScrollableScrollPhysics();
 
   ScrollController get controller {
-    final duration = MaterialRoute.animationDurations?.medium ?? Duration.zero;
+    final duration = MaterialRoute.animationDuration?.medium ?? Duration.zero;
     return duration > Duration.zero ? sc0 : sc1;
   }
 
@@ -719,7 +721,7 @@ class ArtistScreenState extends State<ArtistScreen>
   @override
   void initState() {
     super.initState();
-    final duration = MaterialRoute.animationDurations?.medium ?? Duration.zero;
+    final duration = MaterialRoute.animationDuration?.medium ?? Duration.zero;
 
     // [ScrollController] is only needed on mobile for animation.
     if (isMobile) {
@@ -835,7 +837,7 @@ class ArtistScreenState extends State<ArtistScreen>
                         ),
                         curve: Curves.easeOut,
                         duration: Theme.of(context)
-                                .extension<AnimationDurations>()
+                                .extension<AnimationDuration>()
                                 ?.medium ??
                             Duration.zero,
                         builder: (context, color, _) => DesktopAppBar(
@@ -890,7 +892,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                               curve: Curves.easeOut,
                                               duration: Theme.of(context)
                                                       .extension<
-                                                          AnimationDurations>()
+                                                          AnimationDuration>()
                                                       ?.slow ??
                                                   Duration.zero,
                                               builder: (context, color, _) =>
@@ -1467,7 +1469,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                 end: detailsVisible ? 0.0 : 1.0,
                               ),
                               duration: Theme.of(context)
-                                      .extension<AnimationDurations>()
+                                      .extension<AnimationDuration>()
                                       ?.fast ??
                                   Duration.zero,
                               builder: (context, value, _) => Opacity(
@@ -1538,7 +1540,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                           end: detailsVisible ? 1.0 : 0.0,
                                         ),
                                         duration: Theme.of(context)
-                                                .extension<AnimationDurations>()
+                                                .extension<AnimationDuration>()
                                                 ?.fast ??
                                             Duration.zero,
                                         builder: (context, value, _) => Opacity(
@@ -1627,7 +1629,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                         begin: 0.0,
                                         end: detailsVisible ? 1.0 : 0.0),
                                     duration: Theme.of(context)
-                                            .extension<AnimationDurations>()
+                                            .extension<AnimationDuration>()
                                             ?.fast ??
                                         Duration.zero,
                                     builder: (context, value, _) =>
@@ -1671,7 +1673,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                         begin: 0.0,
                                         end: detailsVisible ? 1.0 : 0.0),
                                     duration: Theme.of(context)
-                                            .extension<AnimationDurations>()
+                                            .extension<AnimationDuration>()
                                             ?.fast ??
                                         Duration.zero,
                                     builder: (context, value, _) =>

@@ -14,7 +14,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:animations/animations.dart';
 import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -48,7 +47,7 @@ class PlaylistTab extends StatelessWidget {
               top: isDesktop
                   ? 20.0
                   : kMobileSearchBarHeight +
-                      2 * tileMargin +
+                      2 * tileMargin(context) +
                       MediaQuery.of(context).padding.top,
             ),
             children: <Widget>[
@@ -843,7 +842,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
   ScrollPhysics? physics = NeverScrollableScrollPhysics();
 
   ScrollController get controller {
-    final duration = MaterialRoute.animationDurations?.medium ?? Duration.zero;
+    final duration = MaterialRoute.animationDuration?.medium ?? Duration.zero;
     return duration > Duration.zero ? sc0 : sc1;
   }
 
@@ -856,7 +855,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
   @override
   void initState() {
     super.initState();
-    final duration = MaterialRoute.animationDurations?.medium ?? Duration.zero;
+    final duration = MaterialRoute.animationDuration?.medium ?? Duration.zero;
 
     // [ScrollController] is only needed on mobile for animation.
     if (isMobile) {
@@ -949,7 +948,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                 ),
                 curve: Curves.easeOut,
                 duration:
-                    Theme.of(context).extension<AnimationDurations>()?.medium ??
+                    Theme.of(context).extension<AnimationDuration>()?.medium ??
                         Duration.zero,
                 builder: (context, color, _) => Scaffold(
                   backgroundColor: color as Color? ?? Colors.transparent,
@@ -1511,7 +1510,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                             end: detailsVisible ? 0.0 : 1.0,
                           ),
                           duration: Theme.of(context)
-                                  .extension<AnimationDurations>()
+                                  .extension<AnimationDuration>()
                                   ?.fast ??
                               Duration.zero,
                           builder: (context, value, _) => Opacity(
@@ -1597,7 +1596,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                       end: detailsVisible ? 1.0 : 0.0,
                                     ),
                                     duration: Theme.of(context)
-                                            .extension<AnimationDurations>()
+                                            .extension<AnimationDuration>()
                                             ?.fast ??
                                         Duration.zero,
                                     builder: (context, value, _) => Opacity(
@@ -1690,7 +1689,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                     begin: 0.0,
                                     end: detailsVisible ? 1.0 : 0.0),
                                 duration: Theme.of(context)
-                                        .extension<AnimationDurations>()
+                                        .extension<AnimationDuration>()
                                         ?.fast ??
                                     Duration.zero,
                                 builder: (context, value, _) => Transform.scale(
@@ -1733,7 +1732,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                     begin: 0.0,
                                     end: detailsVisible ? 1.0 : 0.0),
                                 duration: Theme.of(context)
-                                        .extension<AnimationDurations>()
+                                        .extension<AnimationDuration>()
                                         ?.fast ??
                                     Duration.zero,
                                 builder: (context, value, _) => Transform.scale(

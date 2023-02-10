@@ -134,7 +134,7 @@ class SearchTabState extends State<SearchTab> {
                                                         kDesktopAppBarHeight),
                                                 child: CustomListView(
                                                   padding: EdgeInsets.only(
-                                                    top: tileMargin,
+                                                    top: tileMargin(context),
                                                   ),
                                                   children: tileGridListWidgets(
                                                     context: context,
@@ -145,9 +145,11 @@ class SearchTabState extends State<SearchTab> {
                                                         (MediaQuery.of(context)
                                                                     .size
                                                                     .width -
-                                                                tileMargin) ~/
+                                                                tileMargin(
+                                                                    context)) ~/
                                                             (kAlbumTileWidth +
-                                                                tileMargin),
+                                                                tileMargin(
+                                                                    context)),
                                                     subHeader: null,
                                                     leadingSubHeader: null,
                                                     widgetCount:
@@ -222,7 +224,7 @@ class SearchTabState extends State<SearchTab> {
                                                         kDesktopAppBarHeight),
                                                 child: CustomListView(
                                                   padding: EdgeInsets.only(
-                                                    top: tileMargin,
+                                                    top: tileMargin(context),
                                                   ),
                                                   children: tileGridListWidgets(
                                                     context: context,
@@ -233,9 +235,11 @@ class SearchTabState extends State<SearchTab> {
                                                         (MediaQuery.of(context)
                                                                     .size
                                                                     .width -
-                                                                tileMargin) ~/
+                                                                tileMargin(
+                                                                    context)) ~/
                                                             (kArtistTileWidth +
-                                                                tileMargin),
+                                                                tileMargin(
+                                                                    context)),
                                                     subHeader: null,
                                                     leadingSubHeader: null,
                                                     widgetCount:
@@ -331,10 +335,11 @@ class _FloatingSearchBarSearchTabState
   int index = 0;
 
   Future<void> listener() async {
-    final elementsPerRow = (MediaQuery.of(context).size.width - tileMargin) ~/
-        (kAlbumTileWidth + tileMargin);
+    final elementsPerRow =
+        (MediaQuery.of(context).size.width - tileMargin(context)) ~/
+            (kAlbumTileWidth + tileMargin(context));
     final double width = (MediaQuery.of(context).size.width -
-            (elementsPerRow + 1) * tileMargin) /
+            (elementsPerRow + 1) * tileMargin(context)) /
         elementsPerRow;
     final double height = width * kAlbumTileHeight / kAlbumTileWidth;
     albums = <Widget>[];
@@ -400,11 +405,12 @@ class _FloatingSearchBarSearchTabState
 
   @override
   Widget build(BuildContext context) {
-    final elementsPerRow = (MediaQuery.of(context).size.width - tileMargin) ~/
-        (kAlbumTileWidth + tileMargin);
+    final elementsPerRow =
+        (MediaQuery.of(context).size.width - tileMargin(context)) ~/
+            (kAlbumTileWidth + tileMargin(context));
     final double width = isMobile
         ? (MediaQuery.of(context).size.width -
-                (elementsPerRow + 1) * tileMargin) /
+                (elementsPerRow + 1) * tileMargin(context)) /
             elementsPerRow
         : kAlbumTileWidth;
     final double height = isMobile
@@ -447,7 +453,7 @@ class _FloatingSearchBarSearchTabState
                                     body: NowPlayingBarScrollHideNotifier(
                                       child: CustomListView(
                                         padding: EdgeInsets.symmetric(
-                                          vertical: tileMargin,
+                                          vertical: tileMargin(context),
                                         ),
                                         children: tileGridListWidgets(
                                           context: context,
@@ -457,9 +463,9 @@ class _FloatingSearchBarSearchTabState
                                               (MediaQuery.of(context)
                                                           .size
                                                           .width -
-                                                      tileMargin) ~/
+                                                      tileMargin(context)) ~/
                                                   (kAlbumTileWidth +
-                                                      tileMargin),
+                                                      tileMargin(context)),
                                           subHeader: null,
                                           leadingSubHeader: null,
                                           widgetCount: this.albums.length ~/ 2,
@@ -519,7 +525,7 @@ class _FloatingSearchBarSearchTabState
                                           NowPlayingBarScrollHideNotifier(
                                             child: CustomListView(
                                               padding: EdgeInsets.symmetric(
-                                                vertical: tileMargin,
+                                                vertical: tileMargin(context),
                                               ),
                                               children: artists,
                                             ),
