@@ -14,7 +14,458 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-ThemeData createTheme({
+ThemeData createM3Theme({
+  required ColorScheme colorScheme,
+  required ThemeMode mode,
+}) {
+  final isLightMode = mode == ThemeMode.light;
+  final isDesktopPlatform =
+      Platform.isWindows || Platform.isLinux || Platform.isMacOS;
+
+  // TYPOGRAPHY
+
+  // Material Design 2021 typography.
+  TextTheme theme = TextTheme(
+    displayLarge: TextStyle(
+      fontSize: 57.0,
+      fontWeight: FontWeight.w400,
+      letterSpacing: -0.25,
+      height: 1.12,
+      textBaseline: TextBaseline.alphabetic,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
+    displayMedium: TextStyle(
+      fontSize: 45.0,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0.0,
+      height: 1.16,
+      textBaseline: TextBaseline.alphabetic,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
+    displaySmall: TextStyle(
+      fontSize: 36.0,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0.0,
+      height: 1.22,
+      textBaseline: TextBaseline.alphabetic,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
+    headlineLarge: TextStyle(
+      fontSize: 32.0,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0.0,
+      height: 1.25,
+      textBaseline: TextBaseline.alphabetic,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
+    headlineMedium: TextStyle(
+      fontSize: 28.0,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0.0,
+      height: 1.29,
+      textBaseline: TextBaseline.alphabetic,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
+    headlineSmall: TextStyle(
+      fontSize: 24.0,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0.0,
+      height: 1.33,
+      textBaseline: TextBaseline.alphabetic,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
+    titleLarge: TextStyle(
+      fontSize: 22.0,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0.0,
+      height: 1.27,
+      textBaseline: TextBaseline.alphabetic,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
+    titleMedium: TextStyle(
+      fontSize: 16.0,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.15,
+      height: 1.50,
+      textBaseline: TextBaseline.alphabetic,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
+    titleSmall: TextStyle(
+      fontSize: 14.0,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.1,
+      height: 1.43,
+      textBaseline: TextBaseline.alphabetic,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
+    labelLarge: TextStyle(
+      fontSize: 14.0,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.1,
+      height: 1.43,
+      textBaseline: TextBaseline.alphabetic,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
+    labelMedium: TextStyle(
+      fontSize: 12.0,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.5,
+      height: 1.33,
+      textBaseline: TextBaseline.alphabetic,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
+    labelSmall: TextStyle(
+      fontSize: 11.0,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.5,
+      height: 1.45,
+      textBaseline: TextBaseline.alphabetic,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
+    bodyLarge: TextStyle(
+      fontSize: 16.0,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0.5,
+      height: 1.50,
+      textBaseline: TextBaseline.alphabetic,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
+    bodyMedium: TextStyle(
+      fontSize: 14.0,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0.25,
+      height: 1.43,
+      textBaseline: TextBaseline.alphabetic,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
+    bodySmall: TextStyle(
+      fontSize: 12.0,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0.4,
+      height: 1.33,
+      textBaseline: TextBaseline.alphabetic,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
+  );
+
+  // Apply the modifications to the original Material Design 2021 typography.
+  final primaryTextColor = colorScheme.onSurface;
+  final secondaryTextColor = colorScheme.onSurfaceVariant;
+  theme = theme.merge(
+    isDesktopPlatform
+        ? TextTheme(
+            // Leading tile widgets text theme.
+            displayLarge: TextStyle(
+              color: primaryTextColor,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
+            ),
+            // [AlbumTile] text theme.
+            displayMedium: TextStyle(
+              color: primaryTextColor,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w600,
+            ),
+            displaySmall: TextStyle(
+              color: secondaryTextColor,
+              fontSize: 14.0,
+              fontWeight: FontWeight.normal,
+            ),
+            headlineMedium: TextStyle(
+              color: primaryTextColor,
+              fontSize: 14.0,
+              fontWeight: FontWeight.normal,
+            ),
+            headlineSmall: TextStyle(
+              color: secondaryTextColor,
+              fontSize: 12.0,
+              fontWeight: FontWeight.normal,
+            ),
+            // [ListTile] text theme.
+            // [ListTile.title]'s text theme must be overrided to [headlineMedium], if it does not contain subtitle.
+            titleMedium: TextStyle(
+              color: primaryTextColor,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w600,
+            ),
+            bodySmall: TextStyle(
+              color: secondaryTextColor,
+              fontSize: 14.0,
+              fontWeight: FontWeight.normal,
+            ),
+            // Normal text shown everywhere.
+            bodyMedium: TextStyle(
+              color: secondaryTextColor,
+              fontSize: 14.0,
+              fontWeight: FontWeight.normal,
+            ),
+            // Used as [DataTable]'s column title text-theme.
+            titleSmall: TextStyle(
+              color: primaryTextColor,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w600,
+            ),
+            // Used as [AlertDialog]'s [title] text-theme.
+            titleLarge: TextStyle(
+              color: primaryTextColor,
+              fontSize: 20.0,
+              fontWeight: FontWeight.w600,
+            ),
+            // Modify button text theme on desktop to be more consistent.
+            labelLarge: TextStyle(
+              letterSpacing: Platform.isLinux ? 0.8 : 1.6,
+              fontWeight: FontWeight.w600,
+            ),
+          )
+        : TextTheme(
+            displayLarge: TextStyle(
+              fontWeight: FontWeight.normal,
+              color: primaryTextColor,
+              fontSize: 18.0,
+            ),
+            displayMedium: TextStyle(
+              fontWeight: FontWeight.normal,
+              color: primaryTextColor,
+              fontSize: 16.0,
+            ),
+            displaySmall: TextStyle(
+              fontWeight: FontWeight.normal,
+              color: secondaryTextColor,
+              fontSize: 14.0,
+            ),
+            headlineMedium: TextStyle(
+              fontWeight: FontWeight.normal,
+              color: primaryTextColor,
+              fontSize: 14.0,
+            ),
+            headlineSmall: TextStyle(
+              fontWeight: FontWeight.normal,
+              color: secondaryTextColor,
+              fontSize: 14.0,
+            ),
+            // [ListTile] text theme.
+            titleMedium: TextStyle(color: primaryTextColor),
+            bodySmall: TextStyle(color: secondaryTextColor),
+          ),
+  );
+  // Enforce `Inter` font family on GNU/Linux.
+  final fontFamily = Platform.isLinux ? 'Inter' : null;
+  theme = theme.apply(fontFamily: fontFamily);
+
+  // COLORS
+
+  final iconColors = IconColors(
+    Color.lerp(Colors.white, colorScheme.primary, 0.54),
+    Color.lerp(Colors.black, colorScheme.primary, 0.54),
+    colorScheme.onSurface,
+    colorScheme.onSurface,
+    colorScheme.onSurfaceVariant,
+    colorScheme.onSurfaceVariant,
+  );
+
+  final cardColor = Color.lerp(
+    colorScheme.surface,
+    colorScheme.surfaceTint,
+    0.05,
+  )!;
+  final searchBarColor = Color.lerp(
+    colorScheme.surface,
+    colorScheme.surfaceTint,
+    0.08,
+  )!;
+  final navigationBarColor = Color.lerp(
+    colorScheme.surface,
+    colorScheme.surfaceTint,
+    0.08,
+  )!;
+
+  final animationDuration = AnimationDuration();
+  final searchBarTheme = SearchBarThemeData(
+    borderRadius: BorderRadius.circular(28.0),
+    accentColor: colorScheme.primary,
+    backgroundColor: searchBarColor,
+    shadowColor: colorScheme.shadow,
+    elevation: 0.0,
+    hintStyle: theme.bodyLarge?.copyWith(
+      color: colorScheme.onSurfaceVariant,
+    ),
+    queryStyle: theme.bodyLarge?.copyWith(
+      color: colorScheme.onSurface,
+    ),
+  );
+  // For access inside page route transitions.
+  MaterialRoute.animationDuration = animationDuration;
+
+  // NOTE: We are manually composing the resulting color of surfaces e.g. [Card] using
+  // [ColorScheme.surface] & [ColorScheme.surfaceTint], because many external packages
+  // aren't ready for the Material 3 specification & cannot separately handle the
+  // tint / surface colors.
+  // _ElevationOpacity(0.0, 0.0),   // Elevation level 0
+  // _ElevationOpacity(1.0, 0.05),  // Elevation level 1
+  // _ElevationOpacity(3.0, 0.08),  // Elevation level 2
+  // _ElevationOpacity(6.0, 0.11),  // Elevation level 3
+  // _ElevationOpacity(8.0, 0.12),  // Elevation level 4
+  // _ElevationOpacity(12.0, 0.14), // Elevation level 5
+
+  // Edge-to-edge content.
+
+  return ThemeData(
+    useMaterial3: true,
+
+    // TYPOGRAPHY
+
+    textTheme: theme,
+    primaryTextTheme: theme,
+    fontFamily: fontFamily,
+
+    // COLORS
+
+    colorScheme: colorScheme,
+    iconTheme: IconThemeData(
+      color: isLightMode ? iconColors.lightIconColor : iconColors.darkIconColor,
+      size: 24.0,
+    ),
+
+    // CARD
+
+    cardTheme: CardTheme(
+      elevation: 0.0,
+      color: cardColor,
+      surfaceTintColor: cardColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+    ),
+
+    // FAB
+
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: colorScheme.primaryContainer,
+      foregroundColor: colorScheme.onPrimaryContainer,
+    ),
+
+    // NAVIGATION BAR
+
+    navigationBarTheme: NavigationBarThemeData(
+      // https://m3.material.io/components/navigation-bar/specs.
+      elevation: 0.0,
+      backgroundColor: navigationBarColor,
+      surfaceTintColor: navigationBarColor,
+      labelTextStyle: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.selected) ||
+            states.contains(MaterialState.focused)) {
+          return theme.labelMedium?.copyWith(
+            color: colorScheme.onSurface,
+          );
+        }
+        return theme.labelMedium?.copyWith(
+          color: colorScheme.onSurfaceVariant,
+        );
+      }),
+      iconTheme: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.selected) ||
+            states.contains(MaterialState.focused)) {
+          return IconThemeData(
+            color: colorScheme.onSecondaryContainer,
+          );
+        }
+        return IconThemeData(
+          color: colorScheme.onSurfaceVariant,
+        );
+      }),
+    ),
+
+    // SCROLLBAR
+
+    // Modify the default scrollbar theme on desktop.
+    // This scrollbar feels more "Material" than the default one.
+    // Thanks to @HrX03 for the this: https://github.com/PotatoProject/Leaflet/blob/11f87a85c8b49192a31fb069066bf9fdfdd755b0/lib/internal/theme/data.dart#L138-L154.
+    scrollbarTheme: ScrollbarThemeData(
+      thumbVisibility: MaterialStatePropertyAll(true),
+      thickness: MaterialStatePropertyAll(8.0),
+      trackBorderColor: MaterialStatePropertyAll(
+        isLightMode ? Colors.black12 : Colors.white24,
+      ),
+      trackColor: MaterialStatePropertyAll(
+        isLightMode ? Colors.black12 : Colors.white24,
+      ),
+      crossAxisMargin: 0.0,
+      radius: Radius.zero,
+      minThumbLength: 96.0,
+      thumbColor: MaterialStateProperty.resolveWith(
+        (states) {
+          if ([
+            MaterialState.hovered,
+            MaterialState.dragged,
+            MaterialState.focused,
+            MaterialState.pressed,
+          ].fold(false, (val, el) => val || states.contains(el))) {
+            return isLightMode ? Colors.black54 : Colors.white54;
+          } else {
+            return isLightMode ? Colors.black26 : Colors.white24;
+          }
+        },
+      ),
+    ),
+
+    // APP BAR
+
+    appBarTheme: AppBarTheme(
+      elevation: 0.0,
+      shadowColor: Colors.transparent,
+      foregroundColor: primaryTextColor,
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness:
+            isLightMode ? Brightness.dark : Brightness.light,
+      ),
+      iconTheme: IconThemeData(
+        color: isLightMode
+            ? iconColors.appBarLightIconColor
+            : iconColors.appBarDarkIconColor,
+        size: 24.0,
+      ),
+      actionsIconTheme: IconThemeData(
+        color: isLightMode
+            ? iconColors.appBarActionLightIconColor
+            : iconColors.appBarActionDarkIconColor,
+        size: 24.0,
+      ),
+    ),
+
+    // TOOLTIP
+
+    // Modify default tooltip theme on desktop.
+    tooltipTheme: isDesktopPlatform
+        ? TooltipThemeData(
+            textStyle: TextStyle(
+              fontSize: 12.0,
+              color: isLightMode ? Colors.white : Colors.black,
+              fontFamily: fontFamily,
+            ),
+            decoration: BoxDecoration(
+              color: isLightMode ? Colors.black : Colors.white,
+              borderRadius: BorderRadius.circular(4.0),
+            ),
+            height: null,
+            verticalOffset: 36.0,
+            preferBelow: true,
+            waitDuration: const Duration(seconds: 1),
+          )
+        : null,
+
+    // EXTENSIONS
+
+    extensions: {
+      iconColors,
+      animationDuration,
+      searchBarTheme,
+      const MaterialStandard(3),
+    },
+  );
+}
+
+ThemeData createM2Theme({
   required Color color,
   required ThemeMode mode,
 }) {
@@ -181,8 +632,6 @@ ThemeData createTheme({
             labelLarge: TextStyle(
               letterSpacing: Platform.isLinux ? 0.8 : 1.6,
               fontWeight: FontWeight.w600,
-              // Enforce `Inter` font family on GNU/Linux.
-              fontFamily: Platform.isLinux ? 'Inter' : null,
             ),
           )
         : TextTheme(
@@ -214,6 +663,12 @@ ThemeData createTheme({
             // [ListTile] text theme. Exactly same as 2014's except color.
             titleMedium: TextStyle(color: primaryTextColor),
             bodySmall: TextStyle(color: secondaryTextColor),
+            // [FloatingSearchBar] search text theme.
+            bodyLarge: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.w400,
+              letterSpacing: 0.0,
+            ),
           ),
   );
   // Enforce `Inter` font family on GNU/Linux.
@@ -240,7 +695,7 @@ ThemeData createTheme({
     surface: isLightMode ? Colors.white : const Color(0xFF222222),
     onSurface: primaryTextColor,
     surfaceVariant: isLightMode ? Colors.white : const Color(0xFF222222),
-    onSurfaceVariant: primaryTextColor,
+    onSurfaceVariant: secondaryTextColor,
     // Remove the fucking tint from popup menus, bottom sheets etc.
     surfaceTint: Colors.transparent,
     // Keep the Material Design 2 shadow.
@@ -282,11 +737,26 @@ ThemeData createTheme({
     Color.lerp(Colors.black, Colors.white, 1.0),
   );
 
-  final animationDurations = AnimationDurations();
+  final animationDuration = AnimationDuration();
+  final searchBarTheme = SearchBarThemeData(
+    borderRadius: BorderRadius.circular(4.0),
+    accentColor: color,
+    backgroundColor: cardColor,
+    shadowColor: Colors.black,
+    elevation: 4.0,
+    hintStyle: theme.bodyLarge?.copyWith(
+      color: colorScheme.onSurfaceVariant,
+    ),
+    queryStyle: theme.bodyLarge?.copyWith(
+      color: colorScheme.onSurface,
+    ),
+  );
   // For access inside page route transitions.
-  MaterialRoute.animationDurations = animationDurations;
+  MaterialRoute.animationDuration = animationDuration;
 
   return ThemeData(
+    useMaterial3: true,
+
     // TYPOGRAPHY
 
     textTheme: theme,
@@ -757,7 +1227,9 @@ ThemeData createTheme({
 
     extensions: {
       iconColors,
-      animationDurations,
+      animationDuration,
+      searchBarTheme,
+      const MaterialStandard(2),
     },
   );
 }
@@ -766,27 +1238,113 @@ class MaterialRoute extends MaterialPageRoute {
   MaterialRoute({required WidgetBuilder builder}) : super(builder: builder);
 
   // A simple "hack" to access the animation duration from the [ThemeExtension] without using [BuildContext].
-  static AnimationDurations? animationDurations;
+  static AnimationDuration? animationDuration;
   static const kDefaultTransitionDuration = Duration(milliseconds: 300);
 
   @override
   Duration get transitionDuration =>
-      animationDurations?.medium ?? kDefaultTransitionDuration;
+      animationDuration?.medium ?? kDefaultTransitionDuration;
 }
 
-class AnimationDurations extends ThemeExtension<AnimationDurations> {
+// Theme extensions:
+
+// https://m3.material.io/components/search
+// Not implemented in Flutter.
+class SearchBarThemeData extends ThemeExtension<SearchBarThemeData> {
+  final BorderRadius borderRadius;
+  final Color accentColor;
+  final Color backgroundColor;
+  final Color shadowColor;
+  final double elevation;
+  final TextStyle? hintStyle;
+  final TextStyle? queryStyle;
+
+  SearchBarThemeData({
+    required this.borderRadius,
+    required this.accentColor,
+    required this.backgroundColor,
+    required this.shadowColor,
+    required this.elevation,
+    required this.hintStyle,
+    required this.queryStyle,
+  });
+
+  @override
+  ThemeExtension<SearchBarThemeData> copyWith({
+    BorderRadius? borderRadius,
+    Color? accentColor,
+    Color? backgroundColor,
+    Color? shadowColor,
+    double? elevation,
+    TextStyle? hintStyle,
+    TextStyle? queryStyle,
+  }) {
+    return SearchBarThemeData(
+      borderRadius: borderRadius ?? this.borderRadius,
+      accentColor: accentColor ?? this.accentColor,
+      backgroundColor: backgroundColor ?? this.backgroundColor,
+      shadowColor: shadowColor ?? this.shadowColor,
+      elevation: elevation ?? this.elevation,
+      hintStyle: hintStyle ?? this.hintStyle,
+      queryStyle: queryStyle ?? this.queryStyle,
+    );
+  }
+
+  @override
+  ThemeExtension<SearchBarThemeData> lerp(
+    ThemeExtension<SearchBarThemeData>? other,
+    double t,
+  ) {
+    if (other is! SearchBarThemeData) {
+      return this;
+    }
+    return SearchBarThemeData(
+      borderRadius: BorderRadius.lerp(borderRadius, other.borderRadius, t)!,
+      accentColor: Color.lerp(accentColor, other.accentColor, t)!,
+      backgroundColor: Color.lerp(backgroundColor, other.backgroundColor, t)!,
+      shadowColor: Color.lerp(shadowColor, other.shadowColor, t)!,
+      elevation: lerpDouble(elevation, other.elevation, t)!,
+      hintStyle: TextStyle.lerp(hintStyle, other.hintStyle, t)!,
+      queryStyle: TextStyle.lerp(queryStyle, other.queryStyle, t)!,
+    );
+  }
+}
+
+class MaterialStandard extends ThemeExtension<MaterialStandard> {
+  final int value;
+
+  const MaterialStandard(this.value);
+
+  @override
+  ThemeExtension<MaterialStandard> copyWith({int? value}) {
+    return MaterialStandard(value ?? this.value);
+  }
+
+  @override
+  ThemeExtension<MaterialStandard> lerp(
+    ThemeExtension<MaterialStandard>? other,
+    double t,
+  ) {
+    if (other is! MaterialStandard) {
+      return this;
+    }
+    return MaterialStandard(other.value);
+  }
+}
+
+class AnimationDuration extends ThemeExtension<AnimationDuration> {
   final Duration fast;
   final Duration medium;
   final Duration slow;
 
-  const AnimationDurations({
+  const AnimationDuration({
     this.fast = const Duration(milliseconds: 150),
     this.medium = const Duration(milliseconds: 300),
     this.slow = const Duration(milliseconds: 450),
   });
 
-  factory AnimationDurations.disabled() {
-    return AnimationDurations(
+  factory AnimationDuration.disabled() {
+    return AnimationDuration(
       fast: Duration.zero,
       medium: Duration.zero,
       slow: Duration.zero,
@@ -794,13 +1352,13 @@ class AnimationDurations extends ThemeExtension<AnimationDurations> {
   }
 
   @override
-  ThemeExtension<AnimationDurations> copyWith({
+  ThemeExtension<AnimationDuration> copyWith({
     bool? enabled,
     Duration? fast,
     Duration? medium,
     Duration? slow,
   }) {
-    return AnimationDurations(
+    return AnimationDuration(
       fast: fast ?? this.fast,
       medium: medium ?? this.medium,
       slow: slow ?? this.slow,
@@ -808,14 +1366,14 @@ class AnimationDurations extends ThemeExtension<AnimationDurations> {
   }
 
   @override
-  ThemeExtension<AnimationDurations> lerp(
-    ThemeExtension<AnimationDurations>? other,
+  ThemeExtension<AnimationDuration> lerp(
+    ThemeExtension<AnimationDuration>? other,
     double t,
   ) {
-    if (other is! AnimationDurations) {
+    if (other is! AnimationDuration) {
       return this;
     }
-    return AnimationDurations(
+    return AnimationDuration(
       fast: fast * (1 - t) + other.fast * t,
       medium: medium * (1 - t) + other.medium * t,
       slow: slow * (1 - t) + other.slow * t,

@@ -43,9 +43,18 @@ import 'package:harmonoid/constants/language.dart';
 
 final isDesktop = Platform.isWindows || Platform.isLinux || Platform.isMacOS;
 final isMobile = Platform.isAndroid || Platform.isIOS;
-final tileMargin = isDesktop ? kDesktopTileMargin : kMobileTileMargin;
 
 // Remaining source code in this file consists of helper & utility methods used for rendering & handling some repeated tasks linked at multiple places.
+
+double tileMargin(BuildContext context) =>
+    isDesktop ? k16tileMargin : k8tileMargin;
+
+bool isMaterial3(BuildContext context) =>
+    Theme.of(context).extension<MaterialStandard>()?.value == 3;
+
+double navigationBarHeight(BuildContext context) => isMaterial3(context)
+    ? 80.0 /* Taken from Material 3 official specification. */
+    : kBottomNavigationBarHeight;
 
 List<Widget> tileGridListWidgets({
   required double tileHeight,
@@ -69,7 +78,7 @@ List<Widget> tileGridListWidgets({
   ]);
   int rowIndex = 0;
   List<Widget> rowChildren = <Widget>[];
-  margin ??= tileMargin;
+  margin ??= tileMargin(context);
   for (int index = 0; index < widgetCount; index++) {
     rowChildren.add(
       Container(
@@ -179,7 +188,7 @@ TileGridListWidgetsData tileGridListWidgetsWithScrollbarSupport({
   var rowIndex = 0;
   var rowChildren = <Widget>[];
   var rowData = <dynamic>[];
-  margin ??= tileMargin;
+  margin ??= tileMargin(context);
   for (int index = 0; index < widgetCount; index++) {
     final widget = builder(context, index);
     rowChildren.add(
