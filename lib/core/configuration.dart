@@ -15,7 +15,6 @@ import 'package:path/path.dart' as path;
 import 'package:media_library/media_library.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 
-import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -468,23 +467,32 @@ class Configuration extends ConfigurationKeys {
               'name': 'English',
               'country': 'United States',
             },
-            'themeMode': isDesktop ? 1 : 0,
+            'themeMode':
+                Platform.isWindows || Platform.isLinux || Platform.isMacOS
+                    ? 1
+                    : 0,
             'automaticAccent': false,
             'notificationLyrics': true,
             'collectionSearchRecent': const [],
             'webRecent': const [],
             'taskbarIndicator': false,
             'seamlessPlayback': false,
-            'jumpToNowPlayingScreenOnPlay': isDesktop,
+            'jumpToNowPlayingScreenOnPlay':
+                Platform.isWindows || Platform.isLinux || Platform.isMacOS,
             'automaticMusicLookup': false,
-            'dynamicNowPlayingBarColoring': isDesktop,
-            'modernNowPlayingScreen': isDesktop,
+            'dynamicNowPlayingBarColoring':
+                Platform.isWindows || Platform.isLinux || Platform.isMacOS,
+            'modernNowPlayingScreen':
+                Platform.isWindows || Platform.isLinux || Platform.isMacOS,
             'modernNowPlayingScreenCarouselIndex': 0,
             'lyricsVisible': true,
             'discordRPC': true,
             'highlightedLyricsSize': 38.0,
             'unhighlightedLyricsSize': 14.0,
-            'albumsSort': isDesktop ? 3 : 0,
+            'albumsSort':
+                Platform.isWindows || Platform.isLinux || Platform.isMacOS
+                    ? 3
+                    : 0,
             'tracksSort': 0,
             'artistsSort': 0,
             'genresSort': 0,
@@ -507,7 +515,8 @@ class Configuration extends ConfigurationKeys {
             ],
             'userLibmpvOptions': <String, String>{},
             'disableAnimations': false,
-            'addLibraryToPlaylistWhenPlayingFromTracksTab': isMobile,
+            'addLibraryToPlaylistWhenPlayingFromTracksTab':
+                Platform.isAndroid || Platform.isIOS,
             'fallbackAlbumArtFileNames': kDefaultFallbackAlbumArtFileNames,
             'androidEnableVolumeBoostFilter': false,
           };
