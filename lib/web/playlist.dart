@@ -9,7 +9,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
@@ -68,8 +68,9 @@ class WebPlaylistLargeTile extends StatelessWidget {
                     tag: 'album_art_${playlist.id}',
                     child: ExtendedImage(
                       image: ExtendedNetworkImageProvider(
-                          playlist.thumbnails.values.skip(1).first,
-                          cache: true),
+                        playlist.thumbnails.values.skip(1).first,
+                        cache: true,
+                      ),
                       fit: BoxFit.cover,
                       height: width,
                       width: width,
@@ -90,7 +91,7 @@ class WebPlaylistLargeTile extends StatelessWidget {
                     children: [
                       Text(
                         playlist.name.overflow,
-                        style: Theme.of(context).textTheme.displayMedium,
+                        style: Theme.of(context).textTheme.titleMedium,
                         textAlign: TextAlign.left,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -165,32 +166,24 @@ class WebPlaylistTile extends StatelessWidget {
                           playlist.name.overflow,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          style: Theme.of(context).textTheme.displayMedium,
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
-                        const SizedBox(
-                          height: 2.0,
-                        ),
+                        const SizedBox(height: 2.0),
                         Text(
                           Language.instance.PLAYLIST_SINGLE,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          style: Theme.of(context).textTheme.displaySmall,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(width: 12.0),
-                  Container(
-                    width: 64.0,
-                    height: 64.0,
-                  ),
+                  const SizedBox(width: 64.0, height: 64.0),
                 ],
               ),
             ),
-            const Divider(
-              height: 1.0,
-              indent: 80.0,
-            ),
+            const Divider(height: 1.0, indent: 80.0),
           ],
         ),
       ),
@@ -222,23 +215,11 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
   bool detailsLoaded = false;
   ScrollPhysics? physics = NeverScrollableScrollPhysics();
 
-  bool isDark(BuildContext context) =>
-      (0.299 *
-              (color?.red ??
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? 0.0
-                      : 255.0))) +
-          (0.587 *
-              (color?.green ??
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? 0.0
-                      : 255.0))) +
-          (0.114 *
-              (color?.blue ??
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? 0.0
-                      : 255.0))) <
-      128.0;
+  bool isDark(BuildContext context) {
+    final fallback =
+        Theme.of(context).brightness == Brightness.dark ? 0.0 : 1.0;
+    return (color?.computeLuminance() ?? fallback) < 0.5;
+  }
 
   @override
   void initState() {
@@ -317,19 +298,11 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                 newPageProgressIndicatorBuilder: (_) => Container(
                   height: 96.0,
                   child: Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation(
-                        Theme.of(context).primaryColor,
-                      ),
-                    ),
+                    child: const CircularProgressIndicator(),
                   ),
                 ),
                 firstPageProgressIndicatorBuilder: (_) => Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation(
-                      Theme.of(context).primaryColor,
-                    ),
-                  ),
+                  child: const CircularProgressIndicator(),
                 ),
                 itemBuilder: (context, track, pageKey) => pageKey == 0
                     ? TweenAnimationBuilder(
@@ -375,10 +348,10 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                                 child: ExtendedImage(
                                                   image:
                                                       ExtendedNetworkImageProvider(
-                                                          thumbnails[thumbnails
-                                                                  .length -
-                                                              2],
-                                                          cache: true),
+                                                    thumbnails[
+                                                        thumbnails.length - 2],
+                                                    cache: true,
+                                                  ),
                                                   height: 256.0,
                                                   width: 256.0,
                                                   fit: BoxFit.cover,
@@ -404,51 +377,62 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                             widget.playlist.name,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .displayLarge
+                                                .headlineSmall
                                                 ?.copyWith(
-                                                  fontSize: 24.0,
                                                   color: isDark(context)
-                                                      ? Colors.white
-                                                      : Colors.black,
+                                                      ? Theme.of(context)
+                                                          .extension<
+                                                              TextColors>()
+                                                          ?.darkPrimary
+                                                      : Theme.of(context)
+                                                          .extension<
+                                                              TextColors>()
+                                                          ?.lightPrimary,
                                                 ),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                           ),
-                                          SizedBox(height: 16.0),
+                                          const SizedBox(height: 16.0),
                                           Row(
                                             children: [
                                               ElevatedButton.icon(
                                                 onPressed: () {
                                                   Web.instance.open(
-                                                      widget.playlist.tracks);
+                                                    widget.playlist.tracks,
+                                                  );
                                                 },
                                                 style: ButtonStyle(
                                                   elevation:
-                                                      MaterialStateProperty.all(
-                                                          0.0),
+                                                      MaterialStatePropertyAll(
+                                                    0.0,
+                                                  ),
                                                   backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                          isDark(context)
-                                                              ? Colors.white
-                                                              : Colors.black87),
+                                                      MaterialStatePropertyAll(
+                                                    isDark(context)
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                  ),
                                                   padding:
-                                                      MaterialStateProperty.all(
-                                                          EdgeInsets.all(12.0)),
+                                                      MaterialStatePropertyAll(
+                                                    const EdgeInsets.all(12.0),
+                                                  ),
                                                 ),
                                                 icon: Icon(
                                                   Icons.play_arrow,
                                                   color: !isDark(context)
                                                       ? Colors.white
-                                                      : Colors.black87,
+                                                      : Colors.black,
                                                 ),
                                                 label: Text(
-                                                  Language.instance.PLAY_NOW
-                                                      .toUpperCase(),
+                                                  label(
+                                                    context,
+                                                    Language.instance.PLAY_NOW,
+                                                  ),
                                                   style: TextStyle(
                                                     fontSize: 12.0,
                                                     color: !isDark(context)
                                                         ? Colors.white
-                                                        : Colors.black87,
+                                                        : Colors.black,
                                                   ),
                                                 ),
                                               ),
@@ -476,26 +460,31 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                                   // ignore: deprecated_member_use
                                                   primary: Colors.white,
                                                   side: BorderSide(
-                                                      color: isDark(context)
-                                                          ? Colors.white
-                                                          : Colors.black87),
-                                                  padding: EdgeInsets.all(12.0),
+                                                    color: isDark(context)
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                  ),
+                                                  padding: const EdgeInsets.all(
+                                                    12.0,
+                                                  ),
                                                 ),
                                                 icon: Icon(
                                                   Icons.playlist_add,
                                                   color: isDark(context)
                                                       ? Colors.white
-                                                      : Colors.black87,
+                                                      : Colors.black,
                                                 ),
                                                 label: Text(
-                                                  Language
-                                                      .instance.SAVE_AS_PLAYLIST
-                                                      .toUpperCase(),
+                                                  label(
+                                                    context,
+                                                    Language.instance
+                                                        .SAVE_AS_PLAYLIST,
+                                                  ),
                                                   style: TextStyle(
                                                     fontSize: 12.0,
                                                     color: isDark(context)
                                                         ? Colors.white
-                                                        : Colors.black87,
+                                                        : Colors.black,
                                                   ),
                                                 ),
                                               ),
@@ -513,26 +502,29 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                                   // ignore: deprecated_member_use
                                                   primary: Colors.white,
                                                   side: BorderSide(
-                                                      color: isDark(context)
-                                                          ? Colors.white
-                                                          : Colors.black87),
+                                                    color: isDark(context)
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                  ),
                                                   padding: EdgeInsets.all(12.0),
                                                 ),
                                                 icon: Icon(
                                                   Icons.open_in_new,
                                                   color: isDark(context)
                                                       ? Colors.white
-                                                      : Colors.black87,
+                                                      : Colors.black,
                                                 ),
                                                 label: Text(
-                                                  Language
-                                                      .instance.OPEN_IN_BROWSER
-                                                      .toUpperCase(),
+                                                  label(
+                                                    context,
+                                                    Language.instance
+                                                        .OPEN_IN_BROWSER,
+                                                  ),
                                                   style: TextStyle(
                                                     fontSize: 12.0,
                                                     color: isDark(context)
                                                         ? Colors.white
-                                                        : Colors.black87,
+                                                        : Colors.black,
                                                   ),
                                                 ),
                                               ),
@@ -580,13 +572,16 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                     children: [
                       Text(
                         elevation != 0.0 ? widget.playlist.name : '',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displayLarge
-                            ?.copyWith(
-                              color:
-                                  isDark(context) ? Colors.white : Colors.black,
-                            ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  color: isDark(context)
+                                      ? Theme.of(context)
+                                          .extension<TextColors>()
+                                          ?.darkPrimary
+                                      : Theme.of(context)
+                                          .extension<TextColors>()
+                                          ?.lightPrimary,
+                                ),
                       ),
                       Spacer(),
                       WebSearchBar(),
@@ -618,15 +613,13 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                         ?.appBarActionDarkIconColor
                                     : Theme.of(context)
                                         .extension<IconColors>()
-                                        ?.appBarActionLightIconColor,
+                                        ?.appBarActionLight,
                               ),
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: 16.0,
-                      ),
+                      const SizedBox(width: 16.0),
                     ],
                   ),
                 ),

@@ -21,7 +21,7 @@ List<PopupMenuItem<int>> webTrackPopupMenuItems(BuildContext context) => [
               : Icons.queue_music),
           title: Text(
             Language.instance.ADD_TO_PLAYLIST,
-            style: Theme.of(context).textTheme.headlineMedium,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
       ),
@@ -33,7 +33,7 @@ List<PopupMenuItem<int>> webTrackPopupMenuItems(BuildContext context) => [
               Platform.isWindows ? FluentIcons.link_20_regular : Icons.link),
           title: Text(
             Language.instance.COPY_LINK,
-            style: Theme.of(context).textTheme.headlineMedium,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
       ),
@@ -45,7 +45,7 @@ List<PopupMenuItem<int>> webTrackPopupMenuItems(BuildContext context) => [
               Platform.isWindows ? FluentIcons.earth_20_regular : Icons.web),
           title: Text(
             Language.instance.OPEN_IN_BROWSER,
-            style: Theme.of(context).textTheme.headlineMedium,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
       ),
@@ -58,7 +58,7 @@ List<PopupMenuItem<int>> webTrackPopupMenuItems(BuildContext context) => [
               : Icons.music_note),
           title: Text(
             Language.instance.ADD_TO_NOW_PLAYING,
-            style: Theme.of(context).textTheme.headlineMedium,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
       ),

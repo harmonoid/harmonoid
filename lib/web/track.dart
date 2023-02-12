@@ -40,12 +40,6 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
   double scale = 1.0;
   Color? color;
 
-  bool get isDark =>
-      (0.299 * (color?.red ?? 256.0)) +
-          (0.587 * (color?.green ?? 256.0)) +
-          (0.114 * (color?.blue ?? 256.0)) <
-      128.0;
-
   @override
   void initState() {
     super.initState();
@@ -127,14 +121,21 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                         const SizedBox(height: 16.0),
                         Text(
                           widget.track.trackName.replaceFirst('(', '\n('),
-                          style: Theme.of(context)
-                              .textTheme
-                              .displaySmall
-                              ?.copyWith(
-                                fontSize: 14.0,
-                                color: isDark ? Colors.white : Colors.black,
-                                fontWeight: FontWeight.w600,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    color: (color?.computeLuminance() ??
+                                                (Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? 0.0
+                                                    : 1.0)) <
+                                            0.5
+                                        ? Theme.of(context)
+                                            .extension<TextColors>()
+                                            ?.darkPrimary
+                                        : Theme.of(context)
+                                            .extension<TextColors>()
+                                            ?.lightPrimary,
+                                  ),
                           textAlign: TextAlign.left,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -142,13 +143,22 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                         const SizedBox(height: 4.0),
                         Text(
                           '${widget.track.trackArtistNames.take(2).join(', ')}',
-                          style: Theme.of(context)
-                              .textTheme
-                              .displaySmall
-                              ?.copyWith(
-                                fontSize: 12.0,
-                                color: isDark ? Colors.white54 : Colors.black54,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: (color?.computeLuminance() ??
+                                                color?.computeLuminance() ??
+                                                (Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? 0.0
+                                                    : 1.0)) <
+                                            0.5
+                                        ? Theme.of(context)
+                                            .extension<TextColors>()
+                                            ?.darkSecondary
+                                        : Theme.of(context)
+                                            .extension<TextColors>()
+                                            ?.lightSecondary,
+                                  ),
                           maxLines: 1,
                           textAlign: TextAlign.left,
                           overflow: TextOverflow.ellipsis,
@@ -156,13 +166,22 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                         const SizedBox(height: 2.0),
                         Text(
                           widget.track.duration.label,
-                          style: Theme.of(context)
-                              .textTheme
-                              .displaySmall
-                              ?.copyWith(
-                                fontSize: 12.0,
-                                color: isDark ? Colors.white54 : Colors.black54,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: (color?.computeLuminance() ??
+                                                color?.computeLuminance() ??
+                                                (Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? 0.0
+                                                    : 1.0)) <
+                                            0.5
+                                        ? Theme.of(context)
+                                            .extension<TextColors>()
+                                            ?.darkSecondary
+                                        : Theme.of(context)
+                                            .extension<TextColors>()
+                                            ?.lightSecondary,
+                                  ),
                         ),
                         const SizedBox(height: 16.0),
                       ],
@@ -218,7 +237,13 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                   icon: Icon(
                     Icons.more_vert,
                     size: 16.0,
-                    color: isDark ? Colors.white54 : Colors.black54,
+                    color: (color?.computeLuminance() ??
+                                (Theme.of(context).brightness == Brightness.dark
+                                    ? 0.0
+                                    : 1.0)) <
+                            0.5
+                        ? Theme.of(context).extension<IconColors>()?.light
+                        : Theme.of(context).extension<IconColors>()?.dark,
                   ),
                 ),
               ),
@@ -322,7 +347,7 @@ class WebTrackTile extends StatelessWidget {
                           '${track.trackNumber}',
                           style: Theme.of(context)
                               .textTheme
-                              .displaySmall
+                              .bodyMedium
                               ?.copyWith(fontSize: 18.0),
                         ),
                         alignment: Alignment.center,
@@ -338,7 +363,7 @@ class WebTrackTile extends StatelessWidget {
                             track.trackName.overflow,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: Theme.of(context).textTheme.displayMedium,
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
                           const SizedBox(
                             height: 2.0,
@@ -357,7 +382,7 @@ class WebTrackTile extends StatelessWidget {
                             ].join(' • '),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: Theme.of(context).textTheme.displaySmall,
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ],
                       ),
@@ -366,6 +391,7 @@ class WebTrackTile extends StatelessWidget {
                     Container(
                       width: 64.0,
                       height: 64.0,
+                      alignment: Alignment.center,
                       child: ContextMenuButton<int>(
                         onSelected: (result) {
                           webTrackPopupMenuHandle(context, track, result);

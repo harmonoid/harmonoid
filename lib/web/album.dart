@@ -11,7 +11,7 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/state/visuals.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
@@ -43,14 +43,18 @@ class WebAlbumLargeTile extends StatelessWidget {
       child: InkWell(
         onTap: () async {
           if (album.tracks.isEmpty) {
-            await Future.wait([
-              YTMClient.album(album),
-              precacheImage(
-                ExtendedNetworkImageProvider(album.thumbnails.values.last,
-                    cache: true),
-                context,
-              ),
-            ]);
+            await Future.wait(
+              [
+                YTMClient.album(album),
+                precacheImage(
+                  ExtendedNetworkImageProvider(
+                    album.thumbnails.values.last,
+                    cache: true,
+                  ),
+                  context,
+                ),
+              ],
+            );
           }
           Navigator.of(context).push(
             MaterialRoute(
@@ -94,7 +98,7 @@ class WebAlbumLargeTile extends StatelessWidget {
                     children: [
                       Text(
                         album.albumName.overflow,
-                        style: Theme.of(context).textTheme.displayMedium,
+                        style: Theme.of(context).textTheme.titleSmall,
                         textAlign: TextAlign.left,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -107,12 +111,7 @@ class WebAlbumLargeTile extends StatelessWidget {
                               album.albumArtistName.overflow,
                             if (album.year.isNotEmpty) album.year.overflow,
                           ].join(' • '),
-                          style: Theme.of(context)
-                              .textTheme
-                              .displaySmall
-                              ?.copyWith(
-                                fontSize: 12.0,
-                              ),
+                          style: Theme.of(context).textTheme.bodySmall,
                           maxLines: 1,
                           textAlign: TextAlign.left,
                           overflow: TextOverflow.ellipsis,
@@ -144,14 +143,18 @@ class WebAlbumTile extends StatelessWidget {
       child: InkWell(
         onTap: () async {
           if (album.tracks.isEmpty) {
-            await Future.wait([
-              YTMClient.album(album),
-              precacheImage(
-                ExtendedNetworkImageProvider(album.thumbnails.values.last,
-                    cache: true),
-                context,
-              ),
-            ]);
+            await Future.wait(
+              [
+                YTMClient.album(album),
+                precacheImage(
+                  ExtendedNetworkImageProvider(
+                    album.thumbnails.values.last,
+                    cache: true,
+                  ),
+                  context,
+                ),
+              ],
+            );
           }
           Navigator.of(context).push(
             MaterialRoute(
@@ -190,7 +193,7 @@ class WebAlbumTile extends StatelessWidget {
                           album.albumName.overflow,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          style: Theme.of(context).textTheme.displayMedium,
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
                         const SizedBox(
                           height: 2.0,
@@ -204,7 +207,7 @@ class WebAlbumTile extends StatelessWidget {
                           ].join(' • '),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          style: Theme.of(context).textTheme.displaySmall,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
                     ),
@@ -250,23 +253,11 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
   bool detailsExpanded = false;
   ScrollPhysics? physics = NeverScrollableScrollPhysics();
 
-  bool isDark(BuildContext context) =>
-      (0.299 *
-              (color?.red ??
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? 0.0
-                      : 255.0))) +
-          (0.587 *
-              (color?.green ??
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? 0.0
-                      : 255.0))) +
-          (0.114 *
-              (color?.blue ??
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? 0.0
-                      : 255.0))) <
-      128.0;
+  bool isDark(BuildContext context) {
+    final fallback =
+        Theme.of(context).brightness == Brightness.dark ? 0.0 : 1.0;
+    return (color?.computeLuminance() ?? fallback) < 0.5;
+  }
 
   @override
   void initState() {
@@ -395,12 +386,15 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                           widget.album.albumName,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .displayLarge
+                                              .headlineSmall
                                               ?.copyWith(
-                                                fontSize: 24.0,
                                                 color: isDark(context)
-                                                    ? Colors.white
-                                                    : Colors.black,
+                                                    ? Theme.of(context)
+                                                        .extension<TextColors>()
+                                                        ?.darkPrimary
+                                                    : Theme.of(context)
+                                                        .extension<TextColors>()
+                                                        ?.lightPrimary,
                                               ),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
@@ -410,11 +404,15 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                           '${widget.album.subtitle}\n${widget.album.secondSubtitle}',
                                           style: Theme.of(context)
                                               .textTheme
-                                              .displaySmall
+                                              .bodyMedium
                                               ?.copyWith(
                                                 color: isDark(context)
-                                                    ? Colors.white70
-                                                    : Colors.black87,
+                                                    ? Theme.of(context)
+                                                        .extension<TextColors>()
+                                                        ?.darkSecondary
+                                                    : Theme.of(context)
+                                                        .extension<TextColors>()
+                                                        ?.lightSecondary,
                                               ),
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
@@ -440,14 +438,21 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                       Language.instance.MORE,
                                                   colorClickableText:
                                                       Theme.of(context)
-                                                          .primaryColor,
+                                                          .colorScheme
+                                                          .primary,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .displaySmall
+                                                      .bodyMedium
                                                       ?.copyWith(
                                                         color: isDark(context)
-                                                            ? Colors.white70
-                                                            : Colors.black87,
+                                                            ? Theme.of(context)
+                                                                .extension<
+                                                                    TextColors>()
+                                                                ?.darkSecondary
+                                                            : Theme.of(context)
+                                                                .extension<
+                                                                    TextColors>()
+                                                                ?.lightSecondary,
                                                       ),
                                                   callback: (collapsed) {
                                                     debugPrint(
@@ -474,34 +479,39 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                     },
                                                     style: ButtonStyle(
                                                       elevation:
-                                                          MaterialStateProperty
-                                                              .all(0.0),
+                                                          MaterialStatePropertyAll(
+                                                        0.0,
+                                                      ),
                                                       backgroundColor:
-                                                          MaterialStateProperty
-                                                              .all(isDark(
-                                                                      context)
-                                                                  ? Colors.white
-                                                                  : Colors
-                                                                      .black87),
+                                                          MaterialStatePropertyAll(
+                                                        isDark(context)
+                                                            ? Colors.white
+                                                            : Colors.black,
+                                                      ),
                                                       padding:
-                                                          MaterialStateProperty
-                                                              .all(EdgeInsets
-                                                                  .all(12.0)),
+                                                          MaterialStatePropertyAll(
+                                                        const EdgeInsets.all(
+                                                          12.0,
+                                                        ),
+                                                      ),
                                                     ),
                                                     icon: Icon(
                                                       Icons.play_arrow,
                                                       color: !isDark(context)
                                                           ? Colors.white
-                                                          : Colors.black87,
+                                                          : Colors.black,
                                                     ),
                                                     label: Text(
-                                                      Language.instance.PLAY_NOW
-                                                          .toUpperCase(),
+                                                      label(
+                                                        context,
+                                                        Language
+                                                            .instance.PLAY_NOW,
+                                                      ),
                                                       style: TextStyle(
                                                         fontSize: 12.0,
                                                         color: !isDark(context)
                                                             ? Colors.white
-                                                            : Colors.black87,
+                                                            : Colors.black,
                                                       ),
                                                     ),
                                                   ),
@@ -521,7 +531,8 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                                 .map(
                                                               (e) =>
                                                                   Parser.track(
-                                                                      e),
+                                                                e,
+                                                              ),
                                                             ),
                                                           ),
                                                       );
@@ -531,27 +542,32 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                       // ignore: deprecated_member_use
                                                       primary: Colors.white,
                                                       side: BorderSide(
-                                                          color: isDark(context)
-                                                              ? Colors.white
-                                                              : Colors.black87),
+                                                        color: isDark(context)
+                                                            ? Colors.white
+                                                            : Colors.black,
+                                                      ),
                                                       padding:
-                                                          EdgeInsets.all(12.0),
+                                                          const EdgeInsets.all(
+                                                        12.0,
+                                                      ),
                                                     ),
                                                     icon: Icon(
                                                       Icons.playlist_add,
                                                       color: isDark(context)
                                                           ? Colors.white
-                                                          : Colors.black87,
+                                                          : Colors.black,
                                                     ),
                                                     label: Text(
-                                                      Language.instance
-                                                          .SAVE_AS_PLAYLIST
-                                                          .toUpperCase(),
+                                                      label(
+                                                        context,
+                                                        Language.instance
+                                                            .SAVE_AS_PLAYLIST,
+                                                      ),
                                                       style: TextStyle(
                                                         fontSize: 12.0,
                                                         color: isDark(context)
                                                             ? Colors.white
-                                                            : Colors.black87,
+                                                            : Colors.black,
                                                       ),
                                                     ),
                                                   ),
@@ -569,27 +585,32 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                       // ignore: deprecated_member_use
                                                       primary: Colors.white,
                                                       side: BorderSide(
-                                                          color: isDark(context)
-                                                              ? Colors.white
-                                                              : Colors.black87),
+                                                        color: isDark(context)
+                                                            ? Colors.white
+                                                            : Colors.black,
+                                                      ),
                                                       padding:
-                                                          EdgeInsets.all(12.0),
+                                                          const EdgeInsets.all(
+                                                        12.0,
+                                                      ),
                                                     ),
                                                     icon: Icon(
                                                       Icons.open_in_new,
                                                       color: isDark(context)
                                                           ? Colors.white
-                                                          : Colors.black87,
+                                                          : Colors.black,
                                                     ),
                                                     label: Text(
-                                                      Language.instance
-                                                          .OPEN_IN_BROWSER
-                                                          .toUpperCase(),
+                                                      label(
+                                                        context,
+                                                        Language.instance
+                                                            .OPEN_IN_BROWSER,
+                                                      ),
                                                       style: TextStyle(
                                                         fontSize: 12.0,
                                                         color: isDark(context)
                                                             ? Colors.white
-                                                            : Colors.black87,
+                                                            : Colors.black,
                                                       ),
                                                     ),
                                                   ),
@@ -644,19 +665,20 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                     children: [
                       Text(
                         elevation != 0.0 ? widget.album.albumName : '',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displayLarge
-                            ?.copyWith(
-                              color:
-                                  isDark(context) ? Colors.white : Colors.black,
-                            ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  color: isDark(context)
+                                      ? Theme.of(context)
+                                          .extension<TextColors>()
+                                          ?.darkPrimary
+                                      : Theme.of(context)
+                                          .extension<TextColors>()
+                                          ?.lightPrimary,
+                                ),
                       ),
                       Spacer(),
                       WebSearchBar(),
-                      SizedBox(
-                        width: 8.0,
-                      ),
+                      const SizedBox(width: 8.0),
                       Material(
                         color: Colors.transparent,
                         child: Tooltip(
@@ -673,6 +695,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                             child: Container(
                               height: 40.0,
                               width: 40.0,
+                              alignment: Alignment.center,
                               child: Icon(
                                 Icons.settings,
                                 size: 20.0,
@@ -682,15 +705,13 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                         ?.appBarActionDarkIconColor
                                     : Theme.of(context)
                                         .extension<IconColors>()
-                                        ?.appBarActionLightIconColor,
+                                        ?.appBarActionLight,
                               ),
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: 16.0,
-                      ),
+                      const SizedBox(width: 16.0),
                     ],
                   ),
                 ),

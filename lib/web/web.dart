@@ -7,18 +7,16 @@
 ///
 import 'dart:collection';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:animations/animations.dart';
-import 'package:window_plus/window_plus.dart';
 import 'package:ytm_client/ytm_client.dart';
+import 'package:window_plus/window_plus.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/interface/collection/playlist.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -90,18 +88,14 @@ class WebTabState extends State<WebTab> with AutomaticKeepAliveClientMixin {
                       children: [
                         Language.instance.RECOMMENDATIONS,
                         Language.instance.PLAYLIST,
-                      ].map(
+                      ].asMap().entries.map(
                         (tab) {
-                          final i = [
-                            Language.instance.RECOMMENDATIONS,
-                            Language.instance.PLAYLIST,
-                          ].indexOf(tab);
                           return InkWell(
                             borderRadius: BorderRadius.circular(4.0),
                             onTap: () {
-                              if (_index == i) return;
+                              if (_index == tab.key) return;
                               setState(() {
-                                _index = i;
+                                _index = tab.key;
                               });
                             },
                             child: Container(
@@ -110,17 +104,21 @@ class WebTabState extends State<WebTab> with AutomaticKeepAliveClientMixin {
                               alignment: Alignment.center,
                               margin: EdgeInsets.symmetric(horizontal: 4.0),
                               child: Text(
-                                tab.toUpperCase(),
+                                tab.value.toUpperCase(),
                                 style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: _index == i
+                                  fontSize: 20.0,
+                                  fontWeight: _index == tab.key
                                       ? FontWeight.w600
                                       : FontWeight.w300,
-                                  color: (Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.white
-                                          : Colors.black)
-                                      .withOpacity(_index == i ? 1.0 : 0.67),
+                                  color: _index == tab.key
+                                      ? Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.color
+                                      : Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.color,
                                 ),
                               ),
                             ),
@@ -162,9 +160,7 @@ class WebTabState extends State<WebTab> with AutomaticKeepAliveClientMixin {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: 16.0,
-                  ),
+                  const SizedBox(width: 16.0),
                 ],
               ),
             ),
@@ -297,19 +293,11 @@ class _WebRecommendationsState extends State<WebRecommendations>
                     newPageProgressIndicatorBuilder: (_) => Container(
                       height: 96.0,
                       child: Center(
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation(
-                            Theme.of(context).primaryColor,
-                          ),
-                        ),
+                        child: const CircularProgressIndicator(),
                       ),
                     ),
                     firstPageProgressIndicatorBuilder: (_) => Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation(
-                          Theme.of(context).primaryColor,
-                        ),
-                      ),
+                      child: const CircularProgressIndicator(),
                     ),
                   ),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -347,18 +335,13 @@ class WebSearch extends StatelessWidget {
       body: Stack(
         children: [
           DesktopAppBar(
+            title: Language.instance.RESULTS_FOR_QUERY
+                .replaceAll('QUERY', query.trim()),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(
-                  Language.instance.RESULTS_FOR_QUERY
-                      .replaceAll('QUERY', query.trim()),
-                  style: Theme.of(context).textTheme.displayLarge,
-                ),
-                Spacer(),
                 WebSearchBar(query: this.query),
-                SizedBox(
-                  width: 8.0,
-                ),
+                const SizedBox(width: 8.0),
                 Material(
                   color: Colors.transparent,
                   child: Tooltip(
@@ -400,11 +383,7 @@ class WebSearch extends StatelessWidget {
             child: CustomFutureBuilder<Map<String, List<Media>>>(
               future: future,
               loadingBuilder: (context) => Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(
-                    Theme.of(context).primaryColor,
-                  ),
-                ),
+                child: const CircularProgressIndicator(),
               ),
               builder: (context, data) {
                 if (data?.isNotEmpty ?? false) {

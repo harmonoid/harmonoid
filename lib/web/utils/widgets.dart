@@ -1,24 +1,20 @@
-import 'dart:ui';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:animations/animations.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:substring_highlight/substring_highlight.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/dimensions.dart';
-import 'package:harmonoid/interface/settings/about.dart';
-import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:harmonoid/constants/language.dart';
 
 import 'package:harmonoid/web/web.dart';
 import 'package:harmonoid/web/state/web.dart';
 import 'package:harmonoid/web/state/parser.dart';
+
+import 'package:harmonoid/constants/language.dart';
 
 class WebSearchBar extends StatefulWidget {
   final String? query;
@@ -76,7 +72,7 @@ class _WebSearchBarState extends State<WebSearchBar> {
         child: Stack(
           children: [
             Container(
-              height: 7 * 32.0,
+              height: 4 * 32.0,
               width: 280.0,
               child: Material(
                 color: Theme.of(context).cardTheme.color,
@@ -107,7 +103,8 @@ class _WebSearchBarState extends State<WebSearchBar> {
                         child: SubstringHighlight(
                           text: option,
                           term: _searchBarController.text,
-                          textStyle: Theme.of(context).textTheme.displaySmall!,
+                          textStyle: Theme.of(context).textTheme.bodyLarge ??
+                              TextStyle(),
                           textStyleHighlight: TextStyle(
                             color:
                                 Theme.of(context).brightness == Brightness.dark
@@ -173,7 +170,7 @@ class _WebSearchBarState extends State<WebSearchBar> {
                   searchOrPlay(query);
                 },
                 textAlignVertical: TextAlignVertical.center,
-                style: Theme.of(context).textTheme.headlineMedium,
+                style: Theme.of(context).textTheme.bodyLarge,
                 decoration: inputDecoration(
                   context,
                   Language.instance.COLLECTION_SEARCH_WELCOME,
@@ -184,7 +181,7 @@ class _WebSearchBarState extends State<WebSearchBar> {
                       child: Icon(
                         Icons.search,
                         size: 20.0,
-                        color: Theme.of(context).iconTheme.color,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ),
@@ -261,9 +258,7 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
             await showDialog(
               context: context,
               builder: (ctx) => AlertDialog(
-                title: Text(
-                  Language.instance.PLAYLISTS_TEXT_FIELD_LABEL,
-                ),
+                title: Text(Language.instance.PLAYLISTS_TEXT_FIELD_LABEL),
                 content: Container(
                   height: 40.0,
                   width: 360.0,
@@ -283,7 +278,7 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
                         Navigator.of(ctx).maybePop();
                       },
                       textAlignVertical: TextAlignVertical.center,
-                      style: Theme.of(ctx).textTheme.headlineMedium,
+                      style: Theme.of(ctx).textTheme.bodyLarge,
                       decoration: inputDecoration(
                         ctx,
                         Language.instance.PLAYLISTS_TEXT_FIELD_HINT,
@@ -294,9 +289,9 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
                 actions: [
                   TextButton(
                     child: Text(
-                      Language.instance.OK,
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
+                      label(
+                        context,
+                        Language.instance.OK,
                       ),
                     ),
                     onPressed: Navigator.of(context).maybePop,
@@ -304,11 +299,7 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
                 ],
               ),
             );
-            if (name.isEmpty) {
-              throw FormatException(
-                'name.isEmpty',
-              );
-            }
+            debugPrint(name);
           }
           debugPrint(playlist?.name.toString());
           try {
@@ -316,8 +307,9 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
               fetched = true;
             });
           } catch (exception) {}
-          final result =
-              await Collection.instance.playlistCreateFromName(playlist!.name);
+          final result = await Collection.instance.playlistCreateFromName(
+            playlist!.name,
+          );
           await Collection.instance.playlistAddTracks(
             result,
             playlist!.tracks.map((e) => Parser.track(e)).toList(),
@@ -342,9 +334,9 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
               actions: [
                 TextButton(
                   child: Text(
-                    Language.instance.OK,
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
+                    label(
+                      context,
+                      Language.instance.OK,
                     ),
                   ),
                   onPressed: Navigator.of(context).maybePop,
@@ -372,7 +364,10 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
             actions: [
               TextButton(
                 child: Text(
-                  Language.instance.OK,
+                  label(
+                    context,
+                    Language.instance.OK,
+                  ),
                 ),
                 onPressed: Navigator.of(context).maybePop,
               ),
@@ -402,7 +397,7 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
               cursorWidth: 1.0,
               onSubmitted: (_) => add(),
               textAlignVertical: TextAlignVertical.center,
-              style: Theme.of(context).textTheme.headlineMedium,
+              style: Theme.of(context).textTheme.bodyLarge,
               decoration: inputDecoration(
                 context,
                 Language.instance.IMPORT_PLAYLIST_SUBTITLE,
@@ -419,11 +414,8 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
                 height: 24.0,
                 width: 24.0,
                 alignment: Alignment.center,
-                child: CircularProgressIndicator(
+                child: const CircularProgressIndicator(
                   strokeWidth: 3.8,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    Theme.of(context).primaryColor,
-                  ),
                 ),
               ),
             ),
@@ -454,7 +446,10 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
           ? [
               TextButton(
                 child: Text(
-                  Language.instance.OK.toUpperCase(),
+                  label(
+                    context,
+                    Language.instance.OK,
+                  ),
                 ),
                 onPressed: Navigator.of(context).maybePop,
               ),
@@ -462,448 +457,23 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
           : [
               TextButton(
                 child: Text(
-                  Language.instance.SAVE.toUpperCase(),
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
+                  label(
+                    context,
+                    Language.instance.SAVE,
                   ),
                 ),
                 onPressed: add,
               ),
               TextButton(
                 child: Text(
-                  Language.instance.CANCEL.toUpperCase(),
-                ),
-                onPressed: Navigator.of(context).maybePop,
-              ),
-            ],
-    );
-  }
-}
-
-class PlaylistImportBottomSheet extends StatefulWidget {
-  PlaylistImportBottomSheet({Key? key}) : super(key: key);
-
-  @override
-  State<PlaylistImportBottomSheet> createState() =>
-      _PlaylistImportBottomSheetState();
-}
-
-class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
-  final TextEditingController controller = TextEditingController();
-  Playlist? playlist;
-  bool fetched = false;
-  bool saved = false;
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  void add() async {
-    if (controller.text.isNotEmpty) {
-      try {
-        playlist = Playlist.fromRawURL(controller.text);
-        setState(() {});
-        try {
-          while (playlist?.continuation != '') {
-            await YTMClient.playlist(playlist!);
-            setState(() {});
-          }
-        } catch (exception, stacktrace) {
-          debugPrint(exception.toString());
-          debugPrint(stacktrace.toString());
-        }
-        if (playlist!.tracks.isNotEmpty) {
-          if (playlist!.name.isEmpty) {
-            debugPrint('playlist.name.isEmpty');
-            await Navigator.of(context).maybePop();
-            String name = '';
-            await showModalBottomSheet(
-              context: context,
-              useRootNavigator: true,
-              builder: (ctx) => Container(
-                margin: EdgeInsets.only(
-                  bottom: MediaQuery.of(ctx).viewInsets.bottom -
-                      MediaQuery.of(ctx).padding.bottom,
-                ),
-                padding: EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(height: 4.0),
-                    CustomTextField(
-                      textCapitalization: TextCapitalization.none,
-                      keyboardType: TextInputType.name,
-                      textInputAction: TextInputAction.done,
-                      autofocus: true,
-                      onChanged: (value) {
-                        playlist?.name = value;
-                        name = value;
-                      },
-                      onSubmitted: (value) {
-                        playlist?.name = value;
-                        Navigator.of(ctx).maybePop();
-                      },
-                      decoration: InputDecoration(
-                        hintText: Language.instance.PLAYLIST_NAME,
-                        contentPadding: EdgeInsets.fromLTRB(
-                          12,
-                          30,
-                          12,
-                          6,
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color:
-                                Theme.of(ctx).iconTheme.color!.withOpacity(0.4),
-                            width: 1.8,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color:
-                                Theme.of(ctx).iconTheme.color!.withOpacity(0.4),
-                            width: 1.8,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Theme.of(ctx).primaryColor,
-                            width: 1.8,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 8.0),
-                    ElevatedButton(
-                      onPressed: Navigator.of(ctx).maybePop,
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                          Theme.of(ctx).primaryColor,
-                        ),
-                      ),
-                      child: Text(
-                        Language.instance.OK.toUpperCase(),
-                        style: const TextStyle(letterSpacing: 2.0),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-            if (name.isEmpty) {
-              throw FormatException(
-                'name.isEmpty',
-              );
-            }
-          }
-          debugPrint(playlist?.name.toString());
-          try {
-            setState(() {
-              fetched = true;
-            });
-          } catch (exception) {}
-          final result =
-              await Collection.instance.playlistCreateFromName(playlist!.name);
-          await Collection.instance.playlistAddTracks(
-            result,
-            playlist!.tracks.map((e) => Parser.track(e)).toList(),
-          );
-          try {
-            setState(() {
-              saved = true;
-            });
-          } catch (exception) {}
-        } else {
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text(
-                Language.instance.ERROR,
-              ),
-              content: Text(
-                Language.instance.INTERNET_ERROR,
-                style: Theme.of(context).textTheme.displaySmall,
-                textAlign: TextAlign.start,
-              ),
-              actions: [
-                TextButton(
-                  child: Text(
-                    Language.instance.OK,
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  onPressed: Navigator.of(context).maybePop,
-                ),
-              ],
-            ),
-          );
-        }
-      } on ArgumentError catch (exception, stacktrace) {
-        debugPrint(exception.toString());
-        debugPrint(stacktrace.toString());
-        playlist = null;
-        setState(() {});
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(
-              Language.instance.ERROR,
-            ),
-            content: Text(
-              Language.instance.INVALID_PLAYLIST_URL,
-              style: Theme.of(context).textTheme.displaySmall,
-              textAlign: TextAlign.start,
-            ),
-            actions: [
-              TextButton(
-                child: Text(
-                  Language.instance.OK,
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
+                  label(
+                    context,
+                    Language.instance.CANCEL,
                   ),
                 ),
                 onPressed: Navigator.of(context).maybePop,
               ),
             ],
-          ),
-        );
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom -
-            MediaQuery.of(context).padding.bottom,
-      ),
-      padding: EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(height: 4.0),
-          CustomTextField(
-            textCapitalization: TextCapitalization.none,
-            keyboardType: TextInputType.url,
-            textInputAction: TextInputAction.done,
-            autofocus: true,
-            controller: controller,
-            onSubmitted: (_) => add(),
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.fromLTRB(
-                12,
-                30,
-                12,
-                6,
-              ),
-              hintText: Language.instance.IMPORT_PLAYLIST_SUBTITLE,
-              border: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Theme.of(context).iconTheme.color!.withOpacity(0.4),
-                  width: 1.8,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Theme.of(context).iconTheme.color!.withOpacity(0.4),
-                  width: 1.8,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Theme.of(context).primaryColor,
-                  width: 1.8,
-                ),
-              ),
-            ),
-          ),
-          if (playlist != null) ...[
-            const SizedBox(height: 12.0),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        child: Text(
-                          '${Language.instance.PLAYLIST_NAME}: ${playlist?.name ?? ''}',
-                          style: Theme.of(context).textTheme.displaySmall,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      Text(
-                        '${Language.instance.TRACK}: ${[
-                          0,
-                          null
-                        ].contains(playlist?.tracks.length) ? '' : playlist?.tracks.length}',
-                        style: Theme.of(context).textTheme.displaySmall,
-                      ),
-                    ],
-                  ),
-                ),
-                if (playlist?.continuation != '' && !fetched)
-                  Align(
-                    child: Container(
-                      margin: EdgeInsets.all(2.0).copyWith(
-                        left: 16.0,
-                        right: 16.0,
-                      ),
-                      height: 24.0,
-                      width: 24.0,
-                      alignment: Alignment.center,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 3.8,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Theme.of(context).primaryColor,
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ],
-          const SizedBox(height: 8.0),
-          if (saved)
-            ElevatedButton(
-              onPressed: Navigator.of(context).maybePop,
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
-                  Theme.of(context).primaryColor,
-                ),
-              ),
-              child: Text(
-                Language.instance.OK.toUpperCase(),
-                style: const TextStyle(letterSpacing: 2.0),
-              ),
-            )
-          else
-            ElevatedButton(
-              onPressed: add,
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
-                  Theme.of(context).primaryColor,
-                ),
-              ),
-              child: Text(
-                Language.instance.ADD.toUpperCase(),
-                style: const TextStyle(letterSpacing: 2.0),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class WebMobileAppBarOverflowButton extends StatefulWidget {
-  final Color? color;
-  final bool withinScreen;
-  WebMobileAppBarOverflowButton({
-    Key? key,
-    this.color,
-    this.withinScreen = true,
-  }) : super(key: key);
-
-  @override
-  State<WebMobileAppBarOverflowButton> createState() =>
-      _WebMobileAppBarOverflowButtonState();
-}
-
-class _WebMobileAppBarOverflowButtonState
-    extends State<WebMobileAppBarOverflowButton> {
-  @override
-  Widget build(BuildContext context) {
-    return CircularButton(
-      icon: Icon(
-        Icons.more_vert,
-        color: widget.color ??
-            Theme.of(context)
-                .extension<IconColors>()
-                ?.appBarActionDarkIconColor,
-      ),
-      onPressed: () {
-        final position = RelativeRect.fromRect(
-          Offset(
-                MediaQuery.of(context).size.width - tileMargin(context) - 48.0,
-                widget.withinScreen
-                    ? (MediaQueryData.fromWindow(window).padding.top +
-                        kMobileSearchBarHeight +
-                        2 * tileMargin(context))
-                    : (MediaQuery.of(context).padding.top +
-                        kToolbarHeight +
-                        2 * tileMargin(context)),
-              ) &
-              Size(double.infinity, double.infinity),
-          Rect.fromLTWH(
-            0,
-            0,
-            MediaQuery.of(context).size.width,
-            MediaQuery.of(context).size.height,
-          ),
-        );
-        showMenu<int>(
-          context: context,
-          position: position,
-          constraints: BoxConstraints(
-            maxWidth: double.infinity,
-            maxHeight: double.infinity,
-          ),
-          elevation: 4.0,
-          items: [
-            PopupMenuItem(
-              value: 0,
-              child: ListTile(
-                leading: Icon(
-                  Icons.settings,
-                  color: Theme.of(context).iconTheme.color,
-                ),
-                title: Text(Language.instance.SETTING),
-              ),
-            ),
-            PopupMenuItem(
-              value: 1,
-              child: ListTile(
-                leading: Icon(
-                  Icons.info,
-                  color: Theme.of(context).iconTheme.color,
-                ),
-                title: Text(Language.instance.ABOUT_TITLE),
-              ),
-            ),
-          ],
-        ).then((value) {
-          switch (value) {
-            case 0:
-              {
-                Navigator.push(
-                  context,
-                  MaterialRoute(
-                    builder: (context) => Settings(),
-                  ),
-                );
-                break;
-              }
-            case 1:
-              {
-                Navigator.push(
-                  context,
-                  MaterialRoute(
-                    builder: (context) => AboutPage(),
-                  ),
-                );
-                break;
-              }
-          }
-        });
-      },
     );
   }
 }

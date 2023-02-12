@@ -140,10 +140,8 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                                   widget.track.trackName.overflow,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .displaySmall
+                                      .titleMedium
                                       ?.copyWith(
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w600,
                                         color: Colors.white,
                                       ),
                                   textAlign: TextAlign.left,
@@ -156,10 +154,9 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                                     '${widget.track.trackArtistNames.take(2).join(', ')}',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .displaySmall
+                                        .bodySmall
                                         ?.copyWith(
                                           color: Colors.white54,
-                                          fontSize: 12.0,
                                         ),
                                     maxLines: 1,
                                     textAlign: TextAlign.left,
@@ -297,7 +294,7 @@ class VideoTile extends StatelessWidget {
                             video.videoName.overflow,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: Theme.of(context).textTheme.displayMedium,
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
                           const SizedBox(
                             height: 2.0,
@@ -310,7 +307,7 @@ class VideoTile extends StatelessWidget {
                             ].join(' • '),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: Theme.of(context).textTheme.displaySmall,
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ],
                       ),
@@ -319,6 +316,7 @@ class VideoTile extends StatelessWidget {
                     Container(
                       width: 64.0,
                       height: 64.0,
+                      alignment: Alignment.center,
                       child: ContextMenuButton<int>(
                         onSelected: (result) {
                           webTrackPopupMenuHandle(context, video, result);

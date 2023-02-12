@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:extended_image/extended_image.dart';
 
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/theme.dart';
@@ -96,7 +96,7 @@ class WebArtistLargeTile extends StatelessWidget {
           Spacer(),
           Text(
             artist.artistName.overflow,
-            style: Theme.of(context).textTheme.displayMedium,
+            style: Theme.of(context).textTheme.titleSmall,
             textAlign: TextAlign.left,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -179,7 +179,7 @@ class WebArtistTile extends StatelessWidget {
                           artist.artistName.overflow,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          style: Theme.of(context).textTheme.displayMedium,
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
                         const SizedBox(
                           height: 2.0,
@@ -188,16 +188,13 @@ class WebArtistTile extends StatelessWidget {
                           artist.subscribersCount,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          style: Theme.of(context).textTheme.displaySmall,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(width: 12.0),
-                  Container(
-                    width: 64.0,
-                    height: 64.0,
-                  ),
+                  const SizedBox(width: 64.0, height: 64.0),
                 ],
               ),
             ),
@@ -353,10 +350,8 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                             children: [
                               AutoSizeText(
                                 widget.artist.artistName.overflow,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displayLarge
-                                    ?.copyWith(fontSize: 56.0),
+                                style:
+                                    Theme.of(context).textTheme.headlineLarge,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -366,7 +361,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                     .split(' • ')
                                     .last
                                     .trim(),
-                                style: Theme.of(context).textTheme.displaySmall,
+                                style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               const SizedBox(height: 8.0),
                               ConstrainedBox(
@@ -378,9 +373,8 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                   trimExpandedText: Language.instance.LESS,
                                   trimCollapsedText: Language.instance.MORE,
                                   colorClickableText:
-                                      Theme.of(context).primaryColor,
-                                  style:
-                                      Theme.of(context).textTheme.displaySmall,
+                                      Theme.of(context).colorScheme.primary,
+                                  style: Theme.of(context).textTheme.bodyMedium,
                                   callback: (isTrimmed) {
                                     setState(() {});
                                   },
@@ -392,19 +386,21 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                 children: [
                                   ElevatedButton.icon(
                                     onPressed: () {
-                                      Web.instance.open(widget.artist.data
-                                          .entries.first.value.elements
-                                          .cast<Track>());
+                                      Web.instance.open(
+                                        widget.artist.data.entries.first.value
+                                            .elements
+                                            .cast<Track>(),
+                                      );
                                     },
                                     style: ButtonStyle(
-                                      elevation: MaterialStateProperty.all(0.0),
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              Theme.of(context).brightness ==
-                                                      Brightness.dark
-                                                  ? Colors.white
-                                                  : Colors.black87),
-                                      padding: MaterialStateProperty.all(
+                                      elevation: MaterialStatePropertyAll(0.0),
+                                      backgroundColor: MaterialStatePropertyAll(
+                                        Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                      padding: MaterialStatePropertyAll(
                                         const EdgeInsets.all(12.0),
                                       ),
                                     ),
@@ -413,16 +409,19 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                       color: !(Theme.of(context).brightness ==
                                               Brightness.dark)
                                           ? Colors.white
-                                          : Colors.black87,
+                                          : Colors.black,
                                     ),
                                     label: Text(
-                                      Language.instance.SHUFFLE.toUpperCase(),
+                                      label(
+                                        context,
+                                        Language.instance.SHUFFLE,
+                                      ),
                                       style: TextStyle(
                                         fontSize: 12.0,
                                         color: !(Theme.of(context).brightness ==
                                                 Brightness.dark)
                                             ? Colors.white
-                                            : Colors.black87,
+                                            : Colors.black,
                                       ),
                                     ),
                                   ),
@@ -439,28 +438,31 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                       // ignore: deprecated_member_use
                                       primary: Colors.white,
                                       side: BorderSide(
-                                          color: Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? Colors.white
-                                              : Colors.black87),
-                                      padding: EdgeInsets.all(12.0),
+                                        color: Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                      padding: const EdgeInsets.all(12.0),
                                     ),
                                     icon: Icon(
                                       Icons.open_in_new,
                                       color: Theme.of(context).brightness ==
                                               Brightness.dark
                                           ? Colors.white
-                                          : Colors.black87,
+                                          : Colors.black,
                                     ),
                                     label: Text(
-                                      Language.instance.OPEN_IN_BROWSER
-                                          .toUpperCase(),
+                                      label(
+                                        context,
+                                        Language.instance.OPEN_IN_BROWSER,
+                                      ),
                                       style: TextStyle(
                                         fontSize: 12.0,
                                         color: Theme.of(context).brightness ==
                                                 Brightness.dark
                                             ? Colors.white
-                                            : Colors.black87,
+                                            : Colors.black,
                                       ),
                                     ),
                                   ),
@@ -620,9 +622,8 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                           Icons.settings,
                           size: 20.0,
                           color: Theme.of(context)
-                              .appBarTheme
-                              .actionsIconTheme
-                              ?.color,
+                              .extension<IconColors>()
+                              ?.appBarActionDarkIconColor,
                         ),
                       ),
                     ),
