@@ -21,7 +21,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/theme.dart';
@@ -59,14 +59,13 @@ class PlaylistTab extends StatelessWidget {
                     children: [
                       Text(
                         Language.instance.PLAYLIST,
-                        style: Theme.of(context)
-                            .textTheme
-                            .displayLarge
-                            ?.copyWith(fontSize: 20.0),
-                        textAlign: TextAlign.start,
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
                       const SizedBox(height: 2.0),
-                      Text(Language.instance.PLAYLISTS_SUBHEADER),
+                      Text(
+                        Language.instance.PLAYLISTS_SUBHEADER,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                       const SizedBox(
                         height: 16.0,
                       ),
@@ -108,9 +107,8 @@ class PlaylistTab extends StatelessWidget {
                                       }
                                     },
                                     textAlignVertical: TextAlignVertical.center,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineMedium,
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
                                     decoration: inputDecoration(
                                       context,
                                       Language
@@ -121,9 +119,9 @@ class PlaylistTab extends StatelessWidget {
                                 actions: [
                                   TextButton(
                                     child: Text(
-                                      Language.instance.OK,
-                                      style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
+                                      label(
+                                        context,
+                                        Language.instance.OK,
                                       ),
                                     ),
                                     onPressed: () async {
@@ -138,9 +136,9 @@ class PlaylistTab extends StatelessWidget {
                                   ),
                                   TextButton(
                                     child: Text(
-                                      Language.instance.CANCEL,
-                                      style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
+                                      label(
+                                        context,
+                                        Language.instance.CANCEL,
                                       ),
                                     ),
                                     onPressed: Navigator.of(context).maybePop,
@@ -151,9 +149,9 @@ class PlaylistTab extends StatelessWidget {
                           }
                         },
                         child: Text(
-                          Language.instance.CREATE.toUpperCase(),
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
+                          label(
+                            context,
+                            Language.instance.CREATE,
                           ),
                         ),
                       ),
@@ -170,9 +168,9 @@ class PlaylistTab extends StatelessWidget {
                           }
                         },
                         child: Text(
-                          Language.instance.IMPORT.toUpperCase(),
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
+                          label(
+                            context,
+                            Language.instance.IMPORT,
                           ),
                         ),
                       ),
@@ -320,7 +318,7 @@ class PlaylistThumbnail extends StatelessWidget {
         alignment: Alignment.center,
         child: Icon(
           Icons.music_note,
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).colorScheme.primary,
           size: width / 2,
         ),
       );
@@ -357,8 +355,7 @@ class PlaylistTileState extends State<PlaylistTile> {
             ),
             title: Text(
               Language.instance.DELETE,
-              style:
-                  isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
             ),
           ),
         ),
@@ -373,8 +370,7 @@ class PlaylistTileState extends State<PlaylistTile> {
             ),
             title: Text(
               Language.instance.RENAME,
-              style:
-                  isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
             ),
           ),
         ),
@@ -401,7 +397,6 @@ class PlaylistTileState extends State<PlaylistTile> {
                   'NAME',
                   '${widget.playlist.name}',
                 ),
-                style: Theme.of(subContext).textTheme.displaySmall,
               ),
               actions: [
                 TextButton(
@@ -409,11 +404,21 @@ class PlaylistTileState extends State<PlaylistTile> {
                     await Collection.instance.playlistDelete(widget.playlist);
                     Navigator.of(subContext).pop();
                   },
-                  child: Text(Language.instance.YES),
+                  child: Text(
+                    label(
+                      context,
+                      Language.instance.YES,
+                    ),
+                  ),
                 ),
                 TextButton(
                   onPressed: Navigator.of(subContext).pop,
-                  child: Text(Language.instance.NO),
+                  child: Text(
+                    label(
+                      context,
+                      Language.instance.NO,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -451,7 +456,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                       }
                     },
                     textAlignVertical: TextAlignVertical.center,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: Theme.of(context).textTheme.bodyLarge,
                     decoration: inputDecoration(
                       context,
                       Language.instance.PLAYLISTS_TEXT_FIELD_LABEL,
@@ -461,9 +466,9 @@ class PlaylistTileState extends State<PlaylistTile> {
                 actions: [
                   TextButton(
                     child: Text(
-                      Language.instance.OK,
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
+                      label(
+                        context,
+                        Language.instance.OK,
                       ),
                     ),
                     onPressed: () async {
@@ -479,9 +484,9 @@ class PlaylistTileState extends State<PlaylistTile> {
                   ),
                   TextButton(
                     child: Text(
-                      Language.instance.CANCEL,
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
+                      label(
+                        context,
+                        Language.instance.CANCEL,
                       ),
                     ),
                     onPressed: Navigator.of(context).maybePop,
@@ -533,40 +538,9 @@ class PlaylistTileState extends State<PlaylistTile> {
                                 setState(() {});
                               }
                             },
-                            decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.fromLTRB(
-                                12,
-                                30,
-                                12,
-                                6,
-                              ),
-                              hintText:
-                                  Language.instance.PLAYLISTS_TEXT_FIELD_LABEL,
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .iconTheme
-                                      .color!
-                                      .withOpacity(0.4),
-                                  width: 1.8,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .iconTheme
-                                      .color!
-                                      .withOpacity(0.4),
-                                  width: 1.8,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Theme.of(context).primaryColor,
-                                  width: 1.8,
-                                ),
-                              ),
-                              errorStyle: TextStyle(height: 0.0),
+                            decoration: inputDecoration(
+                              context,
+                              '',
                             ),
                           ),
                         ),
@@ -583,15 +557,10 @@ class PlaylistTileState extends State<PlaylistTile> {
                               setState(() {});
                             }
                           },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                              Theme.of(context).primaryColor,
-                            ),
-                          ),
                           child: Text(
-                            Language.instance.RENAME.toUpperCase(),
-                            style: const TextStyle(
-                              letterSpacing: 2.0,
+                            label(
+                              context,
+                              Language.instance.RENAME,
                             ),
                           ),
                         ),
@@ -738,12 +707,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                                 widget.playlist.name.overflow,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium
-                                ?.copyWith(
-                                  letterSpacing: isDesktop ? 0.2 : 0.0,
-                                ),
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
                           const SizedBox(
                             height: 2.0,
@@ -755,7 +719,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                             ),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: Theme.of(context).textTheme.displaySmall,
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ],
                       ),
@@ -790,7 +754,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                             );
                             await handleSelection(result);
                           },
-                          icon: Icon(Icons.more_vert),
+                          icon: const Icon(Icons.more_vert),
                           iconSize: 24.0,
                           splashRadius: 20.0,
                         ),
@@ -1053,9 +1017,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                             .overflow,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .displayLarge
-                                                        ?.copyWith(
-                                                            fontSize: 24.0),
+                                                        .headlineSmall,
                                                     maxLines: 1,
                                                     overflow:
                                                         TextOverflow.ellipsis,
@@ -1065,7 +1027,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                     '${Language.instance.TRACK}: ${widget.playlist.tracks.length}',
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .displaySmall,
+                                                        .bodyMedium,
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                   ),
@@ -1166,10 +1128,10 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                             Alignment.center,
                                                         child: Text(
                                                           '#',
-                                                          style: Theme.of(
-                                                                  context)
-                                                              .textTheme
-                                                              .displayMedium,
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .titleSmall,
                                                         ),
                                                       ),
                                                       Expanded(
@@ -1187,7 +1149,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .displayMedium,
+                                                                .titleSmall,
                                                           ),
                                                         ),
                                                         flex: 3,
@@ -1208,7 +1170,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .displayMedium,
+                                                                .titleSmall,
                                                           ),
                                                         ),
                                                         flex: 2,
@@ -1291,7 +1253,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                       style: isDesktop
                                                                           ? Theme.of(context)
                                                                               .textTheme
-                                                                              .headlineMedium
+                                                                              .bodyLarge
                                                                           : null,
                                                                     ),
                                                                   ),
@@ -1357,7 +1319,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                         : Text(
                                                                             '${track.key + 1}',
                                                                             style:
-                                                                                Theme.of(context).textTheme.headlineMedium,
+                                                                                Theme.of(context).textTheme.bodyLarge,
                                                                           ),
                                                                   ),
                                                                   Expanded(
@@ -1381,7 +1343,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                             .trackName,
                                                                         style: Theme.of(context)
                                                                             .textTheme
-                                                                            .headlineMedium,
+                                                                            .bodyLarge,
                                                                         overflow:
                                                                             TextOverflow.ellipsis,
                                                                       ),
@@ -1409,7 +1371,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                             .albumArtistName,
                                                                         style: Theme.of(context)
                                                                             .textTheme
-                                                                            .headlineMedium,
+                                                                            .bodyLarge,
                                                                         overflow:
                                                                             TextOverflow.ellipsis,
                                                                       ),
@@ -1470,14 +1432,14 @@ class PlaylistScreenState extends State<PlaylistScreen>
                               color: detailsVisible
                                   ? Theme.of(context)
                                       .extension<IconColors>()
-                                      ?.appBarDarkIconColor
+                                      ?.appBarDark
                                   : [
                                       Theme.of(context)
                                           .extension<IconColors>()
-                                          ?.appBarLightIconColor,
+                                          ?.appBarLight,
                                       Theme.of(context)
                                           .extension<IconColors>()
-                                          ?.appBarDarkIconColor,
+                                          ?.appBarDark,
                                     ][(color?.computeLuminance() ??
                                               (Theme.of(context).brightness ==
                                                       Brightness.dark
@@ -1522,22 +1484,23 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                         Language.instance.LIKED_SONGS,
                                   }[widget.playlist.id] ??
                                   widget.playlist.name.overflow,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleLarge
-                                  ?.copyWith(
-                                    color: [
-                                      Color(0xFF212121),
-                                      Colors.white,
-                                    ][(color?.computeLuminance() ??
-                                                (Theme.of(context).brightness ==
-                                                        Brightness.dark
-                                                    ? 0.0
-                                                    : 1.0)) >
-                                            0.5
-                                        ? 0
-                                        : 1],
-                                  ),
+                              style: TextStyle(
+                                color: [
+                                  Theme.of(context)
+                                      .extension<TextColors>()
+                                      ?.lightPrimary,
+                                  Theme.of(context)
+                                      .extension<TextColors>()
+                                      ?.darkPrimary,
+                                ][(color?.computeLuminance() ??
+                                            (Theme.of(context).brightness ==
+                                                    Brightness.dark
+                                                ? 0.0
+                                                : 1.0)) >
+                                        0.5
+                                    ? 0
+                                    : 1],
+                              ),
                             ),
                           ),
                         ),
@@ -1626,11 +1589,17 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                               style:
                                                   Theme.of(context)
                                                       .textTheme
-                                                      .titleLarge
+                                                      .headlineSmall
                                                       ?.copyWith(
                                                         color: [
-                                                          Color(0xFF212121),
-                                                          Colors.white,
+                                                          Theme.of(context)
+                                                              .extension<
+                                                                  TextColors>()
+                                                              ?.lightPrimary,
+                                                          Theme.of(context)
+                                                              .extension<
+                                                                  TextColors>()
+                                                              ?.darkPrimary,
                                                         ][(color?.computeLuminance() ??
                                                                     (Theme.of(context).brightness ==
                                                                             Brightness.dark
@@ -1639,7 +1608,6 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                 0.5
                                                             ? 0
                                                             : 1],
-                                                        fontSize: 24.0,
                                                       ),
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
@@ -1654,11 +1622,17 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                               style:
                                                   Theme.of(context)
                                                       .textTheme
-                                                      .displayMedium
+                                                      .bodyMedium
                                                       ?.copyWith(
                                                         color: [
-                                                          Color(0xFF363636),
-                                                          Color(0xFFD9D9D9),
+                                                          Theme.of(context)
+                                                              .extension<
+                                                                  TextColors>()
+                                                              ?.lightSecondary,
+                                                          Theme.of(context)
+                                                              .extension<
+                                                                  TextColors>()
+                                                              ?.darkSecondary,
                                                         ][(color?.computeLuminance() ??
                                                                     (Theme.of(context).brightness ==
                                                                             Brightness.dark
@@ -1700,8 +1674,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                       heroTag: 'play_now',
                                       backgroundColor: secondary,
                                       foregroundColor: [
-                                        Colors.white,
-                                        Color(0xFF212121)
+                                        kFABDarkForegroundColor,
+                                        kFABLightForegroundColor,
                                       ][(secondary?.computeLuminance() ?? 0.0) >
                                               0.5
                                           ? 1
@@ -1743,8 +1717,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                       heroTag: 'shuffle',
                                       backgroundColor: secondary,
                                       foregroundColor: [
-                                        Colors.white,
-                                        Color(0xFF212121)
+                                        kFABDarkForegroundColor,
+                                        kFABLightForegroundColor,
                                       ][(secondary?.computeLuminance() ?? 0.0) >
                                               0.5
                                           ? 1
@@ -1776,6 +1750,55 @@ class PlaylistScreenState extends State<PlaylistScreen>
                               if (!tracks[i].trackArtistNamesNotPresent)
                                 tracks[i].trackArtistNames.take(2).join(', ')
                             ].join(' • ');
+
+                            void handler() async {
+                              showDialog(
+                                context: context,
+                                builder: (subContext) => AlertDialog(
+                                  title: Text(
+                                    Language.instance.REMOVE,
+                                  ),
+                                  content: Text(
+                                    Language.instance
+                                        .COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY
+                                        .replaceAll(
+                                          'TRACK_NAME',
+                                          tracks[i].trackName,
+                                        )
+                                        .replaceAll('PLAYLIST_NAME',
+                                            widget.playlist.name),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () async {
+                                        await Collection.instance
+                                            .playlistRemoveTrack(
+                                          widget.playlist,
+                                          tracks[i],
+                                        );
+
+                                        Navigator.of(subContext).pop();
+                                        setState(() {});
+                                      },
+                                      child: Text(label(
+                                        context,
+                                        Language.instance.YES,
+                                      )),
+                                    ),
+                                    TextButton(
+                                      onPressed: Navigator.of(subContext).pop,
+                                      child: Text(
+                                        label(
+                                          context,
+                                          Language.instance.NO,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+
                             return Material(
                               color: Colors.transparent,
                               child: InkWell(
@@ -1788,49 +1811,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                   ],
                                   index: i,
                                 ),
-                                onLongPress: () async {
-                                  showDialog(
-                                    context: context,
-                                    builder: (subContext) => AlertDialog(
-                                      title: Text(
-                                        Language.instance.REMOVE,
-                                      ),
-                                      content: Text(
-                                        Language.instance
-                                            .COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY
-                                            .replaceAll(
-                                              'TRACK_NAME',
-                                              tracks[i].trackName,
-                                            )
-                                            .replaceAll('PLAYLIST_NAME',
-                                                widget.playlist.name),
-                                        style: Theme.of(subContext)
-                                            .textTheme
-                                            .displaySmall,
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () async {
-                                            await Collection.instance
-                                                .playlistRemoveTrack(
-                                              widget.playlist,
-                                              tracks[i],
-                                            );
-
-                                            Navigator.of(subContext).pop();
-                                            setState(() {});
-                                          },
-                                          child: Text(Language.instance.YES),
-                                        ),
-                                        TextButton(
-                                          onPressed:
-                                              Navigator.of(subContext).pop,
-                                          child: Text(Language.instance.NO),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
+                                onLongPress: handler,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -1853,7 +1834,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                               (i + 1).toString(),
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .displaySmall
+                                                  .bodyMedium
                                                   ?.copyWith(fontSize: 18.0),
                                             ),
                                           ),
@@ -1873,7 +1854,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                   maxLines: 1,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .displayMedium,
+                                                      .titleMedium,
                                                 ),
                                                 if (subtitle.isNotEmpty) ...[
                                                   const SizedBox(
@@ -1884,9 +1865,6 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     maxLines: 1,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .displaySmall,
                                                   ),
                                                 ],
                                               ],
@@ -1898,59 +1876,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                             height: 64.0,
                                             alignment: Alignment.center,
                                             child: IconButton(
-                                              onPressed: () async {
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (subContext) =>
-                                                      AlertDialog(
-                                                    title: Text(
-                                                      Language.instance.REMOVE,
-                                                    ),
-                                                    content: Text(
-                                                      Language.instance
-                                                          .COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY
-                                                          .replaceAll(
-                                                            'TRACK_NAME',
-                                                            tracks[i].trackName,
-                                                          )
-                                                          .replaceAll(
-                                                              'PLAYLIST_NAME',
-                                                              widget.playlist
-                                                                  .name),
-                                                      style:
-                                                          Theme.of(subContext)
-                                                              .textTheme
-                                                              .displaySmall,
-                                                    ),
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed: () async {
-                                                          await Collection
-                                                              .instance
-                                                              .playlistRemoveTrack(
-                                                            widget.playlist,
-                                                            tracks[i],
-                                                          );
-
-                                                          Navigator.of(
-                                                                  subContext)
-                                                              .pop();
-                                                          setState(() {});
-                                                        },
-                                                        child: Text(Language
-                                                            .instance.YES),
-                                                      ),
-                                                      TextButton(
-                                                        onPressed: Navigator.of(
-                                                                subContext)
-                                                            .pop,
-                                                        child: Text(Language
-                                                            .instance.NO),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                );
-                                              },
+                                              onPressed: handler,
                                               icon: Icon(
                                                 Icons.more_vert,
                                               ),

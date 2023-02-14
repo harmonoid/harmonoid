@@ -24,7 +24,7 @@ import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/theme.dart';
@@ -149,25 +149,21 @@ class _ArtistTabState extends State<ArtistTab> {
                               {
                                 return Text(
                                   artist.artistName[0].toUpperCase(),
-                                  style:
-                                      Theme.of(context).textTheme.displayLarge,
+                                  style: Theme.of(context).textTheme.bodyLarge,
                                 );
                               }
                             case ArtistsSort.dateAdded:
                               {
                                 return Text(
                                   '${artist.timeAdded.label}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineMedium,
+                                  style: Theme.of(context).textTheme.bodyLarge,
                                 );
                               }
 
                             default:
                               return Text(
                                 '',
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               );
                           }
                         },
@@ -315,8 +311,7 @@ class ArtistTile extends StatelessWidget {
                                 artist.artistName.overflow,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
-                                style:
-                                    Theme.of(context).textTheme.displayMedium,
+                                style: Theme.of(context).textTheme.titleMedium,
                               ),
                               const SizedBox(
                                 height: 2.0,
@@ -327,7 +322,7 @@ class ArtistTile extends StatelessWidget {
                                     .replaceAll('N', '${artist.albums.length}'),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
-                                style: Theme.of(context).textTheme.displaySmall,
+                                style: Theme.of(context).textTheme.bodyMedium,
                               ),
                             ],
                           ),
@@ -433,7 +428,7 @@ class ArtistTile extends StatelessWidget {
                 Spacer(),
                 Text(
                   artist.artistName.overflow,
-                  style: Theme.of(context).textTheme.displayMedium,
+                  style: Theme.of(context).textTheme.titleSmall,
                   textAlign: TextAlign.left,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -538,7 +533,7 @@ class ArtistTile extends StatelessWidget {
                                         maxLines: 1,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .displayMedium,
+                                            .titleMedium,
                                       ),
                                       const SizedBox(
                                         height: 2.0,
@@ -553,7 +548,7 @@ class ArtistTile extends StatelessWidget {
                                         maxLines: 1,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .displaySmall,
+                                            .bodyMedium,
                                       ),
                                     ],
                                   ),
@@ -666,10 +661,7 @@ class ArtistTile extends StatelessWidget {
                       const Spacer(),
                       Text(
                         artist.artistName.overflow,
-                        style: Theme.of(context)
-                            .textTheme
-                            .displayMedium
-                            ?.copyWith(
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               fontSize:
                                   helper.artistTileNormalDensity ? null : 14.0,
                             ),
@@ -958,7 +950,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                     widget.artist.artistName,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .displayLarge
+                                                        .headlineSmall
                                                         ?.copyWith(
                                                             fontSize: 24.0),
                                                     maxLines: 1,
@@ -970,7 +962,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                     '${Language.instance.TRACK}: ${tracks.length}\n${Language.instance.ALBUM}: ${widget.artist.albums.length}',
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .displaySmall,
+                                                        .bodyMedium,
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                   ),
@@ -1067,10 +1059,10 @@ class ArtistScreenState extends State<ArtistScreen>
                                                             Alignment.center,
                                                         child: Text(
                                                           '#',
-                                                          style: Theme.of(
-                                                                  context)
-                                                              .textTheme
-                                                              .displayMedium,
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .titleSmall,
                                                         ),
                                                       ),
                                                       Expanded(
@@ -1087,7 +1079,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .displayMedium,
+                                                                .titleSmall,
                                                           ),
                                                         ),
                                                         flex: 3,
@@ -1106,7 +1098,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .displayMedium,
+                                                                .titleSmall,
                                                           ),
                                                         ),
                                                         flex: 2,
@@ -1248,7 +1240,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                         : Text(
                                                                             '${track.value.trackNumber}',
                                                                             style:
-                                                                                Theme.of(context).textTheme.headlineMedium,
+                                                                                Theme.of(context).textTheme.bodyLarge,
                                                                           ),
                                                                   ),
                                                                   Expanded(
@@ -1269,7 +1261,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                             .trackName,
                                                                         style: Theme.of(context)
                                                                             .textTheme
-                                                                            .headlineMedium,
+                                                                            .bodyLarge,
                                                                         overflow:
                                                                             TextOverflow.ellipsis,
                                                                       ),
@@ -1284,7 +1276,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                         child: HyperLink(
                                                                           style: Theme.of(context)
                                                                               .textTheme
-                                                                              .headlineMedium,
+                                                                              .bodyLarge,
                                                                           text:
                                                                               TextSpan(
                                                                             children: [
@@ -1410,14 +1402,14 @@ class ArtistScreenState extends State<ArtistScreen>
                                 color: detailsVisible
                                     ? Theme.of(context)
                                         .extension<IconColors>()
-                                        ?.appBarDarkIconColor
+                                        ?.appBarDark
                                     : [
                                         Theme.of(context)
                                             .extension<IconColors>()
-                                            ?.appBarLightIconColor,
+                                            ?.appBarLight,
                                         Theme.of(context)
                                             .extension<IconColors>()
-                                            ?.appBarDarkIconColor,
+                                            ?.appBarDark,
                                       ][(color?.computeLuminance() ??
                                                 (Theme.of(context).brightness ==
                                                         Brightness.dark
@@ -1443,7 +1435,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                       : [
                                           Theme.of(context)
                                               .extension<IconColors>()
-                                              ?.appBarActionLightIconColor,
+                                              ?.appBarActionLight,
                                           Theme.of(context)
                                               .extension<IconColors>()
                                               ?.appBarActionDarkIconColor,
@@ -1476,23 +1468,23 @@ class ArtistScreenState extends State<ArtistScreen>
                                 opacity: value,
                                 child: Text(
                                   widget.artist.artistName.overflow,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleLarge
-                                      ?.copyWith(
-                                        color: [
-                                          Color(0xFF212121),
-                                          Colors.white,
-                                        ][(color?.computeLuminance() ??
-                                                    (Theme.of(context)
-                                                                .brightness ==
-                                                            Brightness.dark
-                                                        ? 0.0
-                                                        : 1.0)) >
-                                                0.5
-                                            ? 0
-                                            : 1],
-                                      ),
+                                  style: TextStyle(
+                                    color: [
+                                      Theme.of(context)
+                                          .extension<TextColors>()
+                                          ?.lightPrimary,
+                                      Theme.of(context)
+                                          .extension<TextColors>()
+                                          ?.darkPrimary,
+                                    ][(color?.computeLuminance() ??
+                                                (Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? 0.0
+                                                    : 1.0)) >
+                                            0.5
+                                        ? 0
+                                        : 1],
+                                  ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -1564,11 +1556,17 @@ class ArtistScreenState extends State<ArtistScreen>
                                                       .overflow,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .titleLarge
+                                                      .headlineSmall
                                                       ?.copyWith(
                                                         color: [
-                                                          Color(0xFF212121),
-                                                          Colors.white,
+                                                          Theme.of(context)
+                                                              .extension<
+                                                                  TextColors>()
+                                                              ?.lightPrimary,
+                                                          Theme.of(context)
+                                                              .extension<
+                                                                  TextColors>()
+                                                              ?.darkPrimary,
                                                         ][(color?.computeLuminance() ??
                                                                     (Theme.of(context).brightness ==
                                                                             Brightness.dark
@@ -1577,7 +1575,6 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                 0.5
                                                             ? 0
                                                             : 1],
-                                                        fontSize: 24.0,
                                                       ),
                                                   maxLines: 1,
                                                   overflow:
@@ -1596,11 +1593,17 @@ class ArtistScreenState extends State<ArtistScreen>
                                                   maxLines: 1,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .displayMedium
+                                                      .bodyMedium
                                                       ?.copyWith(
                                                         color: [
-                                                          Color(0xFF363636),
-                                                          Color(0xFFD9D9D9),
+                                                          Theme.of(context)
+                                                              .extension<
+                                                                  TextColors>()
+                                                              ?.lightSecondary,
+                                                          Theme.of(context)
+                                                              .extension<
+                                                                  TextColors>()
+                                                              ?.darkSecondary,
                                                         ][(color?.computeLuminance() ??
                                                                     (Theme.of(context).brightness ==
                                                                             Brightness.dark
@@ -1640,9 +1643,9 @@ class ArtistScreenState extends State<ArtistScreen>
                                         child: FloatingActionButton(
                                           heroTag: 'play_now',
                                           backgroundColor: secondary,
-                                          foregroundColor: [
-                                            Colors.white,
-                                            Color(0xFF212121)
+                                          foregroundColor: const [
+                                            kFABDarkForegroundColor,
+                                            kFABLightForegroundColor,
                                           ][(secondary?.computeLuminance() ??
                                                       0.0) >
                                                   0.5
@@ -1684,9 +1687,9 @@ class ArtistScreenState extends State<ArtistScreen>
                                         child: FloatingActionButton(
                                           heroTag: 'shuffle',
                                           backgroundColor: secondary,
-                                          foregroundColor: [
-                                            Colors.white,
-                                            Color(0xFF212121)
+                                          foregroundColor: const [
+                                            kFABDarkForegroundColor,
+                                            kFABLightForegroundColor,
                                           ][(secondary?.computeLuminance() ??
                                                       0.0) >
                                                   0.5
@@ -1714,178 +1717,147 @@ class ArtistScreenState extends State<ArtistScreen>
                           ),
                           SliverList(
                             delegate: SliverChildBuilderDelegate(
-                              (context, i) => Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: () => Playback.instance.open(
-                                    [
-                                      ...tracks,
-                                      if (Configuration
-                                          .instance.seamlessPlayback)
-                                        ...[...Collection.instance.tracks]
-                                          ..shuffle(),
-                                    ],
-                                    index: i,
-                                  ),
-                                  onLongPress: () async {
-                                    var result;
-                                    await showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      context: context,
-                                      builder: (context) => Container(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: trackPopupMenuItems(
-                                                  tracks[i], context)
-                                              .map(
-                                                (item) => PopupMenuItem(
-                                                  child: item.child,
-                                                  onTap: () =>
-                                                      result = item.value,
-                                                ),
-                                              )
-                                              .toList(),
-                                        ),
-                                      ),
-                                    );
-                                    await trackPopupMenuHandle(
-                                      context,
-                                      tracks[i],
-                                      result,
-                                      recursivelyPopNavigatorOnDeleteIf: () =>
-                                          widget.artist.tracks.isEmpty,
-                                    );
-                                  },
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        height: 64.0,
-                                        alignment: Alignment.center,
-                                        margin: const EdgeInsets.symmetric(
-                                            vertical: 4.0),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            const SizedBox(width: 12.0),
-                                            Container(
-                                              height: 56.0,
-                                              width: 56.0,
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                '${tracks[i].trackNumber}',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .displaySmall
-                                                    ?.copyWith(fontSize: 18.0),
+                              (context, i) {
+                                void handler() async {
+                                  var result;
+                                  await showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    context: context,
+                                    builder: (context) => Container(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: trackPopupMenuItems(
+                                                tracks[i], context)
+                                            .map(
+                                              (item) => PopupMenuItem(
+                                                child: item.child,
+                                                onTap: () =>
+                                                    result = item.value,
                                               ),
-                                            ),
-                                            const SizedBox(width: 12.0),
-                                            Expanded(
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    tracks[i]
-                                                        .trackName
-                                                        .overflow,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    maxLines: 1,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .displayMedium,
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 2.0,
-                                                  ),
-                                                  Text(
-                                                    [
+                                            )
+                                            .toList(),
+                                      ),
+                                    ),
+                                  );
+                                  await trackPopupMenuHandle(
+                                    context,
+                                    tracks[i],
+                                    result,
+                                    recursivelyPopNavigatorOnDeleteIf: () =>
+                                        widget.artist.tracks.isEmpty,
+                                  );
+                                }
+
+                                return Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () => Playback.instance.open(
+                                      [
+                                        ...tracks,
+                                        if (Configuration
+                                            .instance.seamlessPlayback)
+                                          ...[...Collection.instance.tracks]
+                                            ..shuffle(),
+                                      ],
+                                      index: i,
+                                    ),
+                                    onLongPress: handler,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          height: 64.0,
+                                          alignment: Alignment.center,
+                                          margin: const EdgeInsets.symmetric(
+                                              vertical: 4.0),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              const SizedBox(width: 12.0),
+                                              Container(
+                                                height: 56.0,
+                                                width: 56.0,
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  '${tracks[i].trackNumber}',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium
+                                                      ?.copyWith(
+                                                          fontSize: 18.0),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 12.0),
+                                              Expanded(
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
                                                       tracks[i]
-                                                              .duration
-                                                              ?.label ??
-                                                          Duration.zero.label,
-                                                      if (!tracks[i]
-                                                          .albumNameNotPresent)
-                                                        tracks[i].albumName,
-                                                    ].join(' • '),
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    maxLines: 1,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .displaySmall,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            const SizedBox(width: 12.0),
-                                            Container(
-                                              width: 64.0,
-                                              height: 64.0,
-                                              alignment: Alignment.center,
-                                              child: IconButton(
-                                                onPressed: () async {
-                                                  var result;
-                                                  await showModalBottomSheet(
-                                                    isScrollControlled: true,
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        Container(
-                                                      child: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children:
-                                                            trackPopupMenuItems(
-                                                                    tracks[i],
-                                                                    context)
-                                                                .map(
-                                                                  (item) =>
-                                                                      PopupMenuItem(
-                                                                    child: item
-                                                                        .child,
-                                                                    onTap: () =>
-                                                                        result =
-                                                                            item.value,
-                                                                  ),
-                                                                )
-                                                                .toList(),
-                                                      ),
+                                                          .trackName
+                                                          .overflow,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 1,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .titleMedium,
                                                     ),
-                                                  );
-                                                  await trackPopupMenuHandle(
-                                                    context,
-                                                    tracks[i],
-                                                    result,
-                                                    recursivelyPopNavigatorOnDeleteIf:
-                                                        () => widget.artist
-                                                            .tracks.isEmpty,
-                                                  );
-                                                },
-                                                icon: Icon(
-                                                  Icons.more_vert,
+                                                    const SizedBox(height: 2.0),
+                                                    Text(
+                                                      [
+                                                        tracks[i]
+                                                                .duration
+                                                                ?.label ??
+                                                            Duration.zero.label,
+                                                        if (!tracks[i]
+                                                            .albumNameNotPresent)
+                                                          tracks[i].albumName,
+                                                      ].join(' • '),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 1,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium,
+                                                    ),
+                                                  ],
                                                 ),
-                                                iconSize: 24.0,
-                                                splashRadius: 20.0,
                                               ),
-                                            ),
-                                          ],
+                                              const SizedBox(width: 12.0),
+                                              Container(
+                                                width: 64.0,
+                                                height: 64.0,
+                                                alignment: Alignment.center,
+                                                child: IconButton(
+                                                  onPressed: handler,
+                                                  icon: Icon(
+                                                    Icons.more_vert,
+                                                  ),
+                                                  iconSize: 24.0,
+                                                  splashRadius: 20.0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      const Divider(
-                                        height: 1.0,
-                                        thickness: 1.0,
-                                        indent: 80.0,
-                                      ),
-                                    ],
+                                        const Divider(
+                                          height: 1.0,
+                                          thickness: 1.0,
+                                          indent: 80.0,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ),
+                                );
+                              },
                               childCount: tracks.length,
                             ),
                           ),

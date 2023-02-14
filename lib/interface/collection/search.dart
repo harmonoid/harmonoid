@@ -18,7 +18,7 @@ import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/interface/collection/track.dart';
@@ -35,57 +35,57 @@ class SearchTabState extends State<SearchTab> {
   List<Widget> tracks = <Widget>[];
   List<Widget> artists = <Widget>[];
   int index = 0;
-  late Future<void> Function() listener;
+
+  void listener() {
+    albums = <Widget>[];
+    tracks = <Widget>[];
+    artists = <Widget>[];
+    final result = Collection.instance.search(widget.query.value);
+    for (final media in result) {
+      if (media is Album) {
+        albums.addAll(
+          [
+            AlbumTile(
+              height: kAlbumTileHeight,
+              width: kAlbumTileWidth,
+              album: media,
+            ),
+            const SizedBox(
+              width: 16.0,
+            ),
+          ],
+        );
+      }
+      if (media is Artist) {
+        artists.addAll(
+          [
+            ArtistTile(
+              height: kArtistTileHeight,
+              width: kArtistTileWidth,
+              artist: media,
+            ),
+            const SizedBox(
+              width: 16.0,
+            ),
+          ],
+        );
+      } else if (media is Track) {
+        tracks.add(
+          TrackTile(
+            track: media,
+            index: 0,
+            group: [
+              media,
+            ],
+          ),
+        );
+      }
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    listener = () async {
-      albums = <Widget>[];
-      tracks = <Widget>[];
-      artists = <Widget>[];
-      final result = Collection.instance.search(widget.query.value);
-      for (final media in result) {
-        if (media is Album) {
-          albums.addAll(
-            [
-              AlbumTile(
-                height: kAlbumTileHeight,
-                width: kAlbumTileWidth,
-                album: media,
-              ),
-              const SizedBox(
-                width: 16.0,
-              ),
-            ],
-          );
-        }
-        if (media is Artist) {
-          artists.addAll(
-            [
-              ArtistTile(
-                height: kArtistTileHeight,
-                width: kArtistTileWidth,
-                artist: media,
-              ),
-              const SizedBox(
-                width: 16.0,
-              ),
-            ],
-          );
-        } else if (media is Track) {
-          tracks.add(
-            TrackTile(
-              track: media,
-              index: 0,
-              group: [
-                media,
-              ],
-            ),
-          );
-        }
-      }
-    };
     widget.query.addListener(listener);
     listener();
   }

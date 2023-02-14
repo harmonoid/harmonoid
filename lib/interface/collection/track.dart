@@ -11,7 +11,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:provider/provider.dart';
-import 'package:animations/animations.dart';
 import 'package:desktop/desktop.dart' as desktop;
 import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
@@ -26,7 +25,7 @@ import 'package:harmonoid/interface/collection/artist.dart';
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class TrackTab extends StatefulWidget {
@@ -81,9 +80,9 @@ class _TrackTabState extends State<TrackTab> {
                             .color
                             ?.withOpacity(0.2) ??
                         Theme.of(context).dividerColor.withOpacity(0.4),
-                    borderHighlightColor: Theme.of(context).primaryColor,
-                    borderIndicatorColor: Theme.of(context).primaryColor,
-                    borderHoverColor: Theme.of(context).primaryColor,
+                    borderHighlightColor: Theme.of(context).colorScheme.primary,
+                    borderIndicatorColor: Theme.of(context).colorScheme.primary,
+                    borderHoverColor: Theme.of(context).colorScheme.primary,
                   ),
                   child: Stack(
                     alignment: Alignment.topRight,
@@ -165,7 +164,7 @@ class _TrackTabState extends State<TrackTab> {
                                 Language.instance.ALBUM_SINGLE,
                                 Language.instance.YEAR
                               ][index],
-                              style: Theme.of(context).textTheme.displayMedium,
+                              style: Theme.of(context).textTheme.titleSmall,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -193,8 +192,7 @@ class _TrackTabState extends State<TrackTab> {
                                   collection.tracks[index].year.toString(),
                                 ][property],
                                 overflow: TextOverflow.ellipsis,
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               );
                             } else if (property == 2) {
                               final elements = <TextSpan>[];
@@ -234,16 +232,14 @@ class _TrackTabState extends State<TrackTab> {
                               });
                               elements.removeLast();
                               return HyperLink(
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium,
+                                style: Theme.of(context).textTheme.bodyLarge,
                                 text: TextSpan(
                                   children: elements,
                                 ),
                               );
                             } else if (property == 3) {
                               return HyperLink(
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium,
+                                style: Theme.of(context).textTheme.bodyLarge,
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
@@ -310,9 +306,11 @@ class _TrackTabState extends State<TrackTab> {
                           mini: true,
                           tooltip: Language.instance.PLAY_ALL,
                           child: Icon(Icons.play_arrow),
-                          foregroundColor:
-                              Theme.of(context).appBarTheme.iconTheme?.color,
-                          backgroundColor: Theme.of(context).cardColor,
+                          foregroundColor: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.secondaryContainer,
                         ),
                       ),
                       Positioned(
@@ -327,9 +325,11 @@ class _TrackTabState extends State<TrackTab> {
                           mini: true,
                           tooltip: Language.instance.SHUFFLE,
                           child: Icon(Icons.shuffle),
-                          foregroundColor:
-                              Theme.of(context).appBarTheme.iconTheme?.color,
-                          backgroundColor: Theme.of(context).cardColor,
+                          foregroundColor: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.secondaryContainer,
                         ),
                       ),
                     ],
@@ -364,29 +364,27 @@ class _TrackTabState extends State<TrackTab> {
                             {
                               return Text(
                                 track.trackName[0].toUpperCase(),
-                                style: Theme.of(context).textTheme.displayLarge,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               );
                             }
                           case TracksSort.dateAdded:
                             {
                               return Text(
                                 '${track.timeAdded.label}',
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               );
                             }
                           case TracksSort.year:
                             {
                               return Text(
                                 '${track.year}',
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               );
                             }
                           default:
                             return Text(
                               '',
-                              style: Theme.of(context).textTheme.headlineMedium,
+                              style: Theme.of(context).textTheme.bodyLarge,
                             );
                         }
                       },
@@ -560,9 +558,7 @@ class TrackTileState extends State<TrackTile> {
                             : widget.leading ??
                                 Text(
                                   '${widget.track.trackNumber}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineMedium,
+                                  style: Theme.of(context).textTheme.bodyLarge,
                                 ),
                       ),
                       Expanded(
@@ -572,7 +568,7 @@ class TrackTileState extends State<TrackTile> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             widget.track.trackName,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: Theme.of(context).textTheme.bodyLarge,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -616,7 +612,7 @@ class TrackTileState extends State<TrackTile> {
                             });
                             elements.removeLast();
                             return HyperLink(
-                              style: Theme.of(context).textTheme.headlineMedium,
+                              style: Theme.of(context).textTheme.bodyLarge,
                               text: TextSpan(
                                 children: elements,
                               ),
@@ -632,7 +628,7 @@ class TrackTileState extends State<TrackTile> {
                           alignment: Alignment.centerRight,
                           child: Text(
                             widget.track.year.toString(),
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: Theme.of(context).textTheme.bodyLarge,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -708,9 +704,8 @@ class TrackTileState extends State<TrackTile> {
                                     widget.track.trackName.overflow,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displayMedium,
+                                    style:
+                                        Theme.of(context).textTheme.titleMedium,
                                   ),
                               if (widget.subtitle != null) ...[
                                 const SizedBox(
@@ -725,8 +720,7 @@ class TrackTileState extends State<TrackTile> {
                                   subtitle,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
-                                  style:
-                                      Theme.of(context).textTheme.displaySmall,
+                                  style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                               ],
                             ],

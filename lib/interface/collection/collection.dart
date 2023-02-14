@@ -24,7 +24,7 @@ import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/interface/collection/track.dart';
@@ -204,9 +204,10 @@ class CollectionScreenState extends State<CollectionScreen>
                             left: 0.0,
                             bottom: 0.0,
                             child: Card(
+                              // NOTE: Force elevation.
+                              elevation: kDefaultCardElevation,
                               clipBehavior: Clip.antiAlias,
                               margin: EdgeInsets.all(16.0),
-                              elevation: Theme.of(context).cardTheme.elevation,
                               child: Container(
                                 width: 328.0,
                                 height: 56.0,
@@ -215,26 +216,12 @@ class CollectionScreenState extends State<CollectionScreen>
                                   mainAxisSize: MainAxisSize.max,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    refresh.progress == null
-                                        ? LinearProgressIndicator(
-                                            value: null,
-                                            valueColor: AlwaysStoppedAnimation(
-                                              Theme.of(context).primaryColor,
-                                            ),
-                                            backgroundColor: Theme.of(context)
-                                                .primaryColor
-                                                .withOpacity(0.4),
-                                          )
-                                        : LinearProgressIndicator(
-                                            value: (refresh.progress ?? 0) /
-                                                refresh.total,
-                                            valueColor: AlwaysStoppedAnimation(
-                                              Theme.of(context).primaryColor,
-                                            ),
-                                            backgroundColor: Theme.of(context)
-                                                .primaryColor
-                                                .withOpacity(0.4),
-                                          ),
+                                    LinearProgressIndicator(
+                                      value: refresh.progress == null
+                                          ? null
+                                          : (refresh.progress ?? 0) /
+                                              refresh.total,
+                                    ),
                                     Expanded(
                                       child: Container(
                                         padding: EdgeInsets.all(12.0),
@@ -269,7 +256,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                                 textAlign: TextAlign.center,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headlineMedium,
+                                                    .bodyLarge,
                                               ),
                                             ),
                                             SizedBox(
@@ -323,20 +310,14 @@ class CollectionScreenState extends State<CollectionScreen>
                                   Language.instance.TRACK,
                                   Language.instance.ARTIST,
                                   Language.instance.PLAYLIST,
-                                ].map(
+                                ].asMap().entries.map(
                                   (tab) {
-                                    final _index = [
-                                      Language.instance.ALBUM,
-                                      Language.instance.TRACK,
-                                      Language.instance.ARTIST,
-                                      Language.instance.PLAYLIST,
-                                    ].indexOf(tab);
                                     return InkWell(
                                       borderRadius: BorderRadius.circular(4.0),
                                       onTap: () {
-                                        if (index.value == _index) return;
+                                        if (index.value == tab.key) return;
                                         setState(() {
-                                          index.value = _index;
+                                          index.value = tab.key;
                                         });
                                       },
                                       child: Container(
@@ -349,19 +330,21 @@ class CollectionScreenState extends State<CollectionScreen>
                                           horizontal: 4.0,
                                         ),
                                         child: Text(
-                                          tab.toUpperCase(),
+                                          tab.value.toUpperCase(),
                                           style: TextStyle(
                                             fontSize: 20.0,
-                                            fontWeight: index.value == _index
+                                            fontWeight: index.value == tab.key
                                                 ? FontWeight.w600
                                                 : FontWeight.w300,
-                                            color: index.value == _index
+                                            color: index.value == tab.key
                                                 ? Theme.of(context)
-                                                    .tabBarTheme
-                                                    .labelColor
+                                                    .textTheme
+                                                    .bodyLarge
+                                                    ?.color
                                                 : Theme.of(context)
-                                                    .tabBarTheme
-                                                    .unselectedLabelColor,
+                                                    .textTheme
+                                                    .bodyMedium
+                                                    ?.color,
                                           ),
                                         ),
                                       ),
@@ -403,9 +386,8 @@ class CollectionScreenState extends State<CollectionScreen>
                                       node.requestFocus();
                                     },
                                     textAlignVertical: TextAlignVertical.center,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineMedium,
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
                                     decoration: inputDecoration(
                                       context,
                                       Language
@@ -418,8 +400,8 @@ class CollectionScreenState extends State<CollectionScreen>
                                             Icons.search,
                                             size: 20.0,
                                             color: Theme.of(context)
-                                                .iconTheme
-                                                .color,
+                                                .colorScheme
+                                                .onSurfaceVariant,
                                           ),
                                         ),
                                       ),
