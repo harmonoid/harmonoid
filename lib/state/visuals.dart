@@ -88,11 +88,15 @@ class Visuals extends ChangeNotifier {
       try {
         // Android.
         final corePalette = await DynamicColorPlugin.getCorePalette();
-        systemLightColorScheme =
-            corePalette?.toColorScheme(brightness: Brightness.light);
-        systemDarkColorScheme =
-            corePalette?.toColorScheme(brightness: Brightness.dark);
-        return;
+        if (corePalette != null) {
+          systemLightColorScheme = corePalette.toColorScheme(
+            brightness: Brightness.light,
+          );
+          systemDarkColorScheme = corePalette.toColorScheme(
+            brightness: Brightness.dark,
+          );
+          return;
+        }
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
@@ -109,8 +113,8 @@ class Visuals extends ChangeNotifier {
             seedColor: accentColor,
             brightness: Brightness.dark,
           );
+          return;
         }
-        return;
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
@@ -203,6 +207,7 @@ class Visuals extends ChangeNotifier {
     context ??= this.context;
     debugPrint(themeMode.toString());
     debugPrint(standard.toString());
+    debugPrint(context.toString());
     if (context != null) {
       if (Platform.isAndroid || Platform.isIOS) {
         final brightness = Theme.of(context).brightness == Brightness.dark
