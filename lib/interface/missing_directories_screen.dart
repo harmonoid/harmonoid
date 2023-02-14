@@ -16,7 +16,7 @@ import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -140,7 +140,10 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
             const SizedBox(width: 16.0),
             TextButton(
               child: Text(
-                Language.instance.REMOVE.toUpperCase(),
+                label(
+                  context,
+                  Language.instance.REMOVE,
+                ),
               ),
               onPressed: () async {
                 try {
@@ -169,7 +172,12 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                         actions: [
                           TextButton(
                             onPressed: Navigator.of(context).pop,
-                            child: Text(Language.instance.OK),
+                            child: Text(
+                              label(
+                                context,
+                                Language.instance.OK,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -192,7 +200,12 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                             onPressed: () async {
                               Navigator.of(subContext).pop();
                             },
-                            child: Text(Language.instance.OK),
+                            child: Text(
+                              label(
+                                context,
+                                Language.instance.OK,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -243,10 +256,10 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                               0.5
                           ? Theme.of(context)
                               .extension<IconColors>()
-                              ?.appBarLightIconColor
+                              ?.appBarLight
                           : Theme.of(context)
                               .extension<IconColors>()
-                              ?.appBarDarkIconColor,
+                              ?.appBarDark,
                       onTap: refresh,
                     ),
                     color: Theme.of(context).colorScheme.error,

@@ -8,6 +8,7 @@
 
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/state/now_playing_color_palette.dart';
 import 'package:provider/provider.dart';
 import 'package:window_plus/window_plus.dart';
 import 'package:media_library/media_library.dart';
@@ -19,12 +20,13 @@ import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/interface/collection/track.dart';
 import 'package:harmonoid/constants/language.dart';
 
-/// LEGACY [Widget].
-/// Usage of this screen may still be enabled from the "Miscellaneous" settings.
+// Legacy now playing screen.
+// Now [ModernNowPlayingScreen] is used on desktop.
+// This may still be used after enabling it from settings.
 
 class NowPlayingScreen extends StatefulWidget {
   const NowPlayingScreen({Key? key}) : super(key: key);
@@ -73,12 +75,6 @@ class NowPlayingState extends State<NowPlayingScreen>
     return Scaffold(
       body: Stack(
         children: [
-          DesktopAppBar(
-            leading: NavigatorPopButton(
-              onTap: DesktopNowPlayingController.instance.hide,
-            ),
-            title: Language.instance.NOW_PLAYING,
-          ),
           Container(
             margin: EdgeInsets.only(
               top: WindowPlus.instance.captionHeight + kDesktopAppBarHeight,
@@ -89,10 +85,6 @@ class NowPlayingState extends State<NowPlayingScreen>
                 Expanded(
                   child: Center(
                     child: Container(
-                      constraints: BoxConstraints(
-                        maxWidth: 640.0,
-                        maxHeight: 640.0,
-                      ),
                       padding: EdgeInsets.all(32.0),
                       child: MouseRegion(
                         onEnter: (e) => setState(() {
@@ -104,26 +96,20 @@ class NowPlayingState extends State<NowPlayingScreen>
                         child: Card(
                           clipBehavior: Clip.antiAlias,
                           elevation: kDefaultHeavyElevation,
-                          child: LayoutBuilder(
-                            builder: (context, constraints) => AnimatedSwitcher(
-                              duration: Theme.of(context)
-                                      .extension<AnimationDuration>()
-                                      ?.medium ??
-                                  Duration.zero,
-                              transitionBuilder: (child, animation) =>
-                                  FadeTransition(
-                                opacity: animation,
-                                child: child,
-                              ),
-                              child: ExtendedImage(
-                                key: Key(index.toString()),
-                                image: getAlbumArt(tracks[index]),
-                                fit: BoxFit.cover,
-                                height: min(constraints.maxHeight,
-                                    constraints.maxWidth),
-                                width: min(constraints.maxHeight,
-                                    constraints.maxWidth),
-                              ),
+                          child: AnimatedSwitcher(
+                            duration: Theme.of(context)
+                                    .extension<AnimationDuration>()
+                                    ?.medium ??
+                                Duration.zero,
+                            transitionBuilder: (child, animation) =>
+                                FadeTransition(
+                              opacity: animation,
+                              child: child,
+                            ),
+                            child: ExtendedImage(
+                              key: Key(index.toString()),
+                              image: getAlbumArt(tracks[index]),
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
@@ -131,10 +117,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                     ),
                   ),
                 ),
-                VerticalDivider(
-                  width: 1.0,
-                  thickness: 1.0,
-                ),
+                const VerticalDivider(width: 1.0, thickness: 1.0),
                 Expanded(
                   child: DefaultTabController(
                     length: 2,
@@ -143,15 +126,6 @@ class NowPlayingState extends State<NowPlayingScreen>
                         Material(
                           color: Colors.transparent,
                           child: TabBar(
-                            unselectedLabelColor:
-                                Theme.of(context).textTheme.displayLarge?.color,
-                            labelStyle: Theme.of(context)
-                                .textTheme
-                                .headlineMedium
-                                ?.copyWith(
-                                    color: Theme.of(context).primaryColor),
-                            indicatorColor: Theme.of(context).primaryColor,
-                            labelColor: Theme.of(context).primaryColor,
                             tabs: [
                               Tab(
                                 text: Language.instance.COMING_UP.toUpperCase(),
@@ -162,10 +136,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                             ],
                           ),
                         ),
-                        Divider(
-                          thickness: 1.0,
-                          height: 1.0,
-                        ),
+                        const Divider(thickness: 1.0, height: 1.0),
                         Expanded(
                           child: TabBarView(
                             children: [
@@ -191,7 +162,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                                             '${i + 1}',
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headlineMedium,
+                                                .bodyLarge,
                                           ),
                                     track: tracks[i],
                                     index: 0,
@@ -215,7 +186,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                                                 lyric.words,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headlineMedium,
+                                                    .bodyLarge,
                                                 textAlign: TextAlign.start,
                                               ),
                                             )
@@ -226,7 +197,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                                           Language.instance.LYRICS_NOT_FOUND,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headlineMedium,
+                                              .bodyLarge,
                                           textAlign: TextAlign.start,
                                         ),
                                       ),
@@ -240,6 +211,12 @@ class NowPlayingState extends State<NowPlayingScreen>
                 ),
               ],
             ),
+          ),
+          DesktopAppBar(
+            leading: NavigatorPopButton(
+              onTap: DesktopNowPlayingController.instance.hide,
+            ),
+            title: Language.instance.NOW_PLAYING,
           ),
         ],
       ),

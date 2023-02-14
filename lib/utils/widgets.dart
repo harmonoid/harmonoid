@@ -18,7 +18,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uri_parser/uri_parser.dart';
-import 'package:animations/animations.dart';
 import 'package:window_plus/window_plus.dart';
 import 'package:media_library/media_library.dart';
 import 'package:visual_assets/visual_assets.dart';
@@ -31,7 +30,7 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/keyboard_shortcuts.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
@@ -389,10 +388,10 @@ class SortBarFixedHolderState extends State<SortBarFixedHolder> {
           child: MouseRegion(
             cursor: SystemMouseCursors.click,
             onEnter: (_) => setState(() {
-              hover1 = true;
+              hover0 = true;
             }),
             onExit: (_) => setState(() {
-              hover1 = false;
+              hover0 = false;
             }),
             child: Container(
               padding: EdgeInsets.symmetric(
@@ -404,16 +403,16 @@ class SortBarFixedHolderState extends State<SortBarFixedHolder> {
                 children: [
                   Icon(
                     Icons.play_arrow,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                   const SizedBox(
                     width: 4.0,
                   ),
                   Text(
                     Language.instance.PLAY_ALL,
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                          color: Theme.of(context).primaryColor,
-                          decoration: hover1
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          decoration: hover0
                               ? TextDecoration.underline
                               : TextDecoration.none,
                         ),
@@ -433,10 +432,10 @@ class SortBarFixedHolderState extends State<SortBarFixedHolder> {
           child: MouseRegion(
             cursor: SystemMouseCursors.click,
             onEnter: (_) => setState(() {
-              hover0 = true;
+              hover1 = true;
             }),
             onExit: (_) => setState(() {
-              hover0 = false;
+              hover1 = false;
             }),
             child: Container(
               padding: EdgeInsets.symmetric(
@@ -448,16 +447,16 @@ class SortBarFixedHolderState extends State<SortBarFixedHolder> {
                 children: [
                   Icon(
                     Icons.shuffle,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                   const SizedBox(
                     width: 4.0,
                   ),
                   Text(
                     Language.instance.SHUFFLE,
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                          color: Theme.of(context).primaryColor,
-                          decoration: hover0
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          decoration: hover1
                               ? TextDecoration.underline
                               : TextDecoration.none,
                         ),
@@ -534,7 +533,9 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.A_TO_Z,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.bodyLarge
+                                : null,
                           ),
                         ),
                       ),
@@ -548,7 +549,9 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.DATE_ADDED,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.bodyLarge
+                                : null,
                           ),
                         ),
                       ),
@@ -562,7 +565,9 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.YEAR,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.bodyLarge
+                                : null,
                           ),
                         ),
                       ),
@@ -576,7 +581,9 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.ALBUM_ARTIST,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.bodyLarge
+                                : null,
                           ),
                         ),
                       ),
@@ -592,7 +599,9 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.A_TO_Z,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.bodyLarge
+                                : null,
                           ),
                         ),
                       ),
@@ -606,7 +615,9 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.DATE_ADDED,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.bodyLarge
+                                : null,
                           ),
                         ),
                       ),
@@ -620,7 +631,9 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.YEAR,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.bodyLarge
+                                : null,
                           ),
                         ),
                       ),
@@ -636,7 +649,9 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.A_TO_Z,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.bodyLarge
+                                : null,
                           ),
                         ),
                       ),
@@ -650,7 +665,9 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.DATE_ADDED,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.bodyLarge
+                                : null,
                           ),
                         ),
                       ),
@@ -690,7 +707,7 @@ class _SortBarState extends State<SortBar> {
                         children: [
                           TextSpan(
                             text: '${Language.instance.SORT_BY}: ',
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
                           TextSpan(
                             text: {
@@ -716,9 +733,9 @@ class _SortBarState extends State<SortBar> {
                             }[tab]!,
                             style: Theme.of(context)
                                 .textTheme
-                                .headlineMedium
+                                .bodyLarge
                                 ?.copyWith(
-                                  color: Theme.of(context).primaryColor,
+                                  color: Theme.of(context).colorScheme.primary,
                                   decoration:
                                       _hover0 ? TextDecoration.underline : null,
                                 ),
@@ -729,6 +746,7 @@ class _SortBarState extends State<SortBar> {
                     const SizedBox(width: 4.0),
                     Icon(
                       Icons.expand_more,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 18.0,
                     ),
                   ],
@@ -770,7 +788,9 @@ class _SortBarState extends State<SortBar> {
                       dense: true,
                       title: Text(
                         Language.instance.ASCENDING,
-                        style: Theme.of(context).textTheme.headlineMedium,
+                        style: isDesktop
+                            ? Theme.of(context).textTheme.bodyLarge
+                            : null,
                       ),
                     ),
                   ),
@@ -790,7 +810,7 @@ class _SortBarState extends State<SortBar> {
                       dense: true,
                       title: Text(
                         Language.instance.DESCENDING,
-                        style: Theme.of(context).textTheme.headlineMedium,
+                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ),
                   ),
@@ -839,7 +859,7 @@ class _SortBarState extends State<SortBar> {
                         children: [
                           TextSpan(
                             text: '${Language.instance.ORDER}: ',
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
                           TextSpan(
                             text: {
@@ -864,9 +884,9 @@ class _SortBarState extends State<SortBar> {
                             }[tab]!,
                             style: Theme.of(context)
                                 .textTheme
-                                .headlineMedium
+                                .bodyLarge
                                 ?.copyWith(
-                                  color: Theme.of(context).primaryColor,
+                                  color: Theme.of(context).colorScheme.primary,
                                   decoration:
                                       _hover1 ? TextDecoration.underline : null,
                                 ),
@@ -877,6 +897,7 @@ class _SortBarState extends State<SortBar> {
                     const SizedBox(width: 4.0),
                     Icon(
                       Icons.expand_more,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 18.0,
                     ),
                   ],
@@ -961,40 +982,46 @@ class _ScaleOnHoverState extends State<ScaleOnHover> {
 }
 
 class SubHeader extends StatelessWidget {
-  final String? text;
-  final TextStyle? style;
+  final String text;
+  final double height;
+  final EdgeInsets? padding;
 
-  const SubHeader(this.text, {this.style, Key? key}) : super(key: key);
+  const SubHeader(
+    this.text, {
+    this.height = 56.0,
+    this.padding,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return text != null
-        ? isDesktop
-            ? Container(
-                alignment: Alignment.centerLeft,
-                height: 56.0,
-                padding: EdgeInsets.fromLTRB(24.0, 0, 0, 0),
-                child: Text(
-                  text!,
-                  style: style ?? Theme.of(context).textTheme.displayLarge,
-                ),
-              )
-            : Container(
-                alignment: Alignment.centerLeft,
-                height: 56.0,
-                padding: EdgeInsets.fromLTRB(16.0, 0, 0, 0),
-                child: Text(
-                  text!.toUpperCase(),
-                  style: style ??
-                      Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color:
-                                Theme.of(context).textTheme.displaySmall?.color,
-                            fontSize: 12.0,
-                            fontWeight: FontWeight.w600,
-                          ),
-                ),
-              )
-        : Container();
+    final horizontal = isDesktop ? 24.0 : 16.0;
+    final fontSize = isDesktop ? 16.0 : null;
+    final TextStyle? style;
+    if (isMaterial2(context) && isMobile) {
+      style = Theme.of(context).textTheme.titleSmall?.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+            fontSize: fontSize,
+          );
+    } else if (isMaterial2(context) && isDesktop) {
+      style = Theme.of(context).textTheme.titleSmall?.copyWith(
+            fontSize: fontSize,
+          );
+    } else {
+      style = Theme.of(context).textTheme.titleSmall?.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+            fontSize: fontSize,
+          );
+    }
+    return Container(
+      alignment: Alignment.centerLeft,
+      height: height,
+      padding: padding ?? EdgeInsets.symmetric(horizontal: horizontal),
+      child: Text(
+        text,
+        style: style,
+      ),
+    );
   }
 }
 
@@ -1086,10 +1113,10 @@ class DesktopAppBar extends StatelessWidget {
                               ? isDark
                                   ? Theme.of(context)
                                       .extension<IconColors>()
-                                      ?.appBarDarkIconColor
+                                      ?.appBarDark
                                   : Theme.of(context)
                                       .extension<IconColors>()
-                                      ?.appBarLightIconColor
+                                      ?.appBarLight
                               : null,
                         ),
                     SizedBox(
@@ -1098,21 +1125,14 @@ class DesktopAppBar extends StatelessWidget {
                     if (title != null)
                       Text(
                         title!,
-                        style:
-                            Theme.of(context).textTheme.displayLarge?.copyWith(
-                                color: color != null
-                                    ? isDark
-                                        ? Colors.white
-                                        : Colors.black
-                                    : null),
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
                     if (actions != null) ...[
                       const Spacer(),
                       ...actions!,
                       const SizedBox(width: 16.0),
                     ] else if (child != null)
-                      Container(
-                        width: MediaQuery.of(context).size.width - 72.0,
+                      Expanded(
                         child: child!,
                       ),
                   ],
@@ -1153,13 +1173,13 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
       builder: (context, refresh, _) => refresh.progress == refresh.total
           ? FloatingActionButton(
               heroTag: 'collection_refresh_button',
-              backgroundColor:
-                  widget.color ?? Theme.of(context).colorScheme.secondary,
               child: Icon(
                 Icons.refresh,
-                color: widget.color?.isDark ?? true
-                    ? Colors.white
-                    : Colors.black87,
+                color: widget.color == null
+                    ? null
+                    : (widget.color?.computeLuminance() ?? 0.0) < 0.5
+                        ? kFABDarkForegroundColor
+                        : kFABLightForegroundColor,
               ),
               onPressed: () {
                 if (lock) return;
@@ -1278,16 +1298,13 @@ class ExceptionWidget extends StatelessWidget {
           const SizedBox(height: 12.0),
           Text(
             title,
-            style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  fontSize: 20.0,
-                  fontWeight: isDesktop ? null : FontWeight.normal,
-                ),
+            style: Theme.of(context).textTheme.titleLarge,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 4.0),
           Text(
             subtitle,
-            style: Theme.of(context).textTheme.displaySmall,
+            style: Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),
           if (title == Language.instance.NO_COLLECTION_TITLE) ...[
@@ -1301,10 +1318,7 @@ class ExceptionWidget extends StatelessWidget {
                 );
               },
               child: Text(
-                Language.instance.GO_TO_SETTINGS.toUpperCase(),
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                ),
+                label(context, Language.instance.GO_TO_SETTINGS),
               ),
             ),
           ]
@@ -1631,8 +1645,8 @@ class _M2MobileBottomNavigationBarState
         duration: Theme.of(context).extension<AnimationDuration>()?.medium ??
             Duration.zero,
         tween: ColorTween(
-          begin: Theme.of(context).primaryColor,
-          end: value?.first ?? Theme.of(context).primaryColor,
+          begin: Theme.of(context).colorScheme.primary,
+          end: value?.first ?? Theme.of(context).colorScheme.primary,
         ),
         builder: (context, color, _) => isMaterial3(context)
             ? NavigationBar(
@@ -1663,10 +1677,12 @@ class _M2MobileBottomNavigationBarState
                 ),
                 child: BottomNavigationBar(
                   currentIndex: _index,
-                  selectedItemColor:
-                      color?.isDark ?? true ? null : Colors.black87,
-                  unselectedItemColor:
-                      color?.isDark ?? true ? null : Colors.black45,
+                  selectedItemColor: (color?.computeLuminance() ?? 0.0) < 0.5
+                      ? null
+                      : Colors.black87,
+                  unselectedItemColor: (color?.computeLuminance() ?? 0.0) < 0.5
+                      ? null
+                      : Colors.black45,
                   type: BottomNavigationBarType.shifting,
                   onTap: (index) {
                     MobileNowPlayingController.instance.restore();
@@ -1682,22 +1698,26 @@ class _M2MobileBottomNavigationBarState
                     BottomNavigationBarItem(
                       icon: Icon(Icons.album),
                       label: Language.instance.ALBUM,
-                      backgroundColor: color ?? Theme.of(context).primaryColor,
+                      backgroundColor:
+                          color ?? Theme.of(context).colorScheme.primary,
                     ),
                     BottomNavigationBarItem(
                       icon: Icon(Icons.music_note),
                       label: Language.instance.TRACK,
-                      backgroundColor: color ?? Theme.of(context).primaryColor,
+                      backgroundColor:
+                          color ?? Theme.of(context).colorScheme.primary,
                     ),
                     BottomNavigationBarItem(
                       icon: Icon(Icons.person),
                       label: Language.instance.ARTIST,
-                      backgroundColor: color ?? Theme.of(context).primaryColor,
+                      backgroundColor:
+                          color ?? Theme.of(context).colorScheme.primary,
                     ),
                     BottomNavigationBarItem(
                       icon: Icon(Icons.playlist_play),
                       label: Language.instance.PLAYLIST,
-                      backgroundColor: color ?? Theme.of(context).primaryColor,
+                      backgroundColor:
+                          color ?? Theme.of(context).colorScheme.primary,
                     ),
                   ],
                 ),
@@ -1735,36 +1755,21 @@ class ShowAllButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(4.0),
-      child: InkWell(
-        onTap: onPressed,
-        borderRadius: BorderRadius.circular(4.0),
-        child: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: 6.0,
-            vertical: 2.0,
+    return TextButton(
+      onPressed: onPressed,
+      child: Row(
+        children: [
+          Icon(
+            Icons.view_list,
+            color: Theme.of(context).colorScheme.primary,
           ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.view_list,
-                color: Theme.of(context).primaryColor,
-              ),
-              const SizedBox(
-                width: 4.0,
-              ),
-              Text(
-                Language.instance.SEE_ALL,
-                style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                      color: Theme.of(context).primaryColor,
-                    ),
-              ),
-            ],
+          const SizedBox(
+            width: 4.0,
           ),
-        ),
+          Text(
+            Language.instance.SEE_ALL,
+          ),
+        ],
       ),
     );
   }
@@ -1805,8 +1810,8 @@ class ScrollableSlider extends StatelessWidget {
     required this.onScrolledUp,
     required this.onScrolledDown,
     required this.onChanged,
-    this.inferSliderInactiveTrackColor: true,
-    this.mobile: false,
+    this.inferSliderInactiveTrackColor = true,
+    this.mobile = false,
   }) : super(key: key);
 
   @override
@@ -1837,15 +1842,15 @@ class ScrollableSlider extends StatelessWidget {
               ? null
               : RoundSliderOverlayShape(overlayRadius: 12.0),
           overlayColor:
-              (color ?? Theme.of(context).primaryColor).withOpacity(0.4),
-          thumbColor: (color ?? Theme.of(context).primaryColor),
-          activeTrackColor: (color ?? Theme.of(context).primaryColor),
+              (color ?? Theme.of(context).colorScheme.primary).withOpacity(0.4),
+          thumbColor: (color ?? Theme.of(context).colorScheme.primary),
+          activeTrackColor: (color ?? Theme.of(context).colorScheme.primary),
           inactiveTrackColor: (mobile && isMobile)
-              ? Theme.of(context).primaryColor.withOpacity(0.2)
+              ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
               : inferSliderInactiveTrackColor
                   ? ((secondaryColor != null
-                          ? secondaryColor?.isDark
-                          : Theme.of(context).brightness == Brightness.dark)!
+                          ? (secondaryColor?.computeLuminance() ?? 0.0) < 0.5
+                          : Theme.of(context).brightness == Brightness.dark)
                       ? Colors.white.withOpacity(0.4)
                       : Colors.black.withOpacity(0.2))
                   : Colors.white.withOpacity(0.4),
@@ -2060,7 +2065,9 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.A_TO_Z,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: isDesktop
+                        ? Theme.of(context).textTheme.bodyLarge
+                        : null,
                   ),
                 ),
               ),
@@ -2073,7 +2080,9 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.DATE_ADDED,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: isDesktop
+                        ? Theme.of(context).textTheme.bodyLarge
+                        : null,
                   ),
                 ),
               ),
@@ -2086,7 +2095,9 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.YEAR,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: isDesktop
+                        ? Theme.of(context).textTheme.bodyLarge
+                        : null,
                   ),
                 ),
               ),
@@ -2099,7 +2110,9 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.ALBUM_ARTIST,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: isDesktop
+                        ? Theme.of(context).textTheme.bodyLarge
+                        : null,
                   ),
                 ),
               ),
@@ -2114,7 +2127,11 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.A_TO_Z,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: isDesktop
+                        ? isDesktop
+                            ? Theme.of(context).textTheme.bodyLarge
+                            : null
+                        : null,
                   ),
                 ),
               ),
@@ -2127,7 +2144,9 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.DATE_ADDED,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: isDesktop
+                        ? Theme.of(context).textTheme.bodyLarge
+                        : null,
                   ),
                 ),
               ),
@@ -2140,7 +2159,9 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.YEAR,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: isDesktop
+                        ? Theme.of(context).textTheme.bodyLarge
+                        : null,
                   ),
                 ),
               ),
@@ -2155,7 +2176,9 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.A_TO_Z,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: isDesktop
+                        ? Theme.of(context).textTheme.bodyLarge
+                        : null,
                   ),
                 ),
               ),
@@ -2169,7 +2192,9 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.DATE_ADDED,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: isDesktop
+                        ? Theme.of(context).textTheme.bodyLarge
+                        : null,
                   ),
                 ),
               ),
@@ -2193,7 +2218,8 @@ class CollectionSortButton extends StatelessWidget {
                 dense: true,
                 title: Text(
                   Language.instance.ASCENDING,
-                  style: Theme.of(context).textTheme.headlineMedium,
+                  style:
+                      isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
               ),
             ),
@@ -2213,7 +2239,8 @@ class CollectionSortButton extends StatelessWidget {
                 dense: true,
                 title: Text(
                   Language.instance.DESCENDING,
-                  style: Theme.of(context).textTheme.headlineMedium,
+                  style:
+                      isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
               ),
             ),
@@ -2243,82 +2270,13 @@ class CorrectedSwitchListTile extends StatelessWidget {
       value: value,
       title: Text(
         isDesktop ? subtitle : title,
-        style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
       onChanged: (value) {
         onChanged.call(value);
       },
-    );
-  }
-}
-
-class CorrectedListTile extends StatelessWidget {
-  final void Function()? onTap;
-  final IconData? iconData;
-  final String title;
-  final String? subtitle;
-  final double? height;
-  CorrectedListTile({
-    Key? key,
-    this.iconData,
-    required this.title,
-    this.subtitle,
-    this.onTap,
-    this.height,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        height: height ?? 88.0,
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.only(left: 16.0),
-        child: Row(
-          crossAxisAlignment: subtitle == null
-              ? CrossAxisAlignment.center
-              : CrossAxisAlignment.start,
-          children: [
-            if (iconData != null)
-              Container(
-                margin: EdgeInsets.only(
-                    top: subtitle == null ? 0.0 : 16.0, right: 16.0),
-                width: 40.0,
-                height: 40.0,
-                child: Icon(iconData),
-              ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.titleMedium,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  if (subtitle != null) const SizedBox(height: 4.0),
-                  if (subtitle != null)
-                    Text(
-                      subtitle!,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color:
-                                Theme.of(context).textTheme.displaySmall?.color,
-                          ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 16.0),
-          ],
-        ),
-      ),
     );
   }
 }
@@ -2348,6 +2306,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
           padding: EdgeInsets.zero,
           child: Text(
             Language.instance.A_TO_Z,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
         CheckedPopupMenuItem(
@@ -2356,6 +2315,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
           padding: EdgeInsets.zero,
           child: Text(
             Language.instance.DATE_ADDED,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
         CheckedPopupMenuItem(
@@ -2364,6 +2324,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
           padding: EdgeInsets.zero,
           child: Text(
             Language.instance.YEAR,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
       ],
@@ -2374,6 +2335,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
           padding: EdgeInsets.zero,
           child: Text(
             Language.instance.A_TO_Z,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
         CheckedPopupMenuItem(
@@ -2382,6 +2344,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
           padding: EdgeInsets.zero,
           child: Text(
             Language.instance.DATE_ADDED,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
         CheckedPopupMenuItem(
@@ -2390,6 +2353,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
           padding: EdgeInsets.zero,
           child: Text(
             Language.instance.YEAR,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
       ],
@@ -2400,6 +2364,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
           padding: EdgeInsets.zero,
           child: Text(
             Language.instance.A_TO_Z,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
         CheckedPopupMenuItem(
@@ -2408,6 +2373,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
           padding: EdgeInsets.zero,
           child: Text(
             Language.instance.DATE_ADDED,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
       ],
@@ -2418,6 +2384,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
           padding: EdgeInsets.zero,
           child: Text(
             Language.instance.A_TO_Z,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
         CheckedPopupMenuItem(
@@ -2426,6 +2393,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
           padding: EdgeInsets.zero,
           child: Text(
             Language.instance.DATE_ADDED,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
       ],
@@ -2442,6 +2410,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
         padding: EdgeInsets.zero,
         child: Text(
           Language.instance.ASCENDING,
+          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
         ),
       ),
       CheckedPopupMenuItem(
@@ -2455,6 +2424,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
         padding: EdgeInsets.zero,
         child: Text(
           Language.instance.DESCENDING,
+          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
         ),
       ),
     ];
@@ -2487,6 +2457,11 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                 ...sort,
                 PopupMenuDivider(),
                 ...order,
+                if (!isDesktop && !MobileNowPlayingController.instance.isHidden)
+                  PopupMenuItem<int>(
+                    padding: EdgeInsets.zero,
+                    child: SizedBox(height: kMobileNowPlayingBarHeight),
+                  ),
               ],
             ),
           ),
@@ -2615,7 +2590,7 @@ class CollectionMoreButton extends StatelessWidget {
             leading: Icon(Icons.code),
             title: Text(
               Language.instance.READ_METADATA,
-              style: Theme.of(context).textTheme.headlineMedium,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
             ),
           ),
         ),
@@ -2627,7 +2602,7 @@ class CollectionMoreButton extends StatelessWidget {
             leading: Icon(Icons.waves),
             title: Text(
               Language.instance.STREAM,
-              style: Theme.of(context).textTheme.headlineMedium,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
             ),
           ),
         ),
@@ -2682,11 +2657,7 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                 ),
                 title: Text(
                   Language.instance.FILE,
-                  style: isDesktop
-                      ? Theme.of(ctx).textTheme.headlineMedium
-                      : Theme.of(ctx).textTheme.displaySmall?.copyWith(
-                            fontSize: 16.0,
-                          ),
+                  style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
                 ),
               ),
               ListTile(
@@ -2735,7 +2706,7 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                                     }
                                   },
                                   textAlignVertical: TextAlignVertical.center,
-                                  style: Theme.of(ctx).textTheme.headlineMedium,
+                                  style: Theme.of(ctx).textTheme.bodyLarge,
                                   decoration: inputDecoration(
                                     ctx,
                                     Language.instance.PLAY_URL_SUBTITLE,
@@ -2749,9 +2720,9 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                       actions: [
                         TextButton(
                           child: Text(
-                            Language.instance.PLAY.toUpperCase(),
-                            style: TextStyle(
-                              color: Theme.of(ctx).primaryColor,
+                            label(
+                              context,
+                              Language.instance.PLAY,
                             ),
                           ),
                           onPressed: () async {
@@ -2764,9 +2735,9 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                         ),
                         TextButton(
                           child: Text(
-                            Language.instance.CANCEL.toUpperCase(),
-                            style: TextStyle(
-                              color: Theme.of(ctx).primaryColor,
+                            label(
+                              context,
+                              Language.instance.CANCEL,
                             ),
                           ),
                           onPressed: Navigator.of(ctx).maybePop,
@@ -2784,11 +2755,7 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                 ),
                 title: Text(
                   Language.instance.URL,
-                  style: isDesktop
-                      ? Theme.of(ctx).textTheme.headlineMedium
-                      : Theme.of(ctx).textTheme.displaySmall?.copyWith(
-                            fontSize: 16.0,
-                          ),
+                  style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
                 ),
               ),
             ],
@@ -2829,10 +2796,6 @@ class _ContextMenuAreaState extends State<ContextMenuArea> {
       child: widget.child,
     );
   }
-}
-
-extension on Color {
-  bool get isDark => (0.299 * red) + (0.587 * green) + (0.114 * blue) < 128.0;
 }
 
 class StillGIF extends StatefulWidget {
@@ -3027,28 +2990,44 @@ class _MobileAppBarOverflowButtonState
               value: 0,
               child: ListTile(
                 leading: Icon(Icons.file_open),
-                title: Text(Language.instance.OPEN_FILE_OR_URL),
+                title: Text(
+                  Language.instance.OPEN_FILE_OR_URL,
+                  style:
+                      isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                ),
               ),
             ),
             PopupMenuItem(
               value: 1,
               child: ListTile(
                 leading: Icon(Icons.code),
-                title: Text(Language.instance.READ_METADATA),
+                title: Text(
+                  Language.instance.READ_METADATA,
+                  style:
+                      isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                ),
               ),
             ),
             PopupMenuItem(
               value: 2,
               child: ListTile(
                 leading: Icon(Icons.settings),
-                title: Text(Language.instance.SETTING),
+                title: Text(
+                  Language.instance.SETTING,
+                  style:
+                      isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                ),
               ),
             ),
             PopupMenuItem(
               value: 3,
               child: ListTile(
                 leading: Icon(Icons.info),
-                title: Text(Language.instance.ABOUT_TITLE),
+                title: Text(
+                  Language.instance.ABOUT_TITLE,
+                  style:
+                      isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                ),
               ),
             ),
           ],
@@ -3086,10 +3065,8 @@ class _MobileAppBarOverflowButtonState
                         title: Text(
                           Language.instance.FILE,
                           style: isDesktop
-                              ? Theme.of(ctx).textTheme.headlineMedium
-                              : Theme.of(ctx).textTheme.displaySmall?.copyWith(
-                                    fontSize: 16.0,
-                                  ),
+                              ? Theme.of(ctx).textTheme.bodyLarge
+                              : null,
                         ),
                       ),
                       ListTile(
@@ -3148,41 +3125,9 @@ class _MobileAppBarOverflowButtonState
                                                   .playURI(value);
                                             }
                                           },
-                                          decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.fromLTRB(
-                                              12,
-                                              30,
-                                              12,
-                                              6,
-                                            ),
-                                            hintText: Language
-                                                .instance.FILE_PATH_OR_URL,
-                                            border: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .iconTheme
-                                                    .color!
-                                                    .withOpacity(0.4),
-                                                width: 1.8,
-                                              ),
-                                            ),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .iconTheme
-                                                    .color!
-                                                    .withOpacity(0.4),
-                                                width: 1.8,
-                                              ),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                                width: 1.8,
-                                              ),
-                                            ),
-                                            errorStyle: TextStyle(height: 0.0),
+                                          decoration: inputDecoration(
+                                            context,
+                                            '',
                                           ),
                                         ),
                                       ),
@@ -3198,16 +3143,10 @@ class _MobileAppBarOverflowButtonState
                                                 .playURI(input);
                                           }
                                         },
-                                        style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                            Theme.of(context).primaryColor,
-                                          ),
-                                        ),
                                         child: Text(
-                                          Language.instance.PLAY.toUpperCase(),
-                                          style: const TextStyle(
-                                            letterSpacing: 2.0,
+                                          label(
+                                            context,
+                                            Language.instance.PLAY,
                                           ),
                                         ),
                                       ),
@@ -3228,10 +3167,8 @@ class _MobileAppBarOverflowButtonState
                         title: Text(
                           Language.instance.URL,
                           style: isDesktop
-                              ? Theme.of(ctx).textTheme.headlineMedium
-                              : Theme.of(ctx).textTheme.displaySmall?.copyWith(
-                                    fontSize: 16.0,
-                                  ),
+                              ? Theme.of(ctx).textTheme.bodyLarge
+                              : null,
                         ),
                       ),
                     ],

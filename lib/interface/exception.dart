@@ -16,7 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 
 class ExceptionApp extends StatelessWidget {
   final Object exception;
@@ -103,7 +103,7 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                 Stack(
                   children: [
                     Material(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).colorScheme.primary,
                       child: Stack(
                         children: [
                           Positioned(
@@ -234,7 +234,7 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                     ),
                     if (Platform.isWindows)
                       DesktopCaptionBar(
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).colorScheme.primary,
                         hideMaximizeAndRestoreButton: true,
                       ),
                   ],
@@ -293,7 +293,7 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                   pinned: true,
                   snap: false,
                   forceElevated: true,
-                  backgroundColor: Theme.of(context).primaryColor,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                   flexibleSpace: FlexibleSpaceBar(
                     title: Text(Label.error),
                     titlePadding: padding,

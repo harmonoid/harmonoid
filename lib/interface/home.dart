@@ -26,7 +26,7 @@ import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/constants/language.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -324,9 +324,9 @@ class HomeState extends State<Home>
                           },
                         ),
                       ),
-                      // MiniNowPlayingBar(
-                      //   key: MobileNowPlayingController.instance.barKey,
-                      // ),
+                      MiniNowPlayingBar(
+                        key: MobileNowPlayingController.instance.barKey,
+                      ),
                     ],
                   ),
                   bottomNavigationBar: ValueListenableBuilder<double>(
