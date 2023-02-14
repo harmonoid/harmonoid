@@ -38,16 +38,13 @@ class NowPlayingScreenState extends State<NowPlayingScreenSetting> {
                 TextButton(
                   onPressed: () async {
                     await Configuration.instance.save(
-                      highlightedLyricsSize: 24.0,
+                      highlightedLyricsSize: 38.0,
                       unhighlightedLyricsSize: 14.0,
                     );
                     setState(() {});
                   },
                   child: Text(
-                    Language.instance.RESTORE_DEFAULTS.toUpperCase(),
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                    ),
+                    label(context, Language.instance.RESTORE_DEFAULTS),
                   ),
                 ),
               ],
@@ -63,7 +60,7 @@ class NowPlayingScreenState extends State<NowPlayingScreenSetting> {
                   const SizedBox(height: 8.0),
                   Text(
                     '${Language.instance.HIGHLIGHTED_LYRICS_SIZE}: ${Configuration.instance.highlightedLyricsSize.toStringAsFixed(1)}',
-                    style: Theme.of(context).textTheme.displaySmall,
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   const SizedBox(height: 8.0),
                   ScrollableSlider(
@@ -82,7 +79,7 @@ class NowPlayingScreenState extends State<NowPlayingScreenSetting> {
                   const SizedBox(height: 8.0),
                   Text(
                     '${Language.instance.UNHIGHLIGHTED_LYRICS_SIZE}: ${Configuration.instance.unhighlightedLyricsSize.toStringAsFixed(1)}',
-                    style: Theme.of(context).textTheme.displaySmall,
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   const SizedBox(height: 8.0),
                   ScrollableSlider(

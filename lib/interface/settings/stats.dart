@@ -25,7 +25,20 @@ class StatsSettingState extends State<StatsSetting> {
       margin: EdgeInsets.symmetric(horizontal: 16.0),
       title: Language.instance.STATS_TITLE,
       subtitle: Language.instance.STATS_SUBTITLE,
-      child: Table(),
+      child: isDesktop
+          ? Table()
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 8.0),
+                Text(
+                  Language.instance.STATS_SUBTITLE,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                const SizedBox(height: 16.0),
+                Table(),
+              ],
+            ),
     );
   }
 }
@@ -44,11 +57,11 @@ class Table extends StatelessWidget {
       margin: isDesktop
           ? EdgeInsets.only(top: tileMargin(context))
           : EdgeInsets.only(
-              top: tileMargin(context), bottom: 2 * tileMargin(context)),
+              top: tileMargin(context),
+              bottom: 2 * tileMargin(context),
+            ),
       child: Consumer<Collection>(
         builder: (context, collection, _) => DataTable(
-          headingRowHeight: isDesktop ? 44.0 : 52.0,
-          dataRowHeight: isDesktop ? 44.0 : 52.0,
           columnSpacing: 0.0,
           columns: [
             DataColumn(

@@ -10,9 +10,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/state/visuals.dart';
+import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/interface/settings/settings.dart';
+
 import 'package:harmonoid/constants/language.dart';
 
 class ThemeSetting extends StatelessWidget {
@@ -30,7 +31,7 @@ class ThemeSetting extends StatelessWidget {
                       value: ThemeMode.system,
                       title: Text(
                         Language.instance.THEME_MODE_SYSTEM,
-                        style: Theme.of(context).textTheme.headlineMedium,
+                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       groupValue: visuals.themeMode,
                       onChanged: (ThemeMode? themeMode) =>
@@ -40,7 +41,7 @@ class ThemeSetting extends StatelessWidget {
                     value: ThemeMode.light,
                     title: Text(
                       Language.instance.THEME_MODE_LIGHT,
-                      style: Theme.of(context).textTheme.headlineMedium,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     groupValue: visuals.themeMode,
                     onChanged: (ThemeMode? themeMode) =>
@@ -50,7 +51,7 @@ class ThemeSetting extends StatelessWidget {
                     value: ThemeMode.dark,
                     title: Text(
                       Language.instance.THEME_MODE_DARK,
-                      style: Theme.of(context).textTheme.headlineMedium,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     groupValue: visuals.themeMode,
                     onChanged: (ThemeMode? themeMode) =>

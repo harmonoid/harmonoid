@@ -15,7 +15,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/interface/settings/stats.dart';
 import 'package:harmonoid/interface/settings/theme.dart';
@@ -38,9 +38,9 @@ class Settings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return isDesktop
-        ? Scaffold(
-            body: Stack(
+    return Scaffold(
+      body: isDesktop
+          ? Stack(
               children: [
                 Container(
                   margin: EdgeInsets.only(
@@ -136,59 +136,50 @@ class Settings extends StatelessWidget {
                   ],
                 ),
               ],
-            ),
-          )
-        : Stack(
-            children: [
-              Scaffold(
-                resizeToAvoidBottomInset: true,
-                appBar: AppBar(
-                  leading: IconButton(
-                    onPressed: Navigator.of(context).pop,
-                    icon: Icon(Icons.arrow_back),
-                    splashRadius: 20.0,
-                  ),
-                  title: Text(
-                    Language.instance.SETTING,
-                  ),
-                ),
-                body: NowPlayingBarScrollHideNotifier(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 8.0,
+            )
+          : NowPlayingBarScrollHideNotifier(
+              child: CustomScrollView(
+                slivers: [
+                  SliverAppBar.large(
+                    leading: IconButton(
+                      onPressed: Navigator.of(context).pop,
+                      icon: Icon(Icons.arrow_back),
+                      color: Theme.of(context).appBarTheme.iconTheme?.color,
+                      splashRadius: 20.0,
+                    ),
+                    // TODO(@alexmercerind): https://github.com/flutter/flutter/issues/120516
+                    title: Padding(
+                      padding: EdgeInsets.only(
+                        left: 16.0,
                       ),
-                      child: Column(
-                        children: [
-                          IndexingSetting(),
-                          Divider(thickness: 1.0),
-                          ThemeSetting(),
-                          LanguageSetting(),
-                          Divider(thickness: 1.0),
-                          StatsSetting(),
-                          if (StorageRetriever.instance.version >= 33) ...[
-                            AndroidPermissionsSetting(),
-                            Divider(thickness: 1.0),
-                          ],
-                          MiscellaneousSetting(),
-                          Divider(thickness: 1.0),
-                          ExperimentalSetting(),
-                        ],
-                      ),
+                      child: Text('Settings'),
                     ),
                   ),
-                ),
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+                        IndexingSetting(),
+                        const Divider(thickness: 1.0),
+                        ThemeSetting(),
+                        const Divider(thickness: 1.0),
+                        LanguageSetting(),
+                        const Divider(thickness: 1.0),
+                        StatsSetting(),
+                        const Divider(thickness: 1.0),
+                        if (StorageRetriever.instance.version >= 33) ...[
+                          AndroidPermissionsSetting(),
+                          const Divider(thickness: 1.0),
+                        ],
+                        MiscellaneousSetting(),
+                        const Divider(thickness: 1.0),
+                        ExperimentalSetting(),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              Positioned(
-                top: kToolbarHeight + MediaQuery.of(context).padding.top - 4.0,
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: 4.0,
-                  child: MobileIndexingProgressIndicator(),
-                ),
-              ),
-            ],
-          );
+            ),
+    );
   }
 }
 
@@ -223,7 +214,7 @@ class SettingsTile extends StatelessWidget {
         children: <Widget>[
           if (isDesktop)
             Padding(
-              padding: EdgeInsets.only(
+              padding: const EdgeInsets.only(
                 top: 24.0,
                 left: 16.0,
                 right: 16.0,
@@ -236,32 +227,21 @@ class SettingsTile extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: Theme.of(context)
-                        .textTheme
-                        .displayLarge
-                        ?.copyWith(fontSize: 20.0),
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  SizedBox(height: 2.0),
+                  const SizedBox(height: 2.0),
                   Text(
                     subtitle,
-                    style: Theme.of(context).textTheme.displaySmall,
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ],
               ),
             ),
           if (isMobile)
-            Container(
-              alignment: Alignment.bottomLeft,
+            SubHeader(
+              title,
               height: 40.0,
-              padding: EdgeInsets.fromLTRB(16.0, 0.0, 0.0, 12.0),
-              child: Text(
-                title.toUpperCase(),
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: Theme.of(context).textTheme.displaySmall?.color,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w600,
-                    ),
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
             ),
           Container(
             margin: margin ?? EdgeInsets.zero,
@@ -292,13 +272,10 @@ class MobileIndexingProgressIndicator extends StatelessWidget {
             value: controller.progress == null
                 ? null
                 : controller.progress! / controller.total,
-            backgroundColor:
-                Theme.of(context).colorScheme.secondary.withOpacity(0.2),
-            valueColor:
-                AlwaysStoppedAnimation(Theme.of(context).colorScheme.secondary),
           );
-        } else
+        } else {
           return SizedBox.shrink();
+        }
       },
     );
   }

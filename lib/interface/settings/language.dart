@@ -51,7 +51,7 @@ class LanguageSetting extends StatelessWidget {
                               title: Text(
                                 data.name,
                                 style: isDesktop
-                                    ? Theme.of(context).textTheme.headlineMedium
+                                    ? Theme.of(context).textTheme.bodyLarge
                                     : null,
                               ),
                             ),
@@ -76,13 +76,13 @@ class LanguageSetting extends StatelessWidget {
               await Configuration.instance.save(language: value);
             },
             child: Text(
-              Language.instance.OK,
+              label(context, Language.instance.OK),
             ),
           ),
           TextButton(
             onPressed: Navigator.of(context).maybePop,
             child: Text(
-              Language.instance.CANCEL,
+              label(context, Language.instance.CANCEL),
             ),
           ),
         ],
@@ -109,7 +109,7 @@ class LanguageSetting extends StatelessWidget {
                   Language.instance.current.name,
                   Language.instance.current.country,
                 ].join(' • '),
-                style: Theme.of(context).textTheme.displaySmall,
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
             const SizedBox(height: 8.0),
@@ -119,10 +119,7 @@ class LanguageSetting extends StatelessWidget {
                 TextButton(
                   onPressed: () => action(context),
                   child: Text(
-                    Language.instance.EDIT.toUpperCase(),
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                    ),
+                    label(context, Language.instance.EDIT),
                   ),
                 ),
                 const SizedBox(width: 8.0),

@@ -27,23 +27,23 @@ class ExperimentalSettingState extends State<ExperimentalSetting> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Theme.of(context).cardTheme.color,
-        title: Text(
-          Language.instance.WARNING,
-        ),
+        title: Text(Language.instance.WARNING),
         contentPadding: const EdgeInsets.fromLTRB(
           24.0,
           20.0,
           24.0,
           12.0,
         ),
-        content: Text(
-          Language.instance.ENABLE_VOLUME_BOOST_FILTER_WARNING,
-          style: Theme.of(context).textTheme.displaySmall,
-        ),
+        content: Text(Language.instance.ENABLE_VOLUME_BOOST_FILTER_WARNING),
         actions: [
           TextButton(
             onPressed: Navigator.of(context).pop,
-            child: Text(Language.instance.OK),
+            child: Text(
+              label(
+                context,
+                Language.instance.OK,
+              ),
+            ),
           ),
         ],
       ),
@@ -65,10 +65,7 @@ class ExperimentalSettingState extends State<ExperimentalSetting> {
               margin: const EdgeInsets.symmetric(vertical: 8.0),
               child: Text(
                 Language.instance.EXPERIMENTAL_SUBTITLE,
-                style: Theme.of(context)
-                    .textTheme
-                    .displaySmall
-                    ?.copyWith(height: 1.2),
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
           CorrectedSwitchListTile(
