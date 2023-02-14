@@ -17,8 +17,9 @@ import 'package:media_library/media_library.dart';
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 
-import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -279,7 +280,7 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
                             alignment: Alignment.centerLeft,
                             child: Text(
                               Language.instance.AVAILABLE_STORAGES,
-                              style: Theme.of(context).textTheme.displayMedium,
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           )
                         : Theme(
@@ -366,9 +367,9 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
                           );
                         },
                   child: Text(
-                    Language.instance.ADD_THIS_FOLDER.toUpperCase(),
-                    style: const TextStyle(
-                      letterSpacing: 2.0,
+                    label(
+                      context,
+                      Language.instance.ADD_THIS_FOLDER,
                     ),
                   ),
                 ),
