@@ -34,7 +34,7 @@ import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
 export 'package:harmonoid/utils/extensions.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -52,8 +52,16 @@ double tileMargin(BuildContext context) =>
 bool isMaterial3(BuildContext context) =>
     Theme.of(context).extension<MaterialStandard>()?.value == 3;
 
+bool isMaterial2(BuildContext context) =>
+    Theme.of(context).extension<MaterialStandard>()?.value == 2;
+
+String label(BuildContext context, String value) =>
+    // All button labels are uppercase in Material Design 2.
+    isMaterial2(context) ? value.toUpperCase() : value;
+
 double navigationBarHeight(BuildContext context) => isMaterial3(context)
-    ? 80.0 /* Taken from Material 3 official specification. */
+    // Based on Material Design 3 specification.
+    ? 80.0
     : kBottomNavigationBarHeight;
 
 List<Widget> tileGridListWidgets({
@@ -284,7 +292,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
             Platform.isWindows ? FluentIcons.delete_16_regular : Icons.delete),
         title: Text(
           Language.instance.DELETE,
-          style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
         ),
       ),
     ),
@@ -297,8 +305,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
               Platform.isWindows ? FluentIcons.share_16_regular : Icons.share),
           title: Text(
             Language.instance.SHARE,
-            style:
-                isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
       ),
@@ -311,7 +318,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
             : Icons.music_note),
         title: Text(
           Language.instance.ADD_TO_NOW_PLAYING,
-          style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
         ),
       ),
     ),
@@ -324,7 +331,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
             : Icons.queue_music),
         title: Text(
           Language.instance.ADD_TO_PLAYLIST,
-          style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
         ),
       ),
     ),
@@ -339,8 +346,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
               : Icons.folder),
           title: Text(
             Language.instance.SHOW_IN_FILE_MANAGER,
-            style:
-                isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
       ),
@@ -352,7 +358,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
             Icon(Platform.isWindows ? FluentIcons.edit_24_regular : Icons.edit),
         title: Text(
           Language.instance.EDIT_DETAILS,
-          style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
         ),
       ),
     ),
@@ -364,7 +370,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
             Platform.isWindows ? FluentIcons.album_24_regular : Icons.album),
         title: Text(
           Language.instance.SHOW_ALBUM,
-          style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
         ),
       ),
     ),
@@ -376,7 +382,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
             Icon(Platform.isWindows ? FluentIcons.info_24_regular : Icons.info),
         title: Text(
           Language.instance.FILE_INFORMATION,
-          style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
         ),
       ),
     ),
@@ -392,8 +398,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
           ),
           title: Text(
             Language.instance.CLEAR_LRC_FILE,
-            style:
-                isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
       )
@@ -407,8 +412,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
           ),
           title: Text(
             Language.instance.SET_LRC_FILE,
-            style:
-                isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
       ),
@@ -434,7 +438,7 @@ List<PopupMenuItem<int>> albumPopupMenuItems(
         ),
         title: Text(
           Language.instance.PLAY,
-          style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
         ),
       ),
     ),
@@ -449,7 +453,7 @@ List<PopupMenuItem<int>> albumPopupMenuItems(
         ),
         title: Text(
           Language.instance.SHUFFLE,
-          style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
         ),
       ),
     ),
@@ -462,7 +466,7 @@ List<PopupMenuItem<int>> albumPopupMenuItems(
         ),
         title: Text(
           Language.instance.DELETE,
-          style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
         ),
       ),
     ),
@@ -477,7 +481,7 @@ List<PopupMenuItem<int>> albumPopupMenuItems(
         ),
         title: Text(
           Language.instance.ADD_TO_NOW_PLAYING,
-          style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
         ),
       ),
     ),
@@ -528,7 +532,6 @@ Future<void> trackPopupMenuHandle(
                 'NAME',
                 track.trackName,
               ),
-              style: Theme.of(ctx).textTheme.displaySmall,
             ),
             actions: [
               TextButton(
@@ -546,11 +549,21 @@ Future<void> trackPopupMenuHandle(
                     }
                   }
                 },
-                child: Text(Language.instance.YES),
+                child: Text(
+                  label(
+                    context,
+                    Language.instance.YES,
+                  ),
+                ),
               ),
               TextButton(
                 onPressed: Navigator.of(ctx).pop,
-                child: Text(Language.instance.NO),
+                child: Text(
+                  label(
+                    context,
+                    Language.instance.NO,
+                  ),
+                ),
               ),
             ],
           ),
@@ -648,14 +661,16 @@ Future<void> trackPopupMenuHandle(
                 title: Text(
                   Language.instance.ERROR,
                 ),
-                content: Text(
-                  Language.instance.CORRUPT_LRC_FILE,
-                  style: Theme.of(context).textTheme.displaySmall,
-                ),
+                content: Text(Language.instance.CORRUPT_LRC_FILE),
                 actions: [
                   TextButton(
                     onPressed: Navigator.of(context).pop,
-                    child: Text(Language.instance.OK),
+                    child: Text(
+                      label(
+                        context,
+                        Language.instance.OK,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -723,7 +738,6 @@ Future<void> albumPopupMenuHandle(
                 'NAME',
                 album.albumName,
               ),
-              style: Theme.of(ctx).textTheme.displaySmall,
             ),
             actions: [
               TextButton(
@@ -737,11 +751,21 @@ Future<void> albumPopupMenuHandle(
                     floatingSearchBarController.close();
                   }
                 },
-                child: Text(Language.instance.YES),
+                child: Text(
+                  label(
+                    context,
+                    Language.instance.YES,
+                  ),
+                ),
               ),
               TextButton(
                 onPressed: Navigator.of(ctx).pop,
-                child: Text(Language.instance.NO),
+                child: Text(
+                  label(
+                    context,
+                    Language.instance.NO,
+                  ),
+                ),
               ),
             ],
           ),
@@ -896,16 +920,19 @@ Future<void> showAddToPlaylistDialog(
                   ),
                 ),
               ),
-              Divider(
-                height: 1.0,
-              ),
+              const Divider(height: 1.0),
             ],
           ),
         ),
         actions: [
           TextButton(
             onPressed: Navigator.of(subContext).pop,
-            child: Text(Language.instance.CANCEL),
+            child: Text(
+              label(
+                context,
+                Language.instance.CANCEL,
+              ),
+            ),
           ),
         ],
       ),
@@ -998,11 +1025,12 @@ InputDecoration inputDecoration(
             child: Material(
               color: Colors.transparent,
               child: IconButton(
-                splashRadius: 12.0,
+                splashRadius: 8.0,
                 iconSize: 24.0,
                 highlightColor: Colors.transparent,
                 onPressed: trailingIconOnPressed,
                 icon: trailingIcon,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
           ),
@@ -1022,38 +1050,30 @@ InputDecoration inputDecoration(
           : 2.0,
     ),
     hintText: hintText,
-    hintStyle: isDesktop
-        ? Theme.of(context).textTheme.displaySmall?.copyWith(
-              color: Theme.of(context).brightness == Brightness.light
-                  ? Colors.black54
-                  : Colors.white60,
-            )
-        : null,
     filled: true,
-    fillColor:
-        fillColor ?? Theme.of(context).dividerTheme.color?.withOpacity(0.04),
+    fillColor: fillColor ?? Theme.of(context).colorScheme.surfaceVariant,
     border: UnderlineInputBorder(
       borderSide: BorderSide(
-        color: Theme.of(context).iconTheme.color!.withOpacity(0.4),
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
         width: 1.8,
       ),
     ),
     enabledBorder: UnderlineInputBorder(
       borderSide: BorderSide(
-        color: Theme.of(context).iconTheme.color!.withOpacity(0.4),
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
         width: 1.8,
       ),
     ),
     focusedBorder: UnderlineInputBorder(
       borderSide: BorderSide(
-        color: Theme.of(context).primaryColor,
+        color: Theme.of(context).colorScheme.primary,
         width: 1.8,
       ),
     ),
     hintMaxLines: 1,
     errorMaxLines: 1,
     helperMaxLines: 1,
-    errorStyle: TextStyle(height: 0.0),
+    errorStyle: const TextStyle(height: 0.0),
   );
 }
 

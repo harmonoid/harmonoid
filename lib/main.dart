@@ -77,9 +77,9 @@ Future<void> main(List<String> args) async {
       await Intent.initialize(args: args);
       // TODO(@alexmercerind): Restore from application cache.
       await Visuals.initialize(
-        standard: 3,
+        standard: 2,
         themeMode: Configuration.instance.themeMode,
-        systemColorScheme: true,
+        systemColorScheme: false,
       );
       DiscordRPC.initialize();
     }
@@ -99,9 +99,9 @@ Future<void> main(List<String> args) async {
       DiscordRPC.initialize();
       // TODO(@alexmercerind): Restore from application cache.
       await Visuals.initialize(
-        standard: 3,
+        standard: 2,
         themeMode: Configuration.instance.themeMode,
-        systemColorScheme: true,
+        systemColorScheme: false,
       );
     }
     if (Platform.isAndroid) {
@@ -154,9 +154,9 @@ Future<void> main(List<String> args) async {
       await Intent.initialize();
       // TODO(@alexmercerind): Restore from application cache.
       await Visuals.initialize(
-        standard: 3,
+        standard: 2,
         themeMode: Configuration.instance.themeMode,
-        systemColorScheme: true,
+        systemColorScheme: false,
       );
     }
     await Collection.initialize(

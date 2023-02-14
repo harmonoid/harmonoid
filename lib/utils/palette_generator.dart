@@ -107,7 +107,7 @@ class PaletteGenerator with Diagnosticable {
       avoidRedBlackWhitePaletteFilter
     ],
     List<PaletteTarget> targets = const <PaletteTarget>[],
-    Duration timeout = const Duration(seconds: 15),
+    Duration timeout = const Duration(seconds: 1),
   }) async {
     assert(region == null || size != null);
     assert(region == null || region != Rect.zero);
@@ -173,10 +173,11 @@ class PaletteGenerator with Diagnosticable {
   final List<PaletteTarget> targets;
 
   Iterable<Color>? get colors {
-    if (paletteColors.isEmpty) {
-      return null;
-    }
-    return paletteColors.map((e) => e.color);
+    return null;
+    // if (paletteColors.isEmpty) {
+    //   return null;
+    // }
+    // return paletteColors.map((e) => e.color);
   }
 
   PaletteColor? get vibrantColor => selectedSwatches[PaletteTarget.vibrant];
@@ -469,19 +470,16 @@ class PaletteTarget with Diagnosticable {
   }
 
   @override
-  int get hashCode {
-    return hashValues(
-      minimumSaturation,
-      targetSaturation,
-      maximumSaturation,
-      minimumLightness,
-      targetLightness,
-      maximumLightness,
-      saturationWeight,
-      lightnessWeight,
-      populationWeight,
-    );
-  }
+  int get hashCode =>
+      minimumSaturation.hashCode ^
+      targetSaturation.hashCode ^
+      maximumSaturation.hashCode ^
+      minimumLightness.hashCode ^
+      targetLightness.hashCode ^
+      maximumLightness.hashCode ^
+      saturationWeight.hashCode ^
+      lightnessWeight.hashCode ^
+      populationWeight.hashCode;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -643,9 +641,7 @@ class PaletteColor with Diagnosticable {
   }
 
   @override
-  int get hashCode {
-    return hashValues(color, population);
-  }
+  int get hashCode => color.hashCode ^ population.hashCode;
 
   @override
   bool operator ==(Object other) {
