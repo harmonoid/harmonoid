@@ -16,7 +16,7 @@ import 'package:media_kit_tag_reader/media_kit_tag_reader.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class FileInfoScreen extends StatefulWidget {
@@ -84,11 +84,7 @@ class FileInfoScreen extends StatefulWidget {
               ),
               title: Text(
                 Language.instance.FILE,
-                style: isDesktop
-                    ? Theme.of(ctx).textTheme.headlineMedium
-                    : Theme.of(ctx).textTheme.displaySmall?.copyWith(
-                          fontSize: 16.0,
-                        ),
+                style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
               ),
             ),
             ListTile(
@@ -159,7 +155,7 @@ class FileInfoScreen extends StatefulWidget {
                                   );
                                 },
                                 textAlignVertical: TextAlignVertical.center,
-                                style: Theme.of(ctx).textTheme.headlineMedium,
+                                style: Theme.of(context).textTheme.bodyLarge,
                                 decoration: inputDecoration(
                                   context,
                                   Language.instance.FILE_PATH_OR_URL,
@@ -172,7 +168,10 @@ class FileInfoScreen extends StatefulWidget {
                       actions: [
                         TextButton(
                           child: Text(
-                            Language.instance.READ.toUpperCase(),
+                            label(
+                              context,
+                              Language.instance.READ,
+                            ),
                           ),
                           onPressed: () async {
                             await showFileInfoScreen(
@@ -184,7 +183,10 @@ class FileInfoScreen extends StatefulWidget {
                         ),
                         TextButton(
                           child: Text(
-                            Language.instance.CANCEL.toUpperCase(),
+                            label(
+                              context,
+                              Language.instance.CANCEL,
+                            ),
                           ),
                           onPressed: Navigator.of(ctx).maybePop,
                         ),
@@ -235,40 +237,9 @@ class FileInfoScreen extends StatefulWidget {
                                       timeout,
                                     );
                                   },
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.fromLTRB(
-                                      12,
-                                      30,
-                                      12,
-                                      6,
-                                    ),
-                                    hintText:
-                                        Language.instance.FILE_PATH_OR_URL,
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Theme.of(context)
-                                            .iconTheme
-                                            .color!
-                                            .withOpacity(0.4),
-                                        width: 1.8,
-                                      ),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Theme.of(context)
-                                            .iconTheme
-                                            .color!
-                                            .withOpacity(0.4),
-                                        width: 1.8,
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Theme.of(context).primaryColor,
-                                        width: 1.8,
-                                      ),
-                                    ),
-                                    errorStyle: TextStyle(height: 0.0),
+                                  decoration: inputDecoration(
+                                    context,
+                                    '',
                                   ),
                                 ),
                               ),
@@ -281,15 +252,10 @@ class FileInfoScreen extends StatefulWidget {
                                     timeout,
                                   );
                                 },
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                    Theme.of(context).primaryColor,
-                                  ),
-                                ),
                                 child: Text(
-                                  Language.instance.READ.toUpperCase(),
-                                  style: const TextStyle(
-                                    letterSpacing: 2.0,
+                                  label(
+                                    context,
+                                    Language.instance.READ,
                                   ),
                                 ),
                               ),
@@ -308,12 +274,10 @@ class FileInfoScreen extends StatefulWidget {
                   Icons.link,
                 ),
               ),
-              title: Text(Language.instance.URL,
-                  style: isDesktop
-                      ? Theme.of(ctx).textTheme.headlineMedium
-                      : Theme.of(ctx).textTheme.displaySmall?.copyWith(
-                            fontSize: 16.0,
-                          )),
+              title: Text(
+                Language.instance.URL,
+                style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
+              ),
             ),
           ],
         ),
@@ -351,10 +315,10 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
           waitUntilAlbumArtIsSaved: true,
           timeout: widget.timeout,
         );
-        metadata.addAll(result);
+        metadata.addAll(result.map((k, v) => MapEntry(k.toUpperCase(), v)));
         try {
           // Convert `package:media_kit_tag_reader` model to `package:media_library` model.
-          track = Track.fromJson(reader.platform?.serialize(metadata).toJson());
+          track = Track.fromJson(reader.platform?.serialize(result).toJson());
         } catch (exception, stacktrace) {
           debugPrint(exception.toString());
           debugPrint(stacktrace.toString());
@@ -434,48 +398,39 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
     );
     return isDesktop
         ? Container(
-            constraints: BoxConstraints(
-              maxWidth: isDesktop ? 960.0 : double.infinity,
-              maxHeight: isDesktop ? 640.0 : double.infinity,
-            ),
             child: metadata.isEmpty
                 ? Container(
                     constraints: BoxConstraints(
-                      maxWidth: isDesktop ? 640.0 : double.infinity,
-                      maxHeight: isDesktop ? 480.0 : double.infinity,
+                      maxWidth: 360.0,
+                      maxHeight: 360.0,
                     ),
                     child: Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation(
-                          Theme.of(context).primaryColor,
-                        ),
-                      ),
+                      child: const CircularProgressIndicator(),
                     ),
                   )
                 : IntrinsicWidth(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Container(
-                          padding: EdgeInsets.all(20.0),
+                          padding: const EdgeInsets.all(20.0),
                           child: Flex(
                             direction: Axis.horizontal,
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Flexible(
-                                fit: FlexFit.tight,
+                              Expanded(
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
                                   children: [
                                     Text(
                                       Language.instance.FILE_INFORMATION,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .displayLarge
-                                          ?.copyWith(
-                                            fontSize: 24.0,
-                                          ),
+                                          .headlineSmall,
                                     ),
                                     Text(
                                       !widget.uri.isScheme('FILE')
@@ -483,7 +438,9 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
                                           : basename(widget.uri.toFilePath()),
                                       style: Theme.of(context)
                                           .textTheme
-                                          .displaySmall,
+                                          .bodyMedium,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ],
                                 ),
@@ -499,7 +456,10 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
                                   );
                                 },
                                 child: Text(
-                                  Language.instance.COPY_AS_JSON.toUpperCase(),
+                                  label(
+                                    context,
+                                    Language.instance.COPY_AS_JSON,
+                                  ),
                                 ),
                               ),
                             ],
@@ -511,6 +471,8 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
                         Expanded(
                           child: SingleChildScrollView(
                             child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 if (track != null)
                                   Padding(
@@ -554,11 +516,7 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
                 : null,
             body: metadata.isEmpty
                 ? Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation(
-                        Theme.of(context).primaryColor,
-                      ),
-                    ),
+                    child: const CircularProgressIndicator(),
                   )
                 : NowPlayingBarScrollHideNotifier(
                     child: SingleChildScrollView(
