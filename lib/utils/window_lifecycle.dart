@@ -14,6 +14,7 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/interface/home.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -59,16 +60,26 @@ abstract class WindowLifecycle {
       if (showInterruptAlert) {
         await showDialog(
           context: navigatorKey.currentContext!,
-          builder: (c) => AlertDialog(
+          builder: (context) => AlertDialog(
             title: Text(Language.instance.WARNING),
+            contentPadding: const EdgeInsets.fromLTRB(
+              24.0,
+              20.0,
+              24.0,
+              20.0,
+            ),
             content: Text(
               Language.instance.COLLECTION_INDEXING_LABEL.replaceAll('\n', ' '),
-              style: Theme.of(c).textTheme.displaySmall,
             ),
             actions: [
               TextButton(
-                onPressed: Navigator.of(c).maybePop,
-                child: Text(Language.instance.OK),
+                onPressed: Navigator.of(context).maybePop,
+                child: Text(
+                  label(
+                    context,
+                    Language.instance.OK,
+                  ),
+                ),
               ),
             ],
           ),

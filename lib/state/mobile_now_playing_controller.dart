@@ -8,7 +8,7 @@
 import 'package:flutter/widgets.dart';
 
 import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/interface/mini_now_playing_bar.dart';
 
 class MobileNowPlayingController {

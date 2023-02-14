@@ -126,3 +126,6 @@ class DimensionsHelper {
       Configuration.instance.mobileArtistsGridSize <=
       kArtistTileSubTitleThreshold;
 }
+
+const kFABLightForegroundColor = Color(0xFF212121);
+const kFABDarkForegroundColor = Color(0xFFFFFFFF);

@@ -24,7 +24,6 @@ class KeyboardShortcuts {
   /// List of all registered shortcuts.
   final Map<LogicalKeySet, VoidCallback> bindings = {
     // Harmonoid specific shortcuts.
-    // TODO(@alexmercerind): Expose to user & likely consume from [Configuration].
     LogicalKeySet(LogicalKeyboardKey.space): Playback.instance.playOrPause,
     // Keyboard keys specifically for media playback control.
     // Although these are already registered using System Media Transport Controls on Windows & MPRIS on Linux.
