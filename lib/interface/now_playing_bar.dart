@@ -1709,6 +1709,9 @@ class _ControlPanelState extends State<ControlPanel> {
                         },
                         textAlign: TextAlign.center,
                         textAlignVertical: TextAlignVertical.bottom,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontSize: 16.0,
+                            ),
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Theme.of(context)
@@ -1792,6 +1795,9 @@ class _ControlPanelState extends State<ControlPanel> {
                         scrollPhysics: NeverScrollableScrollPhysics(),
                         textAlign: TextAlign.center,
                         textAlignVertical: TextAlignVertical.bottom,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontSize: 16.0,
+                            ),
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Theme.of(context)
@@ -1884,6 +1890,10 @@ class _ControlPanelState extends State<ControlPanel> {
                           scrollPhysics: NeverScrollableScrollPhysics(),
                           textAlign: TextAlign.center,
                           textAlignVertical: TextAlignVertical.bottom,
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    fontSize: 16.0,
+                                  ),
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Theme.of(context)

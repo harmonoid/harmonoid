@@ -237,9 +237,15 @@ class FileInfoScreen extends StatefulWidget {
                                       timeout,
                                     );
                                   },
-                                  decoration: inputDecoration(
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
+                                        fontSize: 16.0,
+                                      ),
+                                  decoration: mobileUnderlinedInputDecoration(
                                     context,
-                                    '',
+                                    Language.instance.FILE_PATH_OR_URL,
                                   ),
                                 ),
                               ),
@@ -520,40 +526,41 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
                   )
                 : NowPlayingBarScrollHideNotifier(
                     child: SingleChildScrollView(
-                      child: Stack(
+                      child: Column(
                         children: [
-                          Column(
-                            children: [
-                              if (track != null)
+                          if (track != null)
+                            Stack(
+                              children: [
                                 Image(
                                   image: getAlbumArt(track!),
                                   height: MediaQuery.of(context).size.width,
                                   width: MediaQuery.of(context).size.width,
                                   fit: BoxFit.cover,
                                 ),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: data,
-                              ),
-                            ],
-                          ),
-                          if (track != null)
-                            Positioned(
-                              top: MediaQuery.of(context).size.width - 28.0,
-                              right: 28.0,
-                              child: FloatingActionButton(
-                                onPressed: () {
-                                  Clipboard.setData(
-                                    ClipboardData(
-                                      text: const JsonEncoder.withIndent('    ')
-                                          .convert(metadata),
+                                if (track != null)
+                                  Positioned(
+                                    right: 16.0,
+                                    bottom: 16.0,
+                                    child: FloatingActionButton(
+                                      onPressed: () {
+                                        Clipboard.setData(
+                                          ClipboardData(
+                                            text: const JsonEncoder.withIndent(
+                                                    '    ')
+                                                .convert(metadata),
+                                          ),
+                                        );
+                                      },
+                                      child: Icon(Icons.copy_all),
+                                      tooltip: Language.instance.COPY_AS_JSON,
                                     ),
-                                  );
-                                },
-                                child: Icon(Icons.copy_all),
-                                tooltip: Language.instance.COPY_AS_JSON,
-                              ),
+                                  ),
+                              ],
                             ),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: data,
+                          ),
                         ],
                       ),
                     ),

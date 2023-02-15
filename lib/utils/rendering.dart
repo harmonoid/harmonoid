@@ -1077,6 +1077,35 @@ InputDecoration inputDecoration(
   );
 }
 
+InputDecoration mobileUnderlinedInputDecoration(
+    BuildContext context, String hintText) {
+  return InputDecoration(
+    hintText: hintText,
+    border: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+        width: 1.8,
+      ),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+        width: 1.8,
+      ),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Theme.of(context).colorScheme.primary,
+        width: 1.8,
+      ),
+    ),
+    hintMaxLines: 1,
+    errorMaxLines: 1,
+    helperMaxLines: 1,
+    errorStyle: const TextStyle(height: 0.0),
+  );
+}
+
 class TabRoute {
   final int index;
   final TabRouteSender sender;

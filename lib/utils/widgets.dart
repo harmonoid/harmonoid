@@ -3125,9 +3125,16 @@ class _MobileAppBarOverflowButtonState
                                                   .playURI(value);
                                             }
                                           },
-                                          decoration: inputDecoration(
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge
+                                              ?.copyWith(
+                                                fontSize: 16.0,
+                                              ),
+                                          decoration:
+                                              mobileUnderlinedInputDecoration(
                                             context,
-                                            '',
+                                            Language.instance.FILE_PATH_OR_URL,
                                           ),
                                         ),
                                       ),

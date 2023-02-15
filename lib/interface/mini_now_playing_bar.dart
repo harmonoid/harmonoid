@@ -1083,6 +1083,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                     ),
                                                   ),
                                                 ),
+                                                const SizedBox(height: 2.0),
                                                 if (!Playback
                                                     .instance
                                                     .tracks[
@@ -2289,9 +2290,17 @@ class MiniNowPlayingBarRefreshCollectionButtonState
                                             Navigator.of(context).maybePop();
                                           }
                                         },
-                                        decoration: inputDecoration(
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge
+                                            ?.copyWith(
+                                              fontSize: 16.0,
+                                            ),
+                                        decoration:
+                                            mobileUnderlinedInputDecoration(
                                           context,
-                                          '',
+                                          Language.instance
+                                              .PLAYLISTS_TEXT_FIELD_LABEL,
                                         ),
                                       ),
                                       const SizedBox(height: 4.0),
@@ -2331,7 +2340,7 @@ class MiniNowPlayingBarRefreshCollectionButtonState
           ValueListenableBuilder<double>(
             valueListenable: MobileNowPlayingController.instance.fabOffset,
             builder: (context, value, child) => AnimatedContainer(
-              height: 0,
+              height: value,
               duration:
                   Theme.of(context).extension<AnimationDuration>()?.fast ??
                       Duration.zero,
