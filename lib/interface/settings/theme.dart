@@ -10,9 +10,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/state/visuals.dart';
+import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/interface/settings/settings.dart';
+
 import 'package:harmonoid/constants/language.dart';
 
 class ThemeSetting extends StatelessWidget {
@@ -30,37 +31,31 @@ class ThemeSetting extends StatelessWidget {
                       value: ThemeMode.system,
                       title: Text(
                         Language.instance.THEME_MODE_SYSTEM,
-                        style: Theme.of(context).textTheme.headlineMedium,
+                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       groupValue: visuals.themeMode,
-                      onChanged: (dynamic themeMode) => visuals.update(
-                        themeMode: themeMode,
-                        context: context,
-                      ),
+                      onChanged: (ThemeMode? themeMode) =>
+                          visuals.update(themeMode: themeMode),
                     ),
                   RadioListTile(
                     value: ThemeMode.light,
                     title: Text(
                       Language.instance.THEME_MODE_LIGHT,
-                      style: Theme.of(context).textTheme.headlineMedium,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     groupValue: visuals.themeMode,
-                    onChanged: (dynamic themeMode) => visuals.update(
-                      themeMode: themeMode,
-                      context: context,
-                    ),
+                    onChanged: (ThemeMode? themeMode) =>
+                        visuals.update(themeMode: themeMode),
                   ),
                   RadioListTile(
                     value: ThemeMode.dark,
                     title: Text(
                       Language.instance.THEME_MODE_DARK,
-                      style: Theme.of(context).textTheme.headlineMedium,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     groupValue: visuals.themeMode,
-                    onChanged: (dynamic themeMode) => visuals.update(
-                      themeMode: themeMode,
-                      context: context,
-                    ),
+                    onChanged: (ThemeMode? themeMode) =>
+                        visuals.update(themeMode: themeMode),
                   ),
                 ],
               ),
@@ -90,10 +85,7 @@ class ThemeSetting extends StatelessWidget {
                               groupValue: visuals.themeMode,
                               onChanged: (e) {
                                 if (e != null) {
-                                  visuals.update(
-                                    context: context,
-                                    themeMode: e,
-                                  );
+                                  visuals.update(themeMode: e);
                                   Navigator.of(context).maybePop();
                                 }
                               },

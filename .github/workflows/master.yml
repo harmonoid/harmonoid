@@ -73,9 +73,9 @@ jobs:
       - name: Release Snapshot
         uses: softprops/action-gh-release@v1
         env:
-          GITHUB_REPOSITORY: harmonoid/harmonoid-snapshots
+          GITHUB_REPOSITORY: harmonoid/snapshots
         with:
-          repository: harmonoid/harmonoid-snapshots
+          repository: harmonoid/snapshots
           draft: false
           prerelease: true
           body: ${{ github.sha }}
@@ -166,9 +166,9 @@ jobs:
       - name: Release Snapshot
         uses: softprops/action-gh-release@v1
         env:
-          GITHUB_REPOSITORY: harmonoid/harmonoid-snapshots
+          GITHUB_REPOSITORY: harmonoid/snapshots
         with:
-          repository: harmonoid/harmonoid-snapshots
+          repository: harmonoid/snapshots
           draft: false
           prerelease: true
           body: ${{ github.sha }}
@@ -237,30 +237,4 @@ jobs:
             harmonoid-android-arm64-v8a-release.apk
             harmonoid-android-armeabi-v7a-release.apk
             harmonoid-android-x86_64-release.apk
-          token: ${{ secrets.ACCESS_TOKEN_2 }}
-
-      - name: Apply Google Play Patch
-        run: |
-          rm -r lib/web
-          git apply --reject --whitespace=fix patches/google-play.patch
-
-      - run: flutter build apk --verbose --split-per-abi
-      - run: cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk harmonoid-android-google-play-arm64-v8a-release.apk
-      - run: cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk harmonoid-android-google-play-armeabi-v7a-release.apk
-      - run: cp build/app/outputs/flutter-apk/app-x86_64-release.apk harmonoid-android-google-play-x86_64-release.apk
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_REPOSITORY: alexmercerind2/harmonoid-releases
-        with:
-          repository: alexmercerind2/harmonoid-releases
-          draft: true
-          prerelease: false
-          body: ""
-          tag_name: "vnext"
-          files: |
-            harmonoid-android-google-play-arm64-v8a-release.apk
-            harmonoid-android-google-play-armeabi-v7a-release.apk
-            harmonoid-android-google-play-x86_64-release.apk
           token: ${{ secrets.ACCESS_TOKEN_2 }}

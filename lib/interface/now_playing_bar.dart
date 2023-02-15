@@ -22,9 +22,10 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/interface/collection/artist.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/state/now_playing_color_palette.dart';
 import 'package:media_library/media_library.dart';
@@ -56,7 +57,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
     super.initState();
     playOrPause = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
     );
     listener = () async {
       if (Playback.instance.isPlaying) {
@@ -79,73 +80,78 @@ class NowPlayingBarState extends State<NowPlayingBar>
   }
 
   void colorPaletteListener() async {
-    if (horizontal == null) {
-      final monitors = await WindowPlus.instance.monitors;
-      debugPrint(monitors.toString());
-      horizontal = monitors
-          .map((e) => e.bounds.width)
-          .reduce((value, element) => value + element);
-    }
-    final ms =
-        ((1000 * (800 / (horizontal ?? MediaQuery.of(context).size.width))) ~/
-            1);
     final color = NowPlayingColorPalette.instance.palette == null
         ? Theme.of(context).cardTheme.color
         : NowPlayingColorPalette.instance.palette?.first.withOpacity(1.0);
-    if (color == this.color) {
-      return;
-    }
-    if (timer?.isActive ?? true) {
-      timer?.cancel();
-    }
-    timer = Timer(
-      Duration(milliseconds: ms + 100),
-      () async {
-        setState(() {
-          this.color = color;
-        });
-        await Future.delayed(const Duration(milliseconds: 100));
-        setState(() {
-          debugPrint(
-            '[NowPlayingBar] Freed ${fills.length} [Color] [TweenAnimationBuilder] fill(s).',
-          );
-          fills.clear();
-        });
-      },
-    );
-    setState(() {
-      fills.add(
-        TweenAnimationBuilder(
-          tween: Tween<double>(
-            begin: 0.0,
-            end: 2 * MediaQuery.of(context).size.width / 4.0,
-          ),
-          duration: Duration(
-            milliseconds: ms,
-          ),
-          curve: Curves.easeInOut,
-          child: Container(
-            height: kDesktopNowPlayingBarHeight,
-            width: MediaQuery.of(context).size.width,
-            alignment: Alignment.center,
-            child: ClipRect(
-              child: Container(
-                height: 4.0,
-                width: 4.0,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
+    if (Theme.of(context).extension<AnimationDuration>()?.fast ==
+        Duration.zero) {
+      setState(() => this.color = color);
+    } else {
+      if (horizontal == null) {
+        final monitors = await WindowPlus.instance.monitors;
+        debugPrint(monitors.toString());
+        horizontal = monitors
+            .map((e) => e.bounds.width)
+            .reduce((value, element) => value + element);
+      }
+      final ms =
+          (1000 * (800 / (horizontal ?? MediaQuery.of(context).size.width))) ~/
+              1;
+      if (color == this.color) {
+        return;
+      }
+      if (timer?.isActive ?? true) {
+        timer?.cancel();
+      }
+      timer = Timer(
+        Duration(milliseconds: ms + 100),
+        () async {
+          setState(() {
+            this.color = color;
+          });
+          await Future.delayed(const Duration(milliseconds: 100));
+          setState(() {
+            debugPrint(
+              '[NowPlayingBar] Freed ${fills.length} [Color] [TweenAnimationBuilder] fill(s).',
+            );
+            fills.clear();
+          });
+        },
+      );
+      setState(() {
+        fills.add(
+          TweenAnimationBuilder(
+            tween: Tween<double>(
+              begin: 0.0,
+              end: 2 * MediaQuery.of(context).size.width / 4.0,
+            ),
+            duration: Duration(
+              milliseconds: ms,
+            ),
+            curve: Curves.easeInOut,
+            child: Container(
+              height: kDesktopNowPlayingBarHeight,
+              width: MediaQuery.of(context).size.width,
+              alignment: Alignment.center,
+              child: ClipRect(
+                child: Container(
+                  height: 4.0,
+                  width: 4.0,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                  ),
                 ),
               ),
             ),
+            builder: (context, value, child) => Transform.scale(
+              scale: value as double,
+              child: child,
+            ),
           ),
-          builder: (context, value, child) => Transform.scale(
-            scale: value as double,
-            child: child,
-          ),
-        ),
-      );
-    });
+        );
+      });
+    }
   }
 
   @override
@@ -218,12 +224,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           Container(
                                             height: 24.0,
                                             width: 24.0,
-                                            child: CircularProgressIndicator(
-                                              valueColor:
-                                                  AlwaysStoppedAnimation(
-                                                Theme.of(context).primaryColor,
-                                              ),
-                                            ),
+                                            child:
+                                                const CircularProgressIndicator(),
                                           ),
                                           SizedBox(
                                             width: 24.0,
@@ -234,18 +236,24 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                               style:
                                                   Theme.of(context)
                                                       .textTheme
-                                                      .displayMedium
+                                                      .titleMedium
                                                       ?.copyWith(
-                                                        color:
-                                                            (colors.palette ??
+                                                        color: (colors.palette ??
                                                                         [
                                                                           Theme.of(context).cardTheme.color ??
                                                                               Theme.of(context).cardColor
                                                                         ])
                                                                     .first
-                                                                    .isDark
-                                                                ? Colors.white
-                                                                : Colors.black,
+                                                                    .computeLuminance() <
+                                                                0.5
+                                                            ? Theme.of(context)
+                                                                .extension<
+                                                                    TextColors>()
+                                                                ?.darkPrimary
+                                                            : Theme.of(context)
+                                                                .extension<
+                                                                    TextColors>()
+                                                                ?.lightPrimary,
                                                       ),
                                             ),
                                           ),
@@ -284,8 +292,12 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                         BorderRadius.circular(
                                                             0.0),
                                                     child: AnimatedSwitcher(
-                                                      duration: const Duration(
-                                                          milliseconds: 300),
+                                                      duration: Theme.of(
+                                                                  context)
+                                                              .extension<
+                                                                  AnimationDuration>()
+                                                              ?.fast ??
+                                                          Duration.zero,
                                                       transitionBuilder:
                                                           (child, animation) =>
                                                               FadeTransition(
@@ -320,8 +332,11 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                           ? 1.0
                                                           : 0.0,
                                                     ),
-                                                    duration: Duration(
-                                                        milliseconds: 100),
+                                                    duration: Theme.of(context)
+                                                            .extension<
+                                                                AnimationDuration>()
+                                                            ?.fast ??
+                                                        Duration.zero,
                                                     curve: Curves.easeInOut,
                                                     child: Material(
                                                       color: Colors.transparent,
@@ -377,18 +392,24 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                       .overflow,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .displayLarge
+                                                      .titleMedium
                                                       ?.copyWith(
-                                                        color:
-                                                            (colors.palette ??
+                                                        color: (colors.palette ??
                                                                         [
                                                                           Theme.of(context).cardTheme.color ??
                                                                               Theme.of(context).cardColor
                                                                         ])
                                                                     .first
-                                                                    .isDark
-                                                                ? Colors.white
-                                                                : Colors.black,
+                                                                    .computeLuminance() <
+                                                                0.5
+                                                            ? Theme.of(context)
+                                                                .extension<
+                                                                    TextColors>()
+                                                                ?.darkPrimary
+                                                            : Theme.of(context)
+                                                                .extension<
+                                                                    TextColors>()
+                                                                ?.lightPrimary,
                                                       ),
                                                   maxLines: 1,
                                                   overflow:
@@ -440,7 +461,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                                         navigatorKey
                                                                             .currentState
                                                                             ?.push(
-                                                                          MaterialPageRoute(
+                                                                          MaterialRoute(
                                                                             builder: (context) =>
                                                                                 ArtistScreen(
                                                                               artist: artist,
@@ -470,22 +491,29 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                                   : ''),
                                                         ),
                                                     ),
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .displaySmall
-                                                        ?.copyWith(
-                                                          color:
-                                                              (colors.palette ??
-                                                                          [
-                                                                            Theme.of(context).cardTheme.color ??
-                                                                                Theme.of(context).cardColor
-                                                                          ])
-                                                                      .first
-                                                                      .isDark
-                                                                  ? Colors.white
-                                                                  : Colors
-                                                                      .black,
-                                                        ),
+                                                    style:
+                                                        Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium
+                                                            ?.copyWith(
+                                                              color: (colors.palette ??
+                                                                              [
+                                                                                Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
+                                                                              ])
+                                                                          .first
+                                                                          .computeLuminance() <
+                                                                      0.5
+                                                                  ? Theme.of(
+                                                                          context)
+                                                                      .extension<
+                                                                          TextColors>()
+                                                                      ?.darkPrimary
+                                                                  : Theme.of(
+                                                                          context)
+                                                                      .extension<
+                                                                          TextColors>()
+                                                                      ?.lightPrimary,
+                                                            ),
                                                   ),
                                                 if (Configuration.instance
                                                         .displayAudioFormat &&
@@ -495,22 +523,29 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                   Text(
                                                     playback
                                                         .audioFormatLabelSmall,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .displaySmall
-                                                        ?.copyWith(
-                                                          color:
-                                                              (colors.palette ??
-                                                                          [
-                                                                            Theme.of(context).cardTheme.color ??
-                                                                                Theme.of(context).cardColor
-                                                                          ])
-                                                                      .first
-                                                                      .isDark
-                                                                  ? Colors.white
-                                                                  : Colors
-                                                                      .black,
-                                                        ),
+                                                    style:
+                                                        Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium
+                                                            ?.copyWith(
+                                                              color: (colors.palette ??
+                                                                              [
+                                                                                Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
+                                                                              ])
+                                                                          .first
+                                                                          .computeLuminance() <
+                                                                      0.5
+                                                                  ? Theme.of(
+                                                                          context)
+                                                                      .extension<
+                                                                          TextColors>()
+                                                                      ?.darkPrimary
+                                                                  : Theme.of(
+                                                                          context)
+                                                                      .extension<
+                                                                          TextColors>()
+                                                                      ?.lightPrimary,
+                                                            ),
                                                     maxLines: 1,
                                                     overflow:
                                                         TextOverflow.ellipsis,
@@ -542,18 +577,23 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                               playback.position.label,
                                               style: TextStyle(
                                                 color: (colors.palette ??
-                                                            [
-                                                              Theme.of(context)
-                                                                      .cardTheme
-                                                                      .color ??
-                                                                  Theme.of(
-                                                                          context)
-                                                                      .cardColor
-                                                            ])
-                                                        .first
-                                                        .isDark
-                                                    ? Colors.white
-                                                    : Colors.black,
+                                                                [
+                                                                  Theme.of(context)
+                                                                          .cardTheme
+                                                                          .color ??
+                                                                      Theme.of(
+                                                                              context)
+                                                                          .cardColor
+                                                                ])
+                                                            .first
+                                                            .computeLuminance() <
+                                                        0.5
+                                                    ? Theme.of(context)
+                                                        .extension<TextColors>()
+                                                        ?.darkPrimary
+                                                    : Theme.of(context)
+                                                        .extension<TextColors>()
+                                                        ?.lightPrimary,
                                                 fontSize: 14.0,
                                               ),
                                             ),
@@ -616,18 +656,23 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                               playback.duration.label,
                                               style: TextStyle(
                                                 color: (colors.palette ??
-                                                            [
-                                                              Theme.of(context)
-                                                                      .cardTheme
-                                                                      .color ??
-                                                                  Theme.of(
-                                                                          context)
-                                                                      .cardColor
-                                                            ])
-                                                        .first
-                                                        .isDark
-                                                    ? Colors.white
-                                                    : Colors.black,
+                                                                [
+                                                                  Theme.of(context)
+                                                                          .cardTheme
+                                                                          .color ??
+                                                                      Theme.of(
+                                                                              context)
+                                                                          .cardColor
+                                                                ])
+                                                            .first
+                                                            .computeLuminance() <
+                                                        0.5
+                                                    ? Theme.of(context)
+                                                        .extension<TextColors>()
+                                                        ?.darkPrimary
+                                                    : Theme.of(context)
+                                                        .extension<TextColors>()
+                                                        ?.lightPrimary,
                                                 fontSize: 14.0,
                                               ),
                                             ),
@@ -640,58 +685,6 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           top: 8.0, bottom: 26.0),
                                       child: Row(
                                         children: [
-                                          // Transform.rotate(
-                                          //   angle: pi,
-                                          //   child: Container(
-                                          //     width: kDesktopNowPlayingBarHeight,
-                                          //     child: ScrollableSlider(
-                                          //       min: 0.0,
-                                          //       max: 2.0,
-                                          //       value: playback.rate,
-                                          //       color: palette?.last,
-                                          //       secondaryColor: palette?.first,
-                                          //       onScrolledUp: () {
-                                          //         playback.setRate(
-                                          //           (playback.rate + 0.05)
-                                          //               .clamp(0.0, 2.0),
-                                          //         );
-                                          //       },
-                                          //       onScrolledDown: () {
-                                          //         playback.setRate(
-                                          //           (playback.rate - 0.05)
-                                          //               .clamp(0.0, 2.0),
-                                          //         );
-                                          //       },
-                                          //       onChanged: (value) {
-                                          //         playback.setRate(value);
-                                          //       },
-                                          //     ),
-                                          //   ),
-                                          // ),
-                                          // SizedBox(
-                                          //   width: 12.0,
-                                          // ),
-                                          // IconButton(
-                                          //   onPressed: () {
-                                          //     playback.setRate(1.0);
-                                          //   },
-                                          //   iconSize: 20.0,
-                                          //   color: (palette ??
-                                          //               [
-                                          //                 Theme.of(context)
-                                          //                     .cardTheme.color
-                                          //               ])
-                                          //           .first
-                                          //           .isDark
-                                          //       ? Colors.white.withOpacity(0.87)
-                                          //       : Colors.black87,
-                                          //   splashRadius: 18.0,
-                                          //   tooltip:
-                                          //       Language.instance.RESET_SPEED,
-                                          //   icon: Icon(
-                                          //     Icons.speed,
-                                          //   ),
-                                          // ),
                                           if (playback.tracks.isNotEmpty &&
                                               !playback
                                                   .tracks[playback.index.clamp(
@@ -714,16 +707,17 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                 Icons.link,
                                               ),
                                               color: (colors.palette ??
-                                                          [
-                                                            Theme.of(context)
-                                                                    .cardTheme
-                                                                    .color ??
-                                                                Theme.of(
-                                                                        context)
-                                                                    .cardColor
-                                                          ])
-                                                      .first
-                                                      .isDark
+                                                              [
+                                                                Theme.of(context)
+                                                                        .cardTheme
+                                                                        .color ??
+                                                                    Theme.of(
+                                                                            context)
+                                                                        .cardColor
+                                                              ])
+                                                          .first
+                                                          .computeLuminance() <
+                                                      0.5
                                                   ? Colors.white
                                                       .withOpacity(0.87)
                                                   : Colors.black87,
@@ -735,31 +729,33 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                             iconSize: 20.0,
                                             color: playback.isShuffling
                                                 ? (colors.palette ??
-                                                            [
-                                                              Theme.of(context)
-                                                                      .cardTheme
-                                                                      .color ??
-                                                                  Theme.of(
-                                                                          context)
-                                                                      .cardColor
-                                                            ])
-                                                        .first
-                                                        .isDark
+                                                                [
+                                                                  Theme.of(context)
+                                                                          .cardTheme
+                                                                          .color ??
+                                                                      Theme.of(
+                                                                              context)
+                                                                          .cardColor
+                                                                ])
+                                                            .first
+                                                            .computeLuminance() <
+                                                        0.5
                                                     ? Color.lerp(Colors.black,
                                                         Colors.white, 0.87)
                                                     : Color.lerp(Colors.white,
                                                         Colors.black, 0.87)
                                                 : (colors.palette ??
-                                                            [
-                                                              Theme.of(context)
-                                                                      .cardTheme
-                                                                      .color ??
-                                                                  Theme.of(
-                                                                          context)
-                                                                      .cardColor
-                                                            ])
-                                                        .first
-                                                        .isDark
+                                                                [
+                                                                  Theme.of(context)
+                                                                          .cardTheme
+                                                                          .color ??
+                                                                      Theme.of(
+                                                                              context)
+                                                                          .cardColor
+                                                                ])
+                                                            .first
+                                                            .computeLuminance() <
+                                                        0.5
                                                     ? Color.lerp(Colors.black,
                                                         Colors.white, 0.54)
                                                     : Color.lerp(Colors.white,
@@ -777,28 +773,32 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                 ? null
                                                 : playback.previous,
                                             disabledColor: (colors.palette ??
-                                                        [
-                                                          Theme.of(context)
-                                                                  .cardTheme
-                                                                  .color ??
+                                                            [
                                                               Theme.of(context)
-                                                                  .cardColor
-                                                        ])
-                                                    .first
-                                                    .isDark
+                                                                      .cardTheme
+                                                                      .color ??
+                                                                  Theme.of(
+                                                                          context)
+                                                                      .cardColor
+                                                            ])
+                                                        .first
+                                                        .computeLuminance() <
+                                                    0.5
                                                 ? Colors.white.withOpacity(0.45)
                                                 : Colors.black45,
                                             iconSize: 24.0,
                                             color: (colors.palette ??
-                                                        [
-                                                          Theme.of(context)
-                                                                  .cardTheme
-                                                                  .color ??
+                                                            [
                                                               Theme.of(context)
-                                                                  .cardColor
-                                                        ])
-                                                    .first
-                                                    .isDark
+                                                                      .cardTheme
+                                                                      .color ??
+                                                                  Theme.of(
+                                                                          context)
+                                                                      .cardColor
+                                                            ])
+                                                        .first
+                                                        .computeLuminance() <
+                                                    0.5
                                                 ? Colors.white.withOpacity(0.87)
                                                 : Colors.black87,
                                             splashRadius: 18.0,
@@ -812,18 +812,21 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           FloatingActionButton(
                                             elevation: 2.0,
                                             foregroundColor: (colors.palette ??
-                                                        [
-                                                          Theme.of(context)
-                                                              .primaryColor
-                                                        ])
-                                                    .last
-                                                    .isDark
-                                                ? Colors.white
-                                                : Color(0xFF212121),
+                                                            [
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .primary
+                                                            ])
+                                                        .last
+                                                        .computeLuminance() <
+                                                    0.5
+                                                ? kFABDarkForegroundColor
+                                                : kFABLightForegroundColor,
                                             backgroundColor: (colors.palette ??
                                                     [
                                                       Theme.of(context)
-                                                          .primaryColor
+                                                          .colorScheme
+                                                          .primary
                                                     ])
                                                 .last,
                                             onPressed: playback.playOrPause,
@@ -844,27 +847,31 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                 : playback.next,
                                             iconSize: 24.0,
                                             disabledColor: (colors.palette ??
-                                                        [
-                                                          Theme.of(context)
-                                                                  .cardTheme
-                                                                  .color ??
+                                                            [
                                                               Theme.of(context)
-                                                                  .cardColor
-                                                        ])
-                                                    .first
-                                                    .isDark
+                                                                      .cardTheme
+                                                                      .color ??
+                                                                  Theme.of(
+                                                                          context)
+                                                                      .cardColor
+                                                            ])
+                                                        .first
+                                                        .computeLuminance() <
+                                                    0.5
                                                 ? Colors.white.withOpacity(0.45)
                                                 : Colors.black45,
                                             color: (colors.palette ??
-                                                        [
-                                                          Theme.of(context)
-                                                                  .cardTheme
-                                                                  .color ??
+                                                            [
                                                               Theme.of(context)
-                                                                  .cardColor
-                                                        ])
-                                                    .first
-                                                    .isDark
+                                                                      .cardTheme
+                                                                      .color ??
+                                                                  Theme.of(
+                                                                          context)
+                                                                      .cardColor
+                                                            ])
+                                                        .first
+                                                        .computeLuminance() <
+                                                    0.5
                                                 ? Colors.white.withOpacity(0.87)
                                                 : Colors.black87,
                                             splashRadius: 18.0,
@@ -896,31 +903,33 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                             color: (playback.playlistLoopMode !=
                                                     PlaylistLoopMode.none)
                                                 ? (colors.palette ??
-                                                            [
-                                                              Theme.of(context)
-                                                                      .cardTheme
-                                                                      .color ??
-                                                                  Theme.of(
-                                                                          context)
-                                                                      .cardColor
-                                                            ])
-                                                        .first
-                                                        .isDark
+                                                                [
+                                                                  Theme.of(context)
+                                                                          .cardTheme
+                                                                          .color ??
+                                                                      Theme.of(
+                                                                              context)
+                                                                          .cardColor
+                                                                ])
+                                                            .first
+                                                            .computeLuminance() <
+                                                        0.5
                                                     ? Color.lerp(Colors.black,
                                                         Colors.white, 0.87)
                                                     : Color.lerp(Colors.white,
                                                         Colors.black, 0.87)
                                                 : (colors.palette ??
-                                                            [
-                                                              Theme.of(context)
-                                                                      .cardTheme
-                                                                      .color ??
-                                                                  Theme.of(
-                                                                          context)
-                                                                      .cardColor
-                                                            ])
-                                                        .first
-                                                        .isDark
+                                                                [
+                                                                  Theme.of(context)
+                                                                          .cardTheme
+                                                                          .color ??
+                                                                      Theme.of(
+                                                                              context)
+                                                                          .cardColor
+                                                                ])
+                                                            .first
+                                                            .computeLuminance() <
+                                                        0.5
                                                     ? Color.lerp(Colors.black,
                                                         Colors.white, 0.54)
                                                     : Color.lerp(Colors.white,
@@ -962,69 +971,23 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                 Icons.open_in_new,
                                               ),
                                               color: (colors.palette ??
-                                                          [
-                                                            Theme.of(context)
-                                                                    .cardTheme
-                                                                    .color ??
-                                                                Theme.of(
-                                                                        context)
-                                                                    .cardColor
-                                                          ])
-                                                      .first
-                                                      .isDark
+                                                              [
+                                                                Theme.of(context)
+                                                                        .cardTheme
+                                                                        .color ??
+                                                                    Theme.of(
+                                                                            context)
+                                                                        .cardColor
+                                                              ])
+                                                          .first
+                                                          .computeLuminance() <
+                                                      0.5
                                                   ? Colors.white
                                                       .withOpacity(0.87)
                                                   : Colors.black87,
                                               tooltip: Language
                                                   .instance.OPEN_IN_BROWSER,
                                             ),
-                                          // IconButton(
-                                          //   onPressed: () =>
-                                          //       playback.setPitch(1.0),
-                                          //   iconSize: 20.0,
-                                          //   color: (palette ??
-                                          //               [
-                                          //                 Theme.of(context)
-                                          //                     .cardTheme.color
-                                          //               ])
-                                          //           .first
-                                          //           .isDark
-                                          //       ? Colors.white.withOpacity(0.87)
-                                          //       : Colors.black87,
-                                          //   splashRadius: 18.0,
-                                          //   tooltip:
-                                          //       Language.instance.RESET_PITCH,
-                                          //   icon:
-                                          //       Icon(FluentIcons.pulse_20_filled),
-                                          // ),
-                                          // SizedBox(
-                                          //   width: 12.0,
-                                          // ),
-                                          // Container(
-                                          //   width: kDesktopNowPlayingBarHeight,
-                                          //   child: ScrollableSlider(
-                                          //     min: 0.5,
-                                          //     max: 1.5,
-                                          //     value: playback.pitch,
-                                          //     color: palette?.last,
-                                          //     secondaryColor: palette?.first,
-                                          //     onScrolledUp: () {
-                                          //       playback.setPitch(
-                                          //         (playback.pitch + 0.05)
-                                          //             .clamp(0.5, 1.5),
-                                          //       );
-                                          //     },
-                                          //     onScrolledDown: () {
-                                          //       playback.setPitch(
-                                          //         (playback.pitch - 0.05)
-                                          //             .clamp(0.5, 1.5),
-                                          //       );
-                                          //     },
-                                          //     onChanged: (value) {
-                                          //       playback.setPitch(value);
-                                          //     },
-                                          //   ),
-                                          // ),
                                         ],
                                       ),
                                     ),
@@ -1042,15 +1005,17 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           onPressed: playback.toggleMute,
                                           iconSize: 20.0,
                                           color: (colors.palette ??
-                                                      [
-                                                        Theme.of(context)
-                                                                .cardTheme
-                                                                .color ??
+                                                          [
                                                             Theme.of(context)
-                                                                .cardColor
-                                                      ])
-                                                  .first
-                                                  .isDark
+                                                                    .cardTheme
+                                                                    .color ??
+                                                                Theme.of(
+                                                                        context)
+                                                                    .cardColor
+                                                          ])
+                                                      .first
+                                                      .computeLuminance() <
+                                                  0.5
                                               ? Colors.white.withOpacity(0.87)
                                               : Colors.black87,
                                           splashRadius: 18.0,
@@ -1134,15 +1099,17 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           },
                                           iconSize: 20.0,
                                           color: (colors.palette ??
-                                                      [
-                                                        Theme.of(context)
-                                                                .cardTheme
-                                                                .color ??
+                                                          [
                                                             Theme.of(context)
-                                                                .cardColor
-                                                      ])
-                                                  .first
-                                                  .isDark
+                                                                    .cardTheme
+                                                                    .color ??
+                                                                Theme.of(
+                                                                        context)
+                                                                    .cardColor
+                                                          ])
+                                                      .first
+                                                      .computeLuminance() <
+                                                  0.5
                                               ? Colors.white.withOpacity(0.87)
                                               : Colors.black87,
                                           splashRadius: 18.0,
@@ -1249,6 +1216,18 @@ class _ControlPanelState extends State<ControlPanel> {
             scopesRoute: true,
             explicitChildNodes: true,
             child: WillPopScope(
+              onWillPop: () async {
+                widget.onPop();
+                setState(() {
+                  end = 156.0;
+                });
+                final duration =
+                    Theme.of(context).extension<AnimationDuration>()?.fast;
+                if (duration != null) {
+                  await Future.delayed(duration);
+                }
+                return true;
+              },
               child: Stack(
                 children: [
                   Positioned.fill(
@@ -1271,7 +1250,10 @@ class _ControlPanelState extends State<ControlPanel> {
                         end: end,
                       ),
                       curve: Curves.easeInOut,
-                      duration: Duration(milliseconds: 160),
+                      duration: Theme.of(context)
+                              .extension<AnimationDuration>()
+                              ?.fast ??
+                          Duration.zero,
                       child: Consumer<Playback>(
                         builder: (context, playback, _) => Column(
                           mainAxisSize: MainAxisSize.min,
@@ -1284,7 +1266,7 @@ class _ControlPanelState extends State<ControlPanel> {
                                 Text(
                                   Language.instance.CONTROL_PANEL,
                                   style:
-                                      Theme.of(context).textTheme.displayLarge,
+                                      Theme.of(context).textTheme.titleMedium,
                                 ),
                                 Transform.translate(
                                   offset: Offset(2.0, -6.0),
@@ -1303,7 +1285,7 @@ class _ControlPanelState extends State<ControlPanel> {
                                       Language.instance.BETA.toUpperCase(),
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headlineSmall
+                                          .bodyLarge
                                           ?.copyWith(
                                             fontSize: 10.0,
                                           ),
@@ -1321,8 +1303,7 @@ class _ControlPanelState extends State<ControlPanel> {
                               ),
                               child: Text(
                                 Language.instance.SPEED,
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               ),
                             ),
                             Row(
@@ -1385,9 +1366,8 @@ class _ControlPanelState extends State<ControlPanel> {
                                     },
                                     textAlign: TextAlign.center,
                                     textAlignVertical: TextAlignVertical.center,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineMedium,
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
                                     decoration: InputDecoration(
                                       filled: true,
                                       fillColor: Theme.of(context)
@@ -1429,8 +1409,7 @@ class _ControlPanelState extends State<ControlPanel> {
                               ),
                               child: Text(
                                 Language.instance.PITCH,
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               ),
                             ),
                             Row(
@@ -1490,9 +1469,8 @@ class _ControlPanelState extends State<ControlPanel> {
                                         NeverScrollableScrollPhysics(),
                                     textAlign: TextAlign.center,
                                     textAlignVertical: TextAlignVertical.center,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineMedium,
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
                                     decoration: InputDecoration(
                                       filled: true,
                                       fillColor: Theme.of(context)
@@ -1534,8 +1512,7 @@ class _ControlPanelState extends State<ControlPanel> {
                               ),
                               child: Text(
                                 Language.instance.VOLUME_BOOST,
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               ),
                             ),
                             Row(
@@ -1602,9 +1579,8 @@ class _ControlPanelState extends State<ControlPanel> {
                                         NeverScrollableScrollPhysics(),
                                     textAlign: TextAlign.center,
                                     textAlignVertical: TextAlignVertical.center,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineMedium,
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
                                     decoration: InputDecoration(
                                       filled: true,
                                       fillColor: Theme.of(context)
@@ -1668,14 +1644,6 @@ class _ControlPanelState extends State<ControlPanel> {
                   ),
                 ],
               ),
-              onWillPop: () async {
-                widget.onPop();
-                setState(() {
-                  end = 156.0;
-                });
-                await Future.delayed(const Duration(milliseconds: 100));
-                return Future.value(true);
-              },
             ),
           )
         : Consumer<Playback>(
@@ -1741,6 +1709,9 @@ class _ControlPanelState extends State<ControlPanel> {
                         },
                         textAlign: TextAlign.center,
                         textAlignVertical: TextAlignVertical.bottom,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontSize: 16.0,
+                            ),
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Theme.of(context)
@@ -1824,6 +1795,9 @@ class _ControlPanelState extends State<ControlPanel> {
                         scrollPhysics: NeverScrollableScrollPhysics(),
                         textAlign: TextAlign.center,
                         textAlignVertical: TextAlignVertical.bottom,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontSize: 16.0,
+                            ),
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Theme.of(context)
@@ -1916,6 +1890,10 @@ class _ControlPanelState extends State<ControlPanel> {
                           scrollPhysics: NeverScrollableScrollPhysics(),
                           textAlign: TextAlign.center,
                           textAlignVertical: TextAlignVertical.bottom,
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    fontSize: 16.0,
+                                  ),
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Theme.of(context)
@@ -1950,8 +1928,4 @@ class _ControlPanelState extends State<ControlPanel> {
             ),
           );
   }
-}
-
-extension on Color {
-  bool get isDark => (0.299 * red) + (0.587 * green) + (0.114 * blue) < 128.0;
 }

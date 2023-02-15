@@ -9,6 +9,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/foundation.dart';
+import 'package:harmonoid/state/visuals.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:window_plus/window_plus.dart';
 import 'package:harmonoid/utils/android_tag_reader.dart';
@@ -28,7 +29,6 @@ import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/now_playing_visuals.dart';
 
-import 'package:harmonoid/utils/updater.dart';
 import 'package:harmonoid/utils/window_lifecycle.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
 
@@ -75,6 +75,12 @@ Future<void> main(List<String> args) async {
         await SystemMediaTransportControls.initialize();
       }
       await Intent.initialize(args: args);
+      // TODO(@alexmercerind): Restore from application cache.
+      await Visuals.initialize(
+        standard: 2,
+        themeMode: Configuration.instance.themeMode,
+        systemColorScheme: false,
+      );
       DiscordRPC.initialize();
     }
     if (Platform.isLinux) {
@@ -91,6 +97,12 @@ Future<void> main(List<String> args) async {
       await NowPlayingVisuals.initialize();
       await Intent.initialize(args: args);
       DiscordRPC.initialize();
+      // TODO(@alexmercerind): Restore from application cache.
+      await Visuals.initialize(
+        standard: 2,
+        themeMode: Configuration.instance.themeMode,
+        systemColorScheme: false,
+      );
     }
     if (Platform.isAndroid) {
       await StorageRetriever.initialize();
@@ -98,11 +110,15 @@ Future<void> main(List<String> args) async {
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown,
       ]);
-      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-        systemNavigationBarColor: Colors.black,
-        systemNavigationBarDividerColor: Colors.black,
-        systemNavigationBarIconBrightness: Brightness.dark,
-      ));
+      // Based on Material 2 specifications.
+      // Edge to edge based Material 3 configuration (if enabled by user) may be enabled during runtime later on.
+      SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(
+          systemNavigationBarColor: Colors.black,
+          systemNavigationBarDividerColor: Colors.black,
+          systemNavigationBarIconBrightness: Brightness.dark,
+        ),
+      );
       // Android 12 or lower.
       if (StorageRetriever.instance.version < 33) {
         if (await Permission.storage.isDenied ||
@@ -136,6 +152,12 @@ Future<void> main(List<String> args) async {
       await ExternalMediaProvider.create();
       await AppState.initialize();
       await Intent.initialize();
+      // TODO(@alexmercerind): Restore from application cache.
+      await Visuals.initialize(
+        standard: 2,
+        themeMode: Configuration.instance.themeMode,
+        systemColorScheme: false,
+      );
     }
     await Collection.initialize(
       collectionDirectories: Configuration.instance.collectionDirectories,
@@ -162,12 +184,16 @@ Future<void> main(List<String> args) async {
     await Language.initialize(
       language: Configuration.instance.language,
     );
-    Updater.initialize();
     runApp(Harmonoid());
   } catch (exception, stacktrace) {
     debugPrint(exception.toString());
     debugPrint(stacktrace.toString());
-    WindowLifecycle.initialize();
+    try {
+      WindowLifecycle.initialize();
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
     runApp(
       ExceptionApp(
         exception: exception,

@@ -23,9 +23,10 @@ import 'package:harmonoid/interface/modern_now_playing_screen.dart';
 import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/constants/language.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -198,8 +199,14 @@ class HomeState extends State<Home>
               if (Configuration.instance.modernNowPlayingScreen) {
                 Navigator.of(context).push(
                   PageRouteBuilder(
-                    transitionDuration: Duration(milliseconds: 600),
-                    reverseTransitionDuration: Duration(milliseconds: 300),
+                    transitionDuration: Theme.of(context)
+                            .extension<AnimationDuration>()
+                            ?.slow ??
+                        Duration.zero,
+                    reverseTransitionDuration: Theme.of(context)
+                            .extension<AnimationDuration>()
+                            ?.medium ??
+                        Duration.zero,
                     pageBuilder: (context, animation, secondaryAnimation) =>
                         SharedAxisTransition(
                       transitionType: SharedAxisTransitionType.vertical,
@@ -245,7 +252,7 @@ class HomeState extends State<Home>
                             onGenerateRoute: (RouteSettings routeSettings) {
                               Route<dynamic>? route;
                               if (routeSettings.name == '/collection_screen') {
-                                route = MaterialPageRoute(
+                                route = MaterialRoute(
                                   builder: (BuildContext context) =>
                                       CollectionScreen(
                                     tabControllerNotifier:
@@ -257,10 +264,14 @@ class HomeState extends State<Home>
                               }
                               if (routeSettings.name == '/now_playing') {
                                 route = PageRouteBuilder(
-                                  transitionDuration:
-                                      Duration(milliseconds: 600),
-                                  reverseTransitionDuration:
-                                      Duration(milliseconds: 300),
+                                  transitionDuration: Theme.of(context)
+                                          .extension<AnimationDuration>()
+                                          ?.slow ??
+                                      Duration.zero,
+                                  reverseTransitionDuration: Theme.of(context)
+                                          .extension<AnimationDuration>()
+                                          ?.medium ??
+                                      Duration.zero,
                                   pageBuilder: (context, animation,
                                           secondaryAnimation) =>
                                       SharedAxisTransition(
@@ -297,7 +308,7 @@ class HomeState extends State<Home>
                           onGenerateRoute: (RouteSettings routeSettings) {
                             Route<dynamic>? route;
                             if (routeSettings.name == '/collection_screen') {
-                              route = MaterialPageRoute(
+                              route = MaterialRoute(
                                 builder: (BuildContext context) =>
                                     NowPlayingBarScrollHideNotifier(
                                   child: CollectionScreen(
@@ -321,7 +332,7 @@ class HomeState extends State<Home>
                   bottomNavigationBar: ValueListenableBuilder<double>(
                     valueListenable:
                         MobileNowPlayingController.instance.bottomNavigationBar,
-                    child: MobileBottomNavigationBar(
+                    child: M2MobileBottomNavigationBar(
                       tabControllerNotifier: tabControllerNotifier,
                     ),
                     builder: (context, height, child) => Container(
@@ -331,7 +342,7 @@ class HomeState extends State<Home>
                                   // On-screen keyboard is hidden (not visible).
                                   MediaQuery.of(context).viewInsets.bottom <
                                       180.0)
-                          ? height
+                          ? height * navigationBarHeight(context)
                           : 0.0,
                       child: SingleChildScrollView(
                         physics: NeverScrollableScrollPhysics(),

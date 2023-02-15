@@ -19,6 +19,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
+import 'package:known_extents_list_view_builder/known_extents_list_view_builder.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
@@ -28,7 +29,7 @@ import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -90,11 +91,12 @@ class _AlbumTabState extends State<AlbumTab> {
                         controller: controller,
                         itemCount: 1 + data.widgets.length,
                         itemExtents: [
-                              28.0 + tileMargin,
+                              28.0 + tileMargin(context),
                             ] +
                             List.generate(
                               data.widgets.length,
-                              (index) => helper.albumTileHeight + tileMargin,
+                              (index) =>
+                                  helper.albumTileHeight + tileMargin(context),
                             ),
                         itemBuilder: (context, i) => i == 0
                             ? SortBarFixedHolder(
@@ -131,11 +133,12 @@ class _AlbumTabState extends State<AlbumTab> {
                         ),
                         labelTextBuilder: (offset) {
                           final perTileHeight = helper.albumElementsPerRow > 1
-                              ? (helper.albumTileHeight + tileMargin)
+                              ? (helper.albumTileHeight + tileMargin(context))
                               : kAlbumTileListViewHeight;
                           final index = (offset -
                                   (kMobileSearchBarHeight +
-                                      2 * tileMargin +
+                                      56.0 +
+                                      tileMargin(context) +
                                       MediaQuery.of(context).padding.top)) ~/
                               perTileHeight;
                           final album = data
@@ -149,58 +152,79 @@ class _AlbumTabState extends State<AlbumTab> {
                               {
                                 return Text(
                                   album.albumName[0].toUpperCase(),
-                                  style:
-                                      Theme.of(context).textTheme.displayLarge,
+                                  style: Theme.of(context).textTheme.bodyLarge,
                                 );
                               }
                             case AlbumsSort.dateAdded:
                               {
                                 return Text(
                                   '${album.timeAdded.label}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineMedium,
+                                  style: Theme.of(context).textTheme.bodyLarge,
                                 );
                               }
                             case AlbumsSort.year:
                               {
                                 return Text(
                                   album.year,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineMedium,
+                                  style: Theme.of(context).textTheme.bodyLarge,
                                 );
                               }
                             default:
                               return Text(
                                 '',
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               );
                           }
                         },
                         backgroundColor: Theme.of(context).cardTheme.color ??
                             Theme.of(context).cardColor,
                         controller: controller,
-                        child: ListView(
+                        child: KnownExtentsListView.builder(
                           controller: controller,
-                          itemExtent: helper.albumElementsPerRow > 1
-                              ? (helper.albumTileHeight + tileMargin)
-                              : kAlbumTileListViewHeight,
+                          itemExtents: [
+                            56.0,
+                            ...data.widgets.map(
+                              (e) => helper.albumElementsPerRow > 1
+                                  ? (helper.albumTileHeight +
+                                      tileMargin(context))
+                                  : kAlbumTileListViewHeight,
+                            ),
+                          ],
                           padding: EdgeInsets.only(
                             top: MediaQuery.of(context).padding.top +
                                 kMobileSearchBarHeight +
-                                2 * tileMargin,
+                                tileMargin(context),
                           ),
-                          children: data.widgets,
+                          itemBuilder: (context, i) {
+                            if (i == 0) {
+                              return Container(
+                                height: 56.0,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: tileMargin(context),
+                                ),
+                                alignment: Alignment.centerRight,
+                                child: Row(
+                                  children: [
+                                    const SizedBox(width: 8.0),
+                                    Text(
+                                      '${Collection.instance.albums.length} ${Language.instance.ALBUM}',
+                                    ),
+                                    const Spacer(),
+                                    MobileSortByButton(tab: kAlbumTabIndex),
+                                  ],
+                                ),
+                              );
+                            }
+                            return data.widgets[i - 1];
+                          },
                         ),
                       )
                     : Container(
-                        // padding: EdgeInsets.only(
-                        //   top: MediaQuery.of(context).padding.top +
-                        //       kMobileSearchBarHeight +
-                        //       2 * tileMargin,
-                        // ),
+                        padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).padding.top +
+                              kMobileSearchBarHeight +
+                              tileMargin(context),
+                        ),
                         child: Center(
                           child: ExceptionWidget(
                             title: Language.instance.NO_COLLECTION_TITLE,
@@ -253,35 +277,36 @@ class _DesktopAlbumArtistTabState extends State<DesktopAlbumArtistTab> {
           ),
         );
       final elementsPerRow =
-          ((MediaQuery.of(context).size.width - 177.0) - tileMargin) ~/
-              (kAlbumTileWidth + tileMargin);
+          ((MediaQuery.of(context).size.width - 177.0) - tileMargin(context)) ~/
+              (kAlbumTileWidth + tileMargin(context));
       final double width = kAlbumTileWidth;
       final double height = kAlbumTileHeight;
       // Children of the right pane.
       List<Widget> children = [];
       List<double> itemExtents = [];
       Map<AlbumArtist, double> offsets = {};
-      double last = -1 * (tileMargin + 12.0);
+      double last = -1 * (tileMargin(context) + 12.0);
       // Grid generated for each iteration of album artist.
       List<Widget> widgets = [];
       if (collection.albumsOrderType == OrderType.ascending) {
         for (final key in collection.albumArtists.keys) {
-          offsets[key] =
-              36.0 + (kAlbumTileHeight + tileMargin) * widgets.length + last;
+          offsets[key] = 36.0 +
+              (kAlbumTileHeight + tileMargin(context)) * widgets.length +
+              last;
           last = offsets[key]!;
           children.addAll(widgets);
           children.add(Container(
-            margin: EdgeInsets.only(left: tileMargin),
+            margin: EdgeInsets.only(left: tileMargin(context)),
             alignment: Alignment.topLeft,
             height: 36.0,
             child: Text(
               key.name,
-              style: Theme.of(context).textTheme.displayLarge,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
           ));
           itemExtents.addAll(List.generate(
             widgets.length,
-            (_) => (kAlbumTileHeight + tileMargin),
+            (_) => (kAlbumTileHeight + tileMargin(context)),
           ));
           itemExtents.add(36.0);
           widgets = tileGridListWidgets(
@@ -328,25 +353,30 @@ class _DesktopAlbumArtistTabState extends State<DesktopAlbumArtistTab> {
           mainAxisAlignment: MainAxisAlignment.start,
         ));
         itemExtents.addAll(List.generate(
-            widgets.length, (_) => (kAlbumTileHeight + tileMargin)));
+            widgets.length, (_) => (kAlbumTileHeight + tileMargin(context))));
       }
       if (collection.albumsOrderType == OrderType.descending) {
         for (final key in collection.albumArtists.keys.toList().reversed) {
-          offsets[key] =
-              36.0 + (kAlbumTileHeight + tileMargin) * widgets.length + last;
+          offsets[key] = 36.0 +
+              (kAlbumTileHeight + tileMargin(context)) * widgets.length +
+              last;
           last = offsets[key]!;
           children.addAll(widgets);
           children.add(Container(
-            margin: EdgeInsets.only(left: tileMargin),
+            margin: EdgeInsets.only(left: tileMargin(context)),
             alignment: Alignment.topLeft,
             height: 36.0,
             child: Text(
               key.name,
-              style: Theme.of(context).textTheme.displayLarge,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
           ));
-          itemExtents.addAll(List.generate(
-              widgets.length, (_) => (kAlbumTileHeight + tileMargin)));
+          itemExtents.addAll(
+            List.generate(
+              widgets.length,
+              (_) => (kAlbumTileHeight + tileMargin(context)),
+            ),
+          );
           itemExtents.add(36.0);
           widgets = tileGridListWidgets(
             context: context,
@@ -392,7 +422,7 @@ class _DesktopAlbumArtistTabState extends State<DesktopAlbumArtistTab> {
           mainAxisAlignment: MainAxisAlignment.start,
         ));
         itemExtents.addAll(List.generate(
-            widgets.length, (_) => (kAlbumTileHeight + tileMargin)));
+            widgets.length, (_) => (kAlbumTileHeight + tileMargin(context))));
       }
       return Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -400,7 +430,7 @@ class _DesktopAlbumArtistTabState extends State<DesktopAlbumArtistTab> {
           Container(
             width: 176.0,
             child: CustomListViewBuilder(
-              padding: EdgeInsets.only(top: tileMargin / 2.0),
+              padding: EdgeInsets.only(top: tileMargin(context) / 2.0),
               itemCount: collection.albumArtists.keys.length,
               itemExtents: List.generate(
                   collection.albumArtists.keys.length, (_) => 28.0),
@@ -416,7 +446,8 @@ class _DesktopAlbumArtistTabState extends State<DesktopAlbumArtistTab> {
                                       i -
                                       1)]! +
                           28.0,
-                      duration: Duration(milliseconds: 100),
+                      // MUST BE GREATER THAN 0 OTHERWISE IT WILL NOT SCROLL.
+                      duration: const Duration(milliseconds: 100),
                       curve: Curves.easeInOut,
                     );
                   },
@@ -440,7 +471,7 @@ class _DesktopAlbumArtistTabState extends State<DesktopAlbumArtistTab> {
                                   collection.albumArtists.keys.length - i - 1)
                               .name
                               .overflow,
-                      style: Theme.of(context).textTheme.headlineMedium,
+                      style: Theme.of(context).textTheme.bodyLarge,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -458,7 +489,7 @@ class _DesktopAlbumArtistTabState extends State<DesktopAlbumArtistTab> {
                   controller: scrollController,
                   itemCount: 1 + children.length,
                   itemExtents: [
-                        28.0 + tileMargin,
+                        28.0 + tileMargin(context),
                       ] +
                       itemExtents,
                   itemBuilder: (context, i) => i == 0
@@ -531,205 +562,255 @@ class AlbumTile extends StatelessWidget {
 
   Widget build(BuildContext context) {
     final helper = DimensionsHelper(context);
+
+    // Only for mobile:
+    final albumElementsPerRow =
+        forceDefaultStyleOnMobile ? 2 : helper.albumElementsPerRow;
+    final albumTileNormalDensity =
+        forceDefaultStyleOnMobile ? true : helper.albumTileNormalDensity;
+
     Iterable<Color>? palette;
-    if (isMobile && forceDefaultStyleOnMobile) {
-      return OpenContainer(
-        closedColor:
-            Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor,
-        closedElevation:
+
+    // Desktop
+    if (isDesktop) {
+      return Card(
+        clipBehavior: Clip.antiAlias,
+        elevation:
             Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
-        openElevation: 0.0,
-        openColor: Theme.of(context).scaffoldBackgroundColor,
-        closedBuilder: (context, open) => InkWell(
-          onLongPress: () => action(context),
-          onTap: () async {
-            try {
-              if (palette == null) {
-                final result = await PaletteGenerator.fromImageProvider(
-                  getAlbumArt(
-                    album,
-                    small: true,
-                  ),
-                );
-                palette = result.colors;
-              }
-              await precacheImage(getAlbumArt(album), context);
-              MobileNowPlayingController.instance.hide();
-            } catch (exception, stacktrace) {
-              debugPrint(exception.toString());
-              debugPrint(stacktrace.toString());
-            }
-            open();
+        margin: EdgeInsets.zero,
+        child: ContextMenuArea(
+          onPressed: (e) async {
+            final result = await showMenu(
+              context: context,
+              constraints: BoxConstraints(
+                maxWidth: double.infinity,
+              ),
+              position: RelativeRect.fromLTRB(
+                e.position.dx,
+                e.position.dy,
+                MediaQuery.of(context).size.width,
+                MediaQuery.of(context).size.width,
+              ),
+              items: albumPopupMenuItems(
+                album,
+                context,
+              ),
+            );
+            await albumPopupMenuHandle(
+              context,
+              album,
+              result,
+            );
           },
-          child: Container(
-            height: height,
-            width: width,
-            child: Column(
-              children: [
-                Ink.image(
-                  image: getAlbumArt(
-                    album,
-                    small: true,
-                    cacheWidth:
-                        width * MediaQuery.of(context).devicePixelRatio ~/ 1,
-                  ),
-                  fit: BoxFit.cover,
-                  height: width,
-                  width: width,
-                ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: helper.albumTileNormalDensity ? 12.0 : 8.0,
+          child: InkWell(
+            onTap: () async {
+              Playback.instance.interceptPositionChangeRebuilds = true;
+              try {
+                await precacheImage(getAlbumArt(album), context);
+              } catch (exception, stacktrace) {
+                debugPrint(exception.toString());
+                debugPrint(stacktrace.toString());
+              }
+              try {
+                if (palette == null) {
+                  final result = await PaletteGenerator.fromImageProvider(
+                    getAlbumArt(
+                      album,
+                      small: true,
                     ),
-                    width: width,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          album.albumName.overflow,
-                          style: Theme.of(context)
-                              .textTheme
-                              .displayMedium
-                              ?.copyWith(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w700,
-                              ),
-                          textAlign: TextAlign.left,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                  );
+                  palette = result.colors;
+                }
+              } catch (exception, stacktrace) {
+                debugPrint(exception.toString());
+                debugPrint(stacktrace.toString());
+              }
+              Navigator.of(context).push(
+                MaterialRoute(
+                  builder: (context) => AlbumScreen(
+                    album: album,
+                    palette: palette,
+                  ),
+                ),
+              );
+              Timer(const Duration(milliseconds: 400), () {
+                Playback.instance.interceptPositionChangeRebuilds = false;
+              });
+            },
+            child: Container(
+              height: height,
+              width: width,
+              child: Column(
+                children: [
+                  ClipRect(
+                    child: ScaleOnHover(
+                      child: Hero(
+                        tag:
+                            'album_art_${album.albumName}_${album.albumArtistName}_${album.year}',
+                        child: ExtendedImage(
+                          image: getAlbumArt(album, small: true),
+                          fit: BoxFit.cover,
+                          height: width,
+                          width: width,
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 2),
-                          child: Text(
-                            [
-                              if (!['', kUnknownArtist]
-                                  .contains(album.albumArtistName))
-                                album.albumArtistName,
-                              if (!['', kUnknownYear].contains(album.year))
-                                album.year,
-                            ].join(' • '),
-                            style: Theme.of(context).textTheme.displaySmall,
-                            maxLines: 1,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.0,
+                      ),
+                      width: width,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            album.albumName.overflow,
+                            style: Theme.of(context).textTheme.titleSmall,
                             textAlign: TextAlign.left,
+                            maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding: EdgeInsets.only(top: 2),
+                            child: Text(
+                              [
+                                if (!['', kUnknownArtist]
+                                    .contains(album.albumArtistName))
+                                  album.albumArtistName,
+                                if (!['', kUnknownYear].contains(album.year))
+                                  album.year,
+                              ].join(' • '),
+                              style: Theme.of(context).textTheme.bodySmall,
+                              maxLines: 1,
+                              textAlign: TextAlign.left,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-        openBuilder: (context, _) => AlbumScreen(
-          album: album,
-          palette: palette,
-        ),
       );
     }
-    return isDesktop
-        ? Card(
-            clipBehavior: Clip.antiAlias,
-            elevation:
-                Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
-            margin: EdgeInsets.zero,
-            child: ContextMenuArea(
-              onPressed: (e) async {
-                final result = await showMenu(
-                  context: context,
-                  constraints: BoxConstraints(
-                    maxWidth: double.infinity,
+
+    // Mobile
+    switch (albumElementsPerRow) {
+      case 1:
+        return Material(
+          color: Colors.transparent,
+          child: OpenContainer(
+            closedShape: Theme.of(context).cardTheme.shape ??
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.zero,
+                ),
+            transitionDuration:
+                Theme.of(context).extension<AnimationDuration>()?.medium ??
+                    Duration.zero,
+            closedColor: Colors.transparent,
+            closedElevation: 0.0,
+            openColor: Colors.transparent,
+            openElevation: 0.0,
+            openBuilder: (context, close) => AlbumScreen(
+              album: album,
+              palette: palette,
+            ),
+            closedBuilder: (context, open) => SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Divider(
+                    height: 1.0,
+                    thickness: 1.0,
+                    indent: 76.0,
                   ),
-                  position: RelativeRect.fromLTRB(
-                    e.position.dx,
-                    e.position.dy,
-                    MediaQuery.of(context).size.width,
-                    MediaQuery.of(context).size.width,
-                  ),
-                  items: albumPopupMenuItems(
-                    album,
-                    context,
-                  ),
-                );
-                await albumPopupMenuHandle(
-                  context,
-                  album,
-                  result,
-                );
-              },
-              child: InkWell(
-                onTap: () async {
-                  Playback.instance.interceptPositionChangeRebuilds = true;
-                  try {
-                    await precacheImage(getAlbumArt(album), context);
-                  } catch (exception, stacktrace) {
-                    debugPrint(exception.toString());
-                    debugPrint(stacktrace.toString());
-                  }
-                  Navigator.of(context).push(
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) =>
-                          FadeThroughTransition(
-                        fillColor: Colors.transparent,
-                        animation: animation,
-                        secondaryAnimation: secondaryAnimation,
-                        child: AlbumScreen(
-                          album: album,
-                        ),
-                      ),
-                      transitionDuration: Duration(milliseconds: 300),
-                      reverseTransitionDuration: Duration(milliseconds: 300),
-                    ),
-                  );
-                  Timer(const Duration(milliseconds: 400), () {
-                    Playback.instance.interceptPositionChangeRebuilds = false;
-                  });
-                },
-                child: Container(
-                  height: height,
-                  width: width,
-                  child: Column(
-                    children: [
-                      ClipRect(
-                        child: ScaleOnHover(
-                          child: Hero(
-                            tag:
-                                'album_art_${album.albumName}_${album.albumArtistName}',
-                            child: ExtendedImage(
-                              image: getAlbumArt(album, small: true),
-                              fit: BoxFit.cover,
-                              height: width,
-                              width: width,
+                  InkWell(
+                    onTap: () async {
+                      try {
+                        if (palette == null) {
+                          final result =
+                              await PaletteGenerator.fromImageProvider(
+                                  getAlbumArt(album, small: true));
+                          palette = result.colors;
+                        }
+                        await precacheImage(getAlbumArt(album), context);
+                        MobileNowPlayingController.instance.hide();
+                      } catch (exception, stacktrace) {
+                        debugPrint(exception.toString());
+                        debugPrint(stacktrace.toString());
+                      }
+                      if (Theme.of(context)
+                              .extension<AnimationDuration>()
+                              ?.medium ==
+                          Duration.zero) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => AlbumScreen(
+                              album: album,
+                              palette: palette,
                             ),
                           ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 8.0,
-                          ),
-                          width: width,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                album.albumName.overflow,
-                                style:
-                                    Theme.of(context).textTheme.displayMedium,
-                                textAlign: TextAlign.left,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                        );
+                      } else {
+                        open();
+                      }
+                    },
+                    onLongPress: () => action(context),
+                    child: Container(
+                      height: 64.0,
+                      width: MediaQuery.of(context).size.width,
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(width: 12.0),
+                          Card(
+                            // EXCEPTION IN DESIGN.
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4.0),
+                            ),
+                            elevation: Theme.of(context).cardTheme.elevation ??
+                                kDefaultCardElevation,
+                            margin: EdgeInsets.zero,
+                            child: Padding(
+                              padding: EdgeInsets.all(2.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(4.0),
+                                child: ExtendedImage(
+                                  image: getAlbumArt(album, small: true),
+                                  height: 48.0,
+                                  width: 48.0,
+                                  borderRadius: BorderRadius.circular(4.0),
+                                ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 2),
-                                child: Text(
+                            ),
+                          ),
+                          const SizedBox(width: 12.0),
+                          Expanded(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  album.albumName.overflow,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
+                                ),
+                                const SizedBox(height: 2.0),
+                                Text(
                                   [
                                     if (!['', kUnknownArtist]
                                         .contains(album.albumArtistName))
@@ -738,245 +819,156 @@ class AlbumTile extends StatelessWidget {
                                         .contains(album.year))
                                       album.year,
                                   ].join(' • '),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displaySmall
-                                      ?.copyWith(
-                                        fontSize: 12.0,
-                                      ),
-                                  maxLines: 1,
-                                  textAlign: TextAlign.left,
                                   overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: Theme.of(context).textTheme.bodyMedium,
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
+                          const SizedBox(width: 12.0),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
-          )
-        : helper.albumElementsPerRow == 1
-            ? Material(
-                color: Colors.transparent,
-                child: OpenContainer(
-                  closedColor: Colors.transparent,
-                  closedElevation: 0.0,
-                  openColor: Colors.transparent,
-                  openElevation: 0.0,
-                  openBuilder: (context, close) => AlbumScreen(
-                    album: album,
-                    palette: palette,
-                  ),
-                  closedBuilder: (context, open) => SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Divider(
-                          height: 1.0,
-                          thickness: 1.0,
-                          indent: 76.0,
-                        ),
-                        InkWell(
-                          onTap: () async {
-                            try {
-                              if (palette == null) {
-                                final result =
-                                    await PaletteGenerator.fromImageProvider(
-                                        getAlbumArt(album, small: true));
-                                palette = result.colors;
-                              }
-                              await precacheImage(getAlbumArt(album), context);
-                              MobileNowPlayingController.instance.hide();
-                            } catch (exception, stacktrace) {
-                              debugPrint(exception.toString());
-                              debugPrint(stacktrace.toString());
-                            }
-                            open();
-                          },
-                          onLongPress: () => action(context),
-                          child: Container(
-                            height: 64.0,
-                            width: MediaQuery.of(context).size.width,
-                            alignment: Alignment.center,
-                            margin: const EdgeInsets.symmetric(vertical: 4.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const SizedBox(width: 12.0),
-                                Card(
-                                  elevation:
-                                      Theme.of(context).cardTheme.elevation ??
-                                          kDefaultCardElevation,
-                                  margin: EdgeInsets.zero,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(2.0),
-                                    child: ExtendedImage(
-                                      image: getAlbumArt(album, small: true),
-                                      height: 48.0,
-                                      width: 48.0,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 12.0),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        album.albumName.overflow,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .displayMedium,
-                                      ),
-                                      const SizedBox(
-                                        height: 2.0,
-                                      ),
-                                      Text(
-                                        [
-                                          if (!['', kUnknownArtist]
-                                              .contains(album.albumArtistName))
-                                            album.albumArtistName,
-                                          if (!['', kUnknownYear]
-                                              .contains(album.year))
-                                            album.year,
-                                        ].join(' • '),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .displaySmall,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(width: 12.0),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+          ),
+        );
+      default:
+        return OpenContainer(
+          closedShape: Theme.of(context).cardTheme.shape ??
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.zero,
+              ),
+          transitionDuration:
+              Theme.of(context).extension<AnimationDuration>()?.medium ??
+                  Duration.zero,
+          closedColor:
+              Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor,
+          closedElevation:
+              Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
+          openElevation: 0.0,
+          openColor: Theme.of(context).scaffoldBackgroundColor,
+          closedBuilder: (context, open) => InkWell(
+            onLongPress: () => action(context),
+            onTap: () async {
+              try {
+                if (palette == null) {
+                  final result = await PaletteGenerator.fromImageProvider(
+                    getAlbumArt(
+                      album,
+                      small: true,
+                    ),
+                  );
+                  palette = result.colors;
+                }
+                await precacheImage(getAlbumArt(album), context);
+                MobileNowPlayingController.instance.hide();
+              } catch (exception, stacktrace) {
+                debugPrint(exception.toString());
+                debugPrint(stacktrace.toString());
+              }
+              if (Theme.of(context).extension<AnimationDuration>()?.medium ==
+                  Duration.zero) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => AlbumScreen(
+                      album: album,
+                      palette: palette,
                     ),
                   ),
-                ),
-              )
-            : OpenContainer(
-                closedColor: Theme.of(context).cardTheme.color ??
-                    Theme.of(context).cardColor,
-                closedElevation: Theme.of(context).cardTheme.elevation ??
-                    kDefaultCardElevation,
-                openElevation: 0.0,
-                openColor: Theme.of(context).scaffoldBackgroundColor,
-                closedBuilder: (context, open) => InkWell(
-                  onLongPress: () => action(context),
-                  onTap: () async {
-                    try {
-                      if (palette == null) {
-                        final result = await PaletteGenerator.fromImageProvider(
-                          getAlbumArt(
-                            album,
-                            small: true,
-                          ),
-                        );
-                        palette = result.colors;
+                );
+              } else {
+                open();
+              }
+            },
+            child: Container(
+              height: height,
+              width: width,
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: () {
+                      if (Theme.of(context).cardTheme.shape
+                          is RoundedRectangleBorder) {
+                        return (Theme.of(context).cardTheme.shape
+                                as RoundedRectangleBorder)
+                            .borderRadius;
                       }
-                      await precacheImage(getAlbumArt(album), context);
-                      MobileNowPlayingController.instance.hide();
-                    } catch (exception, stacktrace) {
-                      debugPrint(exception.toString());
-                      debugPrint(stacktrace.toString());
-                    }
-                    open();
-                  },
-                  child: Container(
-                    height: height,
-                    width: width,
-                    child: Column(
-                      children: [
-                        Ink.image(
-                          image: getAlbumArt(
-                            album,
-                            small: true,
-                            cacheWidth: width *
-                                MediaQuery.of(context).devicePixelRatio ~/
-                                1,
-                          ),
-                          fit: BoxFit.cover,
-                          height: width,
-                          width: width,
-                        ),
-                        Expanded(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal:
-                                  helper.albumTileNormalDensity ? 12.0 : 8.0,
-                            ),
-                            width: width,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  album.albumName.overflow,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displayMedium
-                                      ?.copyWith(
-                                        fontSize: helper.albumTileNormalDensity
-                                            ? 18.0
-                                            : 14.0,
-                                        fontWeight:
-                                            helper.albumTileNormalDensity
-                                                ? FontWeight.w700
-                                                : null,
-                                      ),
-                                  textAlign: TextAlign.left,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                if (helper.albumTileNormalDensity)
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 2),
-                                    child: Text(
-                                      [
-                                        if (!['', kUnknownArtist]
-                                            .contains(album.albumArtistName))
-                                          album.albumArtistName,
-                                        if (!['', kUnknownYear]
-                                            .contains(album.year))
-                                          album.year,
-                                      ].join(' • '),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displaySmall,
-                                      maxLines: 1,
-                                      textAlign: TextAlign.left,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                    }(),
+                    child: Image(
+                      image: getAlbumArt(
+                        album,
+                        small: true,
+                        cacheWidth: width *
+                            MediaQuery.of(context).devicePixelRatio ~/
+                            1,
+                      ),
+                      fit: BoxFit.cover,
+                      height: width,
+                      width: width,
                     ),
                   ),
-                ),
-                openBuilder: (context, _) => AlbumScreen(
-                  album: album,
-                  palette: palette,
-                ),
-              );
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: albumTileNormalDensity ? 12.0 : 8.0,
+                      ),
+                      width: width,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            album.albumName.overflow,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                                  fontSize:
+                                      albumTileNormalDensity ? 18.0 : 14.0,
+                                  fontWeight: albumTileNormalDensity
+                                      ? FontWeight.w700
+                                      : FontWeight.normal,
+                                ),
+                            textAlign: TextAlign.left,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          if (albumTileNormalDensity)
+                            Padding(
+                              padding: EdgeInsets.only(top: 2),
+                              child: Text(
+                                [
+                                  if (!['', kUnknownArtist]
+                                      .contains(album.albumArtistName))
+                                    album.albumArtistName,
+                                  if (!['', kUnknownYear].contains(album.year))
+                                    album.year,
+                                ].join(' • '),
+                                style: Theme.of(context).textTheme.bodyMedium,
+                                maxLines: 1,
+                                textAlign: TextAlign.left,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          openBuilder: (context, _) => AlbumScreen(
+            album: album,
+            palette: palette,
+          ),
+        );
+    }
   }
 }
 
@@ -999,57 +991,26 @@ class AlbumScreenState extends State<AlbumScreen>
   bool reactToSecondaryPress = false;
   bool detailsVisible = false;
   bool detailsLoaded = false;
-  ScrollController controller = ScrollController(initialScrollOffset: 136.0);
   ScrollPhysics? physics = NeverScrollableScrollPhysics();
+
+  ScrollController get controller {
+    final duration = MaterialRoute.animationDuration?.medium ?? Duration.zero;
+    return duration > Duration.zero ? sc0 : sc1;
+  }
+
+  final sc0 =
+      ScrollController(initialScrollOffset: kMobileLayoutInitialScrollOffset);
+  final sc1 = ScrollController(initialScrollOffset: 0.0);
+
+  static const double kMobileLayoutInitialScrollOffset = 136.0;
 
   @override
   void initState() {
     super.initState();
-    if (isDesktop) {
-      Timer(
-        Duration(milliseconds: 300),
-        () {
-          if (widget.palette == null) {
-            PaletteGenerator.fromImageProvider(
-                    getAlbumArt(widget.album, small: true))
-                .then((palette) {
-              setState(() {
-                if (palette.colors != null) {
-                  color = palette.colors!.first;
-                  secondary = palette.colors!.last;
-                }
-                detailsVisible = true;
-              });
-            });
-          } else {
-            setState(() {
-              detailsVisible = true;
-            });
-          }
-        },
-      );
-    }
+    final duration = MaterialRoute.animationDuration?.medium ?? Duration.zero;
+
+    // [ScrollController] is only needed on mobile for animation.
     if (isMobile) {
-      Timer(Duration(milliseconds: 100), () {
-        controller
-            .animateTo(
-          0.0,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        )
-            .then((_) {
-          Timer(Duration(milliseconds: 50), () {
-            setState(() {
-              detailsLoaded = true;
-              physics = null;
-            });
-          });
-        });
-      });
-      if (widget.palette != null) {
-        color = widget.palette?.first;
-        secondary = widget.palette?.last;
-      }
       controller.addListener(() {
         if (controller.offset < 36.0) {
           if (!detailsVisible) {
@@ -1064,6 +1025,50 @@ class AlbumScreenState extends State<AlbumScreen>
         }
       });
     }
+
+    // No animation, assign values at mount.
+    if (duration == Duration.zero) {
+      color = widget.palette?.first;
+      secondary = widget.palette?.last;
+      detailsVisible = true;
+      detailsLoaded = true;
+    }
+    // Animation, assign values with some delay or animate with [ScrollController].
+    else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (isDesktop) {
+          Future.delayed(duration, () {
+            setState(() {
+              color = widget.palette?.first;
+              secondary = widget.palette?.last;
+            });
+          });
+        }
+        if (isMobile) {
+          setState(() {
+            color = widget.palette?.first;
+            secondary = widget.palette?.last;
+          });
+          controller.animateTo(
+            0.0,
+            duration: duration,
+            curve: Curves.easeInOut,
+          );
+          Future.delayed(duration + const Duration(milliseconds: 100));
+          setState(() {
+            detailsLoaded = true;
+            physics = null;
+          });
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    sc0.dispose();
+    sc1.dispose();
+    super.dispose();
   }
 
   @override
@@ -1086,15 +1091,24 @@ class AlbumScreenState extends State<AlbumScreen>
       builder: (context, value, child) {
         final tracks = widget.album.tracks.toList();
         tracks.sort(
-          (first, second) =>
-              first.discNumber.compareTo(second.discNumber) * 100000000 +
-              first.trackNumber.compareTo(second.trackNumber) * 1000000 +
-              first.trackName.compareTo(second.trackName) * 10000 +
-              first.trackArtistNames
-                      .join()
-                      .compareTo(second.trackArtistNames.join()) *
-                  100 +
-              first.uri.toString().compareTo(second.uri.toString()),
+          (first, second) {
+            if (first.discNumber != second.discNumber) {
+              return first.discNumber.compareTo(second.discNumber);
+            }
+            if (first.trackNumber != second.trackNumber) {
+              return first.trackNumber.compareTo(second.trackNumber);
+            }
+            if (first.trackName != second.trackName) {
+              return first.trackName.compareTo(second.trackName);
+            }
+            if (first.trackArtistNames.join(' ') !=
+                second.trackArtistNames.join(' ')) {
+              return first.trackArtistNames
+                  .join(' ')
+                  .compareTo(second.trackArtistNames.join(' '));
+            }
+            return first.uri.toString().compareTo(second.uri.toString());
+          },
         );
         return isDesktop
             ? Scaffold(
@@ -1111,9 +1125,10 @@ class AlbumScreenState extends State<AlbumScreen>
                               : color!,
                         ),
                         curve: Curves.easeOut,
-                        duration: Duration(
-                          milliseconds: 400,
-                        ),
+                        duration: Theme.of(context)
+                                .extension<AnimationDuration>()
+                                ?.medium ??
+                            Duration.zero,
                         builder: (context, color, _) => DesktopAppBar(
                           height: MediaQuery.of(context).size.height / 3,
                           color: color as Color? ?? Colors.transparent,
@@ -1160,9 +1175,11 @@ class AlbumScreenState extends State<AlbumScreen>
                                                   : secondary!,
                                             ),
                                             curve: Curves.easeOut,
-                                            duration: Duration(
-                                              milliseconds: 600,
-                                            ),
+                                            duration: Theme.of(context)
+                                                    .extension<
+                                                        AnimationDuration>()
+                                                    ?.slow ??
+                                                Duration.zero,
                                             builder: (context, color, _) =>
                                                 Positioned.fill(
                                               child: Container(
@@ -1174,7 +1191,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                             padding: EdgeInsets.all(20.0),
                                             child: Hero(
                                               tag:
-                                                  'album_art_${widget.album.albumName}_${widget.album.albumArtistName}',
+                                                  'album_art_${widget.album.albumName}_${widget.album.albumArtistName}_${widget.album.year}',
                                               child: Card(
                                                 color: Colors.white,
                                                 elevation: Theme.of(context)
@@ -1277,9 +1294,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                     widget.album.albumName,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .displayLarge
-                                                        ?.copyWith(
-                                                            fontSize: 24.0),
+                                                        .headlineSmall,
                                                     maxLines: 1,
                                                     overflow:
                                                         TextOverflow.ellipsis,
@@ -1289,7 +1304,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                     '${Language.instance.ARTIST}: ${widget.album.albumArtistName}\n${Language.instance.YEAR}: ${widget.album.year}\n${Language.instance.TRACK}: ${tracks.length}',
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .displaySmall,
+                                                        .bodyMedium,
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                   ),
@@ -1383,10 +1398,10 @@ class AlbumScreenState extends State<AlbumScreen>
                                                             Alignment.center,
                                                         child: Text(
                                                           '#',
-                                                          style: Theme.of(
-                                                                  context)
-                                                              .textTheme
-                                                              .displayMedium,
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .titleSmall,
                                                         ),
                                                       ),
                                                       Expanded(
@@ -1403,7 +1418,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .displayMedium,
+                                                                .titleSmall,
                                                           ),
                                                         ),
                                                       ),
@@ -1421,7 +1436,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .displayMedium,
+                                                                .titleSmall,
                                                           ),
                                                         ),
                                                       ),
@@ -1556,7 +1571,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                         : Text(
                                                                             '${track.value.trackNumber}',
                                                                             style:
-                                                                                Theme.of(context).textTheme.headlineMedium,
+                                                                                Theme.of(context).textTheme.bodyLarge,
                                                                           ),
                                                                   ),
                                                                   Expanded(
@@ -1577,7 +1592,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                             .trackName,
                                                                         style: Theme.of(context)
                                                                             .textTheme
-                                                                            .headlineMedium,
+                                                                            .bodyLarge,
                                                                         overflow:
                                                                             TextOverflow.ellipsis,
                                                                       ),
@@ -1612,7 +1627,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                                 if (artist != null) {
                                                                                   Playback.instance.interceptPositionChangeRebuilds = true;
                                                                                   Navigator.of(context).push(
-                                                                                    MaterialPageRoute(
+                                                                                    MaterialRoute(
                                                                                       builder: (context) => ArtistScreen(
                                                                                         artist: artist,
                                                                                       ),
@@ -1636,7 +1651,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                         return HyperLink(
                                                                           style: Theme.of(context)
                                                                               .textTheme
-                                                                              .headlineMedium,
+                                                                              .bodyLarge,
                                                                           text:
                                                                               TextSpan(
                                                                             children:
@@ -1736,14 +1751,14 @@ class AlbumScreenState extends State<AlbumScreen>
                                 color: detailsVisible
                                     ? Theme.of(context)
                                         .extension<IconColors>()
-                                        ?.appBarDarkIconColor
+                                        ?.appBarDark
                                     : [
                                         Theme.of(context)
                                             .extension<IconColors>()
-                                            ?.appBarLightIconColor,
+                                            ?.appBarLight,
                                         Theme.of(context)
                                             .extension<IconColors>()
-                                            ?.appBarDarkIconColor,
+                                            ?.appBarDark,
                                       ][(color?.computeLuminance() ??
                                                 (Theme.of(context).brightness ==
                                                         Brightness.dark
@@ -1770,7 +1785,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                       : [
                                           Theme.of(context)
                                               .extension<IconColors>()
-                                              ?.appBarActionLightIconColor,
+                                              ?.appBarActionLight,
                                           Theme.of(context)
                                               .extension<IconColors>()
                                               ?.appBarActionDarkIconColor,
@@ -1807,9 +1822,6 @@ class AlbumScreenState extends State<AlbumScreen>
                                               'NAME',
                                               widget.album.albumName,
                                             ),
-                                            style: Theme.of(ctx)
-                                                .textTheme
-                                                .displaySmall,
                                           ),
                                           actions: [
                                             TextButton(
@@ -1821,13 +1833,22 @@ class AlbumScreenState extends State<AlbumScreen>
                                                 await Navigator.of(context)
                                                     .maybePop();
                                               },
-                                              child:
-                                                  Text(Language.instance.YES),
+                                              child: Text(
+                                                label(
+                                                  context,
+                                                  Language.instance.YES,
+                                                ),
+                                              ),
                                             ),
                                             TextButton(
                                               onPressed:
                                                   Navigator.of(ctx).maybePop,
-                                              child: Text(Language.instance.NO),
+                                              child: Text(
+                                                label(
+                                                  context,
+                                                  Language.instance.NO,
+                                                ),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -1849,7 +1870,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                       : [
                                           Theme.of(context)
                                               .extension<IconColors>()
-                                              ?.appBarActionLightIconColor,
+                                              ?.appBarActionLight,
                                           Theme.of(context)
                                               .extension<IconColors>()
                                               ?.appBarActionDarkIconColor,
@@ -1873,28 +1894,31 @@ class AlbumScreenState extends State<AlbumScreen>
                                 begin: 1.0,
                                 end: detailsVisible ? 0.0 : 1.0,
                               ),
-                              duration: Duration(milliseconds: 200),
+                              duration: Theme.of(context)
+                                      .extension<AnimationDuration>()
+                                      ?.fast ??
+                                  Duration.zero,
                               builder: (context, value, _) => Opacity(
                                 opacity: value,
                                 child: Text(
                                   widget.album.albumName.overflow,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleLarge
-                                      ?.copyWith(
-                                        color: [
-                                          Color(0xFF212121),
-                                          Colors.white,
-                                        ][(color?.computeLuminance() ??
-                                                    (Theme.of(context)
-                                                                .brightness ==
-                                                            Brightness.dark
-                                                        ? 0.0
-                                                        : 1.0)) >
-                                                0.5
-                                            ? 0
-                                            : 1],
-                                      ),
+                                  style: TextStyle(
+                                    color: [
+                                      Theme.of(context)
+                                          .extension<TextColors>()
+                                          ?.lightPrimary,
+                                      Theme.of(context)
+                                          .extension<TextColors>()
+                                          ?.darkPrimary,
+                                    ][(color?.computeLuminance() ??
+                                                (Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? 0.0
+                                                    : 1.0)) >
+                                            0.5
+                                        ? 0
+                                        : 1],
+                                  ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -1941,7 +1965,10 @@ class AlbumScreenState extends State<AlbumScreen>
                                           begin: 1.0,
                                           end: detailsVisible ? 1.0 : 0.0,
                                         ),
-                                        duration: Duration(milliseconds: 200),
+                                        duration: Theme.of(context)
+                                                .extension<AnimationDuration>()
+                                                ?.fast ??
+                                            Duration.zero,
                                         builder: (context, value, _) => Opacity(
                                           opacity: value,
                                           child: Container(
@@ -1963,11 +1990,17 @@ class AlbumScreenState extends State<AlbumScreen>
                                                       .album.albumName.overflow,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .titleLarge
+                                                      .headlineSmall
                                                       ?.copyWith(
                                                         color: [
-                                                          Color(0xFF212121),
-                                                          Colors.white,
+                                                          Theme.of(context)
+                                                              .extension<
+                                                                  TextColors>()
+                                                              ?.lightPrimary,
+                                                          Theme.of(context)
+                                                              .extension<
+                                                                  TextColors>()
+                                                              ?.darkPrimary,
                                                         ][(color?.computeLuminance() ??
                                                                     (Theme.of(context).brightness ==
                                                                             Brightness.dark
@@ -1976,7 +2009,6 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                 0.5
                                                             ? 0
                                                             : 1],
-                                                        fontSize: 24.0,
                                                       ),
                                                   maxLines: 1,
                                                   overflow:
@@ -1991,11 +2023,17 @@ class AlbumScreenState extends State<AlbumScreen>
                                                         .overflow,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .displayMedium
+                                                        .bodyMedium
                                                         ?.copyWith(
                                                           color: [
-                                                            Color(0xFF363636),
-                                                            Color(0xFFD9D9D9),
+                                                            Theme.of(context)
+                                                                .extension<
+                                                                    TextColors>()
+                                                                ?.lightSecondary,
+                                                            Theme.of(context)
+                                                                .extension<
+                                                                    TextColors>()
+                                                                ?.darkSecondary,
                                                           ][(color?.computeLuminance() ??
                                                                       (Theme.of(context).brightness ==
                                                                               Brightness.dark
@@ -2019,11 +2057,17 @@ class AlbumScreenState extends State<AlbumScreen>
                                                     '${widget.album.year}',
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .displayMedium
+                                                        .titleMedium
                                                         ?.copyWith(
                                                           color: [
-                                                            Color(0xFF363636),
-                                                            Color(0xFFD9D9D9),
+                                                            Theme.of(context)
+                                                                .extension<
+                                                                    TextColors>()
+                                                                ?.lightSecondary,
+                                                            Theme.of(context)
+                                                                .extension<
+                                                                    TextColors>()
+                                                                ?.darkSecondary,
                                                           ][(color?.computeLuminance() ??
                                                                       (Theme.of(context).brightness ==
                                                                               Brightness.dark
@@ -2055,7 +2099,10 @@ class AlbumScreenState extends State<AlbumScreen>
                                     tween: Tween<double>(
                                         begin: 0.0,
                                         end: detailsVisible ? 1.0 : 0.0),
-                                    duration: Duration(milliseconds: 200),
+                                    duration: Theme.of(context)
+                                            .extension<AnimationDuration>()
+                                            ?.fast ??
+                                        Duration.zero,
                                     builder: (context, value, _) =>
                                         Transform.scale(
                                       scale: value as double,
@@ -2064,10 +2111,14 @@ class AlbumScreenState extends State<AlbumScreen>
                                         child: FloatingActionButton(
                                           heroTag: 'play_now',
                                           backgroundColor: secondary,
-                                          foregroundColor: [
-                                            Colors.white,
-                                            Color(0xFF212121)
-                                          ][(secondary?.computeLuminance() ??
+                                          foregroundColor: const [
+                                            kFABDarkForegroundColor,
+                                            kFABLightForegroundColor,
+                                          ][((secondary ??
+                                                              Theme.of(context)
+                                                                  .floatingActionButtonTheme
+                                                                  .backgroundColor)
+                                                          ?.computeLuminance() ??
                                                       0.0) >
                                                   0.5
                                               ? 1
@@ -2096,7 +2147,10 @@ class AlbumScreenState extends State<AlbumScreen>
                                     tween: Tween<double>(
                                         begin: 0.0,
                                         end: detailsVisible ? 1.0 : 0.0),
-                                    duration: Duration(milliseconds: 200),
+                                    duration: Theme.of(context)
+                                            .extension<AnimationDuration>()
+                                            ?.fast ??
+                                        Duration.zero,
                                     builder: (context, value, _) =>
                                         Transform.scale(
                                       scale: value as double,
@@ -2105,10 +2159,14 @@ class AlbumScreenState extends State<AlbumScreen>
                                         child: FloatingActionButton(
                                           heroTag: 'shuffle',
                                           backgroundColor: secondary,
-                                          foregroundColor: [
-                                            Colors.white,
-                                            Color(0xFF212121)
-                                          ][(secondary?.computeLuminance() ??
+                                          foregroundColor: const [
+                                            kFABDarkForegroundColor,
+                                            kFABLightForegroundColor,
+                                          ][((secondary ??
+                                                              Theme.of(context)
+                                                                  .floatingActionButtonTheme
+                                                                  .backgroundColor)
+                                                          ?.computeLuminance() ??
                                                       0.0) >
                                                   0.5
                                               ? 1
@@ -2185,7 +2243,8 @@ class AlbumScreenState extends State<AlbumScreen>
                                             MediaQuery.of(context).size.width,
                                         alignment: Alignment.center,
                                         margin: const EdgeInsets.symmetric(
-                                            vertical: 4.0),
+                                          vertical: 4.0,
+                                        ),
                                         child: Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
@@ -2199,7 +2258,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                 '${tracks[i].trackNumber}',
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .displaySmall
+                                                    .bodyMedium
                                                     ?.copyWith(fontSize: 18.0),
                                               ),
                                             ),
@@ -2221,7 +2280,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                     maxLines: 1,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .displayMedium,
+                                                        .titleMedium,
                                                   ),
                                                   const SizedBox(
                                                     height: 2.0,
@@ -2244,7 +2303,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                     maxLines: 1,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .displaySmall,
+                                                        .bodyMedium,
                                                   ),
                                                 ],
                                               ),

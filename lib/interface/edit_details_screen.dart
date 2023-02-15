@@ -16,7 +16,7 @@ import 'package:safe_local_storage/safe_local_storage.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/interface/home.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/state/now_playing_visuals.dart';
@@ -55,7 +55,8 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 FloatingActionButton.extended(
-                  heroTag: -1,
+                  heroTag: 'save_button',
+                  shape: const StadiumBorder(),
                   onPressed: () async {
                     if (!edited.isNotEmpty || loading) {
                       Navigator.of(context).maybePop();
@@ -94,13 +95,18 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                       floatingSearchBarController.close();
                     }
                   },
-                  label: Text(Language.instance.SAVE.toUpperCase()),
+                  label: Text(
+                    label(
+                      context,
+                      Language.instance.SAVE,
+                    ),
+                  ),
                   icon: loading
                       ? Container(
                           height: 24.0,
                           width: 24.0,
                           padding: EdgeInsets.all(4.0),
-                          child: CircularProgressIndicator(
+                          child: const CircularProgressIndicator(
                             valueColor: AlwaysStoppedAnimation(Colors.white),
                             strokeWidth: 4.4,
                           ),
@@ -109,7 +115,8 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                 ),
                 const SizedBox(height: 16.0),
                 FloatingActionButton.extended(
-                  heroTag: -2,
+                  heroTag: 'restore_button',
+                  shape: const StadiumBorder(),
                   onPressed: () async {
                     if (loading) {
                       return;
@@ -133,13 +140,18 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                       floatingSearchBarController.close();
                     }
                   },
-                  label: Text(Language.instance.RESTORE.toUpperCase()),
+                  label: Text(
+                    label(
+                      context,
+                      Language.instance.RESTORE,
+                    ),
+                  ),
                   icon: loading
                       ? Container(
                           height: 24.0,
                           width: 24.0,
                           padding: EdgeInsets.all(4.0),
-                          child: CircularProgressIndicator(
+                          child: const CircularProgressIndicator(
                             valueColor: AlwaysStoppedAnimation(Colors.white),
                             strokeWidth: 4.4,
                           ),
@@ -274,7 +286,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                                 e.key + ' : ',
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .displayMedium,
+                                                    .bodyLarge,
                                               ),
                                             ),
                                             ConstrainedBox(
@@ -379,7 +391,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                                     TextAlignVertical.center,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headlineMedium,
+                                                    .bodyLarge,
                                               ),
                                             ),
                                           ],
@@ -397,7 +409,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                             .USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headlineMedium,
+                                            .bodyMedium,
                                       ),
                                     ],
                                   ),
@@ -441,11 +453,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                             barrierDismissible: false,
                             useRootNavigator: false,
                             builder: (_) => Center(
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Theme.of(context).primaryColor,
-                                ),
-                              ),
+                              child: const CircularProgressIndicator(),
                             ),
                           );
                           setState(() {
@@ -496,11 +504,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                             barrierDismissible: false,
                             useRootNavigator: false,
                             builder: (_) => Center(
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Theme.of(context).primaryColor,
-                                ),
-                              ),
+                              child: const CircularProgressIndicator(),
                             ),
                           );
                           setState(() {
@@ -614,7 +618,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                             e.key,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .displaySmall,
+                                                .bodyLarge,
                                           ),
                                           margin: EdgeInsets.only(
                                             left: 4.0,
@@ -718,7 +722,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                                 TextAlignVertical.center,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .displayMedium,
+                                                .bodyLarge,
                                           ),
                                         ),
                                       ],
@@ -733,7 +737,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                     .instance
                                     .USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS
                                     .overflow,
-                                style: Theme.of(context).textTheme.displaySmall,
+                                style: Theme.of(context).textTheme.bodySmall,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(height: 24.0),

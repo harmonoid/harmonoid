@@ -9,10 +9,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/constants/language.dart';
+
+import 'package:harmonoid/interface/settings/settings.dart';
 
 class ExperimentalSetting extends StatefulWidget {
   ExperimentalSetting({Key? key}) : super(key: key);
@@ -21,28 +22,28 @@ class ExperimentalSetting extends StatefulWidget {
 
 class ExperimentalSettingState extends State<ExperimentalSetting> {
   Future<void> showAndroidVolumeBoostWarningDialog() async {
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 500));
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Theme.of(context).cardTheme.color,
-        title: Text(
-          Language.instance.WARNING,
-        ),
+        title: Text(Language.instance.WARNING),
         contentPadding: const EdgeInsets.fromLTRB(
           24.0,
           20.0,
           24.0,
           12.0,
         ),
-        content: Text(
-          Language.instance.ENABLE_VOLUME_BOOST_FILTER_WARNING,
-          style: Theme.of(context).textTheme.displaySmall,
-        ),
+        content: Text(Language.instance.ENABLE_VOLUME_BOOST_FILTER_WARNING),
         actions: [
           TextButton(
             onPressed: Navigator.of(context).pop,
-            child: Text(Language.instance.OK),
+            child: Text(
+              label(
+                context,
+                Language.instance.OK,
+              ),
+            ),
           ),
         ],
       ),
@@ -60,14 +61,11 @@ class ExperimentalSettingState extends State<ExperimentalSetting> {
         children: [
           if (isMobile)
             Container(
-              padding: const EdgeInsets.only(left: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               margin: const EdgeInsets.symmetric(vertical: 8.0),
               child: Text(
                 Language.instance.EXPERIMENTAL_SUBTITLE,
-                style: Theme.of(context)
-                    .textTheme
-                    .displaySmall
-                    ?.copyWith(height: 1.2),
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
           CorrectedSwitchListTile(
@@ -101,12 +99,15 @@ class ExperimentalSettingState extends State<ExperimentalSetting> {
           CorrectedSwitchListTile(
             title: Language.instance.FALLBACK_ALBUM_ARTS,
             subtitle: Language.instance.FALLBACK_ALBUM_ARTS,
-            onChanged: (_) => Configuration.instance
-                .save(
-                  lookupForFallbackAlbumArt:
-                      !Configuration.instance.lookupForFallbackAlbumArt,
-                )
-                .then((value) => setState(() {})),
+            onChanged: (_) {
+              resolvedAlbumArts.clear();
+              Configuration.instance
+                  .save(
+                    lookupForFallbackAlbumArt:
+                        !Configuration.instance.lookupForFallbackAlbumArt,
+                  )
+                  .then((value) => setState(() {}));
+            },
             value: Configuration.instance.lookupForFallbackAlbumArt,
           ),
         ],

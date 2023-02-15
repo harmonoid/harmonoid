@@ -16,7 +16,6 @@ import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter_lyric/lyrics_reader.dart';
 import 'package:flutter_lyric/lyrics_reader_model.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:external_media_provider/external_media_provider.dart';
 
 import 'package:harmonoid/core/playback.dart';
@@ -25,7 +24,7 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/mini_player.dart';
 import 'package:harmonoid/utils/sliding_up_panel.dart';
 import 'package:harmonoid/state/lyrics.dart';
@@ -34,7 +33,6 @@ import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/interface/now_playing_bar.dart';
 import 'package:harmonoid/interface/collection/track.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/web/utils/widgets.dart';
 
 const kDetailsAreaHeight = 100.0;
 
@@ -108,7 +106,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
         window.devicePixelRatio;
     playOrPause = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
     );
     Playback.instance.addListener(listener);
     NowPlayingColorPalette.instance.addListener(colorPaletteListener);
@@ -126,63 +124,67 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
       color = Theme.of(context).scaffoldBackgroundColor;
       setState(() {});
     } else {
-      final ms = ((1000 * (400 / MediaQuery.of(context).size.width)) ~/ 1);
-      final color =
-          NowPlayingColorPalette.instance.palette?.first.withOpacity(1.0);
-      if (color == this.color) {
-        return;
-      }
-      if (timer?.isActive ?? true) {
-        timer?.cancel();
-      }
-      timer = Timer(
-        Duration(milliseconds: ms + 100),
-        () async {
-          setState(() {
-            this.color = color;
-          });
-          await Future.delayed(const Duration(milliseconds: 100));
-          setState(() {
-            debugPrint(
-              '[MiniNowPlayingBar] Freed ${fills.length} [Color] [TweenAnimationBuilder] fill(s).',
-            );
-            fills.clear();
-          });
-        },
-      );
-      setState(() {
-        fills.add(
-          TweenAnimationBuilder(
-            tween: Tween<double>(
-              begin: 0.0,
-              end: 2 * MediaQuery.of(context).size.width / 4.0,
-            ),
-            duration: Duration(
-              milliseconds: ms,
-            ),
-            curve: Curves.easeInOut,
-            child: Container(
-              height: kDesktopNowPlayingBarHeight,
-              width: MediaQuery.of(context).size.width,
-              alignment: Alignment.center,
-              child: ClipRect(
-                child: Container(
-                  height: 4.0,
-                  width: 4.0,
-                  decoration: BoxDecoration(
-                    color: color,
-                    shape: BoxShape.circle,
+      final color = NowPlayingColorPalette.instance.palette == null
+          ? Theme.of(context).cardTheme.color
+          : NowPlayingColorPalette.instance.palette?.first.withOpacity(1.0);
+      if (Theme.of(context).extension<AnimationDuration>()?.fast ==
+          Duration.zero) {
+        setState(() => this.color = color);
+      } else {
+        final ms = ((1000 * (400 / MediaQuery.of(context).size.width)) ~/ 1);
+        if (color == this.color) {
+          return;
+        }
+        if (timer?.isActive ?? true) {
+          timer?.cancel();
+        }
+        timer = Timer(
+          Duration(milliseconds: ms + 100),
+          () async {
+            setState(() {
+              this.color = color;
+            });
+            await Future.delayed(const Duration(milliseconds: 100));
+            setState(() {
+              debugPrint(
+                '[MiniNowPlayingBar] Freed ${fills.length} [Color] [TweenAnimationBuilder] fill(s).',
+              );
+              fills.clear();
+            });
+          },
+        );
+        setState(() {
+          fills.add(
+            TweenAnimationBuilder(
+              tween: Tween<double>(
+                begin: 0.0,
+                end: 2 * MediaQuery.of(context).size.width / 4.0,
+              ),
+              duration: Duration(milliseconds: ms),
+              curve: Curves.easeInOut,
+              child: Container(
+                height: kDesktopNowPlayingBarHeight,
+                width: MediaQuery.of(context).size.width,
+                alignment: Alignment.center,
+                child: ClipRect(
+                  child: Container(
+                    height: 4.0,
+                    width: 4.0,
+                    decoration: BoxDecoration(
+                      color: color,
+                      shape: BoxShape.circle,
+                    ),
                   ),
                 ),
               ),
+              builder: (context, value, child) => Transform.scale(
+                scale: value as double,
+                child: child,
+              ),
             ),
-            builder: (context, value, child) => Transform.scale(
-              scale: value as double,
-              child: child,
-            ),
-          ),
-        );
-      });
+          );
+        });
+      }
     }
   }
 
@@ -214,7 +216,8 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
       if (pageController.hasClients) {
         pageController.animateToPage(
           Playback.instance.index,
-          duration: Duration(milliseconds: 400),
+          duration: Theme.of(context).extension<AnimationDuration>()?.medium ??
+              Duration.zero,
           curve: Curves.easeInOut,
         );
       } else {
@@ -276,29 +279,26 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                           width: 28.0,
                           alignment: Alignment.center,
                           child: MiniMusicVisualizer(
-                            color:
-                                Theme.of(context).textTheme.displaySmall?.color,
+                            color: Theme.of(context).iconTheme.color,
                             width: 6,
                             height: 15,
                           ),
                         )
                       : Text(
                           '${e.key - Playback.instance.index <= 0 ? '' : '+'}${e.key - Playback.instance.index}',
-                          style: Theme.of(context)
-                              .textTheme
-                              .displaySmall
-                              ?.copyWith(
-                                fontSize: 16.0,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontSize: 18.0,
+                                  ),
                         ),
                 ),
                 title: Text(
                   e.value.trackName,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
-                  style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: e.key < Playback.instance.index
-                            ? Theme.of(context).textTheme.displaySmall?.color
+                            ? Theme.of(context).textTheme.bodyMedium?.color
                             : null,
                       ),
                 ),
@@ -306,7 +306,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                   e.value.trackArtistNames.take(1).join(', '),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
-                  style: Theme.of(context).textTheme.displaySmall,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
             ),
@@ -336,13 +336,13 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                     e.trackName,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
-                    style: Theme.of(context).textTheme.displayMedium,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                   subtitle: Text(
                     e.trackArtistNames.take(1).join(', '),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
-                    style: Theme.of(context).textTheme.displaySmall,
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
               ),
@@ -368,7 +368,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
           if (colors.palette?.last != null)
             colors.palette!.last
           else
-            Theme.of(context).primaryColor,
+            Theme.of(context).colorScheme.primary,
         ];
     } else if ([
       null,
@@ -379,7 +379,8 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
 
     return AnimatedSlide(
       offset: Offset(0, _y),
-      duration: Duration(milliseconds: 200),
+      duration: Theme.of(context).extension<AnimationDuration>()?.fast ??
+          Duration.zero,
       curve: Curves.easeInOut,
       child: Miniplayer(
         controller: controller,
@@ -407,8 +408,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
             WidgetsBinding.instance.addPostFrameCallback(
               (_) {
                 MobileNowPlayingController.instance.bottomNavigationBar.value =
-                    (1.0 - (percentage * 1.4).clamp(0.0, 1.0)) *
-                        kBottomNavigationBarHeight;
+                    (1.0 - (percentage * 1.4).clamp(0.0, 1.0));
               },
             );
           } catch (exception, stacktrace) {
@@ -445,11 +445,12 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                       playback.duration.inMilliseconds,
                               minHeight: 2.0,
                               valueColor: AlwaysStoppedAnimation(
-                                  colors.palette?.last ??
-                                      Theme.of(context).primaryColor),
-                              backgroundColor: (colors.palette?.last ??
-                                      Theme.of(context).primaryColor)
-                                  .withOpacity(0.2),
+                                colors.palette?.last ??
+                                    Theme.of(context).colorScheme.primary,
+                              ),
+                              backgroundColor:
+                                  colors.palette?.last.withOpacity(0.2) ??
+                                      Colors.transparent,
                             ),
                           ),
                         Container(
@@ -472,9 +473,12 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                             playback.duration.inMilliseconds,
                                     minHeight: height - 2.0,
                                     valueColor: AlwaysStoppedAnimation(
-                                        (colors.palette?.last ??
-                                                Theme.of(context).primaryColor)
-                                            .withOpacity(0.2)),
+                                      colors.palette?.last.withOpacity(0.2) ??
+                                          Theme.of(context)
+                                              .colorScheme
+                                              .primary
+                                              .withOpacity(0.2),
+                                    ),
                                     backgroundColor:
                                         Theme.of(context).cardTheme.color,
                                   ),
@@ -676,7 +680,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                   state: MiniPlayerPanelState.MIN,
                                                                                 );
                                                                               },
-                                                                              color: Theme.of(context).extension<IconColors>()?.appBarDarkIconColor,
+                                                                              color: Theme.of(context).extension<IconColors>()?.appBarDark,
                                                                               icon: Icon(Icons.close),
                                                                               splashRadius: 24.0,
                                                                             ),
@@ -703,7 +707,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                 Icons.text_format,
                                                                               ),
                                                                               tooltip: Language.instance.SHOW_LYRICS,
-                                                                              color: Theme.of(context).extension<IconColors>()?.appBarDarkIconColor,
+                                                                              color: Theme.of(context).extension<IconColors>()?.appBarDark,
                                                                               splashRadius: 24.0,
                                                                             ),
                                                                           ),
@@ -730,7 +734,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                 Icons.equalizer_outlined,
                                                                               ),
                                                                               tooltip: Language.instance.CONTROL_PANEL,
-                                                                              color: Theme.of(context).extension<IconColors>()?.appBarDarkIconColor,
+                                                                              color: Theme.of(context).extension<IconColors>()?.appBarDark,
                                                                               splashRadius: 24.0,
                                                                             ),
                                                                           ),
@@ -769,7 +773,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                           }
                                                                                         }(),
                                                                                       ),
-                                                                                      color: Theme.of(context).extension<IconColors>()?.appBarDarkIconColor,
+                                                                                      color: Theme.of(context).extension<IconColors>()?.appBarDark,
                                                                                       splashRadius: 24.0,
                                                                                     ),
                                                                             ),
@@ -844,35 +848,12 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                               title: Text(Language.instance.SHARE),
                                                                                             ),
                                                                                           ),
-                                                                                          // if (Lyrics.instance.current.length > 1)
-                                                                                          //   PopupMenuItem(
-                                                                                          //     onTap: () => result = 4,
-                                                                                          //     value: 4,
-                                                                                          //     child: ListTile(
-                                                                                          //       leading: Icon(Icons.text_format),
-                                                                                          //       title: Text(Language.instance.SHOW_LYRICS),
-                                                                                          //     ),
-                                                                                          //   ),
                                                                                         ],
                                                                                       ),
                                                                                     ),
                                                                                   ),
                                                                                 );
                                                                                 switch (result) {
-                                                                                  // case 0:
-                                                                                  //   {
-                                                                                  //     await Future.delayed(const Duration(milliseconds: 200));
-                                                                                  //     await showDialog(
-                                                                                  //       context: context,
-                                                                                  //       builder: (context) => AlertDialog(
-                                                                                  //         contentPadding: EdgeInsets.zero,
-                                                                                  //         content: ControlPanel(
-                                                                                  //           onPop: () {},
-                                                                                  //         ),
-                                                                                  //       ),
-                                                                                  //     );
-                                                                                  //     break;
-                                                                                  //   }
                                                                                   case 1:
                                                                                     {
                                                                                       Clipboard.setData(ClipboardData(text: track.uri.toString()));
@@ -932,7 +913,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                     break;
                                                                                 }
                                                                               },
-                                                                              color: Theme.of(context).extension<IconColors>()?.appBarDarkIconColor,
+                                                                              color: Theme.of(context).extension<IconColors>()?.appBarDark,
                                                                               icon: Icon(Icons.more_vert),
                                                                               splashRadius: 24.0,
                                                                             ),
@@ -943,11 +924,12 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                   ),
                                                                 ],
                                                               ),
-                                                              duration:
-                                                                  Duration(
-                                                                milliseconds:
-                                                                    400,
-                                                              ),
+                                                              duration: Theme.of(
+                                                                          context)
+                                                                      .extension<
+                                                                          AnimationDuration>()
+                                                                      ?.medium ??
+                                                                  Duration.zero,
                                                               builder: (
                                                                 context,
                                                                 value,
@@ -1095,12 +1077,13 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                           .overflow,
                                                       style: Theme.of(context)
                                                           .textTheme
-                                                          .displayMedium,
+                                                          .titleMedium,
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                     ),
                                                   ),
                                                 ),
+                                                const SizedBox(height: 2.0),
                                                 if (!Playback
                                                     .instance
                                                     .tracks[
@@ -1124,7 +1107,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                             .overflow,
                                                         style: Theme.of(context)
                                                             .textTheme
-                                                            .displaySmall,
+                                                            .bodySmall,
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                       ),
@@ -1143,6 +1126,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                           child: Container(
                                             height: 64.0,
                                             width: 64.0,
+                                            alignment: Alignment.center,
                                             child: IconButton(
                                               onPressed:
                                                   Playback.instance.playOrPause,
@@ -1217,18 +1201,24 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                       .overflow,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .titleLarge
+                                                      .headlineSmall
                                                       ?.copyWith(
-                                                        color:
-                                                            (colors.palette ??
+                                                        color: (colors.palette ??
                                                                         [
                                                                           Theme.of(context).cardTheme.color ??
                                                                               Theme.of(context).cardColor
                                                                         ])
                                                                     .first
-                                                                    .isDark
-                                                                ? Colors.white
-                                                                : Colors.black,
+                                                                    .computeLuminance() <
+                                                                0.5
+                                                            ? Theme.of(context)
+                                                                .extension<
+                                                                    TextColors>()
+                                                                ?.darkPrimary
+                                                            : Theme.of(context)
+                                                                .extension<
+                                                                    TextColors>()
+                                                                ?.lightPrimary,
                                                         fontSize: 24.0,
                                                       ),
                                                   maxLines: 1,
@@ -1257,18 +1247,24 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                   ].join(' • '),
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .displaySmall
+                                                      .bodyMedium
                                                       ?.copyWith(
-                                                        color:
-                                                            (colors.palette ??
+                                                        color: (colors.palette ??
                                                                         [
                                                                           Theme.of(context).cardTheme.color ??
                                                                               Theme.of(context).cardColor
                                                                         ])
                                                                     .first
-                                                                    .isDark
-                                                                ? Colors.white
-                                                                : Colors.black,
+                                                                    .computeLuminance() <
+                                                                0.5
+                                                            ? Theme.of(context)
+                                                                .extension<
+                                                                    TextColors>()
+                                                                ?.darkSecondary
+                                                            : Theme.of(context)
+                                                                .extension<
+                                                                    TextColors>()
+                                                                ?.lightSecondary,
                                                       ),
                                                   maxLines: 1,
                                                   overflow:
@@ -1287,22 +1283,29 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                     maxLines: 1,
                                                     overflow:
                                                         TextOverflow.ellipsis,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .displaySmall
-                                                        ?.copyWith(
-                                                          color:
-                                                              (colors.palette ??
-                                                                          [
-                                                                            Theme.of(context).cardTheme.color ??
-                                                                                Theme.of(context).cardColor
-                                                                          ])
-                                                                      .first
-                                                                      .isDark
-                                                                  ? Colors.white
-                                                                  : Colors
-                                                                      .black,
-                                                        ),
+                                                    style:
+                                                        Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium
+                                                            ?.copyWith(
+                                                              color: (colors.palette ??
+                                                                              [
+                                                                                Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
+                                                                              ])
+                                                                          .first
+                                                                          .computeLuminance() <
+                                                                      0.5
+                                                                  ? Theme.of(
+                                                                          context)
+                                                                      .extension<
+                                                                          TextColors>()
+                                                                      ?.darkSecondary
+                                                                  : Theme.of(
+                                                                          context)
+                                                                      .extension<
+                                                                          TextColors>()
+                                                                      ?.lightSecondary,
+                                                            ),
                                                   ),
                                               ],
                                             ),
@@ -1366,11 +1369,12 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                     PlaylistLoopMode
                                                                         .none)
                                                                 ? (colors.palette ??
-                                                                            [
-                                                                              Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
-                                                                            ])
-                                                                        .first
-                                                                        .isDark
+                                                                                [
+                                                                                  Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
+                                                                                ])
+                                                                            .first
+                                                                            .computeLuminance() <
+                                                                        0.5
                                                                     ? Color.lerp(
                                                                         Colors
                                                                             .black,
@@ -1384,11 +1388,12 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                             .black,
                                                                         0.87)
                                                                 : (colors.palette ??
-                                                                            [
-                                                                              Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
-                                                                            ])
-                                                                        .first
-                                                                        .isDark
+                                                                                [
+                                                                                  Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
+                                                                                ])
+                                                                            .first
+                                                                            .computeLuminance() <
+                                                                        0.5
                                                                     ? Color.lerp(
                                                                         Colors
                                                                             .black,
@@ -1424,11 +1429,12 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                 Icons
                                                                     .skip_previous,
                                                                 color: (colors.palette ??
-                                                                            [
-                                                                              Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
-                                                                            ])
-                                                                        .first
-                                                                        .isDark
+                                                                                [
+                                                                                  Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
+                                                                                ])
+                                                                            .first
+                                                                            .computeLuminance() <
+                                                                        0.5
                                                                     ? Color.lerp(
                                                                         Colors
                                                                             .black,
@@ -1463,9 +1469,10 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                       .instance
                                                                       .play,
                                                               backgroundColor:
-                                                                  (colors.palette ??
+                                                                  (colors.palette?.cast<
+                                                                              Color?>() ??
                                                                           [
-                                                                            Theme.of(context).primaryColor
+                                                                            Theme.of(context).floatingActionButtonTheme.backgroundColor
                                                                           ])
                                                                       .last,
                                                               child:
@@ -1475,11 +1482,12 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                 icon: AnimatedIcons
                                                                     .play_pause,
                                                                 color: (colors.palette ??
-                                                                            [
-                                                                              Theme.of(context).primaryColor
-                                                                            ])
-                                                                        .last
-                                                                        .isDark
+                                                                                [
+                                                                                  Theme.of(context).colorScheme.primary
+                                                                                ])
+                                                                            .last
+                                                                            .computeLuminance() <
+                                                                        0.5
                                                                     ? Colors
                                                                         .white
                                                                     : Colors
@@ -1500,11 +1508,12 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                               icon: Icon(
                                                                 Icons.skip_next,
                                                                 color: (colors.palette ??
-                                                                            [
-                                                                              Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
-                                                                            ])
-                                                                        .first
-                                                                        .isDark
+                                                                                [
+                                                                                  Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
+                                                                                ])
+                                                                            .first
+                                                                            .computeLuminance() <
+                                                                        0.5
                                                                     ? Color.lerp(
                                                                         Colors
                                                                             .black,
@@ -1531,11 +1540,12 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                             color: playback
                                                                     .isShuffling
                                                                 ? (colors.palette ??
-                                                                            [
-                                                                              Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
-                                                                            ])
-                                                                        .first
-                                                                        .isDark
+                                                                                [
+                                                                                  Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
+                                                                                ])
+                                                                            .first
+                                                                            .computeLuminance() <
+                                                                        0.5
                                                                     ? Color.lerp(
                                                                         Colors
                                                                             .black,
@@ -1549,11 +1559,12 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                             .black,
                                                                         0.87)
                                                                 : (colors.palette ??
-                                                                            [
-                                                                              Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
-                                                                            ])
-                                                                        .first
-                                                                        .isDark
+                                                                                [
+                                                                                  Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
+                                                                                ])
+                                                                            .first
+                                                                            .computeLuminance() <
+                                                                        0.5
                                                                     ? Color.lerp(
                                                                         Colors
                                                                             .black,
@@ -1602,12 +1613,12 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                 );
                                                               },
                                                               color: (colors.palette ??
-                                                                          [
-                                                                            Theme.of(context).cardTheme.color ??
-                                                                                Theme.of(context).cardColor
-                                                                          ])
-                                                                      .first
-                                                                      .isDark
+                                                                              [
+                                                                                Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
+                                                                              ])
+                                                                          .first
+                                                                          .computeLuminance() <
+                                                                      0.5
                                                                   ? Color.lerp(
                                                                       Colors
                                                                           .black,
@@ -1698,12 +1709,12 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                 );
                                                               },
                                                               color: (colors.palette ??
-                                                                          [
-                                                                            Theme.of(context).cardTheme.color ??
-                                                                                Theme.of(context).cardColor
-                                                                          ])
-                                                                      .first
-                                                                      .isDark
+                                                                              [
+                                                                                Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor
+                                                                              ])
+                                                                          .first
+                                                                          .computeLuminance() <
+                                                                      0.5
                                                                   ? Color.lerp(
                                                                       Colors
                                                                           .black,
@@ -1791,18 +1802,24 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                 playback.position.label,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .displaySmall
+                                                    .bodyLarge
                                                     ?.copyWith(
-                                                      color:
-                                                          (colors.palette ??
+                                                      color: (colors.palette ??
                                                                       [
                                                                         Theme.of(context).cardTheme.color ??
                                                                             Theme.of(context).cardColor
                                                                       ])
                                                                   .first
-                                                                  .isDark
-                                                              ? Colors.white
-                                                              : Colors.black,
+                                                                  .computeLuminance() <
+                                                              0.5
+                                                          ? Theme.of(context)
+                                                              .extension<
+                                                                  TextColors>()
+                                                              ?.darkPrimary
+                                                          : Theme.of(context)
+                                                              .extension<
+                                                                  TextColors>()
+                                                              ?.lightPrimary,
                                                     ),
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
@@ -1812,18 +1829,24 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                 playback.duration.label,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .displaySmall
+                                                    .bodyLarge
                                                     ?.copyWith(
-                                                      color:
-                                                          (colors.palette ??
+                                                      color: (colors.palette ??
                                                                       [
                                                                         Theme.of(context).cardTheme.color ??
                                                                             Theme.of(context).cardColor
                                                                       ])
                                                                   .first
-                                                                  .isDark
-                                                              ? Colors.white
-                                                              : Colors.black,
+                                                                  .computeLuminance() <
+                                                              0.5
+                                                          ? Theme.of(context)
+                                                              .extension<
+                                                                  TextColors>()
+                                                              ?.darkPrimary
+                                                          : Theme.of(context)
+                                                              .extension<
+                                                                  TextColors>()
+                                                              ?.lightPrimary,
                                                     ),
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
@@ -1889,7 +1912,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                   backdropOpacity: 0.0,
                                   color: Theme.of(context).cardTheme.color ??
                                       Theme.of(context).cardColor,
-                                  margin: EdgeInsets.only(
+                                  margin: const EdgeInsets.only(
                                     left: 16.0,
                                     right: 16.0,
                                   ),
@@ -2215,163 +2238,97 @@ class MiniNowPlayingBarRefreshCollectionButtonState
           ValueListenableBuilder<Iterable<Color>?>(
             valueListenable: MobileNowPlayingController.instance.palette,
             builder: (context, value, _) => TweenAnimationBuilder(
-              duration: Duration(milliseconds: 400),
+              duration:
+                  Theme.of(context).extension<AnimationDuration>()?.medium ??
+                      Duration.zero,
               tween: ColorTween(
-                begin: Theme.of(context).primaryColor,
-                end: value?.first ?? Theme.of(context).primaryColor,
+                begin:
+                    Theme.of(context).floatingActionButtonTheme.backgroundColor,
+                end: value?.first ??
+                    Theme.of(context).floatingActionButtonTheme.backgroundColor,
               ),
               builder: (context, color, _) => Container(
                 child: widget.index.value == 3
-                    ? SpeedDial(
-                        icon: Icons.add,
-                        activeIcon: Icons.close,
-                        spacing: 8.0,
-                        heroTag: 'create-playlist-fab',
-                        animationCurve: Curves.easeInOut,
-                        animationDuration: const Duration(milliseconds: 200),
-                        children: [
-                          SpeedDialChild(
-                            child: const Icon(Icons.downloading),
-                            label: Language.instance.IMPORT,
-                            visible: true,
-                            onTap: () {
-                              showModalBottomSheet(
-                                isScrollControlled: true,
-                                constraints: BoxConstraints(
-                                  maxHeight: double.infinity,
-                                ),
-                                context: context,
-                                elevation: kDefaultHeavyElevation,
-                                useRootNavigator: true,
-                                builder: (context) => StatefulBuilder(
-                                  builder: (context, setState) {
-                                    return PlaylistImportBottomSheet();
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                          SpeedDialChild(
-                            child: const Icon(Icons.edit),
-                            label: Language.instance.CREATE,
-                            visible: true,
-                            onTap: () async {
-                              String text = '';
-                              await showModalBottomSheet(
-                                isScrollControlled: true,
-                                context: context,
-                                elevation: kDefaultHeavyElevation,
-                                useRootNavigator: true,
-                                builder: (context) => StatefulBuilder(
-                                  builder: (context, setState) {
-                                    return Container(
-                                      margin: EdgeInsets.only(
-                                        bottom: MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom -
-                                            MediaQuery.of(context)
-                                                .padding
-                                                .bottom,
+                    ? FloatingActionButton(
+                        tooltip: Language.instance.CREATE,
+                        child: const Icon(Icons.edit),
+                        backgroundColor: color as Color?,
+                        onPressed: () async {
+                          String text = '';
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            context: context,
+                            elevation: kDefaultHeavyElevation,
+                            useRootNavigator: true,
+                            builder: (context) => StatefulBuilder(
+                              builder: (context, setState) {
+                                return Container(
+                                  margin: EdgeInsets.only(
+                                    bottom: MediaQuery.of(context)
+                                            .viewInsets
+                                            .bottom -
+                                        MediaQuery.of(context).padding.bottom,
+                                  ),
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      const SizedBox(height: 4.0),
+                                      CustomTextField(
+                                        textCapitalization:
+                                            TextCapitalization.words,
+                                        textInputAction: TextInputAction.done,
+                                        autofocus: true,
+                                        onChanged: (value) => text = value,
+                                        onSubmitted: (String value) async {
+                                          if (value.isNotEmpty) {
+                                            FocusScope.of(context).unfocus();
+                                            await Collection.instance
+                                                .playlistCreateFromName(value);
+                                            Navigator.of(context).maybePop();
+                                          }
+                                        },
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge
+                                            ?.copyWith(
+                                              fontSize: 16.0,
+                                            ),
+                                        decoration:
+                                            mobileUnderlinedInputDecoration(
+                                          context,
+                                          Language.instance
+                                              .PLAYLISTS_TEXT_FIELD_LABEL,
+                                        ),
                                       ),
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
-                                        children: [
-                                          const SizedBox(height: 4.0),
-                                          CustomTextField(
-                                            textCapitalization:
-                                                TextCapitalization.words,
-                                            textInputAction:
-                                                TextInputAction.done,
-                                            autofocus: true,
-                                            onChanged: (value) => text = value,
-                                            onSubmitted: (String value) async {
-                                              if (value.isNotEmpty) {
-                                                FocusScope.of(context)
-                                                    .unfocus();
-                                                await Collection.instance
-                                                    .playlistCreateFromName(
-                                                        value);
-                                                Navigator.of(context)
-                                                    .maybePop();
-                                              }
-                                            },
-                                            decoration: InputDecoration(
-                                              contentPadding:
-                                                  EdgeInsets.fromLTRB(
-                                                12,
-                                                30,
-                                                12,
-                                                6,
-                                              ),
-                                              hintText: Language.instance
-                                                  .PLAYLISTS_TEXT_FIELD_LABEL,
-                                              border: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .iconTheme
-                                                      .color!
-                                                      .withOpacity(0.4),
-                                                  width: 1.8,
-                                                ),
-                                              ),
-                                              enabledBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .iconTheme
-                                                      .color!
-                                                      .withOpacity(0.4),
-                                                  width: 1.8,
-                                                ),
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                  width: 1.8,
-                                                ),
-                                              ),
-                                            ),
+                                      const SizedBox(height: 4.0),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          if (text.isNotEmpty) {
+                                            FocusScope.of(context).unfocus();
+                                            await Collection.instance
+                                                .playlistCreateFromName(
+                                              text,
+                                            );
+                                            Navigator.of(context).maybePop();
+                                          }
+                                        },
+                                        child: Text(
+                                          label(
+                                            context,
+                                            Language.instance.CREATE,
                                           ),
-                                          const SizedBox(height: 4.0),
-                                          ElevatedButton(
-                                            onPressed: () async {
-                                              if (text.isNotEmpty) {
-                                                FocusScope.of(context)
-                                                    .unfocus();
-                                                await Collection.instance
-                                                    .playlistCreateFromName(
-                                                  text,
-                                                );
-                                                Navigator.of(context)
-                                                    .maybePop();
-                                              }
-                                            },
-                                            style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                Theme.of(context).primaryColor,
-                                              ),
-                                            ),
-                                            child: Text(
-                                              Language.instance.CREATE
-                                                  .toUpperCase(),
-                                              style: const TextStyle(
-                                                letterSpacing: 2.0,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                        ],
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        },
                       )
                     : RefreshCollectionButton(
                         color: color as Color?,
@@ -2384,7 +2341,9 @@ class MiniNowPlayingBarRefreshCollectionButtonState
             valueListenable: MobileNowPlayingController.instance.fabOffset,
             builder: (context, value, child) => AnimatedContainer(
               height: value,
-              duration: Duration(milliseconds: 200),
+              duration:
+                  Theme.of(context).extension<AnimationDuration>()?.fast ??
+                      Duration.zero,
               curve: Curves.easeInOut,
             ),
           ),
@@ -2550,11 +2509,13 @@ class _LyricsScreenState extends State<LyricsScreen> {
           end: palette.palette?.first ??
               Theme.of(context).scaffoldBackgroundColor,
         ),
-        duration: Duration(milliseconds: 400),
+        duration: Theme.of(context).extension<AnimationDuration>()?.medium ??
+            Duration.zero,
         curve: Curves.easeInOut,
         builder: (context, value, _) => AnimatedContainer(
           color: value,
-          duration: Duration(milliseconds: 400),
+          duration: Theme.of(context).extension<AnimationDuration>()?.medium ??
+              Duration.zero,
           curve: Curves.easeInOut,
           alignment: Alignment.center,
           child: Consumer<Lyrics>(
@@ -2568,7 +2529,9 @@ class _LyricsScreenState extends State<LyricsScreen> {
                         ? 1.0
                         : 0.0,
                   ),
-                  duration: Duration(milliseconds: 200),
+                  duration:
+                      Theme.of(context).extension<AnimationDuration>()?.fast ??
+                          Duration.zero,
                   curve: Curves.easeInOut,
                   builder: (context, opacity, _) => Opacity(
                     opacity: opacity,
@@ -2587,7 +2550,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                       },
                       blendMode: BlendMode.dstOut,
                       child: LyricsReader(
-                        padding: EdgeInsets.all(tileMargin * 2),
+                        padding: EdgeInsets.all(tileMargin(context) * 2),
                         model: LyricsReaderModel()
                           ..lyrics =
                               Lyrics.instance.current.asMap().entries.map((e) {
@@ -2608,16 +2571,16 @@ class _LyricsScreenState extends State<LyricsScreen> {
                                     Theme.of(context).cardColor
                               ];
                           return LyricsStyle(
-                            color: colors.first.isDark
+                            color: colors.first.computeLuminance() < 0.5
                                 ? Colors.white
                                 : Colors.black,
                             primary: colors.first !=
                                     Theme.of(context).cardTheme.color
-                                ? colors.first.isDark
+                                ? colors.first.computeLuminance() < 0.5
                                     ? Colors.white
                                     : Colors.black
                                 : (palette.palette ??
-                                        [Theme.of(context).primaryColor])
+                                        [Theme.of(context).colorScheme.primary])
                                     .last,
                           );
                         }(),
@@ -2635,10 +2598,6 @@ class _LyricsScreenState extends State<LyricsScreen> {
       ),
     );
   }
-}
-
-extension on Color {
-  bool get isDark => (0.299 * red) + (0.587 * green) + (0.114 * blue) < 128.0;
 }
 
 class LyricsStyle extends LyricUI {

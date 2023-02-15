@@ -11,11 +11,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:provider/provider.dart';
-import 'package:animations/animations.dart';
 import 'package:desktop/desktop.dart' as desktop;
 import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
+import 'package:known_extents_list_view_builder/known_extents_list_view_builder.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
@@ -26,7 +26,7 @@ import 'package:harmonoid/interface/collection/artist.dart';
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class TrackTab extends StatefulWidget {
@@ -81,9 +81,9 @@ class _TrackTabState extends State<TrackTab> {
                             .color
                             ?.withOpacity(0.2) ??
                         Theme.of(context).dividerColor.withOpacity(0.4),
-                    borderHighlightColor: Theme.of(context).primaryColor,
-                    borderIndicatorColor: Theme.of(context).primaryColor,
-                    borderHoverColor: Theme.of(context).primaryColor,
+                    borderHighlightColor: Theme.of(context).colorScheme.primary,
+                    borderIndicatorColor: Theme.of(context).colorScheme.primary,
+                    borderHoverColor: Theme.of(context).colorScheme.primary,
                   ),
                   child: Stack(
                     alignment: Alignment.topRight,
@@ -165,7 +165,7 @@ class _TrackTabState extends State<TrackTab> {
                                 Language.instance.ALBUM_SINGLE,
                                 Language.instance.YEAR
                               ][index],
-                              style: Theme.of(context).textTheme.displayMedium,
+                              style: Theme.of(context).textTheme.titleSmall,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -193,8 +193,7 @@ class _TrackTabState extends State<TrackTab> {
                                   collection.tracks[index].year.toString(),
                                 ][property],
                                 overflow: TextOverflow.ellipsis,
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               );
                             } else if (property == 2) {
                               final elements = <TextSpan>[];
@@ -212,7 +211,7 @@ class _TrackTabState extends State<TrackTab> {
                                                 .interceptPositionChangeRebuilds =
                                             true;
                                         navigatorKey.currentState?.push(
-                                          MaterialPageRoute(
+                                          MaterialRoute(
                                             builder: (context) => ArtistScreen(
                                               artist: artist,
                                             ),
@@ -234,16 +233,14 @@ class _TrackTabState extends State<TrackTab> {
                               });
                               elements.removeLast();
                               return HyperLink(
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium,
+                                style: Theme.of(context).textTheme.bodyLarge,
                                 text: TextSpan(
                                   children: elements,
                                 ),
                               );
                             } else if (property == 3) {
                               return HyperLink(
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium,
+                                style: Theme.of(context).textTheme.bodyLarge,
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
@@ -271,7 +268,7 @@ class _TrackTabState extends State<TrackTab> {
                                                     .interceptPositionChangeRebuilds =
                                                 true;
                                             navigatorKey.currentState?.push(
-                                              MaterialPageRoute(
+                                              MaterialRoute(
                                                 builder: (context) =>
                                                     AlbumScreen(
                                                   album: album,
@@ -310,9 +307,11 @@ class _TrackTabState extends State<TrackTab> {
                           mini: true,
                           tooltip: Language.instance.PLAY_ALL,
                           child: Icon(Icons.play_arrow),
-                          foregroundColor:
-                              Theme.of(context).appBarTheme.iconTheme?.color,
-                          backgroundColor: Theme.of(context).cardColor,
+                          foregroundColor: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.secondaryContainer,
                         ),
                       ),
                       Positioned(
@@ -327,9 +326,11 @@ class _TrackTabState extends State<TrackTab> {
                           mini: true,
                           tooltip: Language.instance.SHUFFLE,
                           child: Icon(Icons.shuffle),
-                          foregroundColor:
-                              Theme.of(context).appBarTheme.iconTheme?.color,
-                          backgroundColor: Theme.of(context).cardColor,
+                          foregroundColor: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.secondaryContainer,
                         ),
                       ),
                     ],
@@ -352,7 +353,8 @@ class _TrackTabState extends State<TrackTab> {
                       labelTextBuilder: (offset) {
                         final index = (offset -
                                 (kMobileSearchBarHeight +
-                                    2 * tileMargin +
+                                    56.0 +
+                                    tileMargin(context) +
                                     MediaQuery.of(context).padding.top)) ~/
                             kMobileTrackTileHeight;
                         final track = collection.tracks[index.clamp(
@@ -364,70 +366,88 @@ class _TrackTabState extends State<TrackTab> {
                             {
                               return Text(
                                 track.trackName[0].toUpperCase(),
-                                style: Theme.of(context).textTheme.displayLarge,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               );
                             }
                           case TracksSort.dateAdded:
                             {
                               return Text(
                                 '${track.timeAdded.label}',
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               );
                             }
                           case TracksSort.year:
                             {
                               return Text(
                                 '${track.year}',
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               );
                             }
                           default:
                             return Text(
                               '',
-                              style: Theme.of(context).textTheme.headlineMedium,
+                              style: Theme.of(context).textTheme.bodyLarge,
                             );
                         }
                       },
                       backgroundColor: Theme.of(context).cardTheme.color ??
                           Theme.of(context).cardColor,
                       controller: controller,
-                      child: ListView(
+                      child: KnownExtentsListView.builder(
                         controller: controller,
-                        itemExtent: kMobileTrackTileHeight,
+                        itemExtents: [
+                          56.0,
+                          ...collection.tracks.map(
+                            (e) => kMobileTrackTileHeight,
+                          ),
+                        ],
                         padding: EdgeInsets.only(
                           top: MediaQuery.of(context).padding.top +
                               kMobileSearchBarHeight +
-                              2 * tileMargin,
+                              tileMargin(context),
                         ),
-                        children: collection.tracks
-                            .asMap()
-                            .entries
-                            .map(
-                              (track) => Configuration.instance
-                                      .addLibraryToPlaylistWhenPlayingFromTracksTab
-                                  ? TrackTile(
-                                      index: track.key,
-                                      track: track.value,
-                                    )
-                                  : TrackTile(
-                                      index: 0,
-                                      track: track.value,
-                                      group: [
-                                        track.value,
-                                      ],
-                                    ),
-                            )
-                            .toList(),
+                        itemBuilder: (context, i) {
+                          if (i == 0) {
+                            return Container(
+                              height: 56.0,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: tileMargin(context),
+                              ),
+                              alignment: Alignment.centerRight,
+                              child: Row(
+                                children: [
+                                  const SizedBox(width: 8.0),
+                                  Text(
+                                    '${Collection.instance.tracks.length} ${Language.instance.TRACK}',
+                                  ),
+                                  const Spacer(),
+                                  MobileSortByButton(tab: kTrackTabIndex),
+                                ],
+                              ),
+                            );
+                          }
+                          return Configuration.instance
+                                  .addLibraryToPlaylistWhenPlayingFromTracksTab
+                              ? TrackTile(
+                                  index: i - 1,
+                                  track: collection.tracks[i - 1],
+                                )
+                              : TrackTile(
+                                  index: 0,
+                                  track: collection.tracks[i - 1],
+                                  group: [
+                                    collection.tracks[i - 1],
+                                  ],
+                                );
+                        },
                       ),
                     )
                   : Container(
-                      // padding: EdgeInsets.only(
-                      //   top: MediaQuery.of(context).padding.top +
-                      //       kMobileSearchBarHeight +
-                      //       2 * tileMargin,
-                      // ),
+                      padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).padding.top +
+                            kMobileSearchBarHeight +
+                            tileMargin(context),
+                      ),
                       child: Center(
                         child: ExceptionWidget(
                           title: Language.instance.NO_COLLECTION_TITLE,
@@ -560,9 +580,7 @@ class TrackTileState extends State<TrackTile> {
                             : widget.leading ??
                                 Text(
                                   '${widget.track.trackNumber}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineMedium,
+                                  style: Theme.of(context).textTheme.bodyLarge,
                                 ),
                       ),
                       Expanded(
@@ -572,7 +590,7 @@ class TrackTileState extends State<TrackTile> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             widget.track.trackName,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: Theme.of(context).textTheme.bodyLarge,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -598,7 +616,7 @@ class TrackTileState extends State<TrackTile> {
                                           DesktopNowPlayingController.instance
                                               .hide();
                                           navigatorKey.currentState?.push(
-                                            MaterialPageRoute(
+                                            MaterialRoute(
                                               builder: (context) =>
                                                   ArtistScreen(
                                                 artist: artist,
@@ -616,7 +634,7 @@ class TrackTileState extends State<TrackTile> {
                             });
                             elements.removeLast();
                             return HyperLink(
-                              style: Theme.of(context).textTheme.headlineMedium,
+                              style: Theme.of(context).textTheme.bodyLarge,
                               text: TextSpan(
                                 children: elements,
                               ),
@@ -632,7 +650,7 @@ class TrackTileState extends State<TrackTile> {
                           alignment: Alignment.centerRight,
                           child: Text(
                             widget.track.year.toString(),
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: Theme.of(context).textTheme.bodyLarge,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -708,9 +726,8 @@ class TrackTileState extends State<TrackTile> {
                                     widget.track.trackName.overflow,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displayMedium,
+                                    style:
+                                        Theme.of(context).textTheme.titleMedium,
                                   ),
                               if (widget.subtitle != null) ...[
                                 const SizedBox(
@@ -725,8 +742,7 @@ class TrackTileState extends State<TrackTile> {
                                   subtitle,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
-                                  style:
-                                      Theme.of(context).textTheme.displaySmall,
+                                  style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                               ],
                             ],

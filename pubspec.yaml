@@ -52,6 +52,7 @@ dependencies:
 
   ffi: ^2.0.1
   win32: ^3.0.0
+  dynamic_color: ^1.6.2
   just_audio: ^0.9.28
   audio_service: ^0.18.7
   awesome_notifications: ^0.7.0-beta.5
@@ -92,15 +93,9 @@ dependencies:
   auto_size_text: ^3.0.0
   uuid: ^3.0.6
   synchronized: ^3.0.0+2
-  flutter_speed_dial: ^6.0.0
   flutter_svg: ^1.1.4
 
   # Third-party forked plugins & packages to meet requirements.
-
-  flutter_platform_alert:
-    git:
-      url: https://github.com/alexmercerind/flutter_platform_alert.git
-      ref: b174a505c6c2c00bad973c2fc285e80d6a85cb7d
   desktop:
     git:
       url: https://github.com/alexmercerind/desktop.git

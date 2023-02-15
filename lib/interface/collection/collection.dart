@@ -21,9 +21,10 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
-import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/interface/collection/track.dart';
@@ -81,11 +82,18 @@ class CollectionScreenState extends State<CollectionScreen>
     super.initState();
     widget.tabControllerNotifier.addListener(() {
       if (index.value != widget.tabControllerNotifier.value.index) {
-        pageController.animateToPage(
-          widget.tabControllerNotifier.value.index,
-          duration: Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-        );
+        final duration =
+            Theme.of(context).extension<AnimationDuration>()?.fast ??
+                Duration.zero;
+        if (duration == Duration.zero) {
+          pageController.jumpToPage(widget.tabControllerNotifier.value.index);
+        } else {
+          pageController.animateToPage(
+            widget.tabControllerNotifier.value.index,
+            duration: duration,
+            curve: Curves.easeInOut,
+          );
+        }
       }
     });
     if (isMobile) {
@@ -130,7 +138,7 @@ class CollectionScreenState extends State<CollectionScreen>
               context,
               rootNavigator: true,
             ).push(
-              MaterialPageRoute(
+              MaterialRoute(
                 builder: (context) => MissingDirectoriesScreen(),
               ),
             );
@@ -169,6 +177,10 @@ class CollectionScreenState extends State<CollectionScreen>
                       alignment: Alignment.bottomLeft,
                       children: <Widget>[
                         PageTransitionSwitcher(
+                          duration: Theme.of(context)
+                                  .extension<AnimationDuration>()
+                                  ?.medium ??
+                              Duration.zero,
                           child: index.value == -1
                               ? SearchTab(query: query)
                               : [
@@ -192,9 +204,10 @@ class CollectionScreenState extends State<CollectionScreen>
                             left: 0.0,
                             bottom: 0.0,
                             child: Card(
+                              // NOTE: Force elevation.
+                              elevation: kDefaultCardElevation,
                               clipBehavior: Clip.antiAlias,
                               margin: EdgeInsets.all(16.0),
-                              elevation: Theme.of(context).cardTheme.elevation,
                               child: Container(
                                 width: 328.0,
                                 height: 56.0,
@@ -203,26 +216,12 @@ class CollectionScreenState extends State<CollectionScreen>
                                   mainAxisSize: MainAxisSize.max,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    refresh.progress == null
-                                        ? LinearProgressIndicator(
-                                            value: null,
-                                            valueColor: AlwaysStoppedAnimation(
-                                              Theme.of(context).primaryColor,
-                                            ),
-                                            backgroundColor: Theme.of(context)
-                                                .primaryColor
-                                                .withOpacity(0.4),
-                                          )
-                                        : LinearProgressIndicator(
-                                            value: (refresh.progress ?? 0) /
-                                                refresh.total,
-                                            valueColor: AlwaysStoppedAnimation(
-                                              Theme.of(context).primaryColor,
-                                            ),
-                                            backgroundColor: Theme.of(context)
-                                                .primaryColor
-                                                .withOpacity(0.4),
-                                          ),
+                                    LinearProgressIndicator(
+                                      value: refresh.progress == null
+                                          ? null
+                                          : (refresh.progress ?? 0) /
+                                              refresh.total,
+                                    ),
                                     Expanded(
                                       child: Container(
                                         padding: EdgeInsets.all(12.0),
@@ -257,7 +256,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                                 textAlign: TextAlign.center,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headlineMedium,
+                                                    .bodyLarge,
                                               ),
                                             ),
                                             SizedBox(
@@ -311,45 +310,41 @@ class CollectionScreenState extends State<CollectionScreen>
                                   Language.instance.TRACK,
                                   Language.instance.ARTIST,
                                   Language.instance.PLAYLIST,
-                                ].map(
+                                ].asMap().entries.map(
                                   (tab) {
-                                    final _index = [
-                                      Language.instance.ALBUM,
-                                      Language.instance.TRACK,
-                                      Language.instance.ARTIST,
-                                      Language.instance.PLAYLIST,
-                                    ].indexOf(tab);
                                     return InkWell(
                                       borderRadius: BorderRadius.circular(4.0),
                                       onTap: () {
-                                        if (index.value == _index) return;
+                                        if (index.value == tab.key) return;
                                         setState(() {
-                                          index.value = _index;
+                                          index.value = tab.key;
                                         });
                                       },
                                       child: Container(
                                         height: 40.0,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 4.0),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 4.0,
+                                        ),
                                         alignment: Alignment.center,
-                                        margin: EdgeInsets.symmetric(
-                                            horizontal: 4.0),
+                                        margin: const EdgeInsets.symmetric(
+                                          horizontal: 4.0,
+                                        ),
                                         child: Text(
-                                          tab.toUpperCase(),
+                                          tab.value.toUpperCase(),
                                           style: TextStyle(
                                             fontSize: 20.0,
-                                            fontWeight: index.value == _index
+                                            fontWeight: index.value == tab.key
                                                 ? FontWeight.w600
                                                 : FontWeight.w300,
-                                            color:
-                                                (Theme.of(context).brightness ==
-                                                            Brightness.dark
-                                                        ? Colors.white
-                                                        : Colors.black)
-                                                    .withOpacity(
-                                                        index.value == _index
-                                                            ? 1.0
-                                                            : 0.67),
+                                            color: index.value == tab.key
+                                                ? Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge
+                                                    ?.color
+                                                : Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium
+                                                    ?.color,
                                           ),
                                         ),
                                       ),
@@ -391,9 +386,8 @@ class CollectionScreenState extends State<CollectionScreen>
                                       node.requestFocus();
                                     },
                                     textAlignVertical: TextAlignVertical.center,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineMedium,
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
                                     decoration: inputDecoration(
                                       context,
                                       Language
@@ -406,8 +400,8 @@ class CollectionScreenState extends State<CollectionScreen>
                                             Icons.search,
                                             size: 20.0,
                                             color: Theme.of(context)
-                                                .iconTheme
-                                                .color,
+                                                .colorScheme
+                                                .onSurfaceVariant,
                                           ),
                                         ),
                                       ),
@@ -426,38 +420,14 @@ class CollectionScreenState extends State<CollectionScreen>
                                   width: 12.0,
                                 ),
                                 PlayFileOrURLButton(),
-                                // TweenAnimationBuilder<double>(
-                                //   tween: Tween<double>(
-                                //     begin: 0.0,
-                                //     end: index.value == 3 ? 0.0 : 1.0,
-                                //   ),
-                                //   duration: Duration(milliseconds: 200),
-                                //   child: CollectionSortButton(
-                                //     tab: index.value,
-                                //   ),
-                                //   builder: (context, value, child) =>
-                                //       Opacity(
-                                //     opacity: value,
-                                //     child:
-                                //         value == 0.0 ? Container() : child,
-                                //   ),
-                                // ),
                                 CollectionMoreButton(),
                                 Tooltip(
                                   message: Language.instance.SETTING,
                                   child: InkWell(
                                     onTap: () {
                                       Navigator.of(context).push(
-                                        PageRouteBuilder(
-                                          pageBuilder: (context, animation,
-                                                  secondaryAnimation) =>
-                                              FadeThroughTransition(
-                                            fillColor: Colors.transparent,
-                                            animation: animation,
-                                            secondaryAnimation:
-                                                secondaryAnimation,
-                                            child: Settings(),
-                                          ),
+                                        MaterialRoute(
+                                          builder: (context) => Settings(),
                                         ),
                                       );
                                     },
@@ -491,23 +461,22 @@ class CollectionScreenState extends State<CollectionScreen>
             ),
           )
         : AnnotatedRegion<SystemUiOverlayStyle>(
-            value: SystemUiOverlayStyle(
-              statusBarColor: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.black12
-                  : Colors.white12,
-              statusBarIconBrightness:
-                  Theme.of(context).brightness == Brightness.dark
-                      ? Brightness.light
-                      : Brightness.dark,
-            ),
+            value: Theme.of(context).appBarTheme.systemOverlayStyle ??
+                SystemUiOverlayStyle(),
             child: Consumer<CollectionRefresh>(
               builder: (context, refresh, _) => Scaffold(
                 resizeToAvoidBottomInset: false,
                 floatingActionButton: ValueListenableBuilder(
                   valueListenable: index,
                   builder: (context, value, child) => AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 200),
-                    reverseDuration: const Duration(milliseconds: 200),
+                    duration: Theme.of(context)
+                            .extension<AnimationDuration>()
+                            ?.medium ??
+                        Duration.zero,
+                    reverseDuration: Theme.of(context)
+                            .extension<AnimationDuration>()
+                            ?.medium ??
+                        Duration.zero,
                     switchInCurve: Curves.easeInOut,
                     switchOutCurve: Curves.easeInOut,
                     transitionBuilder: (child, value) => FadeTransition(
@@ -536,14 +505,44 @@ class CollectionScreenState extends State<CollectionScreen>
                                   ? 1.0
                                   : (refresh.progress ?? 0.0) / refresh.total,
                       transitionCurve: Curves.easeInOut,
-                      width: MediaQuery.of(context).size.width - 2 * tileMargin,
-                      height: kMobileSearchBarHeight,
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       margins: EdgeInsets.only(
-                        top: MediaQuery.of(context).padding.top + tileMargin,
+                        top: tileMargin(context) +
+                            MediaQuery.of(context).padding.top,
                       ),
-                      accentColor: Theme.of(context).primaryColor,
+                      height: kMobileSearchBarHeight,
+                      width: MediaQuery.of(context).size.width -
+                          (isMaterial3(context)
+                              ? 4 * tileMargin(context)
+                              : 2 * tileMargin(context)),
+                      borderRadius: Theme.of(context)
+                          .extension<SearchBarThemeData>()
+                          ?.borderRadius,
+                      accentColor: Theme.of(context)
+                          .extension<SearchBarThemeData>()
+                          ?.accentColor,
+                      backgroundColor: Theme.of(context)
+                          .extension<SearchBarThemeData>()
+                          ?.backgroundColor,
+                      shadowColor: Theme.of(context)
+                          .extension<SearchBarThemeData>()
+                          ?.shadowColor,
+                      elevation: Theme.of(context)
+                              .extension<SearchBarThemeData>()
+                              ?.elevation ??
+                          kDefaultCardElevation,
                       onQueryChanged: (value) => query.value = value,
                       clearQueryOnClose: true,
+                      hintStyle: Theme.of(context)
+                          .extension<SearchBarThemeData>()
+                          ?.hintStyle,
+                      queryStyle: Theme.of(context)
+                          .extension<SearchBarThemeData>()
+                          ?.queryStyle,
+                      transitionDuration: Theme.of(context)
+                              .extension<AnimationDuration>()
+                              ?.medium ??
+                          Duration.zero,
                       transition: CircularFloatingSearchBarTransition(),
                       leadingActions: [
                         FloatingSearchBarAction(
@@ -568,187 +567,100 @@ class CollectionScreenState extends State<CollectionScreen>
                         FloatingSearchBarAction(
                           showIfOpened: false,
                           showIfClosed: true,
-                          child: MobileSortByButton(
-                            value: index,
-                          ),
-                        ),
-                        FloatingSearchBarAction(
-                          showIfOpened: false,
-                          showIfClosed: true,
-                          child: CircularButton(
-                            icon: Icon(
-                              Icons.grid_on,
-                              size: 20.0,
-                              color: Theme.of(context)
-                                  .appBarTheme
-                                  .actionsIconTheme
-                                  ?.color,
-                            ),
-                            onPressed: () async {
-                              final position = RelativeRect.fromRect(
-                                Offset(
-                                      MediaQuery.of(context).size.width -
-                                          tileMargin -
-                                          48.0,
-                                      MediaQuery.of(context).padding.top +
-                                          kMobileSearchBarHeight +
-                                          2 * tileMargin,
-                                    ) &
-                                    Size(228.0, 320.0),
-                                Rect.fromLTWH(
-                                  0,
-                                  0,
-                                  MediaQuery.of(context).size.width,
-                                  MediaQuery.of(context).size.height,
+                          // TODO(@alexmercerind): Genre support.
+                          child: ValueListenableBuilder<int>(
+                            valueListenable: index,
+                            builder: (context, tab, child) => AnimatedOpacity(
+                              duration: Theme.of(context)
+                                      .extension<AnimationDuration>()
+                                      ?.fast ??
+                                  Duration.zero,
+                              curve: Curves.easeInOut,
+                              opacity: {
+                                kAlbumTabIndex,
+                                kArtistTabIndex,
+                                kGenreTabIndex,
+                              }.contains(tab)
+                                  ? 1.0
+                                  : 0.0,
+                              child: CircularButton(
+                                icon: Icon(
+                                  Icons.view_list_outlined,
+                                  color: Theme.of(context)
+                                      .appBarTheme
+                                      .actionsIconTheme
+                                      ?.color,
                                 ),
-                              );
-                              showMenu<int>(
-                                context: context,
-                                position: position,
-                                elevation:
-                                    Theme.of(context).popupMenuTheme.elevation,
-                                constraints: BoxConstraints(
-                                  maxWidth: double.infinity,
-                                ),
-                                items: [
-                                  PopupMenuItem(
-                                    padding: EdgeInsets.zero,
-                                    value: 0,
-                                    child: ListTile(
-                                      leading: CircleAvatar(
-                                        backgroundColor: Colors.transparent,
-                                        child: Text(
-                                          Configuration
-                                              .instance.mobileAlbumsGridSize
-                                              .toString(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .displaySmall
-                                              ?.copyWith(
-                                                fontSize: 18.0,
-                                              ),
-                                        ),
-                                      ),
+                                onPressed: () async {
+                                  if (!{
+                                    kAlbumTabIndex,
+                                    kArtistTabIndex,
+                                    kGenreTabIndex,
+                                  }.contains(tab)) return;
+                                  return showDialog(
+                                    context: context,
+                                    builder: (context) => SimpleDialog(
                                       title: Text(
-                                        Language
-                                            .instance.MOBILE_ALBUM_GRID_SIZE,
-                                      ),
-                                    ),
-                                  ),
-                                  PopupMenuItem(
-                                    padding: EdgeInsets.zero,
-                                    value: 1,
-                                    child: ListTile(
-                                      leading: CircleAvatar(
-                                        backgroundColor: Colors.transparent,
-                                        child: Text(
-                                          Configuration
-                                              .instance.mobileArtistsGridSize
-                                              .toString(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .displaySmall
-                                              ?.copyWith(
-                                                fontSize: 18.0,
-                                              ),
-                                        ),
-                                      ),
-                                      title: Text(
-                                        Language
-                                            .instance.MOBILE_ARTIST_GRID_SIZE,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ).then((value) async {
-                                switch (value) {
-                                  case 0:
-                                    {
-                                      int result = Configuration
-                                          .instance.mobileAlbumsGridSize;
-                                      await showDialog(
-                                        context: context,
-                                        builder: (context) => StatefulBuilder(
-                                          builder: (context, setState) =>
-                                              SimpleDialog(
-                                            title: Text(
-                                              Language.instance
+                                        {
+                                              kAlbumTabIndex: Language.instance
                                                   .MOBILE_ALBUM_GRID_SIZE,
-                                            ),
-                                            children: [1, 2, 3, 4]
-                                                .map(
-                                                  (e) => RadioListTile<int>(
-                                                    title: Text(e.toString()),
-                                                    groupValue: result,
-                                                    onChanged: (e) {
-                                                      if (e != null) {
-                                                        result = e;
-                                                        Navigator.of(context)
-                                                            .maybePop();
-                                                      }
-                                                    },
-                                                    value: e,
-                                                  ),
-                                                )
-                                                .toList(),
-                                          ),
-                                        ),
-                                      );
-                                      if (result !=
-                                          Configuration
-                                              .instance.mobileAlbumsGridSize) {
-                                        await Configuration.instance.save(
-                                          mobileAlbumsGridSize: result,
-                                        );
-                                        setState(() {});
-                                      }
-                                      break;
-                                    }
-                                  case 1:
-                                    {
-                                      int result = Configuration
-                                          .instance.mobileArtistsGridSize;
-                                      await showDialog(
-                                        context: context,
-                                        builder: (context) => StatefulBuilder(
-                                          builder: (context, setState) =>
-                                              SimpleDialog(
-                                            title: Text(
-                                              Language.instance
+                                              kArtistTabIndex: Language.instance
                                                   .MOBILE_ARTIST_GRID_SIZE,
+                                            }[tab] ??
+                                            '',
+                                      ),
+                                      children: [1, 2, 3, 4]
+                                          .map(
+                                            (e) => RadioListTile<int>(
+                                              title: Text(e.toString()),
+                                              groupValue: {
+                                                    kAlbumTabIndex: Configuration
+                                                        .instance
+                                                        .mobileAlbumsGridSize,
+                                                    kArtistTabIndex: Configuration
+                                                        .instance
+                                                        .mobileArtistsGridSize,
+                                                  }[tab] ??
+                                                  -1,
+                                              onChanged: (e) async {
+                                                if (e != null) {
+                                                  if (tab == kAlbumTabIndex) {
+                                                    if (e !=
+                                                        Configuration.instance
+                                                            .mobileAlbumsGridSize) {
+                                                      await Configuration
+                                                          .instance
+                                                          .save(
+                                                        mobileAlbumsGridSize: e,
+                                                      );
+                                                    }
+                                                  }
+                                                  if (tab == kArtistTabIndex) {
+                                                    if (e !=
+                                                        Configuration.instance
+                                                            .mobileArtistsGridSize) {
+                                                      await Configuration
+                                                          .instance
+                                                          .save(
+                                                        mobileArtistsGridSize:
+                                                            e,
+                                                      );
+                                                    }
+                                                  }
+                                                  Navigator.of(context)
+                                                      .maybePop();
+                                                  setState(() {});
+                                                }
+                                              },
+                                              value: e,
                                             ),
-                                            children: [1, 2, 3, 4]
-                                                .map(
-                                                  (e) => RadioListTile<int>(
-                                                    title: Text(e.toString()),
-                                                    groupValue: result,
-                                                    onChanged: (e) {
-                                                      if (e != null) {
-                                                        result = e;
-                                                        Navigator.of(context)
-                                                            .maybePop();
-                                                      }
-                                                    },
-                                                    value: e,
-                                                  ),
-                                                )
-                                                .toList(),
-                                          ),
-                                        ),
-                                      );
-                                      if (result !=
-                                          Configuration
-                                              .instance.mobileArtistsGridSize) {
-                                        await Configuration.instance.save(
-                                          mobileArtistsGridSize: result,
-                                        );
-                                        setState(() {});
-                                      }
-                                      break;
-                                    }
-                                }
-                              });
-                            },
+                                          )
+                                          .toList(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
                           ),
                         ),
                         FloatingSearchBarAction(

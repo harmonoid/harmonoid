@@ -7,7 +7,6 @@
 ///
 
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:media_library/media_library.dart';
@@ -17,8 +16,9 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
-import 'package:harmonoid/utils/storage_retriever.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class IndexingSetting extends StatefulWidget {
@@ -56,8 +56,9 @@ class IndexingState extends State<IndexingSetting>
             if (isMobile) ...[
               ListTile(
                 dense: false,
-                onTap:
-                    controller.isCompleted ? pickNewFolder : showProgressDialog,
+                onTap: controller.isCompleted
+                    ? pickNewFolder
+                    : showIndexingAlreadyUnderProgressDialog,
                 title: Text(Language.instance.ADD_NEW_FOLDER),
                 subtitle: Text(Language.instance.ADD_NEW_FOLDER_SUBTITLE),
               ),
@@ -71,7 +72,7 @@ class IndexingState extends State<IndexingSetting>
                           },
                         );
                       }
-                    : showProgressDialog,
+                    : showIndexingAlreadyUnderProgressDialog,
                 title: Text(Language.instance.REFRESH),
                 subtitle: Text(Language.instance.REFRESH_SUBTITLE),
               ),
@@ -85,7 +86,7 @@ class IndexingState extends State<IndexingSetting>
                           },
                         );
                       }
-                    : showProgressDialog,
+                    : showIndexingAlreadyUnderProgressDialog,
                 title: Text(Language.instance.REINDEX),
                 subtitle: Text(Language.instance.REINDEX_SUBTITLE),
               ),
@@ -118,9 +119,9 @@ class IndexingState extends State<IndexingSetting>
                         TextButton(
                           onPressed: CollectionRefresh.instance.isCompleted
                               ? pickNewFolder
-                              : showProgressDialog,
+                              : showIndexingAlreadyUnderProgressDialog,
                           child: Text(
-                            Language.instance.ADD_NEW_FOLDER.toUpperCase(),
+                            label(context, Language.instance.ADD_NEW_FOLDER),
                           ),
                         ),
                       ],
@@ -135,7 +136,7 @@ class IndexingState extends State<IndexingSetting>
                       children: [
                         Text(
                           Language.instance.SELECTED_DIRECTORIES,
-                          style: Theme.of(context).textTheme.displaySmall,
+                          style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         const SizedBox(height: 8.0),
                         if (!Platform.isAndroid || volumes != null)
@@ -174,11 +175,9 @@ class IndexingState extends State<IndexingSetting>
                                                     Language.instance.SD_CARD,
                                                   )
                                                   .overflow,
-                                          style: isDesktop
-                                              ? null
-                                              : Theme.of(context)
-                                                  .textTheme
-                                                  .titleMedium,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -192,74 +191,13 @@ class IndexingState extends State<IndexingSetting>
                                             final cr =
                                                 CollectionRefresh.instance;
                                             if (!cr.isCompleted) {
-                                              await showDialog(
-                                                context: context,
-                                                builder: (context) =>
-                                                    AlertDialog(
-                                                  backgroundColor:
-                                                      Theme.of(context)
-                                                          .cardTheme
-                                                          .color,
-                                                  title: Text(
-                                                    Language.instance
-                                                        .INDEXING_ALREADY_GOING_ON_TITLE,
-                                                  ),
-                                                  content: Text(
-                                                    Language.instance
-                                                        .INDEXING_ALREADY_GOING_ON_SUBTITLE,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .displaySmall,
-                                                  ),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed:
-                                                          Navigator.of(context)
-                                                              .pop,
-                                                      child: Text(
-                                                          Language.instance.OK),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
+                                              await showIndexingAlreadyUnderProgressDialog();
                                               return;
                                             }
                                             if (conf.collectionDirectories
                                                     .length ==
                                                 1) {
-                                              await showDialog(
-                                                context: context,
-                                                builder: (subContext) =>
-                                                    AlertDialog(
-                                                  title: Text(
-                                                    Language.instance.WARNING,
-                                                  ),
-                                                  contentPadding:
-                                                      const EdgeInsets.fromLTRB(
-                                                    24.0,
-                                                    20.0,
-                                                    24.0,
-                                                    12.0,
-                                                  ),
-                                                  content: Text(
-                                                    Language.instance
-                                                        .LAST_COLLECTION_DIRECTORY_REMOVED,
-                                                    style: Theme.of(subContext)
-                                                        .textTheme
-                                                        .displaySmall,
-                                                  ),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () async {
-                                                        Navigator.of(subContext)
-                                                            .pop();
-                                                      },
-                                                      child: Text(
-                                                          Language.instance.OK),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
+                                              await showAtleastOneDirectoryMustStayDialog();
                                               return;
                                             }
                                             await c.removeDirectories(
@@ -286,11 +224,9 @@ class IndexingState extends State<IndexingSetting>
                                           }
                                         },
                                         child: Text(
-                                          Language.instance.REMOVE
-                                              .toUpperCase(),
-                                          style: TextStyle(
-                                            color:
-                                                Theme.of(context).primaryColor,
+                                          label(
+                                            context,
+                                            Language.instance.REMOVE,
                                           ),
                                         ),
                                       ),
@@ -322,7 +258,7 @@ class IndexingState extends State<IndexingSetting>
                                                   .instance.DISCOVERING_FILES,
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .displaySmall,
+                                                  .bodyLarge,
                                             ),
                                             Container(
                                               margin: const EdgeInsets.only(
@@ -335,17 +271,6 @@ class IndexingState extends State<IndexingSetting>
                                                   32.0,
                                               child: LinearProgressIndicator(
                                                 value: null,
-                                                backgroundColor:
-                                                    Theme.of(context)
-                                                        .colorScheme
-                                                        .primary
-                                                        .withOpacity(0.2),
-                                                valueColor:
-                                                    AlwaysStoppedAnimation(
-                                                  Theme.of(context)
-                                                      .colorScheme
-                                                      .primary,
-                                                ),
                                               ),
                                             ),
                                           ],
@@ -356,7 +281,11 @@ class IndexingState extends State<IndexingSetting>
                                             end: (controller.progress ?? 0) /
                                                 controller.total,
                                           ),
-                                          duration: Duration(milliseconds: 400),
+                                          duration: Theme.of(context)
+                                                  .extension<
+                                                      AnimationDuration>()
+                                                  ?.medium ??
+                                              Duration.zero,
                                           child: Text(
                                             Language.instance
                                                 .SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
@@ -371,7 +300,7 @@ class IndexingState extends State<IndexingSetting>
                                                 ),
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .displaySmall,
+                                                .bodyLarge,
                                           ),
                                           builder: (_, dynamic value, child) =>
                                               Column(
@@ -390,17 +319,6 @@ class IndexingState extends State<IndexingSetting>
                                                     32.0,
                                                 child: LinearProgressIndicator(
                                                   value: value,
-                                                  backgroundColor:
-                                                      Theme.of(context)
-                                                          .colorScheme
-                                                          .primary
-                                                          .withOpacity(0.2),
-                                                  valueColor:
-                                                      AlwaysStoppedAnimation(
-                                                    Theme.of(context)
-                                                        .colorScheme
-                                                        .primary,
-                                                  ),
                                                 ),
                                               ),
                                             ],
@@ -428,9 +346,12 @@ class IndexingState extends State<IndexingSetting>
                                     },
                                   );
                                 }
-                              : showProgressDialog,
+                              : showIndexingAlreadyUnderProgressDialog,
                           child: Text(
-                            Language.instance.REFRESH.toUpperCase(),
+                            label(
+                              context,
+                              Language.instance.REFRESH,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 4.0),
@@ -443,9 +364,12 @@ class IndexingState extends State<IndexingSetting>
                                     },
                                   );
                                 }
-                              : showProgressDialog,
+                              : showIndexingAlreadyUnderProgressDialog,
                           child: Text(
-                            Language.instance.REINDEX.toUpperCase(),
+                            label(
+                              context,
+                              Language.instance.REINDEX,
+                            ),
                           ),
                         ),
                       ],
@@ -457,13 +381,13 @@ class IndexingState extends State<IndexingSetting>
                         children: [
                           const SizedBox(height: 8.0),
                           Text(
-                            '${Language.instance.REFRESH.toUpperCase()}: ${Language.instance.REFRESH_INFORMATION}',
-                            style: Theme.of(context).textTheme.displaySmall,
+                            '${label(context, Language.instance.REFRESH)}: ${Language.instance.REFRESH_INFORMATION}',
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
                           const SizedBox(height: 2.0),
                           Text(
-                            '${Language.instance.REINDEX.toUpperCase()}: ${Language.instance.REINDEX_INFORMATION}',
-                            style: Theme.of(context).textTheme.displaySmall,
+                            '${label(context, Language.instance.REINDEX)}: ${Language.instance.REINDEX_INFORMATION}',
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
                         ],
                       ),
@@ -472,8 +396,10 @@ class IndexingState extends State<IndexingSetting>
                     TextButton(
                       onPressed: showEditAlbumParametersDialog,
                       child: Text(
-                        Language.instance.EDIT_ALBUM_PARAMETERS_TITLE
-                            .toUpperCase(),
+                        label(
+                          context,
+                          Language.instance.EDIT_ALBUM_PARAMETERS_TITLE,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 8.0),
@@ -481,14 +407,17 @@ class IndexingState extends State<IndexingSetting>
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
                         Language.instance.EDIT_ALBUM_PARAMETERS_SUBTITLE_,
-                        style: Theme.of(context).textTheme.displaySmall,
+                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ),
                     const SizedBox(height: 8.0),
                     TextButton(
                       onPressed: showEditMinimumFileSizeDialog,
                       child: Text(
-                        Language.instance.EDIT_MINIMUM_FILE_SIZE.toUpperCase(),
+                        label(
+                          context,
+                          Language.instance.EDIT_MINIMUM_FILE_SIZE,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 8.0),
@@ -496,7 +425,7 @@ class IndexingState extends State<IndexingSetting>
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
                         Language.instance.MINIMUM_FILE_SIZE_WARNING,
-                        style: Theme.of(context).textTheme.displaySmall,
+                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ),
                   ],
@@ -516,12 +445,6 @@ class IndexingState extends State<IndexingSetting>
           .contains(directory.path)) {
         return;
       }
-      await Collection.instance.addDirectories(
-        directories: {directory},
-        onProgress: (progress, total, isCompleted) {
-          CollectionRefresh.instance.set(progress, total);
-        },
-      );
       await Configuration.instance.save(
         collectionDirectories: Collection.instance.collectionDirectories.union(
           {
@@ -529,15 +452,20 @@ class IndexingState extends State<IndexingSetting>
           },
         ),
       );
+      await Collection.instance.addDirectories(
+        directories: {directory},
+        onProgress: (progress, total, isCompleted) {
+          CollectionRefresh.instance.set(progress, total);
+        },
+      );
     }
   }
 
-  Future<void> showProgressDialog() {
+  Future<void> showIndexingAlreadyUnderProgressDialog() {
     if (!CollectionRefresh.instance.isCompleted) {
       return showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          backgroundColor: Theme.of(context).cardTheme.color,
           title: Text(
             Language.instance.INDEXING_ALREADY_GOING_ON_TITLE,
           ),
@@ -545,16 +473,54 @@ class IndexingState extends State<IndexingSetting>
             24.0,
             20.0,
             24.0,
-            12.0,
+            20.0,
           ),
-          content: Text(
-            Language.instance.INDEXING_ALREADY_GOING_ON_SUBTITLE,
-            style: Theme.of(context).textTheme.displaySmall,
-          ),
+          content: Text(Language.instance.INDEXING_ALREADY_GOING_ON_SUBTITLE),
           actions: [
             TextButton(
               onPressed: Navigator.of(context).pop,
-              child: Text(Language.instance.OK),
+              child: Text(
+                label(
+                  context,
+                  Language.instance.OK,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    return Future.value();
+  }
+
+  Future<void> showAtleastOneDirectoryMustStayDialog() {
+    if (Collection.instance.collectionDirectories.length <= 1) {
+      return showDialog(
+        context: context,
+        builder: (subContext) => AlertDialog(
+          title: Text(
+            Language.instance.WARNING,
+          ),
+          contentPadding: const EdgeInsets.fromLTRB(
+            24.0,
+            20.0,
+            24.0,
+            20.0,
+          ),
+          content: Text(
+            Language.instance.LAST_COLLECTION_DIRECTORY_REMOVED,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                Navigator.of(subContext).pop();
+              },
+              child: Text(
+                label(
+                  context,
+                  Language.instance.OK,
+                ),
+              ),
             ),
           ],
         ),
@@ -599,7 +565,7 @@ class IndexingState extends State<IndexingSetting>
                               title: Text(
                                 '${e.value} ${e.key == 1024 * 1024 ? Language.instance.RECOMMENDED_HINT : ''}',
                                 style: isDesktop
-                                    ? Theme.of(ctx).textTheme.headlineMedium
+                                    ? Theme.of(ctx).textTheme.bodyLarge
                                     : null,
                               ),
                             ),
@@ -622,7 +588,7 @@ class IndexingState extends State<IndexingSetting>
               Navigator.of(ctx).maybePop();
               // Do not proceed if some indexing related operation is going on.
               if (!CollectionRefresh.instance.isCompleted) {
-                await showProgressDialog();
+                await showIndexingAlreadyUnderProgressDialog();
                 return;
               }
               // Save the new value to `package:media_library` & cache.
@@ -641,36 +607,33 @@ class IndexingState extends State<IndexingSetting>
                     horizontal: 72.0,
                     vertical: 24.0,
                   ),
-                  contentPadding: const EdgeInsets.fromLTRB(
-                    24.0,
-                    20.0,
-                    24.0,
-                    12.0,
-                  ),
                   title: Text(
                     Language.instance.WARNING,
                   ),
-                  content: Text(
-                    Language.instance.MINIMUM_FILE_SIZE_WARNING,
-                    style: Theme.of(ctx).textTheme.displaySmall,
-                  ),
+                  content: Text(Language.instance.MINIMUM_FILE_SIZE_WARNING),
                   actions: [
                     TextButton(
                       onPressed: Navigator.of(ctx).pop,
-                      child: Text(Language.instance.OK),
+                      child: Text(label(context, Language.instance.OK)),
                     ),
                   ],
                 ),
               );
             },
             child: Text(
-              Language.instance.OK,
+              label(
+                context,
+                Language.instance.OK,
+              ),
             ),
           ),
           TextButton(
             onPressed: Navigator.of(ctx).maybePop,
             child: Text(
-              Language.instance.CANCEL,
+              label(
+                context,
+                Language.instance.CANCEL,
+              ),
             ),
           ),
         ],
@@ -712,7 +675,7 @@ class IndexingState extends State<IndexingSetting>
                           title: Text(
                             Language.instance.TITLE,
                             style: isDesktop
-                                ? Theme.of(context).textTheme.headlineMedium
+                                ? Theme.of(context).textTheme.bodyLarge
                                 : null,
                           ),
                         ),
@@ -740,7 +703,7 @@ class IndexingState extends State<IndexingSetting>
                                     Language.instance.YEAR,
                               }[e]!,
                               style: isDesktop
-                                  ? Theme.of(context).textTheme.headlineMedium
+                                  ? Theme.of(context).textTheme.bodyLarge
                                   : null,
                             ),
                           );
@@ -762,7 +725,7 @@ class IndexingState extends State<IndexingSetting>
             onPressed: () async {
               Navigator.of(context).maybePop();
               if (!CollectionRefresh.instance.isCompleted) {
-                await showProgressDialog();
+                await showIndexingAlreadyUnderProgressDialog();
                 return;
               }
               debugPrint(parameters.toString());
@@ -770,15 +733,22 @@ class IndexingState extends State<IndexingSetting>
               await Configuration.instance.save(
                 albumHashCodeParameters: parameters,
               );
+              resolvedAlbumArts.clear();
             },
             child: Text(
-              Language.instance.OK,
+              label(
+                context,
+                Language.instance.OK,
+              ),
             ),
           ),
           TextButton(
             onPressed: Navigator.of(context).maybePop,
             child: Text(
-              Language.instance.CANCEL,
+              label(
+                context,
+                Language.instance.CANCEL,
+              ),
             ),
           ),
         ],

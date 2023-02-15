@@ -18,7 +18,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uri_parser/uri_parser.dart';
-import 'package:animations/animations.dart';
 import 'package:window_plus/window_plus.dart';
 import 'package:media_library/media_library.dart';
 import 'package:visual_assets/visual_assets.dart';
@@ -31,7 +30,7 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/keyboard_shortcuts.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
@@ -389,10 +388,10 @@ class SortBarFixedHolderState extends State<SortBarFixedHolder> {
           child: MouseRegion(
             cursor: SystemMouseCursors.click,
             onEnter: (_) => setState(() {
-              hover1 = true;
+              hover0 = true;
             }),
             onExit: (_) => setState(() {
-              hover1 = false;
+              hover0 = false;
             }),
             child: Container(
               padding: EdgeInsets.symmetric(
@@ -404,16 +403,16 @@ class SortBarFixedHolderState extends State<SortBarFixedHolder> {
                 children: [
                   Icon(
                     Icons.play_arrow,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                   const SizedBox(
                     width: 4.0,
                   ),
                   Text(
                     Language.instance.PLAY_ALL,
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                          color: Theme.of(context).primaryColor,
-                          decoration: hover1
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          decoration: hover0
                               ? TextDecoration.underline
                               : TextDecoration.none,
                         ),
@@ -433,10 +432,10 @@ class SortBarFixedHolderState extends State<SortBarFixedHolder> {
           child: MouseRegion(
             cursor: SystemMouseCursors.click,
             onEnter: (_) => setState(() {
-              hover0 = true;
+              hover1 = true;
             }),
             onExit: (_) => setState(() {
-              hover0 = false;
+              hover1 = false;
             }),
             child: Container(
               padding: EdgeInsets.symmetric(
@@ -448,16 +447,16 @@ class SortBarFixedHolderState extends State<SortBarFixedHolder> {
                 children: [
                   Icon(
                     Icons.shuffle,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                   const SizedBox(
                     width: 4.0,
                   ),
                   Text(
                     Language.instance.SHUFFLE,
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                          color: Theme.of(context).primaryColor,
-                          decoration: hover0
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          decoration: hover1
                               ? TextDecoration.underline
                               : TextDecoration.none,
                         ),
@@ -504,6 +503,7 @@ class _SortBarState extends State<SortBar> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          // TODO(@alexmercerind): Genre support.
           const SizedBox(width: 8.0),
           GestureDetector(
             key: _key0,
@@ -517,7 +517,7 @@ class _SortBarState extends State<SortBar> {
                 position: RelativeRect.fromLTRB(
                   _key0.globalPaintBounds!.left - (widget.fixed ? 0.0 : 8.0),
                   _key0.globalPaintBounds!.bottom +
-                      tileMargin / (widget.fixed ? 2.0 : 1.0),
+                      tileMargin(context) / (widget.fixed ? 2.0 : 1.0),
                   MediaQuery.of(context).size.width,
                   MediaQuery.of(context).size.height,
                 ),
@@ -534,7 +534,9 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.A_TO_Z,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.bodyLarge
+                                : null,
                           ),
                         ),
                       ),
@@ -548,7 +550,9 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.DATE_ADDED,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.bodyLarge
+                                : null,
                           ),
                         ),
                       ),
@@ -562,7 +566,9 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.YEAR,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.bodyLarge
+                                : null,
                           ),
                         ),
                       ),
@@ -576,7 +582,9 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.ALBUM_ARTIST,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.bodyLarge
+                                : null,
                           ),
                         ),
                       ),
@@ -592,7 +600,9 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.A_TO_Z,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.bodyLarge
+                                : null,
                           ),
                         ),
                       ),
@@ -606,7 +616,9 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.DATE_ADDED,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.bodyLarge
+                                : null,
                           ),
                         ),
                       ),
@@ -620,7 +632,9 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.YEAR,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.bodyLarge
+                                : null,
                           ),
                         ),
                       ),
@@ -636,7 +650,9 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.A_TO_Z,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.bodyLarge
+                                : null,
                           ),
                         ),
                       ),
@@ -650,7 +666,9 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.DATE_ADDED,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: isDesktop
+                                ? Theme.of(context).textTheme.bodyLarge
+                                : null,
                           ),
                         ),
                       ),
@@ -690,7 +708,7 @@ class _SortBarState extends State<SortBar> {
                         children: [
                           TextSpan(
                             text: '${Language.instance.SORT_BY}: ',
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
                           TextSpan(
                             text: {
@@ -716,9 +734,9 @@ class _SortBarState extends State<SortBar> {
                             }[tab]!,
                             style: Theme.of(context)
                                 .textTheme
-                                .headlineMedium
+                                .bodyLarge
                                 ?.copyWith(
-                                  color: Theme.of(context).primaryColor,
+                                  color: Theme.of(context).colorScheme.primary,
                                   decoration:
                                       _hover0 ? TextDecoration.underline : null,
                                 ),
@@ -729,6 +747,7 @@ class _SortBarState extends State<SortBar> {
                     const SizedBox(width: 4.0),
                     Icon(
                       Icons.expand_more,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 18.0,
                     ),
                   ],
@@ -749,8 +768,8 @@ class _SortBarState extends State<SortBar> {
                 position: RelativeRect.fromLTRB(
                   MediaQuery.of(context).size.width,
                   _key1.globalPaintBounds!.bottom +
-                      tileMargin / (widget.fixed ? 2.0 : 1.0),
-                  tileMargin + (widget.fixed ? 8.0 : 0.0),
+                      tileMargin(context) / (widget.fixed ? 2.0 : 1.0),
+                  tileMargin(context) + (widget.fixed ? 8.0 : 0.0),
                   0.0,
                 ),
                 items: <PopupMenuEntry>[
@@ -770,7 +789,9 @@ class _SortBarState extends State<SortBar> {
                       dense: true,
                       title: Text(
                         Language.instance.ASCENDING,
-                        style: Theme.of(context).textTheme.headlineMedium,
+                        style: isDesktop
+                            ? Theme.of(context).textTheme.bodyLarge
+                            : null,
                       ),
                     ),
                   ),
@@ -790,7 +811,7 @@ class _SortBarState extends State<SortBar> {
                       dense: true,
                       title: Text(
                         Language.instance.DESCENDING,
-                        style: Theme.of(context).textTheme.headlineMedium,
+                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ),
                   ),
@@ -839,7 +860,7 @@ class _SortBarState extends State<SortBar> {
                         children: [
                           TextSpan(
                             text: '${Language.instance.ORDER}: ',
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
                           TextSpan(
                             text: {
@@ -864,9 +885,9 @@ class _SortBarState extends State<SortBar> {
                             }[tab]!,
                             style: Theme.of(context)
                                 .textTheme
-                                .headlineMedium
+                                .bodyLarge
                                 ?.copyWith(
-                                  color: Theme.of(context).primaryColor,
+                                  color: Theme.of(context).colorScheme.primary,
                                   decoration:
                                       _hover1 ? TextDecoration.underline : null,
                                 ),
@@ -877,6 +898,7 @@ class _SortBarState extends State<SortBar> {
                     const SizedBox(width: 4.0),
                     Icon(
                       Icons.expand_more,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 18.0,
                     ),
                   ],
@@ -894,7 +916,7 @@ class _SortBarState extends State<SortBar> {
             child: child,
             builder: (context, hover, child) => Container(
               alignment: Alignment.center,
-              padding: EdgeInsets.only(right: tileMargin),
+              padding: EdgeInsets.only(right: tileMargin(context)),
               child: child,
             ),
           )
@@ -903,16 +925,18 @@ class _SortBarState extends State<SortBar> {
             child: child,
             builder: (context, hover, child) => AnimatedPositioned(
               curve: Curves.easeInOut,
-              duration: const Duration(milliseconds: 200),
+              duration:
+                  Theme.of(context).extension<AnimationDuration>()?.fast ??
+                      Duration.zero,
               top: hover
                   ? widget.tab == 1
                       ? 28.0
                       : 0
                   : -72.0,
-              right: tileMargin,
+              right: tileMargin(context),
               child: Card(
                 color: Theme.of(context).appBarTheme.backgroundColor,
-                margin: EdgeInsets.only(top: tileMargin),
+                margin: EdgeInsets.only(top: tileMargin(context)),
                 elevation: 4.0,
                 child: Container(
                   padding: EdgeInsets.only(
@@ -947,7 +971,8 @@ class _ScaleOnHoverState extends State<ScaleOnHover> {
         scale = 1.00;
       }),
       child: TweenAnimationBuilder(
-        duration: const Duration(milliseconds: 100),
+        duration: Theme.of(context).extension<AnimationDuration>()?.fast ??
+            Duration.zero,
         tween: Tween<double>(begin: 1.0, end: scale),
         builder: (BuildContext context, double value, _) {
           return Transform.scale(scale: value, child: widget.child);
@@ -958,40 +983,46 @@ class _ScaleOnHoverState extends State<ScaleOnHover> {
 }
 
 class SubHeader extends StatelessWidget {
-  final String? text;
-  final TextStyle? style;
+  final String text;
+  final double height;
+  final EdgeInsets? padding;
 
-  const SubHeader(this.text, {this.style, Key? key}) : super(key: key);
+  const SubHeader(
+    this.text, {
+    this.height = 56.0,
+    this.padding,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return text != null
-        ? isDesktop
-            ? Container(
-                alignment: Alignment.centerLeft,
-                height: 56.0,
-                padding: EdgeInsets.fromLTRB(24.0, 0, 0, 0),
-                child: Text(
-                  text!,
-                  style: style ?? Theme.of(context).textTheme.displayLarge,
-                ),
-              )
-            : Container(
-                alignment: Alignment.centerLeft,
-                height: 56.0,
-                padding: EdgeInsets.fromLTRB(16.0, 0, 0, 0),
-                child: Text(
-                  text!.toUpperCase(),
-                  style: style ??
-                      Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color:
-                                Theme.of(context).textTheme.displaySmall?.color,
-                            fontSize: 12.0,
-                            fontWeight: FontWeight.w600,
-                          ),
-                ),
-              )
-        : Container();
+    final horizontal = isDesktop ? 24.0 : 16.0;
+    final fontSize = isDesktop ? 16.0 : null;
+    final TextStyle? style;
+    if (isMaterial2(context) && isMobile) {
+      style = Theme.of(context).textTheme.titleSmall?.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+            fontSize: fontSize,
+          );
+    } else if (isMaterial2(context) && isDesktop) {
+      style = Theme.of(context).textTheme.titleSmall?.copyWith(
+            fontSize: fontSize,
+          );
+    } else {
+      style = Theme.of(context).textTheme.titleSmall?.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+            fontSize: fontSize,
+          );
+    }
+    return Container(
+      alignment: Alignment.centerLeft,
+      height: height,
+      padding: padding ?? EdgeInsets.symmetric(horizontal: horizontal),
+      child: Text(
+        text,
+        style: style,
+      ),
+    );
   }
 }
 
@@ -1083,10 +1114,10 @@ class DesktopAppBar extends StatelessWidget {
                               ? isDark
                                   ? Theme.of(context)
                                       .extension<IconColors>()
-                                      ?.appBarDarkIconColor
+                                      ?.appBarDark
                                   : Theme.of(context)
                                       .extension<IconColors>()
-                                      ?.appBarLightIconColor
+                                      ?.appBarLight
                               : null,
                         ),
                     SizedBox(
@@ -1095,21 +1126,14 @@ class DesktopAppBar extends StatelessWidget {
                     if (title != null)
                       Text(
                         title!,
-                        style:
-                            Theme.of(context).textTheme.displayLarge?.copyWith(
-                                color: color != null
-                                    ? isDark
-                                        ? Colors.white
-                                        : Colors.black
-                                    : null),
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
                     if (actions != null) ...[
                       const Spacer(),
                       ...actions!,
                       const SizedBox(width: 16.0),
                     ] else if (child != null)
-                      Container(
-                        width: MediaQuery.of(context).size.width - 72.0,
+                      Expanded(
                         child: child!,
                       ),
                   ],
@@ -1150,13 +1174,13 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
       builder: (context, refresh, _) => refresh.progress == refresh.total
           ? FloatingActionButton(
               heroTag: 'collection_refresh_button',
-              backgroundColor:
-                  widget.color ?? Theme.of(context).colorScheme.secondary,
               child: Icon(
                 Icons.refresh,
-                color: widget.color?.isDark ?? true
-                    ? Colors.white
-                    : Colors.black87,
+                color: widget.color == null
+                    ? null
+                    : (widget.color?.computeLuminance() ?? 0.0) < 0.5
+                        ? kFABDarkForegroundColor
+                        : kFABLightForegroundColor,
               ),
               onPressed: () {
                 if (lock) return;
@@ -1236,8 +1260,8 @@ class _HyperLinkState extends State<HyperLink> {
 /// There aren't likely going to be any changes to this in future, so it's not worth it to make it better.
 /// But, since it's not much ground-breakingly tough to understand, I'm not going to fix it.
 class ExceptionWidget extends StatelessWidget {
-  final String? title;
-  final String? subtitle;
+  final String title;
+  final String subtitle;
 
   const ExceptionWidget({
     Key? key,
@@ -1272,48 +1296,30 @@ class ExceptionWidget extends StatelessWidget {
             filterQuality: FilterQuality.high,
             fit: BoxFit.contain,
           ),
-          const SizedBox(
-            height: 12.0,
-          ),
+          const SizedBox(height: 12.0),
           Text(
-            title!,
-            style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  fontSize: 20.0,
-                  fontWeight: isDesktop ? null : FontWeight.normal,
-                ),
+            title,
+            style: Theme.of(context).textTheme.titleLarge,
             textAlign: TextAlign.center,
           ),
-          const SizedBox(
-            height: 4.0,
-          ),
+          const SizedBox(height: 4.0),
           Text(
-            subtitle!,
-            style: Theme.of(context).textTheme.displaySmall,
+            subtitle,
+            style: Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),
           if (title == Language.instance.NO_COLLECTION_TITLE) ...[
-            const SizedBox(
-              height: 8.0,
-            ),
+            const SizedBox(height: 8.0),
             TextButton(
               onPressed: () {
                 Navigator.of(context).push(
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        FadeThroughTransition(
-                      fillColor: Colors.transparent,
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      child: Settings(),
-                    ),
+                  MaterialRoute(
+                    builder: (context) => Settings(),
                   ),
                 );
               },
               child: Text(
-                Language.instance.GO_TO_SETTINGS.toUpperCase(),
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                ),
+                label(context, Language.instance.GO_TO_SETTINGS),
               ),
             ),
           ]
@@ -1595,19 +1601,20 @@ class DesktopCaptionBar extends StatelessWidget {
   }
 }
 
-class MobileBottomNavigationBar extends StatefulWidget {
+class M2MobileBottomNavigationBar extends StatefulWidget {
   final ValueNotifier<TabRoute> tabControllerNotifier;
-  MobileBottomNavigationBar({
+  M2MobileBottomNavigationBar({
     Key? key,
     required this.tabControllerNotifier,
   }) : super(key: key);
 
   @override
-  State<MobileBottomNavigationBar> createState() =>
-      _MobileBottomNavigationBarState();
+  State<M2MobileBottomNavigationBar> createState() =>
+      _M2MobileBottomNavigationBarState();
 }
 
-class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
+class _M2MobileBottomNavigationBarState
+    extends State<M2MobileBottomNavigationBar> {
   late int _index;
 
   @override
@@ -1636,56 +1643,86 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
     return ValueListenableBuilder<Iterable<Color>?>(
       valueListenable: MobileNowPlayingController.instance.palette,
       builder: (context, value, _) => TweenAnimationBuilder<Color?>(
-        duration: Duration(milliseconds: 400),
+        duration: Theme.of(context).extension<AnimationDuration>()?.medium ??
+            Duration.zero,
         tween: ColorTween(
-          begin: Theme.of(context).primaryColor,
-          end: value?.first ?? Theme.of(context).primaryColor,
+          begin: Theme.of(context).colorScheme.primary,
+          end: value?.first ?? Theme.of(context).colorScheme.primary,
         ),
-        builder: (context, color, _) => Container(
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(color: Colors.black45, blurRadius: 8.0),
-            ],
-          ),
-          child: BottomNavigationBar(
-            currentIndex: _index,
-            selectedItemColor: color?.isDark ?? true ? null : Colors.black87,
-            unselectedItemColor: color?.isDark ?? true ? null : Colors.black45,
-            type: BottomNavigationBarType.shifting,
-            onTap: (index) {
-              MobileNowPlayingController.instance.restore();
-              if (index != _index) {
-                widget.tabControllerNotifier.value =
-                    TabRoute(index, TabRouteSender.bottomNavigationBar);
-              }
-              setState(() {
-                _index = index;
-              });
-            },
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.album),
-                label: Language.instance.ALBUM,
-                backgroundColor: color ?? Theme.of(context).primaryColor,
+        builder: (context, color, _) => isMaterial3(context)
+            ? NavigationBar(
+                destinations: [
+                  NavigationDestination(
+                    icon: Icon(Icons.album),
+                    label: Language.instance.ALBUM,
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.music_note),
+                    label: Language.instance.TRACK,
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.person),
+                    label: Language.instance.ARTIST,
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.playlist_play),
+                    label: Language.instance.PLAYLIST,
+                  ),
+                ],
+              )
+            : Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(color: Colors.black45, blurRadius: 8.0),
+                  ],
+                ),
+                child: BottomNavigationBar(
+                  currentIndex: _index,
+                  selectedItemColor: (color?.computeLuminance() ?? 0.0) < 0.5
+                      ? null
+                      : Colors.black87,
+                  unselectedItemColor: (color?.computeLuminance() ?? 0.0) < 0.5
+                      ? null
+                      : Colors.black45,
+                  type: BottomNavigationBarType.shifting,
+                  onTap: (index) {
+                    MobileNowPlayingController.instance.restore();
+                    if (index != _index) {
+                      widget.tabControllerNotifier.value =
+                          TabRoute(index, TabRouteSender.bottomNavigationBar);
+                    }
+                    setState(() {
+                      _index = index;
+                    });
+                  },
+                  items: [
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.album),
+                      label: Language.instance.ALBUM,
+                      backgroundColor:
+                          color ?? Theme.of(context).colorScheme.primary,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.music_note),
+                      label: Language.instance.TRACK,
+                      backgroundColor:
+                          color ?? Theme.of(context).colorScheme.primary,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.person),
+                      label: Language.instance.ARTIST,
+                      backgroundColor:
+                          color ?? Theme.of(context).colorScheme.primary,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.playlist_play),
+                      label: Language.instance.PLAYLIST,
+                      backgroundColor:
+                          color ?? Theme.of(context).colorScheme.primary,
+                    ),
+                  ],
+                ),
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.music_note),
-                label: Language.instance.TRACK,
-                backgroundColor: color ?? Theme.of(context).primaryColor,
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: Language.instance.ARTIST,
-                backgroundColor: color ?? Theme.of(context).primaryColor,
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.playlist_play),
-                label: Language.instance.PLAYLIST,
-                backgroundColor: color ?? Theme.of(context).primaryColor,
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -1719,36 +1756,21 @@ class ShowAllButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(4.0),
-      child: InkWell(
-        onTap: onPressed,
-        borderRadius: BorderRadius.circular(4.0),
-        child: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: 6.0,
-            vertical: 2.0,
+    return TextButton(
+      onPressed: onPressed,
+      child: Row(
+        children: [
+          Icon(
+            Icons.view_list,
+            color: Theme.of(context).colorScheme.primary,
           ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.view_list,
-                color: Theme.of(context).primaryColor,
-              ),
-              const SizedBox(
-                width: 4.0,
-              ),
-              Text(
-                Language.instance.SEE_ALL,
-                style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                      color: Theme.of(context).primaryColor,
-                    ),
-              ),
-            ],
+          const SizedBox(
+            width: 4.0,
           ),
-        ),
+          Text(
+            Language.instance.SEE_ALL,
+          ),
+        ],
       ),
     );
   }
@@ -1789,8 +1811,8 @@ class ScrollableSlider extends StatelessWidget {
     required this.onScrolledUp,
     required this.onScrolledDown,
     required this.onChanged,
-    this.inferSliderInactiveTrackColor: true,
-    this.mobile: false,
+    this.inferSliderInactiveTrackColor = true,
+    this.mobile = false,
   }) : super(key: key);
 
   @override
@@ -1821,15 +1843,15 @@ class ScrollableSlider extends StatelessWidget {
               ? null
               : RoundSliderOverlayShape(overlayRadius: 12.0),
           overlayColor:
-              (color ?? Theme.of(context).primaryColor).withOpacity(0.4),
-          thumbColor: (color ?? Theme.of(context).primaryColor),
-          activeTrackColor: (color ?? Theme.of(context).primaryColor),
+              (color ?? Theme.of(context).colorScheme.primary).withOpacity(0.4),
+          thumbColor: (color ?? Theme.of(context).colorScheme.primary),
+          activeTrackColor: (color ?? Theme.of(context).colorScheme.primary),
           inactiveTrackColor: (mobile && isMobile)
-              ? Theme.of(context).primaryColor.withOpacity(0.2)
+              ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
               : inferSliderInactiveTrackColor
                   ? ((secondaryColor != null
-                          ? secondaryColor?.isDark
-                          : Theme.of(context).brightness == Brightness.dark)!
+                          ? (secondaryColor?.computeLuminance() ?? 0.0) < 0.5
+                          : Theme.of(context).brightness == Brightness.dark)
                       ? Colors.white.withOpacity(0.4)
                       : Colors.black.withOpacity(0.2))
                   : Colors.white.withOpacity(0.4),
@@ -1935,7 +1957,10 @@ class _HorizontalListState extends State<HorizontalList> {
                       controller.animateTo(
                         controller.offset +
                             MediaQuery.of(context).size.width / 2,
-                        duration: Duration(milliseconds: 200),
+                        duration: Theme.of(context)
+                                .extension<AnimationDuration>()
+                                ?.fast ??
+                            Duration.zero,
                         curve: Curves.easeInOut,
                       );
                     },
@@ -1943,7 +1968,7 @@ class _HorizontalListState extends State<HorizontalList> {
                   ),
                 ),
               ),
-              right: isDesktop ? 32.0 : tileMargin,
+              right: isDesktop ? 32.0 : tileMargin(context),
             ),
           if (extentBefore != 0.0 && isDesktop)
             Positioned(
@@ -1957,7 +1982,10 @@ class _HorizontalListState extends State<HorizontalList> {
                       controller.animateTo(
                         controller.offset -
                             MediaQuery.of(context).size.width / 2,
-                        duration: Duration(milliseconds: 200),
+                        duration: Theme.of(context)
+                                .extension<AnimationDuration>()
+                                ?.fast ??
+                            Duration.zero,
                         curve: Curves.easeInOut,
                       );
                     },
@@ -1965,7 +1993,7 @@ class _HorizontalListState extends State<HorizontalList> {
                   ),
                 ),
               ),
-              left: isDesktop ? 32.0 : tileMargin,
+              left: isDesktop ? 32.0 : tileMargin(context),
             ),
         ],
       ),
@@ -2038,7 +2066,9 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.A_TO_Z,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: isDesktop
+                        ? Theme.of(context).textTheme.bodyLarge
+                        : null,
                   ),
                 ),
               ),
@@ -2051,7 +2081,9 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.DATE_ADDED,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: isDesktop
+                        ? Theme.of(context).textTheme.bodyLarge
+                        : null,
                   ),
                 ),
               ),
@@ -2064,7 +2096,9 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.YEAR,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: isDesktop
+                        ? Theme.of(context).textTheme.bodyLarge
+                        : null,
                   ),
                 ),
               ),
@@ -2077,7 +2111,9 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.ALBUM_ARTIST,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: isDesktop
+                        ? Theme.of(context).textTheme.bodyLarge
+                        : null,
                   ),
                 ),
               ),
@@ -2092,7 +2128,11 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.A_TO_Z,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: isDesktop
+                        ? isDesktop
+                            ? Theme.of(context).textTheme.bodyLarge
+                            : null
+                        : null,
                   ),
                 ),
               ),
@@ -2105,7 +2145,9 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.DATE_ADDED,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: isDesktop
+                        ? Theme.of(context).textTheme.bodyLarge
+                        : null,
                   ),
                 ),
               ),
@@ -2118,7 +2160,9 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.YEAR,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: isDesktop
+                        ? Theme.of(context).textTheme.bodyLarge
+                        : null,
                   ),
                 ),
               ),
@@ -2133,7 +2177,9 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.A_TO_Z,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: isDesktop
+                        ? Theme.of(context).textTheme.bodyLarge
+                        : null,
                   ),
                 ),
               ),
@@ -2147,7 +2193,9 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.DATE_ADDED,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: isDesktop
+                        ? Theme.of(context).textTheme.bodyLarge
+                        : null,
                   ),
                 ),
               ),
@@ -2171,7 +2219,8 @@ class CollectionSortButton extends StatelessWidget {
                 dense: true,
                 title: Text(
                   Language.instance.ASCENDING,
-                  style: Theme.of(context).textTheme.headlineMedium,
+                  style:
+                      isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
               ),
             ),
@@ -2191,7 +2240,8 @@ class CollectionSortButton extends StatelessWidget {
                 dense: true,
                 title: Text(
                   Language.instance.DESCENDING,
-                  style: Theme.of(context).textTheme.headlineMedium,
+                  style:
+                      isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
               ),
             ),
@@ -2221,7 +2271,7 @@ class CorrectedSwitchListTile extends StatelessWidget {
       value: value,
       title: Text(
         isDesktop ? subtitle : title,
-        style: isDesktop ? Theme.of(context).textTheme.headlineMedium : null,
+        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
@@ -2232,80 +2282,11 @@ class CorrectedSwitchListTile extends StatelessWidget {
   }
 }
 
-class CorrectedListTile extends StatelessWidget {
-  final void Function()? onTap;
-  final IconData? iconData;
-  final String title;
-  final String? subtitle;
-  final double? height;
-  CorrectedListTile({
-    Key? key,
-    this.iconData,
-    required this.title,
-    this.subtitle,
-    this.onTap,
-    this.height,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        height: height ?? 88.0,
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.only(left: 16.0),
-        child: Row(
-          crossAxisAlignment: subtitle == null
-              ? CrossAxisAlignment.center
-              : CrossAxisAlignment.start,
-          children: [
-            if (iconData != null)
-              Container(
-                margin: EdgeInsets.only(
-                    top: subtitle == null ? 0.0 : 16.0, right: 16.0),
-                width: 40.0,
-                height: 40.0,
-                child: Icon(iconData),
-              ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.titleMedium,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  if (subtitle != null) const SizedBox(height: 4.0),
-                  if (subtitle != null)
-                    Text(
-                      subtitle!,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color:
-                                Theme.of(context).textTheme.displaySmall?.color,
-                          ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 16.0),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class MobileSortByButton extends StatefulWidget {
-  final ValueNotifier<int> value;
+  final int tab;
   MobileSortByButton({
     Key? key,
-    required this.value,
+    required this.tab,
   }) : super(key: key);
 
   @override
@@ -2313,250 +2294,291 @@ class MobileSortByButton extends StatefulWidget {
 }
 
 class _MobileSortByButtonState extends State<MobileSortByButton> {
-  late int index;
-  late final VoidCallback listener;
-
-  @override
-  void initState() {
-    super.initState();
-    index = widget.value.value;
-    listener = () => setState(() {
-          index = widget.value.value;
-        });
-    widget.value.addListener(listener);
+  Future<void> handle(dynamic value) async {
+    if (value is AlbumsSort) {
+      if (Collection.instance.albumsSort == value) {
+        return;
+      }
+      await Collection.instance.sort(albumsSort: value);
+      await Configuration.instance.save(albumsSort: value);
+    }
+    if (value is TracksSort) {
+      if (Collection.instance.tracksSort == value) {
+        return;
+      }
+      await Collection.instance.sort(tracksSort: value);
+      await Configuration.instance.save(tracksSort: value);
+    }
+    if (value is ArtistsSort) {
+      if (Collection.instance.artistsSort == value) {
+        return;
+      }
+      await Collection.instance.sort(artistsSort: value);
+      await Configuration.instance.save(artistsSort: value);
+    }
+    if (value is GenresSort) {
+      if (Collection.instance.genresSort == value) {
+        return;
+      }
+      await Collection.instance.sort(genresSort: value);
+      await Configuration.instance.save(genresSort: value);
+    }
+    if (value is OrderType) {
+      switch (widget.tab) {
+        case kAlbumTabIndex:
+          {
+            if (Collection.instance.albumsOrderType == value) {
+              return;
+            }
+            await Collection.instance.sort(albumsOrderType: value);
+            await Configuration.instance.save(albumsOrderType: value);
+            break;
+          }
+        case kTrackTabIndex:
+          {
+            if (Collection.instance.tracksOrderType == value) {
+              return;
+            }
+            await Collection.instance.sort(tracksOrderType: value);
+            await Configuration.instance.save(tracksOrderType: value);
+            break;
+          }
+        case kArtistTabIndex:
+          {
+            if (Collection.instance.artistsOrderType == value) {
+              return;
+            }
+            await Collection.instance.sort(artistsOrderType: value);
+            await Configuration.instance.save(artistsOrderType: value);
+            break;
+          }
+        case kGenreTabIndex:
+          {
+            if (Collection.instance.genresOrderType == value) {
+              return;
+            }
+            await Collection.instance.sort(genresOrderType: value);
+            await Configuration.instance.save(genresOrderType: value);
+            break;
+          }
+      }
+    }
+    debugPrint(setStateCallback.toString());
+    try {
+      setStateCallback?.call(() {
+        debugPrint('setState');
+      });
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
   }
 
-  @override
-  void dispose() {
-    widget.value.removeListener(listener);
-    super.dispose();
-  }
+  void Function(void Function())? setStateCallback;
+
+  List<CustomCheckedPopupMenuItem> get sort => {
+        kAlbumTabIndex: <CustomCheckedPopupMenuItem>[
+          CustomCheckedPopupMenuItem(
+            onTap: () => handle(AlbumsSort.aToZ),
+            checked: Collection.instance.albumsSort == AlbumsSort.aToZ,
+            value: AlbumsSort.aToZ,
+            padding: EdgeInsets.zero,
+            child: Text(
+              Language.instance.A_TO_Z,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+          CustomCheckedPopupMenuItem(
+            onTap: () => handle(AlbumsSort.dateAdded),
+            checked: Collection.instance.albumsSort == AlbumsSort.dateAdded,
+            value: AlbumsSort.dateAdded,
+            padding: EdgeInsets.zero,
+            child: Text(
+              Language.instance.DATE_ADDED,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+          CustomCheckedPopupMenuItem(
+            onTap: () => handle(AlbumsSort.year),
+            checked: Collection.instance.albumsSort == AlbumsSort.year,
+            value: AlbumsSort.year,
+            padding: EdgeInsets.zero,
+            child: Text(
+              Language.instance.YEAR,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+        ],
+        kTrackTabIndex: <CustomCheckedPopupMenuItem>[
+          CustomCheckedPopupMenuItem(
+            onTap: () => handle(TracksSort.aToZ),
+            checked: Collection.instance.tracksSort == TracksSort.aToZ,
+            value: TracksSort.aToZ,
+            padding: EdgeInsets.zero,
+            child: Text(
+              Language.instance.A_TO_Z,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+          CustomCheckedPopupMenuItem(
+            onTap: () => handle(TracksSort.dateAdded),
+            checked: Collection.instance.tracksSort == TracksSort.dateAdded,
+            value: TracksSort.dateAdded,
+            padding: EdgeInsets.zero,
+            child: Text(
+              Language.instance.DATE_ADDED,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+          CustomCheckedPopupMenuItem(
+            onTap: () => handle(TracksSort.year),
+            checked: Collection.instance.tracksSort == TracksSort.year,
+            value: TracksSort.year,
+            padding: EdgeInsets.zero,
+            child: Text(
+              Language.instance.YEAR,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+        ],
+        kArtistTabIndex: <CustomCheckedPopupMenuItem>[
+          CustomCheckedPopupMenuItem(
+            onTap: () => handle(ArtistsSort.aToZ),
+            checked: Collection.instance.artistsSort == ArtistsSort.aToZ,
+            value: ArtistsSort.aToZ,
+            padding: EdgeInsets.zero,
+            child: Text(
+              Language.instance.A_TO_Z,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+          CustomCheckedPopupMenuItem(
+            onTap: () => handle(ArtistsSort.dateAdded),
+            checked: Collection.instance.artistsSort == ArtistsSort.dateAdded,
+            value: ArtistsSort.dateAdded,
+            padding: EdgeInsets.zero,
+            child: Text(
+              Language.instance.DATE_ADDED,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+        ],
+        kGenreTabIndex: <CustomCheckedPopupMenuItem>[
+          CustomCheckedPopupMenuItem(
+            onTap: () => handle(GenresSort.aToZ),
+            checked: Collection.instance.genresSort == GenresSort.aToZ,
+            value: GenresSort.aToZ,
+            padding: EdgeInsets.zero,
+            child: Text(
+              Language.instance.A_TO_Z,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+          CustomCheckedPopupMenuItem(
+            onTap: () => handle(GenresSort.dateAdded),
+            checked: Collection.instance.genresSort == GenresSort.dateAdded,
+            value: GenresSort.dateAdded,
+            padding: EdgeInsets.zero,
+            child: Text(
+              Language.instance.DATE_ADDED,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+        ],
+      }[widget.tab]!;
+
+  List<CustomCheckedPopupMenuItem> get order => [
+        CustomCheckedPopupMenuItem(
+          onTap: () => handle(OrderType.ascending),
+          checked: {
+            kAlbumTabIndex:
+                Collection.instance.albumsOrderType == OrderType.ascending,
+            kTrackTabIndex:
+                Collection.instance.tracksOrderType == OrderType.ascending,
+            kArtistTabIndex:
+                Collection.instance.artistsOrderType == OrderType.ascending,
+            kGenreTabIndex:
+                Collection.instance.genresOrderType == OrderType.ascending,
+          }[widget.tab]!,
+          value: OrderType.ascending,
+          padding: EdgeInsets.zero,
+          child: Text(
+            Language.instance.ASCENDING,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+        CustomCheckedPopupMenuItem(
+          onTap: () => handle(OrderType.descending),
+          checked: {
+            kAlbumTabIndex:
+                Collection.instance.albumsOrderType == OrderType.descending,
+            kTrackTabIndex:
+                Collection.instance.tracksOrderType == OrderType.descending,
+            kArtistTabIndex:
+                Collection.instance.artistsOrderType == OrderType.descending,
+            kGenreTabIndex:
+                Collection.instance.genresOrderType == OrderType.descending,
+          }[widget.tab]!,
+          value: OrderType.descending,
+          padding: EdgeInsets.zero,
+          child: Text(
+            Language.instance.DESCENDING,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+      ];
 
   @override
   Widget build(BuildContext context) {
-    final tab = index;
-    return AnimatedOpacity(
-      opacity: [0, 1, 2].contains(tab) ? 1.0 : 0.0,
-      duration: Duration(milliseconds: 50),
-      child: CircularButton(
-        icon: Icon(
-          Icons.sort_by_alpha,
-          color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
+    return TextButton(
+      style: ButtonStyle(
+        textStyle: MaterialStatePropertyAll(
+          Theme.of(context).textTheme.bodyMedium,
         ),
-        onPressed: () async {
-          if (tab == 3) return;
-          final position = RelativeRect.fromRect(
-            Offset(
-                  MediaQuery.of(context).size.width - tileMargin - 48.0,
-                  MediaQuery.of(context).padding.top +
-                      kMobileSearchBarHeight +
-                      2 * tileMargin,
-                ) &
-                Size(240.0, 240.0),
-            Rect.fromLTWH(
-              0,
-              0,
-              MediaQuery.of(context).size.width,
-              MediaQuery.of(context).size.height,
-            ),
-          );
-          final value = await showMenu<dynamic>(
-            context: context,
-            position: position,
-            elevation: 4.0,
-            items: [
-              ...{
-                0: <PopupMenuItem>[
-                  CheckedPopupMenuItem(
-                    checked: Collection.instance.albumsSort == AlbumsSort.aToZ,
-                    value: AlbumsSort.aToZ,
-                    padding: EdgeInsets.zero,
-                    child: Text(
-                      Language.instance.A_TO_Z,
-                    ),
-                  ),
-                  CheckedPopupMenuItem(
-                    checked:
-                        Collection.instance.albumsSort == AlbumsSort.dateAdded,
-                    value: AlbumsSort.dateAdded,
-                    padding: EdgeInsets.zero,
-                    child: Text(
-                      Language.instance.DATE_ADDED,
-                    ),
-                  ),
-                  CheckedPopupMenuItem(
-                    checked: Collection.instance.albumsSort == AlbumsSort.year,
-                    value: AlbumsSort.year,
-                    padding: EdgeInsets.zero,
-                    child: Text(
-                      Language.instance.YEAR,
-                    ),
-                  ),
-                  // Not implemented for mobile.
-                  // CheckedPopupMenuItem(
-                  //   checked:
-                  //       Collection.instance.albumsSort == AlbumsSort.artist,
-                  //   value: AlbumsSort.artist,
-                  //   padding: EdgeInsets.zero,
-                  //   child: ListTile(
-                  //     title: Text(
-                  //       Language.instance.ALBUM_ARTIST,
-                  //     ),
-                  //   ),
-                  // ),
-                ],
-                1: <PopupMenuItem>[
-                  CheckedPopupMenuItem(
-                    checked: Collection.instance.tracksSort == TracksSort.aToZ,
-                    value: TracksSort.aToZ,
-                    padding: EdgeInsets.zero,
-                    child: Text(
-                      Language.instance.A_TO_Z,
-                    ),
-                  ),
-                  CheckedPopupMenuItem(
-                    checked:
-                        Collection.instance.tracksSort == TracksSort.dateAdded,
-                    value: TracksSort.dateAdded,
-                    padding: EdgeInsets.zero,
-                    child: Text(
-                      Language.instance.DATE_ADDED,
-                    ),
-                  ),
-                  CheckedPopupMenuItem(
-                    checked: Collection.instance.tracksSort == TracksSort.year,
-                    value: TracksSort.year,
-                    padding: EdgeInsets.zero,
-                    child: Text(
-                      Language.instance.YEAR,
-                    ),
-                  ),
-                ],
-                2: <PopupMenuItem>[
-                  CheckedPopupMenuItem(
-                    checked:
-                        Collection.instance.artistsSort == ArtistsSort.aToZ,
-                    value: ArtistsSort.aToZ,
-                    padding: EdgeInsets.zero,
-                    child: Text(
-                      Language.instance.A_TO_Z,
-                    ),
-                  ),
-                  CheckedPopupMenuItem(
-                    checked: Collection.instance.artistsSort ==
-                        ArtistsSort.dateAdded,
-                    value: ArtistsSort.dateAdded,
-                    padding: EdgeInsets.zero,
-                    child: Text(
-                      Language.instance.DATE_ADDED,
-                    ),
-                  ),
-                ],
-                3: <PopupMenuItem>[
-                  CheckedPopupMenuItem(
-                    checked: Collection.instance.genresSort == GenresSort.aToZ,
-                    value: GenresSort.aToZ,
-                    padding: EdgeInsets.zero,
-                    child: Text(
-                      Language.instance.A_TO_Z,
-                    ),
-                  ),
-                  CheckedPopupMenuItem(
-                    checked:
-                        Collection.instance.genresSort == GenresSort.dateAdded,
-                    value: GenresSort.dateAdded,
-                    padding: EdgeInsets.zero,
-                    child: Text(
-                      Language.instance.DATE_ADDED,
-                    ),
-                  ),
-                ],
-              }[tab]!,
-              PopupMenuDivider(),
-              ...[
-                CheckedPopupMenuItem(
-                  checked: {
-                    0: Collection.instance.albumsOrderType ==
-                        OrderType.ascending,
-                    1: Collection.instance.tracksOrderType ==
-                        OrderType.ascending,
-                    2: Collection.instance.artistsOrderType ==
-                        OrderType.ascending,
-                    3: Collection.instance.genresOrderType ==
-                        OrderType.ascending,
-                  }[tab]!,
-                  value: OrderType.ascending,
-                  padding: EdgeInsets.zero,
-                  child: Text(
-                    Language.instance.ASCENDING,
-                  ),
-                ),
-                CheckedPopupMenuItem(
-                  checked: {
-                    0: Collection.instance.albumsOrderType ==
-                        OrderType.descending,
-                    1: Collection.instance.tracksOrderType ==
-                        OrderType.descending,
-                    2: Collection.instance.artistsOrderType ==
-                        OrderType.descending,
-                    3: Collection.instance.genresOrderType ==
-                        OrderType.descending,
-                  }[tab]!,
-                  value: OrderType.descending,
-                  padding: EdgeInsets.zero,
-                  child: Text(
-                    Language.instance.DESCENDING,
-                  ),
-                ),
-              ],
-            ],
-          );
-          if (value is AlbumsSort) {
-            await Collection.instance.sort(albumsSort: value);
-            await Configuration.instance.save(albumsSort: value);
-          }
-          if (value is TracksSort) {
-            await Collection.instance.sort(tracksSort: value);
-            await Configuration.instance.save(tracksSort: value);
-          }
-          if (value is ArtistsSort) {
-            await Collection.instance.sort(artistsSort: value);
-            await Configuration.instance.save(artistsSort: value);
-          }
-          if (value is GenresSort) {
-            await Collection.instance.sort(genresSort: value);
-            await Configuration.instance.save(genresSort: value);
-          }
-          if (value is OrderType) {
-            switch (tab) {
-              case 0:
-                {
-                  await Collection.instance.sort(albumsOrderType: value);
-                  await Configuration.instance.save(albumsOrderType: value);
-                  break;
-                }
-              case 1:
-                {
-                  await Collection.instance.sort(tracksOrderType: value);
-                  await Configuration.instance.save(tracksOrderType: value);
-                  break;
-                }
-              case 2:
-                {
-                  await Collection.instance.sort(artistsOrderType: value);
-                  await Configuration.instance.save(artistsOrderType: value);
-                  break;
-                }
-              case 3:
-                {
-                  await Collection.instance.sort(genresOrderType: value);
-                  await Configuration.instance.save(genresOrderType: value);
-                  break;
-                }
-            }
-          }
-        },
+        foregroundColor: MaterialStatePropertyAll(
+          Theme.of(context).textTheme.bodyMedium?.color,
+        ),
       ),
+      child: Row(
+        children: [
+          const SizedBox(width: 8.0),
+          Text(
+            '${(sort.firstWhere((e) => e.checked).child as Text).data}'
+            ' '
+            '(${(order.firstWhere((e) => e.checked).child as Text).data})',
+          ),
+          const SizedBox(width: 4.0),
+          const Icon(Icons.expand_more),
+        ],
+      ),
+      onPressed: () async {
+        if (widget.tab == 3) return;
+        await showModalBottomSheet(
+          isScrollControlled: true,
+          context: context,
+          elevation: kDefaultHeavyElevation,
+          builder: (context) => StatefulBuilder(
+            builder: (context, setState) {
+              setStateCallback = setState;
+              return Container(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ...sort,
+                    PopupMenuDivider(),
+                    ...order,
+                    if (!isDesktop &&
+                        !MobileNowPlayingController.instance.isHidden)
+                      const SizedBox(height: kMobileNowPlayingBarHeight),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
@@ -2619,14 +2641,8 @@ class CollectionMoreButton extends StatelessWidget {
           case 1:
             {
               Navigator.of(context).push(
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                      FadeThroughTransition(
-                    fillColor: Colors.transparent,
-                    animation: animation,
-                    secondaryAnimation: secondaryAnimation,
-                    child: WebTab(),
-                  ),
+                MaterialRoute(
+                  builder: (context) => WebTab(),
                 ),
               );
               break;
@@ -2642,7 +2658,7 @@ class CollectionMoreButton extends StatelessWidget {
             leading: Icon(Icons.code),
             title: Text(
               Language.instance.READ_METADATA,
-              style: Theme.of(context).textTheme.headlineMedium,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
             ),
           ),
         ),
@@ -2654,7 +2670,7 @@ class CollectionMoreButton extends StatelessWidget {
             leading: Icon(Icons.waves),
             title: Text(
               Language.instance.STREAM,
-              style: Theme.of(context).textTheme.headlineMedium,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
             ),
           ),
         ),
@@ -2709,11 +2725,7 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                 ),
                 title: Text(
                   Language.instance.FILE,
-                  style: isDesktop
-                      ? Theme.of(ctx).textTheme.headlineMedium
-                      : Theme.of(ctx).textTheme.displaySmall?.copyWith(
-                            fontSize: 16.0,
-                          ),
+                  style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
                 ),
               ),
               ListTile(
@@ -2762,7 +2774,7 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                                     }
                                   },
                                   textAlignVertical: TextAlignVertical.center,
-                                  style: Theme.of(ctx).textTheme.headlineMedium,
+                                  style: Theme.of(ctx).textTheme.bodyLarge,
                                   decoration: inputDecoration(
                                     ctx,
                                     Language.instance.PLAY_URL_SUBTITLE,
@@ -2776,9 +2788,9 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                       actions: [
                         TextButton(
                           child: Text(
-                            Language.instance.PLAY.toUpperCase(),
-                            style: TextStyle(
-                              color: Theme.of(ctx).primaryColor,
+                            label(
+                              context,
+                              Language.instance.PLAY,
                             ),
                           ),
                           onPressed: () async {
@@ -2791,9 +2803,9 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                         ),
                         TextButton(
                           child: Text(
-                            Language.instance.CANCEL.toUpperCase(),
-                            style: TextStyle(
-                              color: Theme.of(ctx).primaryColor,
+                            label(
+                              context,
+                              Language.instance.CANCEL,
                             ),
                           ),
                           onPressed: Navigator.of(ctx).maybePop,
@@ -2811,11 +2823,7 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                 ),
                 title: Text(
                   Language.instance.URL,
-                  style: isDesktop
-                      ? Theme.of(ctx).textTheme.headlineMedium
-                      : Theme.of(ctx).textTheme.displaySmall?.copyWith(
-                            fontSize: 16.0,
-                          ),
+                  style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
                 ),
               ),
             ],
@@ -2856,10 +2864,6 @@ class _ContextMenuAreaState extends State<ContextMenuArea> {
       child: widget.child,
     );
   }
-}
-
-extension on Color {
-  bool get isDark => (0.299 * red) + (0.587 * green) + (0.114 * blue) < 128.0;
 }
 
 class StillGIF extends StatefulWidget {
@@ -3026,67 +3030,84 @@ class _MobileAppBarOverflowButtonState
         color: widget.color ??
             Theme.of(context).appBarTheme.actionsIconTheme?.color,
       ),
-      onPressed: () {
-        final position = RelativeRect.fromRect(
-          Offset(
-                MediaQuery.of(context).size.width - tileMargin - 48.0,
-                MediaQuery.of(context).padding.top +
-                    kMobileSearchBarHeight +
-                    2 * tileMargin,
-              ) &
-              Size(160.0, 160.0),
-          Rect.fromLTWH(
-            0,
-            0,
-            MediaQuery.of(context).size.width,
-            MediaQuery.of(context).size.height,
+      onPressed: () async {
+        Completer<int> completer = Completer<int>();
+        await showModalBottomSheet(
+          isScrollControlled: true,
+          context: context,
+          elevation: kDefaultHeavyElevation,
+          useRootNavigator: false,
+          builder: (context) => Container(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                PopupMenuItem(
+                  onTap: () {
+                    completer.complete(0);
+                    Navigator.of(context).maybePop();
+                  },
+                  child: ListTile(
+                    leading: Icon(Icons.file_open),
+                    title: Text(
+                      Language.instance.OPEN_FILE_OR_URL,
+                      style: isDesktop
+                          ? Theme.of(context).textTheme.bodyLarge
+                          : null,
+                    ),
+                  ),
+                ),
+                PopupMenuItem(
+                  onTap: () {
+                    completer.complete(1);
+                    Navigator.of(context).maybePop();
+                  },
+                  child: ListTile(
+                    leading: Icon(Icons.code),
+                    title: Text(
+                      Language.instance.READ_METADATA,
+                      style: isDesktop
+                          ? Theme.of(context).textTheme.bodyLarge
+                          : null,
+                    ),
+                  ),
+                ),
+                PopupMenuItem(
+                  onTap: () {
+                    completer.complete(2);
+                    Navigator.of(context).maybePop();
+                  },
+                  child: ListTile(
+                    leading: Icon(Icons.settings),
+                    title: Text(
+                      Language.instance.SETTING,
+                      style: isDesktop
+                          ? Theme.of(context).textTheme.bodyLarge
+                          : null,
+                    ),
+                  ),
+                ),
+                PopupMenuItem(
+                  onTap: () {
+                    completer.complete(3);
+                    Navigator.of(context).maybePop();
+                  },
+                  child: ListTile(
+                    leading: Icon(Icons.info),
+                    title: Text(
+                      Language.instance.ABOUT_TITLE,
+                      style: isDesktop
+                          ? Theme.of(context).textTheme.bodyLarge
+                          : null,
+                    ),
+                  ),
+                ),
+                if (!isDesktop && !MobileNowPlayingController.instance.isHidden)
+                  const SizedBox(height: kMobileNowPlayingBarHeight),
+              ],
+            ),
           ),
         );
-        showMenu<int>(
-          context: context,
-          position: position,
-          elevation: 4.0,
-          constraints: BoxConstraints(
-            maxWidth: double.infinity,
-          ),
-          items: [
-            PopupMenuItem(
-              value: 0,
-              child: ListTile(
-                leading: Icon(Icons.file_open),
-                title: Text(Language.instance.OPEN_FILE_OR_URL),
-              ),
-            ),
-            PopupMenuItem(
-              value: 1,
-              child: ListTile(
-                leading: Icon(Icons.code),
-                title: Text(Language.instance.READ_METADATA),
-              ),
-            ),
-            PopupMenuItem(
-              value: 2,
-              child: ListTile(
-                leading: Icon(Icons.waves),
-                title: Text(Language.instance.STREAM),
-              ),
-            ),
-            PopupMenuItem(
-              value: 3,
-              child: ListTile(
-                leading: Icon(Icons.settings),
-                title: Text(Language.instance.SETTING),
-              ),
-            ),
-            PopupMenuItem(
-              value: 4,
-              child: ListTile(
-                leading: Icon(Icons.info),
-                title: Text(Language.instance.ABOUT_TITLE),
-              ),
-            ),
-          ],
-        ).then((value) async {
+        completer.future.then((value) async {
           // Prevent visual glitches when pushing a new route into the view.
           await Future.delayed(const Duration(milliseconds: 300));
           switch (value) {
@@ -3120,10 +3141,8 @@ class _MobileAppBarOverflowButtonState
                         title: Text(
                           Language.instance.FILE,
                           style: isDesktop
-                              ? Theme.of(ctx).textTheme.headlineMedium
-                              : Theme.of(ctx).textTheme.displaySmall?.copyWith(
-                                    fontSize: 16.0,
-                                  ),
+                              ? Theme.of(ctx).textTheme.bodyLarge
+                              : null,
                         ),
                       ),
                       ListTile(
@@ -3182,41 +3201,16 @@ class _MobileAppBarOverflowButtonState
                                                   .playURI(value);
                                             }
                                           },
-                                          decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.fromLTRB(
-                                              12,
-                                              30,
-                                              12,
-                                              6,
-                                            ),
-                                            hintText: Language
-                                                .instance.FILE_PATH_OR_URL,
-                                            border: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .iconTheme
-                                                    .color!
-                                                    .withOpacity(0.4),
-                                                width: 1.8,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge
+                                              ?.copyWith(
+                                                fontSize: 16.0,
                                               ),
-                                            ),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .iconTheme
-                                                    .color!
-                                                    .withOpacity(0.4),
-                                                width: 1.8,
-                                              ),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                                width: 1.8,
-                                              ),
-                                            ),
-                                            errorStyle: TextStyle(height: 0.0),
+                                          decoration:
+                                              mobileUnderlinedInputDecoration(
+                                            context,
+                                            Language.instance.FILE_PATH_OR_URL,
                                           ),
                                         ),
                                       ),
@@ -3232,16 +3226,10 @@ class _MobileAppBarOverflowButtonState
                                                 .playURI(input);
                                           }
                                         },
-                                        style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                            Theme.of(context).primaryColor,
-                                          ),
-                                        ),
                                         child: Text(
-                                          Language.instance.PLAY.toUpperCase(),
-                                          style: const TextStyle(
-                                            letterSpacing: 2.0,
+                                          label(
+                                            context,
+                                            Language.instance.PLAY,
                                           ),
                                         ),
                                       ),
@@ -3262,10 +3250,8 @@ class _MobileAppBarOverflowButtonState
                         title: Text(
                           Language.instance.URL,
                           style: isDesktop
-                              ? Theme.of(ctx).textTheme.headlineMedium
-                              : Theme.of(ctx).textTheme.displaySmall?.copyWith(
-                                    fontSize: 16.0,
-                                  ),
+                              ? Theme.of(ctx).textTheme.bodyLarge
+                              : null,
                         ),
                       ),
                     ],
@@ -3282,13 +3268,8 @@ class _MobileAppBarOverflowButtonState
               {
                 await Navigator.push(
                   context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        FadeThroughTransition(
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      child: WebTab(),
-                    ),
+                  MaterialRoute(
+                    builder: (context) => Settings(),
                   ),
                 );
                 break;
@@ -3297,28 +3278,8 @@ class _MobileAppBarOverflowButtonState
               {
                 await Navigator.push(
                   context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        FadeThroughTransition(
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      child: Settings(),
-                    ),
-                  ),
-                );
-                break;
-              }
-            case 4:
-              {
-                await Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        FadeThroughTransition(
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      child: AboutPage(),
-                    ),
+                  MaterialRoute(
+                    builder: (context) => AboutPage(),
                   ),
                 );
                 break;
@@ -3335,5 +3296,171 @@ class NoOverscrollGlowBehavior extends ScrollBehavior {
   Widget buildOverscrollIndicator(
       BuildContext context, Widget child, ScrollableDetails details) {
     return child;
+  }
+}
+
+// FIX FOR: https://github.com/flutter/flutter/issues/120516
+class ScrollUnderFlexibleSpace extends StatelessWidget {
+  const ScrollUnderFlexibleSpace({
+    this.title,
+    this.centerCollapsedTitle,
+    this.primary = true,
+  });
+
+  final Widget? title;
+  final bool? centerCollapsedTitle;
+  final bool primary;
+
+  @override
+  Widget build(BuildContext context) {
+    late final ThemeData theme = Theme.of(context);
+    final FlexibleSpaceBarSettings settings =
+        context.dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>()!;
+    final double topPadding =
+        primary ? MediaQuery.of(context).viewPadding.top : 0;
+    final double collapsedHeight = settings.minExtent - topPadding;
+    final double scrollUnderHeight = settings.maxExtent - settings.minExtent;
+    final LargeScrollUnderFlexibleConfig config =
+        LargeScrollUnderFlexibleConfig(context);
+
+    late final Widget? collapsedTitle;
+    late final Widget? expandedTitle;
+    if (title != null) {
+      collapsedTitle = config.collapsedTextStyle != null
+          ? DefaultTextStyle(
+              style: config.collapsedTextStyle!,
+              child: title!,
+            )
+          : title;
+      expandedTitle = config.expandedTextStyle != null
+          ? DefaultTextStyle(
+              style: config.expandedTextStyle!,
+              child: title!,
+            )
+          : title;
+    }
+
+    late final bool centerTitle;
+    {
+      bool platformCenter() {
+        switch (theme.platform) {
+          case TargetPlatform.android:
+          case TargetPlatform.fuchsia:
+          case TargetPlatform.linux:
+          case TargetPlatform.windows:
+            return false;
+          case TargetPlatform.iOS:
+          case TargetPlatform.macOS:
+            return true;
+        }
+      }
+
+      centerTitle = centerCollapsedTitle ??
+          theme.appBarTheme.centerTitle ??
+          platformCenter();
+    }
+
+    final bool isCollapsed = settings.isScrolledUnder ?? false;
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(top: topPadding),
+          child: Container(
+            height: collapsedHeight,
+            padding: centerTitle
+                ? config.collapsedCenteredTitlePadding
+                : config.collapsedTitlePadding,
+            child: AnimatedOpacity(
+              opacity: isCollapsed ? 1 : 0,
+              duration: const Duration(milliseconds: 500),
+              curve: const Cubic(0.2, 0.0, 0.0, 1.0),
+              child: Align(
+                  alignment: centerTitle
+                      ? Alignment.center
+                      : AlignmentDirectional.centerStart,
+                  child: collapsedTitle),
+            ),
+          ),
+        ),
+        Flexible(
+          child: ClipRect(
+            child: OverflowBox(
+              minHeight: scrollUnderHeight,
+              maxHeight: scrollUnderHeight,
+              alignment: Alignment.bottomLeft,
+              child: Container(
+                alignment: AlignmentDirectional.bottomStart,
+                padding: config.expandedTitlePadding,
+                child: expandedTitle,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class LargeScrollUnderFlexibleConfig {
+  LargeScrollUnderFlexibleConfig(this.context);
+
+  final BuildContext context;
+  late final ThemeData _theme = Theme.of(context);
+  late final ColorScheme _colors = _theme.colorScheme;
+  late final TextTheme _textTheme = _theme.textTheme;
+
+  static const double collapsedHeight = 64.0;
+  static const double expandedHeight = 152.0;
+
+  TextStyle? get collapsedTextStyle =>
+      _textTheme.titleLarge?.apply(color: _colors.onSurface);
+
+  TextStyle? get expandedTextStyle =>
+      _textTheme.headlineMedium?.apply(color: _colors.onSurface);
+
+  EdgeInsetsGeometry? get collapsedTitlePadding =>
+      const EdgeInsets.fromLTRB(48 + 16, 0, 16, 0);
+
+  EdgeInsetsGeometry? get collapsedCenteredTitlePadding =>
+      const EdgeInsets.fromLTRB(16, 0, 16, 0);
+
+  EdgeInsetsGeometry? get expandedTitlePadding =>
+      const EdgeInsets.fromLTRB(16, 0, 16, 28);
+}
+
+class CustomCheckedPopupMenuItem<T> extends StatelessWidget {
+  final T value;
+  final bool checked;
+  final VoidCallback onTap;
+  final Widget child;
+  final EdgeInsets? padding;
+
+  const CustomCheckedPopupMenuItem({
+    Key? key,
+    required this.value,
+    this.checked = false,
+    required this.onTap,
+    required this.child,
+    required this.padding,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuItem(
+      padding: padding,
+      child: ListTile(
+        onTap: () {
+          onTap();
+        },
+        leading: AnimatedOpacity(
+          opacity: checked ? 1.0 : 0.0,
+          curve: Curves.easeInOut,
+          duration: Theme.of(context).extension<AnimationDuration>()?.fast ??
+              Duration.zero,
+          child: Icon(Icons.done),
+        ),
+        title: child,
+      ),
+    );
   }
 }

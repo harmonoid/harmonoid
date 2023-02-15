@@ -12,9 +12,10 @@ import 'package:flutter_lyric/lyrics_reader_model.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/interface/collection/track.dart';
 import 'package:harmonoid/interface/now_playing_bar.dart';
 import 'package:harmonoid/state/lyrics.dart';
@@ -22,6 +23,9 @@ import 'package:harmonoid/state/now_playing_visuals.dart';
 import 'package:harmonoid/state/now_playing_color_palette.dart';
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/constants/language.dart';
+
+const kEnabledIconButtonColor = Color(0xFFFFFFFF);
+const kDisabledIconButtonColor = Color(0xFF757575);
 
 class ModernNowPlayingScreen extends StatefulWidget {
   const ModernNowPlayingScreen({Key? key}) : super(key: key);
@@ -107,7 +111,9 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
             if (pageController.hasClients) {
               pageController.animateToPage(
                 Playback.instance.index,
-                duration: Duration(milliseconds: 400),
+                duration:
+                    Theme.of(context).extension<AnimationDuration>()?.medium ??
+                        Duration.zero,
                 curve: Curves.easeInOut,
               );
             }
@@ -126,7 +132,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
     super.initState();
     playOrPause = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
     );
     Playback.instance.addListener(listener);
   }
@@ -148,7 +154,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
               color: Colors.transparent,
               elevation: 0.0,
               leading: NavigatorPopButton(
-                color: Colors.white,
+                color: kEnabledIconButtonColor,
                 onTap: DesktopNowPlayingController.instance.hide,
               ),
             ),
@@ -173,7 +179,9 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
               );
             },
             hide: DesktopNowPlayingController.instance.hide,
-            duration: const Duration(milliseconds: 300),
+            duration:
+                Theme.of(context).extension<AnimationDuration>()?.medium ??
+                    Duration.zero,
             content: Column(
               children: [
                 Expanded(
@@ -195,7 +203,10 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                   ? 1.0
                                   : 0.0,
                             ),
-                            duration: Duration(milliseconds: 200),
+                            duration: Theme.of(context)
+                                    .extension<AnimationDuration>()
+                                    ?.fast ??
+                                Duration.zero,
                             curve: Curves.easeInOut,
                             builder: (context, opacity, _) => Opacity(
                               opacity: opacity,
@@ -211,13 +222,19 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                         Colors.transparent,
                                         Colors.black,
                                       ],
-                                      stops: [0.0, 0.2, 0.8, 1.0],
+                                      stops: const [
+                                        0.0,
+                                        0.2,
+                                        0.8,
+                                        1.0,
+                                      ],
                                     ).createShader(rect);
                                   },
                                   blendMode: BlendMode.dstOut,
                                   child: LyricsReader(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 12.0),
+                                      horizontal: 12.0,
+                                    ),
                                     model: LyricsReaderModel()
                                       ..lyrics = Lyrics.instance.current
                                           .asMap()
@@ -278,12 +295,25 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                               elevation: kDefaultHeavyElevation,
                               child: Padding(
                                 padding: EdgeInsets.all(8.0),
-                                child: ExtendedImage(
-                                  image: getAlbumArt(playback.tracks[i],
-                                      small: true),
-                                  height: 156.0,
-                                  width: 156.0,
-                                  fit: BoxFit.cover,
+                                child: ClipRRect(
+                                  borderRadius: () {
+                                    if (Theme.of(context).cardTheme.shape
+                                        is RoundedRectangleBorder) {
+                                      return (Theme.of(context).cardTheme.shape
+                                              as RoundedRectangleBorder)
+                                          .borderRadius
+                                          .resolve(
+                                            Directionality.of(context),
+                                          );
+                                    }
+                                  }(),
+                                  child: ExtendedImage(
+                                    image: getAlbumArt(playback.tracks[i],
+                                        small: true),
+                                    height: 156.0,
+                                    width: 156.0,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             ),
@@ -304,10 +334,8 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                         Container(
                                           height: 28.0,
                                           width: 28.0,
-                                          child: CircularProgressIndicator(
-                                            valueColor: AlwaysStoppedAnimation(
-                                              Theme.of(context).primaryColor,
-                                            ),
+                                          child:
+                                              const CircularProgressIndicator(
                                             strokeWidth: 4.8,
                                           ),
                                         ),
@@ -319,11 +347,24 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                             Language.instance.BUFFERING,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .displayLarge
+                                                .headlineSmall
                                                 ?.copyWith(
-                                                  color: Colors.white,
-                                                  fontSize: 20.0,
+                                              color: Colors.white,
+                                              shadows: const <Shadow>[
+                                                Shadow(
+                                                  offset: Offset(-2.0, 2.0),
+                                                  blurRadius: 3.0,
+                                                  color: Color.fromARGB(
+                                                      96, 0, 0, 0),
                                                 ),
+                                                Shadow(
+                                                  offset: Offset(2.0, 2.0),
+                                                  blurRadius: 8.0,
+                                                  color: Color.fromARGB(
+                                                      128, 0, 0, 0),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -344,22 +385,29 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                           playback.tracks[i].trackName.overflow,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .displayLarge
+                                              .headlineSmall
                                               ?.copyWith(
-                                            fontSize: 28.0,
                                             color: Colors.white,
-                                            shadows: <Shadow>[
+                                            shadows: const <Shadow>[
                                               Shadow(
                                                 offset: Offset(-2.0, 2.0),
                                                 blurRadius: 3.0,
-                                                color:
-                                                    Color.fromARGB(96, 0, 0, 0),
+                                                color: Color.fromARGB(
+                                                  96,
+                                                  0,
+                                                  0,
+                                                  0,
+                                                ),
                                               ),
                                               Shadow(
                                                 offset: Offset(2.0, 2.0),
                                                 blurRadius: 8.0,
                                                 color: Color.fromARGB(
-                                                    128, 0, 0, 0),
+                                                  128,
+                                                  0,
+                                                  0,
+                                                  0,
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -387,21 +435,29 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                           ].join(' • '),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .displaySmall
+                                              .bodyMedium
                                               ?.copyWith(
                                             color: Colors.white70,
-                                            shadows: <Shadow>[
+                                            shadows: const <Shadow>[
                                               Shadow(
                                                 offset: Offset(-2.0, 2.0),
                                                 blurRadius: 3.0,
-                                                color:
-                                                    Color.fromARGB(96, 0, 0, 0),
+                                                color: Color.fromARGB(
+                                                  96,
+                                                  0,
+                                                  0,
+                                                  0,
+                                                ),
                                               ),
                                               Shadow(
                                                 offset: Offset(2.0, 2.0),
                                                 blurRadius: 8.0,
                                                 color: Color.fromARGB(
-                                                    128, 0, 0, 0),
+                                                  128,
+                                                  0,
+                                                  0,
+                                                  0,
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -416,10 +472,10 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                             playback.audioFormatLabel,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .displaySmall
+                                                .bodyMedium
                                                 ?.copyWith(
                                               color: Colors.white70,
-                                              shadows: <Shadow>[
+                                              shadows: const <Shadow>[
                                                 Shadow(
                                                   offset: Offset(-2.0, 2.0),
                                                   blurRadius: 3.0,
@@ -547,8 +603,9 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                               icon: Icon(
                                 Icons.skip_previous,
                               ),
-                              color: Colors.white,
+                              color: kEnabledIconButtonColor,
                               tooltip: Language.instance.PREVIOUS,
+                              disabledColor: kDisabledIconButtonColor,
                             ),
                             IconButton(
                               splashRadius: 20.0,
@@ -557,7 +614,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 icon: AnimatedIcons.play_pause,
                                 progress: playOrPause,
                               ),
-                              color: Colors.white,
+                              color: kEnabledIconButtonColor,
                               tooltip: playback.isPlaying
                                   ? Language.instance.PAUSE
                                   : Language.instance.PLAY,
@@ -572,8 +629,9 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                               icon: Icon(
                                 Icons.skip_next,
                               ),
-                              color: Colors.white,
+                              color: kEnabledIconButtonColor,
                               tooltip: Language.instance.NEXT,
+                              disabledColor: kDisabledIconButtonColor,
                             ),
                             IconButton(
                               onPressed: () {
@@ -583,9 +641,8 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                               },
                               iconSize: 20.0,
                               color: playback.isShuffling
-                                  ? Color.lerp(Colors.black, Colors.white, 0.87)
-                                  : Color.lerp(
-                                      Colors.black, Colors.white, 0.54),
+                                  ? kEnabledIconButtonColor
+                                  : kDisabledIconButtonColor,
                               splashRadius: 18.0,
                               icon: Icon(
                                 Icons.shuffle,
@@ -609,9 +666,8 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                               iconSize: 20.0,
                               color: (playback.playlistLoopMode !=
                                       PlaylistLoopMode.none)
-                                  ? Color.lerp(Colors.black, Colors.white, 0.87)
-                                  : Color.lerp(
-                                      Colors.black, Colors.white, 0.54),
+                                  ? kEnabledIconButtonColor
+                                  : kDisabledIconButtonColor,
                               splashRadius: 18.0,
                               icon: Icon(
                                 playback.playlistLoopMode ==
@@ -633,7 +689,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                               icon: Icon(
                                 Icons.add,
                               ),
-                              color: Colors.white,
+                              color: kEnabledIconButtonColor,
                               tooltip: Language.instance.ADD_TO_PLAYLIST,
                             ),
                             IconButton(
@@ -649,9 +705,8 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 Icons.text_format,
                               ),
                               color: Configuration.instance.lyricsVisible
-                                  ? Color.lerp(Colors.black, Colors.white, 0.87)
-                                  : Color.lerp(
-                                      Colors.black, Colors.white, 0.54),
+                                  ? kEnabledIconButtonColor
+                                  : kDisabledIconButtonColor,
                               tooltip: Language.instance.SHOW_LYRICS,
                             ),
                             if (!playback.tracks[playback.index].uri
@@ -668,7 +723,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 icon: Icon(
                                   Icons.open_in_new,
                                 ),
-                                color: Colors.white,
+                                color: kEnabledIconButtonColor,
                                 tooltip: Language.instance.OPEN_IN_BROWSER,
                               ),
                             if (!playback.tracks[playback.index].uri
@@ -684,13 +739,13 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 icon: Icon(
                                   Icons.link,
                                 ),
-                                color: Colors.white,
+                                color: kEnabledIconButtonColor,
                                 tooltip: Language.instance.COPY_LINK,
                               ),
                             IconButton(
                               onPressed: playback.toggleMute,
                               iconSize: 20.0,
-                              color: Colors.white,
+                              color: kEnabledIconButtonColor,
                               splashRadius: 18.0,
                               tooltip: playback.isMuted
                                   ? Language.instance.UNMUTE
@@ -764,7 +819,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 }
                               },
                               iconSize: 20.0,
-                              color: Colors.white,
+                              color: kEnabledIconButtonColor,
                               splashRadius: 18.0,
                               tooltip: Language.instance.CONTROL_PANEL,
                               icon: Icon(Icons.more_horiz),
@@ -851,7 +906,7 @@ class CarouselState extends State<Carousel> {
         NowPlayingVisuals.instance.preloaded.length,
   );
   bool _isFullscreen = false;
-  Timer _timer = Timer(const Duration(milliseconds: 400), () {});
+  Timer _timer = Timer(Duration.zero, () {});
   Color? get color => _current == -1 ? widget.palette?.first : null;
 
   @override
@@ -871,7 +926,10 @@ class CarouselState extends State<Carousel> {
 
   void previous() {
     if (_timer.isActive) return;
-    _timer = Timer(const Duration(milliseconds: 400), () {});
+    _timer = Timer(
+        Theme.of(context).extension<AnimationDuration>()?.medium ??
+            Duration.zero,
+        () {});
     setState(() {
       _current = _current + 1 == widget.images.length ? -1 : _current + 1;
       Configuration.instance.save(
@@ -884,13 +942,17 @@ class CarouselState extends State<Carousel> {
             setState(() {
               widgets.removeAt(0);
             });
-            _timer = Timer(const Duration(milliseconds: 400), () {});
+            _timer = Timer(
+                Theme.of(context).extension<AnimationDuration>()?.medium ??
+                    Duration.zero,
+                () {});
           },
           tween: Tween<Offset>(
             begin: Offset(MediaQuery.of(context).size.width, 0),
             end: Offset.zero,
           ),
-          duration: const Duration(milliseconds: 400),
+          duration: Theme.of(context).extension<AnimationDuration>()?.medium ??
+              Duration.zero,
           curve: Curves.easeInOut,
           builder: (context, value, child) => Transform.translate(
             offset: value as Offset,
@@ -918,7 +980,10 @@ class CarouselState extends State<Carousel> {
 
   void next() {
     if (_timer.isActive) return;
-    _timer = Timer(const Duration(milliseconds: 400), () {});
+    _timer = Timer(
+        Theme.of(context).extension<AnimationDuration>()?.medium ??
+            Duration.zero,
+        () {});
     setState(() {
       _current = _current - 1 == -2 ? widget.images.length - 1 : _current - 1;
       Configuration.instance.save(
@@ -936,7 +1001,8 @@ class CarouselState extends State<Carousel> {
             begin: Offset(-MediaQuery.of(context).size.width, 0),
             end: Offset.zero,
           ),
-          duration: const Duration(milliseconds: 400),
+          duration: Theme.of(context).extension<AnimationDuration>()?.medium ??
+              Duration.zero,
           curve: Curves.easeInOut,
           builder: (context, value, child) => Transform.translate(
             offset: value as Offset,
@@ -971,7 +1037,8 @@ class CarouselState extends State<Carousel> {
             begin: Offset.zero,
             end: Offset.zero,
           ),
-          duration: const Duration(milliseconds: 400),
+          duration: Theme.of(context).extension<AnimationDuration>()?.medium ??
+              Duration.zero,
           curve: Curves.easeInOut,
           builder: (context, value, child) => Material(
             color: Colors.black,
@@ -1047,14 +1114,6 @@ class CarouselState extends State<Carousel> {
                 ),
                 GestureDetector(
                   onDoubleTap: toggle,
-                  onHorizontalDragUpdate: (details) {
-                    const sensitivity = 4;
-                    if (details.delta.dx > sensitivity) {
-                      next();
-                    } else if (details.delta.dx < -sensitivity) {
-                      previous();
-                    }
-                  },
                   child: Container(
                     color: Colors.transparent,
                     width: widget.width ?? MediaQuery.of(context).size.width,
@@ -1093,13 +1152,13 @@ class CarouselState extends State<Carousel> {
                         splashRadius: 20.0,
                         onPressed: previous,
                         icon: const Icon(Icons.chevron_left),
-                        color: Colors.white,
+                        color: kEnabledIconButtonColor,
                       ),
                       IconButton(
                         splashRadius: 20.0,
                         onPressed: next,
                         icon: const Icon(Icons.chevron_right),
-                        color: Colors.white,
+                        color: kEnabledIconButtonColor,
                       ),
                       const SizedBox(width: 16.0),
                       IconButton(
@@ -1110,7 +1169,7 @@ class CarouselState extends State<Carousel> {
                               ? Icons.fullscreen_exit
                               : Icons.fullscreen,
                         ),
-                        color: Colors.white,
+                        color: kEnabledIconButtonColor,
                         tooltip: _isFullscreen
                             ? Language.instance.EXIT_FULLSCREEN
                             : Language.instance.FULLSCREEN,
@@ -1140,9 +1199,10 @@ class CarouselState extends State<Carousel> {
                 backgroundColor: widget.palette?.last,
                 foregroundColor:
                     (widget.palette?.last ?? Theme.of(context).primaryColor)
-                            .isDark
-                        ? Colors.white
-                        : Colors.black,
+                                .computeLuminance() <
+                            0.5
+                        ? kFABDarkForegroundColor
+                        : kFABLightForegroundColor,
               ),
             ),
           ),
@@ -1174,7 +1234,7 @@ class CarouselState extends State<Carousel> {
                             )
                           : Text(
                               '${index + 1}',
-                              style: Theme.of(context).textTheme.headlineMedium,
+                              style: Theme.of(context).textTheme.bodyLarge,
                             ),
                       track: Playback.instance.tracks[index],
                       index: 0,
@@ -1191,7 +1251,9 @@ class CarouselState extends State<Carousel> {
                 begin: Colors.transparent,
                 end: playlistVisible ? Colors.black38 : Colors.transparent,
               ),
-              duration: Duration(milliseconds: 300),
+              duration:
+                  Theme.of(context).extension<AnimationDuration>()?.medium ??
+                      Duration.zero,
               curve: Curves.easeInOut,
               builder: (context, color, child) => GestureDetector(
                 onTap: () {
@@ -1219,7 +1281,10 @@ class CarouselState extends State<Carousel> {
                                     MediaQuery.of(context).size.height,
                                   ),
                           ),
-                          duration: Duration(milliseconds: 300),
+                          duration: Theme.of(context)
+                                  .extension<AnimationDuration>()
+                                  ?.medium ??
+                              Duration.zero,
                           curve: Curves.easeInOut,
                           builder: (context, offset, _) => Transform.translate(
                             offset: offset,
@@ -1274,9 +1339,7 @@ class CarouselState extends State<Carousel> {
                                                   Language.instance.NOW_PLAYING,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .displayLarge
-                                                      ?.copyWith(
-                                                          fontSize: 24.0),
+                                                      .headlineSmall,
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
@@ -1286,7 +1349,7 @@ class CarouselState extends State<Carousel> {
                                                   '${Language.instance.TRACK}: ${Playback.instance.tracks.length}',
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .displaySmall,
+                                                      .bodyMedium,
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                 ),
@@ -1332,7 +1395,8 @@ class _ProminentColorWidgetState extends State<ProminentColorWidget> {
           begin: color.palette?.first,
           end: color.palette?.first ?? Colors.transparent,
         ),
-        duration: Duration(milliseconds: 400),
+        duration: Theme.of(context).extension<AnimationDuration>()?.medium ??
+            Duration.zero,
         builder: (context, color, _) => Container(
           color: Colors.black,
           child: Container(
@@ -1419,7 +1483,7 @@ class LyricsStyle extends LyricUI {
   TextStyle getOtherMainTextStyle() => TextStyle(
         color: Colors.grey[200],
         fontSize: otherMainSize,
-        shadows: <Shadow>[
+        shadows: const <Shadow>[
           Shadow(
             offset: Offset(-2.0, 2.0),
             blurRadius: 3.0,
@@ -1441,7 +1505,7 @@ class LyricsStyle extends LyricUI {
         color: Colors.white,
         fontSize: defaultSize,
         fontWeight: FontWeight.w600,
-        shadows: <Shadow>[
+        shadows: const <Shadow>[
           Shadow(
             offset: Offset(-2.0, 2.0),
             blurRadius: 3.0,
@@ -1475,8 +1539,4 @@ class LyricsStyle extends LyricUI {
 
   @override
   bool enableHighlight() => highlight;
-}
-
-extension on Color {
-  bool get isDark => (0.299 * red) + (0.587 * green) + (0.114 * blue) < 128.0;
 }
