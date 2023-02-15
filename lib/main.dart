@@ -188,7 +188,12 @@ Future<void> main(List<String> args) async {
   } catch (exception, stacktrace) {
     debugPrint(exception.toString());
     debugPrint(stacktrace.toString());
-    WindowLifecycle.initialize();
+    try {
+      WindowLifecycle.initialize();
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
     runApp(
       ExceptionApp(
         exception: exception,
