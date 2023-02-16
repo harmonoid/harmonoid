@@ -65,6 +65,8 @@ class _ExceptionAppState extends State<_ExceptionApp> {
     bottom: 48.0,
   );
 
+  static const double kDesktopHorizontalPadding = 24.0;
+
   void listener() {
     setState(() {
       padding = EdgeInsetsDirectional.only(
@@ -110,7 +112,7 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                             right: 0.0,
                             bottom: 0.0,
                             child: Transform.translate(
-                              offset: Offset(16.0, 48.0),
+                              offset: const Offset(16.0, 48.0),
                               child: Icon(
                                 Icons.close_outlined,
                                 color: Colors.red.shade900,
@@ -128,39 +130,39 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                                   padding: EdgeInsets.only(
                                     top: WindowPlus.instance.captionHeight +
                                         16.0,
-                                    left: 36.0,
-                                    right: 36.0,
-                                    bottom: 16.0,
+                                    left: kDesktopHorizontalPadding,
+                                    right: kDesktopHorizontalPadding,
                                   ),
                                   child: Text(
                                     Label.error,
-                                    style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimary,
-                                      fontSize: 96.0,
-                                      fontWeight: FontWeight.w200,
-                                    ),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displayLarge
+                                        ?.copyWith(
+                                          color: Theme.of(context)
+                                              .extension<TextColors>()
+                                              ?.darkPrimary,
+                                        ),
                                   ),
                                 ),
-                                Divider(
-                                  color: Colors.white24,
-                                ),
+                                const Divider(color: Colors.white24),
                                 Padding(
-                                  padding: EdgeInsets.only(
+                                  padding: const EdgeInsets.only(
                                     top: 16.0,
-                                    left: 36.0,
+                                    left: kDesktopHorizontalPadding,
+                                    right: kDesktopHorizontalPadding,
                                   ),
                                   child: Text(
                                     widget.exception.toString().overflow,
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimary
-                                          .withOpacity(0.87),
-                                      fontSize: 14.0,
-                                    ),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          color: Theme.of(context)
+                                              .extension<TextColors>()
+                                              ?.darkSecondary,
+                                        ),
                                     maxLines: 1,
                                   ),
                                 ),
@@ -168,11 +170,10 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                                 Material(
                                   color: Colors.transparent,
                                   child: Padding(
-                                    padding: EdgeInsets.only(
-                                      top: 16.0,
-                                      left: 20.0,
-                                      right: 20.0,
-                                      bottom: 16.0,
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 16.0,
+                                      horizontal:
+                                          kDesktopHorizontalPadding - 16.0,
                                     ),
                                     child: ButtonBar(
                                       alignment: MainAxisAlignment.start,
@@ -200,12 +201,7 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                                             launchUrl(
                                               Uri.https(
                                                 'github.com',
-                                                '/harmonoid/harmonoid/issues/new',
-                                                {
-                                                  'assignees': 'alexmercerind',
-                                                  'labels': 'bug',
-                                                  'template': 'bug_report.md',
-                                                },
+                                                '/harmonoid/harmonoid/issues/new/choose',
                                               ),
                                               mode: LaunchMode
                                                   .externalApplication,
@@ -241,23 +237,21 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                 ),
                 Expanded(
                   child: CustomListView(
-                    padding: EdgeInsets.only(
-                      top: 16.0,
-                      left: 36.0,
-                      right: 36.0,
-                      bottom: 16.0,
+                    padding: EdgeInsets.symmetric(
+                      vertical: 16.0,
+                      horizontal: kDesktopHorizontalPadding,
                     ),
                     children: [
-                      Text(
+                      const SubHeader(
                         Label.stack_trace,
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        padding: const EdgeInsets.only(left: 0),
                       ),
-                      const SizedBox(height: 16.0),
-                      Text(
-                        widget.stacktrace.toString(),
+                      const SizedBox(height: 8.0),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 0),
+                        child: Text(
+                          widget.stacktrace.toString(),
+                        ),
                       ),
                     ],
                   ),
@@ -266,21 +260,6 @@ class _ExceptionAppState extends State<_ExceptionApp> {
             ),
           )
         : Scaffold(
-            floatingActionButton: FloatingActionButton(
-              tooltip: Label.copy,
-              backgroundColor: Colors.black,
-              onPressed: () {
-                Clipboard.setData(
-                  ClipboardData(
-                    text:
-                        '${Label.exception}: ${widget.exception.toString()}\n${Label.stack_trace}: ${widget.stacktrace.toString()}',
-                  ),
-                );
-              },
-              child: Icon(
-                Icons.copy,
-              ),
-            ),
             body: CustomScrollView(
               controller: controller,
               slivers: [
@@ -295,7 +274,14 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                   forceElevated: true,
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   flexibleSpace: FlexibleSpaceBar(
-                    title: Text(Label.error),
+                    title: Text(
+                      Label.error,
+                      style: TextStyle(
+                        color: Theme.of(context)
+                            .extension<TextColors>()
+                            ?.darkPrimary,
+                      ),
+                    ),
                     titlePadding: padding,
                     background: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -304,7 +290,7 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                         Expanded(
                           child: Container(
                             alignment: Alignment.centerRight,
-                            padding: EdgeInsets.all(24.0),
+                            padding: EdgeInsets.symmetric(vertical: 24.0),
                             width: MediaQuery.of(context).size.width,
                             child: Icon(
                               Icons.close_outlined,
@@ -314,7 +300,7 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                             left: 16.0,
                             right: 16.0,
                             bottom: 16.0,
@@ -353,6 +339,8 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                                 widget.stacktrace.toString(),
                               ),
                             ),
+                            for (int i = 0; i <= 100; i++)
+                              const SizedBox(height: 16.0),
                           ],
                         ),
                       ),
