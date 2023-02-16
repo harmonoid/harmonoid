@@ -152,7 +152,7 @@ class Settings extends StatelessWidget {
                       padding: EdgeInsets.only(
                         left: 16.0,
                       ),
-                      child: Text('Settings'),
+                      child: Text(Language.instance.SETTING),
                     ),
                   ),
                   SliverList(

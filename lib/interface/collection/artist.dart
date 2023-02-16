@@ -219,247 +219,293 @@ class ArtistTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final helper = DimensionsHelper(context);
+
+    // Only for mobile:
+    final artistElementsPerRow =
+        forceDefaultStyleOnMobile ? 1 : helper.artistElementsPerRow;
+    final artistTileNormalDensity =
+        forceDefaultStyleOnMobile ? false : helper.artistTileNormalDensity;
+
     Iterable<Color>? palette;
-    if (isMobile && forceDefaultStyleOnMobile) {
-      return Material(
-        color: Colors.transparent,
-        child: OpenContainer(
-          closedColor: Colors.transparent,
-          closedElevation: 0.0,
-          openColor: Colors.transparent,
-          openElevation: 0.0,
-          openBuilder: (context, close) => ArtistScreen(
-            artist: artist,
-            palette: palette,
-          ),
-          closedBuilder: (context, open) => SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Divider(
-                  height: 1.0,
-                  thickness: 1.0,
-                  indent: 76.0,
+
+    // Desktop
+    if (isDesktop) {
+      return Container(
+        height: height,
+        width: width,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Card(
+              clipBehavior: Clip.antiAlias,
+              margin: EdgeInsets.zero,
+              elevation: Theme.of(context).cardTheme.elevation ??
+                  kDefaultCardElevation,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(
+                  width / 2.0,
                 ),
-                InkWell(
-                  onTap: () async {
-                    try {
-                      if (palette == null) {
-                        final result = await PaletteGenerator.fromImageProvider(
-                            getAlbumArt(artist, small: true));
-                        palette = result.colors;
-                      }
-                      await precacheImage(getAlbumArt(artist), context);
-                      MobileNowPlayingController.instance.hide();
-                    } catch (exception, stacktrace) {
-                      debugPrint(exception.toString());
-                      debugPrint(stacktrace.toString());
-                    }
-                    if (Theme.of(context)
-                            .extension<AnimationDuration>()
-                            ?.medium ==
-                        Duration.zero) {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => ArtistScreen(
-                            artist: artist,
-                            palette: palette,
-                          ),
-                        ),
-                      );
-                    } else {
-                      open();
-                    }
-                  },
-                  child: Container(
-                    height: 64.0,
-                    width: MediaQuery.of(context).size.width,
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.symmetric(vertical: 4.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const SizedBox(width: 12.0),
-                        Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(28.0),
-                          ),
-                          elevation: Theme.of(context).cardTheme.elevation ??
-                              kDefaultCardElevation,
-                          margin: EdgeInsets.zero,
-                          child: Padding(
-                            padding: EdgeInsets.all(2.0),
-                            child: ClipOval(
-                              child: ExtendedImage(
-                                fit: BoxFit.cover,
-                                image: getAlbumArt(artist, small: true),
-                                height: 48.0,
-                                width: 48.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12.0),
-                        Expanded(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                artist.artistName.overflow,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                              const SizedBox(
-                                height: 2.0,
-                              ),
-                              Text(
-                                Language.instance.M_TRACKS_AND_N_ALBUMS
-                                    .replaceAll('M', '${artist.tracks.length}')
-                                    .replaceAll('N', '${artist.albums.length}'),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 12.0),
-                      ],
+              ),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Hero(
+                    tag: 'artist_art_${artist.artistName}',
+                    child: ClipOval(
+                      child: ExtendedImage(
+                        fit: BoxFit.cover,
+                        image: getAlbumArt(artist, small: true),
+                        height: width - 8.0,
+                        width: width - 8.0,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  Material(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        width / 2.0,
+                      ),
+                    ),
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () async {
+                        Playback.instance.interceptPositionChangeRebuilds =
+                            true;
+                        try {
+                          await precacheImage(getAlbumArt(artist), context);
+                        } catch (exception, stacktrace) {
+                          debugPrint(exception.toString());
+                          debugPrint(stacktrace.toString());
+                        }
+                        try {
+                          if (palette == null) {
+                            final result =
+                                await PaletteGenerator.fromImageProvider(
+                              getAlbumArt(
+                                artist,
+                                small: true,
+                              ),
+                            );
+                            palette = result.colors;
+                          }
+                        } catch (exception, stacktrace) {
+                          debugPrint(exception.toString());
+                          debugPrint(stacktrace.toString());
+                        }
+                        Navigator.of(context).push(
+                          MaterialRoute(
+                            builder: (context) => ArtistScreen(
+                              artist: artist,
+                              palette: palette,
+                            ),
+                          ),
+                        );
+                        Timer(const Duration(milliseconds: 400), () {
+                          Playback.instance.interceptPositionChangeRebuilds =
+                              false;
+                        });
+                      },
+                      child: Container(
+                        height: width,
+                        width: width,
+                        padding: EdgeInsets.all(4.0),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
+            Spacer(),
+            Text(
+              artist.artistName.overflow,
+              style: Theme.of(context).textTheme.titleSmall,
+              textAlign: TextAlign.left,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const Spacer(),
+          ],
         ),
       );
     }
-    return isDesktop
-        ? Container(
+
+    // Mobile
+    switch (artistElementsPerRow) {
+      case 1:
+        return Material(
+          color: Colors.transparent,
+          child: OpenContainer(
+            closedColor: Colors.transparent,
+            closedElevation: 0.0,
+            openColor: Colors.transparent,
+            openElevation: 0.0,
+            openBuilder: (context, close) => ArtistScreen(
+              artist: artist,
+              palette: palette,
+            ),
+            closedBuilder: (context, open) => SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Divider(
+                    height: 1.0,
+                    thickness: 1.0,
+                    indent: 76.0,
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      try {
+                        if (palette == null) {
+                          final result =
+                              await PaletteGenerator.fromImageProvider(
+                                  getAlbumArt(artist, small: true));
+                          palette = result.colors;
+                        }
+                        await precacheImage(getAlbumArt(artist), context);
+                        MobileNowPlayingController.instance.hide();
+                      } catch (exception, stacktrace) {
+                        debugPrint(exception.toString());
+                        debugPrint(stacktrace.toString());
+                      }
+                      if (Theme.of(context)
+                              .extension<AnimationDuration>()
+                              ?.medium ==
+                          Duration.zero) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ArtistScreen(
+                              artist: artist,
+                              palette: palette,
+                            ),
+                          ),
+                        );
+                      } else {
+                        open();
+                      }
+                    },
+                    child: Container(
+                      height: 64.0,
+                      width: MediaQuery.of(context).size.width,
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(width: 12.0),
+                          Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(28.0),
+                            ),
+                            elevation: Theme.of(context).cardTheme.elevation ??
+                                kDefaultCardElevation,
+                            margin: EdgeInsets.zero,
+                            child: Padding(
+                              padding: EdgeInsets.all(2.0),
+                              child: ClipOval(
+                                child: ExtendedImage(
+                                  fit: BoxFit.cover,
+                                  image: getAlbumArt(artist, small: true),
+                                  height: 48.0,
+                                  width: 48.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12.0),
+                          Expanded(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  artist.artistName.overflow,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
+                                ),
+                                const SizedBox(
+                                  height: 2.0,
+                                ),
+                                Text(
+                                  Language.instance.M_TRACKS_AND_N_ALBUMS
+                                      .replaceAll(
+                                          'M', '${artist.tracks.length}')
+                                      .replaceAll(
+                                          'N', '${artist.albums.length}'),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 12.0),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      default:
+        return Material(
+          color: Colors.transparent,
+          child: Container(
             height: height,
             width: width,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
               children: [
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  margin: EdgeInsets.zero,
-                  elevation: Theme.of(context).cardTheme.elevation ??
+                OpenContainer(
+                  closedElevation: Theme.of(context).cardTheme.elevation ??
                       kDefaultCardElevation,
-                  shape: RoundedRectangleBorder(
+                  openElevation: 0.0,
+                  closedColor: Theme.of(context).cardTheme.color ??
+                      Theme.of(context).cardColor,
+                  openColor: Theme.of(context).cardTheme.color ??
+                      Theme.of(context).cardColor,
+                  closedShape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
                       width / 2.0,
                     ),
                   ),
-                  child: Stack(
+                  openBuilder: (context, close) => ArtistScreen(
+                    artist: artist,
+                    palette: palette,
+                  ),
+                  closedBuilder: (context, open) => Stack(
                     alignment: Alignment.center,
                     children: [
-                      Hero(
-                        tag: 'artist_art_${artist.artistName}',
+                      Container(
+                        height: width,
+                        width: width,
+                        color: Theme.of(context).cardTheme.color,
+                        alignment: Alignment.center,
                         child: ClipOval(
                           child: ExtendedImage(
                             fit: BoxFit.cover,
-                            image: getAlbumArt(artist, small: true),
+                            image: getAlbumArt(
+                              artist,
+                              small: true,
+                              cacheWidth: (width - 8.0) *
+                                  MediaQuery.of(context).devicePixelRatio ~/
+                                  1,
+                            ),
                             height: width - 8.0,
                             width: width - 8.0,
                           ),
                         ),
                       ),
                       Material(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            width / 2.0,
-                          ),
-                        ),
                         color: Colors.transparent,
                         child: InkWell(
-                          onTap: () async {
-                            Playback.instance.interceptPositionChangeRebuilds =
-                                true;
-                            try {
-                              await precacheImage(getAlbumArt(artist), context);
-                            } catch (exception, stacktrace) {
-                              debugPrint(exception.toString());
-                              debugPrint(stacktrace.toString());
-                            }
-                            try {
-                              if (palette == null) {
-                                final result =
-                                    await PaletteGenerator.fromImageProvider(
-                                  getAlbumArt(
-                                    artist,
-                                    small: true,
-                                  ),
-                                );
-                                palette = result.colors;
-                              }
-                            } catch (exception, stacktrace) {
-                              debugPrint(exception.toString());
-                              debugPrint(stacktrace.toString());
-                            }
-                            Navigator.of(context).push(
-                              MaterialRoute(
-                                builder: (context) => ArtistScreen(
-                                  artist: artist,
-                                  palette: palette,
-                                ),
-                              ),
-                            );
-                            Timer(const Duration(milliseconds: 400), () {
-                              Playback.instance
-                                  .interceptPositionChangeRebuilds = false;
-                            });
-                          },
-                          child: Container(
-                            height: width,
-                            width: width,
-                            padding: EdgeInsets.all(4.0),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Spacer(),
-                Text(
-                  artist.artistName.overflow,
-                  style: Theme.of(context).textTheme.titleSmall,
-                  textAlign: TextAlign.left,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const Spacer(),
-              ],
-            ),
-          )
-        : helper.artistElementsPerRow == 1
-            ? Material(
-                color: Colors.transparent,
-                child: OpenContainer(
-                  closedColor: Colors.transparent,
-                  closedElevation: 0.0,
-                  openColor: Colors.transparent,
-                  openElevation: 0.0,
-                  openBuilder: (context, close) => ArtistScreen(
-                    artist: artist,
-                    palette: palette,
-                  ),
-                  closedBuilder: (context, open) => SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Divider(
-                          height: 1.0,
-                          thickness: 1.0,
-                          indent: 76.0,
-                        ),
-                        InkWell(
                           onTap: () async {
                             try {
                               if (palette == null) {
@@ -491,189 +537,31 @@ class ArtistTile extends StatelessWidget {
                             }
                           },
                           child: Container(
-                            height: 64.0,
-                            width: MediaQuery.of(context).size.width,
-                            alignment: Alignment.center,
-                            margin: const EdgeInsets.symmetric(vertical: 4.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const SizedBox(width: 12.0),
-                                Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(28.0),
-                                  ),
-                                  elevation:
-                                      Theme.of(context).cardTheme.elevation ??
-                                          kDefaultCardElevation,
-                                  margin: EdgeInsets.zero,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(2.0),
-                                    child: ClipOval(
-                                      child: ExtendedImage(
-                                        fit: BoxFit.cover,
-                                        image: getAlbumArt(artist, small: true),
-                                        height: 48.0,
-                                        width: 48.0,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 12.0),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        artist.artistName.overflow,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium,
-                                      ),
-                                      const SizedBox(
-                                        height: 2.0,
-                                      ),
-                                      Text(
-                                        Language.instance.M_TRACKS_AND_N_ALBUMS
-                                            .replaceAll(
-                                                'M', '${artist.tracks.length}')
-                                            .replaceAll(
-                                                'N', '${artist.albums.length}'),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(width: 12.0),
-                              ],
-                            ),
+                            height: width,
+                            width: width,
+                            padding: EdgeInsets.all(4.0),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            : Material(
-                color: Colors.transparent,
-                child: Container(
-                  height: height,
-                  width: width,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      OpenContainer(
-                        closedElevation:
-                            Theme.of(context).cardTheme.elevation ??
-                                kDefaultCardElevation,
-                        openElevation: 0.0,
-                        closedColor: Theme.of(context).cardTheme.color ??
-                            Theme.of(context).cardColor,
-                        openColor: Theme.of(context).cardTheme.color ??
-                            Theme.of(context).cardColor,
-                        closedShape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            width / 2.0,
-                          ),
-                        ),
-                        openBuilder: (context, close) => ArtistScreen(
-                          artist: artist,
-                          palette: palette,
-                        ),
-                        closedBuilder: (context, open) => Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Container(
-                              height: width,
-                              width: width,
-                              color: Theme.of(context).cardTheme.color,
-                              alignment: Alignment.center,
-                              child: ClipOval(
-                                child: ExtendedImage(
-                                  fit: BoxFit.cover,
-                                  image: getAlbumArt(
-                                    artist,
-                                    small: true,
-                                    cacheWidth: (width - 8.0) *
-                                        MediaQuery.of(context)
-                                            .devicePixelRatio ~/
-                                        1,
-                                  ),
-                                  height: width - 8.0,
-                                  width: width - 8.0,
-                                ),
-                              ),
-                            ),
-                            Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                onTap: () async {
-                                  try {
-                                    if (palette == null) {
-                                      final result = await PaletteGenerator
-                                          .fromImageProvider(
-                                              getAlbumArt(artist, small: true));
-                                      palette = result.colors;
-                                    }
-                                    await precacheImage(
-                                        getAlbumArt(artist), context);
-                                    MobileNowPlayingController.instance.hide();
-                                  } catch (exception, stacktrace) {
-                                    debugPrint(exception.toString());
-                                    debugPrint(stacktrace.toString());
-                                  }
-                                  if (Theme.of(context)
-                                          .extension<AnimationDuration>()
-                                          ?.medium ==
-                                      Duration.zero) {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => ArtistScreen(
-                                          artist: artist,
-                                          palette: palette,
-                                        ),
-                                      ),
-                                    );
-                                  } else {
-                                    open();
-                                  }
-                                },
-                                child: Container(
-                                  height: width,
-                                  width: width,
-                                  padding: EdgeInsets.all(4.0),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
-                      const Spacer(),
-                      Text(
-                        artist.artistName.overflow,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontSize:
-                                  helper.artistTileNormalDensity ? null : 14.0,
-                            ),
-                        textAlign: TextAlign.center,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const Spacer(),
                     ],
                   ),
                 ),
-              );
+                const Spacer(),
+                Text(
+                  artist.artistName.overflow,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontSize: artistTileNormalDensity ? null : 14.0,
+                      ),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const Spacer(),
+              ],
+            ),
+          ),
+        );
+    }
   }
 }
 
@@ -1646,7 +1534,11 @@ class ArtistScreenState extends State<ArtistScreen>
                                           foregroundColor: const [
                                             kFABDarkForegroundColor,
                                             kFABLightForegroundColor,
-                                          ][(secondary?.computeLuminance() ??
+                                          ][((secondary ??
+                                                              Theme.of(context)
+                                                                  .floatingActionButtonTheme
+                                                                  .backgroundColor)
+                                                          ?.computeLuminance() ??
                                                       0.0) >
                                                   0.5
                                               ? 1
@@ -1690,7 +1582,11 @@ class ArtistScreenState extends State<ArtistScreen>
                                           foregroundColor: const [
                                             kFABDarkForegroundColor,
                                             kFABLightForegroundColor,
-                                          ][(secondary?.computeLuminance() ??
+                                          ][((secondary ??
+                                                              Theme.of(context)
+                                                                  .floatingActionButtonTheme
+                                                                  .backgroundColor)
+                                                          ?.computeLuminance() ??
                                                       0.0) >
                                                   0.5
                                               ? 1

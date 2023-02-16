@@ -538,9 +538,13 @@ class PlaylistTileState extends State<PlaylistTile> {
                                 setState(() {});
                               }
                             },
-                            decoration: inputDecoration(
+                            style:
+                                Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                      fontSize: 16.0,
+                                    ),
+                            decoration: mobileUnderlinedInputDecoration(
                               context,
-                              '',
+                              Language.instance.PLAYLIST_NAME,
                             ),
                           ),
                         ),
@@ -1676,7 +1680,12 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                       foregroundColor: [
                                         kFABDarkForegroundColor,
                                         kFABLightForegroundColor,
-                                      ][(secondary?.computeLuminance() ?? 0.0) >
+                                      ][((secondary ??
+                                                          Theme.of(context)
+                                                              .floatingActionButtonTheme
+                                                              .backgroundColor)
+                                                      ?.computeLuminance() ??
+                                                  0.0) >
                                               0.5
                                           ? 1
                                           : 0],
@@ -1719,7 +1728,12 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                       foregroundColor: [
                                         kFABDarkForegroundColor,
                                         kFABLightForegroundColor,
-                                      ][(secondary?.computeLuminance() ?? 0.0) >
+                                      ][((secondary ??
+                                                          Theme.of(context)
+                                                              .floatingActionButtonTheme
+                                                              .backgroundColor)
+                                                      ?.computeLuminance() ??
+                                                  0.0) >
                                               0.5
                                           ? 1
                                           : 0],

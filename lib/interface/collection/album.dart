@@ -552,244 +552,255 @@ class AlbumTile extends StatelessWidget {
 
   Widget build(BuildContext context) {
     final helper = DimensionsHelper(context);
+
+    // Only for mobile:
+    final albumElementsPerRow =
+        forceDefaultStyleOnMobile ? 2 : helper.albumElementsPerRow;
+    final albumTileNormalDensity =
+        forceDefaultStyleOnMobile ? true : helper.albumTileNormalDensity;
+
     Iterable<Color>? palette;
-    if (isMobile && forceDefaultStyleOnMobile) {
-      return OpenContainer(
-        closedShape: Theme.of(context).cardTheme.shape ??
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.zero,
-            ),
-        transitionDuration:
-            Theme.of(context).extension<AnimationDuration>()?.medium ??
-                Duration.zero,
-        closedColor:
-            Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor,
-        closedElevation:
+
+    // Desktop
+    if (isDesktop) {
+      return Card(
+        clipBehavior: Clip.antiAlias,
+        elevation:
             Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
-        openElevation: 0.0,
-        openColor: Theme.of(context).scaffoldBackgroundColor,
-        closedBuilder: (context, open) => InkWell(
-          onLongPress: () => action(context),
-          onTap: () async {
-            try {
-              if (palette == null) {
-                final result = await PaletteGenerator.fromImageProvider(
-                  getAlbumArt(
-                    album,
-                    small: true,
-                  ),
-                );
-                palette = result.colors;
+        margin: EdgeInsets.zero,
+        child: ContextMenuArea(
+          onPressed: (e) async {
+            final result = await showMenu(
+              context: context,
+              constraints: BoxConstraints(
+                maxWidth: double.infinity,
+              ),
+              position: RelativeRect.fromLTRB(
+                e.position.dx,
+                e.position.dy,
+                MediaQuery.of(context).size.width,
+                MediaQuery.of(context).size.width,
+              ),
+              items: albumPopupMenuItems(
+                album,
+                context,
+              ),
+            );
+            await albumPopupMenuHandle(
+              context,
+              album,
+              result,
+            );
+          },
+          child: InkWell(
+            onTap: () async {
+              Playback.instance.interceptPositionChangeRebuilds = true;
+              try {
+                await precacheImage(getAlbumArt(album), context);
+              } catch (exception, stacktrace) {
+                debugPrint(exception.toString());
+                debugPrint(stacktrace.toString());
               }
-              await precacheImage(getAlbumArt(album), context);
-              MobileNowPlayingController.instance.hide();
-            } catch (exception, stacktrace) {
-              debugPrint(exception.toString());
-              debugPrint(stacktrace.toString());
-            }
-            if (Theme.of(context).extension<AnimationDuration>()?.medium ==
-                Duration.zero) {
+              try {
+                if (palette == null) {
+                  final result = await PaletteGenerator.fromImageProvider(
+                    getAlbumArt(
+                      album,
+                      small: true,
+                    ),
+                  );
+                  palette = result.colors;
+                }
+              } catch (exception, stacktrace) {
+                debugPrint(exception.toString());
+                debugPrint(stacktrace.toString());
+              }
               Navigator.of(context).push(
-                MaterialPageRoute(
+                MaterialRoute(
                   builder: (context) => AlbumScreen(
                     album: album,
                     palette: palette,
                   ),
                 ),
               );
-            } else {
-              open();
-            }
-          },
-          child: Container(
-            height: height,
-            width: width,
-            child: Column(
-              children: [
-                ClipRRect(
-                  borderRadius: () {
-                    if (Theme.of(context).cardTheme.shape
-                        is RoundedRectangleBorder) {
-                      return (Theme.of(context).cardTheme.shape
-                              as RoundedRectangleBorder)
-                          .borderRadius;
-                    }
-                  }(),
-                  child: Image(
-                    image: getAlbumArt(
-                      album,
-                      small: true,
-                      cacheWidth:
-                          width * MediaQuery.of(context).devicePixelRatio ~/ 1,
-                    ),
-                    fit: BoxFit.cover,
-                    height: width,
-                    width: width,
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: helper.albumTileNormalDensity ? 12.0 : 8.0,
-                    ),
-                    width: width,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          album.albumName.overflow,
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontSize: 18.0,
-                                    fontWeight: helper.albumTileNormalDensity
-                                        ? FontWeight.w700
-                                        : FontWeight.normal,
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .titleSmall
-                                        ?.color,
-                                  ),
-                          textAlign: TextAlign.left,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+              Timer(const Duration(milliseconds: 400), () {
+                Playback.instance.interceptPositionChangeRebuilds = false;
+              });
+            },
+            child: Container(
+              height: height,
+              width: width,
+              child: Column(
+                children: [
+                  ClipRect(
+                    child: ScaleOnHover(
+                      child: Hero(
+                        tag:
+                            'album_art_${album.albumName}_${album.albumArtistName}_${album.year}',
+                        child: ExtendedImage(
+                          image: getAlbumArt(album, small: true),
+                          fit: BoxFit.cover,
+                          height: width,
+                          width: width,
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 2),
-                          child: Text(
-                            [
-                              if (!['', kUnknownArtist]
-                                  .contains(album.albumArtistName))
-                                album.albumArtistName,
-                              if (!['', kUnknownYear].contains(album.year))
-                                album.year,
-                            ].join(' • '),
-                            style: Theme.of(context).textTheme.bodyMedium,
-                            maxLines: 1,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.0,
+                      ),
+                      width: width,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            album.albumName.overflow,
+                            style: Theme.of(context).textTheme.titleSmall,
                             textAlign: TextAlign.left,
+                            maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding: EdgeInsets.only(top: 2),
+                            child: Text(
+                              [
+                                if (!['', kUnknownArtist]
+                                    .contains(album.albumArtistName))
+                                  album.albumArtistName,
+                                if (!['', kUnknownYear].contains(album.year))
+                                  album.year,
+                              ].join(' • '),
+                              style: Theme.of(context).textTheme.bodySmall,
+                              maxLines: 1,
+                              textAlign: TextAlign.left,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-        openBuilder: (context, _) => AlbumScreen(
-          album: album,
-          palette: palette,
-        ),
       );
     }
-    return isDesktop
-        ? Card(
-            clipBehavior: Clip.antiAlias,
-            elevation:
-                Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
-            margin: EdgeInsets.zero,
-            child: ContextMenuArea(
-              onPressed: (e) async {
-                final result = await showMenu(
-                  context: context,
-                  constraints: BoxConstraints(
-                    maxWidth: double.infinity,
+
+    // Mobile
+    switch (albumElementsPerRow) {
+      case 1:
+        return Material(
+          color: Colors.transparent,
+          child: OpenContainer(
+            closedShape: Theme.of(context).cardTheme.shape ??
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.zero,
+                ),
+            transitionDuration:
+                Theme.of(context).extension<AnimationDuration>()?.medium ??
+                    Duration.zero,
+            closedColor: Colors.transparent,
+            closedElevation: 0.0,
+            openColor: Colors.transparent,
+            openElevation: 0.0,
+            openBuilder: (context, close) => AlbumScreen(
+              album: album,
+              palette: palette,
+            ),
+            closedBuilder: (context, open) => SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Divider(
+                    height: 1.0,
+                    thickness: 1.0,
+                    indent: 76.0,
                   ),
-                  position: RelativeRect.fromLTRB(
-                    e.position.dx,
-                    e.position.dy,
-                    MediaQuery.of(context).size.width,
-                    MediaQuery.of(context).size.width,
-                  ),
-                  items: albumPopupMenuItems(
-                    album,
-                    context,
-                  ),
-                );
-                await albumPopupMenuHandle(
-                  context,
-                  album,
-                  result,
-                );
-              },
-              child: InkWell(
-                onTap: () async {
-                  Playback.instance.interceptPositionChangeRebuilds = true;
-                  try {
-                    await precacheImage(getAlbumArt(album), context);
-                  } catch (exception, stacktrace) {
-                    debugPrint(exception.toString());
-                    debugPrint(stacktrace.toString());
-                  }
-                  try {
-                    if (palette == null) {
-                      final result = await PaletteGenerator.fromImageProvider(
-                        getAlbumArt(
-                          album,
-                          small: true,
-                        ),
-                      );
-                      palette = result.colors;
-                    }
-                  } catch (exception, stacktrace) {
-                    debugPrint(exception.toString());
-                    debugPrint(stacktrace.toString());
-                  }
-                  Navigator.of(context).push(
-                    MaterialRoute(
-                      builder: (context) => AlbumScreen(
-                        album: album,
-                        palette: palette,
-                      ),
-                    ),
-                  );
-                  Timer(const Duration(milliseconds: 400), () {
-                    Playback.instance.interceptPositionChangeRebuilds = false;
-                  });
-                },
-                child: Container(
-                  height: height,
-                  width: width,
-                  child: Column(
-                    children: [
-                      ClipRect(
-                        child: ScaleOnHover(
-                          child: Hero(
-                            tag:
-                                'album_art_${album.albumName}_${album.albumArtistName}_${album.year}',
-                            child: ExtendedImage(
-                              image: getAlbumArt(album, small: true),
-                              fit: BoxFit.cover,
-                              height: width,
-                              width: width,
+                  InkWell(
+                    onTap: () async {
+                      try {
+                        if (palette == null) {
+                          final result =
+                              await PaletteGenerator.fromImageProvider(
+                                  getAlbumArt(album, small: true));
+                          palette = result.colors;
+                        }
+                        await precacheImage(getAlbumArt(album), context);
+                        MobileNowPlayingController.instance.hide();
+                      } catch (exception, stacktrace) {
+                        debugPrint(exception.toString());
+                        debugPrint(stacktrace.toString());
+                      }
+                      if (Theme.of(context)
+                              .extension<AnimationDuration>()
+                              ?.medium ==
+                          Duration.zero) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => AlbumScreen(
+                              album: album,
+                              palette: palette,
                             ),
                           ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 8.0,
-                          ),
-                          width: width,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                album.albumName.overflow,
-                                style: Theme.of(context).textTheme.titleSmall,
-                                textAlign: TextAlign.left,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                        );
+                      } else {
+                        open();
+                      }
+                    },
+                    onLongPress: () => action(context),
+                    child: Container(
+                      height: 64.0,
+                      width: MediaQuery.of(context).size.width,
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(width: 12.0),
+                          Card(
+                            // EXCEPTION IN DESIGN.
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4.0),
+                            ),
+                            elevation: Theme.of(context).cardTheme.elevation ??
+                                kDefaultCardElevation,
+                            margin: EdgeInsets.zero,
+                            child: Padding(
+                              padding: EdgeInsets.all(2.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(4.0),
+                                child: ExtendedImage(
+                                  image: getAlbumArt(album, small: true),
+                                  height: 48.0,
+                                  width: 48.0,
+                                  borderRadius: BorderRadius.circular(4.0),
+                                ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 2),
-                                child: Text(
+                            ),
+                          ),
+                          const SizedBox(width: 12.0),
+                          Expanded(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  album.albumName.overflow,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
+                                ),
+                                const SizedBox(height: 2.0),
+                                Text(
                                   [
                                     if (!['', kUnknownArtist]
                                         .contains(album.albumArtistName))
@@ -798,300 +809,156 @@ class AlbumTile extends StatelessWidget {
                                         .contains(album.year))
                                       album.year,
                                   ].join(' • '),
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                  maxLines: 1,
-                                  textAlign: TextAlign.left,
                                   overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: Theme.of(context).textTheme.bodyMedium,
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
+                          const SizedBox(width: 12.0),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
-          )
-        : helper.albumElementsPerRow == 1
-            ? Material(
-                color: Colors.transparent,
-                child: OpenContainer(
-                  closedShape: Theme.of(context).cardTheme.shape ??
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.zero,
-                      ),
-                  transitionDuration: Theme.of(context)
-                          .extension<AnimationDuration>()
-                          ?.medium ??
-                      Duration.zero,
-                  closedColor: Colors.transparent,
-                  closedElevation: 0.0,
-                  openColor: Colors.transparent,
-                  openElevation: 0.0,
-                  openBuilder: (context, close) => AlbumScreen(
-                    album: album,
-                    palette: palette,
-                  ),
-                  closedBuilder: (context, open) => SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Divider(
-                          height: 1.0,
-                          thickness: 1.0,
-                          indent: 76.0,
-                        ),
-                        InkWell(
-                          onTap: () async {
-                            try {
-                              if (palette == null) {
-                                final result =
-                                    await PaletteGenerator.fromImageProvider(
-                                        getAlbumArt(album, small: true));
-                                palette = result.colors;
-                              }
-                              await precacheImage(getAlbumArt(album), context);
-                              MobileNowPlayingController.instance.hide();
-                            } catch (exception, stacktrace) {
-                              debugPrint(exception.toString());
-                              debugPrint(stacktrace.toString());
-                            }
-                            if (Theme.of(context)
-                                    .extension<AnimationDuration>()
-                                    ?.medium ==
-                                Duration.zero) {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => AlbumScreen(
-                                    album: album,
-                                    palette: palette,
-                                  ),
-                                ),
-                              );
-                            } else {
-                              open();
-                            }
-                          },
-                          onLongPress: () => action(context),
-                          child: Container(
-                            height: 64.0,
-                            width: MediaQuery.of(context).size.width,
-                            alignment: Alignment.center,
-                            margin: const EdgeInsets.symmetric(vertical: 4.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const SizedBox(width: 12.0),
-                                Card(
-                                  // EXCEPTION IN DESIGN.
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4.0),
-                                  ),
-                                  elevation:
-                                      Theme.of(context).cardTheme.elevation ??
-                                          kDefaultCardElevation,
-                                  margin: EdgeInsets.zero,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(2.0),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(4.0),
-                                      child: ExtendedImage(
-                                        image: getAlbumArt(album, small: true),
-                                        height: 48.0,
-                                        width: 48.0,
-                                        borderRadius:
-                                            BorderRadius.circular(4.0),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 12.0),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        album.albumName.overflow,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium,
-                                      ),
-                                      const SizedBox(height: 2.0),
-                                      Text(
-                                        [
-                                          if (!['', kUnknownArtist]
-                                              .contains(album.albumArtistName))
-                                            album.albumArtistName,
-                                          if (!['', kUnknownYear]
-                                              .contains(album.year))
-                                            album.year,
-                                        ].join(' • '),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(width: 12.0),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+          ),
+        );
+      default:
+        return OpenContainer(
+          closedShape: Theme.of(context).cardTheme.shape ??
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.zero,
+              ),
+          transitionDuration:
+              Theme.of(context).extension<AnimationDuration>()?.medium ??
+                  Duration.zero,
+          closedColor:
+              Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor,
+          closedElevation:
+              Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
+          openElevation: 0.0,
+          openColor: Theme.of(context).scaffoldBackgroundColor,
+          closedBuilder: (context, open) => InkWell(
+            onLongPress: () => action(context),
+            onTap: () async {
+              try {
+                if (palette == null) {
+                  final result = await PaletteGenerator.fromImageProvider(
+                    getAlbumArt(
+                      album,
+                      small: true,
+                    ),
+                  );
+                  palette = result.colors;
+                }
+                await precacheImage(getAlbumArt(album), context);
+                MobileNowPlayingController.instance.hide();
+              } catch (exception, stacktrace) {
+                debugPrint(exception.toString());
+                debugPrint(stacktrace.toString());
+              }
+              if (Theme.of(context).extension<AnimationDuration>()?.medium ==
+                  Duration.zero) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => AlbumScreen(
+                      album: album,
+                      palette: palette,
                     ),
                   ),
-                ),
-              )
-            : OpenContainer(
-                closedShape: Theme.of(context).cardTheme.shape ??
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
-                    ),
-                transitionDuration:
-                    Theme.of(context).extension<AnimationDuration>()?.medium ??
-                        Duration.zero,
-                closedColor: Theme.of(context).cardTheme.color ??
-                    Theme.of(context).cardColor,
-                closedElevation: Theme.of(context).cardTheme.elevation ??
-                    kDefaultCardElevation,
-                openElevation: 0.0,
-                openColor: Theme.of(context).scaffoldBackgroundColor,
-                closedBuilder: (context, open) => InkWell(
-                  onLongPress: () => action(context),
-                  onTap: () async {
-                    try {
-                      if (palette == null) {
-                        final result = await PaletteGenerator.fromImageProvider(
-                          getAlbumArt(
-                            album,
-                            small: true,
-                          ),
-                        );
-                        palette = result.colors;
+                );
+              } else {
+                open();
+              }
+            },
+            child: Container(
+              height: height,
+              width: width,
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: () {
+                      if (Theme.of(context).cardTheme.shape
+                          is RoundedRectangleBorder) {
+                        return (Theme.of(context).cardTheme.shape
+                                as RoundedRectangleBorder)
+                            .borderRadius;
                       }
-                      await precacheImage(getAlbumArt(album), context);
-                      MobileNowPlayingController.instance.hide();
-                    } catch (exception, stacktrace) {
-                      debugPrint(exception.toString());
-                      debugPrint(stacktrace.toString());
-                    }
-                    if (Theme.of(context)
-                            .extension<AnimationDuration>()
-                            ?.medium ==
-                        Duration.zero) {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => AlbumScreen(
-                            album: album,
-                            palette: palette,
-                          ),
-                        ),
-                      );
-                    } else {
-                      open();
-                    }
-                  },
-                  child: Container(
-                    height: height,
-                    width: width,
-                    child: Column(
-                      children: [
-                        ClipRRect(
-                          borderRadius: () {
-                            if (Theme.of(context).cardTheme.shape
-                                is RoundedRectangleBorder) {
-                              return (Theme.of(context).cardTheme.shape
-                                      as RoundedRectangleBorder)
-                                  .borderRadius;
-                            }
-                          }(),
-                          child: Image(
-                            image: getAlbumArt(
-                              album,
-                              small: true,
-                              cacheWidth: width *
-                                  MediaQuery.of(context).devicePixelRatio ~/
-                                  1,
-                            ),
-                            fit: BoxFit.cover,
-                            height: width,
-                            width: width,
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal:
-                                  helper.albumTileNormalDensity ? 12.0 : 8.0,
-                            ),
-                            width: width,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  album.albumName.overflow,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium
-                                      ?.copyWith(
-                                        fontSize: helper.albumTileNormalDensity
-                                            ? 18.0
-                                            : 14.0,
-                                        fontWeight:
-                                            helper.albumTileNormalDensity
-                                                ? FontWeight.w700
-                                                : FontWeight.normal,
-                                      ),
-                                  textAlign: TextAlign.left,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                if (helper.albumTileNormalDensity)
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 2),
-                                    child: Text(
-                                      [
-                                        if (!['', kUnknownArtist]
-                                            .contains(album.albumArtistName))
-                                          album.albumArtistName,
-                                        if (!['', kUnknownYear]
-                                            .contains(album.year))
-                                          album.year,
-                                      ].join(' • '),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                      maxLines: 1,
-                                      textAlign: TextAlign.left,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                    }(),
+                    child: Image(
+                      image: getAlbumArt(
+                        album,
+                        small: true,
+                        cacheWidth: width *
+                            MediaQuery.of(context).devicePixelRatio ~/
+                            1,
+                      ),
+                      fit: BoxFit.cover,
+                      height: width,
+                      width: width,
                     ),
                   ),
-                ),
-                openBuilder: (context, _) => AlbumScreen(
-                  album: album,
-                  palette: palette,
-                ),
-              );
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: albumTileNormalDensity ? 12.0 : 8.0,
+                      ),
+                      width: width,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            album.albumName.overflow,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                                  fontSize:
+                                      albumTileNormalDensity ? 18.0 : 14.0,
+                                  fontWeight: albumTileNormalDensity
+                                      ? FontWeight.w700
+                                      : FontWeight.normal,
+                                ),
+                            textAlign: TextAlign.left,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          if (albumTileNormalDensity)
+                            Padding(
+                              padding: EdgeInsets.only(top: 2),
+                              child: Text(
+                                [
+                                  if (!['', kUnknownArtist]
+                                      .contains(album.albumArtistName))
+                                    album.albumArtistName,
+                                  if (!['', kUnknownYear].contains(album.year))
+                                    album.year,
+                                ].join(' • '),
+                                style: Theme.of(context).textTheme.bodyMedium,
+                                maxLines: 1,
+                                textAlign: TextAlign.left,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          openBuilder: (context, _) => AlbumScreen(
+            album: album,
+            palette: palette,
+          ),
+        );
+    }
   }
 }
 
@@ -2237,7 +2104,11 @@ class AlbumScreenState extends State<AlbumScreen>
                                           foregroundColor: const [
                                             kFABDarkForegroundColor,
                                             kFABLightForegroundColor,
-                                          ][(secondary?.computeLuminance() ??
+                                          ][((secondary ??
+                                                              Theme.of(context)
+                                                                  .floatingActionButtonTheme
+                                                                  .backgroundColor)
+                                                          ?.computeLuminance() ??
                                                       0.0) >
                                                   0.5
                                               ? 1
@@ -2281,7 +2152,11 @@ class AlbumScreenState extends State<AlbumScreen>
                                           foregroundColor: const [
                                             kFABDarkForegroundColor,
                                             kFABLightForegroundColor,
-                                          ][(secondary?.computeLuminance() ??
+                                          ][((secondary ??
+                                                              Theme.of(context)
+                                                                  .floatingActionButtonTheme
+                                                                  .backgroundColor)
+                                                          ?.computeLuminance() ??
                                                       0.0) >
                                                   0.5
                                               ? 1
