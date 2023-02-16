@@ -616,7 +616,7 @@ class PlaylistTileState extends State<PlaylistTile> {
         if (!reactToSecondaryPress) return;
         if (!widget.enableTrailingButton) return;
         if (widget.playlist.id < 0) return;
-        final result = await showMenu(
+        final result = await showCustomMenu(
           context: context,
           constraints: BoxConstraints(
             maxWidth: double.infinity,
@@ -793,9 +793,8 @@ class PlaylistTileState extends State<PlaylistTile> {
                         width: 64.0,
                         height: 64.0,
                         alignment: Alignment.center,
-                        child: ContextMenuButton<int>(
+                        child: CustomPopupMenuButton<int>(
                           onSelected: (result) => handleSelection(result),
-                          color: Theme.of(context).iconTheme.color,
                           itemBuilder: (_) => items,
                         ),
                       ),
@@ -1234,7 +1233,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                               (e) async {
                                                             if (!reactToSecondaryPress)
                                                               return;
-                                                            await showMenu(
+                                                            await showCustomMenu(
                                                               elevation: 4.0,
                                                               context: context,
                                                               position:

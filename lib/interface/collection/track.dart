@@ -107,7 +107,7 @@ class _TrackTabState extends State<TrackTab> {
                           }
                         },
                         onSecondaryPress: (index, position) async {
-                          final result = await showMenu(
+                          final result = await showCustomMenu(
                             context: context,
                             constraints: BoxConstraints(
                               maxWidth: double.infinity,
@@ -518,7 +518,7 @@ class TrackTileState extends State<TrackTile> {
               onPointerUp: (e) async {
                 if (widget.disableContextMenu) return;
                 if (!reactToSecondaryPress) return;
-                var result = await showMenu(
+                var result = await showCustomMenu(
                   context: context,
                   constraints: BoxConstraints(
                     maxWidth: double.infinity,
@@ -659,7 +659,7 @@ class TrackTileState extends State<TrackTile> {
                           width: 64.0,
                           height: 56.0,
                           alignment: Alignment.center,
-                          child: ContextMenuButton<int>(
+                          child: CustomPopupMenuButton<int>(
                             onSelected: (result) {
                               trackPopupMenuHandle(
                                 context,
@@ -669,7 +669,6 @@ class TrackTileState extends State<TrackTile> {
                                 recursivelyPopNavigatorOnDeleteIf: () => true,
                               );
                             },
-                            color: Theme.of(context).iconTheme.color,
                             itemBuilder: (_) => trackPopupMenuItems(
                               widget.track,
                               context,

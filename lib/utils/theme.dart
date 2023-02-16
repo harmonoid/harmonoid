@@ -69,6 +69,7 @@ import 'package:flutter/services.dart';
 ThemeData createM3Theme({
   required ColorScheme colorScheme,
   required ThemeMode mode,
+  AnimationDuration animationDuration = const AnimationDuration(),
 }) {
   // TODO(@alexmercerind): WIP
   final isLightMode = mode == ThemeMode.light;
@@ -163,7 +164,6 @@ ThemeData createM3Theme({
     0.11,
   );
 
-  final animationDuration = AnimationDuration();
   final searchBarTheme = SearchBarThemeData(
     borderRadius: BorderRadius.circular(28.0),
     accentColor: colorScheme.primary,
@@ -376,6 +376,7 @@ ThemeData createM3Theme({
 ThemeData createM2Theme({
   required Color color,
   required ThemeMode mode,
+  AnimationDuration animationDuration = const AnimationDuration(),
 }) {
   final isLightMode = mode == ThemeMode.light;
   final isDesktopPlatform =
@@ -525,7 +526,6 @@ ThemeData createM2Theme({
   final popupMenuColor = isLightMode ? Colors.white : const Color(0xFF282828);
   final snackBarColor = isLightMode ? Colors.white : const Color(0xFF282828);
 
-  final animationDuration = AnimationDuration();
   final searchBarTheme = SearchBarThemeData(
     borderRadius: BorderRadius.circular(4.0),
     accentColor: color,
@@ -812,6 +812,7 @@ ThemeData createM2Theme({
     popupMenuTheme: PopupMenuThemeData(
       elevation: 4.0,
       color: popupMenuColor,
+      surfaceTintColor: colorScheme.surfaceTint,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
     ),
     appBarTheme: AppBarTheme(
@@ -1210,6 +1211,14 @@ class AnimationDuration extends ThemeExtension<AnimationDuration> {
     this.slow = const Duration(milliseconds: 450),
   });
 
+  factory AnimationDuration.fromJson(Map<String, dynamic> json) {
+    return AnimationDuration(
+      fast: Duration(milliseconds: json['fast'] as int),
+      medium: Duration(milliseconds: json['medium'] as int),
+      slow: Duration(milliseconds: json['slow'] as int),
+    );
+  }
+
   factory AnimationDuration.disabled() {
     return AnimationDuration(
       fast: Duration.zero,
@@ -1245,6 +1254,32 @@ class AnimationDuration extends ThemeExtension<AnimationDuration> {
       medium: medium * (1 - t) + other.medium * t,
       slow: slow * (1 - t) + other.slow * t,
     );
+  }
+
+  @override
+  operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is AnimationDuration &&
+        other.fast == fast &&
+        other.medium == medium &&
+        other.slow == slow;
+  }
+
+  @override
+  int get hashCode => fast.hashCode ^ medium.hashCode ^ slow.hashCode;
+
+  @override
+  String toString() {
+    return 'AnimationDuration(fast: $fast, medium: $medium, slow: $slow)';
+  }
+
+  Map<String, int> toJson() {
+    return {
+      'fast': fast.inMilliseconds,
+      'medium': medium.inMilliseconds,
+      'slow': slow.inMilliseconds,
+    };
   }
 }
 

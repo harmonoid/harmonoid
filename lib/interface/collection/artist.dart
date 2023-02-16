@@ -1061,7 +1061,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                             if (!reactToSecondaryPress)
                                                               return;
                                                             var result =
-                                                                await showMenu(
+                                                                await showCustomMenu(
                                                               context: context,
                                                               constraints:
                                                                   BoxConstraints(
@@ -1237,7 +1237,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                         Alignment
                                                                             .center,
                                                                     child:
-                                                                        ContextMenuButton<
+                                                                        CustomPopupMenuButton<
                                                                             int>(
                                                                       onSelected:
                                                                           (result) {
@@ -1252,10 +1252,6 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                               .isEmpty,
                                                                         );
                                                                       },
-                                                                      color: Theme.of(
-                                                                              context)
-                                                                          .iconTheme
-                                                                          .color,
                                                                       itemBuilder:
                                                                           (_) =>
                                                                               trackPopupMenuItems(

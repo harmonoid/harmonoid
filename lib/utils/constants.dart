@@ -26,6 +26,7 @@ const double kMobileNowPlayingBarHeight = 66.0;
 
 const double kDesktopAppBarHeight = 64.0;
 const double kDesktopNowPlayingBarHeight = 84.0;
+const double kCenterLayoutWidth = 960.0;
 
 const int kAlbumTileSubTitleThreshold = 2;
 const int kArtistTileSubTitleThreshold = 2;

@@ -450,7 +450,7 @@ packages:
     description:
       path: media_kit
       ref: main
-      resolved-ref: "4b02f9caba41df042d59f44b2f65ce8fde2cf1c9"
+      resolved-ref: "21eb88d28f555866f18d1db09f2ebd79f1248487"
       url: "https://github.com/alexmercerind/media_kit.git"
     source: git
     version: "0.0.1"
@@ -459,7 +459,7 @@ packages:
     description:
       path: media_kit_libs_windows_audio
       ref: main
-      resolved-ref: "4b02f9caba41df042d59f44b2f65ce8fde2cf1c9"
+      resolved-ref: "21eb88d28f555866f18d1db09f2ebd79f1248487"
       url: "https://github.com/alexmercerind/media_kit.git"
     source: git
     version: "1.0.0"

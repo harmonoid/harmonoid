@@ -31,6 +31,7 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/constants.dart';
+import 'package:harmonoid/utils/custom_popup_menu.dart';
 import 'package:harmonoid/utils/keyboard_shortcuts.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
@@ -39,6 +40,8 @@ import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/interface/settings/about.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/web/web.dart';
+
+export 'package:harmonoid/utils/custom_popup_menu.dart';
 
 import 'package:harmonoid/main.dart';
 
@@ -508,7 +511,7 @@ class _SortBarState extends State<SortBar> {
           GestureDetector(
             key: _key0,
             onTap: () async {
-              final value = await showMenu(
+              final value = await showCustomMenu(
                 elevation: 4.0,
                 context: context,
                 constraints: BoxConstraints(
@@ -759,7 +762,7 @@ class _SortBarState extends State<SortBar> {
           GestureDetector(
             key: _key1,
             onTap: () async {
-              final value = await showMenu(
+              final value = await showCustomMenu(
                 elevation: 4.0,
                 context: context,
                 constraints: BoxConstraints(
@@ -1375,164 +1378,6 @@ class ClosedTile extends StatelessWidget {
   }
 }
 
-class ContextMenuButton<T> extends StatefulWidget {
-  const ContextMenuButton({
-    Key? key,
-    required this.itemBuilder,
-    this.initialValue,
-    this.onSelected,
-    this.onCanceled,
-    this.tooltip,
-    this.elevation,
-    this.padding = const EdgeInsets.all(8.0),
-    this.child,
-    this.icon,
-    this.iconSize,
-    this.offset = Offset.zero,
-    this.enabled = true,
-    this.shape,
-    this.color,
-    this.enableFeedback,
-    this.highlightColor,
-    this.splashColor,
-    this.hoverColor,
-  })  : assert(
-          !(child != null && icon != null),
-          'You can only pass [child] or [icon], not both.',
-        ),
-        super(key: key);
-
-  final PopupMenuItemBuilder<T> itemBuilder;
-
-  final T? initialValue;
-
-  final PopupMenuItemSelected<T>? onSelected;
-
-  final PopupMenuCanceled? onCanceled;
-
-  final String? tooltip;
-
-  final double? elevation;
-
-  final EdgeInsetsGeometry padding;
-
-  final Widget? child;
-
-  final Widget? icon;
-
-  final Offset offset;
-
-  final bool enabled;
-
-  final ShapeBorder? shape;
-
-  final Color? color;
-
-  final bool? enableFeedback;
-
-  final double? iconSize;
-
-  final Color? highlightColor;
-
-  final Color? splashColor;
-
-  final Color? hoverColor;
-
-  @override
-  ContextMenuButtonState<T> createState() => ContextMenuButtonState<T>();
-}
-
-class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
-  void showButtonMenu() {
-    final RenderBox button = context.findRenderObject()! as RenderBox;
-    final RenderBox overlay =
-        Navigator.of(context).overlay!.context.findRenderObject()! as RenderBox;
-    final RelativeRect position = RelativeRect.fromRect(
-      Rect.fromPoints(
-        button.localToGlobal(widget.offset, ancestor: overlay),
-        button.localToGlobal(
-            button.size.bottomRight(Offset.zero) + widget.offset,
-            ancestor: overlay),
-      ),
-      Offset.zero & overlay.size,
-    );
-    final List<PopupMenuEntry<T>> items = widget.itemBuilder(context);
-
-    if (items.isNotEmpty) {
-      showMenu<T?>(
-        context: context,
-        elevation: Theme.of(context).popupMenuTheme.elevation,
-        items: items,
-        initialValue: widget.initialValue,
-        position: position,
-        shape: widget.shape ??
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(4.0),
-              ),
-            ),
-        constraints: BoxConstraints(
-          maxWidth: double.infinity,
-        ),
-        color: Theme.of(context).popupMenuTheme.color,
-      ).then<void>((T? newValue) {
-        if (!mounted) return null;
-        if (newValue == null) {
-          widget.onCanceled?.call();
-          return null;
-        }
-        widget.onSelected?.call(newValue);
-      });
-    }
-  }
-
-  bool get _canRequestFocus {
-    final NavigationMode mode = MediaQuery.maybeOf(context)?.navigationMode ??
-        NavigationMode.traditional;
-    switch (mode) {
-      case NavigationMode.traditional:
-        return widget.enabled;
-      case NavigationMode.directional:
-        return true;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final bool enableFeedback = widget.enableFeedback ??
-        PopupMenuTheme.of(context).enableFeedback ??
-        true;
-
-    assert(debugCheckHasMaterialLocalizations(context));
-
-    if (widget.child != null)
-      return Tooltip(
-        message:
-            widget.tooltip ?? MaterialLocalizations.of(context).showMenuTooltip,
-        child: InkWell(
-          highlightColor: widget.highlightColor,
-          splashColor: widget.splashColor,
-          hoverColor: widget.hoverColor,
-          onTap: widget.enabled ? showButtonMenu : null,
-          canRequestFocus: _canRequestFocus,
-          child: widget.child,
-          enableFeedback: enableFeedback,
-        ),
-      );
-
-    return IconButton(
-      onPressed: widget.enabled ? showButtonMenu : null,
-      icon: widget.icon ??
-          Icon(
-            Icons.more_vert,
-            size: 20.0,
-            color: Theme.of(context).iconTheme.color,
-          ),
-      splashRadius: 20.0,
-    );
-  }
-}
-
 class DesktopCaptionBar extends StatelessWidget {
   final hideMaximizeAndRestoreButton;
   final Color? color;
@@ -1792,6 +1637,7 @@ extension GlobalKeyExtension on GlobalKey {
 class ScrollableSlider extends StatelessWidget {
   final double min;
   final double max;
+  final bool enabled;
   final double value;
   final Color? color;
   final Color? secondaryColor;
@@ -1805,6 +1651,7 @@ class ScrollableSlider extends StatelessWidget {
     Key? key,
     required this.min,
     required this.max,
+    this.enabled = true,
     required this.value,
     this.color,
     this.secondaryColor,
@@ -1844,21 +1691,28 @@ class ScrollableSlider extends StatelessWidget {
               : RoundSliderOverlayShape(overlayRadius: 12.0),
           overlayColor:
               (color ?? Theme.of(context).colorScheme.primary).withOpacity(0.4),
-          thumbColor: (color ?? Theme.of(context).colorScheme.primary),
-          activeTrackColor: (color ?? Theme.of(context).colorScheme.primary),
-          inactiveTrackColor: (mobile && isMobile)
-              ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
-              : inferSliderInactiveTrackColor
-                  ? ((secondaryColor != null
-                          ? (secondaryColor?.computeLuminance() ?? 0.0) < 0.5
-                          : Theme.of(context).brightness == Brightness.dark)
-                      ? Colors.white.withOpacity(0.4)
-                      : Colors.black.withOpacity(0.2))
-                  : Colors.white.withOpacity(0.4),
+          thumbColor: enabled
+              ? (color ?? Theme.of(context).colorScheme.primary)
+              : Theme.of(context).disabledColor,
+          activeTrackColor: enabled
+              ? (color ?? Theme.of(context).colorScheme.primary)
+              : Theme.of(context).disabledColor,
+          inactiveTrackColor: enabled
+              ? ((mobile && isMobile)
+                  ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
+                  : inferSliderInactiveTrackColor
+                      ? ((secondaryColor != null
+                              ? (secondaryColor?.computeLuminance() ?? 0.0) <
+                                  0.5
+                              : Theme.of(context).brightness == Brightness.dark)
+                          ? Colors.white.withOpacity(0.4)
+                          : Colors.black.withOpacity(0.2))
+                      : Colors.white.withOpacity(0.4))
+              : Theme.of(context).disabledColor.withOpacity(0.2),
         ),
         child: Slider(
           value: value,
-          onChanged: onChanged,
+          onChanged: enabled ? onChanged : null,
           min: min,
           max: max,
         ),
@@ -2012,7 +1866,7 @@ class CollectionSortButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Tooltip(
       message: Language.instance.SORT,
-      child: ContextMenuButton<dynamic>(
+      child: CustomPopupMenuButton<dynamic>(
         offset: Offset.fromDirection(pi / 2, 64.0),
         icon: Icon(
           Icons.sort_by_alpha,
@@ -2622,7 +2476,7 @@ class CollectionMoreButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ContextMenuButton<int>(
+    return CustomPopupMenuButton<int>(
       padding: EdgeInsets.zero,
       offset: Offset.fromDirection(pi / 2, 64.0),
       icon: Icon(

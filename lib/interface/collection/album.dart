@@ -580,7 +580,7 @@ class AlbumTile extends StatelessWidget {
         margin: EdgeInsets.zero,
         child: ContextMenuArea(
           onPressed: (e) async {
-            final result = await showMenu(
+            final result = await showCustomMenu(
               context: context,
               constraints: BoxConstraints(
                 maxWidth: double.infinity,
@@ -1480,7 +1480,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                             if (!reactToSecondaryPress)
                                                               return;
                                                             final result =
-                                                                await showMenu(
+                                                                await showCustomMenu(
                                                               context: context,
                                                               constraints:
                                                                   BoxConstraints(
@@ -1669,7 +1669,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                         Alignment
                                                                             .center,
                                                                     child:
-                                                                        ContextMenuButton<
+                                                                        CustomPopupMenuButton<
                                                                             int>(
                                                                       onSelected:
                                                                           (result) {
@@ -1684,10 +1684,6 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                               .isEmpty,
                                                                         );
                                                                       },
-                                                                      color: Theme.of(
-                                                                              context)
-                                                                          .iconTheme
-                                                                          .color,
                                                                       itemBuilder:
                                                                           (_) =>
                                                                               trackPopupMenuItems(

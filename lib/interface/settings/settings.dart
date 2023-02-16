@@ -18,15 +18,14 @@ import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/interface/settings/stats.dart';
-import 'package:harmonoid/interface/settings/theme.dart';
 import 'package:harmonoid/interface/settings/about.dart';
+import 'package:harmonoid/interface/settings/display.dart';
 import 'package:harmonoid/interface/settings/indexing.dart';
 import 'package:harmonoid/interface/settings/language.dart';
 import 'package:harmonoid/interface/settings/experimental.dart';
 import 'package:harmonoid/interface/settings/miscellaneous.dart';
 import 'package:harmonoid/interface/settings/now_playing_screen.dart';
 import 'package:harmonoid/interface/settings/android_permissions.dart';
-import 'package:harmonoid/interface/settings/now_playing_visuals.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -48,19 +47,27 @@ class Settings extends StatelessWidget {
                         kDesktopAppBarHeight,
                   ),
                   child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        IndexingSetting(),
-                        StatsSetting(),
-                        ThemeSetting(),
-                        MiscellaneousSetting(),
-                        LanguageSetting(),
-                        NowPlayingVisualsSetting(),
-                        NowPlayingScreenSetting(),
-                        ExperimentalSetting(),
-                        const SizedBox(height: 8.0),
-                      ],
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        constraints: const BoxConstraints(
+                          maxWidth: kCenterLayoutWidth,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            IndexingSetting(),
+                            StatsSetting(),
+                            DisplaySetting(),
+                            LanguageSetting(),
+                            NowPlayingScreenSetting(),
+                            MiscellaneousSetting(),
+                            ExperimentalSetting(),
+                            const SizedBox(height: 8.0),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -174,7 +181,7 @@ class Settings extends StatelessWidget {
                         const Divider(thickness: 1.0),
                         StatsSetting(),
                         const Divider(thickness: 1.0),
-                        ThemeSetting(),
+                        DisplaySetting(),
                         const Divider(thickness: 1.0),
                         LanguageSetting(),
                         const Divider(thickness: 1.0),
