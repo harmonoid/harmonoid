@@ -31,38 +31,17 @@ class MissingDirectoriesScreen extends StatefulWidget {
 
 class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
     with SingleTickerProviderStateMixin {
-  final ScrollController controller = ScrollController();
-  late AnimationController visible;
   bool loaded = false;
   List<Directory> missing = [];
 
   @override
   void initState() {
     super.initState();
-    visible = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-    );
     WidgetsBinding.instance.addPostFrameCallback((_) => refresh());
-    controller.addListener(listener);
-  }
-
-  void listener() {
-    final breakpoint = 180.0 - MediaQuery.of(context).padding.top;
-    if (controller.offset > breakpoint && visible.isDismissed) {
-      setState(() {
-        visible.forward();
-      });
-    } else if (controller.offset <= breakpoint && visible.isCompleted) {
-      setState(() {
-        visible.reverse();
-      });
-    }
   }
 
   @override
   void dispose() {
-    controller.removeListener(listener);
     super.dispose();
   }
 
@@ -132,7 +111,7 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                 alignment: Alignment.centerLeft,
                 child: Text(
                   e.path.overflow,
-                  style: Theme.of(context).textTheme.headlineMedium,
+                  style: Theme.of(context).textTheme.bodyLarge,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -167,7 +146,6 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                         ),
                         content: Text(
                           Language.instance.INDEXING_ALREADY_GOING_ON_SUBTITLE,
-                          style: Theme.of(context).textTheme.displaySmall,
                         ),
                         actions: [
                           TextButton(
@@ -193,7 +171,6 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                         ),
                         content: Text(
                           Language.instance.LAST_COLLECTION_DIRECTORY_REMOVED,
-                          style: Theme.of(subContext).textTheme.displaySmall,
                         ),
                         actions: [
                           TextButton(
@@ -277,7 +254,7 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                         elevation: Theme.of(context).cardTheme.elevation ??
                             kDefaultCardElevation,
                         child: Container(
-                          constraints: BoxConstraints(
+                          constraints: const BoxConstraints(
                             maxWidth: 12 / 6 * 720.0,
                             maxHeight: 720.0,
                           ),
@@ -304,8 +281,7 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                                           Language.instance.FOLDERS_NOT_FOUND,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .displayLarge
-                                              ?.copyWith(fontSize: 24.0),
+                                              .headlineSmall,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -315,7 +291,7 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                                               .FOLDERS_NOT_FOUND_SUBTITLE,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .displaySmall,
+                                              .bodyMedium,
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ],
@@ -389,8 +365,10 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                     },
                     child: const Icon(Icons.settings),
                     tooltip: Language.instance.GO_TO_SETTINGS,
-                    foregroundColor: Theme.of(context).iconTheme.color,
-                    backgroundColor: Theme.of(context).cardColor,
+                    foregroundColor:
+                        Theme.of(context).colorScheme.onSecondaryContainer,
+                    backgroundColor:
+                        Theme.of(context).colorScheme.secondaryContainer,
                   ),
                   const SizedBox(height: 16.0),
                   FloatingActionButton(
@@ -404,57 +382,39 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
               resizeToAvoidBottomInset: true,
               body: NowPlayingBarScrollHideNotifier(
                 child: CustomScrollView(
-                  controller: controller,
                   slivers: [
-                    SliverAppBar(
-                      foregroundColor:
-                          Theme.of(context).appBarTheme.foregroundColor,
-                      backgroundColor:
-                          Theme.of(context).appBarTheme.backgroundColor,
-                      leading: IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.arrow_back),
+                    Theme(
+                      data: Theme.of(context).copyWith(
+                        // Change [_LargeScrollUnderFlexibleConfig.expandedTextStyle].
+                        textTheme: Theme.of(context).textTheme.copyWith(
+                              headlineMedium:
+                                  Theme.of(context).textTheme.headlineSmall,
+                            ),
                       ),
-                      expandedHeight: 200.0,
-                      snap: false,
-                      pinned: true,
-                      floating: false,
-                      forceElevated: true,
-                      title: FadeTransition(
-                        opacity: visible,
-                        child: Text(Language.instance.FOLDERS_NOT_FOUND),
-                      ),
-                      flexibleSpace: FlexibleSpaceBar(
-                        background: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                Language.instance.FOLDERS_NOT_FOUND,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge
-                                    ?.copyWith(
-                                      fontSize: 24.0,
-                                    ),
-                              ),
-                              const SizedBox(height: 12.0),
-                              Text(
-                                Language.instance.FOLDERS_NOT_FOUND_SUBTITLE
-                                    .replaceAll('\n', ' '),
-                                style: Theme.of(context).textTheme.displaySmall,
-                              ),
-                              const SizedBox(height: 24.0),
-                            ],
-                          ),
+                      // TODO(@alexmercerind): https://github.com/flutter/flutter/issues/120516
+                      child: SliverAppBar.large(
+                        leading: IconButton(
+                          onPressed: refresh,
+                          icon: const Icon(Icons.arrow_back),
+                        ),
+                        title: Text(
+                          Language.instance.FOLDERS_NOT_FOUND,
                         ),
                       ),
                     ),
                     SliverList(
                       delegate: SliverChildListDelegate.fixed(
                         [
+                          const SizedBox(height: 16.0),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Text(
+                              Language.instance.FOLDERS_NOT_FOUND_SUBTITLE
+                                  .replaceAll('\n', ' '),
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ),
                           const SizedBox(height: 16.0),
                           ...iterable,
                           const SizedBox(height: 16.0),
