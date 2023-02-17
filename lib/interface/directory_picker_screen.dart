@@ -33,7 +33,7 @@ class DirectoryPickerScreen extends StatefulWidget {
 class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
   final GlobalKey<NavigatorState> key = GlobalKey<NavigatorState>();
   final ValueNotifier<List<String>> stack = ValueNotifier(<String>['.']);
-  final ScrollController controller = ScrollController();
+  final ScrollController addressBarScrollController = ScrollController();
   List<Directory>? volumes;
   bool exit = false;
 
@@ -48,17 +48,22 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
     return root;
   }
 
-  Future<void> scrollAddressBarToRight() async {
+  void scrollAddressBarToRight() async {
+    await Future.delayed(const Duration(milliseconds: 400));
     final duration =
         Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero;
     try {
-      if (controller.hasClients) {
+      debugPrint(
+        addressBarScrollController.position.maxScrollExtent.toString(),
+      );
+      if (addressBarScrollController.hasClients) {
         if (duration == Duration.zero) {
-          controller.jumpTo(controller.position.maxScrollExtent);
+          addressBarScrollController.jumpTo(
+            addressBarScrollController.position.maxScrollExtent,
+          );
         } else {
-          Future.delayed(const Duration(milliseconds: 400));
-          controller.animateTo(
-            controller.position.maxScrollExtent,
+          addressBarScrollController.animateTo(
+            addressBarScrollController.position.maxScrollExtent,
             duration: duration,
             curve: Curves.easeInOut,
           );
@@ -224,7 +229,7 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
 
   @override
   void dispose() {
-    controller.dispose();
+    addressBarScrollController.dispose();
     super.dispose();
   }
 
@@ -263,10 +268,8 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
           title: Text(
             Language.instance.ADD_NEW_FOLDER,
           ),
-        ),
-        body: Column(
-          children: [
-            Container(
+          bottom: PreferredSize(
+            child: Container(
               height: 64.0,
               width: MediaQuery.of(context).size.width,
               child: ValueListenableBuilder<List<String>>(
@@ -296,7 +299,7 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
                                 key: ValueKey(
                                   'directory_screen_picker/address_bar',
                                 ),
-                                controller: controller,
+                                controller: addressBarScrollController,
                                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                                 scrollDirection: Axis.horizontal,
                                 itemBuilder: (context, i) => Container(
@@ -326,6 +329,14 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
                           ),
               ),
             ),
+            preferredSize: Size(
+              MediaQuery.of(context).size.width,
+              64.0,
+            ),
+          ),
+        ),
+        body: Column(
+          children: [
             Expanded(
               child: Navigator(
                 key: key,
