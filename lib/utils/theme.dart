@@ -124,9 +124,6 @@ ThemeData createM3Theme({
           bodyLarge: TextStyle(
             fontSize: 14.0, // Default: `16.0`
           ),
-          labelLarge: TextStyle(
-            letterSpacing: isDesktopPlatform ? 1.0 : 0.0, // Default: `0.0`
-          ),
         ),
       )
       .apply(fontFamily: fontFamily);
@@ -393,13 +390,13 @@ ThemeData createM2Theme({
   // Apply the modifications to the original Material Design 2014 typography.
   final textColors = TextColors(
     isDesktopPlatform ? Colors.black : Colors.black.withOpacity(0.87),
-    isDesktopPlatform ? Colors.white : Colors.white.withOpacity(0.87),
+    isDesktopPlatform ? Colors.white : Colors.white.withOpacity(1.00),
     isDesktopPlatform
         ? Colors.black.withOpacity(0.87)
         : Colors.black.withOpacity(0.54),
     isDesktopPlatform
         ? Colors.white.withOpacity(0.87)
-        : Colors.white.withOpacity(0.70),
+        : Colors.white.withOpacity(0.87),
   );
   final primaryTextColor =
       isLightMode ? textColors.lightPrimary : textColors.darkPrimary;
@@ -453,7 +450,7 @@ ThemeData createM2Theme({
             fontWeight: FontWeight.w400, // Default: `FontWeight.w500`
           ),
           labelLarge: TextStyle(
-            letterSpacing: isDesktopPlatform ? 1.0 : 0.0, // Default: `0.0`,
+            letterSpacing: 1.0, // Default: `0.0`,
           ),
         ),
       )
@@ -548,7 +545,7 @@ ThemeData createM2Theme({
   MaterialRoute.animationDuration = animationDuration;
 
   return ThemeData(
-    useMaterial3: true,
+    useMaterial3: true, // REMOVE ONCE MATERIAL 3 IS RELEASED.
 
     // TYPOGRAPHY
 
@@ -932,6 +929,55 @@ ThemeData createM2Theme({
         ),
       );
     }(),
+
+    // SWITCH
+
+    switchTheme: SwitchThemeData(
+      thumbColor: MaterialStateProperty.resolveWith(
+        (Set<MaterialState> states) {
+          if (states.contains(MaterialState.disabled)) {
+            if (states.contains(MaterialState.selected)) {
+              return colorScheme.surface.withOpacity(1.0);
+            }
+            return colorScheme.onSurface.withOpacity(0.38);
+          }
+          if (states.contains(MaterialState.selected)) {
+            if (states.contains(MaterialState.pressed)) {
+              return Color.lerp(
+                Colors.white,
+                colorScheme.primaryContainer,
+                0.2,
+              );
+            }
+            if (states.contains(MaterialState.hovered)) {
+              return Color.lerp(
+                Colors.white,
+                colorScheme.primaryContainer,
+                0.2,
+              );
+            }
+            if (states.contains(MaterialState.focused)) {
+              return Color.lerp(
+                Colors.white,
+                colorScheme.primaryContainer,
+                0.2,
+              );
+            }
+            return colorScheme.onPrimary;
+          }
+          if (states.contains(MaterialState.pressed)) {
+            return colorScheme.onSurfaceVariant;
+          }
+          if (states.contains(MaterialState.hovered)) {
+            return colorScheme.onSurfaceVariant;
+          }
+          if (states.contains(MaterialState.focused)) {
+            return colorScheme.onSurfaceVariant;
+          }
+          return colorScheme.outline;
+        },
+      ),
+    ),
 
     // DIALOG
 
