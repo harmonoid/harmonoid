@@ -128,8 +128,14 @@ class _AlbumTabState extends State<AlbumTab> {
                     ? DraggableScrollbar.semicircle(
                         heightScrollThumb: 56.0,
                         labelConstraints: BoxConstraints.tightFor(
-                          width: 120.0,
-                          height: 32.0,
+                          width:
+                              Collection.instance.albumsSort == AlbumsSort.aToZ
+                                  ? 72.0
+                                  : 136.0,
+                          height:
+                              Collection.instance.albumsSort == AlbumsSort.aToZ
+                                  ? 72.0
+                                  : 32.0,
                         ),
                         labelTextBuilder: (offset) {
                           final perTileHeight = helper.albumElementsPerRow > 1
@@ -152,7 +158,8 @@ class _AlbumTabState extends State<AlbumTab> {
                               {
                                 return Text(
                                   album.albumName[0].toUpperCase(),
-                                  style: Theme.of(context).textTheme.bodyLarge,
+                                  style:
+                                      Theme.of(context).textTheme.displaySmall,
                                 );
                               }
                             case AlbumsSort.dateAdded:
@@ -1035,7 +1042,7 @@ class AlbumScreenState extends State<AlbumScreen>
     }
     // Animation, assign values with some delay or animate with [ScrollController].
     else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
         if (isDesktop) {
           Future.delayed(duration, () {
             setState(() {
@@ -1049,12 +1056,13 @@ class AlbumScreenState extends State<AlbumScreen>
             color = widget.palette?.first;
             secondary = widget.palette?.last;
           });
-          controller.animateTo(
+          await Future.delayed(const Duration(milliseconds: 50));
+          await controller.animateTo(
             0.0,
             duration: duration,
-            curve: Curves.easeInOut,
+            curve: Curves.easeIn,
           );
-          Future.delayed(duration + const Duration(milliseconds: 100));
+          await Future.delayed(const Duration(milliseconds: 50));
           setState(() {
             detailsLoaded = true;
             physics = null;

@@ -873,7 +873,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
     }
     // Animation, assign values with some delay or animate with [ScrollController].
     else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
         if (isDesktop) {
           Future.delayed(duration, () {
             setState(() {
@@ -887,12 +887,13 @@ class PlaylistScreenState extends State<PlaylistScreen>
             color = widget.palette?.first;
             secondary = widget.palette?.last;
           });
-          controller.animateTo(
+          await Future.delayed(const Duration(milliseconds: 50));
+          await controller.animateTo(
             0.0,
             duration: duration,
-            curve: Curves.easeInOut,
+            curve: Curves.easeIn,
           );
-          Future.delayed(duration + const Duration(milliseconds: 100));
+          await Future.delayed(const Duration(milliseconds: 50));
           setState(() {
             detailsLoaded = true;
             physics = null;

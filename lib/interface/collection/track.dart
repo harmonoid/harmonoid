@@ -347,8 +347,12 @@ class _TrackTabState extends State<TrackTab> {
                   ? DraggableScrollbar.semicircle(
                       heightScrollThumb: 56.0,
                       labelConstraints: BoxConstraints.tightFor(
-                        width: 120.0,
-                        height: 32.0,
+                        width: collection.tracksSort == TracksSort.aToZ
+                            ? 72.0
+                            : 136.0,
+                        height: collection.tracksSort == TracksSort.aToZ
+                            ? 72.0
+                            : 32.0,
                       ),
                       labelTextBuilder: (offset) {
                         final index = (offset -
@@ -366,7 +370,7 @@ class _TrackTabState extends State<TrackTab> {
                             {
                               return Text(
                                 track.trackName[0].toUpperCase(),
-                                style: Theme.of(context).textTheme.bodyLarge,
+                                style: Theme.of(context).textTheme.displaySmall,
                               );
                             }
                           case TracksSort.dateAdded:

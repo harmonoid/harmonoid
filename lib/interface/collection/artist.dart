@@ -127,8 +127,12 @@ class _ArtistTabState extends State<ArtistTab> {
                     ? DraggableScrollbar.semicircle(
                         heightScrollThumb: 56.0,
                         labelConstraints: BoxConstraints.tightFor(
-                          width: 120.0,
-                          height: 32.0,
+                          width: collection.artistsSort == ArtistsSort.aToZ
+                              ? 72.0
+                              : 120.0,
+                          height: collection.artistsSort == ArtistsSort.aToZ
+                              ? 72.0
+                              : 32.0,
                         ),
                         labelTextBuilder: (offset) {
                           final perTileHeight = helper.artistElementsPerRow > 1
@@ -151,7 +155,8 @@ class _ArtistTabState extends State<ArtistTab> {
                               {
                                 return Text(
                                   artist.artistName[0].toUpperCase(),
-                                  style: Theme.of(context).textTheme.bodyLarge,
+                                  style:
+                                      Theme.of(context).textTheme.displaySmall,
                                 );
                               }
                             case ArtistsSort.dateAdded:
@@ -658,7 +663,7 @@ class ArtistScreenState extends State<ArtistScreen>
     }
     // Animation, assign values with some delay or animate with [ScrollController].
     else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
         if (isDesktop) {
           Future.delayed(duration, () {
             setState(() {
@@ -672,12 +677,13 @@ class ArtistScreenState extends State<ArtistScreen>
             color = widget.palette?.first;
             secondary = widget.palette?.last;
           });
-          controller.animateTo(
+          await Future.delayed(const Duration(milliseconds: 50));
+          await controller.animateTo(
             0.0,
             duration: duration,
-            curve: Curves.easeInOut,
+            curve: Curves.easeIn,
           );
-          Future.delayed(duration + const Duration(milliseconds: 100));
+          await Future.delayed(const Duration(milliseconds: 50));
           setState(() {
             detailsLoaded = true;
             physics = null;

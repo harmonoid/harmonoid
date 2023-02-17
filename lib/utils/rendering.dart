@@ -596,28 +596,31 @@ Future<void> trackPopupMenuHandle(
       case 4:
         {
           Iterable<Color>? palette;
-          late final Album album;
-          for (final item in Collection.instance.albums) {
-            if (item.albumName == track.albumName && item.year == track.year) {
-              album = item;
-              break;
-            }
-          }
-          if (isMobile) {
+          final album = Collection.instance.albumsSet.lookup(
+            Album(
+              albumName: track.albumName,
+              year: track.year,
+              albumArtistName: track.albumArtistName,
+              albumHashCodeParameters:
+                  Configuration.instance.albumHashCodeParameters,
+            ),
+          );
+          if (album != null) {
             final result = await PaletteGenerator.fromImageProvider(
               getAlbumArt(album, small: true),
             );
             palette = result.colors;
-          }
-          Playback.instance.interceptPositionChangeRebuilds = true;
-          Navigator.of(context).push(
-            MaterialRoute(
-              builder: (context) => AlbumScreen(
-                album: album,
-                palette: palette,
+            await precacheImage(getAlbumArt(album), context);
+            Playback.instance.interceptPositionChangeRebuilds = true;
+            Navigator.of(context).push(
+              MaterialRoute(
+                builder: (context) => AlbumScreen(
+                  album: album,
+                  palette: palette,
+                ),
               ),
-            ),
-          );
+            );
+          }
           Timer(
             const Duration(milliseconds: 400),
             () {

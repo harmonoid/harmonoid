@@ -42,7 +42,7 @@ class _DisplaySettingState extends State<DisplaySetting> {
             if (isDesktop) ...[
               Padding(
                 padding: EdgeInsets.symmetric(
-                  vertical: 8.0,
+                  vertical: 16.0,
                   horizontal: 16.0,
                 ),
                 child: Text(
@@ -87,6 +87,53 @@ class _DisplaySettingState extends State<DisplaySetting> {
               ),
               const SizedBox(height: 8.0),
             ],
+            if (isMobile) ...[
+              ListTile(
+                onTap: () async {
+                  await showDialog(
+                    context: context,
+                    builder: (context) => StatefulBuilder(
+                      builder: (context, setState) => SimpleDialog(
+                        title: Text(Language.instance.SETTING_THEME_TITLE),
+                        children: ThemeMode.values
+                            .map(
+                              (e) => RadioListTile<ThemeMode>(
+                                title: Text(
+                                  {
+                                    ThemeMode.system:
+                                        Language.instance.THEME_MODE_SYSTEM,
+                                    ThemeMode.light:
+                                        Language.instance.THEME_MODE_LIGHT,
+                                    ThemeMode.dark:
+                                        Language.instance.THEME_MODE_DARK,
+                                  }[e]!,
+                                ),
+                                groupValue: visuals.themeMode,
+                                onChanged: (e) {
+                                  if (e != null) {
+                                    visuals.update(themeMode: e);
+                                    Navigator.of(context).maybePop();
+                                  }
+                                },
+                                value: e,
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  );
+                },
+                title: Text(Language.instance.SETTING_THEME_TITLE),
+                subtitle: Text(
+                  {
+                    ThemeMode.system: Language.instance.THEME_MODE_SYSTEM,
+                    ThemeMode.light: Language.instance.THEME_MODE_LIGHT,
+                    ThemeMode.dark: Language.instance.THEME_MODE_DARK,
+                  }[visuals.themeMode]!,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+            ],
             Padding(
               padding: EdgeInsets.only(
                 top: 2.0,
@@ -105,8 +152,7 @@ class _DisplaySettingState extends State<DisplaySetting> {
               ),
             ),
             Container(
-              width:
-                  isDesktop ? 540.0 : MediaQuery.of(context).size.width - 32.0,
+              width: isDesktop ? 540.0 : MediaQuery.of(context).size.width,
               alignment: Alignment.center,
               padding: isDesktop ? EdgeInsets.only(top: 2.0) : null,
               child: Padding(
@@ -177,51 +223,6 @@ class _DisplaySettingState extends State<DisplaySetting> {
                 style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
               ),
             ),
-            if (isMobile)
-              ListTile(
-                onTap: () async {
-                  await showDialog(
-                    context: context,
-                    builder: (context) => StatefulBuilder(
-                      builder: (context, setState) => SimpleDialog(
-                        title: Text(Language.instance.SETTING_THEME_TITLE),
-                        children: ThemeMode.values
-                            .map(
-                              (e) => RadioListTile<ThemeMode>(
-                                title: Text(
-                                  {
-                                    ThemeMode.system:
-                                        Language.instance.THEME_MODE_SYSTEM,
-                                    ThemeMode.light:
-                                        Language.instance.THEME_MODE_LIGHT,
-                                    ThemeMode.dark:
-                                        Language.instance.THEME_MODE_DARK,
-                                  }[e]!,
-                                ),
-                                groupValue: visuals.themeMode,
-                                onChanged: (e) {
-                                  if (e != null) {
-                                    visuals.update(themeMode: e);
-                                    Navigator.of(context).maybePop();
-                                  }
-                                },
-                                value: e,
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ),
-                  );
-                },
-                title: Text(Language.instance.SETTING_THEME_TITLE),
-                subtitle: Text(
-                  {
-                    ThemeMode.system: Language.instance.THEME_MODE_SYSTEM,
-                    ThemeMode.light: Language.instance.THEME_MODE_LIGHT,
-                    ThemeMode.dark: Language.instance.THEME_MODE_DARK,
-                  }[visuals.themeMode]!,
-                ),
-              ),
             CorrectedSwitchListTile(
               title: Language
                   .instance.CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC_TITLE,
