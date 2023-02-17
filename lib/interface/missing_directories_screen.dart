@@ -392,13 +392,24 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                             ),
                       ),
                       // TODO(@alexmercerind): https://github.com/flutter/flutter/issues/120516
-                      child: SliverAppBar.large(
+                      child: SliverAppBar(
                         leading: IconButton(
                           onPressed: refresh,
                           icon: const Icon(Icons.arrow_back),
                         ),
-                        title: Text(
-                          Language.instance.FOLDERS_NOT_FOUND,
+                        floating: false,
+                        pinned: true,
+                        snap: false,
+                        stretch: false,
+                        stretchTriggerOffset: 100.0,
+                        toolbarHeight:
+                            LargeScrollUnderFlexibleConfig.collapsedHeight,
+                        collapsedHeight:
+                            LargeScrollUnderFlexibleConfig.collapsedHeight,
+                        expandedHeight:
+                            LargeScrollUnderFlexibleConfig.expandedHeight,
+                        flexibleSpace: ScrollUnderFlexibleSpace(
+                          title: Text(Language.instance.FOLDERS_NOT_FOUND),
                         ),
                       ),
                     ),

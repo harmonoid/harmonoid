@@ -140,24 +140,30 @@ class Settings extends StatelessWidget {
           : NowPlayingBarScrollHideNotifier(
               child: CustomScrollView(
                 slivers: [
-                  SliverAppBar.large(
+                  SliverAppBar(
                     leading: IconButton(
-                      onPressed: Navigator.of(context).pop,
-                      icon: Icon(Icons.arrow_back),
-                      color: Theme.of(context).appBarTheme.iconTheme?.color,
-                      splashRadius: 20.0,
+                      onPressed: Navigator.of(context).maybePop,
+                      icon: const Icon(Icons.arrow_back),
                     ),
-                    // TODO(@alexmercerind): https://github.com/flutter/flutter/issues/120516
-                    title: Padding(
-                      padding: EdgeInsets.only(
-                        left: 16.0,
-                      ),
-                      child: Text(Language.instance.SETTING),
+                    floating: false,
+                    pinned: true,
+                    snap: false,
+                    stretch: false,
+                    stretchTriggerOffset: 100.0,
+                    toolbarHeight:
+                        LargeScrollUnderFlexibleConfig.collapsedHeight,
+                    collapsedHeight:
+                        LargeScrollUnderFlexibleConfig.collapsedHeight,
+                    expandedHeight:
+                        LargeScrollUnderFlexibleConfig.expandedHeight,
+                    flexibleSpace: ScrollUnderFlexibleSpace(
+                      title: Text(Language.instance.SETTING),
                     ),
                   ),
                   SliverList(
                     delegate: SliverChildListDelegate(
                       [
+                        const SizedBox(height: 16.0),
                         IndexingSetting(),
                         const Divider(thickness: 1.0),
                         ThemeSetting(),

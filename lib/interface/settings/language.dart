@@ -48,12 +48,8 @@ class LanguageSetting extends StatelessWidget {
                                   setState(() => value = e);
                                 }
                               },
-                              title: Text(
-                                data.name,
-                                style: isDesktop
-                                    ? Theme.of(context).textTheme.bodyLarge
-                                    : null,
-                              ),
+                              title: Text(data.name),
+                              subtitle: Text(data.country),
                             ),
                           )
                           .toList(),
