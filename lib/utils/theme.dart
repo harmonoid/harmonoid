@@ -548,6 +548,8 @@ ThemeData createM2Theme({
   MaterialRoute.animationDuration = animationDuration;
 
   return ThemeData(
+    useMaterial3: true,
+
     // TYPOGRAPHY
 
     textTheme: theme,
@@ -686,7 +688,7 @@ ThemeData createM2Theme({
           return null;
         }),
         // Keep the Material Design 2 shadow.
-        shadowColor: const MaterialStatePropertyAll(Colors.transparent),
+        shadowColor: const MaterialStatePropertyAll(Colors.black),
         elevation: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.disabled)) {
             return 0.0;

@@ -173,11 +173,10 @@ class PaletteGenerator with Diagnosticable {
   final List<PaletteTarget> targets;
 
   Iterable<Color>? get colors {
-    return null;
-    // if (paletteColors.isEmpty) {
-    //   return null;
-    // }
-    // return paletteColors.map((e) => e.color);
+    if (paletteColors.isEmpty) {
+      return null;
+    }
+    return paletteColors.map((e) => e.color);
   }
 
   PaletteColor? get vibrantColor => selectedSwatches[PaletteTarget.vibrant];
