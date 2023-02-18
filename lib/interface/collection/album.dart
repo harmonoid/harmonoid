@@ -19,6 +19,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
+import 'package:known_extents_list_view_builder/known_extents_list_view_builder.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
@@ -136,7 +137,8 @@ class _AlbumTabState extends State<AlbumTab> {
                               : kAlbumTileListViewHeight;
                           final index = (offset -
                                   (kMobileSearchBarHeight +
-                                      2 * tileMargin(context) +
+                                      56.0 +
+                                      tileMargin(context) +
                                       MediaQuery.of(context).padding.top)) ~/
                               perTileHeight;
                           final album = data
@@ -177,36 +179,44 @@ class _AlbumTabState extends State<AlbumTab> {
                         backgroundColor: Theme.of(context).cardTheme.color ??
                             Theme.of(context).cardColor,
                         controller: controller,
-                        child: ListView(
+                        child: KnownExtentsListView.builder(
                           controller: controller,
-                          // itemExtent: helper.albumElementsPerRow > 1
-                          //     ? (helper.albumTileHeight + tileMargin(context))
-                          //     : kAlbumTileListViewHeight,
+                          itemExtents: [
+                            56.0,
+                            ...data.widgets.map(
+                              (e) => helper.albumElementsPerRow > 1
+                                  ? (helper.albumTileHeight +
+                                      tileMargin(context))
+                                  : kAlbumTileListViewHeight,
+                            ),
+                          ],
                           padding: EdgeInsets.only(
                             top: MediaQuery.of(context).padding.top +
                                 kMobileSearchBarHeight +
                                 tileMargin(context),
                           ),
-                          children: [
-                            Container(
-                              height: 56.0,
-                              padding: EdgeInsets.symmetric(
-                                horizontal: tileMargin(context),
-                              ),
-                              alignment: Alignment.centerRight,
-                              child: Row(
-                                children: [
-                                  const SizedBox(width: 8.0),
-                                  Text(
-                                    '${Collection.instance.albums.length} ${Language.instance.ALBUM}',
-                                  ),
-                                  const Spacer(),
-                                  MobileSortByButton(tab: kAlbumTabIndex),
-                                ],
-                              ),
-                            ),
-                            ...data.widgets,
-                          ],
+                          itemBuilder: (context, i) {
+                            if (i == 0) {
+                              return Container(
+                                height: 56.0,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: tileMargin(context),
+                                ),
+                                alignment: Alignment.centerRight,
+                                child: Row(
+                                  children: [
+                                    const SizedBox(width: 8.0),
+                                    Text(
+                                      '${Collection.instance.albums.length} ${Language.instance.ALBUM}',
+                                    ),
+                                    const Spacer(),
+                                    MobileSortByButton(tab: kAlbumTabIndex),
+                                  ],
+                                ),
+                              );
+                            }
+                            return data.widgets[i - 1];
+                          },
                         ),
                       )
                     : Container(

@@ -17,17 +17,18 @@ import 'package:animations/animations.dart';
 import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
-import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:known_extents_list_view_builder/known_extents_list_view_builder.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
+import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/widgets.dart';
-import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class ArtistTab extends StatefulWidget {
@@ -135,7 +136,8 @@ class _ArtistTabState extends State<ArtistTab> {
                               : kArtistTileListViewHeight;
                           final index = (offset -
                                   (kMobileSearchBarHeight +
-                                      2 * tileMargin(context) +
+                                      56.0 +
+                                      tileMargin(context) +
                                       MediaQuery.of(context).padding.top)) ~/
                               perTileHeight;
                           final artist = data
@@ -170,17 +172,44 @@ class _ArtistTabState extends State<ArtistTab> {
                         backgroundColor: Theme.of(context).cardTheme.color ??
                             Theme.of(context).cardColor,
                         controller: controller,
-                        child: ListView(
+                        child: KnownExtentsListView.builder(
                           controller: controller,
-                          itemExtent: helper.artistElementsPerRow > 1
-                              ? (helper.artistTileHeight + tileMargin(context))
-                              : kArtistTileListViewHeight,
+                          itemExtents: [
+                            56.0,
+                            ...data.widgets.map(
+                              (e) => helper.artistElementsPerRow > 1
+                                  ? (helper.artistTileHeight +
+                                      tileMargin(context))
+                                  : kArtistTileListViewHeight,
+                            ),
+                          ],
                           padding: EdgeInsets.only(
                             top: MediaQuery.of(context).padding.top +
                                 kMobileSearchBarHeight +
                                 tileMargin(context),
                           ),
-                          children: data.widgets,
+                          itemBuilder: (context, i) {
+                            if (i == 0) {
+                              return Container(
+                                height: 56.0,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: tileMargin(context),
+                                ),
+                                alignment: Alignment.centerRight,
+                                child: Row(
+                                  children: [
+                                    const SizedBox(width: 8.0),
+                                    Text(
+                                      '${Collection.instance.artists.length} ${Language.instance.ARTIST}',
+                                    ),
+                                    const Spacer(),
+                                    MobileSortByButton(tab: kArtistTabIndex),
+                                  ],
+                                ),
+                              );
+                            }
+                            return data.widgets[i - 1];
+                          },
                         ),
                       )
                     : Container(

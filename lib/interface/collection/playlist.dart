@@ -47,7 +47,7 @@ class PlaylistTab extends StatelessWidget {
               top: isDesktop
                   ? 20.0
                   : kMobileSearchBarHeight +
-                      2 * tileMargin(context) +
+                      tileMargin(context) +
                       MediaQuery.of(context).padding.top,
             ),
             children: <Widget>[
@@ -183,6 +183,23 @@ class PlaylistTab extends StatelessWidget {
               if (isDesktop)
                 const SizedBox(
                   height: 16.0,
+                )
+              else if (isMobile)
+                Container(
+                  height: 56.0,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: tileMargin(context),
+                  ),
+                  alignment: Alignment.centerRight,
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 8.0),
+                      Text(
+                        '${Collection.instance.playlists.length} ${Language.instance.PLAYLIST}',
+                      ),
+                      const Spacer(),
+                    ],
+                  ),
                 ),
               ...Collection.instance.playlists
                   .map(
@@ -388,6 +405,12 @@ class PlaylistTileState extends State<PlaylistTile> {
           await showDialog(
             context: context,
             builder: (subContext) => AlertDialog(
+              contentPadding: const EdgeInsets.fromLTRB(
+                24.0,
+                20.0,
+                24.0,
+                12.0,
+              ),
               title: Text(
                 Language.instance.COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER,
               ),

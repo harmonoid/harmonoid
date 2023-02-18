@@ -15,6 +15,7 @@ import 'package:desktop/desktop.dart' as desktop;
 import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
+import 'package:known_extents_list_view_builder/known_extents_list_view_builder.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
@@ -352,7 +353,8 @@ class _TrackTabState extends State<TrackTab> {
                       labelTextBuilder: (offset) {
                         final index = (offset -
                                 (kMobileSearchBarHeight +
-                                    2 * tileMargin(context) +
+                                    56.0 +
+                                    tileMargin(context) +
                                     MediaQuery.of(context).padding.top)) ~/
                             kMobileTrackTileHeight;
                         final track = collection.tracks[index.clamp(
@@ -391,33 +393,53 @@ class _TrackTabState extends State<TrackTab> {
                       backgroundColor: Theme.of(context).cardTheme.color ??
                           Theme.of(context).cardColor,
                       controller: controller,
-                      child: ListView(
+                      child: KnownExtentsListView.builder(
                         controller: controller,
-                        itemExtent: kMobileTrackTileHeight,
+                        itemExtents: [
+                          56.0,
+                          ...collection.tracks.map(
+                            (e) => kMobileTrackTileHeight,
+                          ),
+                        ],
                         padding: EdgeInsets.only(
                           top: MediaQuery.of(context).padding.top +
                               kMobileSearchBarHeight +
                               tileMargin(context),
                         ),
-                        children: collection.tracks
-                            .asMap()
-                            .entries
-                            .map(
-                              (track) => Configuration.instance
-                                      .addLibraryToPlaylistWhenPlayingFromTracksTab
-                                  ? TrackTile(
-                                      index: track.key,
-                                      track: track.value,
-                                    )
-                                  : TrackTile(
-                                      index: 0,
-                                      track: track.value,
-                                      group: [
-                                        track.value,
-                                      ],
-                                    ),
-                            )
-                            .toList(),
+                        itemBuilder: (context, i) {
+                          if (i == 0) {
+                            return Container(
+                              height: 56.0,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: tileMargin(context),
+                              ),
+                              alignment: Alignment.centerRight,
+                              child: Row(
+                                children: [
+                                  const SizedBox(width: 8.0),
+                                  Text(
+                                    '${Collection.instance.tracks.length} ${Language.instance.TRACK}',
+                                  ),
+                                  const Spacer(),
+                                  MobileSortByButton(tab: kTrackTabIndex),
+                                ],
+                              ),
+                            );
+                          }
+                          return Configuration.instance
+                                  .addLibraryToPlaylistWhenPlayingFromTracksTab
+                              ? TrackTile(
+                                  index: i - 1,
+                                  track: collection.tracks[i - 1],
+                                )
+                              : TrackTile(
+                                  index: 0,
+                                  track: collection.tracks[i - 1],
+                                  group: [
+                                    collection.tracks[i - 1],
+                                  ],
+                                );
+                        },
                       ),
                     )
                   : Container(
