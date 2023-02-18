@@ -503,6 +503,7 @@ class _SortBarState extends State<SortBar> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          // TODO(@alexmercerind): Genre support.
           const SizedBox(width: 8.0),
           GestureDetector(
             key: _key0,
@@ -2293,150 +2294,258 @@ class MobileSortByButton extends StatefulWidget {
 }
 
 class _MobileSortByButtonState extends State<MobileSortByButton> {
-  // User selected value.
-  dynamic value;
+  Future<void> handle(dynamic value) async {
+    if (value is AlbumsSort) {
+      if (Collection.instance.albumsSort == value) {
+        return;
+      }
+      await Collection.instance.sort(albumsSort: value);
+      await Configuration.instance.save(albumsSort: value);
+    }
+    if (value is TracksSort) {
+      if (Collection.instance.tracksSort == value) {
+        return;
+      }
+      await Collection.instance.sort(tracksSort: value);
+      await Configuration.instance.save(tracksSort: value);
+    }
+    if (value is ArtistsSort) {
+      if (Collection.instance.artistsSort == value) {
+        return;
+      }
+      await Collection.instance.sort(artistsSort: value);
+      await Configuration.instance.save(artistsSort: value);
+    }
+    if (value is GenresSort) {
+      if (Collection.instance.genresSort == value) {
+        return;
+      }
+      await Collection.instance.sort(genresSort: value);
+      await Configuration.instance.save(genresSort: value);
+    }
+    if (value is OrderType) {
+      switch (widget.tab) {
+        case kAlbumTabIndex:
+          {
+            if (Collection.instance.albumsOrderType == value) {
+              return;
+            }
+            await Collection.instance.sort(albumsOrderType: value);
+            await Configuration.instance.save(albumsOrderType: value);
+            break;
+          }
+        case kTrackTabIndex:
+          {
+            if (Collection.instance.tracksOrderType == value) {
+              return;
+            }
+            await Collection.instance.sort(tracksOrderType: value);
+            await Configuration.instance.save(tracksOrderType: value);
+            break;
+          }
+        case kArtistTabIndex:
+          {
+            if (Collection.instance.artistsOrderType == value) {
+              return;
+            }
+            await Collection.instance.sort(artistsOrderType: value);
+            await Configuration.instance.save(artistsOrderType: value);
+            break;
+          }
+        case kGenreTabIndex:
+          {
+            if (Collection.instance.genresOrderType == value) {
+              return;
+            }
+            await Collection.instance.sort(genresOrderType: value);
+            await Configuration.instance.save(genresOrderType: value);
+            break;
+          }
+      }
+    }
+    debugPrint(setStateCallback.toString());
+    try {
+      setStateCallback?.call(() {
+        debugPrint('setState');
+      });
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
+  }
+
+  void Function(void Function())? setStateCallback;
+
+  List<CustomCheckedPopupMenuItem> get sort => {
+        kAlbumTabIndex: <CustomCheckedPopupMenuItem>[
+          CustomCheckedPopupMenuItem(
+            onTap: () => handle(AlbumsSort.aToZ),
+            checked: Collection.instance.albumsSort == AlbumsSort.aToZ,
+            value: AlbumsSort.aToZ,
+            padding: EdgeInsets.zero,
+            child: Text(
+              Language.instance.A_TO_Z,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+          CustomCheckedPopupMenuItem(
+            onTap: () => handle(AlbumsSort.dateAdded),
+            checked: Collection.instance.albumsSort == AlbumsSort.dateAdded,
+            value: AlbumsSort.dateAdded,
+            padding: EdgeInsets.zero,
+            child: Text(
+              Language.instance.DATE_ADDED,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+          CustomCheckedPopupMenuItem(
+            onTap: () => handle(AlbumsSort.year),
+            checked: Collection.instance.albumsSort == AlbumsSort.year,
+            value: AlbumsSort.year,
+            padding: EdgeInsets.zero,
+            child: Text(
+              Language.instance.YEAR,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+        ],
+        kTrackTabIndex: <CustomCheckedPopupMenuItem>[
+          CustomCheckedPopupMenuItem(
+            onTap: () => handle(TracksSort.aToZ),
+            checked: Collection.instance.tracksSort == TracksSort.aToZ,
+            value: TracksSort.aToZ,
+            padding: EdgeInsets.zero,
+            child: Text(
+              Language.instance.A_TO_Z,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+          CustomCheckedPopupMenuItem(
+            onTap: () => handle(TracksSort.dateAdded),
+            checked: Collection.instance.tracksSort == TracksSort.dateAdded,
+            value: TracksSort.dateAdded,
+            padding: EdgeInsets.zero,
+            child: Text(
+              Language.instance.DATE_ADDED,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+          CustomCheckedPopupMenuItem(
+            onTap: () => handle(TracksSort.year),
+            checked: Collection.instance.tracksSort == TracksSort.year,
+            value: TracksSort.year,
+            padding: EdgeInsets.zero,
+            child: Text(
+              Language.instance.YEAR,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+        ],
+        kArtistTabIndex: <CustomCheckedPopupMenuItem>[
+          CustomCheckedPopupMenuItem(
+            onTap: () => handle(ArtistsSort.aToZ),
+            checked: Collection.instance.artistsSort == ArtistsSort.aToZ,
+            value: ArtistsSort.aToZ,
+            padding: EdgeInsets.zero,
+            child: Text(
+              Language.instance.A_TO_Z,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+          CustomCheckedPopupMenuItem(
+            onTap: () => handle(ArtistsSort.dateAdded),
+            checked: Collection.instance.artistsSort == ArtistsSort.dateAdded,
+            value: ArtistsSort.dateAdded,
+            padding: EdgeInsets.zero,
+            child: Text(
+              Language.instance.DATE_ADDED,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+        ],
+        kGenreTabIndex: <CustomCheckedPopupMenuItem>[
+          CustomCheckedPopupMenuItem(
+            onTap: () => handle(GenresSort.aToZ),
+            checked: Collection.instance.genresSort == GenresSort.aToZ,
+            value: GenresSort.aToZ,
+            padding: EdgeInsets.zero,
+            child: Text(
+              Language.instance.A_TO_Z,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+          CustomCheckedPopupMenuItem(
+            onTap: () => handle(GenresSort.dateAdded),
+            checked: Collection.instance.genresSort == GenresSort.dateAdded,
+            value: GenresSort.dateAdded,
+            padding: EdgeInsets.zero,
+            child: Text(
+              Language.instance.DATE_ADDED,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+        ],
+      }[widget.tab]!;
+
+  List<CustomCheckedPopupMenuItem> get order => [
+        CustomCheckedPopupMenuItem(
+          onTap: () => handle(OrderType.ascending),
+          checked: {
+            kAlbumTabIndex:
+                Collection.instance.albumsOrderType == OrderType.ascending,
+            kTrackTabIndex:
+                Collection.instance.tracksOrderType == OrderType.ascending,
+            kArtistTabIndex:
+                Collection.instance.artistsOrderType == OrderType.ascending,
+            kGenreTabIndex:
+                Collection.instance.genresOrderType == OrderType.ascending,
+          }[widget.tab]!,
+          value: OrderType.ascending,
+          padding: EdgeInsets.zero,
+          child: Text(
+            Language.instance.ASCENDING,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+        CustomCheckedPopupMenuItem(
+          onTap: () => handle(OrderType.descending),
+          checked: {
+            kAlbumTabIndex:
+                Collection.instance.albumsOrderType == OrderType.descending,
+            kTrackTabIndex:
+                Collection.instance.tracksOrderType == OrderType.descending,
+            kArtistTabIndex:
+                Collection.instance.artistsOrderType == OrderType.descending,
+            kGenreTabIndex:
+                Collection.instance.genresOrderType == OrderType.descending,
+          }[widget.tab]!,
+          value: OrderType.descending,
+          padding: EdgeInsets.zero,
+          child: Text(
+            Language.instance.DESCENDING,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+      ];
 
   @override
   Widget build(BuildContext context) {
-    final sort = {
-      0: <CheckedPopupMenuItem>[
-        CheckedPopupMenuItem(
-          checked: Collection.instance.albumsSort == AlbumsSort.aToZ,
-          value: AlbumsSort.aToZ,
-          padding: EdgeInsets.zero,
-          child: Text(
-            Language.instance.A_TO_Z,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
-        CheckedPopupMenuItem(
-          checked: Collection.instance.albumsSort == AlbumsSort.dateAdded,
-          value: AlbumsSort.dateAdded,
-          padding: EdgeInsets.zero,
-          child: Text(
-            Language.instance.DATE_ADDED,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
-        CheckedPopupMenuItem(
-          checked: Collection.instance.albumsSort == AlbumsSort.year,
-          value: AlbumsSort.year,
-          padding: EdgeInsets.zero,
-          child: Text(
-            Language.instance.YEAR,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
-      ],
-      1: <CheckedPopupMenuItem>[
-        CheckedPopupMenuItem(
-          checked: Collection.instance.tracksSort == TracksSort.aToZ,
-          value: TracksSort.aToZ,
-          padding: EdgeInsets.zero,
-          child: Text(
-            Language.instance.A_TO_Z,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
-        CheckedPopupMenuItem(
-          checked: Collection.instance.tracksSort == TracksSort.dateAdded,
-          value: TracksSort.dateAdded,
-          padding: EdgeInsets.zero,
-          child: Text(
-            Language.instance.DATE_ADDED,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
-        CheckedPopupMenuItem(
-          checked: Collection.instance.tracksSort == TracksSort.year,
-          value: TracksSort.year,
-          padding: EdgeInsets.zero,
-          child: Text(
-            Language.instance.YEAR,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
-      ],
-      2: <CheckedPopupMenuItem>[
-        CheckedPopupMenuItem(
-          checked: Collection.instance.artistsSort == ArtistsSort.aToZ,
-          value: ArtistsSort.aToZ,
-          padding: EdgeInsets.zero,
-          child: Text(
-            Language.instance.A_TO_Z,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
-        CheckedPopupMenuItem(
-          checked: Collection.instance.artistsSort == ArtistsSort.dateAdded,
-          value: ArtistsSort.dateAdded,
-          padding: EdgeInsets.zero,
-          child: Text(
-            Language.instance.DATE_ADDED,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
-      ],
-      3: <CheckedPopupMenuItem>[
-        CheckedPopupMenuItem(
-          checked: Collection.instance.genresSort == GenresSort.aToZ,
-          value: GenresSort.aToZ,
-          padding: EdgeInsets.zero,
-          child: Text(
-            Language.instance.A_TO_Z,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
-        CheckedPopupMenuItem(
-          checked: Collection.instance.genresSort == GenresSort.dateAdded,
-          value: GenresSort.dateAdded,
-          padding: EdgeInsets.zero,
-          child: Text(
-            Language.instance.DATE_ADDED,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
-      ],
-    }[widget.tab]!;
-    final order = [
-      CheckedPopupMenuItem(
-        checked: {
-          0: Collection.instance.albumsOrderType == OrderType.ascending,
-          1: Collection.instance.tracksOrderType == OrderType.ascending,
-          2: Collection.instance.artistsOrderType == OrderType.ascending,
-          3: Collection.instance.genresOrderType == OrderType.ascending,
-        }[widget.tab]!,
-        value: OrderType.ascending,
-        padding: EdgeInsets.zero,
-        child: Text(
-          Language.instance.ASCENDING,
-          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-        ),
-      ),
-      CheckedPopupMenuItem(
-        checked: {
-          0: Collection.instance.albumsOrderType == OrderType.descending,
-          1: Collection.instance.tracksOrderType == OrderType.descending,
-          2: Collection.instance.artistsOrderType == OrderType.descending,
-          3: Collection.instance.genresOrderType == OrderType.descending,
-        }[widget.tab]!,
-        value: OrderType.descending,
-        padding: EdgeInsets.zero,
-        child: Text(
-          Language.instance.DESCENDING,
-          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-        ),
-      ),
-    ];
     return TextButton(
+      style: ButtonStyle(
+        textStyle: MaterialStatePropertyAll(
+          Theme.of(context).textTheme.bodyMedium,
+        ),
+        foregroundColor: MaterialStatePropertyAll(
+          Theme.of(context).textTheme.bodyMedium?.color,
+        ),
+      ),
       child: Row(
         children: [
           const SizedBox(width: 8.0),
           Text(
-            [
-              (sort.firstWhere((e) => e.checked).child as Text).data!,
-              (order.firstWhere((e) => e.checked).child as Text).data!,
-            ].join(' / '),
+            '${(sort.firstWhere((e) => e.checked).child as Text).data}'
+            ' '
+            '(${(order.firstWhere((e) => e.checked).child as Text).data})',
           ),
           const SizedBox(width: 4.0),
           const Icon(Icons.expand_more),
@@ -2448,68 +2557,27 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
           isScrollControlled: true,
           context: context,
           elevation: kDefaultHeavyElevation,
-          builder: (context) => Container(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ...sort,
-                PopupMenuDivider(),
-                ...order,
-                if (!isDesktop && !MobileNowPlayingController.instance.isHidden)
-                  PopupMenuItem<int>(
-                    padding: EdgeInsets.zero,
-                    child: SizedBox(height: kMobileNowPlayingBarHeight),
-                  ),
-              ],
-            ),
+          builder: (context) => StatefulBuilder(
+            builder: (context, setState) {
+              setStateCallback = setState;
+              return Container(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ...sort,
+                    PopupMenuDivider(),
+                    ...order,
+                    if (!isDesktop &&
+                        !MobileNowPlayingController.instance.isHidden)
+                      const SizedBox(height: kMobileNowPlayingBarHeight),
+                  ],
+                ),
+              );
+            },
           ),
         );
-        if (value is AlbumsSort) {
-          await Collection.instance.sort(albumsSort: value);
-          await Configuration.instance.save(albumsSort: value);
-        }
-        if (value is TracksSort) {
-          await Collection.instance.sort(tracksSort: value);
-          await Configuration.instance.save(tracksSort: value);
-        }
-        if (value is ArtistsSort) {
-          await Collection.instance.sort(artistsSort: value);
-          await Configuration.instance.save(artistsSort: value);
-        }
-        if (value is GenresSort) {
-          await Collection.instance.sort(genresSort: value);
-          await Configuration.instance.save(genresSort: value);
-        }
-        if (value is OrderType) {
-          switch (widget.tab) {
-            case 0:
-              {
-                await Collection.instance.sort(albumsOrderType: value);
-                await Configuration.instance.save(albumsOrderType: value);
-                break;
-              }
-            case 1:
-              {
-                await Collection.instance.sort(tracksOrderType: value);
-                await Configuration.instance.save(tracksOrderType: value);
-                break;
-              }
-            case 2:
-              {
-                await Collection.instance.sort(artistsOrderType: value);
-                await Configuration.instance.save(artistsOrderType: value);
-                break;
-              }
-            case 3:
-              {
-                await Collection.instance.sort(genresOrderType: value);
-                await Configuration.instance.save(genresOrderType: value);
-                break;
-              }
-          }
-        }
       },
     );
   }
@@ -2962,76 +3030,84 @@ class _MobileAppBarOverflowButtonState
         color: widget.color ??
             Theme.of(context).appBarTheme.actionsIconTheme?.color,
       ),
-      onPressed: () {
-        final position = RelativeRect.fromRect(
-          Offset(
-                MediaQuery.of(context).size.width - tileMargin(context) - 48.0,
-                MediaQuery.of(context).padding.top +
-                    kMobileSearchBarHeight +
-                    2 * tileMargin(context),
-              ) &
-              Size(160.0, 160.0),
-          Rect.fromLTWH(
-            0,
-            0,
-            MediaQuery.of(context).size.width,
-            MediaQuery.of(context).size.height,
+      onPressed: () async {
+        Completer<int> completer = Completer<int>();
+        await showModalBottomSheet(
+          isScrollControlled: true,
+          context: context,
+          elevation: kDefaultHeavyElevation,
+          useRootNavigator: false,
+          builder: (context) => Container(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                PopupMenuItem(
+                  onTap: () {
+                    completer.complete(0);
+                    Navigator.of(context).maybePop();
+                  },
+                  child: ListTile(
+                    leading: Icon(Icons.file_open),
+                    title: Text(
+                      Language.instance.OPEN_FILE_OR_URL,
+                      style: isDesktop
+                          ? Theme.of(context).textTheme.bodyLarge
+                          : null,
+                    ),
+                  ),
+                ),
+                PopupMenuItem(
+                  onTap: () {
+                    completer.complete(1);
+                    Navigator.of(context).maybePop();
+                  },
+                  child: ListTile(
+                    leading: Icon(Icons.code),
+                    title: Text(
+                      Language.instance.READ_METADATA,
+                      style: isDesktop
+                          ? Theme.of(context).textTheme.bodyLarge
+                          : null,
+                    ),
+                  ),
+                ),
+                PopupMenuItem(
+                  onTap: () {
+                    completer.complete(2);
+                    Navigator.of(context).maybePop();
+                  },
+                  child: ListTile(
+                    leading: Icon(Icons.settings),
+                    title: Text(
+                      Language.instance.SETTING,
+                      style: isDesktop
+                          ? Theme.of(context).textTheme.bodyLarge
+                          : null,
+                    ),
+                  ),
+                ),
+                PopupMenuItem(
+                  onTap: () {
+                    completer.complete(3);
+                    Navigator.of(context).maybePop();
+                  },
+                  child: ListTile(
+                    leading: Icon(Icons.info),
+                    title: Text(
+                      Language.instance.ABOUT_TITLE,
+                      style: isDesktop
+                          ? Theme.of(context).textTheme.bodyLarge
+                          : null,
+                    ),
+                  ),
+                ),
+                if (!isDesktop && !MobileNowPlayingController.instance.isHidden)
+                  const SizedBox(height: kMobileNowPlayingBarHeight),
+              ],
+            ),
           ),
         );
-        showMenu<int>(
-          context: context,
-          position: position,
-          elevation: 4.0,
-          constraints: BoxConstraints(
-            maxWidth: double.infinity,
-          ),
-          items: [
-            PopupMenuItem(
-              value: 0,
-              child: ListTile(
-                leading: Icon(Icons.file_open),
-                title: Text(
-                  Language.instance.OPEN_FILE_OR_URL,
-                  style:
-                      isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                ),
-              ),
-            ),
-            PopupMenuItem(
-              value: 1,
-              child: ListTile(
-                leading: Icon(Icons.code),
-                title: Text(
-                  Language.instance.READ_METADATA,
-                  style:
-                      isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                ),
-              ),
-            ),
-            PopupMenuItem(
-              value: 2,
-              child: ListTile(
-                leading: Icon(Icons.settings),
-                title: Text(
-                  Language.instance.SETTING,
-                  style:
-                      isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                ),
-              ),
-            ),
-            PopupMenuItem(
-              value: 3,
-              child: ListTile(
-                leading: Icon(Icons.info),
-                title: Text(
-                  Language.instance.ABOUT_TITLE,
-                  style:
-                      isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                ),
-              ),
-            ),
-          ],
-        ).then((value) async {
+        completer.future.then((value) async {
           // Prevent visual glitches when pushing a new route into the view.
           await Future.delayed(const Duration(milliseconds: 300));
           switch (value) {
@@ -3350,4 +3426,41 @@ class LargeScrollUnderFlexibleConfig {
 
   EdgeInsetsGeometry? get expandedTitlePadding =>
       const EdgeInsets.fromLTRB(16, 0, 16, 28);
+}
+
+class CustomCheckedPopupMenuItem<T> extends StatelessWidget {
+  final T value;
+  final bool checked;
+  final VoidCallback onTap;
+  final Widget child;
+  final EdgeInsets? padding;
+
+  const CustomCheckedPopupMenuItem({
+    Key? key,
+    required this.value,
+    this.checked = false,
+    required this.onTap,
+    required this.child,
+    required this.padding,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuItem(
+      padding: padding,
+      child: ListTile(
+        onTap: () {
+          onTap();
+        },
+        leading: AnimatedOpacity(
+          opacity: checked ? 1.0 : 0.0,
+          curve: Curves.easeInOut,
+          duration: Theme.of(context).extension<AnimationDuration>()?.fast ??
+              Duration.zero,
+          child: Icon(Icons.done),
+        ),
+        title: child,
+      ),
+    );
+  }
 }

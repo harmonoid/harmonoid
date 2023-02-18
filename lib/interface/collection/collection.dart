@@ -567,179 +567,100 @@ class CollectionScreenState extends State<CollectionScreen>
                         FloatingSearchBarAction(
                           showIfOpened: false,
                           showIfClosed: true,
-                          child: CircularButton(
-                            icon: Icon(
-                              Icons.view_list_outlined,
-                              color: Theme.of(context)
-                                  .appBarTheme
-                                  .actionsIconTheme
-                                  ?.color,
-                            ),
-                            onPressed: () async {
-                              final position = RelativeRect.fromRect(
-                                Offset(
-                                      MediaQuery.of(context).size.width -
-                                          tileMargin(context) -
-                                          48.0,
-                                      MediaQuery.of(context).padding.top +
-                                          kMobileSearchBarHeight +
-                                          2 * tileMargin(context),
-                                    ) &
-                                    Size(228.0, 320.0),
-                                Rect.fromLTWH(
-                                  0,
-                                  0,
-                                  MediaQuery.of(context).size.width,
-                                  MediaQuery.of(context).size.height,
+                          // TODO(@alexmercerind): Genre support.
+                          child: ValueListenableBuilder<int>(
+                            valueListenable: index,
+                            builder: (context, tab, child) => AnimatedOpacity(
+                              duration: Theme.of(context)
+                                      .extension<AnimationDuration>()
+                                      ?.fast ??
+                                  Duration.zero,
+                              curve: Curves.easeInOut,
+                              opacity: {
+                                kAlbumTabIndex,
+                                kArtistTabIndex,
+                                kGenreTabIndex,
+                              }.contains(tab)
+                                  ? 1.0
+                                  : 0.0,
+                              child: CircularButton(
+                                icon: Icon(
+                                  Icons.view_list_outlined,
+                                  color: Theme.of(context)
+                                      .appBarTheme
+                                      .actionsIconTheme
+                                      ?.color,
                                 ),
-                              );
-                              showMenu<int>(
-                                context: context,
-                                position: position,
-                                elevation:
-                                    Theme.of(context).popupMenuTheme.elevation,
-                                constraints: BoxConstraints(
-                                  maxWidth: double.infinity,
-                                ),
-                                items: [
-                                  PopupMenuItem(
-                                    padding: EdgeInsets.zero,
-                                    value: 0,
-                                    child: ListTile(
-                                      leading: CircleAvatar(
-                                        backgroundColor: Colors.transparent,
-                                        child: Text(
-                                          Configuration
-                                              .instance.mobileAlbumsGridSize
-                                              .toString(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .displaySmall
-                                              ?.copyWith(
-                                                fontSize: 18.0,
-                                              ),
-                                        ),
-                                      ),
+                                onPressed: () async {
+                                  if (!{
+                                    kAlbumTabIndex,
+                                    kArtistTabIndex,
+                                    kGenreTabIndex,
+                                  }.contains(tab)) return;
+                                  return showDialog(
+                                    context: context,
+                                    builder: (context) => SimpleDialog(
                                       title: Text(
-                                        Language
-                                            .instance.MOBILE_ALBUM_GRID_SIZE,
-                                      ),
-                                    ),
-                                  ),
-                                  PopupMenuItem(
-                                    padding: EdgeInsets.zero,
-                                    value: 1,
-                                    child: ListTile(
-                                      leading: CircleAvatar(
-                                        backgroundColor: Colors.transparent,
-                                        child: Text(
-                                          Configuration
-                                              .instance.mobileArtistsGridSize
-                                              .toString(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .displaySmall
-                                              ?.copyWith(
-                                                fontSize: 18.0,
-                                              ),
-                                        ),
-                                      ),
-                                      title: Text(
-                                        Language
-                                            .instance.MOBILE_ARTIST_GRID_SIZE,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ).then((value) async {
-                                switch (value) {
-                                  case 0:
-                                    {
-                                      int result = Configuration
-                                          .instance.mobileAlbumsGridSize;
-                                      await showDialog(
-                                        context: context,
-                                        builder: (context) => StatefulBuilder(
-                                          builder: (context, setState) =>
-                                              SimpleDialog(
-                                            title: Text(
-                                              Language.instance
+                                        {
+                                              kAlbumTabIndex: Language.instance
                                                   .MOBILE_ALBUM_GRID_SIZE,
-                                            ),
-                                            children: [1, 2, 3, 4]
-                                                .map(
-                                                  (e) => RadioListTile<int>(
-                                                    title: Text(e.toString()),
-                                                    groupValue: result,
-                                                    onChanged: (e) {
-                                                      if (e != null) {
-                                                        result = e;
-                                                        Navigator.of(context)
-                                                            .maybePop();
-                                                      }
-                                                    },
-                                                    value: e,
-                                                  ),
-                                                )
-                                                .toList(),
-                                          ),
-                                        ),
-                                      );
-                                      if (result !=
-                                          Configuration
-                                              .instance.mobileAlbumsGridSize) {
-                                        await Configuration.instance.save(
-                                          mobileAlbumsGridSize: result,
-                                        );
-                                        setState(() {});
-                                      }
-                                      break;
-                                    }
-                                  case 1:
-                                    {
-                                      int result = Configuration
-                                          .instance.mobileArtistsGridSize;
-                                      await showDialog(
-                                        context: context,
-                                        builder: (context) => StatefulBuilder(
-                                          builder: (context, setState) =>
-                                              SimpleDialog(
-                                            title: Text(
-                                              Language.instance
+                                              kArtistTabIndex: Language.instance
                                                   .MOBILE_ARTIST_GRID_SIZE,
+                                            }[tab] ??
+                                            '',
+                                      ),
+                                      children: [1, 2, 3, 4]
+                                          .map(
+                                            (e) => RadioListTile<int>(
+                                              title: Text(e.toString()),
+                                              groupValue: {
+                                                    kAlbumTabIndex: Configuration
+                                                        .instance
+                                                        .mobileAlbumsGridSize,
+                                                    kArtistTabIndex: Configuration
+                                                        .instance
+                                                        .mobileArtistsGridSize,
+                                                  }[tab] ??
+                                                  -1,
+                                              onChanged: (e) async {
+                                                if (e != null) {
+                                                  if (tab == kAlbumTabIndex) {
+                                                    if (e !=
+                                                        Configuration.instance
+                                                            .mobileAlbumsGridSize) {
+                                                      await Configuration
+                                                          .instance
+                                                          .save(
+                                                        mobileAlbumsGridSize: e,
+                                                      );
+                                                    }
+                                                  }
+                                                  if (tab == kArtistTabIndex) {
+                                                    if (e !=
+                                                        Configuration.instance
+                                                            .mobileArtistsGridSize) {
+                                                      await Configuration
+                                                          .instance
+                                                          .save(
+                                                        mobileArtistsGridSize:
+                                                            e,
+                                                      );
+                                                    }
+                                                  }
+                                                  Navigator.of(context)
+                                                      .maybePop();
+                                                  setState(() {});
+                                                }
+                                              },
+                                              value: e,
                                             ),
-                                            children: [1, 2, 3, 4]
-                                                .map(
-                                                  (e) => RadioListTile<int>(
-                                                    title: Text(e.toString()),
-                                                    groupValue: result,
-                                                    onChanged: (e) {
-                                                      if (e != null) {
-                                                        result = e;
-                                                        Navigator.of(context)
-                                                            .maybePop();
-                                                      }
-                                                    },
-                                                    value: e,
-                                                  ),
-                                                )
-                                                .toList(),
-                                          ),
-                                        ),
-                                      );
-                                      if (result !=
-                                          Configuration
-                                              .instance.mobileArtistsGridSize) {
-                                        await Configuration.instance.save(
-                                          mobileArtistsGridSize: result,
-                                        );
-                                        setState(() {});
-                                      }
-                                      break;
-                                    }
-                                }
-                              });
-                            },
+                                          )
+                                          .toList(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
                           ),
                         ),
                         FloatingSearchBarAction(
