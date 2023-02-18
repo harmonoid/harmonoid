@@ -7,6 +7,7 @@
 ///
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
+import 'package:window_plus/window_plus.dart';
 
 import 'package:harmonoid/core/playback.dart';
 
@@ -36,6 +37,10 @@ class KeyboardShortcuts {
     LogicalKeySet(
       LogicalKeyboardKey.mediaTrackPrevious,
     ): Playback.instance.previous,
+    LogicalKeySet(
+      LogicalKeyboardKey.control,
+      LogicalKeyboardKey.keyQ,
+    ): WindowPlus.instance.close,
   };
 }
 
