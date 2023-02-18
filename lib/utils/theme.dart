@@ -434,18 +434,24 @@ ThemeData createM2Theme({
       .merge(
         TextTheme(
           headlineLarge: TextStyle(
-            fontWeight: FontWeight.w500, // Default: `FontWeight.w400`
+            fontWeight: FontWeight.w600, // Default: `FontWeight.w400`
           ),
           headlineMedium: TextStyle(
-            fontWeight: FontWeight.w500, // Default: `FontWeight.w400`
+            fontWeight: FontWeight.w600, // Default: `FontWeight.w400`
           ),
           headlineSmall: TextStyle(
-            fontWeight: FontWeight.w500, // Default: `FontWeight.w400`
+            fontWeight: FontWeight.w600, // Default: `FontWeight.w400`
+          ),
+          titleLarge: TextStyle(
+            fontWeight: FontWeight.w600, // Default: `FontWeight.w500`
           ),
           titleMedium: TextStyle(
             fontWeight: isDesktopPlatform
-                ? FontWeight.w500
+                ? FontWeight.w600
                 : FontWeight.w400, // Default: `FontWeight.w400`
+          ),
+          titleSmall: TextStyle(
+            fontWeight: FontWeight.w600, // Default: `FontWeight.w500`
           ),
           bodyLarge: TextStyle(
             fontWeight: FontWeight.w400, // Default: `FontWeight.w500`
@@ -494,9 +500,9 @@ ThemeData createM2Theme({
     Color.lerp(Colors.white, Colors.black, 0.54)!,
     Color.lerp(Colors.black, Colors.white, 0.54)!,
     Color.lerp(Colors.white, Colors.black, 0.70)!,
-    Color.lerp(Colors.black, Colors.white, 1.0)!,
+    Color.lerp(Colors.black, Colors.white, 1.00)!,
     Color.lerp(Colors.white, Colors.black, 0.70)!,
-    Color.lerp(Colors.black, Colors.white, 1.0)!,
+    Color.lerp(Colors.black, Colors.white, 1.00)!,
     Color.lerp(Colors.white, Colors.black, 0.38)!,
     Color.lerp(Colors.black, Colors.white, 0.38)!,
   );

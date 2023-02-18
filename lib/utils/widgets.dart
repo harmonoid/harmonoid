@@ -367,7 +367,7 @@ class SortBarFixedHolderState extends State<SortBarFixedHolder> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(width: 8.0),
+        const SizedBox(width: 4.0),
         GestureDetector(
           onTap: () {
             if (widget.index == kAlbumTabIndex) {
