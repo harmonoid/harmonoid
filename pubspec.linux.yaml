@@ -114,6 +114,7 @@ dependencies:
 
 dependency_overrides:
   ffi: 1.1.0
+  meta: ^1.9.0
   win32: ^3.0.0
   platform: ^3.1.0
   uri_parser: ^2.0.0

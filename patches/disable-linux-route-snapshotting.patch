@@ -1,0 +1,17 @@
+diff --git a/lib/utils/theme.dart b/lib/utils/theme.dart
+index 852b4f0c..66631c42 100644
+--- a/lib/utils/theme.dart
++++ b/lib/utils/theme.dart
+@@ -849,7 +849,11 @@ ThemeData createM2Theme({
+     pageTransitionsTheme: PageTransitionsTheme(
+       builders: {
+         TargetPlatform.windows: ZoomPageTransitionsBuilder(),
+-        TargetPlatform.linux: ZoomPageTransitionsBuilder(),
++        TargetPlatform.linux: ZoomPageTransitionsBuilder(
++          // For disabling use of [SnapshotWidget] on GNU/Linux in [ZoomPageTransitionsBuilder].
++          // This results in problems & images don't remain visible upon exiting the route.
++          allowEnterRouteSnapshotting: false,
++        ),
+         TargetPlatform.android: ZoomPageTransitionsBuilder(),
+         TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+         TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
