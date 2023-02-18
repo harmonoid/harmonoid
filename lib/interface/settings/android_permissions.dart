@@ -8,10 +8,10 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'package:harmonoid/utils/extensions.dart';
+import 'package:harmonoid/state/lyrics.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/constants/language.dart';
 
 /// Only for Android 13 or higher i.e. SDK 33 or above.
@@ -27,6 +27,18 @@ class AndroidPermissionsSettingState extends State<AndroidPermissionsSetting> {
   bool music = false;
   bool notification = false;
   bool photos = false;
+
+  MaterialStateProperty<Icon?>? thumbIcon(BuildContext context) =>
+      isMaterial2(context)
+          ? null
+          : MaterialStateProperty.resolveWith(
+              (states) {
+                if (states.contains(MaterialState.selected)) {
+                  return const Icon(Icons.check);
+                }
+                return const Icon(Icons.close);
+              },
+            );
 
   @override
   void initState() {
@@ -77,20 +89,23 @@ class AndroidPermissionsSettingState extends State<AndroidPermissionsSetting> {
       subtitle: Language.instance.PERMISSIONS_SUBTITLE,
       child: Column(
         children: [
-          SwitchListTile(
-            value: music,
-            onChanged: (_) async {
-              if (!music) {
-                if (StorageRetriever.instance.version >= 33) {
-                  final result = await Permission.audio.request();
-                  debugPrint(result.toString());
-                } else {
-                  final result = await Permission.storage.request();
-                  debugPrint(result.toString());
+          ListTile(
+            trailing: Switch(
+              thumbIcon: thumbIcon(context),
+              value: music,
+              onChanged: (_) async {
+                if (!music) {
+                  if (StorageRetriever.instance.version >= 33) {
+                    final result = await Permission.audio.request();
+                    debugPrint(result.toString());
+                  } else {
+                    final result = await Permission.storage.request();
+                    debugPrint(result.toString());
+                  }
+                  await refresh();
                 }
-                await refresh();
-              }
-            },
+              },
+            ),
             title: Text(Language.instance.PERMISSION_MUSIC_AND_AUDIO),
             subtitle: Text(
               Language.instance.PERMISSION_MUSIC_AND_AUDIO_SUBTITLE.overflow,
@@ -100,26 +115,29 @@ class AndroidPermissionsSettingState extends State<AndroidPermissionsSetting> {
           ),
           // Notifications permission is only required by Android 13 or higher.
           if (StorageRetriever.instance.version >= 33)
-            SwitchListTile(
-              value: notification,
-              onChanged: (_) async {
-                if (!notification) {
-                  if (StorageRetriever.instance.version >= 33) {
-                    final result = await Permission.notification.request();
-                    debugPrint(result.toString());
-                    if (result == PermissionStatus.granted) {
-                      // Create notification channel & setup callbacks for lyrics.
-                      try {
-                        Lyrics.initialize();
-                      } catch (exception, stacktrace) {
-                        debugPrint(exception.toString());
-                        debugPrint(stacktrace.toString());
+            ListTile(
+              trailing: Switch(
+                thumbIcon: thumbIcon(context),
+                value: notification,
+                onChanged: (_) async {
+                  if (!notification) {
+                    if (StorageRetriever.instance.version >= 33) {
+                      final result = await Permission.notification.request();
+                      debugPrint(result.toString());
+                      if (result == PermissionStatus.granted) {
+                        // Create notification channel & setup callbacks for lyrics.
+                        try {
+                          Lyrics.initialize();
+                        } catch (exception, stacktrace) {
+                          debugPrint(exception.toString());
+                          debugPrint(stacktrace.toString());
+                        }
                       }
                     }
+                    await refresh();
                   }
-                  await refresh();
-                }
-              },
+                },
+              ),
               title: Text(Language.instance.PERMISSION_NOTIFICATIONS),
               subtitle: Text(
                 Language.instance.PERMISSION_NOTIFICATIONS_SUBTITLE.overflow,
@@ -129,17 +147,20 @@ class AndroidPermissionsSettingState extends State<AndroidPermissionsSetting> {
             ),
           // Photos & images permission is only required by Android 13 or higher.
           if (StorageRetriever.instance.version >= 33)
-            SwitchListTile(
-              value: photos,
-              onChanged: (_) async {
-                if (!photos) {
-                  if (StorageRetriever.instance.version >= 33) {
-                    final result = await Permission.photos.request();
-                    debugPrint(result.toString());
+            ListTile(
+              trailing: Switch(
+                thumbIcon: thumbIcon(context),
+                value: photos,
+                onChanged: (_) async {
+                  if (!photos) {
+                    if (StorageRetriever.instance.version >= 33) {
+                      final result = await Permission.photos.request();
+                      debugPrint(result.toString());
+                    }
+                    await refresh();
                   }
-                  await refresh();
-                }
-              },
+                },
+              ),
               isThreeLine: true,
               title: Text(
                 Language.instance.PERMISSION_IMAGES_AND_PHOTOS,
