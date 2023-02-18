@@ -144,6 +144,8 @@ class Settings extends StatelessWidget {
                     leading: IconButton(
                       onPressed: Navigator.of(context).maybePop,
                       icon: const Icon(Icons.arrow_back),
+                      color: Theme.of(context).appBarTheme.iconTheme?.color,
+                      splashRadius: 24.0,
                     ),
                     floating: false,
                     pinned: true,
@@ -159,6 +161,10 @@ class Settings extends StatelessWidget {
                     flexibleSpace: ScrollUnderFlexibleSpace(
                       title: Text(Language.instance.SETTING),
                     ),
+                    bottom: PreferredSize(
+                      child: MobileIndexingProgressIndicator(),
+                      preferredSize: Size.fromHeight(4.0),
+                    ),
                   ),
                   SliverList(
                     delegate: SliverChildListDelegate(
@@ -166,11 +172,11 @@ class Settings extends StatelessWidget {
                         const SizedBox(height: 16.0),
                         IndexingSetting(),
                         const Divider(thickness: 1.0),
+                        StatsSetting(),
+                        const Divider(thickness: 1.0),
                         ThemeSetting(),
                         const Divider(thickness: 1.0),
                         LanguageSetting(),
-                        const Divider(thickness: 1.0),
-                        StatsSetting(),
                         const Divider(thickness: 1.0),
                         if (StorageRetriever.instance.version >= 33) ...[
                           AndroidPermissionsSetting(),
@@ -274,13 +280,17 @@ class MobileIndexingProgressIndicator extends StatelessWidget {
     return Consumer<CollectionRefresh>(
       builder: (context, controller, _) {
         if (controller.progress != controller.total) {
-          return LinearProgressIndicator(
-            value: controller.progress == null
-                ? null
-                : controller.progress! / controller.total,
+          return Container(
+            height: 4.0,
+            width: double.infinity,
+            child: LinearProgressIndicator(
+              value: controller.progress == null
+                  ? null
+                  : controller.progress! / controller.total,
+            ),
           );
         } else {
-          return SizedBox.shrink();
+          return const SizedBox(height: 4.0);
         }
       },
     );

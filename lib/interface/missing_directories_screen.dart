@@ -396,6 +396,8 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                         leading: IconButton(
                           onPressed: refresh,
                           icon: const Icon(Icons.arrow_back),
+                          color: Theme.of(context).appBarTheme.iconTheme?.color,
+                          splashRadius: 24.0,
                         ),
                         floating: false,
                         pinned: true,
