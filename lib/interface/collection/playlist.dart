@@ -887,13 +887,13 @@ class PlaylistScreenState extends State<PlaylistScreen>
             color = widget.palette?.first;
             secondary = widget.palette?.last;
           });
-          await Future.delayed(const Duration(milliseconds: 50));
+          await Future.delayed(const Duration(milliseconds: 100));
           await controller.animateTo(
             0.0,
             duration: duration,
-            curve: Curves.easeIn,
+            curve: Curves.easeInOut,
           );
-          await Future.delayed(const Duration(milliseconds: 50));
+          await Future.delayed(const Duration(milliseconds: 100));
           setState(() {
             detailsLoaded = true;
             physics = null;
