@@ -107,7 +107,7 @@ class PaletteGenerator with Diagnosticable {
       avoidRedBlackWhitePaletteFilter
     ],
     List<PaletteTarget> targets = const <PaletteTarget>[],
-    Duration timeout = const Duration(seconds: 1),
+    Duration timeout = const Duration(seconds: 5),
   }) async {
     assert(region == null || size != null);
     assert(region == null || region != Rect.zero);
