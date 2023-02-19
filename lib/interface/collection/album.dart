@@ -618,26 +618,9 @@ class AlbumTile extends StatelessWidget {
                 debugPrint(exception.toString());
                 debugPrint(stacktrace.toString());
               }
-              try {
-                if (palette == null) {
-                  final result = await PaletteGenerator.fromImageProvider(
-                    getAlbumArt(
-                      album,
-                      small: true,
-                    ),
-                  );
-                  palette = result.colors;
-                }
-              } catch (exception, stacktrace) {
-                debugPrint(exception.toString());
-                debugPrint(stacktrace.toString());
-              }
               Navigator.of(context).push(
                 MaterialRoute(
-                  builder: (context) => AlbumScreen(
-                    album: album,
-                    palette: palette,
-                  ),
+                  builder: (context) => AlbumScreen(album: album),
                 ),
               );
               Timer(const Duration(milliseconds: 400), () {
@@ -1044,11 +1027,22 @@ class AlbumScreenState extends State<AlbumScreen>
     else {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         if (isDesktop) {
-          Future.delayed(duration, () {
-            setState(() {
-              color = widget.palette?.first;
-              secondary = widget.palette?.last;
-            });
+          Future.delayed(duration, () async {
+            try {
+              final palette = await PaletteGenerator.fromImageProvider(
+                getAlbumArt(
+                  widget.album,
+                  small: true,
+                ),
+              );
+              setState(() {
+                color = palette.colors?.first;
+                secondary = palette.colors?.last;
+              });
+            } catch (exception, stacktrace) {
+              debugPrint(exception.toString());
+              debugPrint(stacktrace.toString());
+            }
           });
         }
         if (isMobile) {
@@ -1529,180 +1523,176 @@ class AlbumScreenState extends State<AlbumScreen>
                                                           child: Material(
                                                             color: Colors
                                                                 .transparent,
-                                                            child: InkWell(
-                                                              onTap: () {
-                                                                Playback
-                                                                    .instance
-                                                                    .open(
-                                                                  [
-                                                                    ...tracks,
-                                                                    if (Configuration
-                                                                        .instance
-                                                                        .seamlessPlayback)
-                                                                      ...[
-                                                                        ...Collection
-                                                                            .instance
-                                                                            .tracks
-                                                                      ]..shuffle(),
-                                                                  ],
-                                                                  index:
-                                                                      track.key,
-                                                                );
-                                                              },
-                                                              child: Row(
-                                                                children: [
-                                                                  Container(
-                                                                    width: 64.0,
-                                                                    height:
-                                                                        48.0,
-                                                                    padding: EdgeInsets.only(
-                                                                        right:
-                                                                            8.0),
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .center,
-                                                                    child: hovered ==
-                                                                            track.key
-                                                                        ? IconButton(
-                                                                            onPressed:
-                                                                                () {
-                                                                              Playback.instance.open(
-                                                                                tracks,
-                                                                                index: track.key,
+                                                            child: Stack(
+                                                              children: [
+                                                                Positioned.fill(
+                                                                  child:
+                                                                      InkWell(
+                                                                    onTap: () {
+                                                                      Playback
+                                                                          .instance
+                                                                          .open(
+                                                                        [
+                                                                          ...tracks,
+                                                                          if (Configuration
+                                                                              .instance
+                                                                              .seamlessPlayback)
+                                                                            ...[
+                                                                              ...Collection.instance.tracks
+                                                                            ]..shuffle(),
+                                                                        ],
+                                                                        index: track
+                                                                            .key,
+                                                                      );
+                                                                    },
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Container(
+                                                                          width:
+                                                                              64.0,
+                                                                          height:
+                                                                              56.0,
+                                                                          padding:
+                                                                              EdgeInsets.only(right: 8.0),
+                                                                          alignment:
+                                                                              Alignment.center,
+                                                                          child: hovered == track.key
+                                                                              ? IconButton(
+                                                                                  onPressed: () {
+                                                                                    Playback.instance.open(
+                                                                                      tracks,
+                                                                                      index: track.key,
+                                                                                    );
+                                                                                  },
+                                                                                  icon: Icon(Icons.play_arrow),
+                                                                                  splashRadius: 20.0,
+                                                                                )
+                                                                              : Text(
+                                                                                  '${track.value.trackNumber}',
+                                                                                  style: Theme.of(context).textTheme.bodyLarge,
+                                                                                ),
+                                                                        ),
+                                                                        Expanded(
+                                                                          child:
+                                                                              Container(
+                                                                            height:
+                                                                                56.0,
+                                                                            padding:
+                                                                                EdgeInsets.only(right: 8.0),
+                                                                            alignment:
+                                                                                Alignment.centerLeft,
+                                                                            child:
+                                                                                Text(
+                                                                              track.value.trackName,
+                                                                              style: Theme.of(context).textTheme.bodyLarge,
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        const Spacer(),
+                                                                        Container(
+                                                                          width:
+                                                                              64.0,
+                                                                          height:
+                                                                              56.0,
+                                                                          alignment:
+                                                                              Alignment.center,
+                                                                          child:
+                                                                              CustomPopupMenuButton<int>(
+                                                                            onSelected:
+                                                                                (result) {
+                                                                              trackPopupMenuHandle(
+                                                                                context,
+                                                                                track.value,
+                                                                                result,
+                                                                                recursivelyPopNavigatorOnDeleteIf: () => widget.album.tracks.isEmpty,
                                                                               );
                                                                             },
-                                                                            icon:
-                                                                                Icon(Icons.play_arrow),
-                                                                            splashRadius:
-                                                                                20.0,
+                                                                            itemBuilder: (_) =>
+                                                                                trackPopupMenuItems(
+                                                                              track.value,
+                                                                              context,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Row(
+                                                                  children: [
+                                                                    const SizedBox(
+                                                                      width:
+                                                                          64.0,
+                                                                      height:
+                                                                          56.0,
+                                                                    ),
+                                                                    const Spacer(),
+                                                                    Expanded(
+                                                                      child:
+                                                                          Container(
+                                                                        height:
+                                                                            56.0,
+                                                                        padding:
+                                                                            EdgeInsets.only(right: 8.0),
+                                                                        alignment:
+                                                                            Alignment.centerLeft,
+                                                                        child:
+                                                                            () {
+                                                                          final elements =
+                                                                              <TextSpan>[];
+                                                                          track
+                                                                              .value
+                                                                              .trackArtistNames
+                                                                              .map(
+                                                                            (e) =>
+                                                                                TextSpan(
+                                                                              text: e,
+                                                                              recognizer: TapGestureRecognizer()
+                                                                                ..onTap = () {
+                                                                                  final artist = Collection.instance.artistsSet.lookup(Artist(artistName: e));
+                                                                                  if (artist != null) {
+                                                                                    Playback.instance.interceptPositionChangeRebuilds = true;
+                                                                                    Navigator.of(context).push(
+                                                                                      MaterialRoute(
+                                                                                        builder: (context) => ArtistScreen(
+                                                                                          artist: artist,
+                                                                                        ),
+                                                                                      ),
+                                                                                    );
+                                                                                    Timer(const Duration(milliseconds: 400), () {
+                                                                                      Playback.instance.interceptPositionChangeRebuilds = false;
+                                                                                    });
+                                                                                  }
+                                                                                },
+                                                                            ),
                                                                           )
-                                                                        : Text(
-                                                                            '${track.value.trackNumber}',
+                                                                              .forEach((element) {
+                                                                            elements.add(element);
+                                                                            elements.add(TextSpan(text: ', '));
+                                                                          });
+                                                                          elements
+                                                                              .removeLast();
+                                                                          return HyperLink(
                                                                             style:
                                                                                 Theme.of(context).textTheme.bodyLarge,
-                                                                          ),
-                                                                  ),
-                                                                  Expanded(
-                                                                    child:
-                                                                        Container(
-                                                                      height:
-                                                                          48.0,
-                                                                      padding: EdgeInsets.only(
-                                                                          right:
-                                                                              8.0),
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .centerLeft,
-                                                                      child:
-                                                                          Text(
-                                                                        track
-                                                                            .value
-                                                                            .trackName,
-                                                                        style: Theme.of(context)
-                                                                            .textTheme
-                                                                            .bodyLarge,
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  Expanded(
-                                                                    child:
-                                                                        Container(
-                                                                      height:
-                                                                          48.0,
-                                                                      padding: EdgeInsets.only(
-                                                                          right:
-                                                                              8.0),
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .centerLeft,
-                                                                      child:
-                                                                          () {
-                                                                        final elements =
-                                                                            <TextSpan>[];
-                                                                        track
-                                                                            .value
-                                                                            .trackArtistNames
-                                                                            .map(
-                                                                          (e) =>
-                                                                              TextSpan(
                                                                             text:
-                                                                                e,
-                                                                            recognizer: TapGestureRecognizer()
-                                                                              ..onTap = () {
-                                                                                final artist = Collection.instance.artistsSet.lookup(Artist(artistName: e));
-                                                                                if (artist != null) {
-                                                                                  Playback.instance.interceptPositionChangeRebuilds = true;
-                                                                                  Navigator.of(context).push(
-                                                                                    MaterialRoute(
-                                                                                      builder: (context) => ArtistScreen(
-                                                                                        artist: artist,
-                                                                                      ),
-                                                                                    ),
-                                                                                  );
-                                                                                  Timer(const Duration(milliseconds: 400), () {
-                                                                                    Playback.instance.interceptPositionChangeRebuilds = false;
-                                                                                  });
-                                                                                }
-                                                                              },
-                                                                          ),
-                                                                        )
-                                                                            .forEach((element) {
-                                                                          elements
-                                                                              .add(element);
-                                                                          elements
-                                                                              .add(TextSpan(text: ', '));
-                                                                        });
-                                                                        elements
-                                                                            .removeLast();
-                                                                        return HyperLink(
-                                                                          style: Theme.of(context)
-                                                                              .textTheme
-                                                                              .bodyLarge,
-                                                                          text:
-                                                                              TextSpan(
-                                                                            children:
-                                                                                elements,
-                                                                          ),
-                                                                        );
-                                                                      }(),
-                                                                    ),
-                                                                  ),
-                                                                  Container(
-                                                                    width: 64.0,
-                                                                    height:
-                                                                        56.0,
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .center,
-                                                                    child:
-                                                                        CustomPopupMenuButton<
-                                                                            int>(
-                                                                      onSelected:
-                                                                          (result) {
-                                                                        trackPopupMenuHandle(
-                                                                          context,
-                                                                          track
-                                                                              .value,
-                                                                          result,
-                                                                          recursivelyPopNavigatorOnDeleteIf: () => widget
-                                                                              .album
-                                                                              .tracks
-                                                                              .isEmpty,
-                                                                        );
-                                                                      },
-                                                                      itemBuilder:
-                                                                          (_) =>
-                                                                              trackPopupMenuItems(
-                                                                        track
-                                                                            .value,
-                                                                        context,
+                                                                                TextSpan(
+                                                                              children: elements,
+                                                                            ),
+                                                                          );
+                                                                        }(),
                                                                       ),
                                                                     ),
-                                                                  ),
-                                                                ],
-                                                              ),
+                                                                    const SizedBox(
+                                                                      width:
+                                                                          64.0,
+                                                                      height:
+                                                                          56.0,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
                                                             ),
                                                           ),
                                                         ),
@@ -2061,7 +2051,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                     '${widget.album.year}',
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .titleMedium
+                                                        .bodyMedium
                                                         ?.copyWith(
                                                           color: [
                                                             Theme.of(context)

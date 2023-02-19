@@ -312,26 +312,10 @@ class ArtistTile extends StatelessWidget {
                           debugPrint(exception.toString());
                           debugPrint(stacktrace.toString());
                         }
-                        try {
-                          if (palette == null) {
-                            final result =
-                                await PaletteGenerator.fromImageProvider(
-                              getAlbumArt(
-                                artist,
-                                small: true,
-                              ),
-                            );
-                            palette = result.colors;
-                          }
-                        } catch (exception, stacktrace) {
-                          debugPrint(exception.toString());
-                          debugPrint(stacktrace.toString());
-                        }
                         Navigator.of(context).push(
                           MaterialRoute(
                             builder: (context) => ArtistScreen(
                               artist: artist,
-                              palette: palette,
                             ),
                           ),
                         );
@@ -665,11 +649,22 @@ class ArtistScreenState extends State<ArtistScreen>
     else {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         if (isDesktop) {
-          Future.delayed(duration, () {
-            setState(() {
-              color = widget.palette?.first;
-              secondary = widget.palette?.last;
-            });
+          Future.delayed(duration, () async {
+            try {
+              final palette = await PaletteGenerator.fromImageProvider(
+                getAlbumArt(
+                  widget.artist,
+                  small: true,
+                ),
+              );
+              setState(() {
+                color = palette.colors?.first;
+                secondary = palette.colors?.last;
+              });
+            } catch (exception, stacktrace) {
+              debugPrint(exception.toString());
+              debugPrint(stacktrace.toString());
+            }
           });
         }
         if (isMobile) {
@@ -1108,167 +1103,176 @@ class ArtistScreenState extends State<ArtistScreen>
                                                           child: Material(
                                                             color: Colors
                                                                 .transparent,
-                                                            child: InkWell(
-                                                              onTap: () {
-                                                                Playback
-                                                                    .instance
-                                                                    .open(
-                                                                  [
-                                                                    ...tracks,
-                                                                    if (Configuration
-                                                                        .instance
-                                                                        .seamlessPlayback)
-                                                                      ...([
-                                                                        ...collection
-                                                                            .tracks
-                                                                      ]..shuffle())
-                                                                  ],
-                                                                  index:
-                                                                      track.key,
-                                                                );
-                                                              },
-                                                              child: Row(
-                                                                children: [
-                                                                  Container(
-                                                                    width: 64.0,
-                                                                    height:
-                                                                        48.0,
-                                                                    padding: EdgeInsets.only(
-                                                                        right:
-                                                                            8.0),
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .center,
-                                                                    child: hovered ==
-                                                                            track.key
-                                                                        ? IconButton(
-                                                                            onPressed:
-                                                                                () {
-                                                                              Playback.instance.open(
-                                                                                [
-                                                                                  ...tracks,
-                                                                                  if (Configuration.instance.seamlessPlayback)
-                                                                                    ...[
-                                                                                      ...Collection.instance.tracks
-                                                                                    ]..shuffle(),
-                                                                                ],
-                                                                                index: track.key,
+                                                            child: Stack(
+                                                              children: [
+                                                                Positioned.fill(
+                                                                  child:
+                                                                      InkWell(
+                                                                    onTap: () {
+                                                                      Playback
+                                                                          .instance
+                                                                          .open(
+                                                                        [
+                                                                          ...tracks,
+                                                                          if (Configuration
+                                                                              .instance
+                                                                              .seamlessPlayback)
+                                                                            ...([
+                                                                              ...collection.tracks
+                                                                            ]..shuffle())
+                                                                        ],
+                                                                        index: track
+                                                                            .key,
+                                                                      );
+                                                                    },
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Container(
+                                                                          width:
+                                                                              64.0,
+                                                                          height:
+                                                                              56.0,
+                                                                          padding:
+                                                                              EdgeInsets.only(right: 8.0),
+                                                                          alignment:
+                                                                              Alignment.center,
+                                                                          child: hovered == track.key
+                                                                              ? IconButton(
+                                                                                  onPressed: () {
+                                                                                    Playback.instance.open(
+                                                                                      [
+                                                                                        ...tracks,
+                                                                                        if (Configuration.instance.seamlessPlayback)
+                                                                                          ...[
+                                                                                            ...Collection.instance.tracks
+                                                                                          ]..shuffle(),
+                                                                                      ],
+                                                                                      index: track.key,
+                                                                                    );
+                                                                                  },
+                                                                                  icon: Icon(Icons.play_arrow),
+                                                                                  splashRadius: 20.0,
+                                                                                )
+                                                                              : Text(
+                                                                                  '${track.value.trackNumber}',
+                                                                                  style: Theme.of(context).textTheme.bodyLarge,
+                                                                                ),
+                                                                        ),
+                                                                        Expanded(
+                                                                          child:
+                                                                              Container(
+                                                                            height:
+                                                                                56.0,
+                                                                            padding:
+                                                                                EdgeInsets.only(right: 8.0),
+                                                                            alignment:
+                                                                                Alignment.centerLeft,
+                                                                            child:
+                                                                                Text(
+                                                                              track.value.trackName,
+                                                                              style: Theme.of(context).textTheme.bodyLarge,
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                            ),
+                                                                          ),
+                                                                          flex:
+                                                                              3,
+                                                                        ),
+                                                                        const Spacer(
+                                                                          flex:
+                                                                              2,
+                                                                        ),
+                                                                        Container(
+                                                                          width:
+                                                                              64.0,
+                                                                          height:
+                                                                              56.0,
+                                                                          alignment:
+                                                                              Alignment.center,
+                                                                          child:
+                                                                              CustomPopupMenuButton<int>(
+                                                                            onSelected:
+                                                                                (result) {
+                                                                              trackPopupMenuHandle(
+                                                                                context,
+                                                                                track.value,
+                                                                                result,
+                                                                                recursivelyPopNavigatorOnDeleteIf: () => widget.artist.tracks.isEmpty,
                                                                               );
                                                                             },
-                                                                            icon:
-                                                                                Icon(Icons.play_arrow),
-                                                                            splashRadius:
-                                                                                20.0,
-                                                                          )
-                                                                        : Text(
-                                                                            '${track.value.trackNumber}',
+                                                                            itemBuilder: (_) =>
+                                                                                trackPopupMenuItems(
+                                                                              track.value,
+                                                                              context,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Row(
+                                                                  children: [
+                                                                    const SizedBox(
+                                                                      width:
+                                                                          64.0,
+                                                                      height:
+                                                                          56.0,
+                                                                    ),
+                                                                    const Spacer(
+                                                                      flex: 3,
+                                                                    ),
+                                                                    Expanded(
+                                                                      child: Container(
+                                                                          height: 48.0,
+                                                                          padding: EdgeInsets.only(right: 8.0),
+                                                                          alignment: Alignment.centerLeft,
+                                                                          child: HyperLink(
                                                                             style:
                                                                                 Theme.of(context).textTheme.bodyLarge,
-                                                                          ),
-                                                                  ),
-                                                                  Expanded(
-                                                                    child:
-                                                                        Container(
-                                                                      height:
-                                                                          48.0,
-                                                                      padding: EdgeInsets.only(
-                                                                          right:
-                                                                              8.0),
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .centerLeft,
-                                                                      child:
-                                                                          Text(
-                                                                        track
-                                                                            .value
-                                                                            .trackName,
-                                                                        style: Theme.of(context)
-                                                                            .textTheme
-                                                                            .bodyLarge,
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis,
-                                                                      ),
-                                                                    ),
-                                                                    flex: 3,
-                                                                  ),
-                                                                  Expanded(
-                                                                    child: Container(
-                                                                        height: 48.0,
-                                                                        padding: EdgeInsets.only(right: 8.0),
-                                                                        alignment: Alignment.centerLeft,
-                                                                        child: HyperLink(
-                                                                          style: Theme.of(context)
-                                                                              .textTheme
-                                                                              .bodyLarge,
-                                                                          text:
-                                                                              TextSpan(
-                                                                            children: [
-                                                                              TextSpan(
-                                                                                text: track.value.albumName,
-                                                                                recognizer: TapGestureRecognizer()
-                                                                                  ..onTap = () {
-                                                                                    final album = Collection.instance.albumsSet.lookup(
-                                                                                      Album(
-                                                                                        albumName: track.value.albumName,
-                                                                                        year: track.value.year,
-                                                                                        albumArtistName: track.value.albumArtistName,
-                                                                                        albumHashCodeParameters: Collection.instance.albumHashCodeParameters,
-                                                                                      ),
-                                                                                    );
-                                                                                    if (album != null) {
-                                                                                      Playback.instance.interceptPositionChangeRebuilds = true;
-                                                                                      Navigator.of(context).push(
-                                                                                        MaterialRoute(
-                                                                                          builder: (context) => AlbumScreen(
-                                                                                            album: album,
-                                                                                          ),
+                                                                            text:
+                                                                                TextSpan(
+                                                                              children: [
+                                                                                TextSpan(
+                                                                                  text: track.value.albumName,
+                                                                                  recognizer: TapGestureRecognizer()
+                                                                                    ..onTap = () {
+                                                                                      final album = Collection.instance.albumsSet.lookup(
+                                                                                        Album(
+                                                                                          albumName: track.value.albumName,
+                                                                                          year: track.value.year,
+                                                                                          albumArtistName: track.value.albumArtistName,
+                                                                                          albumHashCodeParameters: Collection.instance.albumHashCodeParameters,
                                                                                         ),
                                                                                       );
-                                                                                      Timer(const Duration(milliseconds: 400), () {
-                                                                                        Playback.instance.interceptPositionChangeRebuilds = false;
-                                                                                      });
-                                                                                    }
-                                                                                  },
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                        )),
-                                                                    flex: 2,
-                                                                  ),
-                                                                  Container(
-                                                                    width: 64.0,
-                                                                    height:
-                                                                        56.0,
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .center,
-                                                                    child:
-                                                                        CustomPopupMenuButton<
-                                                                            int>(
-                                                                      onSelected:
-                                                                          (result) {
-                                                                        trackPopupMenuHandle(
-                                                                          context,
-                                                                          track
-                                                                              .value,
-                                                                          result,
-                                                                          recursivelyPopNavigatorOnDeleteIf: () => widget
-                                                                              .artist
-                                                                              .tracks
-                                                                              .isEmpty,
-                                                                        );
-                                                                      },
-                                                                      itemBuilder:
-                                                                          (_) =>
-                                                                              trackPopupMenuItems(
-                                                                        track
-                                                                            .value,
-                                                                        context,
-                                                                      ),
+                                                                                      if (album != null) {
+                                                                                        Playback.instance.interceptPositionChangeRebuilds = true;
+                                                                                        Navigator.of(context).push(
+                                                                                          MaterialRoute(
+                                                                                            builder: (context) => AlbumScreen(
+                                                                                              album: album,
+                                                                                            ),
+                                                                                          ),
+                                                                                        );
+                                                                                        Timer(const Duration(milliseconds: 400), () {
+                                                                                          Playback.instance.interceptPositionChangeRebuilds = false;
+                                                                                        });
+                                                                                      }
+                                                                                    },
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          )),
+                                                                      flex: 2,
                                                                     ),
-                                                                  ),
-                                                                ],
-                                                              ),
+                                                                    const SizedBox(
+                                                                      width:
+                                                                          64.0,
+                                                                      height:
+                                                                          56.0,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
                                                             ),
                                                           ),
                                                         ),
