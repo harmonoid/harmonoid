@@ -1008,11 +1008,12 @@ ThemeData createM2Theme({
       minVerticalPadding: 4.0,
       shape: const Border(),
       tileColor: Colors.transparent,
-      titleTextStyle: theme.titleMedium,
-      subtitleTextStyle: theme.bodyMedium,
-      leadingAndTrailingTextStyle: theme.bodyMedium,
-      selectedColor: colorScheme.primary,
-      iconColor: isLightMode ? iconColors.light : iconColors.dark,
+      // NOT on stable channel yet.
+      // titleTextStyle: theme.titleMedium,
+      // subtitleTextStyle: theme.bodyMedium,
+      // leadingAndTrailingTextStyle: theme.bodyMedium,
+      // selectedColor: colorScheme.primary,
+      // iconColor: isLightMode ? iconColors.light : iconColors.dark,
     ),
 
     // DIALOG
