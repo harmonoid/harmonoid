@@ -153,7 +153,10 @@ class NowPlayingScreenState extends State<NowPlayingScreenSetting> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 16.0),
-                  Text(Language.instance.VISUALS),
+                  Text(
+                    Language.instance.VISUALS,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
                   const SizedBox(height: 16.0),
                   GridView.extent(
                     physics: NeverScrollableScrollPhysics(),

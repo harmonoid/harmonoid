@@ -75,7 +75,6 @@ Future<void> main(List<String> args) async {
         await SystemMediaTransportControls.initialize();
       }
       await Intent.initialize(args: args);
-      // TODO(@alexmercerind): Restore from application cache.
       await Visuals.initialize(
         standard: 2,
         themeMode: Configuration.instance.themeMode,
@@ -97,14 +96,13 @@ Future<void> main(List<String> args) async {
       await AppState.initialize();
       await NowPlayingVisuals.initialize();
       await Intent.initialize(args: args);
-      DiscordRPC.initialize();
-      // TODO(@alexmercerind): Restore from application cache.
       await Visuals.initialize(
         standard: 2,
         themeMode: Configuration.instance.themeMode,
         systemColorScheme: false,
         animationDuration: Configuration.instance.animationDuration,
       );
+      DiscordRPC.initialize();
     }
     if (Platform.isAndroid) {
       await StorageRetriever.initialize();
@@ -154,7 +152,6 @@ Future<void> main(List<String> args) async {
       await ExternalMediaProvider.create();
       await AppState.initialize();
       await Intent.initialize();
-      // TODO(@alexmercerind): Restore from application cache.
       await Visuals.initialize(
         standard: 2,
         themeMode: Configuration.instance.themeMode,

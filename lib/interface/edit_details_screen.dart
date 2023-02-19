@@ -737,7 +737,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                     .instance
                                     .USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS
                                     .overflow,
-                                style: Theme.of(context).textTheme.bodySmall,
+                                style: Theme.of(context).textTheme.bodyMedium,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(height: 24.0),

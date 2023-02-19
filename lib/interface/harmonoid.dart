@@ -18,7 +18,6 @@ class Harmonoid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      lazy: true,
       create: (context) => Visuals.instance..update(context: context),
       builder: (context, _) => Consumer<Visuals>(
         builder: (context, visuals, _) => MultiProvider(

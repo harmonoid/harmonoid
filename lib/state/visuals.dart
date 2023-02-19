@@ -218,10 +218,6 @@ class Visuals extends ChangeNotifier {
     standard ??= this.standard;
     context ??= this.context;
     animationDuration ??= this.animationDuration;
-    debugPrint(themeMode.toString());
-    debugPrint(standard.toString());
-    debugPrint(context.toString());
-    debugPrint(animationDuration.toString());
     if (context != null) {
       if (Platform.isAndroid || Platform.isIOS) {
         final brightness = Theme.of(context).brightness == Brightness.dark

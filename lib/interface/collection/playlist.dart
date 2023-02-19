@@ -639,7 +639,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                 Playback.instance.interceptPositionChangeRebuilds = true;
                 Iterable<Color>? palette;
                 try {
-                  if (widget.playlist.tracks.isNotEmpty) {
+                  if (widget.playlist.tracks.isNotEmpty && isMobile) {
                     final result = await PaletteGenerator.fromImageProvider(
                       getAlbumArt(
                         widget.playlist.tracks.first,
@@ -875,11 +875,22 @@ class PlaylistScreenState extends State<PlaylistScreen>
     else {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         if (isDesktop) {
-          Future.delayed(duration, () {
-            setState(() {
-              color = widget.palette?.first;
-              secondary = widget.palette?.last;
-            });
+          Future.delayed(duration, () async {
+            try {
+              final palette = await PaletteGenerator.fromImageProvider(
+                getAlbumArt(
+                  widget.playlist.tracks.first,
+                  small: true,
+                ),
+              );
+              setState(() {
+                color = palette.colors?.first;
+                secondary = palette.colors?.last;
+              });
+            } catch (exception, stacktrace) {
+              debugPrint(exception.toString());
+              debugPrint(stacktrace.toString());
+            }
           });
         }
         if (isMobile) {

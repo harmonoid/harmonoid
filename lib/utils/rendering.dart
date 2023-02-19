@@ -606,10 +606,12 @@ Future<void> trackPopupMenuHandle(
             ),
           );
           if (album != null) {
-            final result = await PaletteGenerator.fromImageProvider(
-              getAlbumArt(album, small: true),
-            );
-            palette = result.colors;
+            if (isMobile) {
+              final result = await PaletteGenerator.fromImageProvider(
+                getAlbumArt(album, small: true),
+              );
+              palette = result.colors;
+            }
             await precacheImage(getAlbumArt(album), context);
             Playback.instance.interceptPositionChangeRebuilds = true;
             Navigator.of(context).push(

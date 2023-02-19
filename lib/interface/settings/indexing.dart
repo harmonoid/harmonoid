@@ -243,6 +243,9 @@ class IndexingState extends State<IndexingSetting>
                             Container(
                               height: 56.0,
                               width: 324.0,
+                              margin: const EdgeInsets.only(
+                                bottom: 8.0,
+                              ),
                               alignment: Alignment.centerLeft,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -286,37 +289,33 @@ class IndexingState extends State<IndexingSetting>
                                                       AnimationDuration>()
                                                   ?.medium ??
                                               Duration.zero,
-                                          child: Text(
-                                            Language.instance
-                                                .SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
-                                                .replaceAll(
-                                                  'NUMBER_STRING',
-                                                  controller.progress
-                                                      .toString(),
-                                                )
-                                                .replaceAll(
-                                                  'TOTAL_STRING',
-                                                  controller.total.toString(),
-                                                ),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge,
-                                          ),
                                           builder: (_, dynamic value, child) =>
                                               Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
-                                              child!,
+                                              Text(
+                                                Language.instance
+                                                    .SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
+                                                    .replaceAll(
+                                                      'COMPLETED',
+                                                      controller.progress
+                                                          .toString(),
+                                                    )
+                                                    .replaceAll(
+                                                      'TOTAL',
+                                                      controller.total
+                                                          .toString(),
+                                                    ),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge,
+                                              ),
                                               Container(
                                                 margin: const EdgeInsets.only(
                                                   top: 8.0,
                                                 ),
                                                 height: 4.0,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width -
-                                                    32.0,
                                                 child: LinearProgressIndicator(
                                                   value: value,
                                                 ),

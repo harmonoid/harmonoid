@@ -247,11 +247,15 @@ class CollectionScreenState extends State<CollectionScreen>
                                                     : Language.instance
                                                         .SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
                                                         .replaceAll(
-                                                            'NUMBER_STRING',
-                                                            '${refresh.progress}')
+                                                          'COMPLETED',
+                                                          refresh.progress
+                                                              .toString(),
+                                                        )
                                                         .replaceAll(
-                                                            'TOTAL_STRING',
-                                                            '${refresh.total}'),
+                                                          'TOTAL',
+                                                          refresh.total
+                                                              .toString(),
+                                                        ),
                                                 overflow: TextOverflow.ellipsis,
                                                 textAlign: TextAlign.center,
                                                 style: Theme.of(context)
