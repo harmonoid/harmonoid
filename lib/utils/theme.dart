@@ -8,10 +8,8 @@
 
 // DO NOT IMPORT ANYTHING FROM `package:harmonoid` IN THIS FILE.
 
-/// Typography Introduction
-/// -----------------------
-/// As used throughout Harmonoid.
-/// Might be out of date or Hitesh was just lazy.
+/// Typography
+/// ----------
 ///
 /// Defaults:
 ///   independent text: bodyLarge              [default][primary-text-color]
@@ -34,6 +32,11 @@
 ///   title: titleMedium + 14 + w400           [mobile][dense]
 ///   subtitle: bodyMedium                     [mobile]
 ///
+/// ArtistTile:
+///   title: titleSmall                        [desktop]
+///   title: bodyLarge                         [mobile][normal]
+///   title: bodyLarge + 14                    [mobile][dense]
+///
 /// SettingsTile:
 ///   title: titleLarge                        [desktop]
 ///   subtitle: bodyMedium                     [desktop]
@@ -54,8 +57,8 @@
 /// AlbumScreen/ArtistScreen/GenreScreen/PlaylistScreen:
 ///   title: headlineSmall                     [desktop]
 ///   subtitle: bodyMedium                     [desktop]
-///   title: titleMedium                       [mobile]
-///   subtitle: bodyMedium                     [mobile]
+///   title: headlineSmall                     [mobile]
+///   subtitle: bodyMedium + 16                [mobile]
 ///
 
 import 'dart:io';
@@ -434,24 +437,34 @@ ThemeData createM2Theme({
       .merge(
         TextTheme(
           headlineLarge: TextStyle(
-            fontWeight: FontWeight.w600, // Default: `FontWeight.w400`
+            fontWeight: isDesktopPlatform
+                ? FontWeight.w600
+                : null, // Default: `FontWeight.w400`
           ),
           headlineMedium: TextStyle(
-            fontWeight: FontWeight.w600, // Default: `FontWeight.w400`
+            fontWeight: isDesktopPlatform
+                ? FontWeight.w600
+                : null, // Default: `FontWeight.w400`
           ),
           headlineSmall: TextStyle(
-            fontWeight: FontWeight.w600, // Default: `FontWeight.w400`
+            fontWeight: isDesktopPlatform
+                ? FontWeight.w600
+                : null, // Default: `FontWeight.w400`
           ),
           titleLarge: TextStyle(
-            fontWeight: FontWeight.w600, // Default: `FontWeight.w500`
+            fontWeight: isDesktopPlatform
+                ? FontWeight.w600
+                : null, // Default: `FontWeight.w500`
           ),
           titleMedium: TextStyle(
             fontWeight: isDesktopPlatform
                 ? FontWeight.w600
-                : FontWeight.w400, // Default: `FontWeight.w400`
+                : null, // Default: `FontWeight.w400`
           ),
           titleSmall: TextStyle(
-            fontWeight: FontWeight.w600, // Default: `FontWeight.w500`
+            fontWeight: isDesktopPlatform
+                ? FontWeight.w600
+                : null, // Default: `FontWeight.w500`
           ),
           bodyLarge: TextStyle(
             fontWeight: FontWeight.w400, // Default: `FontWeight.w500`
@@ -984,6 +997,22 @@ ThemeData createM2Theme({
           return colorScheme.outline;
         },
       ),
+    ),
+
+    // LISTTILE
+
+    // Revert https://github.com/flutter/flutter/pull/117965 to keep Material Design 2.
+    listTileTheme: ListTileThemeData(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+      minLeadingWidth: 40.0,
+      minVerticalPadding: 4.0,
+      shape: const Border(),
+      tileColor: Colors.transparent,
+      titleTextStyle: theme.titleMedium,
+      subtitleTextStyle: theme.bodyMedium,
+      leadingAndTrailingTextStyle: theme.bodyMedium,
+      selectedColor: colorScheme.primary,
+      iconColor: isLightMode ? iconColors.light : iconColors.dark,
     ),
 
     // DIALOG
