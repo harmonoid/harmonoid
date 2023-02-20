@@ -63,7 +63,6 @@ class Strings {
   late String DATE_ADDED;
   late String DELETE;
   late String DESCENDING;
-  late String DISABLE_ANIMATIONS;
   late String DISABLE_VOLUME_BOOST;
   late String DISCOVERING_FILES;
   late String DISPLAY_AUDIO_FORMAT;
@@ -79,6 +78,7 @@ class Strings {
   late String EDIT_MINIMUM_FILE_SIZE;
   late String ENABLE_125_SCALING;
   late String ENABLE_ACRYLIC_BLUR;
+  late String ENABLE_ANIMATION_EFFECTS;
   late String ENABLE_DISCORD_RPC;
   late String ENABLE_VOLUME_BOOST_FILTER;
   late String ENABLE_VOLUME_BOOST_FILTER_WARNING;
@@ -117,6 +117,7 @@ class Strings {
   late String LYRICS;
   late String LYRICS_NOT_FOUND;
   late String LYRICS_RETRIEVING;
+  late String MATERIAL_DESIGN_3;
   late String MEDIA_FILES;
   late String MENU;
   late String MINIMUM_FILE_SIZE;
@@ -219,6 +220,8 @@ class Strings {
   late String SETTING_APP_VERSION_LATEST;
   late String SETTING_APP_VERSION_SUBTITLE;
   late String SETTING_APP_VERSION_TITLE;
+  late String SETTING_DISPLAY_SUBTITLE;
+  late String SETTING_DISPLAY_TITLE;
   late String SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR;
   late String SETTING_INDEXING_SUBTITLE;
   late String SETTING_INDEXING_TITLE;
@@ -242,11 +245,14 @@ class Strings {
   late String SORT;
   late String SORT_BY;
   late String SPEED;
+  late String SPEED_ANIMATION_EFFECTS;
   late String STARTING_PLAYBACK;
   late String STATS_SUBTITLE;
   late String STATS_TITLE;
   late String STICKY_MINIPLAYER;
   late String STREAM;
+  late String SYSTEM_COLOR_SCHEME;
+  late String SYSTEM_COLOR_SCHEME_SUBTITLE;
   late String THEME_MODE_DARK;
   late String THEME_MODE_LIGHT;
   late String THEME_MODE_SYSTEM;
