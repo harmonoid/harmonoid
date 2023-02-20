@@ -15,6 +15,7 @@ import 'package:path/path.dart' as path;
 import 'package:media_library/media_library.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 
+import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -145,6 +146,7 @@ class Configuration extends ConfigurationKeys {
     bool? addLibraryToPlaylistWhenPlayingFromTracksTab,
     List<String>? fallbackAlbumArtFileNames,
     bool? androidEnableVolumeBoostFilter,
+    AnimationDuration? animationDuration,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -276,6 +278,9 @@ class Configuration extends ConfigurationKeys {
     if (androidEnableVolumeBoostFilter != null) {
       this.androidEnableVolumeBoostFilter = androidEnableVolumeBoostFilter;
     }
+    if (animationDuration != null) {
+      this.animationDuration = animationDuration;
+    }
     await storage.write(
       {
         'collectionDirectories': this
@@ -329,6 +334,7 @@ class Configuration extends ConfigurationKeys {
             this.addLibraryToPlaylistWhenPlayingFromTracksTab,
         'fallbackAlbumArtFileNames': this.fallbackAlbumArtFileNames,
         'androidEnableVolumeBoostFilter': this.androidEnableVolumeBoostFilter,
+        'animationDuration': this.animationDuration.toJson(),
       },
     );
   }
@@ -403,6 +409,8 @@ class Configuration extends ConfigurationKeys {
     fallbackAlbumArtFileNames =
         current['fallbackAlbumArtFileNames'].cast<String>();
     androidEnableVolumeBoostFilter = current['androidEnableVolumeBoostFilter'];
+    animationDuration =
+        AnimationDuration.fromJson(current['animationDuration']);
   }
 
   static Future<Map<String, dynamic>>
@@ -519,6 +527,7 @@ class Configuration extends ConfigurationKeys {
                 Platform.isAndroid || Platform.isIOS,
             'fallbackAlbumArtFileNames': kDefaultFallbackAlbumArtFileNames,
             'androidEnableVolumeBoostFilter': false,
+            'animationDuration': AnimationDuration().toJson(),
           };
 }
 
@@ -566,4 +575,5 @@ abstract class ConfigurationKeys {
   late bool addLibraryToPlaylistWhenPlayingFromTracksTab;
   late List<String> fallbackAlbumArtFileNames;
   late bool androidEnableVolumeBoostFilter;
+  late AnimationDuration animationDuration;
 }
