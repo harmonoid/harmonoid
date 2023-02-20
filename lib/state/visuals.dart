@@ -60,6 +60,9 @@ class Visuals extends ChangeNotifier {
   /// Current [BuildContext] of the application. Assigned at creation of widget tree.
   BuildContext? context;
 
+  /// Animation duration(s) for various animations & transitions inside the application.
+  AnimationDuration animationDuration;
+
   final Color? systemLight;
   final Color? systemDark;
   final ColorScheme? systemLightColorScheme;
@@ -76,6 +79,7 @@ class Visuals extends ChangeNotifier {
     required int standard,
     required ThemeMode themeMode,
     required bool systemColorScheme,
+    required AnimationDuration animationDuration,
   }) async {
     if (_initialized) {
       return;
@@ -125,6 +129,7 @@ class Visuals extends ChangeNotifier {
       standard: standard,
       themeMode: themeMode,
       systemColorScheme: systemColorScheme,
+      animationDuration: animationDuration,
       systemLight: systemLightColorScheme?.primary,
       systemDark: systemDarkColorScheme?.primary,
       systemLightColorScheme: systemLightColorScheme,
@@ -136,6 +141,7 @@ class Visuals extends ChangeNotifier {
     required this.standard,
     required this.themeMode,
     required this.systemColorScheme,
+    required this.animationDuration,
     required this.systemLight,
     required this.systemDark,
     required this.systemLightColorScheme,
@@ -176,10 +182,12 @@ class Visuals extends ChangeNotifier {
         3: createM3Theme(
           colorScheme: lightColorScheme,
           mode: ThemeMode.light,
+          animationDuration: animationDuration,
         ),
         2: createM2Theme(
           color: light,
           mode: ThemeMode.light,
+          animationDuration: animationDuration,
         )
       }[standard]!;
 
@@ -187,10 +195,12 @@ class Visuals extends ChangeNotifier {
         3: createM3Theme(
           colorScheme: darkColorScheme,
           mode: ThemeMode.dark,
+          animationDuration: animationDuration,
         ),
         2: createM2Theme(
           color: dark,
           mode: ThemeMode.dark,
+          animationDuration: animationDuration,
         )
       }[standard]!;
 
@@ -198,16 +208,20 @@ class Visuals extends ChangeNotifier {
     ThemeMode? themeMode,
     int? standard,
     BuildContext? context,
+    AnimationDuration? animationDuration,
   }) async {
     this.themeMode = themeMode ?? this.themeMode;
     this.standard = standard ?? this.standard;
     this.context = context ?? this.context;
+    this.animationDuration = animationDuration ?? this.animationDuration;
     themeMode ??= this.themeMode;
     standard ??= this.standard;
     context ??= this.context;
+    animationDuration ??= this.animationDuration;
     debugPrint(themeMode.toString());
     debugPrint(standard.toString());
     debugPrint(context.toString());
+    debugPrint(animationDuration.toString());
     if (context != null) {
       if (Platform.isAndroid || Platform.isIOS) {
         final brightness = Theme.of(context).brightness == Brightness.dark
@@ -254,6 +268,9 @@ class Visuals extends ChangeNotifier {
       debugPrint('No [BuildContext] provided.');
     }
     notifyListeners();
-    await Configuration.instance.save(themeMode: themeMode);
+    await Configuration.instance.save(
+      themeMode: themeMode,
+      animationDuration: animationDuration,
+    );
   }
 }
