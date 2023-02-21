@@ -868,8 +868,16 @@ ThemeData createM2Theme({
     pageTransitionsTheme: PageTransitionsTheme(
       builders: {
         TargetPlatform.windows: ZoomPageTransitionsBuilder(),
-        TargetPlatform.linux: ZoomPageTransitionsBuilder(),
-        TargetPlatform.android: ZoomPageTransitionsBuilder(),
+        TargetPlatform.linux: ZoomPageTransitionsBuilder(
+          // For disabling use of [SnapshotWidget] on GNU/Linux in [ZoomPageTransitionsBuilder].
+          // This results in problems & images don't remain visible upon exiting the route.
+          allowEnterRouteSnapshotting: false,
+        ),
+        TargetPlatform.android: ZoomPageTransitionsBuilder(
+          // For disabling use of [SnapshotWidget] on GNU/Linux in [ZoomPageTransitionsBuilder].
+          // This results in problems & images don't remain visible upon exiting the route.
+          allowEnterRouteSnapshotting: false,
+        ),
         TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
         TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
       },
@@ -1008,12 +1016,11 @@ ThemeData createM2Theme({
       minVerticalPadding: 4.0,
       shape: const Border(),
       tileColor: Colors.transparent,
-      // NOT on stable channel yet.
-      // titleTextStyle: theme.titleMedium,
-      // subtitleTextStyle: theme.bodyMedium,
-      // leadingAndTrailingTextStyle: theme.bodyMedium,
-      // selectedColor: colorScheme.primary,
-      // iconColor: isLightMode ? iconColors.light : iconColors.dark,
+      titleTextStyle: theme.titleMedium,
+      subtitleTextStyle: theme.bodyMedium,
+      leadingAndTrailingTextStyle: theme.bodyMedium,
+      selectedColor: colorScheme.primary,
+      iconColor: isLightMode ? iconColors.light : iconColors.dark,
     ),
 
     // DIALOG

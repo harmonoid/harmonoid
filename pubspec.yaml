@@ -11,6 +11,7 @@ dependencies:
     sdk: flutter
 
   # Plugins maintained by github.com/alexmercerind or first-party to the Harmonoid.
+
   media_kit:
     git:
       url: https://github.com/alexmercerind/media_kit.git
@@ -98,6 +99,7 @@ dependencies:
   flutter_svg: ^1.1.4
 
   # Third-party forked plugins & packages to meet requirements.
+
   desktop:
     git:
       url: https://github.com/alexmercerind/desktop.git
