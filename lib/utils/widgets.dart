@@ -1305,14 +1305,14 @@ class ExceptionWidget extends StatelessWidget {
             style: Theme.of(context).textTheme.titleLarge,
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 8.0),
+          const SizedBox(height: 4.0),
           Text(
             subtitle,
             style: Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),
           if (title == Language.instance.NO_COLLECTION_TITLE) ...[
-            const SizedBox(height: 4.0),
+            const SizedBox(height: 8.0),
             TextButton(
               onPressed: () {
                 Navigator.of(context).push(
