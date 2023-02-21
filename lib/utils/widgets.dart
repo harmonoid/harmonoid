@@ -1601,21 +1601,31 @@ class ShowAllButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: onPressed,
-      child: Row(
-        children: [
-          Icon(
-            Icons.view_list,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-          const SizedBox(
-            width: 4.0,
-          ),
-          Text(
-            Language.instance.SEE_ALL,
-          ),
-        ],
+    return InkWell(
+      onTap: onPressed,
+      borderRadius: BorderRadius.circular(4.0),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 8.0,
+          vertical: 4.0,
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.view_list,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const SizedBox(
+              width: 4.0,
+            ),
+            Text(
+              Language.instance.SEE_ALL,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -2384,28 +2394,15 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      style: ButtonStyle(
-        textStyle: MaterialStatePropertyAll(
-          Theme.of(context).textTheme.bodyMedium,
-        ),
-        foregroundColor: MaterialStatePropertyAll(
-          Theme.of(context).textTheme.bodyMedium?.color,
-        ),
-      ),
-      child: Row(
-        children: [
-          const SizedBox(width: 8.0),
-          Text(
-            '${(sort.firstWhere((e) => e.checked).child as Text).data}'
-            ' '
-            '(${(order.firstWhere((e) => e.checked).child as Text).data})',
-          ),
-          const SizedBox(width: 4.0),
-          const Icon(Icons.expand_more),
-        ],
-      ),
-      onPressed: () async {
+    final color =
+        isMaterial2(context) && Theme.of(context).brightness == Brightness.light
+            ? Theme.of(context).colorScheme.primary
+            : Theme.of(context).textTheme.bodyLarge?.color;
+    return InkWell(
+      borderRadius: isMaterial2(context)
+          ? BorderRadius.circular(4.0)
+          : BorderRadius.circular(20.0),
+      onTap: () async {
         if (widget.tab == 3) return;
         await showModalBottomSheet(
           isScrollControlled: true,
@@ -2433,6 +2430,41 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
           ),
         );
       },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Text(
+              String.fromCharCode(
+                order.firstWhere((e) => e.checked).value == OrderType.ascending
+                    ? Icons.arrow_upward.codePoint
+                    : Icons.arrow_downward.codePoint,
+              ),
+              style: TextStyle(
+                inherit: false,
+                fontSize: 18.0,
+                fontWeight: FontWeight.w700,
+                fontFamily: Icons.arrow_downward.fontFamily,
+                package: Icons.arrow_downward.fontPackage,
+                color: color,
+              ),
+            ),
+            const SizedBox(width: 10.0),
+            Text(
+              label(
+                context,
+                (sort.firstWhere((e) => e.checked).child as Text)
+                    .data
+                    .toString(),
+              ),
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: color,
+                  ),
+            ),
+            const SizedBox(width: 4.0),
+          ],
+        ),
+      ),
     );
   }
 }
