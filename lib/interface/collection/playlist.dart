@@ -840,7 +840,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
       ScrollController(initialScrollOffset: kMobileLayoutInitialScrollOffset);
   final sc1 = ScrollController(initialScrollOffset: 0.0);
 
-  static const double kMobileLayoutInitialScrollOffset = 96.0;
+  static const double kMobileLayoutInitialScrollOffset = 128.0;
 
   @override
   void initState() {

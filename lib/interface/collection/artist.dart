@@ -127,11 +127,13 @@ class _ArtistTabState extends State<ArtistTab> {
                     ? DraggableScrollbar.semicircle(
                         heightScrollThumb: 56.0,
                         labelConstraints: BoxConstraints.tightFor(
-                          width: collection.artistsSort == ArtistsSort.aToZ
-                              ? 72.0
-                              : 120.0,
-                          height: collection.artistsSort == ArtistsSort.aToZ
-                              ? 72.0
+                          width: Collection.instance.artistsSort ==
+                                  ArtistsSort.aToZ
+                              ? 56.0
+                              : 136.0,
+                          height: Collection.instance.artistsSort ==
+                                  ArtistsSort.aToZ
+                              ? 56.0
                               : 32.0,
                         ),
                         labelTextBuilder: (offset) {
@@ -156,7 +158,7 @@ class _ArtistTabState extends State<ArtistTab> {
                                 return Text(
                                   artist.artistName[0].toUpperCase(),
                                   style:
-                                      Theme.of(context).textTheme.displaySmall,
+                                      Theme.of(context).textTheme.headlineSmall,
                                 );
                               }
                             case ArtistsSort.dateAdded:
@@ -193,6 +195,7 @@ class _ArtistTabState extends State<ArtistTab> {
                                 kMobileSearchBarHeight +
                                 tileMargin(context),
                           ),
+                          itemCount: 1 + data.widgets.length,
                           itemBuilder: (context, i) {
                             if (i == 0) {
                               return Container(
@@ -219,9 +222,7 @@ class _ArtistTabState extends State<ArtistTab> {
                       )
                     : Container(
                         padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).padding.top +
-                              kMobileSearchBarHeight +
-                              tileMargin(context),
+                          top: MediaQuery.of(context).padding.top,
                         ),
                         child: Center(
                           child: ExceptionWidget(
@@ -614,7 +615,7 @@ class ArtistScreenState extends State<ArtistScreen>
       ScrollController(initialScrollOffset: kMobileLayoutInitialScrollOffset);
   final sc1 = ScrollController(initialScrollOffset: 0.0);
 
-  static const double kMobileLayoutInitialScrollOffset = 96.0;
+  static const double kMobileLayoutInitialScrollOffset = 128.0;
 
   @override
   void initState() {
@@ -1354,14 +1355,14 @@ class ArtistScreenState extends State<ArtistScreen>
                                   color: detailsVisible
                                       ? Theme.of(context)
                                           .extension<IconColors>()
-                                          ?.appBarActionDarkIconColor
+                                          ?.appBarActionDark
                                       : [
                                           Theme.of(context)
                                               .extension<IconColors>()
                                               ?.appBarActionLight,
                                           Theme.of(context)
                                               .extension<IconColors>()
-                                              ?.appBarActionDarkIconColor,
+                                              ?.appBarActionDark,
                                         ][(color?.computeLuminance() ??
                                                   (Theme.of(context)
                                                               .brightness ==

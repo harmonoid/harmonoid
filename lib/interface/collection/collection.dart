@@ -420,9 +420,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                     ),
                                   ),
                                 ),
-                                SizedBox(
-                                  width: 12.0,
-                                ),
+                                const SizedBox(width: 12.0),
                                 PlayFileOrURLButton(),
                                 CollectionMoreButton(),
                                 Tooltip(
@@ -547,7 +545,12 @@ class CollectionScreenState extends State<CollectionScreen>
                               .extension<AnimationDuration>()
                               ?.medium ??
                           Duration.zero,
-                      transition: CircularFloatingSearchBarTransition(),
+                      transition: CircularFloatingSearchBarTransition(
+                        divider: const Divider(
+                          height: 2.0,
+                          thickness: 2.0,
+                        ),
+                      ),
                       leadingActions: [
                         FloatingSearchBarAction(
                           child: Padding(

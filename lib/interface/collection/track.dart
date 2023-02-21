@@ -347,12 +347,13 @@ class _TrackTabState extends State<TrackTab> {
                   ? DraggableScrollbar.semicircle(
                       heightScrollThumb: 56.0,
                       labelConstraints: BoxConstraints.tightFor(
-                        width: collection.tracksSort == TracksSort.aToZ
-                            ? 72.0
+                        width: Collection.instance.tracksSort == TracksSort.aToZ
+                            ? 56.0
                             : 136.0,
-                        height: collection.tracksSort == TracksSort.aToZ
-                            ? 72.0
-                            : 32.0,
+                        height:
+                            Collection.instance.tracksSort == TracksSort.aToZ
+                                ? 56.0
+                                : 32.0,
                       ),
                       labelTextBuilder: (offset) {
                         final index = (offset -
@@ -370,7 +371,8 @@ class _TrackTabState extends State<TrackTab> {
                             {
                               return Text(
                                 track.trackName[0].toUpperCase(),
-                                style: Theme.of(context).textTheme.displaySmall,
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall,
                               );
                             }
                           case TracksSort.dateAdded:
@@ -410,6 +412,7 @@ class _TrackTabState extends State<TrackTab> {
                               kMobileSearchBarHeight +
                               tileMargin(context),
                         ),
+                        itemCount: collection.tracks.length + 1,
                         itemBuilder: (context, i) {
                           if (i == 0) {
                             return Container(
@@ -448,9 +451,7 @@ class _TrackTabState extends State<TrackTab> {
                     )
                   : Container(
                       padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).padding.top +
-                            kMobileSearchBarHeight +
-                            tileMargin(context),
+                        top: MediaQuery.of(context).padding.top,
                       ),
                       child: Center(
                         child: ExceptionWidget(
@@ -732,15 +733,10 @@ class TrackTileState extends State<TrackTile> {
                                     style:
                                         Theme.of(context).textTheme.titleMedium,
                                   ),
+                              const SizedBox(height: 2.0),
                               if (widget.subtitle != null) ...[
-                                const SizedBox(
-                                  height: 2.0,
-                                ),
                                 widget.subtitle!
                               ] else if (subtitle.isNotEmpty) ...[
-                                const SizedBox(
-                                  height: 2.0,
-                                ),
                                 Text(
                                   subtitle,
                                   overflow: TextOverflow.ellipsis,
@@ -773,7 +769,7 @@ class TrackTileState extends State<TrackTile> {
           );
   }
 
-  void _showBottomSheet() async {
+  Future<void> _showBottomSheet() async {
     int? result;
     await showModalBottomSheet(
       isScrollControlled: true,

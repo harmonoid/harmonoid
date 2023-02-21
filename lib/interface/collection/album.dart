@@ -130,11 +130,11 @@ class _AlbumTabState extends State<AlbumTab> {
                         labelConstraints: BoxConstraints.tightFor(
                           width:
                               Collection.instance.albumsSort == AlbumsSort.aToZ
-                                  ? 72.0
+                                  ? 56.0
                                   : 136.0,
                           height:
                               Collection.instance.albumsSort == AlbumsSort.aToZ
-                                  ? 72.0
+                                  ? 56.0
                                   : 32.0,
                         ),
                         labelTextBuilder: (offset) {
@@ -159,7 +159,7 @@ class _AlbumTabState extends State<AlbumTab> {
                                 return Text(
                                   album.albumName[0].toUpperCase(),
                                   style:
-                                      Theme.of(context).textTheme.displaySmall,
+                                      Theme.of(context).textTheme.headlineSmall,
                                 );
                               }
                             case AlbumsSort.dateAdded:
@@ -202,6 +202,7 @@ class _AlbumTabState extends State<AlbumTab> {
                                 kMobileSearchBarHeight +
                                 tileMargin(context),
                           ),
+                          itemCount: 1 + data.widgets.length,
                           itemBuilder: (context, i) {
                             if (i == 0) {
                               return Container(
@@ -228,9 +229,7 @@ class _AlbumTabState extends State<AlbumTab> {
                       )
                     : Container(
                         padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).padding.top +
-                              kMobileSearchBarHeight +
-                              tileMargin(context),
+                          top: MediaQuery.of(context).padding.top,
                         ),
                         child: Center(
                           child: ExceptionWidget(
@@ -1775,14 +1774,14 @@ class AlbumScreenState extends State<AlbumScreen>
                                   color: detailsVisible
                                       ? Theme.of(context)
                                           .extension<IconColors>()
-                                          ?.appBarActionDarkIconColor
+                                          ?.appBarActionDark
                                       : [
                                           Theme.of(context)
                                               .extension<IconColors>()
                                               ?.appBarActionLight,
                                           Theme.of(context)
                                               .extension<IconColors>()
-                                              ?.appBarActionDarkIconColor,
+                                              ?.appBarActionDark,
                                         ][(color?.computeLuminance() ??
                                                   (Theme.of(context)
                                                               .brightness ==
@@ -1860,14 +1859,14 @@ class AlbumScreenState extends State<AlbumScreen>
                                   color: detailsVisible
                                       ? Theme.of(context)
                                           .extension<IconColors>()
-                                          ?.appBarActionDarkIconColor
+                                          ?.appBarActionDark
                                       : [
                                           Theme.of(context)
                                               .extension<IconColors>()
                                               ?.appBarActionLight,
                                           Theme.of(context)
                                               .extension<IconColors>()
-                                              ?.appBarActionDarkIconColor,
+                                              ?.appBarActionDark,
                                         ][(color?.computeLuminance() ??
                                                   (Theme.of(context)
                                                               .brightness ==
