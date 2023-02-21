@@ -80,6 +80,7 @@ Future<void> main(List<String> args) async {
         standard: 2,
         themeMode: Configuration.instance.themeMode,
         systemColorScheme: false,
+        animationDuration: Configuration.instance.animationDuration,
       );
       DiscordRPC.initialize();
     }
@@ -102,6 +103,7 @@ Future<void> main(List<String> args) async {
         standard: 2,
         themeMode: Configuration.instance.themeMode,
         systemColorScheme: false,
+        animationDuration: Configuration.instance.animationDuration,
       );
     }
     if (Platform.isAndroid) {
@@ -157,6 +159,7 @@ Future<void> main(List<String> args) async {
         standard: 2,
         themeMode: Configuration.instance.themeMode,
         systemColorScheme: false,
+        animationDuration: Configuration.instance.animationDuration,
       );
     }
     await Collection.initialize(
