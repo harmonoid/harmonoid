@@ -108,9 +108,6 @@ jobs:
       - run: rm -r "assets/icons"
       - run: mkdir "assets/icons"
 
-      - run: rm pubspec.yaml
-      - run: mv pubspec.linux.yaml pubspec.yaml
-
       - name: Compile Tag Reader
         run: |
           cd external/media_kit_tag_reader
@@ -121,6 +118,8 @@ jobs:
           mkdir ../../../assets/platform
           mv tag_reader ../../../assets/platform
           tree ../../../assets
+
+      - run: git apply --reject --whitespace=fix patches/linux-bundle-external-tag-reader-and-fonts.patch
 
       - run: flutter config --enable-linux-desktop
       - run: flutter pub get
@@ -217,8 +216,6 @@ jobs:
       - run: mkdir "assets/icons"
       - run: rm -r "assets/preloaded_visuals"
       - run: mkdir "assets/preloaded_visuals"
-
-      - run: git apply --reject --whitespace=fix patches/linux-bundle-external-tag-reader-and-fonts.patch
 
       - run: flutter pub get
       - run: flutter build apk --verbose --split-per-abi
