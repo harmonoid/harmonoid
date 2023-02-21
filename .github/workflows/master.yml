@@ -218,6 +218,8 @@ jobs:
       - run: rm -r "assets/preloaded_visuals"
       - run: mkdir "assets/preloaded_visuals"
 
+      - run: git apply --reject --whitespace=fix patches/linux-bundle-external-tag-reader-and-fonts.patch
+
       - run: flutter pub get
       - run: flutter build apk --verbose --split-per-abi
       - run: cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk harmonoid-android-arm64-v8a-release.apk

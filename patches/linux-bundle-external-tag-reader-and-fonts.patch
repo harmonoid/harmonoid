@@ -1,0 +1,30 @@
+diff --git a/pubspec.yaml b/pubspec.yaml
+index 7dd4bb9..84579b9 100644
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -142,3 +142,25 @@ flutter:
+     - assets/translations/
+     - assets/translations/translations/
+     - assets/preloaded_visuals/
++    - assets/platform/
++  fonts:
++    - family: "Inter"
++      fonts:
++        - asset: assets/fonts/Inter-Thin.otf
++          weight: 100
++        - asset: assets/fonts/Inter-ExtraLight.otf
++          weight: 200
++        - asset: assets/fonts/Inter-Light.otf
++          weight: 300
++        - asset: assets/fonts/Inter-Regular.otf
++          weight: 400
++        - asset: assets/fonts/Inter-Medium.otf
++          weight: 500
++        - asset: assets/fonts/Inter-SemiBold.otf
++          weight: 600
++        - asset: assets/fonts/Inter-Bold.otf
++          weight: 700
++        - asset: assets/fonts/Inter-ExtraBold.otf
++          weight: 800
++        - asset: assets/fonts/Inter-Black.otf
++          weight: 900
