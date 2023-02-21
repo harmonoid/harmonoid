@@ -1,0 +1,15 @@
+diff --git a/lib/utils/theme.dart b/lib/utils/theme.dart
+index fca15e0..a9d06eb 100644
+--- a/lib/utils/theme.dart
++++ b/lib/utils/theme.dart
+@@ -869,7 +869,9 @@ ThemeData createM2Theme({
+       builders: {
+         TargetPlatform.windows: ZoomPageTransitionsBuilder(),
+         TargetPlatform.linux: ZoomPageTransitionsBuilder(),
+-        TargetPlatform.android: ZoomPageTransitionsBuilder(),
++        TargetPlatform.android: ZoomPageTransitionsBuilder(
++          allowEnterRouteSnapshotting: false,
++        ),
+         TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+         TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+       },
