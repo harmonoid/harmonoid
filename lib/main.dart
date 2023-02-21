@@ -9,10 +9,8 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/foundation.dart';
-import 'package:harmonoid/state/visuals.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:window_plus/window_plus.dart';
-import 'package:harmonoid/utils/android_tag_reader.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:media_kit_tag_reader/media_kit_tag_reader.dart';
@@ -26,11 +24,13 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 
 import 'package:harmonoid/state/lyrics.dart';
+import 'package:harmonoid/state/visuals.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/now_playing_visuals.dart';
 
 import 'package:harmonoid/utils/window_lifecycle.dart';
 import 'package:harmonoid/utils/storage_retriever.dart';
+import 'package:harmonoid/utils/android_tag_reader.dart';
 
 import 'package:harmonoid/interface/harmonoid.dart';
 import 'package:harmonoid/interface/exception.dart';

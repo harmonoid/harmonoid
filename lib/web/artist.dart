@@ -623,7 +623,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                           size: 20.0,
                           color: Theme.of(context)
                               .extension<IconColors>()
-                              ?.appBarActionDarkIconColor,
+                              ?.appBarActionDark,
                         ),
                       ),
                     ),

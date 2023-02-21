@@ -610,7 +610,7 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                 color: isDark(context)
                                     ? Theme.of(context)
                                         .extension<IconColors>()
-                                        ?.appBarActionDarkIconColor
+                                        ?.appBarActionDark
                                     : Theme.of(context)
                                         .extension<IconColors>()
                                         ?.appBarActionLight,
