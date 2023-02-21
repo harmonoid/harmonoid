@@ -219,8 +219,10 @@ jobs:
       - run: rm -r "assets/preloaded_visuals"
       - run: mkdir "assets/preloaded_visuals"
 
-      - run: flutter pub get
+      - run: git apply patches/flutter-master-dependencies.patch
       - run: git apply patches/disable-android-route-snapshotting.patch
+
+      - run: flutter pub get
       - run: flutter build apk --verbose --split-per-abi
       - run: cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk harmonoid-android-arm64-v8a-release.apk
       - run: cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk harmonoid-android-armeabi-v7a-release.apk
