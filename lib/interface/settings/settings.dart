@@ -148,11 +148,20 @@ class Settings extends StatelessWidget {
               child: CustomScrollView(
                 slivers: [
                   SliverAppBar(
-                    leading: IconButton(
-                      onPressed: Navigator.of(context).maybePop,
-                      icon: const Icon(Icons.arrow_back),
-                      color: Theme.of(context).appBarTheme.iconTheme?.color,
-                      splashRadius: 24.0,
+                    leading: Container(
+                      alignment: Alignment.topCenter,
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 8.0),
+                          IconButton(
+                            onPressed: Navigator.of(context).maybePop,
+                            icon: const Icon(Icons.arrow_back),
+                            color:
+                                Theme.of(context).appBarTheme.iconTheme?.color,
+                            splashRadius: 24.0,
+                          ),
+                        ],
+                      ),
                     ),
                     floating: false,
                     pinned: true,
@@ -166,14 +175,11 @@ class Settings extends StatelessWidget {
                     expandedHeight:
                         LargeScrollUnderFlexibleConfig.expandedHeight,
                     flexibleSpace: ScrollUnderFlexibleSpace(
-                      title: Padding(
-                        padding: const EdgeInsets.only(bottom: 4.0),
-                        child: Text(Language.instance.SETTING),
-                      ),
+                      title: Text(Language.instance.SETTING),
                     ),
                     bottom: PreferredSize(
+                      preferredSize: const Size.fromHeight(0.0),
                       child: MobileIndexingProgressIndicator(),
-                      preferredSize: Size.fromHeight(4.0),
                     ),
                   ),
                   SliverList(
@@ -300,7 +306,7 @@ class MobileIndexingProgressIndicator extends StatelessWidget {
             ),
           );
         } else {
-          return const SizedBox(height: 4.0);
+          return SizedBox.shrink();
         }
       },
     );
