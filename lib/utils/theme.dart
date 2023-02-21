@@ -337,7 +337,7 @@ ThemeData createM3Theme({
       actionsIconTheme: IconThemeData(
         color: isLightMode
             ? iconColors.appBarActionLight
-            : iconColors.appBarActionDarkIconColor,
+            : iconColors.appBarActionDark,
         size: 24.0,
       ),
     ),
@@ -439,22 +439,22 @@ ThemeData createM2Theme({
           headlineLarge: TextStyle(
             fontWeight: isDesktopPlatform
                 ? FontWeight.w600
-                : null, // Default: `FontWeight.w400`
+                : FontWeight.w500, // Default: `FontWeight.w400`
           ),
           headlineMedium: TextStyle(
             fontWeight: isDesktopPlatform
                 ? FontWeight.w600
-                : null, // Default: `FontWeight.w400`
+                : FontWeight.w500, // Default: `FontWeight.w400`
           ),
           headlineSmall: TextStyle(
             fontWeight: isDesktopPlatform
                 ? FontWeight.w600
-                : null, // Default: `FontWeight.w400`
+                : FontWeight.w500, // Default: `FontWeight.w400`
           ),
           titleLarge: TextStyle(
             fontWeight: isDesktopPlatform
                 ? FontWeight.w600
-                : null, // Default: `FontWeight.w500`
+                : FontWeight.w500, // Default: `FontWeight.w500`
           ),
           titleMedium: TextStyle(
             fontWeight: isDesktopPlatform
@@ -464,13 +464,13 @@ ThemeData createM2Theme({
           titleSmall: TextStyle(
             fontWeight: isDesktopPlatform
                 ? FontWeight.w600
-                : null, // Default: `FontWeight.w500`
+                : FontWeight.w500, // Default: `FontWeight.w500`
           ),
           bodyLarge: TextStyle(
             fontWeight: FontWeight.w400, // Default: `FontWeight.w500`
           ),
           labelLarge: TextStyle(
-            letterSpacing: 1.0, // Default: `0.0`,
+            letterSpacing: isDesktopPlatform ? 1.0 : 0.0, // Default: `0.0`,
           ),
         ),
       )
@@ -858,7 +858,7 @@ ThemeData createM2Theme({
       actionsIconTheme: IconThemeData(
         color: isLightMode
             ? iconColors.appBarActionLight
-            : iconColors.appBarActionDarkIconColor,
+            : iconColors.appBarActionDark,
         size: 24.0,
       ),
     ),
@@ -1393,7 +1393,7 @@ class IconColors extends ThemeExtension<IconColors> {
   final Color appBarLight;
   final Color appBarDark;
   final Color appBarActionLight;
-  final Color appBarActionDarkIconColor;
+  final Color appBarActionDark;
   final Color lightDisabled;
   final Color darkDisabled;
 
@@ -1403,7 +1403,7 @@ class IconColors extends ThemeExtension<IconColors> {
     this.appBarLight,
     this.appBarDark,
     this.appBarActionLight,
-    this.appBarActionDarkIconColor,
+    this.appBarActionDark,
     this.lightDisabled,
     this.darkDisabled,
   );
@@ -1415,7 +1415,7 @@ class IconColors extends ThemeExtension<IconColors> {
     Color? appBarLight,
     Color? appBarDark,
     Color? appBarActionLight,
-    Color? appBarActionDarkIconColor,
+    Color? appBarActionDark,
     Color? lightDisabled,
     Color? darkDisabled,
   }) {
@@ -1425,7 +1425,7 @@ class IconColors extends ThemeExtension<IconColors> {
       appBarLight ?? this.appBarLight,
       appBarDark ?? this.appBarDark,
       appBarActionLight ?? this.appBarActionLight,
-      appBarActionDarkIconColor ?? this.appBarActionDarkIconColor,
+      appBarActionDark ?? this.appBarActionDark,
       lightDisabled ?? this.lightDisabled,
       darkDisabled ?? this.darkDisabled,
     );
@@ -1468,11 +1468,11 @@ class IconColors extends ThemeExtension<IconColors> {
           ) ??
           appBarActionLight,
       Color.lerp(
-            appBarActionDarkIconColor,
-            other.appBarActionDarkIconColor,
+            appBarActionDark,
+            other.appBarActionDark,
             t,
           ) ??
-          appBarActionDarkIconColor,
+          appBarActionDark,
       Color.lerp(
             lightDisabled,
             other.lightDisabled,
