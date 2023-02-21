@@ -124,7 +124,7 @@ jobs:
 
       - run: flutter config --enable-linux-desktop
       - run: flutter pub get
-      - run: git apply patches/disable-linux-route-snapshotting.patch
+      - run: git apply --reject --whitespace=fix patches/disable-linux-route-snapshotting.patch
       - run: flutter build linux --verbose
 
       - run: chmod +x build/linux/x64/release/bundle/data/flutter_assets/assets/platform/tag_reader
@@ -219,8 +219,8 @@ jobs:
       - run: rm -r "assets/preloaded_visuals"
       - run: mkdir "assets/preloaded_visuals"
 
-      - run: git apply patches/flutter-master-dependencies.patch
-      - run: git apply patches/disable-android-route-snapshotting.patch
+      - run: git apply --reject --whitespace=fix patches/flutter-master-dependencies.patch
+      - run: git apply --reject --whitespace=fix patches/disable-android-route-snapshotting.patch
 
       - run: flutter pub get
       - run: flutter build apk --verbose --split-per-abi
