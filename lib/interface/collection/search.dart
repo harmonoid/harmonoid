@@ -363,18 +363,13 @@ class _FloatingSearchBarSearchTabState
         );
       }
       if (media is Artist) {
-        artists.addAll(
-          [
-            ArtistTile(
-              width: -1,
-              height: -1,
-              artist: media,
-              forceDefaultStyleOnMobile: true,
-            ),
-            const SizedBox(
-              width: 16.0,
-            ),
-          ],
+        artists.add(
+          ArtistTile(
+            width: -1,
+            height: -1,
+            artist: media,
+            forceDefaultStyleOnMobile: true,
+          ),
         );
       } else if (media is Track) {
         tracks.add(
@@ -420,19 +415,19 @@ class _FloatingSearchBarSearchTabState
       elevation: Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
       margin: EdgeInsets.zero,
       color: Theme.of(context).scaffoldBackgroundColor,
-      child: SizedBox(
-        height: (MediaQuery.of(context).size.height -
-                kMobileSearchBarHeight -
-                36.0 -
-                MediaQuery.of(context).padding.vertical -
-                MediaQuery.of(context).viewInsets.vertical)
-            .clamp(480.0, 1 << 32)
-            .toDouble(),
+      child: Container(
         width: MediaQuery.of(context).size.width,
+        constraints: BoxConstraints(
+          minHeight: (MediaQuery.of(context).size.height -
+                  kMobileSearchBarHeight -
+                  36.0 -
+                  MediaQuery.of(context).padding.vertical -
+                  MediaQuery.of(context).viewInsets.vertical)
+              .clamp(480.0, (1 << 32) * 1.0),
+        ),
         child: albums.isNotEmpty || artists.isNotEmpty || tracks.isNotEmpty
             ? Consumer<Collection>(
-                builder: (context, _, __) => CustomListView(
-                  shrinkWrap: true,
+                builder: (context, _, __) => Column(
                   children: <Widget>[
                     if (albums.isNotEmpty)
                       Row(
@@ -452,9 +447,11 @@ class _FloatingSearchBarSearchTabState
                                     ),
                                     body: NowPlayingBarScrollHideNotifier(
                                       child: CustomListView(
-                                        padding: EdgeInsets.symmetric(
-                                          vertical: tileMargin(context),
+                                        padding: EdgeInsets.only(
+                                          top: tileMargin(context),
                                         ),
+                                        itemExtent:
+                                            height + tileMargin(context),
                                         children: tileGridListWidgets(
                                           context: context,
                                           tileHeight: height,
@@ -466,10 +463,10 @@ class _FloatingSearchBarSearchTabState
                                                       tileMargin(context)) ~/
                                                   (kAlbumTileWidth +
                                                       tileMargin(context)),
-                                          subHeader: null,
+                                          leadingWidget: null,
                                           leadingSubHeader: null,
+                                          subHeader: null,
                                           widgetCount: this.albums.length ~/ 2,
-                                          leadingWidget: Container(),
                                           builder: (BuildContext context,
                                                   int index) =>
                                               albums[2 * index],
@@ -481,9 +478,7 @@ class _FloatingSearchBarSearchTabState
                               );
                             },
                           ),
-                          const SizedBox(
-                            width: 20.0,
-                          ),
+                          const SizedBox(width: 8.0),
                         ],
                       ),
                     if (albums.isNotEmpty)
@@ -498,7 +493,7 @@ class _FloatingSearchBarSearchTabState
                           ),
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
-                          children: albums,
+                          children: albums.take(20).toList(),
                         ),
                       ),
                     if (artists.isNotEmpty)
@@ -527,6 +522,8 @@ class _FloatingSearchBarSearchTabState
                                               padding: EdgeInsets.symmetric(
                                                 vertical: tileMargin(context),
                                               ),
+                                              itemExtent:
+                                                  kArtistTileListViewHeight,
                                               children: artists,
                                             ),
                                           ),
@@ -538,23 +535,53 @@ class _FloatingSearchBarSearchTabState
                               );
                             },
                           ),
-                          const SizedBox(
-                            width: 20.0,
-                          ),
+                          const SizedBox(width: 8.0),
                         ],
                       ),
-                    ...artists.take(4),
+                    ...artists.take(8).toList(),
                     if (tracks.isNotEmpty)
                       Row(
                         children: [
                           SubHeader(Language.instance.TRACK),
                           const Spacer(),
-                          const SizedBox(
-                            width: 20.0,
+                          ShowAllButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialRoute(
+                                  builder: (context) => Scaffold(
+                                    resizeToAvoidBottomInset: false,
+                                    appBar: AppBar(
+                                      title: Text(
+                                        Language.instance.TRACK,
+                                      ),
+                                    ),
+                                    body: Container(
+                                      height:
+                                          MediaQuery.of(context).size.height,
+                                      child: Stack(
+                                        children: [
+                                          NowPlayingBarScrollHideNotifier(
+                                            child: CustomListView(
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: tileMargin(context),
+                                              ),
+                                              itemExtent:
+                                                  kMobileTrackTileHeight,
+                                              children: tracks,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
+                          const SizedBox(width: 8.0),
                         ],
                       ),
-                    ...tracks,
+                    ...tracks.take(4).toList(),
                   ],
                 ),
               )
