@@ -111,14 +111,14 @@ class LanguageSetting extends StatelessWidget {
             const SizedBox(height: 8.0),
             Row(
               children: [
-                const SizedBox(width: 8.0),
+                const SizedBox(width: 4.0),
                 TextButton(
                   onPressed: () => action(context),
                   child: Text(
                     label(context, Language.instance.EDIT),
                   ),
                 ),
-                const SizedBox(width: 8.0),
+                const SizedBox(width: 4.0),
               ],
             ),
           ],

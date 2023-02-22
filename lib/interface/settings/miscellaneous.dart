@@ -65,34 +65,6 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
               value: Configuration
                   .instance.mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen,
             ),
-          CorrectedSwitchListTile(
-            title: Language
-                .instance.CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC_TITLE,
-            subtitle:
-                Language.instance.CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC,
-            onChanged: (_) => Configuration.instance
-                .save(
-                  dynamicNowPlayingBarColoring:
-                      !Configuration.instance.dynamicNowPlayingBarColoring,
-                )
-                .then((_) => setState(() {
-                      if (!Configuration
-                          .instance.dynamicNowPlayingBarColoring) {
-                        NowPlayingColorPalette.instance.cleanup();
-                      } else {
-                        try {
-                          NowPlayingColorPalette.instance.update(
-                            Playback.instance.tracks[Playback.instance.index],
-                            force: true,
-                          );
-                        } catch (exception, stacktrace) {
-                          debugPrint(exception.toString());
-                          debugPrint(stacktrace.toString());
-                        }
-                      }
-                    })),
-            value: Configuration.instance.dynamicNowPlayingBarColoring,
-          ),
           if (Platform.isWindows)
             CorrectedSwitchListTile(
               title: Language.instance.SHOW_TRACK_PROGRESS_ON_TASKBAR,
@@ -130,29 +102,6 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
             }),
             value: Configuration.instance.useLRCFromTrackDirectory,
           ),
-          CorrectedSwitchListTile(
-            title: Language.instance.SHOW_NOW_PLAYING_AFTER_PLAYING,
-            subtitle: Language.instance.SHOW_NOW_PLAYING_AFTER_PLAYING_SUBTITLE,
-            onChanged: (_) => Configuration.instance
-                .save(
-                  jumpToNowPlayingScreenOnPlay:
-                      !Configuration.instance.jumpToNowPlayingScreenOnPlay,
-                )
-                .then((_) => setState(() {})),
-            value: Configuration.instance.jumpToNowPlayingScreenOnPlay,
-          ),
-          if (isDesktop)
-            CorrectedSwitchListTile(
-              title: Language.instance.USE_MODERN_NOW_PLAYING_SCREEN,
-              subtitle: Language.instance.USE_MODERN_NOW_PLAYING_SCREEN,
-              onChanged: (_) => Configuration.instance
-                  .save(
-                    modernNowPlayingScreen:
-                        !Configuration.instance.modernNowPlayingScreen,
-                  )
-                  .then((value) => setState(() {})),
-              value: Configuration.instance.modernNowPlayingScreen,
-            ),
           if (isDesktop)
             CorrectedSwitchListTile(
               title: Language.instance.ENABLE_DISCORD_RPC,
@@ -168,23 +117,6 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
                 }
               }),
               value: Configuration.instance.discordRPC,
-            ),
-          if (isMobile)
-            CorrectedSwitchListTile(
-              title: Language.instance.MOBILE_ENABLE_NOW_PLAYING_RIPPLE_EFFECT,
-              subtitle:
-                  Language.instance.MOBILE_ENABLE_NOW_PLAYING_RIPPLE_EFFECT,
-              onChanged: (_) => Configuration.instance
-                  .save(
-                mobileEnableNowPlayingScreenRippleEffect: !Configuration
-                    .instance.mobileEnableNowPlayingScreenRippleEffect,
-              )
-                  .then((_) {
-                setState(() {});
-                MobileNowPlayingController.instance.hide();
-              }),
-              value: Configuration
-                  .instance.mobileEnableNowPlayingScreenRippleEffect,
             ),
           CorrectedSwitchListTile(
             title: Language
