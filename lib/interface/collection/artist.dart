@@ -127,8 +127,12 @@ class _ArtistTabState extends State<ArtistTab> {
                     ? DraggableScrollbar.semicircle(
                         heightScrollThumb: 56.0,
                         labelConstraints: BoxConstraints.tightFor(
-                          width: 120.0,
-                          height: 32.0,
+                          width: collection.artistsSort == ArtistsSort.aToZ
+                              ? 72.0
+                              : 120.0,
+                          height: collection.artistsSort == ArtistsSort.aToZ
+                              ? 72.0
+                              : 32.0,
                         ),
                         labelTextBuilder: (offset) {
                           final perTileHeight = helper.artistElementsPerRow > 1
@@ -151,7 +155,8 @@ class _ArtistTabState extends State<ArtistTab> {
                               {
                                 return Text(
                                   artist.artistName[0].toUpperCase(),
-                                  style: Theme.of(context).textTheme.bodyLarge,
+                                  style:
+                                      Theme.of(context).textTheme.displaySmall,
                                 );
                               }
                             case ArtistsSort.dateAdded:

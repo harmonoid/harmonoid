@@ -792,6 +792,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                 int? result;
                                                                                 await showModalBottomSheet(
                                                                                   isScrollControlled: true,
+                                                                                  elevation: 0,
                                                                                   backgroundColor: Colors.transparent,
                                                                                   context: context,
                                                                                   builder: (context) => Card(
@@ -801,7 +802,6 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                       bottom: 8.0,
                                                                                     ),
                                                                                     clipBehavior: Clip.antiAlias,
-                                                                                    elevation: kDefaultHeavyElevation,
                                                                                     child: Container(
                                                                                       child: Column(
                                                                                         mainAxisSize: MainAxisSize.min,

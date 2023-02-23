@@ -128,8 +128,14 @@ class _AlbumTabState extends State<AlbumTab> {
                     ? DraggableScrollbar.semicircle(
                         heightScrollThumb: 56.0,
                         labelConstraints: BoxConstraints.tightFor(
-                          width: 120.0,
-                          height: 32.0,
+                          width:
+                              Collection.instance.albumsSort == AlbumsSort.aToZ
+                                  ? 72.0
+                                  : 136.0,
+                          height:
+                              Collection.instance.albumsSort == AlbumsSort.aToZ
+                                  ? 72.0
+                                  : 32.0,
                         ),
                         labelTextBuilder: (offset) {
                           final perTileHeight = helper.albumElementsPerRow > 1
@@ -152,7 +158,8 @@ class _AlbumTabState extends State<AlbumTab> {
                               {
                                 return Text(
                                   album.albumName[0].toUpperCase(),
-                                  style: Theme.of(context).textTheme.bodyLarge,
+                                  style:
+                                      Theme.of(context).textTheme.displaySmall,
                                 );
                               }
                             case AlbumsSort.dateAdded:
