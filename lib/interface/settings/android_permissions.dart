@@ -46,6 +46,48 @@ class AndroidPermissionsSettingState extends State<AndroidPermissionsSetting> {
     refresh();
   }
 
+  Future<void> requestMusic() async {
+    if (!music) {
+      if (StorageRetriever.instance.version >= 33) {
+        final result = await Permission.audio.request();
+        debugPrint(result.toString());
+      } else {
+        final result = await Permission.storage.request();
+        debugPrint(result.toString());
+      }
+      await refresh();
+    }
+  }
+
+  Future<void> requestNotification() async {
+    if (!notification) {
+      if (StorageRetriever.instance.version >= 33) {
+        final result = await Permission.notification.request();
+        debugPrint(result.toString());
+        if (result == PermissionStatus.granted) {
+          // Create notification channel & setup callbacks for lyrics.
+          try {
+            Lyrics.initialize();
+          } catch (exception, stacktrace) {
+            debugPrint(exception.toString());
+            debugPrint(stacktrace.toString());
+          }
+        }
+      }
+      await refresh();
+    }
+  }
+
+  Future<void> requestPhotos() async {
+    if (!photos) {
+      if (StorageRetriever.instance.version >= 33) {
+        final result = await Permission.photos.request();
+        debugPrint(result.toString());
+      }
+      await refresh();
+    }
+  }
+
   Future<void> refresh() async {
     try {
       // Granular music & audio permissions for Android 13 or higher.
@@ -90,21 +132,11 @@ class AndroidPermissionsSettingState extends State<AndroidPermissionsSetting> {
       child: Column(
         children: [
           ListTile(
+            onTap: requestMusic,
             trailing: Switch(
               thumbIcon: thumbIcon(context),
               value: music,
-              onChanged: (_) async {
-                if (!music) {
-                  if (StorageRetriever.instance.version >= 33) {
-                    final result = await Permission.audio.request();
-                    debugPrint(result.toString());
-                  } else {
-                    final result = await Permission.storage.request();
-                    debugPrint(result.toString());
-                  }
-                  await refresh();
-                }
-              },
+              onChanged: (_) => requestMusic(),
             ),
             title: Text(Language.instance.PERMISSION_MUSIC_AND_AUDIO),
             subtitle: Text(
@@ -116,27 +148,11 @@ class AndroidPermissionsSettingState extends State<AndroidPermissionsSetting> {
           // Notifications permission is only required by Android 13 or higher.
           if (StorageRetriever.instance.version >= 33)
             ListTile(
+              onTap: requestNotification,
               trailing: Switch(
                 thumbIcon: thumbIcon(context),
                 value: notification,
-                onChanged: (_) async {
-                  if (!notification) {
-                    if (StorageRetriever.instance.version >= 33) {
-                      final result = await Permission.notification.request();
-                      debugPrint(result.toString());
-                      if (result == PermissionStatus.granted) {
-                        // Create notification channel & setup callbacks for lyrics.
-                        try {
-                          Lyrics.initialize();
-                        } catch (exception, stacktrace) {
-                          debugPrint(exception.toString());
-                          debugPrint(stacktrace.toString());
-                        }
-                      }
-                    }
-                    await refresh();
-                  }
-                },
+                onChanged: (_) => requestNotification(),
               ),
               title: Text(Language.instance.PERMISSION_NOTIFICATIONS),
               subtitle: Text(
@@ -148,18 +164,11 @@ class AndroidPermissionsSettingState extends State<AndroidPermissionsSetting> {
           // Photos & images permission is only required by Android 13 or higher.
           if (StorageRetriever.instance.version >= 33)
             ListTile(
+              onTap: requestPhotos,
               trailing: Switch(
                 thumbIcon: thumbIcon(context),
                 value: photos,
-                onChanged: (_) async {
-                  if (!photos) {
-                    if (StorageRetriever.instance.version >= 33) {
-                      final result = await Permission.photos.request();
-                      debugPrint(result.toString());
-                    }
-                    await refresh();
-                  }
-                },
+                onChanged: (_) => requestPhotos(),
               ),
               isThreeLine: true,
               title: Text(
