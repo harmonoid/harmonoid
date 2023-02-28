@@ -42,7 +42,7 @@ class _DisplaySettingState extends State<DisplaySetting> {
             if (isDesktop) ...[
               Padding(
                 padding: EdgeInsets.symmetric(
-                  vertical: 8.0,
+                  vertical: 16.0,
                   horizontal: 16.0,
                 ),
                 child: Text(
