@@ -6,19 +6,18 @@
 
 [Website](https://harmonoid.com) • [Download](https://harmonoid.com/downloads) • [Discord](https://discord.gg/2Rc3edFWd8) • Available for Windows, Linux & Android!
 
-![](https://github.com/harmonoid/harmonoid/blob/assets/windows/0.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/windows/1.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/windows/2.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/windows/3.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/windows/4.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/win32/0.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/win32/1.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/win32/2.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/win32/3.webp?raw=true)
 
 ## Videos
 
 Enjoy that 🧈 buttery experience.
 
-https://user-images.githubusercontent.com/28951144/180613629-942ae758-2179-48a8-825f-fc3e918aba0d.mp4
+https://user-images.githubusercontent.com/28951144/220771329-de074abb-41c6-4168-910a-d9e973f68421.mp4
 
-https://user-images.githubusercontent.com/28951144/180613641-baf7a246-08ba-496f-9952-7792a0117177.mp4
+https://user-images.githubusercontent.com/28951144/220771351-c58f125c-6495-4a06-8109-77fd8f061db1.mp4
 
 ## Features
 
@@ -62,15 +61,10 @@ There are no inconsistent paddings, spacings or weird alignments to make me feel
 
 ## Supporters
 
-### GitHub Sponsors
-
-- [Taylor](https://github.com/tskinn) • 10$ per month.
-
 ### Patreons
 
-- [Oleks](https://www.patreon.com/user/creators?u=28979760) • 5$ per month.
-- [Benjamin Kranz](https://twitter.com/RisuDesign) • Checkout their [YouTube](https://www.youtube.com/c/RapidzDE)! • 5$ per month.
-- [Mohammed Abutaki](https://www.patreon.com/user/creators?u=27366405) • 5$ per month.
+- [Oleks](https://www.patreon.com/user/creators?u=28979760) • 4.50 € per month.
+- [Tse Loki](https://www.patreon.com/user/creators?u=2866352) • 2 € per month.
 
 ## Support
 
