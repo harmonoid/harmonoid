@@ -61,14 +61,9 @@ There are no inconsistent paddings, spacings or weird alignments to make me feel
 
 ## Supporters
 
-### GitHub Sponsors
-
-- [Taylor](https://github.com/tskinn) • 10$ per month.
-
 ### Patreons
 
 - [Oleks](https://www.patreon.com/user/creators?u=28979760) • 4.50 € per month.
-- [Benjamin Kranz](https://twitter.com/RisuDesign) • 4.50 € per month • Checkout their [YouTube Channel](https://www.youtube.com/c/RapidzDE)!
 - [Tse Loki](https://www.patreon.com/user/creators?u=2866352) • 2 € per month.
 
 ## Support
