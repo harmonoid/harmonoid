@@ -12,20 +12,18 @@ dependencies:
 
   # Plugins maintained by github.com/alexmercerind or first-party to the Harmonoid.
 
-  media_kit:
-    git:
-      url: https://github.com/alexmercerind/media_kit.git
-      ref: main
-      path: media_kit
-  media_kit_libs_windows_audio:
-    git:
-      url: https://github.com/alexmercerind/media_kit.git
-      ref: main
-      path: media_kit_libs_windows_audio
+  media_kit: ^0.0.1
+  media_kit_native_event_loop: ^0.0.1
+
+  media_kit_libs_linux: ^1.0.0
+  media_kit_libs_windows_audio: ^1.0.0
+
   media_kit_tag_reader:
     path: external/media_kit_tag_reader
+
   media_library:
     path: external/media_library
+
   window_plus:
     path: external/window_plus
   visual_assets:
