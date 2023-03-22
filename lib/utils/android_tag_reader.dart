@@ -144,8 +144,8 @@ class AndroidTagReader extends PlatformTagReader {
       albumLength: albumLength,
       albumArtistName: data['METADATA_KEY_ALBUMARTIST'],
       trackArtistNames: splitTagValue(data['METADATA_KEY_ARTIST']),
-      authorNames: data['METADATA_KEY_AUTHOR'],
-      writerNames: data['METADATA_KEY_WRITER'],
+      authorNames: splitTagValue(data['METADATA_KEY_AUTHOR']),
+      writerNames: splitTagValue(data['METADATA_KEY_WRITER']),
       year: splitDateTagValue(
         data['METADATA_KEY_YEAR'] ?? data['METADATA_KEY_DATE'],
       ),
