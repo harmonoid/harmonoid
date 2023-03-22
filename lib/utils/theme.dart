@@ -564,7 +564,7 @@ ThemeData createM2Theme({
   MaterialRoute.animationDuration = animationDuration;
 
   return ThemeData(
-    useMaterial3: true, // REMOVE ONCE MATERIAL 3 IS RELEASED.
+    useMaterial3: false, // REMOVE ONCE MATERIAL 3 IS RELEASED.
 
     // TYPOGRAPHY
 
@@ -869,14 +869,10 @@ ThemeData createM2Theme({
       builders: {
         TargetPlatform.windows: ZoomPageTransitionsBuilder(),
         TargetPlatform.linux: ZoomPageTransitionsBuilder(
-          // For disabling use of [SnapshotWidget] on GNU/Linux in [ZoomPageTransitionsBuilder].
-          // This results in problems & images don't remain visible upon exiting the route.
           allowEnterRouteSnapshotting: false,
         ),
         TargetPlatform.android: ZoomPageTransitionsBuilder(
-          // For disabling use of [SnapshotWidget] on GNU/Linux in [ZoomPageTransitionsBuilder].
-          // This results in problems & images don't remain visible upon exiting the route.
-          allowEnterRouteSnapshotting: false,
+         allowEnterRouteSnapshotting: false,
         ),
         TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
         TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
@@ -957,55 +953,6 @@ ThemeData createM2Theme({
         ),
       );
     }(),
-
-    // SWITCH
-
-    switchTheme: SwitchThemeData(
-      thumbColor: MaterialStateProperty.resolveWith(
-        (Set<MaterialState> states) {
-          if (states.contains(MaterialState.disabled)) {
-            if (states.contains(MaterialState.selected)) {
-              return colorScheme.surface.withOpacity(1.0);
-            }
-            return colorScheme.onSurface.withOpacity(0.38);
-          }
-          if (states.contains(MaterialState.selected)) {
-            if (states.contains(MaterialState.pressed)) {
-              return Color.lerp(
-                Colors.white,
-                colorScheme.primaryContainer,
-                0.2,
-              );
-            }
-            if (states.contains(MaterialState.hovered)) {
-              return Color.lerp(
-                Colors.white,
-                colorScheme.primaryContainer,
-                0.2,
-              );
-            }
-            if (states.contains(MaterialState.focused)) {
-              return Color.lerp(
-                Colors.white,
-                colorScheme.primaryContainer,
-                0.2,
-              );
-            }
-            return colorScheme.onPrimary;
-          }
-          if (states.contains(MaterialState.pressed)) {
-            return colorScheme.onSurfaceVariant;
-          }
-          if (states.contains(MaterialState.hovered)) {
-            return colorScheme.onSurfaceVariant;
-          }
-          if (states.contains(MaterialState.focused)) {
-            return colorScheme.onSurfaceVariant;
-          }
-          return colorScheme.outline;
-        },
-      ),
-    ),
 
     // LISTTILE
 
