@@ -8,7 +8,7 @@
 
 import 'dart:math';
 import 'dart:async';
-import 'package:flutter/material.dart' hide Intent;
+import 'package:flutter/material.dart' hide Intent, SearchBarThemeData;
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
