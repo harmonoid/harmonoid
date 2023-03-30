@@ -10,12 +10,12 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:media_kit/media_kit.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:media_kit/media_kit.dart' hide Track;
 import 'package:windows_taskbar/windows_taskbar.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 import 'package:external_media_provider/external_media_provider.dart';
@@ -59,21 +59,22 @@ class Playback extends ChangeNotifier {
 
   int index = DefaultPlaybackValues.index;
   List<Track> tracks = DefaultPlaybackValues.tracks;
-  double volume = DefaultPlaybackValues.volume;
   double rate = DefaultPlaybackValues.rate;
   double pitch = DefaultPlaybackValues.pitch;
+  double volume = DefaultPlaybackValues.volume;
+  bool shuffling = DefaultPlaybackValues.shuffling;
   PlaylistLoopMode playlistLoopMode = DefaultPlaybackValues.playlistLoopMode;
   Duration position = Duration.zero;
   Duration duration = Duration.zero;
-  bool isMuted = false;
-  bool isPlaying = false;
-  bool isBuffering = false;
-  bool isCompleted = false;
-  bool isShuffling = DefaultPlaybackValues.isShuffling;
-  // [audioParams] and [audioBitrate] are part of `package:media_kit`.
+  bool muted = false;
+  bool playing = false;
+  bool buffering = false;
+  bool completed = false;
+
+  // Consumed from [Player] of `package:media_kit`.
   AudioParams audioParams = AudioParams();
   double? audioBitrate;
-  // [androidAudioFormat] is part of [AndroidTagReader], implemented within Harmonoid.
+  // Consumed from [AndroidTagReader] of `package:harmonoid`.
   AndroidMediaFormat androidAudioFormat = AndroidMediaFormat();
 
   Future<void> play() async {
@@ -99,7 +100,7 @@ class Playback extends ChangeNotifier {
       await player?.playOrPause();
     }
     if (Platform.isAndroid || Platform.isIOS) {
-      if (isPlaying) {
+      if (playing) {
         await pause();
       } else {
         await play();
@@ -136,7 +137,7 @@ class Playback extends ChangeNotifier {
 
   Future<void> setRate(double value) async {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      player?.rate = value;
+      await player?.setRate(value);
     }
     if (Platform.isAndroid || Platform.isIOS) {
       await audioService?.setSpeed(value);
@@ -155,7 +156,7 @@ class Playback extends ChangeNotifier {
 
   Future<void> setVolume(double value) async {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      player?.volume = value;
+      await player?.setVolume(volume);
     }
     if (Platform.isAndroid || Platform.isIOS) {
       await audioService?.setVolume(value / 100.0);
@@ -174,7 +175,7 @@ class Playback extends ChangeNotifier {
 
   Future<void> setPitch(double value) async {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      player?.pitch = value;
+      await player?.setPitch(value);
     }
     if (Platform.isAndroid || Platform.isIOS) {
       await audioService?.setPitch(value);
@@ -208,27 +209,25 @@ class Playback extends ChangeNotifier {
   }
 
   Future<void> toggleMute() async {
-    if (isMuted) {
+    if (muted) {
       await setVolume(_volume);
     } else {
       _volume = volume;
       await setVolume(0.0);
     }
-    isMuted = !isMuted;
+    muted = !muted;
     notifyListeners();
   }
 
   Future<void> toggleShuffle() async {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      player?.shuffle = !isShuffling;
-      isShuffling = !isShuffling;
+      await player?.setShuffle(!shuffling);
+      shuffling = !shuffling;
     }
     if (Platform.isAndroid || Platform.isIOS) {
       // Handled through [StreamSubscription] on the Android.
       await audioService?.setShuffleMode(
-        !isShuffling
-            ? AudioServiceShuffleMode.all
-            : AudioServiceShuffleMode.none,
+        !shuffling ? AudioServiceShuffleMode.all : AudioServiceShuffleMode.none,
       );
     }
     notifyListeners();
@@ -261,7 +260,7 @@ class Playback extends ChangeNotifier {
       }
       await player?.open(Playlist(items, index: index));
       // `package:media_kit` resets the shuffle state after loading new playlist.
-      isShuffling = false;
+      shuffling = false;
     }
     if (Platform.isAndroid || Platform.isIOS) {
       this.tracks = tracks;
@@ -309,18 +308,18 @@ class Playback extends ChangeNotifier {
   /// Passing [open] as `false` causes file to not be opened inside [player] or [audioService].
   ///
   Future<void> loadAppState({bool open = true}) async {
-    isShuffling = AppState.instance.shuffle;
-    playlistLoopMode = AppState.instance.playlistLoopMode;
     rate = AppState.instance.rate;
-    volume = AppState.instance.volume;
     pitch = AppState.instance.pitch;
+    volume = AppState.instance.volume;
+    shuffling = AppState.instance.shuffling;
+    playlistLoopMode = AppState.instance.playlistLoopMode;
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      player?.rate = rate;
-      player?.volume = volume;
-      player?.pitch = pitch;
-      player?.setPlaylistMode(PlaylistMode.values[playlistLoopMode.index]);
-      // Shuffle is per-playlist, so this is meaningless for current `package:media_kit` implementation.
-      // player?.shuffle = isShuffling;
+      await player?.setRate(rate);
+      await player?.setVolume(volume);
+      await player?.setPitch(pitch);
+      await player?.setPlaylistMode(
+        PlaylistMode.values[playlistLoopMode.index],
+      );
       // Restore the custom player options/properties defined by the user.
       for (final entry in Configuration.instance.userLibmpvOptions.entries) {
         if (player?.platform is libmpvPlayer) {
@@ -339,13 +338,12 @@ class Playback extends ChangeNotifier {
         AudioServiceRepeatMode.values[playlistLoopMode.index],
       );
       audioService?.setShuffleMode(
-        isShuffling
-            ? AudioServiceShuffleMode.all
-            : AudioServiceShuffleMode.none,
+        shuffling ? AudioServiceShuffleMode.all : AudioServiceShuffleMode.none,
       );
     }
     if (!open) return;
-    tracks = AppState.instance.playlist;
+    index = AppState.instance.index;
+    tracks = AppState.instance.tracks;
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       final items = <Media>[];
       for (final track in tracks) {
@@ -357,10 +355,12 @@ class Playback extends ChangeNotifier {
         );
       }
       await player?.open(
-        Playlist(items, index: AppState.instance.index),
+        Playlist(
+          items,
+          index: AppState.instance.index,
+        ),
         play: false,
       );
-      index = AppState.instance.index;
     }
     if (Platform.isAndroid || Platform.isIOS) {
       await audioService?.open(
@@ -368,7 +368,6 @@ class Playback extends ChangeNotifier {
         index: AppState.instance.index,
         play: false,
       );
-      index = AppState.instance.index;
     }
   }
 
@@ -378,6 +377,7 @@ class Playback extends ChangeNotifier {
         configuration: PlayerConfiguration(
           vid: false,
           osc: false,
+          pitch: true,
           title: 'Harmonoid',
         ),
       );
@@ -395,18 +395,18 @@ class Playback extends ChangeNotifier {
         instance.notifyListeners();
         instance.notifyNativeListeners();
       });
-      instance.player?.streams.isPlaying.listen((event) {
-        instance.isPlaying = event;
+      instance.player?.streams.playing.listen((event) {
+        instance.playing = event;
         instance.notifyListeners();
         instance.notifyNativeListeners();
       });
-      instance.player?.streams.isBuffering.listen((event) {
-        instance.isBuffering = event;
+      instance.player?.streams.buffering.listen((event) {
+        instance.buffering = event;
         instance.notifyListeners();
         instance.notifyNativeListeners();
       });
-      instance.player?.streams.isCompleted.listen((event) async {
-        instance.isCompleted = event;
+      instance.player?.streams.completed.listen((event) async {
+        instance.completed = event;
         instance.notifyListeners();
       });
       //
@@ -500,7 +500,7 @@ class Playback extends ChangeNotifier {
               // [MPRIS] operates in range [0.0, 1.0] while [Playback] operates in range [0.0, 100.0].
               volume: (value) => instance.setVolume(value * 100.0),
               shuffle: (value) async {
-                if (value == instance.isShuffling) return;
+                if (value == instance.shuffling) return;
                 await instance.toggleShuffle();
               },
               setPosition: (_, value) => instance.jump(value),
@@ -589,7 +589,7 @@ class Playback extends ChangeNotifier {
           try {
             if (Configuration.instance.taskbarIndicator) {
               WindowsTaskbar.setProgressMode(
-                isBuffering
+                buffering
                     ? TaskbarProgressMode.indeterminate
                     : TaskbarProgressMode.normal,
               );
@@ -612,12 +612,12 @@ class Playback extends ChangeNotifier {
                 ),
                 ThumbnailToolbarButton(
                   ThumbnailToolbarAssetIcon(
-                    isPlaying
+                    playing
                         ? 'assets/icons/pause.ico'
                         : 'assets/icons/play.ico',
                   ),
-                  isPlaying ? Language.instance.PAUSE : Language.instance.PLAY,
-                  isPlaying ? pause : play,
+                  playing ? Language.instance.PAUSE : Language.instance.PLAY,
+                  playing ? pause : play,
                 ),
                 ThumbnailToolbarButton(
                   ThumbnailToolbarAssetIcon('assets/icons/next.ico'),
@@ -636,7 +636,7 @@ class Playback extends ChangeNotifier {
           // `package:system_media_transport_controls`
           try {
             SystemMediaTransportControls.instance.setStatus(
-              isPlaying ? SMTCStatus.playing : SMTCStatus.paused,
+              playing ? SMTCStatus.playing : SMTCStatus.paused,
             );
             SystemMediaTransportControls.instance.setMusicData(
               title: track.trackName,
@@ -675,9 +675,9 @@ class Playback extends ChangeNotifier {
             final artwork = getAlbumArt(track);
             image = (artwork as ExtendedFileImageProvider).file.uri;
           }
-          instance.mpris?.playbackStatus = instance.isCompleted
+          instance.mpris?.playbackStatus = instance.completed
               ? MPRISPlaybackStatus.stopped
-              : instance.isPlaying
+              : instance.playing
                   ? MPRISPlaybackStatus.playing
                   : MPRISPlaybackStatus.paused;
           instance.mpris?.metadata = MPRISMetadata(
@@ -782,7 +782,7 @@ class Playback extends ChangeNotifier {
             else if (!track.albumArtistNameNotPresent)
               track.albumArtistName,
           ].join(' ');
-          if (!isCompleted) {
+          if (!completed) {
             final title = track.trackName,
                 subtitle = !track.trackArtistNamesNotPresent
                     ? track.trackArtistNames.join(', ')
@@ -802,13 +802,13 @@ class Playback extends ChangeNotifier {
                 largeImageKey: _discordPreviousLargeImageKey,
                 largeImageText:
                     !track.albumNameNotPresent ? track.albumName : null,
-                smallImageKey: isPlaying ? 'play' : 'pause',
-                smallImageText: isPlaying ? 'Playing' : 'Paused',
+                smallImageKey: playing ? 'play' : 'pause',
+                smallImageText: playing ? 'Playing' : 'Paused',
                 button1Label: track.uri.isScheme('FILE') ? 'Find' : 'Listen',
                 button1Url: track.uri.isScheme('FILE')
                     ? 'https://www.google.com/search?q=${Uri.encodeComponent(search)}'
                     : track.uri.toString(),
-                endTimeStamp: isPlaying
+                endTimeStamp: playing
                     ? DateTime.now().millisecondsSinceEpoch +
                         duration.inMilliseconds -
                         position.inMilliseconds
@@ -816,7 +816,7 @@ class Playback extends ChangeNotifier {
               ),
             );
           }
-          if (isCompleted) {
+          if (completed) {
             discord?.clearPresence();
           }
         } catch (exception, stacktrace) {
@@ -833,13 +833,13 @@ class Playback extends ChangeNotifier {
 
   /// Save the current playback state.
   Future<void> saveAppState() => AppState.instance.save(
-        tracks,
         index,
+        tracks,
         rate,
-        isShuffling,
-        playlistLoopMode,
-        volume,
         pitch,
+        volume,
+        shuffling,
+        playlistLoopMode,
       );
 
   @override
@@ -895,12 +895,12 @@ enum PlaylistLoopMode {
 abstract class DefaultPlaybackValues {
   static int index = 0;
   static List<Track> tracks = [];
-  static double volume =
-      Platform.isWindows || Platform.isLinux || Platform.isMacOS ? 50.0 : 100.0;
   static double rate = 1.0;
   static double pitch = 1.0;
+  static double volume =
+      Platform.isWindows || Platform.isLinux || Platform.isMacOS ? 50.0 : 100.0;
+  static bool shuffling = false;
   static PlaylistLoopMode playlistLoopMode = PlaylistLoopMode.none;
-  static bool isShuffling = false;
 }
 
 /// Android/iOS specific implementation for audio playback & media notification.
@@ -924,10 +924,10 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
       debugPrint(e.processingState.toString());
       if (e.processingState == ProcessingState.completed) {
         // The audio playback needs to be interpreted as paused once the playback of a media is completed.
-        playback.isPlaying = false;
+        playback.playing = false;
       }
       playback
-        ..isCompleted = e.processingState == ProcessingState.completed
+        ..completed = e.processingState == ProcessingState.completed
         ..notify()
         ..notifyNativeListeners();
       playbackState.add(_transformEvent(e));
@@ -1012,12 +1012,12 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
     );
     _player.playingStream.listen(
       (e) => playback
-        ..isPlaying = e
+        ..playing = e
         ..notify(),
     );
     _player.shuffleModeEnabledStream.listen(
       (e) => playback
-        ..isShuffling = e
+        ..shuffling = e
         ..notify(),
     );
   }
@@ -1036,7 +1036,7 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
     }
     _player.play();
     playback
-      ..isPlaying = true
+      ..playing = true
       ..notify();
   }
 
@@ -1044,7 +1044,7 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
   Future<void> pause() async {
     _player.pause();
     playback
-      ..isPlaying = false
+      ..playing = false
       ..notify();
   }
 
@@ -1137,7 +1137,7 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
     }
     _muted = !_muted;
     playback
-      ..isMuted = _muted
+      ..muted = _muted
       ..notify();
   }
 

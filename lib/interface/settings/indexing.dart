@@ -56,7 +56,7 @@ class IndexingState extends State<IndexingSetting>
             if (isMobile) ...[
               ListTile(
                 dense: false,
-                onTap: controller.isCompleted
+                onTap: controller.completed
                     ? pickNewFolder
                     : showIndexingAlreadyUnderProgressDialog,
                 title: Text(Language.instance.ADD_NEW_FOLDER),
@@ -64,7 +64,7 @@ class IndexingState extends State<IndexingSetting>
               ),
               ListTile(
                 dense: false,
-                onTap: controller.isCompleted
+                onTap: controller.completed
                     ? () async {
                         Collection.instance.refresh(
                           onProgress: (progress, total, _) {
@@ -78,7 +78,7 @@ class IndexingState extends State<IndexingSetting>
               ),
               ListTile(
                 dense: false,
-                onTap: controller.isCompleted
+                onTap: controller.completed
                     ? () async {
                         Collection.instance.index(
                           onProgress: (progress, total, _) {
@@ -117,7 +117,7 @@ class IndexingState extends State<IndexingSetting>
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         TextButton(
-                          onPressed: CollectionRefresh.instance.isCompleted
+                          onPressed: CollectionRefresh.instance.completed
                               ? pickNewFolder
                               : showIndexingAlreadyUnderProgressDialog,
                           child: Text(
@@ -190,7 +190,7 @@ class IndexingState extends State<IndexingSetting>
                                             final conf = Configuration.instance;
                                             final cr =
                                                 CollectionRefresh.instance;
-                                            if (!cr.isCompleted) {
+                                            if (!cr.completed) {
                                               await showIndexingAlreadyUnderProgressDialog();
                                               return;
                                             }
@@ -203,8 +203,7 @@ class IndexingState extends State<IndexingSetting>
                                             await c.removeDirectories(
                                               refresh: false,
                                               directories: {directory},
-                                              onProgress: (progress, total,
-                                                  isCompleted) {
+                                              onProgress: (progress, total, _) {
                                                 cr.set(progress, total);
                                               },
                                             );
@@ -239,7 +238,7 @@ class IndexingState extends State<IndexingSetting>
                         // Show progress bar on desktop only.
                         if (isDesktop) ...[
                           const SizedBox(height: 8.0),
-                          if (!controller.isCompleted)
+                          if (!controller.completed)
                             Container(
                               height: 56.0,
                               width: 324.0,
@@ -337,7 +336,7 @@ class IndexingState extends State<IndexingSetting>
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         TextButton(
-                          onPressed: controller.isCompleted
+                          onPressed: controller.completed
                               ? () async {
                                   Collection.instance.refresh(
                                     onProgress: (progress, total, _) {
@@ -355,7 +354,7 @@ class IndexingState extends State<IndexingSetting>
                         ),
                         const SizedBox(width: 4.0),
                         TextButton(
-                          onPressed: controller.isCompleted
+                          onPressed: controller.completed
                               ? () async {
                                   Collection.instance.index(
                                     onProgress: (progress, total, _) {
@@ -453,7 +452,7 @@ class IndexingState extends State<IndexingSetting>
       );
       await Collection.instance.addDirectories(
         directories: {directory},
-        onProgress: (progress, total, isCompleted) {
+        onProgress: (progress, total, _) {
           CollectionRefresh.instance.set(progress, total);
         },
       );
@@ -461,7 +460,7 @@ class IndexingState extends State<IndexingSetting>
   }
 
   Future<void> showIndexingAlreadyUnderProgressDialog() {
-    if (!CollectionRefresh.instance.isCompleted) {
+    if (!CollectionRefresh.instance.completed) {
       return showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -586,7 +585,7 @@ class IndexingState extends State<IndexingSetting>
             onPressed: () async {
               Navigator.of(ctx).maybePop();
               // Do not proceed if some indexing related operation is going on.
-              if (!CollectionRefresh.instance.isCompleted) {
+              if (!CollectionRefresh.instance.completed) {
                 await showIndexingAlreadyUnderProgressDialog();
                 return;
               }
@@ -723,7 +722,7 @@ class IndexingState extends State<IndexingSetting>
           TextButton(
             onPressed: () async {
               Navigator.of(context).maybePop();
-              if (!CollectionRefresh.instance.isCompleted) {
+              if (!CollectionRefresh.instance.completed) {
                 await showIndexingAlreadyUnderProgressDialog();
                 return;
               }

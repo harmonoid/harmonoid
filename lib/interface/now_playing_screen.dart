@@ -6,9 +6,7 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
-import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/state/now_playing_color_palette.dart';
 import 'package:provider/provider.dart';
 import 'package:window_plus/window_plus.dart';
 import 'package:media_library/media_library.dart';

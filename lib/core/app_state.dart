@@ -7,6 +7,7 @@
 ///
 
 import 'package:path/path.dart' as path;
+import 'package:flutter/foundation.dart';
 import 'package:media_library/media_library.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 
@@ -28,7 +29,7 @@ class AppState extends AppStateKeys {
       Configuration.instance.cacheDirectory.path,
       'AppState.JSON',
     ),
-    fallback: _defaultAppState,
+    fallback: _default,
   );
 
   /// Initializes the [AppState] class.
@@ -42,31 +43,30 @@ class AppState extends AppStateKeys {
 
   /// Updates and save the app state in the [file].
   Future<void> save(
-    List<Track> playlist,
     int index,
+    List<Track> tracks,
     double rate,
-    bool shuffle,
-    PlaylistLoopMode playlistLoopMode,
-    double volume,
     double pitch,
+    double volume,
+    bool shuffling,
+    PlaylistLoopMode playlistLoopMode,
   ) async {
-    this.playlist = playlist;
     this.index = index;
+    this.tracks = tracks;
     this.rate = rate;
-    this.shuffle = shuffle;
-    this.playlistLoopMode = playlistLoopMode;
-    this.volume = volume;
     this.pitch = pitch;
-
+    this.volume = volume;
+    this.shuffling = shuffling;
+    this.playlistLoopMode = playlistLoopMode;
     await storage.write(
       {
-        'playlist': playlist,
         'index': index,
+        'tracks': tracks,
         'rate': rate,
-        'shuffle': shuffle,
-        'playlistLoopMode': playlistLoopMode.index,
-        'volume': volume,
         'pitch': pitch,
+        'volume': volume,
+        'shuffling': shuffling,
+        'playlistLoopMode': playlistLoopMode.index,
       },
     );
   }
@@ -76,44 +76,45 @@ class AppState extends AppStateKeys {
     bool retry = true,
   }) async {
     final current = await storage.read();
-    // Emblace default values for the keys that not found. Possibly due to app update.
-    _defaultAppState.keys.forEach(
-      (key) {
-        if (!current.containsKey(key)) {
-          current[key] = _defaultAppState[key];
-        }
-      },
-    );
-
-    playlist = (current['playlist'] as List)
-        .map((e) => Track.fromJson(e))
-        .toList()
-        .cast<Track>();
-    index = current['index'];
-    rate = current['rate'];
-    shuffle = current['shuffle'];
-    playlistLoopMode = PlaylistLoopMode.values[current['playlistLoopMode']];
-    volume = current['volume'];
-    pitch = current['pitch'];
+    final conf = _default;
+    // Emplace default values for the keys that not found. Most likely due to update.
+    for (final entry in conf.entries) {
+      current[entry.key] ??= entry.value;
+    }
+    try {
+      index = current['index'];
+      tracks = current['tracks']
+          .map((e) => Track.fromJson(e))
+          .toList()
+          .cast<Track>();
+      rate = current['rate'];
+      pitch = current['pitch'];
+      volume = current['volume'];
+      shuffling = current['shuffling'];
+      playlistLoopMode = PlaylistLoopMode.values[current['playlistLoopMode']];
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
   }
+
+  static Map<String, dynamic> get _default => {
+        'index': DefaultPlaybackValues.index,
+        'tracks': DefaultPlaybackValues.tracks,
+        'rate': DefaultPlaybackValues.rate,
+        'pitch': DefaultPlaybackValues.pitch,
+        'volume': DefaultPlaybackValues.volume,
+        'shuffling': DefaultPlaybackValues.shuffling,
+        'playlistLoopMode': DefaultPlaybackValues.playlistLoopMode.index,
+      };
 }
 
 abstract class AppStateKeys {
-  late List<Track> playlist;
   late int index;
+  late List<Track> tracks;
   late double rate;
-  late bool shuffle;
-  late PlaylistLoopMode playlistLoopMode;
-  late double volume;
   late double pitch;
+  late double volume;
+  late bool shuffling;
+  late PlaylistLoopMode playlistLoopMode;
 }
-
-final Map<String, dynamic> _defaultAppState = {
-  'playlist': DefaultPlaybackValues.tracks,
-  'index': DefaultPlaybackValues.index,
-  'rate': DefaultPlaybackValues.rate,
-  'shuffle': DefaultPlaybackValues.isShuffling,
-  'playlistLoopMode': DefaultPlaybackValues.playlistLoopMode.index,
-  'volume': DefaultPlaybackValues.volume,
-  'pitch': DefaultPlaybackValues.pitch,
-};

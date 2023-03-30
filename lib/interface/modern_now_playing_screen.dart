@@ -41,7 +41,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
   int currentPage = Playback.instance.index.clamp(0, 1 << 32);
   double scale = 0.0;
   double volume = Playback.instance.volume;
-  bool isShuffling = Playback.instance.isShuffling;
+  bool shuffling = Playback.instance.shuffling;
   int playlistLength = Playback.instance.tracks.length;
   Track? track;
   Timer shuffleCooldown = Timer(const Duration(milliseconds: 300), () {});
@@ -50,7 +50,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
   bool controlPanelVisible = false;
 
   Future<void> listener() async {
-    if (Playback.instance.isPlaying) {
+    if (Playback.instance.playing) {
       playOrPause.forward();
     } else {
       playOrPause.reverse();
@@ -85,12 +85,12 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
       if (pageController.hasClients) {
         pageController.jumpToPage(Playback.instance.index);
       }
-      isShuffling = Playback.instance.isShuffling;
+      shuffling = Playback.instance.shuffling;
     } else {
       final track = Playback.instance.tracks[Playback.instance.index];
       if (this.track != track) {
         this.track = track;
-        if (isShuffling == Playback.instance.isShuffling) {
+        if (shuffling == Playback.instance.shuffling) {
           if (currentPage !=
               Playback.instance.index
                   .clamp(0, Playback.instance.tracks.length)) {
@@ -120,7 +120,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
           }
         } else {
           setState(() {
-            isShuffling = Playback.instance.isShuffling;
+            shuffling = Playback.instance.shuffling;
           });
         }
       }
@@ -322,7 +322,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                               child: Container(
                                 padding: EdgeInsets.only(bottom: 24.0),
                                 child: () {
-                                  if (playback.isBuffering) {
+                                  if (playback.buffering) {
                                     return Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
@@ -615,7 +615,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 progress: playOrPause,
                               ),
                               color: kEnabledIconButtonColor,
-                              tooltip: playback.isPlaying
+                              tooltip: playback.playing
                                   ? Language.instance.PAUSE
                                   : Language.instance.PLAY,
                             ),
@@ -640,7 +640,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 playback.toggleShuffle();
                               },
                               iconSize: 20.0,
-                              color: playback.isShuffling
+                              color: playback.shuffling
                                   ? kEnabledIconButtonColor
                                   : kDisabledIconButtonColor,
                               splashRadius: 18.0,
@@ -747,7 +747,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                               iconSize: 20.0,
                               color: kEnabledIconButtonColor,
                               splashRadius: 18.0,
-                              tooltip: playback.isMuted
+                              tooltip: playback.muted
                                   ? Language.instance.UNMUTE
                                   : Language.instance.MUTE,
                               icon: Icon(
@@ -858,7 +858,8 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
     return Playback.instance.tracks
         .skip(Playback.instance.index)
         .take(20)
-        .toList();
+        .toList()
+        .cast();
   }
 }
 

@@ -202,7 +202,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
   double get bottomSheetMinHeight => isVolumeSliderVisible ? 172.0 : 128.0;
 
   Future<void> listener() async {
-    if (Playback.instance.isPlaying) {
+    if (Playback.instance.playing) {
       playOrPause.forward();
     } else {
       playOrPause.reverse();
@@ -584,7 +584,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                   switch (state
                                                                       .extendedImageLoadState) {
                                                                     case LoadState
-                                                                        .failed:
+                                                                          .failed:
                                                                       {
                                                                         if (ExternalMedia.supported(Playback
                                                                             .instance
@@ -998,7 +998,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                             switch (state
                                                                 .extendedImageLoadState) {
                                                               case LoadState
-                                                                  .failed:
+                                                                    .failed:
                                                                 {
                                                                   if (ExternalMedia.supported(playback
                                                                       .tracks[playback
@@ -1461,7 +1461,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                 FloatingActionButton(
                                                               onPressed: Playback
                                                                       .instance
-                                                                      .isPlaying
+                                                                      .playing
                                                                   ? Playback
                                                                       .instance
                                                                       .pause
@@ -1538,7 +1538,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                 .toggleShuffle,
                                                             iconSize: 24.0,
                                                             color: playback
-                                                                    .isShuffling
+                                                                    .shuffling
                                                                 ? (colors.palette ??
                                                                                 [
                                                                                   Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor

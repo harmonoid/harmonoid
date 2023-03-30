@@ -167,7 +167,7 @@ class Intent {
             {
               final id = _playURIOperationID;
               final contents = await parser.directory!.list_(
-                extensions: kSupportedFileTypes,
+                predicate: (e) => kSupportedFileTypes.contains(e.extension),
               );
               bool playing = false;
               for (final file in contents) {

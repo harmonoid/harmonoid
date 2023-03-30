@@ -90,7 +90,7 @@ class Configuration extends ConfigurationKeys {
         '.Harmonoid',
         'Configuration.JSON',
       ),
-      fallback: await _getDefaultApplicationConfiguration(),
+      fallback: await _default,
     );
     await instance.read();
     instance.cacheDirectory = Directory(
@@ -343,192 +343,188 @@ class Configuration extends ConfigurationKeys {
   ///
   Future<void> read() async {
     final current = await storage.read();
-    final conf = await _getDefaultApplicationConfiguration();
-    // Emplace default values for the keys that not found.
-    // Most likely due to update in Harmonoid's app version.
-    // The Harmonoid's version update likely brought new app keys & fallback to default for those.
-    conf.keys.forEach(
-      (key) {
-        if (!current.containsKey(key)) {
-          current[key] = conf[key];
-        }
-      },
-    );
+    final conf = await _default;
+    // Emplace default values for the keys that not found. Most likely due to update.
+    for (final entry in conf.entries) {
+      current[entry.key] ??= entry.value;
+    }
     debugPrint(current.toString());
-    // Check for actual keys from the cache.
-    collectionDirectories = Set<String>.from(current['collectionDirectories'])
-        .map((directory) => Directory(directory))
-        .toSet();
-    language = LanguageData.fromJson(current['language']);
-    themeMode = ThemeMode.values[current['themeMode']];
-    automaticAccent = current['automaticAccent'];
-    notificationLyrics = current['notificationLyrics'];
-    collectionSearchRecent = current['collectionSearchRecent'].cast<String>();
-    webRecent = current['webRecent'].cast<String>();
-    taskbarIndicator = current['taskbarIndicator'];
-    seamlessPlayback = current['seamlessPlayback'];
-    jumpToNowPlayingScreenOnPlay = current['jumpToNowPlayingScreenOnPlay'];
-    automaticMusicLookup = current['automaticMusicLookup'];
-    dynamicNowPlayingBarColoring = current['dynamicNowPlayingBarColoring'];
-    modernNowPlayingScreen = current['modernNowPlayingScreen'];
-    modernNowPlayingScreenCarouselIndex =
-        current['modernNowPlayingScreenCarouselIndex'];
-    lyricsVisible = current['lyricsVisible'];
-    discordRPC = current['discordRPC'];
-    highlightedLyricsSize = current['highlightedLyricsSize'];
-    unhighlightedLyricsSize = current['unhighlightedLyricsSize'];
-    albumsSort = AlbumsSort.values[current['albumsSort']];
-    tracksSort = TracksSort.values[current['tracksSort']];
-    artistsSort = ArtistsSort.values[current['artistsSort']];
-    genresSort = GenresSort.values[current['genresSort']];
-    albumsOrderType = OrderType.values[current['albumsOrderType']];
-    tracksOrderType = OrderType.values[current['tracksOrderType']];
-    artistsOrderType = OrderType.values[current['artistsOrderType']];
-    genresOrderType = OrderType.values[current['genresOrderType']];
-    minimumFileSize = current['minimumFileSize'];
-    libraryTab = current['libraryTab'];
-    useLRCFromTrackDirectory = current['useLRCFromTrackDirectory'];
-    lookupForFallbackAlbumArt = current['lookupForFallbackAlbumArt'];
-    displayAudioFormat = current['displayAudioFormat'];
-    mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen =
-        current['mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen'];
-    mobileEnableNowPlayingScreenRippleEffect =
-        current['mobileEnableNowPlayingScreenRippleEffect'];
-    mobileAlbumsGridSize = current['mobileAlbumsGridSize'];
-    mobileArtistsGridSize = current['mobileArtistsGridSize'];
-    mobileGenresGridSize = current['mobileGenresGridSize'];
-    albumHashCodeParameters = Set<AlbumHashCodeParameter>.from(
-      current['albumHashCodeParameters'].map(
-        (i) => AlbumHashCodeParameter.values[i],
-      ),
-    );
-    userLibmpvOptions = Map<String, String>.from(current['userLibmpvOptions']);
-    disableAnimations = current['disableAnimations'];
-    addLibraryToPlaylistWhenPlayingFromTracksTab =
-        current['addLibraryToPlaylistWhenPlayingFromTracksTab'];
-    fallbackAlbumArtFileNames =
-        current['fallbackAlbumArtFileNames'].cast<String>();
-    androidEnableVolumeBoostFilter = current['androidEnableVolumeBoostFilter'];
-    animationDuration =
-        AnimationDuration.fromJson(current['animationDuration']);
+    try {
+      // Check for actual keys from the cache.
+      collectionDirectories = Set<String>.from(current['collectionDirectories'])
+          .map((directory) => Directory(directory))
+          .toSet();
+      language = LanguageData.fromJson(current['language']);
+      themeMode = ThemeMode.values[current['themeMode']];
+      automaticAccent = current['automaticAccent'];
+      notificationLyrics = current['notificationLyrics'];
+      collectionSearchRecent = current['collectionSearchRecent'].cast<String>();
+      webRecent = current['webRecent'].cast<String>();
+      taskbarIndicator = current['taskbarIndicator'];
+      seamlessPlayback = current['seamlessPlayback'];
+      jumpToNowPlayingScreenOnPlay = current['jumpToNowPlayingScreenOnPlay'];
+      automaticMusicLookup = current['automaticMusicLookup'];
+      dynamicNowPlayingBarColoring = current['dynamicNowPlayingBarColoring'];
+      modernNowPlayingScreen = current['modernNowPlayingScreen'];
+      modernNowPlayingScreenCarouselIndex =
+          current['modernNowPlayingScreenCarouselIndex'];
+      lyricsVisible = current['lyricsVisible'];
+      discordRPC = current['discordRPC'];
+      highlightedLyricsSize = current['highlightedLyricsSize'];
+      unhighlightedLyricsSize = current['unhighlightedLyricsSize'];
+      albumsSort = AlbumsSort.values[current['albumsSort']];
+      tracksSort = TracksSort.values[current['tracksSort']];
+      artistsSort = ArtistsSort.values[current['artistsSort']];
+      genresSort = GenresSort.values[current['genresSort']];
+      albumsOrderType = OrderType.values[current['albumsOrderType']];
+      tracksOrderType = OrderType.values[current['tracksOrderType']];
+      artistsOrderType = OrderType.values[current['artistsOrderType']];
+      genresOrderType = OrderType.values[current['genresOrderType']];
+      minimumFileSize = current['minimumFileSize'];
+      libraryTab = current['libraryTab'];
+      useLRCFromTrackDirectory = current['useLRCFromTrackDirectory'];
+      lookupForFallbackAlbumArt = current['lookupForFallbackAlbumArt'];
+      displayAudioFormat = current['displayAudioFormat'];
+      mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen =
+          current['mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen'];
+      mobileEnableNowPlayingScreenRippleEffect =
+          current['mobileEnableNowPlayingScreenRippleEffect'];
+      mobileAlbumsGridSize = current['mobileAlbumsGridSize'];
+      mobileArtistsGridSize = current['mobileArtistsGridSize'];
+      mobileGenresGridSize = current['mobileGenresGridSize'];
+      albumHashCodeParameters = Set<AlbumHashCodeParameter>.from(
+        current['albumHashCodeParameters'].map(
+          (i) => AlbumHashCodeParameter.values[i],
+        ),
+      );
+      userLibmpvOptions =
+          Map<String, String>.from(current['userLibmpvOptions']);
+      disableAnimations = current['disableAnimations'];
+      addLibraryToPlaylistWhenPlayingFromTracksTab =
+          current['addLibraryToPlaylistWhenPlayingFromTracksTab'];
+      fallbackAlbumArtFileNames =
+          current['fallbackAlbumArtFileNames'].cast<String>();
+      androidEnableVolumeBoostFilter =
+          current['androidEnableVolumeBoostFilter'];
+      animationDuration =
+          AnimationDuration.fromJson(current['animationDuration']);
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
   }
 
-  static Future<Map<String, dynamic>>
-      _getDefaultApplicationConfiguration() async => {
-            'collectionDirectories': <String>[
-              await {
-                'windows': () async {
-                  // `SHGetKnownFolderPath` Win32 API call.
-                  final rfid = GUIDFromString(FOLDERID_Music);
-                  final result = calloc<PWSTR>();
-                  try {
-                    final hr = SHGetKnownFolderPath(
-                      rfid,
-                      KF_FLAG_DEFAULT,
-                      NULL,
-                      result,
-                    );
-                    if (FAILED(hr)) {
-                      throw WindowsException(hr);
-                    }
-                    return path.normalize(result.value.toDartString());
-                  } catch (exception, stacktrace) {
-                    debugPrint(exception.toString());
-                    debugPrint(stacktrace.toString());
-                    // Fallback solution for retrieving the user's music [Directory] using environment variables.
-                    return path.join(
-                      Platform.environment['USERPROFILE']!,
-                      'Music',
-                    );
-                  } finally {
-                    calloc.free(rfid);
-                    calloc.free(result);
-                  }
-                },
-                'linux': () async {
-                  try {
-                    // Invoke `xdg-user-dir` command.
-                    final result = await Process.run(
-                      'xdg-user-dir',
-                      [
-                        'MUSIC',
-                      ],
-                    );
-                    return result.stdout.toString().trim();
-                  } catch (exception, stacktrace) {
-                    // Fallback to the user's `HOME` directory.
-                    debugPrint(exception.toString());
-                    debugPrint(stacktrace.toString());
-                    return Platform.environment['HOME']!;
-                  }
-                },
-                'android': () async {
-                  // Native Android implementation on platform channel.
-                  final volumes = await StorageRetriever.instance.volumes;
-                  debugPrint(volumes.toString());
-                  return volumes.first.path;
-                },
-              }[Platform.operatingSystem]!(),
-            ],
-            'language': const {
-              'code': 'en_US',
-              'name': 'English',
-              'country': 'United States',
+  static Future<Map<String, dynamic>> get _default async => {
+        'collectionDirectories': <String>[
+          await {
+            'windows': () async {
+              // `SHGetKnownFolderPath` Win32 API call.
+              final rfid = GUIDFromString(FOLDERID_Music);
+              final result = calloc<PWSTR>();
+              try {
+                final hr = SHGetKnownFolderPath(
+                  rfid,
+                  KF_FLAG_DEFAULT,
+                  NULL,
+                  result,
+                );
+                if (FAILED(hr)) {
+                  throw WindowsException(hr);
+                }
+                return path.normalize(result.value.toDartString());
+              } catch (exception, stacktrace) {
+                debugPrint(exception.toString());
+                debugPrint(stacktrace.toString());
+                // Fallback solution for retrieving the user's music [Directory] using environment variables.
+                return path.join(
+                  Platform.environment['USERPROFILE']!,
+                  'Music',
+                );
+              } finally {
+                calloc.free(rfid);
+                calloc.free(result);
+              }
             },
-            'themeMode':
-                Platform.isWindows || Platform.isLinux || Platform.isMacOS
-                    ? 1
-                    : 0,
-            'automaticAccent': false,
-            'notificationLyrics': true,
-            'collectionSearchRecent': const [],
-            'webRecent': const [],
-            'taskbarIndicator': false,
-            'seamlessPlayback': false,
-            'jumpToNowPlayingScreenOnPlay':
-                Platform.isWindows || Platform.isLinux || Platform.isMacOS,
-            'automaticMusicLookup': false,
-            'dynamicNowPlayingBarColoring':
-                Platform.isWindows || Platform.isLinux || Platform.isMacOS,
-            'modernNowPlayingScreen':
-                Platform.isWindows || Platform.isLinux || Platform.isMacOS,
-            'modernNowPlayingScreenCarouselIndex': 0,
-            'lyricsVisible': true,
-            'discordRPC': true,
-            'highlightedLyricsSize': 38.0,
-            'unhighlightedLyricsSize': 14.0,
-            'albumsSort':
-                Platform.isWindows || Platform.isLinux || Platform.isMacOS
-                    ? 3
-                    : 0,
-            'tracksSort': 0,
-            'artistsSort': 0,
-            'genresSort': 0,
-            'albumsOrderType': 0,
-            'tracksOrderType': 0,
-            'artistsOrderType': 0,
-            'genresOrderType': 0,
-            'minimumFileSize': 1024 * 1024,
-            'libraryTab': 0,
-            'useLRCFromTrackDirectory': false,
-            'lookupForFallbackAlbumArt': false,
-            'displayAudioFormat': true,
-            'mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen': true,
-            'mobileEnableNowPlayingScreenRippleEffect': true,
-            'mobileAlbumsGridSize': 2,
-            'mobileArtistsGridSize': 3,
-            'mobileGenresGridSize': 3,
-            'albumHashCodeParameters': const [
-              0,
-            ],
-            'userLibmpvOptions': <String, String>{},
-            'disableAnimations': false,
-            'addLibraryToPlaylistWhenPlayingFromTracksTab':
-                Platform.isAndroid || Platform.isIOS,
-            'fallbackAlbumArtFileNames': kDefaultFallbackAlbumArtFileNames,
-            'androidEnableVolumeBoostFilter': false,
-            'animationDuration': AnimationDuration().toJson(),
-          };
+            'linux': () async {
+              try {
+                // Invoke `xdg-user-dir` command.
+                final result = await Process.run(
+                  'xdg-user-dir',
+                  [
+                    'MUSIC',
+                  ],
+                );
+                return result.stdout.toString().trim();
+              } catch (exception, stacktrace) {
+                // Fallback to the user's `HOME` directory.
+                debugPrint(exception.toString());
+                debugPrint(stacktrace.toString());
+                return Platform.environment['HOME']!;
+              }
+            },
+            'android': () async {
+              // Native Android implementation on platform channel.
+              final volumes = await StorageRetriever.instance.volumes;
+              debugPrint(volumes.toString());
+              return volumes.first.path;
+            },
+          }[Platform.operatingSystem]!(),
+        ],
+        'language': const {
+          'code': 'en_US',
+          'name': 'English',
+          'country': 'United States',
+        },
+        'themeMode':
+            Platform.isWindows || Platform.isLinux || Platform.isMacOS ? 1 : 0,
+        'automaticAccent': false,
+        'notificationLyrics': true,
+        'collectionSearchRecent': const [],
+        'webRecent': const [],
+        'taskbarIndicator': false,
+        'seamlessPlayback': false,
+        'jumpToNowPlayingScreenOnPlay':
+            Platform.isWindows || Platform.isLinux || Platform.isMacOS,
+        'automaticMusicLookup': false,
+        'dynamicNowPlayingBarColoring':
+            Platform.isWindows || Platform.isLinux || Platform.isMacOS,
+        'modernNowPlayingScreen':
+            Platform.isWindows || Platform.isLinux || Platform.isMacOS,
+        'modernNowPlayingScreenCarouselIndex': 0,
+        'lyricsVisible': true,
+        'discordRPC': true,
+        'highlightedLyricsSize': 38.0,
+        'unhighlightedLyricsSize': 14.0,
+        'albumsSort':
+            Platform.isWindows || Platform.isLinux || Platform.isMacOS ? 3 : 0,
+        'tracksSort': 0,
+        'artistsSort': 0,
+        'genresSort': 0,
+        'albumsOrderType': 0,
+        'tracksOrderType': 0,
+        'artistsOrderType': 0,
+        'genresOrderType': 0,
+        'minimumFileSize': 1024 * 1024,
+        'libraryTab': 0,
+        'useLRCFromTrackDirectory': false,
+        'lookupForFallbackAlbumArt': false,
+        'displayAudioFormat': true,
+        'mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen': true,
+        'mobileEnableNowPlayingScreenRippleEffect': true,
+        'mobileAlbumsGridSize': 2,
+        'mobileArtistsGridSize': 3,
+        'mobileGenresGridSize': 3,
+        'albumHashCodeParameters': const [
+          0,
+        ],
+        'userLibmpvOptions': <String, String>{},
+        'disableAnimations': false,
+        'addLibraryToPlaylistWhenPlayingFromTracksTab':
+            Platform.isAndroid || Platform.isIOS,
+        'fallbackAlbumArtFileNames': kDefaultFallbackAlbumArtFileNames,
+        'androidEnableVolumeBoostFilter': false,
+        'animationDuration': AnimationDuration().toJson(),
+      };
 }
 
 abstract class ConfigurationKeys {

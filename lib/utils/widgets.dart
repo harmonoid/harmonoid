@@ -1189,9 +1189,9 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
                 if (lock) return;
                 lock = true;
                 Collection.instance.refresh(
-                    onProgress: (progress, total, isCompleted) {
+                    onProgress: (progress, total, completed) {
                   CollectionRefresh.instance.set(progress, total);
-                  if (isCompleted) {
+                  if (completed) {
                     setState(() {
                       lock = false;
                     });
@@ -2509,14 +2509,15 @@ class CollectionMoreButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPopupMenuButton<int>(
-      padding: EdgeInsets.zero,
-      offset: Offset.fromDirection(pi / 2, 64.0),
       icon: Icon(
         Icons.more_vert,
         size: 20.0,
         color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
       ),
       elevation: 4.0,
+      splashRadius: 20.0,
+      padding: EdgeInsets.zero,
+      offset: Offset.fromDirection(pi / 2, 64.0),
       onSelected: (value) async {
         switch (value) {
           case 0:

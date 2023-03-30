@@ -130,7 +130,7 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                   final c = Collection.instance;
                   final conf = Configuration.instance;
                   final cr = CollectionRefresh.instance;
-                  if (!cr.isCompleted) {
+                  if (!cr.completed) {
                     await showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
@@ -192,7 +192,7 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                   await c.removeDirectories(
                     refresh: false,
                     directories: {e},
-                    onProgress: (progress, total, isCompleted) {
+                    onProgress: (progress, total, _) {
                       cr.set(progress, total);
                     },
                   );

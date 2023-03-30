@@ -199,7 +199,7 @@ class CollectionScreenState extends State<CollectionScreen>
                             fillColor: Colors.transparent,
                           ),
                         ),
-                        if (!refresh.isCompleted)
+                        if (!refresh.completed)
                           Positioned(
                             left: 0.0,
                             bottom: 0.0,
@@ -496,10 +496,10 @@ class CollectionScreenState extends State<CollectionScreen>
                     FloatingSearchBar(
                       controller: widget.floatingSearchBarController,
                       automaticallyImplyBackButton: false,
-                      hint: refresh.isCompleted
+                      hint: refresh.completed
                           ? Language.instance.SEARCH_WELCOME
                           : Language.instance.COLLECTION_INDEXING_HINT,
-                      progress: refresh.isCompleted
+                      progress: refresh.completed
                           ? null
                           : refresh.progress == null
                               ? true

@@ -44,7 +44,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
   late VoidCallback listener;
   List<Widget> fills = [];
   Track? track;
-  bool isShuffling = Playback.instance.isShuffling;
+  bool shuffling = Playback.instance.shuffling;
   bool showAlbumArtButton = false;
   bool controlPanelVisible = false;
   Color? color;
@@ -60,7 +60,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
       duration: const Duration(milliseconds: 200),
     );
     listener = () async {
-      if (Playback.instance.isPlaying) {
+      if (Playback.instance.playing) {
         playOrPause.forward();
       } else {
         playOrPause.reverse();
@@ -72,7 +72,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
       final track = Playback.instance.tracks[Playback.instance.index];
       if (this.track != track) {
         this.track = track;
-        isShuffling = Playback.instance.isShuffling;
+        shuffling = Playback.instance.shuffling;
       }
     };
     Playback.instance.addListener(listener);
@@ -212,7 +212,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                               children: [
                                 Expanded(
                                   child: () {
-                                    if (playback.isBuffering) {
+                                    if (playback.buffering) {
                                       return Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
@@ -727,7 +727,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           IconButton(
                                             onPressed: playback.toggleShuffle,
                                             iconSize: 20.0,
-                                            color: playback.isShuffling
+                                            color: playback.shuffling
                                                 ? (colors.palette ??
                                                                 [
                                                                   Theme.of(context)
@@ -830,7 +830,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                     ])
                                                 .last,
                                             onPressed: playback.playOrPause,
-                                            tooltip: playback.isPlaying
+                                            tooltip: playback.playing
                                                 ? Language.instance.PAUSE
                                                 : Language.instance.PLAY,
                                             child: AnimatedIcon(
@@ -1019,7 +1019,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                               ? Colors.white.withOpacity(0.87)
                                               : Colors.black87,
                                           splashRadius: 18.0,
-                                          tooltip: playback.isMuted
+                                          tooltip: playback.muted
                                               ? Language.instance.UNMUTE
                                               : Language.instance.MUTE,
                                           icon: Icon(

@@ -31,7 +31,7 @@ class CollectionRefresh extends ChangeNotifier {
   int? progress = 1;
   int total = 1;
 
-  bool get isCompleted => progress == total;
+  bool get completed => progress == total;
 
   void set(int? progress, int total) {
     this.progress = progress;

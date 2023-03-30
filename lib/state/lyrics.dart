@@ -140,7 +140,7 @@ class Lyrics extends ChangeNotifier {
               debugPrint(stacktrace.toString());
             }
           }
-          if (Playback.instance.isCompleted) {
+          if (Playback.instance.completed) {
             await AwesomeNotifications().dismiss(_kNotificationID);
           }
         }
