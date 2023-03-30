@@ -4,7 +4,8 @@
 	<name>Harmonoid</name>
 	<!-- <summary>Plays &amp; manages your music library. Looks beautiful & juicy.</summary> -->
 	<metadata_license>CC0-1.0</metadata_license>
-	<project_license>LicenseRef-proprietary=https://github.com/harmonoid/harmonoid/blob/master/EULA.txt</project_license>
+	<project_license>
+		LicenseRef-proprietary=https://github.com/harmonoid/harmonoid/blob/master/EULA.txt</project_license>
 	<recommends>
 		<control>pointing</control>
 		<control>keyboard</control>
@@ -34,7 +35,8 @@
 	</screenshots> -->
 	<launchable type="desktop-id">harmonoid.desktop</launchable>
 	<releases>
-		<release version="0.3.6" date="2023-02-05" />
+		<release version="0.3.7" date="2023-03-30" />
+		<release version="0.3.6" date="2023-03-30" />
 		<release version="0.3.5" date="2023-01-05" />
 		<release version="0.3.4" date="2022-11-16" />
 		<release version="0.3.3" date="2022-09-21" />
