@@ -156,7 +156,7 @@ class Playback extends ChangeNotifier {
 
   Future<void> setVolume(double value) async {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      await player?.setVolume(volume);
+      await player?.setVolume(value);
     }
     if (Platform.isAndroid || Platform.isIOS) {
       await audioService?.setVolume(value / 100.0);
@@ -315,8 +315,8 @@ class Playback extends ChangeNotifier {
     playlistLoopMode = AppState.instance.playlistLoopMode;
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       await player?.setRate(rate);
-      await player?.setVolume(volume);
       await player?.setPitch(pitch);
+      await player?.setVolume(volume);
       await player?.setPlaylistMode(
         PlaylistMode.values[playlistLoopMode.index],
       );
