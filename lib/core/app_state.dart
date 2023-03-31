@@ -21,7 +21,7 @@ import 'package:harmonoid/core/configuration.dart';
 ///
 class AppState extends AppStateKeys {
   /// [AppState] object instance.
-  static late AppState instance = AppState();
+  static final AppState instance = AppState();
 
   /// [SafeLocalStorage] instance for cache read/write.
   final SafeLocalStorage storage = SafeLocalStorage(
@@ -32,16 +32,11 @@ class AppState extends AppStateKeys {
     fallback: _default,
   );
 
-  /// Initializes the [AppState] class.
-  ///
-  /// Called after the [Configuration.initialize] and load the app state.
-  /// Generates from scratch if no state is found.
-  ///
+  /// Initializes the [AppState] class singleton.
   static Future<void> initialize() async {
     await instance.read();
   }
 
-  /// Updates and save the app state in the [file].
   Future<void> save(
     int index,
     List<Track> tracks,
@@ -71,7 +66,6 @@ class AppState extends AppStateKeys {
     );
   }
 
-  /// Reads the app state from the [file].
   Future<void> read({
     bool retry = true,
   }) async {

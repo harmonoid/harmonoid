@@ -26,14 +26,20 @@ import 'package:harmonoid/constants/language.dart';
 ///
 class Configuration extends ConfigurationKeys {
   /// [Configuration] object instance.
-  static late Configuration instance = Configuration();
+  static final Configuration instance = Configuration();
+
+  /// The dedicated [Directory] for storing cache.
+  late final Directory cacheDirectory;
 
   /// [SafeLocalStorage] instance for cache read/write.
-  late SafeLocalStorage storage;
+  late final SafeLocalStorage storage;
 
-  /// Returns equivalent directory on various platforms to save application specific data & other cache.
-  ///
-  Future<String> get configurationDirectory async {
+  Future<String> get operatingSystemCacheDirectory async {
+    // Override the cache directory if the `HARMONOID_CACHE_DIR` environment variable is set.
+    if (Platform.environment['HARMONOID_CACHE_DIR'] != null) {
+      return path.normalize(Platform.environment['HARMONOID_CACHE_DIR']!);
+    }
+    // Default cache directory for each platform.
     switch (Platform.operatingSystem) {
       case 'windows':
         {
@@ -55,7 +61,7 @@ class Configuration extends ConfigurationKeys {
             debugPrint(exception.toString());
             debugPrint(stacktrace.toString());
             // Fallback solution for retrieving the user directory.
-            return Platform.environment['USERPROFILE']!;
+            return path.normalize(Platform.environment['USERPROFILE']!);
           } finally {
             calloc.free(rfid);
             calloc.free(result);
@@ -63,13 +69,13 @@ class Configuration extends ConfigurationKeys {
         }
       case 'linux':
         {
-          return Platform.environment['HOME']!;
+          return path.normalize(Platform.environment['HOME']!);
         }
       case 'android':
         {
           final cache = await StorageRetriever.instance.cache;
           debugPrint(cache.toString());
-          return cache.path;
+          return path.normalize(cache.path);
         }
       default:
         {
@@ -78,31 +84,21 @@ class Configuration extends ConfigurationKeys {
     }
   }
 
-  /// Initializes the [Configuration] class.
-  ///
-  /// Called before the [runApp] & fills the configuration keys.
-  /// Generates from scratch if no configuration is found.
-  ///
+  /// Initializes the [Configuration] class singleton.
   static Future<void> initialize() async {
-    instance.storage = SafeLocalStorage(
-      path.join(
-        await instance.configurationDirectory,
-        '.Harmonoid',
-        'Configuration.JSON',
-      ),
+    final directory = await instance.operatingSystemCacheDirectory;
+    final cacheDirectory = Directory(
+      path.join(directory, '.Harmonoid'),
+    );
+    final storage = SafeLocalStorage(
+      path.join(cacheDirectory.path, 'Configuration.JSON'),
       fallback: await _default,
     );
+    instance.cacheDirectory = cacheDirectory;
+    instance.storage = storage;
     await instance.read();
-    instance.cacheDirectory = Directory(
-      path.join(
-        await instance.configurationDirectory,
-        '.Harmonoid',
-      ),
-    );
   }
 
-  /// Updates a particular key in the Harmonoid's configuration.
-  ///
   Future<void> save({
     Set<Directory>? collectionDirectories,
     LanguageData? language,
@@ -339,8 +335,6 @@ class Configuration extends ConfigurationKeys {
     );
   }
 
-  /// Reads various configuration keys & stores in memory.
-  ///
   Future<void> read() async {
     final current = await storage.read();
     final conf = await _default;
@@ -529,7 +523,6 @@ class Configuration extends ConfigurationKeys {
 
 abstract class ConfigurationKeys {
   late Set<Directory> collectionDirectories;
-  late Directory cacheDirectory;
   late LanguageData language;
   late ThemeMode themeMode;
   late bool automaticAccent;
