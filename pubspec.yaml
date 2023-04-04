@@ -12,9 +12,9 @@ dependencies:
 
   # Plugins maintained by github.com/alexmercerind or first-party to the Harmonoid.
 
-  media_kit: ^0.0.2
+  media_kit: ^0.0.3
   media_kit_libs_linux: ^1.0.1
-  media_kit_native_event_loop: ^1.0.1
+  media_kit_native_event_loop: ^1.0.2
   media_kit_libs_windows_audio: ^1.0.1
 
   media_kit_tag_reader:
