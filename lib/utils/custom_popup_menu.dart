@@ -624,7 +624,7 @@ class CustomPopupMenuButtonState<T> extends State<CustomPopupMenuButton<T>> {
             color: Theme.of(context).iconTheme.color,
           ),
       padding: widget.padding,
-      splashRadius: widget.splashRadius,
+      splashRadius: widget.splashRadius ?? 20.0,
       iconSize: widget.iconSize ?? iconTheme.size,
       color: widget.color ?? iconTheme.color,
       tooltip:
