@@ -24,7 +24,8 @@ jobs:
         run: echo ${{ steps.vars.outputs.sha_short }}
       - uses: subosito/flutter-action@v1
         with:
-          channel: "master"
+          channel: "beta"
+          flutter-version: "3.9.0-0.1.pre"
 
       - run: |
           rmdir /s /q "assets/fonts"
@@ -100,7 +101,8 @@ jobs:
         run: echo ${{ steps.vars.outputs.sha_short }}
       - uses: subosito/flutter-action@v1
         with:
-          channel: "master"
+          channel: "beta"
+          flutter-version: "3.9.0-0.1.pre"
 
       - run: sudo apt-get update
       - run: sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev mpv libmpv-dev dpkg-dev rpm tree
@@ -191,7 +193,8 @@ jobs:
         run: echo ${{ steps.vars.outputs.sha_short }}
       - uses: subosito/flutter-action@v1
         with:
-          channel: "master"
+          channel: "beta"
+          flutter-version: "3.9.0-0.1.pre"
 
       - name: Create Key Store
         id: create_key_store
