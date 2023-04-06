@@ -35,7 +35,8 @@
 	</screenshots> -->
 	<launchable type="desktop-id">harmonoid.desktop</launchable>
 	<releases>
-		<release version="0.3.7" date="2023-03-30" />
+		<release version="0.3.8" date="2023-04-06" />
+		<release version="0.3.7" date="2023-04-04" />
 		<release version="0.3.6" date="2023-03-30" />
 		<release version="0.3.5" date="2023-01-05" />
 		<release version="0.3.4" date="2022-11-16" />

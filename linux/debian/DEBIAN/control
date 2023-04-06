@@ -1,5 +1,5 @@
 Package: harmonoid
-Version: 0.3.7-1
+Version: 0.3.8-1
 Section: base
 Priority: optional
 Homepage: https://github.com/harmonoid/harmonoid
@@ -7,4 +7,4 @@ Architecture: amd64
 Depends: mpv, libmpv-dev
 Maintainer: Hitesh Kumar Saini <saini123hitesh@gmail.com>
 Description: Harmonoid
-  Plays & manages your music library. Looks beautiful & juicy.
+Plays & manages your music library. Looks beautiful & juicy.
