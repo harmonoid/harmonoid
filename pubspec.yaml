@@ -12,10 +12,10 @@ dependencies:
 
   # Plugins maintained by github.com/alexmercerind or first-party to the Harmonoid.
 
-  media_kit: ^0.0.4
-  media_kit_libs_linux: ^1.0.1
-  media_kit_native_event_loop: ^1.0.2
-  media_kit_libs_windows_audio: ^1.0.1
+  media_kit: ^0.0.5
+  media_kit_libs_linux: ^1.0.2
+  media_kit_native_event_loop: ^1.0.3
+  media_kit_libs_windows_audio: ^1.0.2
 
   media_kit_tag_reader:
     path: external/media_kit_tag_reader
@@ -44,7 +44,7 @@ dependencies:
       url: https://github.com/alexmercerind/dart_discord_rpc.git
       ref: 48a15a750d9ee50c521a408c466bd681321a38e2
   uri_parser: ^2.0.0
-  safe_local_storage: ^1.0.0
+  safe_local_storage: ^1.0.2
 
   # Third-party plugins.
 

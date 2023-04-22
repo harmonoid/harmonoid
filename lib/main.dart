@@ -65,7 +65,7 @@ Future<void> main(List<String> args) async {
         enableEventStreams: false,
       );
       WindowLifecycle.initialize();
-      libmpvNativeLibrary.find();
+      MediaKit.ensureInitialized();
       await Configuration.initialize();
       await TagReader.initialize();
       await ExternalMediaProvider.create();
@@ -89,7 +89,7 @@ Future<void> main(List<String> args) async {
         enableEventStreams: false,
       );
       WindowLifecycle.initialize();
-      libmpvNativeLibrary.find();
+      MediaKit.ensureInitialized();
       await Configuration.initialize();
       await TagReader.initialize();
       await ExternalMediaProvider.create();
