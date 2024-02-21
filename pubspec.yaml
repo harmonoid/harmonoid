@@ -4,131 +4,64 @@ publish_to: "none"
 version: 0.3.8+5017
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: ">=2.17.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  # Plugins maintained by github.com/alexmercerind or first-party to the Harmonoid.
-
-  media_kit: ^0.0.5
-  media_kit_libs_linux: ^1.0.2
-  media_kit_native_event_loop: ^1.0.3
-  media_kit_libs_windows_audio: ^1.0.2
-
-  media_kit_tag_reader:
-    path: external/media_kit_tag_reader
-
-  media_library:
-    path: external/media_library
-
-  window_plus:
-    path: external/window_plus
-  visual_assets:
-    path: external/visual_assets
-  mpris_service:
-    path: external/mpris_service
-  ytm_client:
-    path: external/ytm_client
-  external_media_provider:
-    path: external/external_media_provider
-  system_media_transport_controls:
-    path: external/smtc-win32/bindings/system_media_transport_controls.dart
-  windows_taskbar:
-    git:
-      url: https://github.com/alexmercerind/windows_taskbar.git
-      ref: b3273d58aab9d71f61b51a84d5c6fb6cf0821529
+  adaptive_layouts:
+    path: external/adaptive_layouts
+  animations: ^2.0.0
+  audio_service: ^0.18.7
+  awesome_notifications: ^0.7.0-beta.5
   dart_discord_rpc:
     git:
       url: https://github.com/alexmercerind/dart_discord_rpc.git
       ref: 48a15a750d9ee50c521a408c466bd681321a38e2
-  uri_parser: ^2.0.0
-  safe_local_storage: ^1.0.2
-
-  # Third-party plugins.
-
+  dynamic_color: ^1.6.9
   ffi: ^2.0.1
-  win32: ^3.0.0
-  dynamic_color: ^1.6.2
-  just_audio: ^0.9.28
-  audio_service: ^0.18.7
-  awesome_notifications: ^0.7.0-beta.5
-  share_plus: ^2.1.4
-  url_launcher: ^6.1.3
-  filepicker_windows:
-    git:
-      url: https://github.com/alexmercerind/filepicker_windows.git
-      ref: master
-  file_picker: ^5.1.0
-  file_selector: ^0.8.2
-  permission_handler:
-    git:
-      url: https://github.com/alexmercerind/flutter-permission-handler.git
-      path: permission_handler
-      ref: 6120686e5f744e2934ca5f45deeca28df3227f5d
-  file_selector_linux:
-    git:
-      url: https://github.com/google/flutter-desktop-embedding.git
-      path: plugins/file_selector/file_selector_linux
-      ref: 4bc2c310e8acf3740ea0c2b326b3ef71280391f8
-
-  # Third-party UI widgets or "pure-dart" packages.
-
-  lrc: ^1.0.1
-  http: ^0.13.0
-  path: ^1.8.0
-  provider: ^6.0.1
-  animations: ^2.0.0
-  draggable_scrollbar: ^0.1.0
-  infinite_scroll_pagination: ^3.1.0
-  readmore: ^2.1.0
+  file_picker: ^6.1.1
   fluentui_system_icons: ^1.1.136
-  material_floating_search_bar:
-    git: https://github.com/alexmercerind/material_floating_search_bar_bxqm.git
-  collection: any
-  substring_highlight: ^1.0.33
-  extended_image:
-    git: https://github.com/chaudharydeepanshu/extended_image.git
-  auto_size_text: ^3.0.0
-  uuid: ^3.0.6
-  synchronized: ^3.0.0+2
-  flutter_svg: ^1.1.4
-
-  # Third-party forked plugins & packages to meet requirements.
-
-  desktop:
-    git:
-      url: https://github.com/alexmercerind/desktop.git
-      path: desktop
-      ref: a087d1ed4afeb61edd00e06842fa62c090f30ff5
-  known_extents_list_view_builder:
-    git:
-      url: https://github.com/alexmercerind/known_extents_list_view_builder.git
   flutter_lyric:
     git:
       url: https://github.com/alexmercerind/flutter_lyric.git
       ref: master
-
-dependency_overrides:
-  ffi: 1.1.0
-  meta: ^1.9.0
-  win32: ^3.0.0
-  platform: ^3.1.0
+  flutter_svg: ^1.1.4
+  extended_image: ^8.1.1
+  http: ^1.2.1
+  known_extents_list_view_builder:
+    git:
+      url: https://github.com/alexmercerind/known_extents_list_view_builder.git
+      ref: master
+  lrc: ^1.0.1
+  material_floating_search_bar:
+    git: https://github.com/alexmercerind/material_floating_search_bar_bxqm.git
+  media_kit: ^1.1.10
+  media_kit_libs_audio: ^1.0.4
+  media_library:
+    path: external/media_library
+  path: ^1.8.0
+  permission_handler: ^11.3.0
+  provider: ^6.0.1
+  share_plus: ^2.1.4
+  substring_highlight: ^1.0.33
+  syncfusion_flutter_datagrid: ^24.2.7
+  synchronized: ^3.0.0+2
+  system_media_transport_controls:
+    path: external/smtc-win32/bindings/system_media_transport_controls.dart
+  tag_reader:
+    path: external/tag_reader
   uri_parser: ^2.0.0
-  permission_handler_platform_interface:
+  url_launcher: ^6.1.3
+  win32: ^5.2.0
+  windows_taskbar:
     git:
-      url: https://github.com/alexmercerind/flutter-permission-handler.git
-      path: permission_handler_platform_interface
-      ref: 6120686e5f744e2934ca5f45deeca28df3227f5d
-  permission_handler_android:
-    git:
-      url: https://github.com/alexmercerind/flutter-permission-handler.git
-      path: permission_handler_android
-      ref: 6120686e5f744e2934ca5f45deeca28df3227f5d
+      url: https://github.com/alexmercerind/windows_taskbar.git
+      ref: b3273d58aab9d71f61b51a84d5c6fb6cf0821529
 
 dev_dependencies:
-  lints: ^2.0.0
+  flutter_lints: ^3.0.1
 
 flutter:
   uses-material-design: true
