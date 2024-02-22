@@ -1,10 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
 import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:media_library/media_library.dart';
@@ -43,9 +36,7 @@ class NowPlayingColorPalette extends ChangeNotifier {
             // [Configuration.instance.dynamicNowPlayingBarColoring] only affects the coloring of refresh FAB & [BottomNavigationBar].
             //
             // On desktop, the [palette] isn't used anywhere once [Configuration.instance.dynamicNowPlayingBarColoring] is disabled.
-            if (isMobile ||
-                (isDesktop &&
-                    Configuration.instance.dynamicNowPlayingBarColoring)) {
+            if (isMobile || (isDesktop && Configuration.instance.dynamicNowPlayingBarColoring)) {
               final image = getAlbumArt(track, small: true);
               final result = await PaletteGenerator.fromImageProvider(image);
               palette = result.colors?.toList();

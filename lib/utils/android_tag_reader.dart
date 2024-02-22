@@ -1,10 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-
 import 'dart:io';
 import 'dart:async';
 import 'package:path/path.dart';
@@ -111,8 +104,7 @@ class AndroidTagReader extends PlatformTagReader {
       albumLength = parseInteger(data['METADATA_KEY_NUM_TRACKS']);
     } else if (data['track'] is String) {
       if (data['METADATA_KEY_CD_TRACK_NUMBER'].contains('/')) {
-        albumLength =
-            parseInteger(data['METADATA_KEY_CD_TRACK_NUMBER'].split('/').last);
+        albumLength = parseInteger(data['METADATA_KEY_CD_TRACK_NUMBER'].split('/').last);
       }
     }
 
@@ -185,8 +177,7 @@ class AndroidTagReader extends PlatformTagReader {
     }
   }
 
-  static const MethodChannel channel =
-      MethodChannel('com.alexmercerind.harmonoid.MetadataRetriever');
+  static const MethodChannel channel = MethodChannel('com.alexmercerind.harmonoid.MetadataRetriever');
 }
 
 /// {@template android_media_metadata}

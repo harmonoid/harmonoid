@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -71,16 +63,8 @@ class _TrackTabState extends State<TrackTab> {
               ? desktop.ListTableTheme(
                   data: desktop.ListTableThemeData(
                     borderColor: Theme.of(context).dividerTheme.color,
-                    highlightColor: Theme.of(context)
-                            .dividerTheme
-                            .color
-                            ?.withOpacity(0.4) ??
-                        Theme.of(context).dividerColor.withOpacity(0.4),
-                    hoverColor: Theme.of(context)
-                            .dividerTheme
-                            .color
-                            ?.withOpacity(0.2) ??
-                        Theme.of(context).dividerColor.withOpacity(0.4),
+                    highlightColor: Theme.of(context).dividerTheme.color?.withOpacity(0.4) ?? Theme.of(context).dividerColor.withOpacity(0.4),
+                    hoverColor: Theme.of(context).dividerTheme.color?.withOpacity(0.2) ?? Theme.of(context).dividerColor.withOpacity(0.4),
                     borderHighlightColor: Theme.of(context).colorScheme.primary,
                     borderIndicatorColor: Theme.of(context).colorScheme.primary,
                     borderHoverColor: Theme.of(context).colorScheme.primary,
@@ -91,8 +75,7 @@ class _TrackTabState extends State<TrackTab> {
                       desktop.ListTable(
                         controller: controller,
                         onPressed: (i, _) {
-                          if (Configuration.instance
-                              .addLibraryToPlaylistWhenPlayingFromTracksTab) {
+                          if (Configuration.instance.addLibraryToPlaylistWhenPlayingFromTracksTab) {
                             Playback.instance.open(
                               collection.tracks,
                               index: i,
@@ -131,18 +114,15 @@ class _TrackTabState extends State<TrackTab> {
                         },
                         colCount: 5,
                         headerColumnBorder: BorderSide(
-                          color: Theme.of(context).dividerTheme.color ??
-                              Theme.of(context).dividerColor,
+                          color: Theme.of(context).dividerTheme.color ?? Theme.of(context).dividerColor,
                           width: 1.0,
                         ),
                         tableBorder: desktop.TableBorder(
                           verticalInside: BorderSide(
-                            color: Theme.of(context).dividerTheme.color ??
-                                Theme.of(context).dividerColor,
+                            color: Theme.of(context).dividerTheme.color ?? Theme.of(context).dividerColor,
                           ),
                           top: BorderSide(
-                            color: Theme.of(context).dividerTheme.color ??
-                                Theme.of(context).dividerColor,
+                            color: Theme.of(context).dividerTheme.color ?? Theme.of(context).dividerColor,
                           ),
                         ),
                         itemCount: collection.tracks.length,
@@ -152,43 +132,31 @@ class _TrackTabState extends State<TrackTab> {
                           1: 0.36,
                           4: 0.12,
                         },
-                        tableHeaderBuilder: (context, index, constraints) =>
-                            Container(
+                        tableHeaderBuilder: (context, index, constraints) => Container(
                           alignment: Alignment.center,
                           child: Transform.translate(
                             offset: Offset(4.0, 0.0),
                             child: Text(
-                              [
-                                '#',
-                                Language.instance.TRACK_SINGLE,
-                                Language.instance.ARTIST,
-                                Language.instance.ALBUM_SINGLE,
-                                Language.instance.YEAR
-                              ][index],
+                              ['#', Language.instance.TRACK_SINGLE, Language.instance.ARTIST, Language.instance.ALBUM_SINGLE, Language.instance.YEAR][index],
                               style: Theme.of(context).textTheme.titleSmall,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ),
-                        tableRowBuilder:
-                            (context, index, property, constraints) =>
-                                Container(
+                        tableRowBuilder: (context, index, property, constraints) => Container(
                           constraints: constraints,
                           padding: EdgeInsets.symmetric(
                             horizontal: 8.0,
                           ),
-                          alignment: property == 0
-                              ? Alignment.center
-                              : Alignment.centerLeft,
+                          alignment: property == 0 ? Alignment.center : Alignment.centerLeft,
                           child: () {
                             if ([0, 1, 4].contains(property)) {
                               return Text(
                                 [
                                   '${collection.tracks[index].trackNumber}',
                                   collection.tracks[index].trackName,
-                                  collection.tracks[index].trackArtistNames
-                                      .join(', '),
+                                  collection.tracks[index].trackArtistNames.join(', '),
                                   collection.tracks[index].albumName,
                                   collection.tracks[index].year.toString(),
                                 ][property],
@@ -203,13 +171,9 @@ class _TrackTabState extends State<TrackTab> {
                                   text: e,
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      final artist = Collection
-                                          .instance.artistsSet
-                                          .lookup(Artist(artistName: e));
+                                      final artist = Collection.instance.artistsSet.lookup(Artist(artistName: e));
                                       if (artist != null) {
-                                        Playback.instance
-                                                .interceptPositionChangeRebuilds =
-                                            true;
+                                        Playback.instance.interceptPositionChangeRebuilds = true;
                                         navigatorKey.currentState?.push(
                                           MaterialRoute(
                                             builder: (context) => ArtistScreen(
@@ -217,11 +181,8 @@ class _TrackTabState extends State<TrackTab> {
                                             ),
                                           ),
                                         );
-                                        Timer(const Duration(milliseconds: 400),
-                                            () {
-                                          Playback.instance
-                                                  .interceptPositionChangeRebuilds =
-                                              false;
+                                        Timer(const Duration(milliseconds: 400), () {
+                                          Playback.instance.interceptPositionChangeRebuilds = false;
                                         });
                                       }
                                     },
@@ -247,40 +208,25 @@ class _TrackTabState extends State<TrackTab> {
                                       text: collection.tracks[index].albumName,
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
-                                          final album = Collection
-                                              .instance.albumsSet
-                                              .lookup(
+                                          final album = Collection.instance.albumsSet.lookup(
                                             Album(
-                                              albumName: collection
-                                                  .tracks[index].albumName,
-                                              year:
-                                                  collection.tracks[index].year,
-                                              albumArtistName: collection
-                                                  .tracks[index]
-                                                  .albumArtistName,
-                                              albumHashCodeParameters:
-                                                  Collection.instance
-                                                      .albumHashCodeParameters,
+                                              albumName: collection.tracks[index].albumName,
+                                              year: collection.tracks[index].year,
+                                              albumArtistName: collection.tracks[index].albumArtistName,
+                                              albumHashCodeParameters: Collection.instance.albumHashCodeParameters,
                                             ),
                                           );
                                           if (album != null) {
-                                            Playback.instance
-                                                    .interceptPositionChangeRebuilds =
-                                                true;
+                                            Playback.instance.interceptPositionChangeRebuilds = true;
                                             navigatorKey.currentState?.push(
                                               MaterialRoute(
-                                                builder: (context) =>
-                                                    AlbumScreen(
+                                                builder: (context) => AlbumScreen(
                                                   album: album,
                                                 ),
                                               ),
                                             );
-                                            Timer(
-                                                const Duration(
-                                                    milliseconds: 400), () {
-                                              Playback.instance
-                                                      .interceptPositionChangeRebuilds =
-                                                  false;
+                                            Timer(const Duration(milliseconds: 400), () {
+                                              Playback.instance.interceptPositionChangeRebuilds = false;
                                             });
                                           }
                                         },
@@ -307,11 +253,8 @@ class _TrackTabState extends State<TrackTab> {
                           mini: true,
                           tooltip: Language.instance.PLAY_ALL,
                           child: Icon(Icons.play_arrow),
-                          foregroundColor: Theme.of(context)
-                              .colorScheme
-                              .onSecondaryContainer,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.secondaryContainer,
+                          foregroundColor: Theme.of(context).colorScheme.onSecondaryContainer,
+                          backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
                         ),
                       ),
                       Positioned(
@@ -326,11 +269,8 @@ class _TrackTabState extends State<TrackTab> {
                           mini: true,
                           tooltip: Language.instance.SHUFFLE,
                           child: Icon(Icons.shuffle),
-                          foregroundColor: Theme.of(context)
-                              .colorScheme
-                              .onSecondaryContainer,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.secondaryContainer,
+                          foregroundColor: Theme.of(context).colorScheme.onSecondaryContainer,
+                          backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
                         ),
                       ),
                     ],
@@ -347,21 +287,11 @@ class _TrackTabState extends State<TrackTab> {
                   ? DraggableScrollbar.semicircle(
                       heightScrollThumb: 56.0,
                       labelConstraints: BoxConstraints.tightFor(
-                        width: Collection.instance.tracksSort == TracksSort.aToZ
-                            ? 56.0
-                            : 136.0,
-                        height:
-                            Collection.instance.tracksSort == TracksSort.aToZ
-                                ? 56.0
-                                : 32.0,
+                        width: Collection.instance.tracksSort == TracksSort.aToZ ? 56.0 : 136.0,
+                        height: Collection.instance.tracksSort == TracksSort.aToZ ? 56.0 : 32.0,
                       ),
                       labelTextBuilder: (offset) {
-                        final index = (offset -
-                                (kMobileSearchBarHeight +
-                                    56.0 +
-                                    tileMargin(context) +
-                                    MediaQuery.of(context).padding.top)) ~/
-                            kMobileTrackTileHeight;
+                        final index = (offset - (kMobileSearchBarHeight + 56.0 + tileMargin(context) + MediaQuery.of(context).padding.top)) ~/ kMobileTrackTileHeight;
                         final track = collection.tracks[index.clamp(
                           0,
                           collection.tracks.length - 1,
@@ -371,8 +301,7 @@ class _TrackTabState extends State<TrackTab> {
                             {
                               return Text(
                                 track.trackName[0].toUpperCase(),
-                                style:
-                                    Theme.of(context).textTheme.headlineSmall,
+                                style: Theme.of(context).textTheme.headlineSmall,
                               );
                             }
                           case TracksSort.dateAdded:
@@ -396,8 +325,7 @@ class _TrackTabState extends State<TrackTab> {
                             );
                         }
                       },
-                      backgroundColor: Theme.of(context).cardTheme.color ??
-                          Theme.of(context).cardColor,
+                      backgroundColor: Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor,
                       controller: controller,
                       child: KnownExtentsListView.builder(
                         controller: controller,
@@ -408,9 +336,7 @@ class _TrackTabState extends State<TrackTab> {
                           ),
                         ],
                         padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).padding.top +
-                              kMobileSearchBarHeight +
-                              tileMargin(context),
+                          top: MediaQuery.of(context).padding.top + kMobileSearchBarHeight + tileMargin(context),
                         ),
                         itemCount: collection.tracks.length + 1,
                         itemBuilder: (context, i) {
@@ -433,8 +359,7 @@ class _TrackTabState extends State<TrackTab> {
                               ),
                             );
                           }
-                          return Configuration.instance
-                                  .addLibraryToPlaylistWhenPlayingFromTracksTab
+                          return Configuration.instance.addLibraryToPlaylistWhenPlayingFromTracksTab
                               ? TrackTile(
                                   index: i - 1,
                                   track: collection.tracks[i - 1],
@@ -498,11 +423,8 @@ class TrackTileState extends State<TrackTile> {
   @override
   Widget build(BuildContext context) {
     final group = widget.group ?? Collection.instance.tracks;
-    final subtitle = [
-      if (!widget.track.albumNameNotPresent) widget.track.albumName.overflow,
-      if (!widget.track.trackArtistNamesNotPresent)
-        widget.track.trackArtistNames.take(2).join(', ')
-    ].join(' • ');
+    final subtitle =
+        [if (!widget.track.albumNameNotPresent) widget.track.albumName.overflow, if (!widget.track.trackArtistNamesNotPresent) widget.track.trackArtistNames.take(2).join(', ')].join(' • ');
     return isDesktop
         ? MouseRegion(
             onEnter: (e) {
@@ -517,8 +439,7 @@ class TrackTileState extends State<TrackTile> {
             },
             child: Listener(
               onPointerDown: (e) {
-                reactToSecondaryPress = e.kind == PointerDeviceKind.mouse &&
-                    e.buttons == kSecondaryMouseButton;
+                reactToSecondaryPress = e.kind == PointerDeviceKind.mouse && e.buttons == kSecondaryMouseButton;
               },
               onPointerUp: (e) async {
                 if (widget.disableContextMenu) return;
@@ -614,16 +535,12 @@ class TrackTileState extends State<TrackTile> {
                                 recognizer: widget.track.uri.isScheme('FILE')
                                     ? (TapGestureRecognizer()
                                       ..onTap = () {
-                                        final artist = Collection
-                                            .instance.artistsSet
-                                            .lookup(Artist(artistName: e));
+                                        final artist = Collection.instance.artistsSet.lookup(Artist(artistName: e));
                                         if (artist != null) {
-                                          DesktopNowPlayingController.instance
-                                              .hide();
+                                          DesktopNowPlayingController.instance.hide();
                                           navigatorKey.currentState?.push(
                                             MaterialRoute(
-                                              builder: (context) =>
-                                                  ArtistScreen(
+                                              builder: (context) => ArtistScreen(
                                                 artist: artist,
                                               ),
                                             ),
@@ -730,8 +647,7 @@ class TrackTileState extends State<TrackTile> {
                                     widget.track.trackName.overflow,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
-                                    style:
-                                        Theme.of(context).textTheme.titleMedium,
+                                    style: Theme.of(context).textTheme.titleMedium,
                                   ),
                               const SizedBox(height: 2.0),
                               if (widget.subtitle != null) ...[

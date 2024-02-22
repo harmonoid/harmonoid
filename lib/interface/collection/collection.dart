@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 import 'dart:math';
 import 'dart:async';
 import 'package:flutter/material.dart' hide Intent, SearchBarThemeData;
@@ -51,11 +43,9 @@ class CollectionScreen extends StatefulWidget {
   CollectionScreenState createState() => CollectionScreenState();
 }
 
-class CollectionScreenState extends State<CollectionScreen>
-    with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
+class CollectionScreenState extends State<CollectionScreen> with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   final FocusNode node = FocusNode();
-  final PageController pageController =
-      PageController(initialPage: Configuration.instance.libraryTab);
+  final PageController pageController = PageController(initialPage: Configuration.instance.libraryTab);
   final ValueNotifier<String> query = ValueNotifier<String>('');
   String queryStr = '';
   final ValueNotifier<int> index = ValueNotifier(
@@ -82,9 +72,7 @@ class CollectionScreenState extends State<CollectionScreen>
     super.initState();
     widget.tabControllerNotifier.addListener(() {
       if (index.value != widget.tabControllerNotifier.value.index) {
-        final duration =
-            Theme.of(context).extension<AnimationDuration>()?.fast ??
-                Duration.zero;
+        final duration = Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero;
         if (duration == Duration.zero) {
           pageController.jumpToPage(widget.tabControllerNotifier.value.index);
         } else {
@@ -161,26 +149,21 @@ class CollectionScreenState extends State<CollectionScreen>
     return isDesktop
         ? Scaffold(
             resizeToAvoidBottomInset: false,
-            floatingActionButton:
-                index.value != -1 ? RefreshCollectionButton() : null,
+            floatingActionButton: index.value != -1 ? RefreshCollectionButton() : null,
             body: Stack(
               children: [
                 Container(
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.only(
-                    top: WindowPlus.instance.captionHeight +
-                        kDesktopAppBarHeight,
+                    top: WindowPlus.instance.captionHeight + kDesktopAppBarHeight,
                   ),
                   child: Consumer<CollectionRefresh>(
                     builder: (context, refresh, __) => Stack(
                       alignment: Alignment.bottomLeft,
                       children: <Widget>[
                         PageTransitionSwitcher(
-                          duration: Theme.of(context)
-                                  .extension<AnimationDuration>()
-                                  ?.medium ??
-                              Duration.zero,
+                          duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
                           child: index.value == -1
                               ? SearchTab(query: query)
                               : [
@@ -189,9 +172,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                   ArtistTab(),
                                   PlaylistTab(),
                                 ][index.value],
-                          transitionBuilder:
-                              (child, animation, secondaryAnimation) =>
-                                  SharedAxisTransition(
+                          transitionBuilder: (child, animation, secondaryAnimation) => SharedAxisTransition(
                             animation: animation,
                             secondaryAnimation: secondaryAnimation,
                             transitionType: SharedAxisTransitionType.vertical,
@@ -217,20 +198,15 @@ class CollectionScreenState extends State<CollectionScreen>
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     LinearProgressIndicator(
-                                      value: refresh.progress == null
-                                          ? null
-                                          : (refresh.progress ?? 0) /
-                                              refresh.total,
+                                      value: refresh.progress == null ? null : (refresh.progress ?? 0) / refresh.total,
                                     ),
                                     Expanded(
                                       child: Container(
                                         padding: EdgeInsets.all(12.0),
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             SizedBox(
                                               width: 16.0,
@@ -242,25 +218,19 @@ class CollectionScreenState extends State<CollectionScreen>
                                             Expanded(
                                               child: Text(
                                                 refresh.progress == null
-                                                    ? Language.instance
-                                                        .DISCOVERING_FILES
-                                                    : Language.instance
-                                                        .SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
+                                                    ? Language.instance.DISCOVERING_FILES
+                                                    : Language.instance.SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
                                                         .replaceAll(
                                                           'COMPLETED',
-                                                          refresh.progress
-                                                              .toString(),
+                                                          refresh.progress.toString(),
                                                         )
                                                         .replaceAll(
                                                           'TOTAL',
-                                                          refresh.total
-                                                              .toString(),
+                                                          refresh.total.toString(),
                                                         ),
                                                 overflow: TextOverflow.ellipsis,
                                                 textAlign: TextAlign.center,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge,
+                                                style: Theme.of(context).textTheme.bodyLarge,
                                               ),
                                             ),
                                             SizedBox(
@@ -282,13 +252,10 @@ class CollectionScreenState extends State<CollectionScreen>
                 ClipRect(
                   clipBehavior: Clip.antiAlias,
                   child: Container(
-                    height: kDesktopAppBarHeight +
-                        WindowPlus.instance.captionHeight +
-                        8.0,
+                    height: kDesktopAppBarHeight + WindowPlus.instance.captionHeight + 8.0,
                     padding: EdgeInsets.only(bottom: 8.0),
                     child: Material(
-                      elevation: Theme.of(context).appBarTheme.elevation ??
-                          kDefaultAppBarElevation,
+                      elevation: Theme.of(context).appBarTheme.elevation ?? kDefaultAppBarElevation,
                       color: Theme.of(context).appBarTheme.backgroundColor,
                       child: Stack(
                         alignment: Alignment.centerLeft,
@@ -337,18 +304,8 @@ class CollectionScreenState extends State<CollectionScreen>
                                           tab.value.toUpperCase(),
                                           style: TextStyle(
                                             fontSize: 20.0,
-                                            fontWeight: index.value == tab.key
-                                                ? FontWeight.w600
-                                                : FontWeight.w300,
-                                            color: index.value == tab.key
-                                                ? Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge
-                                                    ?.color
-                                                : Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium
-                                                    ?.color,
+                                            fontWeight: index.value == tab.key ? FontWeight.w600 : FontWeight.w300,
+                                            color: index.value == tab.key ? Theme.of(context).textTheme.bodyLarge?.color : Theme.of(context).textTheme.bodyMedium?.color,
                                           ),
                                         ),
                                       ),
@@ -390,12 +347,10 @@ class CollectionScreenState extends State<CollectionScreen>
                                       node.requestFocus();
                                     },
                                     textAlignVertical: TextAlignVertical.center,
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge,
+                                    style: Theme.of(context).textTheme.bodyLarge,
                                     decoration: inputDecoration(
                                       context,
-                                      Language
-                                          .instance.COLLECTION_SEARCH_WELCOME,
+                                      Language.instance.COLLECTION_SEARCH_WELCOME,
                                       trailingIcon: Transform.rotate(
                                         angle: pi / 2,
                                         child: Tooltip(
@@ -403,9 +358,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                           child: Icon(
                                             Icons.search,
                                             size: 20.0,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurfaceVariant,
+                                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                                           ),
                                         ),
                                       ),
@@ -440,10 +393,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                       child: Icon(
                                         Icons.settings,
                                         size: 20.0,
-                                        color: Theme.of(context)
-                                            .appBarTheme
-                                            .actionsIconTheme
-                                            ?.color,
+                                        color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
                                       ),
                                     ),
                                   ),
@@ -463,22 +413,15 @@ class CollectionScreenState extends State<CollectionScreen>
             ),
           )
         : AnnotatedRegion<SystemUiOverlayStyle>(
-            value: Theme.of(context).appBarTheme.systemOverlayStyle ??
-                SystemUiOverlayStyle(),
+            value: Theme.of(context).appBarTheme.systemOverlayStyle ?? SystemUiOverlayStyle(),
             child: Consumer<CollectionRefresh>(
               builder: (context, refresh, _) => Scaffold(
                 resizeToAvoidBottomInset: false,
                 floatingActionButton: ValueListenableBuilder(
                   valueListenable: index,
                   builder: (context, value, child) => AnimatedSwitcher(
-                    duration: Theme.of(context)
-                            .extension<AnimationDuration>()
-                            ?.medium ??
-                        Duration.zero,
-                    reverseDuration: Theme.of(context)
-                            .extension<AnimationDuration>()
-                            ?.medium ??
-                        Duration.zero,
+                    duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+                    reverseDuration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
                     switchInCurve: Curves.easeInOut,
                     switchOutCurve: Curves.easeInOut,
                     transitionBuilder: (child, value) => FadeTransition(
@@ -496,9 +439,7 @@ class CollectionScreenState extends State<CollectionScreen>
                     FloatingSearchBar(
                       controller: widget.floatingSearchBarController,
                       automaticallyImplyBackButton: false,
-                      hint: refresh.completed
-                          ? Language.instance.SEARCH_WELCOME
-                          : Language.instance.COLLECTION_INDEXING_HINT,
+                      hint: refresh.completed ? Language.instance.SEARCH_WELCOME : Language.instance.COLLECTION_INDEXING_HINT,
                       progress: refresh.completed
                           ? null
                           : refresh.progress == null
@@ -509,42 +450,20 @@ class CollectionScreenState extends State<CollectionScreen>
                       transitionCurve: Curves.easeInOut,
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       margins: EdgeInsets.only(
-                        top: tileMargin(context) +
-                            MediaQuery.of(context).padding.top,
+                        top: tileMargin(context) + MediaQuery.of(context).padding.top,
                       ),
                       height: kMobileSearchBarHeight,
-                      width: MediaQuery.of(context).size.width -
-                          (isMaterial3(context)
-                              ? 4 * tileMargin(context)
-                              : 2 * tileMargin(context)),
-                      borderRadius: Theme.of(context)
-                          .extension<SearchBarThemeData>()
-                          ?.borderRadius,
-                      accentColor: Theme.of(context)
-                          .extension<SearchBarThemeData>()
-                          ?.accentColor,
-                      backgroundColor: Theme.of(context)
-                          .extension<SearchBarThemeData>()
-                          ?.backgroundColor,
-                      shadowColor: Theme.of(context)
-                          .extension<SearchBarThemeData>()
-                          ?.shadowColor,
-                      elevation: Theme.of(context)
-                              .extension<SearchBarThemeData>()
-                              ?.elevation ??
-                          kDefaultCardElevation,
+                      width: MediaQuery.of(context).size.width - (isMaterial3(context) ? 4 * tileMargin(context) : 2 * tileMargin(context)),
+                      borderRadius: Theme.of(context).extension<SearchBarThemeData>()?.borderRadius,
+                      accentColor: Theme.of(context).extension<SearchBarThemeData>()?.accentColor,
+                      backgroundColor: Theme.of(context).extension<SearchBarThemeData>()?.backgroundColor,
+                      shadowColor: Theme.of(context).extension<SearchBarThemeData>()?.shadowColor,
+                      elevation: Theme.of(context).extension<SearchBarThemeData>()?.elevation ?? kDefaultCardElevation,
                       onQueryChanged: (value) => query.value = value,
                       clearQueryOnClose: true,
-                      hintStyle: Theme.of(context)
-                          .extension<SearchBarThemeData>()
-                          ?.hintStyle,
-                      queryStyle: Theme.of(context)
-                          .extension<SearchBarThemeData>()
-                          ?.queryStyle,
-                      transitionDuration: Theme.of(context)
-                              .extension<AnimationDuration>()
-                              ?.medium ??
-                          Duration.zero,
+                      hintStyle: Theme.of(context).extension<SearchBarThemeData>()?.hintStyle,
+                      queryStyle: Theme.of(context).extension<SearchBarThemeData>()?.queryStyle,
+                      transitionDuration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
                       transition: CircularFloatingSearchBarTransition(
                         divider: const Divider(
                           height: 2.0,
@@ -558,10 +477,7 @@ class CollectionScreenState extends State<CollectionScreen>
                             child: Icon(
                               Icons.search,
                               size: 24.0,
-                              color: Theme.of(context)
-                                  .appBarTheme
-                                  .iconTheme
-                                  ?.color,
+                              color: Theme.of(context).appBarTheme.iconTheme?.color,
                             ),
                           ),
                           showIfOpened: false,
@@ -578,10 +494,7 @@ class CollectionScreenState extends State<CollectionScreen>
                           child: ValueListenableBuilder<int>(
                             valueListenable: index,
                             builder: (context, tab, child) => AnimatedOpacity(
-                              duration: Theme.of(context)
-                                      .extension<AnimationDuration>()
-                                      ?.fast ??
-                                  Duration.zero,
+                              duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
                               curve: Curves.easeInOut,
                               opacity: {
                                 kAlbumTabIndex,
@@ -593,10 +506,7 @@ class CollectionScreenState extends State<CollectionScreen>
                               child: CircularButton(
                                 icon: Icon(
                                   Icons.view_list_outlined,
-                                  color: Theme.of(context)
-                                      .appBarTheme
-                                      .actionsIconTheme
-                                      ?.color,
+                                  color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
                                 ),
                                 onPressed: () async {
                                   if (!{
@@ -609,10 +519,8 @@ class CollectionScreenState extends State<CollectionScreen>
                                     builder: (context) => SimpleDialog(
                                       title: Text(
                                         {
-                                              kAlbumTabIndex: Language.instance
-                                                  .MOBILE_ALBUM_GRID_SIZE,
-                                              kArtistTabIndex: Language.instance
-                                                  .MOBILE_ARTIST_GRID_SIZE,
+                                              kAlbumTabIndex: Language.instance.MOBILE_ALBUM_GRID_SIZE,
+                                              kArtistTabIndex: Language.instance.MOBILE_ARTIST_GRID_SIZE,
                                             }[tab] ??
                                             '',
                                       ),
@@ -621,41 +529,27 @@ class CollectionScreenState extends State<CollectionScreen>
                                             (e) => RadioListTile<int>(
                                               title: Text(e.toString()),
                                               groupValue: {
-                                                    kAlbumTabIndex: Configuration
-                                                        .instance
-                                                        .mobileAlbumsGridSize,
-                                                    kArtistTabIndex: Configuration
-                                                        .instance
-                                                        .mobileArtistsGridSize,
+                                                    kAlbumTabIndex: Configuration.instance.mobileAlbumsGridSize,
+                                                    kArtistTabIndex: Configuration.instance.mobileArtistsGridSize,
                                                   }[tab] ??
                                                   -1,
                                               onChanged: (e) async {
                                                 if (e != null) {
                                                   if (tab == kAlbumTabIndex) {
-                                                    if (e !=
-                                                        Configuration.instance
-                                                            .mobileAlbumsGridSize) {
-                                                      await Configuration
-                                                          .instance
-                                                          .save(
+                                                    if (e != Configuration.instance.mobileAlbumsGridSize) {
+                                                      await Configuration.instance.save(
                                                         mobileAlbumsGridSize: e,
                                                       );
                                                     }
                                                   }
                                                   if (tab == kArtistTabIndex) {
-                                                    if (e !=
-                                                        Configuration.instance
-                                                            .mobileArtistsGridSize) {
-                                                      await Configuration
-                                                          .instance
-                                                          .save(
-                                                        mobileArtistsGridSize:
-                                                            e,
+                                                    if (e != Configuration.instance.mobileArtistsGridSize) {
+                                                      await Configuration.instance.save(
+                                                        mobileArtistsGridSize: e,
                                                       );
                                                     }
                                                   }
-                                                  Navigator.of(context)
-                                                      .maybePop();
+                                                  Navigator.of(context).maybePop();
                                                   setState(() {});
                                                 }
                                               },
@@ -676,10 +570,7 @@ class CollectionScreenState extends State<CollectionScreen>
                         ),
                         FloatingSearchBarAction.searchToClear(
                           showIfClosed: false,
-                          color: Theme.of(context)
-                              .appBarTheme
-                              .actionsIconTheme
-                              ?.color,
+                          color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
                         ),
                       ],
                       builder: (context, transition) {
@@ -688,19 +579,14 @@ class CollectionScreenState extends State<CollectionScreen>
                       body: FloatingSearchBarScrollNotifier(
                         child: NotificationListener<ScrollNotification>(
                           onNotification: (ScrollNotification notification) {
-                            if (notification.depth == 0 &&
-                                notification is ScrollEndNotification &&
-                                notification.metrics.axis == Axis.horizontal) {
+                            if (notification.depth == 0 && notification is ScrollEndNotification && notification.metrics.axis == Axis.horizontal) {
                               index.value = currentIndex;
-                              widget.tabControllerNotifier.value = TabRoute(
-                                  currentIndex, TabRouteSender.pageView);
+                              widget.tabControllerNotifier.value = TabRoute(currentIndex, TabRouteSender.pageView);
                             }
                             return false;
                           },
                           child: PageView(
-                            physics: Collection.instance.tracks.isEmpty
-                                ? const NeverScrollableScrollPhysics()
-                                : null,
+                            physics: Collection.instance.tracks.isEmpty ? const NeverScrollableScrollPhysics() : null,
                             controller: pageController,
                             onPageChanged: (page) {
                               currentIndex = page;

@@ -1,10 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart' hide Intent;
@@ -121,8 +114,7 @@ Future<void> main(List<String> args) async {
       );
       // Android 12 or lower.
       if (StorageRetriever.instance.version < 33) {
-        if (await Permission.storage.isDenied ||
-            await Permission.storage.isPermanentlyDenied) {
+        if (await Permission.storage.isDenied || await Permission.storage.isPermanentlyDenied) {
           final state = await Permission.storage.request();
           if (!state.isGranted) {
             await SystemNavigator.pop(
@@ -133,8 +125,7 @@ Future<void> main(List<String> args) async {
       }
       // Android 13 or higher.
       else {
-        if (await Permission.audio.isDenied ||
-            await Permission.audio.isPermanentlyDenied) {
+        if (await Permission.audio.isDenied || await Permission.audio.isPermanentlyDenied) {
           final state = await Permission.audio.request();
           if (!state.isGranted) {
             await SystemNavigator.pop(
@@ -206,8 +197,7 @@ Future<void> main(List<String> args) async {
 class _HttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback = (cert, host, port) => true;
+    return super.createHttpClient(context)..badCertificateCallback = (cert, host, port) => true;
   }
 
   @override

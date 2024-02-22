@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/widgets.dart';
@@ -207,8 +199,7 @@ class Intent {
               // External network URIs.
               if (ExternalMedia.supported(uri)) {
                 final response = await YTMClient.player(uri.toString());
-                await Playback.instance
-                    .open([Track.fromJson(response!.toJson())]);
+                await Playback.instance.open([Track.fromJson(response!.toJson())]);
               }
               // Direct network URIs. No metadata extraction.
               else {
@@ -256,8 +247,7 @@ class Intent {
 
   /// [MethodChannel] used for retrieving the media [Uri] on Android specifically.
   ///
-  final MethodChannel channel =
-      const MethodChannel('com.alexmercerind.harmonoid.IntentRetriever');
+  final MethodChannel channel = const MethodChannel('com.alexmercerind.harmonoid.IntentRetriever');
 
   /// Platform independent tag reader from `package:media_kit_tag_reader` for parsing & reading metadata from music files.
   final TagReader reader = TagReader();

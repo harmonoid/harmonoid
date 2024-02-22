@@ -1,10 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-
 import 'dart:convert';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
@@ -98,8 +91,7 @@ class FileInfoScreen extends StatefulWidget {
                   String text,
                   Duration timeout,
                 ) async {
-                  if (text.isNotEmpty &&
-                      (formKey.currentState?.validate() ?? false)) {
+                  if (text.isNotEmpty && (formKey.currentState?.validate() ?? false)) {
                     final parser = URIParser(text);
                     if (parser.validate()) {
                       debugPrint(parser.result.toString());
@@ -203,8 +195,7 @@ class FileInfoScreen extends StatefulWidget {
                       builder: (context, setState) {
                         return Container(
                           margin: EdgeInsets.only(
-                            bottom: MediaQuery.of(context).viewInsets.bottom -
-                                MediaQuery.of(context).padding.bottom,
+                            bottom: MediaQuery.of(context).viewInsets.bottom - MediaQuery.of(context).padding.bottom,
                           ),
                           padding: EdgeInsets.all(8.0),
                           child: Column(
@@ -237,10 +228,7 @@ class FileInfoScreen extends StatefulWidget {
                                       timeout,
                                     );
                                   },
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge
-                                      ?.copyWith(
+                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                         fontSize: 16.0,
                                       ),
                                   decoration: mobileUnderlinedInputDecoration(
@@ -429,22 +417,15 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
                               Expanded(
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
                                     Text(
                                       Language.instance.FILE_INFORMATION,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headlineSmall,
+                                      style: Theme.of(context).textTheme.headlineSmall,
                                     ),
                                     Text(
-                                      !widget.uri.isScheme('FILE')
-                                          ? widget.uri.toString()
-                                          : basename(widget.uri.toFilePath()),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
+                                      !widget.uri.isScheme('FILE') ? widget.uri.toString() : basename(widget.uri.toFilePath()),
+                                      style: Theme.of(context).textTheme.bodyMedium,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -456,8 +437,7 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
                                 onPressed: () {
                                   Clipboard.setData(
                                     ClipboardData(
-                                      text: const JsonEncoder.withIndent('    ')
-                                          .convert(metadata),
+                                      text: const JsonEncoder.withIndent('    ').convert(metadata),
                                     ),
                                   );
                                 },
@@ -511,8 +491,7 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
                     onPressed: () {
                       Clipboard.setData(
                         ClipboardData(
-                          text: const JsonEncoder.withIndent('    ')
-                              .convert(metadata),
+                          text: const JsonEncoder.withIndent('    ').convert(metadata),
                         ),
                       );
                     },
@@ -545,9 +524,7 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
                                       onPressed: () {
                                         Clipboard.setData(
                                           ClipboardData(
-                                            text: const JsonEncoder.withIndent(
-                                                    '    ')
-                                                .convert(metadata),
+                                            text: const JsonEncoder.withIndent('    ').convert(metadata),
                                           ),
                                         );
                                       },

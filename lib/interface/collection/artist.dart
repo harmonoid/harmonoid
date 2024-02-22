@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 import 'dart:ui';
 import 'dart:async';
 import 'dart:math';
@@ -92,9 +84,7 @@ class _ArtistTabState extends State<ArtistTab> {
                               ] +
                               List.generate(
                                 data.widgets.length,
-                                (index) =>
-                                    helper.artistTileHeight +
-                                    tileMargin(context),
+                                (index) => helper.artistTileHeight + tileMargin(context),
                               ),
                           itemBuilder: (context, i) => i == 0
                               ? SortBarFixedHolder(
@@ -122,30 +112,16 @@ class _ArtistTabState extends State<ArtistTab> {
                     ),
                   )
             : Consumer<Collection>(
-                builder: (context, collection, _) => collection
-                        .artists.isNotEmpty
+                builder: (context, collection, _) => collection.artists.isNotEmpty
                     ? DraggableScrollbar.semicircle(
                         heightScrollThumb: 56.0,
                         labelConstraints: BoxConstraints.tightFor(
-                          width: Collection.instance.artistsSort ==
-                                  ArtistsSort.aToZ
-                              ? 56.0
-                              : 136.0,
-                          height: Collection.instance.artistsSort ==
-                                  ArtistsSort.aToZ
-                              ? 56.0
-                              : 32.0,
+                          width: Collection.instance.artistsSort == ArtistsSort.aToZ ? 56.0 : 136.0,
+                          height: Collection.instance.artistsSort == ArtistsSort.aToZ ? 56.0 : 32.0,
                         ),
                         labelTextBuilder: (offset) {
-                          final perTileHeight = helper.artistElementsPerRow > 1
-                              ? (helper.artistTileHeight + tileMargin(context))
-                              : kArtistTileListViewHeight;
-                          final index = (offset -
-                                  (kMobileSearchBarHeight +
-                                      56.0 +
-                                      tileMargin(context) +
-                                      MediaQuery.of(context).padding.top)) ~/
-                              perTileHeight;
+                          final perTileHeight = helper.artistElementsPerRow > 1 ? (helper.artistTileHeight + tileMargin(context)) : kArtistTileListViewHeight;
+                          final index = (offset - (kMobileSearchBarHeight + 56.0 + tileMargin(context) + MediaQuery.of(context).padding.top)) ~/ perTileHeight;
                           final artist = data
                               .data[index.clamp(
                             0,
@@ -157,8 +133,7 @@ class _ArtistTabState extends State<ArtistTab> {
                               {
                                 return Text(
                                   artist.artistName[0].toUpperCase(),
-                                  style:
-                                      Theme.of(context).textTheme.headlineSmall,
+                                  style: Theme.of(context).textTheme.headlineSmall,
                                 );
                               }
                             case ArtistsSort.dateAdded:
@@ -176,24 +151,18 @@ class _ArtistTabState extends State<ArtistTab> {
                               );
                           }
                         },
-                        backgroundColor: Theme.of(context).cardTheme.color ??
-                            Theme.of(context).cardColor,
+                        backgroundColor: Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor,
                         controller: controller,
                         child: KnownExtentsListView.builder(
                           controller: controller,
                           itemExtents: [
                             56.0,
                             ...data.widgets.map(
-                              (e) => helper.artistElementsPerRow > 1
-                                  ? (helper.artistTileHeight +
-                                      tileMargin(context))
-                                  : kArtistTileListViewHeight,
+                              (e) => helper.artistElementsPerRow > 1 ? (helper.artistTileHeight + tileMargin(context)) : kArtistTileListViewHeight,
                             ),
                           ],
                           padding: EdgeInsets.only(
-                            top: MediaQuery.of(context).padding.top +
-                                kMobileSearchBarHeight +
-                                tileMargin(context),
+                            top: MediaQuery.of(context).padding.top + kMobileSearchBarHeight + tileMargin(context),
                           ),
                           itemCount: 1 + data.widgets.length,
                           itemBuilder: (context, i) {
@@ -256,10 +225,8 @@ class ArtistTile extends StatelessWidget {
     final helper = DimensionsHelper(context);
 
     // Only for mobile:
-    final artistElementsPerRow =
-        forceDefaultStyleOnMobile ? 1 : helper.artistElementsPerRow;
-    final artistTileNormalDensity =
-        forceDefaultStyleOnMobile ? false : helper.artistTileNormalDensity;
+    final artistElementsPerRow = forceDefaultStyleOnMobile ? 1 : helper.artistElementsPerRow;
+    final artistTileNormalDensity = forceDefaultStyleOnMobile ? false : helper.artistTileNormalDensity;
 
     Iterable<Color>? palette;
 
@@ -275,8 +242,7 @@ class ArtistTile extends StatelessWidget {
             Card(
               clipBehavior: Clip.antiAlias,
               margin: EdgeInsets.zero,
-              elevation: Theme.of(context).cardTheme.elevation ??
-                  kDefaultCardElevation,
+              elevation: Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(
                   width / 2.0,
@@ -305,8 +271,7 @@ class ArtistTile extends StatelessWidget {
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: () async {
-                        Playback.instance.interceptPositionChangeRebuilds =
-                            true;
+                        Playback.instance.interceptPositionChangeRebuilds = true;
                         try {
                           await precacheImage(getAlbumArt(artist), context);
                         } catch (exception, stacktrace) {
@@ -321,8 +286,7 @@ class ArtistTile extends StatelessWidget {
                           ),
                         );
                         Timer(const Duration(milliseconds: 400), () {
-                          Playback.instance.interceptPositionChangeRebuilds =
-                              false;
+                          Playback.instance.interceptPositionChangeRebuilds = false;
                         });
                       },
                       child: Container(
@@ -377,9 +341,7 @@ class ArtistTile extends StatelessWidget {
                     onTap: () async {
                       try {
                         if (palette == null) {
-                          final result =
-                              await PaletteGenerator.fromImageProvider(
-                                  getAlbumArt(artist, small: true));
+                          final result = await PaletteGenerator.fromImageProvider(getAlbumArt(artist, small: true));
                           palette = result.colors;
                         }
                         await precacheImage(getAlbumArt(artist), context);
@@ -388,10 +350,7 @@ class ArtistTile extends StatelessWidget {
                         debugPrint(exception.toString());
                         debugPrint(stacktrace.toString());
                       }
-                      if (Theme.of(context)
-                              .extension<AnimationDuration>()
-                              ?.medium ==
-                          Duration.zero) {
+                      if (Theme.of(context).extension<AnimationDuration>()?.medium == Duration.zero) {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => ArtistScreen(
@@ -417,8 +376,7 @@ class ArtistTile extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(28.0),
                             ),
-                            elevation: Theme.of(context).cardTheme.elevation ??
-                                kDefaultCardElevation,
+                            elevation: Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
                             margin: EdgeInsets.zero,
                             child: Padding(
                               padding: EdgeInsets.all(2.0),
@@ -443,18 +401,13 @@ class ArtistTile extends StatelessWidget {
                                   artist.artistName.overflow,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
-                                  style:
-                                      Theme.of(context).textTheme.titleMedium,
+                                  style: Theme.of(context).textTheme.titleMedium,
                                 ),
                                 const SizedBox(
                                   height: 2.0,
                                 ),
                                 Text(
-                                  Language.instance.M_TRACKS_AND_N_ALBUMS
-                                      .replaceAll(
-                                          'M', '${artist.tracks.length}')
-                                      .replaceAll(
-                                          'N', '${artist.albums.length}'),
+                                  Language.instance.M_TRACKS_AND_N_ALBUMS.replaceAll('M', '${artist.tracks.length}').replaceAll('N', '${artist.albums.length}'),
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                   style: Theme.of(context).textTheme.bodyMedium,
@@ -483,13 +436,10 @@ class ArtistTile extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               children: [
                 OpenContainer(
-                  closedElevation: Theme.of(context).cardTheme.elevation ??
-                      kDefaultCardElevation,
+                  closedElevation: Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
                   openElevation: 0.0,
-                  closedColor: Theme.of(context).cardTheme.color ??
-                      Theme.of(context).cardColor,
-                  openColor: Theme.of(context).cardTheme.color ??
-                      Theme.of(context).cardColor,
+                  closedColor: Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor,
+                  openColor: Theme.of(context).cardTheme.color ?? Theme.of(context).cardColor,
                   closedShape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
                       width / 2.0,
@@ -513,9 +463,7 @@ class ArtistTile extends StatelessWidget {
                             image: getAlbumArt(
                               artist,
                               small: true,
-                              cacheWidth: (width - 8.0) *
-                                  MediaQuery.of(context).devicePixelRatio ~/
-                                  1,
+                              cacheWidth: (width - 8.0) * MediaQuery.of(context).devicePixelRatio ~/ 1,
                             ),
                             height: width - 8.0,
                             width: width - 8.0,
@@ -528,9 +476,7 @@ class ArtistTile extends StatelessWidget {
                           onTap: () async {
                             try {
                               if (palette == null) {
-                                final result =
-                                    await PaletteGenerator.fromImageProvider(
-                                        getAlbumArt(artist, small: true));
+                                final result = await PaletteGenerator.fromImageProvider(getAlbumArt(artist, small: true));
                                 palette = result.colors;
                               }
                               await precacheImage(getAlbumArt(artist), context);
@@ -539,10 +485,7 @@ class ArtistTile extends StatelessWidget {
                               debugPrint(exception.toString());
                               debugPrint(stacktrace.toString());
                             }
-                            if (Theme.of(context)
-                                    .extension<AnimationDuration>()
-                                    ?.medium ==
-                                Duration.zero) {
+                            if (Theme.of(context).extension<AnimationDuration>()?.medium == Duration.zero) {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => ArtistScreen(
@@ -596,8 +539,7 @@ class ArtistScreen extends StatefulWidget {
   ArtistScreenState createState() => ArtistScreenState();
 }
 
-class ArtistScreenState extends State<ArtistScreen>
-    with SingleTickerProviderStateMixin {
+class ArtistScreenState extends State<ArtistScreen> with SingleTickerProviderStateMixin {
   Color? color;
   Color? secondary;
   int? hovered;
@@ -611,8 +553,7 @@ class ArtistScreenState extends State<ArtistScreen>
     return duration > Duration.zero ? sc0 : sc1;
   }
 
-  final sc0 =
-      ScrollController(initialScrollOffset: kMobileLayoutInitialScrollOffset);
+  final sc0 = ScrollController(initialScrollOffset: kMobileLayoutInitialScrollOffset);
   final sc1 = ScrollController(initialScrollOffset: 0.0);
 
   static const double kMobileLayoutInitialScrollOffset = 128.0;
@@ -700,16 +641,11 @@ class ArtistScreenState extends State<ArtistScreen>
   Widget build(BuildContext context) {
     const mobileSliverLabelHeight = 108.0;
     double mobileSliverContentHeight = MediaQuery.of(context).size.width;
-    double mobileSliverExpandedHeight = mobileSliverContentHeight -
-        MediaQuery.of(context).padding.top +
-        mobileSliverLabelHeight;
+    double mobileSliverExpandedHeight = mobileSliverContentHeight - MediaQuery.of(context).padding.top + mobileSliverLabelHeight;
     double mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
-    if (mobileSliverExpandedHeight >
-        MediaQuery.of(context).size.height * 3 / 5) {
+    if (mobileSliverExpandedHeight > MediaQuery.of(context).size.height * 3 / 5) {
       mobileSliverExpandedHeight = MediaQuery.of(context).size.height * 3 / 5;
-      mobileSliverContentHeight = mobileSliverExpandedHeight -
-          mobileSliverLabelHeight +
-          MediaQuery.of(context).padding.top;
+      mobileSliverContentHeight = mobileSliverExpandedHeight - mobileSliverLabelHeight + MediaQuery.of(context).padding.top;
       mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
     }
     return Consumer<Collection>(
@@ -742,41 +678,32 @@ class ArtistScreenState extends State<ArtistScreen>
                       TweenAnimationBuilder(
                         tween: ColorTween(
                           begin: Theme.of(context).appBarTheme.backgroundColor,
-                          end: color == null
-                              ? Theme.of(context).appBarTheme.backgroundColor
-                              : color!,
+                          end: color == null ? Theme.of(context).appBarTheme.backgroundColor : color!,
                         ),
                         curve: Curves.easeOut,
-                        duration: Theme.of(context)
-                                .extension<AnimationDuration>()
-                                ?.medium ??
-                            Duration.zero,
+                        duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
                         builder: (context, color, _) => DesktopAppBar(
                           height: MediaQuery.of(context).size.height / 3,
-                          elevation: Theme.of(context).cardTheme.elevation ??
-                              kDefaultCardElevation,
+                          elevation: Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
                           color: color as Color? ?? Colors.transparent,
                         ),
                       ),
                       Container(
-                        height: MediaQuery.of(context).size.height -
-                            kDesktopNowPlayingBarHeight,
+                        height: MediaQuery.of(context).size.height - kDesktopNowPlayingBarHeight,
                         width: MediaQuery.of(context).size.width,
                         child: Container(
                           alignment: Alignment.center,
                           child: Card(
                             clipBehavior: Clip.antiAlias,
                             margin: EdgeInsets.only(top: 96.0, bottom: 4.0),
-                            elevation: Theme.of(context).cardTheme.elevation ??
-                                kDefaultCardElevation,
+                            elevation: Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
                             child: Container(
                               constraints: BoxConstraints(
                                 maxWidth: 12 / 6 * 720.0,
                                 maxHeight: 720.0,
                               ),
                               width: MediaQuery.of(context).size.width - 136.0,
-                              height:
-                                  MediaQuery.of(context).size.height - 192.0,
+                              height: MediaQuery.of(context).size.height - 192.0,
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -784,30 +711,18 @@ class ArtistScreenState extends State<ArtistScreen>
                                   Expanded(
                                     flex: 6,
                                     child: LayoutBuilder(
-                                      builder: (context, constraints) =>
-                                          ClipRect(
+                                      builder: (context, constraints) => ClipRect(
                                         child: Stack(
                                           alignment: Alignment.center,
                                           children: [
                                             TweenAnimationBuilder(
                                               tween: ColorTween(
-                                                begin: Theme.of(context)
-                                                    .appBarTheme
-                                                    .backgroundColor,
-                                                end: color == null
-                                                    ? Theme.of(context)
-                                                        .dividerTheme
-                                                        .color
-                                                    : secondary!,
+                                                begin: Theme.of(context).appBarTheme.backgroundColor,
+                                                end: color == null ? Theme.of(context).dividerTheme.color : secondary!,
                                               ),
                                               curve: Curves.easeOut,
-                                              duration: Theme.of(context)
-                                                      .extension<
-                                                          AnimationDuration>()
-                                                      ?.slow ??
-                                                  Duration.zero,
-                                              builder: (context, color, _) =>
-                                                  Positioned.fill(
+                                              duration: Theme.of(context).extension<AnimationDuration>()?.slow ?? Duration.zero,
+                                              builder: (context, color, _) => Positioned.fill(
                                                 child: Container(
                                                   color: color as Color?,
                                                 ),
@@ -816,8 +731,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                             Padding(
                                               padding: EdgeInsets.all(20.0),
                                               child: Hero(
-                                                tag:
-                                                    'artist_art_${widget.artist.artistName}',
+                                                tag: 'artist_art_${widget.artist.artistName}',
                                                 child: Container(
                                                   decoration: BoxDecoration(
                                                     color: Colors.white,
@@ -834,11 +748,8 @@ class ArtistScreenState extends State<ArtistScreen>
                                                   padding: EdgeInsets.all(8.0),
                                                   child: CircleAvatar(
                                                     radius: 240.0,
-                                                    backgroundColor:
-                                                        Colors.transparent,
-                                                    backgroundImage:
-                                                        getAlbumArt(
-                                                            widget.artist),
+                                                    backgroundColor: Colors.transparent,
+                                                    backgroundImage: getAlbumArt(widget.artist),
                                                   ),
                                                 ),
                                               ),
@@ -860,30 +771,20 @@ class ArtistScreenState extends State<ArtistScreen>
                                               padding: EdgeInsets.all(16.0),
                                               alignment: Alignment.centerLeft,
                                               child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
                                                   Text(
                                                     widget.artist.artistName,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headlineSmall
-                                                        ?.copyWith(
-                                                            fontSize: 24.0),
+                                                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontSize: 24.0),
                                                     maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                                    overflow: TextOverflow.ellipsis,
                                                   ),
                                                   SizedBox(height: 8.0),
                                                   Text(
                                                     '${Language.instance.TRACK}: ${tracks.length}\n${Language.instance.ALBUM}: ${widget.artist.albums.length}',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyMedium,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                                    style: Theme.of(context).textTheme.bodyMedium,
+                                                    overflow: TextOverflow.ellipsis,
                                                   ),
                                                 ],
                                               ),
@@ -891,8 +792,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                             Padding(
                                               padding: EdgeInsets.all(12.0),
                                               child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
+                                                mainAxisAlignment: MainAxisAlignment.end,
                                                 children: [
                                                   FloatingActionButton(
                                                     heroTag: 'play_now',
@@ -900,14 +800,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                       Playback.instance.open(
                                                         [
                                                           ...tracks,
-                                                          if (Configuration
-                                                              .instance
-                                                              .seamlessPlayback)
-                                                            ...[
-                                                              ...Collection
-                                                                  .instance
-                                                                  .tracks
-                                                            ]..shuffle(),
+                                                          if (Configuration.instance.seamlessPlayback) ...[...Collection.instance.tracks]..shuffle(),
                                                         ],
                                                       );
                                                     },
@@ -915,8 +808,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                     child: Icon(
                                                       Icons.play_arrow,
                                                     ),
-                                                    tooltip: Language
-                                                        .instance.PLAY_NOW,
+                                                    tooltip: Language.instance.PLAY_NOW,
                                                   ),
                                                   SizedBox(
                                                     width: 8.0,
@@ -932,15 +824,13 @@ class ArtistScreenState extends State<ArtistScreen>
                                                     child: Icon(
                                                       Icons.shuffle,
                                                     ),
-                                                    tooltip: Language
-                                                        .instance.SHUFFLE,
+                                                    tooltip: Language.instance.SHUFFLE,
                                                   ),
                                                   SizedBox(
                                                     width: 8.0,
                                                   ),
                                                   FloatingActionButton(
-                                                    heroTag:
-                                                        'add_to_now_playing',
+                                                    heroTag: 'add_to_now_playing',
                                                     onPressed: () {
                                                       Playback.instance.add(
                                                         tracks.toList(),
@@ -950,8 +840,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                     child: Icon(
                                                       Icons.queue_music,
                                                     ),
-                                                    tooltip: Language.instance
-                                                        .ADD_TO_NOW_PLAYING,
+                                                    tooltip: Language.instance.ADD_TO_NOW_PLAYING,
                                                   ),
                                                 ],
                                               ),
@@ -963,42 +852,28 @@ class ArtistScreenState extends State<ArtistScreen>
                                           thickness: 1.0,
                                         ),
                                         LayoutBuilder(
-                                          builder: (context, constraints) =>
-                                              Column(
+                                          builder: (context, constraints) => Column(
                                             children: [
                                                   Row(
                                                     children: [
                                                       Container(
                                                         width: 64.0,
                                                         height: 56.0,
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                right: 8.0),
-                                                        alignment:
-                                                            Alignment.center,
+                                                        padding: EdgeInsets.only(right: 8.0),
+                                                        alignment: Alignment.center,
                                                         child: Text(
                                                           '#',
-                                                          style:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .titleSmall,
+                                                          style: Theme.of(context).textTheme.titleSmall,
                                                         ),
                                                       ),
                                                       Expanded(
                                                         child: Container(
                                                           height: 56.0,
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  right: 8.0),
-                                                          alignment: Alignment
-                                                              .centerLeft,
+                                                          padding: EdgeInsets.only(right: 8.0),
+                                                          alignment: Alignment.centerLeft,
                                                           child: Text(
-                                                            Language.instance
-                                                                .TRACK_SINGLE,
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .titleSmall,
+                                                            Language.instance.TRACK_SINGLE,
+                                                            style: Theme.of(context).textTheme.titleSmall,
                                                           ),
                                                         ),
                                                         flex: 3,
@@ -1006,18 +881,11 @@ class ArtistScreenState extends State<ArtistScreen>
                                                       Expanded(
                                                         child: Container(
                                                           height: 56.0,
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  right: 8.0),
-                                                          alignment: Alignment
-                                                              .centerLeft,
+                                                          padding: EdgeInsets.only(right: 8.0),
+                                                          alignment: Alignment.centerLeft,
                                                           child: Text(
-                                                            Language.instance
-                                                                .ALBUM_SINGLE,
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .titleSmall,
+                                                            Language.instance.ALBUM_SINGLE,
+                                                            style: Theme.of(context).textTheme.titleSmall,
                                                           ),
                                                         ),
                                                         flex: 2,
@@ -1051,41 +919,22 @@ class ArtistScreenState extends State<ArtistScreen>
                                                         },
                                                         child: Listener(
                                                           onPointerDown: (e) {
-                                                            reactToSecondaryPress = e
-                                                                        .kind ==
-                                                                    PointerDeviceKind
-                                                                        .mouse &&
-                                                                e.buttons ==
-                                                                    kSecondaryMouseButton;
+                                                            reactToSecondaryPress = e.kind == PointerDeviceKind.mouse && e.buttons == kSecondaryMouseButton;
                                                           },
-                                                          onPointerUp:
-                                                              (e) async {
-                                                            if (!reactToSecondaryPress)
-                                                              return;
-                                                            var result =
-                                                                await showCustomMenu(
+                                                          onPointerUp: (e) async {
+                                                            if (!reactToSecondaryPress) return;
+                                                            var result = await showCustomMenu(
                                                               context: context,
-                                                              constraints:
-                                                                  BoxConstraints(
-                                                                maxWidth: double
-                                                                    .infinity,
+                                                              constraints: BoxConstraints(
+                                                                maxWidth: double.infinity,
                                                               ),
-                                                              position:
-                                                                  RelativeRect
-                                                                      .fromLTRB(
+                                                              position: RelativeRect.fromLTRB(
                                                                 e.position.dx,
                                                                 e.position.dy,
-                                                                MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width,
-                                                                MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width,
+                                                                MediaQuery.of(context).size.width,
+                                                                MediaQuery.of(context).size.width,
                                                               ),
-                                                              items:
-                                                                  trackPopupMenuItems(
+                                                              items: trackPopupMenuItems(
                                                                 track.value,
                                                                 context,
                                                               ),
@@ -1094,59 +943,38 @@ class ArtistScreenState extends State<ArtistScreen>
                                                               context,
                                                               track.value,
                                                               result,
-                                                              recursivelyPopNavigatorOnDeleteIf:
-                                                                  () => widget
-                                                                      .artist
-                                                                      .tracks
-                                                                      .isEmpty,
+                                                              recursivelyPopNavigatorOnDeleteIf: () => widget.artist.tracks.isEmpty,
                                                             );
                                                           },
                                                           child: Material(
-                                                            color: Colors
-                                                                .transparent,
+                                                            color: Colors.transparent,
                                                             child: Stack(
                                                               children: [
                                                                 Positioned.fill(
-                                                                  child:
-                                                                      InkWell(
+                                                                  child: InkWell(
                                                                     onTap: () {
-                                                                      Playback
-                                                                          .instance
-                                                                          .open(
+                                                                      Playback.instance.open(
                                                                         [
                                                                           ...tracks,
-                                                                          if (Configuration
-                                                                              .instance
-                                                                              .seamlessPlayback)
-                                                                            ...([
-                                                                              ...collection.tracks
-                                                                            ]..shuffle())
+                                                                          if (Configuration.instance.seamlessPlayback) ...([...collection.tracks]..shuffle())
                                                                         ],
-                                                                        index: track
-                                                                            .key,
+                                                                        index: track.key,
                                                                       );
                                                                     },
                                                                     child: Row(
                                                                       children: [
                                                                         Container(
-                                                                          width:
-                                                                              64.0,
-                                                                          height:
-                                                                              56.0,
-                                                                          padding:
-                                                                              EdgeInsets.only(right: 8.0),
-                                                                          alignment:
-                                                                              Alignment.center,
+                                                                          width: 64.0,
+                                                                          height: 56.0,
+                                                                          padding: EdgeInsets.only(right: 8.0),
+                                                                          alignment: Alignment.center,
                                                                           child: hovered == track.key
                                                                               ? IconButton(
                                                                                   onPressed: () {
                                                                                     Playback.instance.open(
                                                                                       [
                                                                                         ...tracks,
-                                                                                        if (Configuration.instance.seamlessPlayback)
-                                                                                          ...[
-                                                                                            ...Collection.instance.tracks
-                                                                                          ]..shuffle(),
+                                                                                        if (Configuration.instance.seamlessPlayback) ...[...Collection.instance.tracks]..shuffle(),
                                                                                       ],
                                                                                       index: track.key,
                                                                                     );
@@ -1160,39 +988,27 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                                 ),
                                                                         ),
                                                                         Expanded(
-                                                                          child:
-                                                                              Container(
-                                                                            height:
-                                                                                56.0,
-                                                                            padding:
-                                                                                EdgeInsets.only(right: 8.0),
-                                                                            alignment:
-                                                                                Alignment.centerLeft,
-                                                                            child:
-                                                                                Text(
+                                                                          child: Container(
+                                                                            height: 56.0,
+                                                                            padding: EdgeInsets.only(right: 8.0),
+                                                                            alignment: Alignment.centerLeft,
+                                                                            child: Text(
                                                                               track.value.trackName,
                                                                               style: Theme.of(context).textTheme.bodyLarge,
                                                                               overflow: TextOverflow.ellipsis,
                                                                             ),
                                                                           ),
-                                                                          flex:
-                                                                              3,
+                                                                          flex: 3,
                                                                         ),
                                                                         const Spacer(
-                                                                          flex:
-                                                                              2,
+                                                                          flex: 2,
                                                                         ),
                                                                         Container(
-                                                                          width:
-                                                                              64.0,
-                                                                          height:
-                                                                              56.0,
-                                                                          alignment:
-                                                                              Alignment.center,
-                                                                          child:
-                                                                              CustomPopupMenuButton<int>(
-                                                                            onSelected:
-                                                                                (result) {
+                                                                          width: 64.0,
+                                                                          height: 56.0,
+                                                                          alignment: Alignment.center,
+                                                                          child: CustomPopupMenuButton<int>(
+                                                                            onSelected: (result) {
                                                                               trackPopupMenuHandle(
                                                                                 context,
                                                                                 track.value,
@@ -1200,8 +1016,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                                 recursivelyPopNavigatorOnDeleteIf: () => widget.artist.tracks.isEmpty,
                                                                               );
                                                                             },
-                                                                            itemBuilder: (_) =>
-                                                                                trackPopupMenuItems(
+                                                                            itemBuilder: (_) => trackPopupMenuItems(
                                                                               track.value,
                                                                               context,
                                                                             ),
@@ -1214,10 +1029,8 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                 Row(
                                                                   children: [
                                                                     const SizedBox(
-                                                                      width:
-                                                                          64.0,
-                                                                      height:
-                                                                          56.0,
+                                                                      width: 64.0,
+                                                                      height: 56.0,
                                                                     ),
                                                                     const Spacer(
                                                                       flex: 3,
@@ -1228,10 +1041,8 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                           padding: EdgeInsets.only(right: 8.0),
                                                                           alignment: Alignment.centerLeft,
                                                                           child: HyperLink(
-                                                                            style:
-                                                                                Theme.of(context).textTheme.bodyLarge,
-                                                                            text:
-                                                                                TextSpan(
+                                                                            style: Theme.of(context).textTheme.bodyLarge,
+                                                                            text: TextSpan(
                                                                               children: [
                                                                                 TextSpan(
                                                                                   text: track.value.albumName,
@@ -1266,10 +1077,8 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                       flex: 2,
                                                                     ),
                                                                     const SizedBox(
-                                                                      width:
-                                                                          64.0,
-                                                                      height:
-                                                                          56.0,
+                                                                      width: 64.0,
+                                                                      height: 56.0,
                                                                     ),
                                                                   ],
                                                                 ),
@@ -1308,12 +1117,7 @@ class ArtistScreenState extends State<ArtistScreen>
                               statusBarColor: Colors.transparent,
                               statusBarIconBrightness: detailsVisible
                                   ? Brightness.light
-                                  : (color?.computeLuminance() ??
-                                              (Theme.of(context).brightness ==
-                                                      Brightness.dark
-                                                  ? 0.0
-                                                  : 1.0)) <
-                                          0.5
+                                  : (color?.computeLuminance() ?? (Theme.of(context).brightness == Brightness.dark ? 0.0 : 1.0)) < 0.5
                                       ? Brightness.light
                                       : Brightness.dark,
                             ),
@@ -1324,24 +1128,11 @@ class ArtistScreenState extends State<ArtistScreen>
                               icon: Icon(
                                 Icons.arrow_back,
                                 color: detailsVisible
-                                    ? Theme.of(context)
-                                        .extension<IconColors>()
-                                        ?.appBarDark
+                                    ? Theme.of(context).extension<IconColors>()?.appBarDark
                                     : [
-                                        Theme.of(context)
-                                            .extension<IconColors>()
-                                            ?.appBarLight,
-                                        Theme.of(context)
-                                            .extension<IconColors>()
-                                            ?.appBarDark,
-                                      ][(color?.computeLuminance() ??
-                                                (Theme.of(context).brightness ==
-                                                        Brightness.dark
-                                                    ? 0.0
-                                                    : 1.0)) >
-                                            0.5
-                                        ? 0
-                                        : 1],
+                                        Theme.of(context).extension<IconColors>()?.appBarLight,
+                                        Theme.of(context).extension<IconColors>()?.appBarDark,
+                                      ][(color?.computeLuminance() ?? (Theme.of(context).brightness == Brightness.dark ? 0.0 : 1.0)) > 0.5 ? 0 : 1],
                               ),
                               iconSize: 24.0,
                               splashRadius: 20.0,
@@ -1353,25 +1144,11 @@ class ArtistScreenState extends State<ArtistScreen>
                                 icon: Icon(
                                   Icons.queue_music,
                                   color: detailsVisible
-                                      ? Theme.of(context)
-                                          .extension<IconColors>()
-                                          ?.appBarActionDark
+                                      ? Theme.of(context).extension<IconColors>()?.appBarActionDark
                                       : [
-                                          Theme.of(context)
-                                              .extension<IconColors>()
-                                              ?.appBarActionLight,
-                                          Theme.of(context)
-                                              .extension<IconColors>()
-                                              ?.appBarActionDark,
-                                        ][(color?.computeLuminance() ??
-                                                  (Theme.of(context)
-                                                              .brightness ==
-                                                          Brightness.dark
-                                                      ? 0.0
-                                                      : 1.0)) >
-                                              0.5
-                                          ? 0
-                                          : 1],
+                                          Theme.of(context).extension<IconColors>()?.appBarActionLight,
+                                          Theme.of(context).extension<IconColors>()?.appBarActionDark,
+                                        ][(color?.computeLuminance() ?? (Theme.of(context).brightness == Brightness.dark ? 0.0 : 1.0)) > 0.5 ? 0 : 1],
                                 ),
                                 iconSize: 24.0,
                                 splashRadius: 20.0,
@@ -1384,30 +1161,16 @@ class ArtistScreenState extends State<ArtistScreen>
                                 begin: 1.0,
                                 end: detailsVisible ? 0.0 : 1.0,
                               ),
-                              duration: Theme.of(context)
-                                      .extension<AnimationDuration>()
-                                      ?.fast ??
-                                  Duration.zero,
+                              duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
                               builder: (context, value, _) => Opacity(
                                 opacity: value,
                                 child: Text(
                                   widget.artist.artistName.overflow,
                                   style: TextStyle(
                                     color: [
-                                      Theme.of(context)
-                                          .extension<TextColors>()
-                                          ?.lightPrimary,
-                                      Theme.of(context)
-                                          .extension<TextColors>()
-                                          ?.darkPrimary,
-                                    ][(color?.computeLuminance() ??
-                                                (Theme.of(context).brightness ==
-                                                        Brightness.dark
-                                                    ? 0.0
-                                                    : 1.0)) >
-                                            0.5
-                                        ? 0
-                                        : 1],
+                                      Theme.of(context).extension<TextColors>()?.lightPrimary,
+                                      Theme.of(context).extension<TextColors>()?.darkPrimary,
+                                    ][(color?.computeLuminance() ?? (Theme.of(context).brightness == Brightness.dark ? 0.0 : 1.0)) > 0.5 ? 0 : 1],
                                   ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -1425,9 +1188,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                           ExtendedImage(
                                             image: getAlbumArt(widget.artist),
                                             fit: BoxFit.cover,
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
+                                            width: MediaQuery.of(context).size.width,
                                             height: mobileSliverContentHeight,
                                           ),
                                           Positioned.fill(
@@ -1455,87 +1216,40 @@ class ArtistScreenState extends State<ArtistScreen>
                                           begin: 1.0,
                                           end: detailsVisible ? 1.0 : 0.0,
                                         ),
-                                        duration: Theme.of(context)
-                                                .extension<AnimationDuration>()
-                                                ?.fast ??
-                                            Duration.zero,
+                                        duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
                                         builder: (context, value, _) => Opacity(
                                           opacity: value,
                                           child: Container(
                                             color: color,
                                             height: mobileSliverLabelHeight,
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
+                                            width: MediaQuery.of(context).size.width,
                                             padding: EdgeInsets.all(16.0),
                                             child: Column(
                                               mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  widget.artist.artistName
-                                                      .overflow,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headlineSmall
-                                                      ?.copyWith(
+                                                  widget.artist.artistName.overflow,
+                                                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                                                         color: [
-                                                          Theme.of(context)
-                                                              .extension<
-                                                                  TextColors>()
-                                                              ?.lightPrimary,
-                                                          Theme.of(context)
-                                                              .extension<
-                                                                  TextColors>()
-                                                              ?.darkPrimary,
-                                                        ][(color?.computeLuminance() ??
-                                                                    (Theme.of(context).brightness ==
-                                                                            Brightness.dark
-                                                                        ? 0.0
-                                                                        : 1.0)) >
-                                                                0.5
-                                                            ? 0
-                                                            : 1],
+                                                          Theme.of(context).extension<TextColors>()?.lightPrimary,
+                                                          Theme.of(context).extension<TextColors>()?.darkPrimary,
+                                                        ][(color?.computeLuminance() ?? (Theme.of(context).brightness == Brightness.dark ? 0.0 : 1.0)) > 0.5 ? 0 : 1],
                                                       ),
                                                   maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                                  overflow: TextOverflow.ellipsis,
                                                 ),
                                                 const SizedBox(height: 4.0),
                                                 Text(
-                                                  Language.instance
-                                                      .M_TRACKS_AND_N_ALBUMS
-                                                      .replaceAll('M',
-                                                          '${tracks.length}')
-                                                      .replaceAll('N',
-                                                          '${widget.artist.albums.length}'),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                                  Language.instance.M_TRACKS_AND_N_ALBUMS.replaceAll('M', '${tracks.length}').replaceAll('N', '${widget.artist.albums.length}'),
+                                                  overflow: TextOverflow.ellipsis,
                                                   maxLines: 1,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyMedium
-                                                      ?.copyWith(
+                                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                                         color: [
-                                                          Theme.of(context)
-                                                              .extension<
-                                                                  TextColors>()
-                                                              ?.lightSecondary,
-                                                          Theme.of(context)
-                                                              .extension<
-                                                                  TextColors>()
-                                                              ?.darkSecondary,
-                                                        ][(color?.computeLuminance() ??
-                                                                    (Theme.of(context).brightness ==
-                                                                            Brightness.dark
-                                                                        ? 0.0
-                                                                        : 1.0)) >
-                                                                0.5
-                                                            ? 0
-                                                            : 1],
+                                                          Theme.of(context).extension<TextColors>()?.lightSecondary,
+                                                          Theme.of(context).extension<TextColors>()?.darkSecondary,
+                                                        ][(color?.computeLuminance() ?? (Theme.of(context).brightness == Brightness.dark ? 0.0 : 1.0)) > 0.5 ? 0 : 1],
                                                         fontSize: 16.0,
                                                       ),
                                                 ),
@@ -1552,15 +1266,9 @@ class ArtistScreenState extends State<ArtistScreen>
                                   right: 16.0 + 64.0,
                                   child: TweenAnimationBuilder(
                                     curve: Curves.easeOut,
-                                    tween: Tween<double>(
-                                        begin: 0.0,
-                                        end: detailsVisible ? 1.0 : 0.0),
-                                    duration: Theme.of(context)
-                                            .extension<AnimationDuration>()
-                                            ?.fast ??
-                                        Duration.zero,
-                                    builder: (context, value, _) =>
-                                        Transform.scale(
+                                    tween: Tween<double>(begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
+                                    duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
+                                    builder: (context, value, _) => Transform.scale(
                                       scale: value as double,
                                       child: Transform.rotate(
                                         angle: value * pi + pi,
@@ -1570,24 +1278,12 @@ class ArtistScreenState extends State<ArtistScreen>
                                           foregroundColor: const [
                                             kFABDarkForegroundColor,
                                             kFABLightForegroundColor,
-                                          ][((secondary ??
-                                                              Theme.of(context)
-                                                                  .floatingActionButtonTheme
-                                                                  .backgroundColor)
-                                                          ?.computeLuminance() ??
-                                                      0.0) >
-                                                  0.5
-                                              ? 1
-                                              : 0],
+                                          ][((secondary ?? Theme.of(context).floatingActionButtonTheme.backgroundColor)?.computeLuminance() ?? 0.0) > 0.5 ? 1 : 0],
                                           child: Icon(Icons.play_arrow),
                                           onPressed: () {
                                             Playback.instance.open([
                                               ...tracks,
-                                              if (Configuration
-                                                  .instance.seamlessPlayback)
-                                                ...[
-                                                  ...Collection.instance.tracks
-                                                ]..shuffle(),
+                                              if (Configuration.instance.seamlessPlayback) ...[...Collection.instance.tracks]..shuffle(),
                                             ]);
                                           },
                                         ),
@@ -1600,15 +1296,9 @@ class ArtistScreenState extends State<ArtistScreen>
                                   right: 16.0,
                                   child: TweenAnimationBuilder(
                                     curve: Curves.easeOut,
-                                    tween: Tween<double>(
-                                        begin: 0.0,
-                                        end: detailsVisible ? 1.0 : 0.0),
-                                    duration: Theme.of(context)
-                                            .extension<AnimationDuration>()
-                                            ?.fast ??
-                                        Duration.zero,
-                                    builder: (context, value, _) =>
-                                        Transform.scale(
+                                    tween: Tween<double>(begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
+                                    duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
+                                    builder: (context, value, _) => Transform.scale(
                                       scale: value as double,
                                       child: Transform.rotate(
                                         angle: value * pi + pi,
@@ -1618,15 +1308,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                           foregroundColor: const [
                                             kFABDarkForegroundColor,
                                             kFABLightForegroundColor,
-                                          ][((secondary ??
-                                                              Theme.of(context)
-                                                                  .floatingActionButtonTheme
-                                                                  .backgroundColor)
-                                                          ?.computeLuminance() ??
-                                                      0.0) >
-                                                  0.5
-                                              ? 1
-                                              : 0],
+                                          ][((secondary ?? Theme.of(context).floatingActionButtonTheme.backgroundColor)?.computeLuminance() ?? 0.0) > 0.5 ? 1 : 0],
                                           child: Icon(Icons.shuffle),
                                           onPressed: () {
                                             Playback.instance.open(
@@ -1658,13 +1340,11 @@ class ArtistScreenState extends State<ArtistScreen>
                                     builder: (context) => Container(
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
-                                        children: trackPopupMenuItems(
-                                                tracks[i], context)
+                                        children: trackPopupMenuItems(tracks[i], context)
                                             .map(
                                               (item) => PopupMenuItem(
                                                 child: item.child,
-                                                onTap: () =>
-                                                    result = item.value,
+                                                onTap: () => result = item.value,
                                               ),
                                             )
                                             .toList(),
@@ -1675,8 +1355,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                     context,
                                     tracks[i],
                                     result,
-                                    recursivelyPopNavigatorOnDeleteIf: () =>
-                                        widget.artist.tracks.isEmpty,
+                                    recursivelyPopNavigatorOnDeleteIf: () => widget.artist.tracks.isEmpty,
                                   );
                                 }
 
@@ -1686,26 +1365,20 @@ class ArtistScreenState extends State<ArtistScreen>
                                     onTap: () => Playback.instance.open(
                                       [
                                         ...tracks,
-                                        if (Configuration
-                                            .instance.seamlessPlayback)
-                                          ...[...Collection.instance.tracks]
-                                            ..shuffle(),
+                                        if (Configuration.instance.seamlessPlayback) ...[...Collection.instance.tracks]..shuffle(),
                                       ],
                                       index: i,
                                     ),
                                     onLongPress: handler,
                                     child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Container(
                                           height: 64.0,
                                           alignment: Alignment.center,
-                                          margin: const EdgeInsets.symmetric(
-                                              vertical: 4.0),
+                                          margin: const EdgeInsets.symmetric(vertical: 4.0),
                                           child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
                                               const SizedBox(width: 12.0),
                                               Container(
@@ -1714,51 +1387,31 @@ class ArtistScreenState extends State<ArtistScreen>
                                                 alignment: Alignment.center,
                                                 child: Text(
                                                   '${tracks[i].trackNumber}',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyMedium
-                                                      ?.copyWith(
-                                                          fontSize: 18.0),
+                                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 18.0),
                                                 ),
                                               ),
                                               const SizedBox(width: 12.0),
                                               Expanded(
                                                 child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                  mainAxisSize: MainAxisSize.max,
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      tracks[i]
-                                                          .trackName
-                                                          .overflow,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
+                                                      tracks[i].trackName.overflow,
+                                                      overflow: TextOverflow.ellipsis,
                                                       maxLines: 1,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .titleMedium,
+                                                      style: Theme.of(context).textTheme.titleMedium,
                                                     ),
                                                     const SizedBox(height: 2.0),
                                                     Text(
                                                       [
-                                                        tracks[i]
-                                                                .duration
-                                                                ?.label ??
-                                                            Duration.zero.label,
-                                                        if (!tracks[i]
-                                                            .albumNameNotPresent)
-                                                          tracks[i].albumName,
+                                                        tracks[i].duration?.label ?? Duration.zero.label,
+                                                        if (!tracks[i].albumNameNotPresent) tracks[i].albumName,
                                                       ].join(' • '),
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
+                                                      overflow: TextOverflow.ellipsis,
                                                       maxLines: 1,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .bodyMedium,
+                                                      style: Theme.of(context).textTheme.bodyMedium,
                                                     ),
                                                   ],
                                                 ),
@@ -1795,10 +1448,7 @@ class ArtistScreenState extends State<ArtistScreen>
                           ),
                           SliverPadding(
                             padding: EdgeInsets.only(
-                              top: 12.0 +
-                                  (detailsLoaded
-                                      ? 0.0
-                                      : MediaQuery.of(context).size.height),
+                              top: 12.0 + (detailsLoaded ? 0.0 : MediaQuery.of(context).size.height),
                             ),
                           ),
                         ],

@@ -1,10 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
 import 'dart:io';
 import 'dart:async';
 import 'package:lrc/lrc.dart';
@@ -55,10 +48,7 @@ class Lyrics extends ChangeNotifier {
         await instance.directory.create_();
       }
     }
-    if (Platform.isAndroid &&
-        !_isAndroidNotificationInitialized &&
-        (StorageRetriever.instance.version < 33 ||
-            await Permission.notification.isGranted)) {
+    if (Platform.isAndroid && !_isAndroidNotificationInitialized && (StorageRetriever.instance.version < 33 || await Permission.notification.isGranted)) {
       _isAndroidNotificationInitialized = true;
       await AwesomeNotifications().initialize(
         'resource://drawable/ic_stat_format_color_text',
@@ -84,32 +74,19 @@ class Lyrics extends ChangeNotifier {
         onActionReceivedMethod: _onNotificationActionReceived,
       );
       Playback.instance.addListener(() async {
-        if (instance.current.isNotEmpty &&
-            Configuration.instance.notificationLyrics &&
-            !instance._currentLyricsHidden) {
+        if (instance.current.isNotEmpty && Configuration.instance.notificationLyrics && !instance._currentLyricsHidden) {
           // If a seek is performed, then clean the existing notifications to avoid missing text in-between.
-          if (instance._currentLyricsTimeStamps[
-                      instance._currentLyricsTimeStamp] !=
-                  null &&
-              instance._currentLyricsTimeStamps[
-                      Playback.instance.position.inSeconds] !=
-                  null) {
-            final current = instance._currentLyricsTimeStamps[
-                Playback.instance.position.inSeconds]!;
-            final previous = instance
-                ._currentLyricsTimeStamps[instance._currentLyricsTimeStamp]!;
+          if (instance._currentLyricsTimeStamps[instance._currentLyricsTimeStamp] != null && instance._currentLyricsTimeStamps[Playback.instance.position.inSeconds] != null) {
+            final current = instance._currentLyricsTimeStamps[Playback.instance.position.inSeconds]!;
+            final previous = instance._currentLyricsTimeStamps[instance._currentLyricsTimeStamp]!;
             if (![0, 1].contains(current - previous)) {
               debugPrint('![0, 1].contains(current - previous)');
               instance.dismissNotification();
             }
           }
           // The rounded-off [Map] contains current position timestamp, and it hasn't been shown before.
-          if (instance.currentLyricsAveragedMap
-                  .containsKey(Playback.instance.position.inSeconds) &&
-              instance._currentLyricsTimeStamp !=
-                  Playback.instance.position.inSeconds) {
-            instance._currentLyricsTimeStamp =
-                Playback.instance.position.inSeconds;
+          if (instance.currentLyricsAveragedMap.containsKey(Playback.instance.position.inSeconds) && instance._currentLyricsTimeStamp != Playback.instance.position.inSeconds) {
+            instance._currentLyricsTimeStamp = Playback.instance.position.inSeconds;
             try {
               final track = Playback.instance.tracks[Playback.instance.index];
               await AwesomeNotifications().createNotification(
@@ -121,8 +98,7 @@ class Lyrics extends ChangeNotifier {
                   notificationLayout: NotificationLayout.Messaging,
                   category: NotificationCategory.Status,
                   title: track.trackName,
-                  body: instance.currentLyricsAveragedMap[
-                      instance._currentLyricsTimeStamp],
+                  body: instance.currentLyricsAveragedMap[instance._currentLyricsTimeStamp],
                   summary: track.trackName,
                   showWhen: false,
                   autoDismissible: true,
@@ -197,11 +173,9 @@ class Lyrics extends ChangeNotifier {
           } else {
             // Lookup for `.LRC` file inside the [Track]'s [Directory].
             // Wrapping in a try/catch clause for avoiding any possible file-system related errors.
-            debugPrint(
-                '[Lyrics]: Configuration.instance.useLRCFromTrackDirectory: ${Configuration.instance.useLRCFromTrackDirectory}');
+            debugPrint('[Lyrics]: Configuration.instance.useLRCFromTrackDirectory: ${Configuration.instance.useLRCFromTrackDirectory}');
             try {
-              if (track.uri.isScheme('FILE') &&
-                  Configuration.instance.useLRCFromTrackDirectory) {
+              if (track.uri.isScheme('FILE') && Configuration.instance.useLRCFromTrackDirectory) {
                 final source = File(track.uri.toFilePath());
                 final elements = basename(source.path).split('.');
                 elements.removeLast();
@@ -238,15 +212,10 @@ class Lyrics extends ChangeNotifier {
                               ),
                         );
                         for (final lyric in current) {
-                          currentLyricsAveragedMap[lyric.time ~/ 1000] =
-                              lyric.words;
+                          currentLyricsAveragedMap[lyric.time ~/ 1000] = lyric.words;
                         }
                         _currentLyricsTimeStamps.addEntries(
-                          currentLyricsAveragedMap.keys
-                              .toList()
-                              .asMap()
-                              .entries
-                              .map(
+                          currentLyricsAveragedMap.keys.toList().asMap().entries.map(
                                 (e) => MapEntry(
                                   e.value,
                                   e.key,
@@ -286,10 +255,7 @@ class Lyrics extends ChangeNotifier {
               final response = await http.get(uri);
               if (response.statusCode == 200) {
                 current.addAll(
-                  (convert.jsonDecode(response.body) as List<dynamic>)
-                      .map((lyric) => Lyric.fromJson(lyric))
-                      .toList()
-                      .cast<Lyric>(),
+                  (convert.jsonDecode(response.body) as List<dynamic>).map((lyric) => Lyric.fromJson(lyric)).toList().cast<Lyric>(),
                 );
                 for (final lyric in current) {
                   currentLyricsAveragedMap[lyric.time ~/ 1000] = lyric.words;
@@ -319,8 +285,7 @@ class Lyrics extends ChangeNotifier {
   /// Whether a [Track] has a `.LRC` file available for it.
   ///
   /// Used directly in the [Widget] tree, thus kept `sync`.
-  bool hasLRCFile(Track track) =>
-      File(join(directory.path, track.moniker)).existsSync_();
+  bool hasLRCFile(Track track) => File(join(directory.path, track.moniker)).existsSync_();
 
   /// Adds a new LRC [File] & caches it for future usage.
   /// Returns `true` if the [File] was added successfully i.e. [lrc] syntax is valid & [File] is found, otherwise returns `false`.
@@ -361,15 +326,10 @@ class Lyrics extends ChangeNotifier {
       try {
         final lrc = Lrc(
           type: LrcTypes.simple,
-          artist: !(_track?.trackArtistNamesNotPresent ?? true)
-              ? _track?.trackArtistNames.join(';')
-              : null,
-          album:
-              !(_track?.albumNameNotPresent ?? true) ? _track?.albumName : null,
+          artist: !(_track?.trackArtistNamesNotPresent ?? true) ? _track?.trackArtistNames.join(';') : null,
+          album: !(_track?.albumNameNotPresent ?? true) ? _track?.albumName : null,
           title: _track?.trackName,
-          author: !(_track?.trackArtistNamesNotPresent ?? true)
-              ? _track?.trackArtistNames.join(';')
-              : null,
+          author: !(_track?.trackArtistNamesNotPresent ?? true) ? _track?.trackArtistNames.join(';') : null,
           version: '1.0.0',
           lyrics: current
               .map(
@@ -428,10 +388,7 @@ class Lyrics extends ChangeNotifier {
   /// Dismisses the lyrics notification.
   /// Android specific.
   FutureOr<void> dismissNotification() async {
-    if (Platform.isAndroid &&
-        _isAndroidNotificationInitialized &&
-        (StorageRetriever.instance.version < 33 ||
-            await Permission.notification.isGranted)) {
+    if (Platform.isAndroid && _isAndroidNotificationInitialized && (StorageRetriever.instance.version < 33 || await Permission.notification.isGranted)) {
       await AwesomeNotifications().dismiss(_kNotificationID);
     }
   }
@@ -449,8 +406,7 @@ class Lyrics extends ChangeNotifier {
   static const _kNotificationHideButtonKey = 'hide_button';
 
   /// Must be a global or `static` method.
-  static Future<void> _onNotificationActionReceived(
-      ReceivedAction action) async {
+  static Future<void> _onNotificationActionReceived(ReceivedAction action) async {
     if (action.buttonKeyPressed == _kNotificationHideButtonKey) {
       AwesomeNotifications().dismiss(_kNotificationID);
       instance._currentLyricsHidden = true;

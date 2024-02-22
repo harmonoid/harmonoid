@@ -1,10 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
 import 'package:flutter/widgets.dart';
 
 import 'package:harmonoid/core/playback.dart';
@@ -12,13 +5,11 @@ import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/interface/mini_now_playing_bar.dart';
 
 class MobileNowPlayingController {
-  static final MobileNowPlayingController instance =
-      MobileNowPlayingController._();
+  static final MobileNowPlayingController instance = MobileNowPlayingController._();
 
   MobileNowPlayingController._();
 
-  final GlobalKey<MiniNowPlayingBarState> barKey =
-      GlobalKey<MiniNowPlayingBarState>();
+  final GlobalKey<MiniNowPlayingBarState> barKey = GlobalKey<MiniNowPlayingBarState>();
 
   final ValueNotifier<Iterable<Color>?> palette = ValueNotifier(null);
   final ValueNotifier<double> bottomNavigationBar = ValueNotifier(1.0);

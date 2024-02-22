@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 import 'package:flutter/widgets.dart';
 
 import 'package:harmonoid/utils/rendering.dart';
@@ -67,65 +59,47 @@ class DimensionsHelper {
     if (isMobile) {
       return Configuration.instance.mobileAlbumsGridSize;
     }
-    return (MediaQuery.of(context).size.width - tileMargin(context)) ~/
-        (kAlbumTileWidth + tileMargin(context));
+    return (MediaQuery.of(context).size.width - tileMargin(context)) ~/ (kAlbumTileWidth + tileMargin(context));
   }
 
   double get albumTileWidth {
     if (isMobile) {
-      return albumElementsPerRow == 1
-          ? MediaQuery.of(context).size.width
-          : (MediaQuery.of(context).size.width -
-                  (albumElementsPerRow + 1) * tileMargin(context)) /
-              albumElementsPerRow;
+      return albumElementsPerRow == 1 ? MediaQuery.of(context).size.width : (MediaQuery.of(context).size.width - (albumElementsPerRow + 1) * tileMargin(context)) / albumElementsPerRow;
     }
     return kAlbumTileWidth;
   }
 
   double get albumTileHeight {
     if (isMobile) {
-      return albumElementsPerRow == 1
-          ? kAlbumTileListViewHeight
-          : albumTileWidth * kAlbumTileHeight / kAlbumTileWidth;
+      return albumElementsPerRow == 1 ? kAlbumTileListViewHeight : albumTileWidth * kAlbumTileHeight / kAlbumTileWidth;
     }
     return kAlbumTileHeight;
   }
 
-  bool get albumTileNormalDensity =>
-      Configuration.instance.mobileAlbumsGridSize <=
-      kAlbumTileSubTitleThreshold;
+  bool get albumTileNormalDensity => Configuration.instance.mobileAlbumsGridSize <= kAlbumTileSubTitleThreshold;
 
   int get artistElementsPerRow {
     if (isMobile) {
       return Configuration.instance.mobileArtistsGridSize;
     }
-    return (MediaQuery.of(context).size.width - tileMargin(context)) ~/
-        (kArtistTileWidth + tileMargin(context));
+    return (MediaQuery.of(context).size.width - tileMargin(context)) ~/ (kArtistTileWidth + tileMargin(context));
   }
 
   double get artistTileWidth {
     if (isMobile) {
-      return artistElementsPerRow == 1
-          ? MediaQuery.of(context).size.width
-          : (MediaQuery.of(context).size.width -
-                  (artistElementsPerRow + 1) * tileMargin(context)) /
-              artistElementsPerRow;
+      return artistElementsPerRow == 1 ? MediaQuery.of(context).size.width : (MediaQuery.of(context).size.width - (artistElementsPerRow + 1) * tileMargin(context)) / artistElementsPerRow;
     }
     return kArtistTileWidth;
   }
 
   double get artistTileHeight {
     if (isMobile) {
-      return artistElementsPerRow == 1
-          ? kArtistTileListViewHeight
-          : artistTileWidth * kArtistTileHeight / kArtistTileWidth;
+      return artistElementsPerRow == 1 ? kArtistTileListViewHeight : artistTileWidth * kArtistTileHeight / kArtistTileWidth;
     }
     return kArtistTileHeight;
   }
 
-  bool get artistTileNormalDensity =>
-      Configuration.instance.mobileArtistsGridSize <=
-      kArtistTileSubTitleThreshold;
+  bool get artistTileNormalDensity => Configuration.instance.mobileArtistsGridSize <= kArtistTileSubTitleThreshold;
 }
 
 const kFABLightForegroundColor = Color(0xFF212121);

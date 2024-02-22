@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Yehuda Kremer <yehudakremer@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
 import 'package:media_library/media_library.dart';
@@ -77,10 +69,7 @@ class AppState extends AppStateKeys {
     }
     try {
       index = current['index'];
-      tracks = current['tracks']
-          .map((e) => Track.fromJson(e))
-          .toList()
-          .cast<Track>();
+      tracks = current['tracks'].map((e) => Track.fromJson(e)).toList().cast<Track>();
       rate = current['rate'];
       pitch = current['pitch'];
       volume = current['volume'];

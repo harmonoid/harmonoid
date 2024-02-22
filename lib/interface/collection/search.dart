@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -105,8 +97,7 @@ class SearchTabState extends State<SearchTab> {
           resizeToAvoidBottomInset: false,
           body: albums.isNotEmpty || artists.isNotEmpty || tracks.isNotEmpty
               ? CustomListView(
-                  keyboardDismissBehavior:
-                      ScrollViewKeyboardDismissBehavior.manual,
+                  keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
                   children: <Widget>[
                         if (albums.isNotEmpty)
                           Row(
@@ -115,50 +106,31 @@ class SearchTabState extends State<SearchTab> {
                               const Spacer(),
                               ShowAllButton(
                                 onPressed: () {
-                                  Playback.instance
-                                      .interceptPositionChangeRebuilds = true;
+                                  Playback.instance.interceptPositionChangeRebuilds = true;
                                   Navigator.of(context).push(
                                     MaterialRoute(
                                       builder: (context) => Scaffold(
                                         resizeToAvoidBottomInset: false,
                                         body: Container(
-                                          height: MediaQuery.of(context)
-                                              .size
-                                              .height,
+                                          height: MediaQuery.of(context).size.height,
                                           child: Stack(
                                             children: [
                                               Padding(
-                                                padding: EdgeInsets.only(
-                                                    top: WindowPlus.instance
-                                                            .captionHeight +
-                                                        kDesktopAppBarHeight),
+                                                padding: EdgeInsets.only(top: WindowPlus.instance.captionHeight + kDesktopAppBarHeight),
                                                 child: CustomListView(
                                                   padding: EdgeInsets.only(
                                                     top: tileMargin(context),
                                                   ),
                                                   children: tileGridListWidgets(
                                                     context: context,
-                                                    tileHeight:
-                                                        kAlbumTileHeight,
+                                                    tileHeight: kAlbumTileHeight,
                                                     tileWidth: kAlbumTileWidth,
-                                                    elementsPerRow:
-                                                        (MediaQuery.of(context)
-                                                                    .size
-                                                                    .width -
-                                                                tileMargin(
-                                                                    context)) ~/
-                                                            (kAlbumTileWidth +
-                                                                tileMargin(
-                                                                    context)),
+                                                    elementsPerRow: (MediaQuery.of(context).size.width - tileMargin(context)) ~/ (kAlbumTileWidth + tileMargin(context)),
                                                     subHeader: null,
                                                     leadingSubHeader: null,
-                                                    widgetCount:
-                                                        this.albums.length ~/ 2,
+                                                    widgetCount: this.albums.length ~/ 2,
                                                     leadingWidget: Container(),
-                                                    builder:
-                                                        (BuildContext context,
-                                                                int index) =>
-                                                            albums[2 * index],
+                                                    builder: (BuildContext context, int index) => albums[2 * index],
                                                   ),
                                                 ),
                                               ),
@@ -172,9 +144,7 @@ class SearchTabState extends State<SearchTab> {
                                     ),
                                   );
                                   Timer(const Duration(milliseconds: 400), () {
-                                    Playback.instance
-                                            .interceptPositionChangeRebuilds =
-                                        false;
+                                    Playback.instance.interceptPositionChangeRebuilds = false;
                                   });
                                 },
                               ),
@@ -205,51 +175,31 @@ class SearchTabState extends State<SearchTab> {
                               const Spacer(),
                               ShowAllButton(
                                 onPressed: () {
-                                  Playback.instance
-                                      .interceptPositionChangeRebuilds = true;
+                                  Playback.instance.interceptPositionChangeRebuilds = true;
                                   Navigator.of(context).push(
                                     MaterialRoute(
                                       builder: (context) => Scaffold(
                                         resizeToAvoidBottomInset: false,
                                         body: Container(
-                                          height: MediaQuery.of(context)
-                                              .size
-                                              .height,
+                                          height: MediaQuery.of(context).size.height,
                                           child: Stack(
                                             children: [
                                               Padding(
-                                                padding: EdgeInsets.only(
-                                                    top: WindowPlus.instance
-                                                            .captionHeight +
-                                                        kDesktopAppBarHeight),
+                                                padding: EdgeInsets.only(top: WindowPlus.instance.captionHeight + kDesktopAppBarHeight),
                                                 child: CustomListView(
                                                   padding: EdgeInsets.only(
                                                     top: tileMargin(context),
                                                   ),
                                                   children: tileGridListWidgets(
                                                     context: context,
-                                                    tileHeight:
-                                                        kArtistTileHeight,
+                                                    tileHeight: kArtistTileHeight,
                                                     tileWidth: kArtistTileWidth,
-                                                    elementsPerRow:
-                                                        (MediaQuery.of(context)
-                                                                    .size
-                                                                    .width -
-                                                                tileMargin(
-                                                                    context)) ~/
-                                                            (kArtistTileWidth +
-                                                                tileMargin(
-                                                                    context)),
+                                                    elementsPerRow: (MediaQuery.of(context).size.width - tileMargin(context)) ~/ (kArtistTileWidth + tileMargin(context)),
                                                     subHeader: null,
                                                     leadingSubHeader: null,
-                                                    widgetCount:
-                                                        this.artists.length ~/
-                                                            2,
+                                                    widgetCount: this.artists.length ~/ 2,
                                                     leadingWidget: Container(),
-                                                    builder:
-                                                        (BuildContext context,
-                                                                int index) =>
-                                                            artists[2 * index],
+                                                    builder: (BuildContext context, int index) => artists[2 * index],
                                                   ),
                                                 ),
                                               ),
@@ -263,9 +213,7 @@ class SearchTabState extends State<SearchTab> {
                                     ),
                                   );
                                   Timer(const Duration(milliseconds: 400), () {
-                                    Playback.instance
-                                            .interceptPositionChangeRebuilds =
-                                        false;
+                                    Playback.instance.interceptPositionChangeRebuilds = false;
                                   });
                                 },
                               ),
@@ -305,8 +253,7 @@ class SearchTabState extends State<SearchTab> {
               : Center(
                   child: ExceptionWidget(
                     title: Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE,
-                    subtitle:
-                        Language.instance.COLLECTION_SEARCH_NO_RESULTS_SUBTITLE,
+                    subtitle: Language.instance.COLLECTION_SEARCH_NO_RESULTS_SUBTITLE,
                   ),
                 ),
         );
@@ -323,24 +270,18 @@ class FloatingSearchBarSearchTab extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<FloatingSearchBarSearchTab> createState() =>
-      _FloatingSearchBarSearchTabState();
+  State<FloatingSearchBarSearchTab> createState() => _FloatingSearchBarSearchTabState();
 }
 
-class _FloatingSearchBarSearchTabState
-    extends State<FloatingSearchBarSearchTab> {
+class _FloatingSearchBarSearchTabState extends State<FloatingSearchBarSearchTab> {
   List<Widget> albums = <Widget>[];
   List<Widget> tracks = <Widget>[];
   List<Widget> artists = <Widget>[];
   int index = 0;
 
   Future<void> listener() async {
-    final elementsPerRow =
-        (MediaQuery.of(context).size.width - tileMargin(context)) ~/
-            (kAlbumTileWidth + tileMargin(context));
-    final double width = (MediaQuery.of(context).size.width -
-            (elementsPerRow + 1) * tileMargin(context)) /
-        elementsPerRow;
+    final elementsPerRow = (MediaQuery.of(context).size.width - tileMargin(context)) ~/ (kAlbumTileWidth + tileMargin(context));
+    final double width = (MediaQuery.of(context).size.width - (elementsPerRow + 1) * tileMargin(context)) / elementsPerRow;
     final double height = width * kAlbumTileHeight / kAlbumTileWidth;
     albums = <Widget>[];
     tracks = <Widget>[];
@@ -400,17 +341,9 @@ class _FloatingSearchBarSearchTabState
 
   @override
   Widget build(BuildContext context) {
-    final elementsPerRow =
-        (MediaQuery.of(context).size.width - tileMargin(context)) ~/
-            (kAlbumTileWidth + tileMargin(context));
-    final double width = isMobile
-        ? (MediaQuery.of(context).size.width -
-                (elementsPerRow + 1) * tileMargin(context)) /
-            elementsPerRow
-        : kAlbumTileWidth;
-    final double height = isMobile
-        ? width * kAlbumTileHeight / kAlbumTileWidth
-        : kAlbumTileHeight;
+    final elementsPerRow = (MediaQuery.of(context).size.width - tileMargin(context)) ~/ (kAlbumTileWidth + tileMargin(context));
+    final double width = isMobile ? (MediaQuery.of(context).size.width - (elementsPerRow + 1) * tileMargin(context)) / elementsPerRow : kAlbumTileWidth;
+    final double height = isMobile ? width * kAlbumTileHeight / kAlbumTileWidth : kAlbumTileHeight;
     return Card(
       elevation: Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
       margin: EdgeInsets.zero,
@@ -418,12 +351,8 @@ class _FloatingSearchBarSearchTabState
       child: Container(
         width: MediaQuery.of(context).size.width,
         constraints: BoxConstraints(
-          minHeight: (MediaQuery.of(context).size.height -
-                  kMobileSearchBarHeight -
-                  36.0 -
-                  MediaQuery.of(context).padding.vertical -
-                  MediaQuery.of(context).viewInsets.vertical)
-              .clamp(480.0, (1 << 32) * 1.0),
+          minHeight:
+              (MediaQuery.of(context).size.height - kMobileSearchBarHeight - 36.0 - MediaQuery.of(context).padding.vertical - MediaQuery.of(context).viewInsets.vertical).clamp(480.0, (1 << 32) * 1.0),
         ),
         child: albums.isNotEmpty || artists.isNotEmpty || tracks.isNotEmpty
             ? Consumer<Collection>(
@@ -450,26 +379,17 @@ class _FloatingSearchBarSearchTabState
                                         padding: EdgeInsets.only(
                                           top: tileMargin(context),
                                         ),
-                                        itemExtent:
-                                            height + tileMargin(context),
+                                        itemExtent: height + tileMargin(context),
                                         children: tileGridListWidgets(
                                           context: context,
                                           tileHeight: height,
                                           tileWidth: width,
-                                          elementsPerRow:
-                                              (MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      tileMargin(context)) ~/
-                                                  (kAlbumTileWidth +
-                                                      tileMargin(context)),
+                                          elementsPerRow: (MediaQuery.of(context).size.width - tileMargin(context)) ~/ (kAlbumTileWidth + tileMargin(context)),
                                           leadingWidget: null,
                                           leadingSubHeader: null,
                                           subHeader: null,
                                           widgetCount: this.albums.length ~/ 2,
-                                          builder: (BuildContext context,
-                                                  int index) =>
-                                              albums[2 * index],
+                                          builder: (BuildContext context, int index) => albums[2 * index],
                                         ),
                                       ),
                                     ),
@@ -513,8 +433,7 @@ class _FloatingSearchBarSearchTabState
                                       ),
                                     ),
                                     body: Container(
-                                      height:
-                                          MediaQuery.of(context).size.height,
+                                      height: MediaQuery.of(context).size.height,
                                       child: Stack(
                                         children: [
                                           NowPlayingBarScrollHideNotifier(
@@ -522,8 +441,7 @@ class _FloatingSearchBarSearchTabState
                                               padding: EdgeInsets.symmetric(
                                                 vertical: tileMargin(context),
                                               ),
-                                              itemExtent:
-                                                  kArtistTileListViewHeight,
+                                              itemExtent: kArtistTileListViewHeight,
                                               children: artists,
                                             ),
                                           ),
@@ -556,8 +474,7 @@ class _FloatingSearchBarSearchTabState
                                       ),
                                     ),
                                     body: Container(
-                                      height:
-                                          MediaQuery.of(context).size.height,
+                                      height: MediaQuery.of(context).size.height,
                                       child: Stack(
                                         children: [
                                           NowPlayingBarScrollHideNotifier(
@@ -565,8 +482,7 @@ class _FloatingSearchBarSearchTabState
                                               padding: EdgeInsets.symmetric(
                                                 vertical: tileMargin(context),
                                               ),
-                                              itemExtent:
-                                                  kMobileTrackTileHeight,
+                                              itemExtent: kMobileTrackTileHeight,
                                               children: tracks,
                                             ),
                                           ),
@@ -588,8 +504,7 @@ class _FloatingSearchBarSearchTabState
             : widget.query.value.isNotEmpty
                 ? ExceptionWidget(
                     title: Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE,
-                    subtitle:
-                        Language.instance.COLLECTION_SEARCH_NO_RESULTS_SUBTITLE,
+                    subtitle: Language.instance.COLLECTION_SEARCH_NO_RESULTS_SUBTITLE,
                   )
                 : ExceptionWidget(
                     title: Language.instance.COLLECTION_SEARCH_LABEL,

@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 import 'dart:io';
 import 'dart:async';
 import 'dart:collection';
@@ -46,14 +38,11 @@ final isMobile = Platform.isAndroid || Platform.isIOS;
 
 // Remaining source code in this file consists of helper & utility methods used for rendering & handling some repeated tasks linked at multiple places.
 
-double tileMargin(BuildContext context) =>
-    isDesktop ? k16tileMargin : k8tileMargin;
+double tileMargin(BuildContext context) => isDesktop ? k16tileMargin : k8tileMargin;
 
-bool isMaterial3(BuildContext context) =>
-    Theme.of(context).extension<MaterialStandard>()?.value == 3;
+bool isMaterial3(BuildContext context) => Theme.of(context).extension<MaterialStandard>()?.value == 3;
 
-bool isMaterial2(BuildContext context) =>
-    Theme.of(context).extension<MaterialStandard>()?.value == 2;
+bool isMaterial2(BuildContext context) => Theme.of(context).extension<MaterialStandard>()?.value == 2;
 
 String label(BuildContext context, String value) =>
     // All button labels are uppercase in Material Design 2.
@@ -118,9 +107,7 @@ List<Widget> tileGridListWidgets({
   if (elementsPerRow != 0) {
     if (widgetCount % elementsPerRow != 0 && showIncompleteRow) {
       rowChildren = <Widget>[];
-      for (int index = widgetCount - (widgetCount % elementsPerRow);
-          index < widgetCount;
-          index++) {
+      for (int index = widgetCount - (widgetCount % elementsPerRow); index < widgetCount; index++) {
         rowChildren.add(
           Container(
             child: builder(context, index),
@@ -130,9 +117,7 @@ List<Widget> tileGridListWidgets({
           ),
         );
       }
-      for (int index = 0;
-          index < elementsPerRow - (widgetCount % elementsPerRow);
-          index++) {
+      for (int index = 0; index < elementsPerRow - (widgetCount % elementsPerRow); index++) {
         rowChildren.add(
           Container(
             height: tileHeight + margin,
@@ -232,9 +217,7 @@ TileGridListWidgetsData tileGridListWidgetsWithScrollbarSupport({
   if (elementsPerRow != 0) {
     if (widgetCount % elementsPerRow != 0) {
       rowChildren = <Widget>[];
-      for (int index = widgetCount - (widgetCount % elementsPerRow);
-          index < widgetCount;
-          index++) {
+      for (int index = widgetCount - (widgetCount % elementsPerRow); index < widgetCount; index++) {
         final widget = builder(context, index);
         rowChildren.add(
           Container(
@@ -246,9 +229,7 @@ TileGridListWidgetsData tileGridListWidgetsWithScrollbarSupport({
         );
         rowData.add((widget.key as ValueKey).value);
       }
-      for (int index = 0;
-          index < elementsPerRow - (widgetCount % elementsPerRow);
-          index++) {
+      for (int index = 0; index < elementsPerRow - (widgetCount % elementsPerRow); index++) {
         rowChildren.add(
           Container(
             height: tileHeight + margin,
@@ -288,8 +269,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
       padding: EdgeInsets.zero,
       value: 0,
       child: ListTile(
-        leading: Icon(
-            Platform.isWindows ? FluentIcons.delete_16_regular : Icons.delete),
+        leading: Icon(Platform.isWindows ? FluentIcons.delete_16_regular : Icons.delete),
         title: Text(
           Language.instance.DELETE,
           style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
@@ -301,8 +281,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
         padding: EdgeInsets.zero,
         value: 1,
         child: ListTile(
-          leading: Icon(
-              Platform.isWindows ? FluentIcons.share_16_regular : Icons.share),
+          leading: Icon(Platform.isWindows ? FluentIcons.share_16_regular : Icons.share),
           title: Text(
             Language.instance.SHARE,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
@@ -313,9 +292,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
       padding: EdgeInsets.zero,
       value: 3,
       child: ListTile(
-        leading: Icon(Platform.isWindows
-            ? FluentIcons.music_note_2_16_regular
-            : Icons.music_note),
+        leading: Icon(Platform.isWindows ? FluentIcons.music_note_2_16_regular : Icons.music_note),
         title: Text(
           Language.instance.ADD_TO_NOW_PLAYING,
           style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
@@ -326,9 +303,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
       padding: EdgeInsets.zero,
       value: 2,
       child: ListTile(
-        leading: Icon(Platform.isWindows
-            ? FluentIcons.list_16_regular
-            : Icons.queue_music),
+        leading: Icon(Platform.isWindows ? FluentIcons.list_16_regular : Icons.queue_music),
         title: Text(
           Language.instance.ADD_TO_PLAYLIST,
           style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
@@ -341,9 +316,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
         padding: EdgeInsets.zero,
         value: 5,
         child: ListTile(
-          leading: Icon(Platform.isWindows
-              ? FluentIcons.folder_24_regular
-              : Icons.folder),
+          leading: Icon(Platform.isWindows ? FluentIcons.folder_24_regular : Icons.folder),
           title: Text(
             Language.instance.SHOW_IN_FILE_MANAGER,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
@@ -354,8 +327,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
       padding: EdgeInsets.zero,
       value: 6,
       child: ListTile(
-        leading:
-            Icon(Platform.isWindows ? FluentIcons.edit_24_regular : Icons.edit),
+        leading: Icon(Platform.isWindows ? FluentIcons.edit_24_regular : Icons.edit),
         title: Text(
           Language.instance.EDIT_DETAILS,
           style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
@@ -366,8 +338,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
       padding: EdgeInsets.zero,
       value: 4,
       child: ListTile(
-        leading: Icon(
-            Platform.isWindows ? FluentIcons.album_24_regular : Icons.album),
+        leading: Icon(Platform.isWindows ? FluentIcons.album_24_regular : Icons.album),
         title: Text(
           Language.instance.SHOW_ALBUM,
           style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
@@ -378,8 +349,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
       padding: EdgeInsets.zero,
       value: 7,
       child: ListTile(
-        leading:
-            Icon(Platform.isWindows ? FluentIcons.info_24_regular : Icons.info),
+        leading: Icon(Platform.isWindows ? FluentIcons.info_24_regular : Icons.info),
         title: Text(
           Language.instance.FILE_INFORMATION,
           style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
@@ -392,9 +362,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(
         value: 9,
         child: ListTile(
           leading: Icon(
-            Platform.isWindows
-                ? FluentIcons.clear_formatting_24_regular
-                : Icons.clear,
+            Platform.isWindows ? FluentIcons.clear_formatting_24_regular : Icons.clear,
           ),
           title: Text(
             Language.instance.CLEAR_LRC_FILE,
@@ -447,9 +415,7 @@ List<PopupMenuItem<int>> albumPopupMenuItems(
       value: 1,
       child: ListTile(
         leading: Icon(
-          Platform.isWindows
-              ? FluentIcons.arrow_shuffle_24_regular
-              : Icons.shuffle,
+          Platform.isWindows ? FluentIcons.arrow_shuffle_24_regular : Icons.shuffle,
         ),
         title: Text(
           Language.instance.SHUFFLE,
@@ -475,9 +441,7 @@ List<PopupMenuItem<int>> albumPopupMenuItems(
       value: 3,
       child: ListTile(
         leading: Icon(
-          Platform.isWindows
-              ? FluentIcons.music_note_2_16_regular
-              : Icons.queue_music,
+          Platform.isWindows ? FluentIcons.music_note_2_16_regular : Icons.queue_music,
         ),
         title: Text(
           Language.instance.ADD_TO_NOW_PLAYING,
@@ -601,8 +565,7 @@ Future<void> trackPopupMenuHandle(
               albumName: track.albumName,
               year: track.year,
               albumArtistName: track.albumArtistName,
-              albumHashCodeParameters:
-                  Configuration.instance.albumHashCodeParameters,
+              albumHashCodeParameters: Configuration.instance.albumHashCodeParameters,
             ),
           );
           if (album != null) {
@@ -701,10 +664,7 @@ Future<void> albumPopupMenuHandle(
         first.discNumber.compareTo(second.discNumber) * 100000000 +
         first.trackNumber.compareTo(second.trackNumber) * 1000000 +
         first.trackName.compareTo(second.trackName) * 10000 +
-        first.trackArtistNames
-                .join()
-                .compareTo(second.trackArtistNames.join()) *
-            100 +
+        first.trackArtistNames.join().compareTo(second.trackArtistNames.join()) * 100 +
         first.uri.toString().compareTo(second.uri.toString()),
   );
   if (result != null) {
@@ -874,8 +834,7 @@ Future<Directory?> pickDirectory({
         useRootNavigator: true,
         barrierDismissible: false,
         barrierColor: Colors.transparent,
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            DirectoryPickerScreen(),
+        pageBuilder: (context, animation, secondaryAnimation) => DirectoryPickerScreen(),
       );
     }
   }
@@ -1050,9 +1009,7 @@ InputDecoration inputDecoration(
       left: 12.0,
       right: 12.0,
       // [bottom] padding is needed since Flutter v3.7.x.
-      bottom: Platform.isWindows || Platform.isLinux || Platform.isMacOS
-          ? 8.0
-          : 2.0,
+      bottom: Platform.isWindows || Platform.isLinux || Platform.isMacOS ? 8.0 : 2.0,
     ),
     hintText: hintText,
     filled: true,
@@ -1082,8 +1039,7 @@ InputDecoration inputDecoration(
   );
 }
 
-InputDecoration mobileUnderlinedInputDecoration(
-    BuildContext context, String hintText) {
+InputDecoration mobileUnderlinedInputDecoration(BuildContext context, String hintText) {
   return InputDecoration(
     hintText: hintText,
     border: OutlineInputBorder(
@@ -1128,8 +1084,7 @@ enum TabRouteSender {
 
 /// Caches the resolved album arts once requested by [getAlbumArt].
 /// This prevents redundant I/O operations.
-HashMap<Media, ImageProvider> resolvedAlbumArts =
-    HashMap<Media, ImageProvider>();
+HashMap<Media, ImageProvider> resolvedAlbumArts = HashMap<Media, ImageProvider>();
 
 /// Fetches the album art of a given [Media] either local or online.
 ///
@@ -1148,8 +1103,7 @@ ImageProvider getAlbumArt(
 }) {
   bool _lookupForFallbackAlbumArt = false;
   try {
-    _lookupForFallbackAlbumArt =
-        Configuration.instance.lookupForFallbackAlbumArt;
+    _lookupForFallbackAlbumArt = Configuration.instance.lookupForFallbackAlbumArt;
   } catch (exception, stacktrace) {
     debugPrint(exception.toString());
     debugPrint(stacktrace.toString());
@@ -1158,8 +1112,7 @@ ImageProvider getAlbumArt(
 
   List<String> _fallbackAlbumArtFileNames = kDefaultFallbackAlbumArtFileNames;
   try {
-    _fallbackAlbumArtFileNames =
-        Configuration.instance.fallbackAlbumArtFileNames;
+    _fallbackAlbumArtFileNames = Configuration.instance.fallbackAlbumArtFileNames;
   } catch (exception, stacktrace) {
     debugPrint(exception.toString());
     debugPrint(stacktrace.toString());

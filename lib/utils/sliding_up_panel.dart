@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 /// This product includes software developed by Akshath Jain (https://akshathjain.com).
 
 import 'dart:math';
@@ -211,8 +203,7 @@ class SlidingUpPanel extends StatefulWidget {
   _SlidingUpPanelState createState() => _SlidingUpPanelState();
 }
 
-class _SlidingUpPanelState extends State<SlidingUpPanel>
-    with SingleTickerProviderStateMixin {
+class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProviderStateMixin {
   late AnimationController _ac;
   late ScrollController _sc;
 
@@ -235,11 +226,9 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
     )..addListener(() {
         if (widget.onPanelSlide != null) widget.onPanelSlide!(_ac.value);
 
-        if (widget.onPanelOpened != null && _ac.value == 1.0)
-          widget.onPanelOpened!();
+        if (widget.onPanelOpened != null && _ac.value == 1.0) widget.onPanelOpened!();
 
-        if (widget.onPanelClosed != null && _ac.value == 0.0)
-          widget.onPanelClosed!();
+        if (widget.onPanelClosed != null && _ac.value == 0.0) widget.onPanelClosed!();
 
         // `com.alexmercerind.harmonoid`.
         if (_ac.value == 0.0) {
@@ -269,9 +258,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
   @override
   Widget build(BuildContext context) {
     return Stack(
-      alignment: widget.slideDirection == SlideDirection.UP
-          ? Alignment.bottomCenter
-          : Alignment.topCenter,
+      alignment: widget.slideDirection == SlideDirection.UP ? Alignment.bottomCenter : Alignment.topCenter,
       children: <Widget>[
         widget.body != null
             ? AnimatedBuilder(
@@ -294,11 +281,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
             : GestureDetector(
                 onVerticalDragEnd: widget.backdropTapClosesPanel
                     ? (DragEndDetails dets) {
-                        if ((widget.slideDirection == SlideDirection.UP
-                                    ? 1
-                                    : -1) *
-                                dets.velocity.pixelsPerSecond.dy >
-                            0) _close();
+                        if ((widget.slideDirection == SlideDirection.UP ? 1 : -1) * dets.velocity.pixelsPerSecond.dy > 0) _close();
                       }
                     : null,
                 onTap: widget.backdropTapClosesPanel ? () => _close() : null,
@@ -308,10 +291,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
                       return Container(
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
-                        color: _ac.value == 0.0
-                            ? null
-                            : widget.backdropColor.withOpacity(
-                                widget.backdropOpacity * _ac.value),
+                        color: _ac.value == 0.0 ? null : widget.backdropColor.withOpacity(widget.backdropOpacity * _ac.value),
                       );
                     }),
               ),
@@ -322,9 +302,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
                   animation: _ac,
                   builder: (context, child) {
                     return Container(
-                      height:
-                          _ac.value * (widget.maxHeight - widget.minHeight) +
-                              widget.minHeight,
+                      height: _ac.value * (widget.maxHeight - widget.minHeight) + widget.minHeight,
                       margin: widget.margin,
                       padding: widget.padding,
                       decoration: widget.renderPanelSheet
@@ -341,73 +319,35 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
                   child: Stack(
                     children: <Widget>[
                       Positioned(
-                          top: widget.slideDirection == SlideDirection.UP
-                              ? 0.0
-                              : null,
-                          bottom: widget.slideDirection == SlideDirection.DOWN
-                              ? 0.0
-                              : null,
-                          width: MediaQuery.of(context).size.width -
-                              (widget.margin != null
-                                  ? widget.margin!.horizontal
-                                  : 0) -
-                              (widget.padding != null
-                                  ? widget.padding!.horizontal
-                                  : 0),
+                          top: widget.slideDirection == SlideDirection.UP ? 0.0 : null,
+                          bottom: widget.slideDirection == SlideDirection.DOWN ? 0.0 : null,
+                          width: MediaQuery.of(context).size.width - (widget.margin != null ? widget.margin!.horizontal : 0) - (widget.padding != null ? widget.padding!.horizontal : 0),
                           child: Container(
                             height: widget.maxHeight,
-                            child: widget.panel != null
-                                ? widget.panel
-                                : widget.panelBuilder!(_sc),
+                            child: widget.panel != null ? widget.panel : widget.panelBuilder!(_sc),
                           )),
                       widget.header != null
                           ? Positioned(
-                              top: widget.slideDirection == SlideDirection.UP
-                                  ? 0.0
-                                  : null,
-                              bottom:
-                                  widget.slideDirection == SlideDirection.DOWN
-                                      ? 0.0
-                                      : null,
+                              top: widget.slideDirection == SlideDirection.UP ? 0.0 : null,
+                              bottom: widget.slideDirection == SlideDirection.DOWN ? 0.0 : null,
                               child: widget.header ?? SizedBox(),
                             )
                           : Container(),
                       widget.footer != null
                           ? Positioned(
-                              top: widget.slideDirection == SlideDirection.UP
-                                  ? null
-                                  : 0.0,
-                              bottom:
-                                  widget.slideDirection == SlideDirection.DOWN
-                                      ? null
-                                      : 0.0,
-                              child: widget.footer ?? SizedBox())
+                              top: widget.slideDirection == SlideDirection.UP ? null : 0.0, bottom: widget.slideDirection == SlideDirection.DOWN ? null : 0.0, child: widget.footer ?? SizedBox())
                           : Container(),
                       Positioned(
-                        top: widget.slideDirection == SlideDirection.UP
-                            ? 0.0
-                            : null,
-                        bottom: widget.slideDirection == SlideDirection.DOWN
-                            ? 0.0
-                            : null,
-                        width: MediaQuery.of(context).size.width -
-                            (widget.margin != null
-                                ? widget.margin!.horizontal
-                                : 0) -
-                            (widget.padding != null
-                                ? widget.padding!.horizontal
-                                : 0),
+                        top: widget.slideDirection == SlideDirection.UP ? 0.0 : null,
+                        bottom: widget.slideDirection == SlideDirection.DOWN ? 0.0 : null,
+                        width: MediaQuery.of(context).size.width - (widget.margin != null ? widget.margin!.horizontal : 0) - (widget.padding != null ? widget.padding!.horizontal : 0),
                         // `com.alexmercerind.harmonoid`.
                         child: SizedBox(
                           height: widget.maxHeight,
                           child: AnimatedBuilder(
                             animation: _ac,
                             builder: (context, _) {
-                              return (_isPanelOpen ||
-                                      _ac.value == 1.0 ||
-                                      restored)
-                                  ? const SizedBox.shrink()
-                                  : widget.collapsed ?? const SizedBox.shrink();
+                              return (_isPanelOpen || _ac.value == 1.0 || restored) ? const SizedBox.shrink() : widget.collapsed ?? const SizedBox.shrink();
                             },
                           ),
                         ),
@@ -429,13 +369,9 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
 
   double _getParallax() {
     if (widget.slideDirection == SlideDirection.UP)
-      return -_ac.value *
-          (widget.maxHeight - widget.minHeight) *
-          widget.parallaxOffset;
+      return -_ac.value * (widget.maxHeight - widget.minHeight) * widget.parallaxOffset;
     else
-      return _ac.value *
-          (widget.maxHeight - widget.minHeight) *
-          widget.parallaxOffset;
+      return _ac.value * (widget.maxHeight - widget.minHeight) * widget.parallaxOffset;
   }
 
   Widget _gestureHandler({required Widget child}) {
@@ -443,18 +379,15 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
 
     if (widget.panel != null) {
       return GestureDetector(
-        onVerticalDragUpdate: (DragUpdateDetails dets) =>
-            _onGestureSlide(dets.delta.dy),
-        onVerticalDragEnd: (DragEndDetails dets) =>
-            _onGestureEnd(dets.velocity),
+        onVerticalDragUpdate: (DragUpdateDetails dets) => _onGestureSlide(dets.delta.dy),
+        onVerticalDragEnd: (DragEndDetails dets) => _onGestureEnd(dets.velocity),
         child: child,
       );
     }
 
     return Listener(
       behavior: HitTestBehavior.translucent,
-      onPointerDown: (PointerDownEvent p) =>
-          _vt.addPosition(p.timeStamp, p.position),
+      onPointerDown: (PointerDownEvent p) => _vt.addPosition(p.timeStamp, p.position),
       onPointerMove: (PointerMoveEvent p) {
         _vt.addPosition(
           p.timeStamp,
@@ -489,11 +422,9 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
     if (_ac.isAnimating) return;
     if (_isPanelOpen && _scrollingEnabled) return;
 
-    double visualVelocity =
-        -v.pixelsPerSecond.dy / (widget.maxHeight - widget.minHeight);
+    double visualVelocity = -v.pixelsPerSecond.dy / (widget.maxHeight - widget.minHeight);
 
-    if (widget.slideDirection == SlideDirection.DOWN)
-      visualVelocity = -visualVelocity;
+    if (widget.slideDirection == SlideDirection.DOWN) visualVelocity = -visualVelocity;
 
     double d2Close = _ac.value;
     double d2Open = 1 - _ac.value;
@@ -502,8 +433,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
 
     if (v.pixelsPerSecond.dy.abs() >= minFlingVelocity) {
       if (widget.panelSnapping && widget.snapPoint != null) {
-        if (v.pixelsPerSecond.dy.abs() >= kSnap * minFlingVelocity ||
-            minDistance == d2Snap)
+        if (v.pixelsPerSecond.dy.abs() >= kSnap * minFlingVelocity || minDistance == d2Snap)
           _ac.fling(velocity: visualVelocity);
         else
           _flingPanelToPosition(widget.snapPoint!, visualVelocity);
@@ -580,8 +510,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
 
   //animate the panel position to value - must
   //be between 0.0 and 1.0
-  Future<void> _animatePanelToPosition(double value,
-      {Duration? duration, Curve curve = Curves.linear}) {
+  Future<void> _animatePanelToPosition(double value, {Duration? duration, Curve curve = Curves.linear}) {
     assert(0.0 <= value && value <= 1.0);
     _scrollingEnabled = value == 1.0;
     return _ac.animateTo(value, duration: duration, curve: curve);
@@ -589,8 +518,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
 
   //animate the panel position to the snap point
   //REQUIRES that widget.snapPoint != null
-  Future<void> _animatePanelToSnapPoint(
-      {Duration? duration, Curve curve = Curves.linear}) {
+  Future<void> _animatePanelToSnapPoint({Duration? duration, Curve curve = Curves.linear}) {
     assert(widget.snapPoint != null);
     return _ac.animateTo(widget.snapPoint!, duration: duration, curve: curve);
   }
@@ -668,25 +596,20 @@ class PanelController {
   /// where 0.0 is fully collapsed and 1.0 is completely open.
   /// (optional) duration specifies the time for the animation to complete
   /// (optional) curve specifies the easing behavior of the animation.
-  Future<void> animatePanelToPosition(double value,
-      {Duration? duration, Curve curve = Curves.linear}) {
+  Future<void> animatePanelToPosition(double value, {Duration? duration, Curve curve = Curves.linear}) {
     assert(isAttached, "PanelController must be attached to a SlidingUpPanel");
     assert(0.0 <= value && value <= 1.0);
-    return _panelState!
-        ._animatePanelToPosition(value, duration: duration, curve: curve);
+    return _panelState!._animatePanelToPosition(value, duration: duration, curve: curve);
   }
 
   /// Animates the panel position to the snap point
   /// Requires that the SlidingUpPanel snapPoint property is not null
   /// (optional) duration specifies the time for the animation to complete
   /// (optional) curve specifies the easing behavior of the animation.
-  Future<void> animatePanelToSnapPoint(
-      {Duration? duration, Curve curve = Curves.linear}) {
+  Future<void> animatePanelToSnapPoint({Duration? duration, Curve curve = Curves.linear}) {
     assert(isAttached, "PanelController must be attached to a SlidingUpPanel");
-    assert(_panelState!.widget.snapPoint != null,
-        "SlidingUpPanel snapPoint property must not be null");
-    return _panelState!
-        ._animatePanelToSnapPoint(duration: duration, curve: curve);
+    assert(_panelState!.widget.snapPoint != null, "SlidingUpPanel snapPoint property must not be null");
+    return _panelState!._animatePanelToSnapPoint(duration: duration, curve: curve);
   }
 
   /// Sets the panel position (without animation).

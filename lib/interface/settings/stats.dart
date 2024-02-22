@@ -1,10 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -49,8 +42,7 @@ class Table extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4.0),
         border: Border.all(
-          color: Theme.of(context).dividerTheme.color ??
-              Theme.of(context).dividerColor,
+          color: Theme.of(context).dividerTheme.color ?? Theme.of(context).dividerColor,
           width: 1.0,
         ),
       ),
@@ -72,17 +64,13 @@ class Table extends StatelessWidget {
             ),
             DataColumn(
               label: Container(
-                width: isDesktop
-                    ? 160.0
-                    : (MediaQuery.of(context).size.width - 56.0) / 2,
+                width: isDesktop ? 160.0 : (MediaQuery.of(context).size.width - 56.0) / 2,
                 child: Text(Language.instance.TYPE),
               ),
             ),
             DataColumn(
               label: Container(
-                width: isDesktop
-                    ? 60.0
-                    : (MediaQuery.of(context).size.width - 56.0) / 2,
+                width: isDesktop ? 60.0 : (MediaQuery.of(context).size.width - 56.0) / 2,
                 child: Text(Language.instance.COUNT),
               ),
             ),

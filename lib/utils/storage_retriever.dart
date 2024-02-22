@@ -1,10 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/services.dart';
@@ -90,10 +83,7 @@ class StorageRetriever {
     assert(Platform.isAndroid);
     final result = await _channel.invokeMethod('volumes');
     assert(result is List);
-    return result
-        .map((e) => Directory(path.normalize(e)))
-        .toList()
-        .cast<Directory>();
+    return result.map((e) => Directory(path.normalize(e))).toList().cast<Directory>();
   }
 
   /// Returns the cache directory.
@@ -140,6 +130,5 @@ class StorageRetriever {
   /// Prevent registering method call handler on platform channel more than once.
   static bool _initialized = false;
 
-  final MethodChannel _channel =
-      const MethodChannel('com.alexmercerind.harmonoid.StorageRetriever');
+  final MethodChannel _channel = const MethodChannel('com.alexmercerind.harmonoid.StorageRetriever');
 }

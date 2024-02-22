@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 import 'package:flutter/material.dart';
 
 import 'package:harmonoid/core/configuration.dart';
@@ -73,8 +65,7 @@ class ExperimentalSettingState extends State<ExperimentalSetting> {
             subtitle: Language.instance.AUTO_REFRESH_SETTING,
             onChanged: (_) => Configuration.instance
                 .save(
-                  automaticMusicLookup:
-                      !Configuration.instance.automaticMusicLookup,
+                  automaticMusicLookup: !Configuration.instance.automaticMusicLookup,
                 )
                 .then((value) => setState(() {})),
             value: Configuration.instance.automaticMusicLookup,
@@ -85,8 +76,7 @@ class ExperimentalSettingState extends State<ExperimentalSetting> {
               subtitle: Language.instance.ENABLE_VOLUME_BOOST_FILTER,
               onChanged: (_) => Configuration.instance
                   .save(
-                androidEnableVolumeBoostFilter:
-                    !Configuration.instance.androidEnableVolumeBoostFilter,
+                androidEnableVolumeBoostFilter: !Configuration.instance.androidEnableVolumeBoostFilter,
               )
                   .then((value) {
                 setState(() {});
@@ -103,8 +93,7 @@ class ExperimentalSettingState extends State<ExperimentalSetting> {
               resolvedAlbumArts.clear();
               Configuration.instance
                   .save(
-                    lookupForFallbackAlbumArt:
-                        !Configuration.instance.lookupForFallbackAlbumArt,
+                    lookupForFallbackAlbumArt: !Configuration.instance.lookupForFallbackAlbumArt,
                   )
                   .then((value) => setState(() {}));
             },

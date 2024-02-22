@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 import 'dart:io';
 import 'dart:math';
 import 'dart:async';
@@ -44,11 +36,7 @@ class PlaylistTab extends StatelessWidget {
           body: CustomListView(
             shrinkWrap: true,
             padding: EdgeInsets.only(
-              top: isDesktop
-                  ? 20.0
-                  : kMobileSearchBarHeight +
-                      tileMargin(context) +
-                      MediaQuery.of(context).padding.top,
+              top: isDesktop ? 20.0 : kMobileSearchBarHeight + tileMargin(context) + MediaQuery.of(context).padding.top,
             ),
             children: <Widget>[
               if (isDesktop)
@@ -100,19 +88,16 @@ class PlaylistTab extends StatelessWidget {
                                     onSubmitted: (String value) async {
                                       if (value.isNotEmpty) {
                                         FocusScope.of(context).unfocus();
-                                        await Collection.instance
-                                            .playlistCreateFromName(value);
+                                        await Collection.instance.playlistCreateFromName(value);
                                         _controller.clear();
                                         Navigator.of(context).maybePop();
                                       }
                                     },
                                     textAlignVertical: TextAlignVertical.center,
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge,
+                                    style: Theme.of(context).textTheme.bodyLarge,
                                     decoration: inputDecoration(
                                       context,
-                                      Language
-                                          .instance.PLAYLISTS_TEXT_FIELD_HINT,
+                                      Language.instance.PLAYLISTS_TEXT_FIELD_HINT,
                                     ),
                                   ),
                                 ),
@@ -127,8 +112,7 @@ class PlaylistTab extends StatelessWidget {
                                     onPressed: () async {
                                       if (_controller.text.isNotEmpty) {
                                         FocusScope.of(context).unfocus();
-                                        await collection.playlistCreateFromName(
-                                            _controller.text);
+                                        await collection.playlistCreateFromName(_controller.text);
                                         _controller.clear();
                                         Navigator.of(context).maybePop();
                                       }
@@ -236,8 +220,7 @@ class PlaylistThumbnail extends StatelessWidget {
   Widget build(BuildContext context) {
     if (encircle) {
       return Card(
-        elevation:
-            Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
+        elevation: Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(width / 2),
@@ -381,9 +364,7 @@ class PlaylistTileState extends State<PlaylistTile> {
           value: 1,
           child: ListTile(
             leading: Icon(
-              Platform.isWindows
-                  ? FluentIcons.rename_16_regular
-                  : Icons.text_format,
+              Platform.isWindows ? FluentIcons.rename_16_regular : Icons.text_format,
             ),
             title: Text(
               Language.instance.RENAME,
@@ -415,8 +396,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                 Language.instance.COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER,
               ),
               content: Text(
-                Language.instance.COLLECTION_PLAYLIST_DELETE_DIALOG_BODY
-                    .replaceAll(
+                Language.instance.COLLECTION_PLAYLIST_DELETE_DIALOG_BODY.replaceAll(
                   'NAME',
                   '${widget.playlist.name}',
                 ),
@@ -531,8 +511,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                 builder: (context, setState) {
                   return Container(
                     margin: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom -
-                          MediaQuery.of(context).padding.bottom,
+                      bottom: MediaQuery.of(context).viewInsets.bottom - MediaQuery.of(context).padding.bottom,
                     ),
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
@@ -551,8 +530,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                             textCapitalization: TextCapitalization.none,
                             textInputAction: TextInputAction.done,
                             onFieldSubmitted: (value) async {
-                              if (value.isNotEmpty &&
-                                  value != widget.playlist.name) {
+                              if (value.isNotEmpty && value != widget.playlist.name) {
                                 await Collection.instance.playlistRename(
                                   widget.playlist,
                                   value,
@@ -561,10 +539,9 @@ class PlaylistTileState extends State<PlaylistTile> {
                                 setState(() {});
                               }
                             },
-                            style:
-                                Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                      fontSize: 16.0,
-                                    ),
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  fontSize: 16.0,
+                                ),
                             decoration: mobileUnderlinedInputDecoration(
                               context,
                               Language.instance.PLAYLIST_NAME,
@@ -574,8 +551,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                         const SizedBox(height: 4.0),
                         ElevatedButton(
                           onPressed: () async {
-                            if (input.isNotEmpty &&
-                                input != widget.playlist.name) {
+                            if (input.isNotEmpty && input != widget.playlist.name) {
                               await Collection.instance.playlistRename(
                                 widget.playlist,
                                 input,
@@ -609,8 +585,7 @@ class PlaylistTileState extends State<PlaylistTile> {
   Widget build(BuildContext context) {
     return Listener(
       onPointerDown: (e) {
-        reactToSecondaryPress = e.kind == PointerDeviceKind.mouse &&
-            e.buttons == kSecondaryMouseButton;
+        reactToSecondaryPress = e.kind == PointerDeviceKind.mouse && e.buttons == kSecondaryMouseButton;
       },
       onPointerUp: (e) async {
         if (!reactToSecondaryPress) return;
@@ -665,9 +640,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                   Playback.instance.interceptPositionChangeRebuilds = false;
                 });
               },
-          onLongPress: widget.playlist.id < 0 ||
-                  isDesktop ||
-                  !widget.enableTrailingButton
+          onLongPress: widget.playlist.id < 0 || isDesktop || !widget.enableTrailingButton
               ? null
               : () async {
                   int? result;
@@ -728,8 +701,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                           Text(
                             {
                                   kHistoryPlaylist: Language.instance.HISTORY,
-                                  kLikedSongsPlaylist:
-                                      Language.instance.LIKED_SONGS,
+                                  kLikedSongsPlaylist: Language.instance.LIKED_SONGS,
                                 }[widget.playlist.id] ??
                                 widget.playlist.name.overflow,
                             overflow: TextOverflow.ellipsis,
@@ -752,9 +724,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                       ),
                     ),
                     const SizedBox(width: 12.0),
-                    if (widget.playlist.id >= 0 &&
-                        isMobile &&
-                        widget.enableTrailingButton)
+                    if (widget.playlist.id >= 0 && isMobile && widget.enableTrailingButton)
                       Container(
                         width: 64.0,
                         height: 64.0,
@@ -786,9 +756,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                           splashRadius: 20.0,
                         ),
                       )
-                    else if (widget.playlist.id >= 0 &&
-                        isDesktop &&
-                        widget.enableTrailingButton)
+                    else if (widget.playlist.id >= 0 && isDesktop && widget.enableTrailingButton)
                       Container(
                         width: 64.0,
                         height: 64.0,
@@ -821,8 +789,7 @@ class PlaylistScreen extends StatefulWidget {
   PlaylistScreenState createState() => PlaylistScreenState();
 }
 
-class PlaylistScreenState extends State<PlaylistScreen>
-    with SingleTickerProviderStateMixin {
+class PlaylistScreenState extends State<PlaylistScreen> with SingleTickerProviderStateMixin {
   Color? color;
   Color? secondary;
   int? hovered;
@@ -836,8 +803,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
     return duration > Duration.zero ? sc0 : sc1;
   }
 
-  final sc0 =
-      ScrollController(initialScrollOffset: kMobileLayoutInitialScrollOffset);
+  final sc0 = ScrollController(initialScrollOffset: kMobileLayoutInitialScrollOffset);
   final sc1 = ScrollController(initialScrollOffset: 0.0);
 
   static const double kMobileLayoutInitialScrollOffset = 128.0;
@@ -925,16 +891,11 @@ class PlaylistScreenState extends State<PlaylistScreen>
   Widget build(BuildContext context) {
     const mobileSliverLabelHeight = 108.0;
     double mobileSliverContentHeight = MediaQuery.of(context).size.width;
-    double mobileSliverExpandedHeight = mobileSliverContentHeight -
-        MediaQuery.of(context).padding.top +
-        mobileSliverLabelHeight;
+    double mobileSliverExpandedHeight = mobileSliverContentHeight - MediaQuery.of(context).padding.top + mobileSliverLabelHeight;
     double mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
-    if (mobileSliverExpandedHeight >
-        MediaQuery.of(context).size.height * 3 / 5) {
+    if (mobileSliverExpandedHeight > MediaQuery.of(context).size.height * 3 / 5) {
       mobileSliverExpandedHeight = MediaQuery.of(context).size.height * 3 / 5;
-      mobileSliverContentHeight = mobileSliverExpandedHeight -
-          mobileSliverLabelHeight +
-          MediaQuery.of(context).padding.top;
+      mobileSliverContentHeight = mobileSliverExpandedHeight - mobileSliverLabelHeight + MediaQuery.of(context).padding.top;
       mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
     }
     final tracks = widget.playlist.tracks.toList();
@@ -944,14 +905,10 @@ class PlaylistScreenState extends State<PlaylistScreen>
             ? TweenAnimationBuilder(
                 tween: ColorTween(
                   begin: Theme.of(context).appBarTheme.backgroundColor,
-                  end: color == null
-                      ? Theme.of(context).appBarTheme.backgroundColor
-                      : color!,
+                  end: color == null ? Theme.of(context).appBarTheme.backgroundColor : color!,
                 ),
                 curve: Curves.easeOut,
-                duration:
-                    Theme.of(context).extension<AnimationDuration>()?.medium ??
-                        Duration.zero,
+                duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
                 builder: (context, color, _) => Scaffold(
                   backgroundColor: color as Color? ?? Colors.transparent,
                   body: Container(
@@ -961,10 +918,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                       children: [
                         Container(
                           color: Theme.of(context).scaffoldBackgroundColor,
-                          margin: const EdgeInsets.only(
-                              top: kDesktopNowPlayingBarHeight),
-                          height: MediaQuery.of(context).size.height -
-                              kDesktopNowPlayingBarHeight,
+                          margin: const EdgeInsets.only(top: kDesktopNowPlayingBarHeight),
+                          height: MediaQuery.of(context).size.height - kDesktopNowPlayingBarHeight,
                           width: MediaQuery.of(context).size.width,
                         ),
                         DesktopAppBar(
@@ -988,8 +943,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                               children: [
                                 Expanded(
                                   flex: 6,
-                                  child: LayoutBuilder(
-                                      builder: (context, constraints) {
+                                  child: LayoutBuilder(builder: (context, constraints) {
                                     var dimension = min(
                                       constraints.maxWidth,
                                       constraints.maxHeight,
@@ -1002,11 +956,9 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                             child: AspectRatio(
                                               aspectRatio: 1.0,
                                               child: Hero(
-                                                tag:
-                                                    'playlist_art_${widget.playlist.name}',
+                                                tag: 'playlist_art_${widget.playlist.name}',
                                                 child: PlaylistThumbnail(
-                                                  tracks:
-                                                      widget.playlist.tracks,
+                                                  tracks: widget.playlist.tracks,
                                                   width: dimension,
                                                   mini: false,
                                                 ),
@@ -1033,67 +985,43 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                           children: [
                                             Container(
                                               height: 156.0,
-                                              padding:
-                                                  const EdgeInsets.all(16.0),
+                                              padding: const EdgeInsets.all(16.0),
                                               alignment: Alignment.centerLeft,
                                               child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
                                                   Text(
                                                     {
-                                                          kHistoryPlaylist:
-                                                              Language.instance
-                                                                  .HISTORY,
-                                                          kLikedSongsPlaylist:
-                                                              Language.instance
-                                                                  .LIKED_SONGS,
+                                                          kHistoryPlaylist: Language.instance.HISTORY,
+                                                          kLikedSongsPlaylist: Language.instance.LIKED_SONGS,
                                                         }[widget.playlist.id] ??
-                                                        widget.playlist.name
-                                                            .overflow,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headlineSmall,
+                                                        widget.playlist.name.overflow,
+                                                    style: Theme.of(context).textTheme.headlineSmall,
                                                     maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                                    overflow: TextOverflow.ellipsis,
                                                   ),
                                                   SizedBox(height: 8.0),
                                                   Text(
                                                     '${Language.instance.TRACK}: ${widget.playlist.tracks.length}',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyMedium,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                                    style: Theme.of(context).textTheme.bodyMedium,
+                                                    overflow: TextOverflow.ellipsis,
                                                   ),
                                                 ],
                                               ),
                                             ),
                                             Padding(
-                                              padding:
-                                                  const EdgeInsets.all(12.0),
+                                              padding: const EdgeInsets.all(12.0),
                                               child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
+                                                mainAxisAlignment: MainAxisAlignment.end,
                                                 children: [
                                                   FloatingActionButton(
                                                     heroTag: 'play_now',
                                                     onPressed: () {
                                                       Playback.instance.open(
                                                         [
-                                                          ...widget
-                                                              .playlist.tracks,
-                                                          if (Configuration
-                                                              .instance
-                                                              .seamlessPlayback)
-                                                            ...[
-                                                              ...Collection
-                                                                  .instance
-                                                                  .tracks
-                                                            ]..shuffle()
+                                                          ...widget.playlist.tracks,
+                                                          if (Configuration.instance.seamlessPlayback) ...[...Collection.instance.tracks]..shuffle()
                                                         ],
                                                       );
                                                     },
@@ -1101,8 +1029,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                     child: Icon(
                                                       Icons.play_arrow,
                                                     ),
-                                                    tooltip: Language
-                                                        .instance.PLAY_NOW,
+                                                    tooltip: Language.instance.PLAY_NOW,
                                                   ),
                                                   SizedBox(
                                                     width: 8.0,
@@ -1111,23 +1038,20 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                     heroTag: 'shuffle',
                                                     onPressed: () {
                                                       Playback.instance.open([
-                                                        ...widget
-                                                            .playlist.tracks,
+                                                        ...widget.playlist.tracks,
                                                       ]..shuffle());
                                                     },
                                                     mini: true,
                                                     child: Icon(
                                                       Icons.shuffle,
                                                     ),
-                                                    tooltip: Language
-                                                        .instance.SHUFFLE,
+                                                    tooltip: Language.instance.SHUFFLE,
                                                   ),
                                                   SizedBox(
                                                     width: 8.0,
                                                   ),
                                                   FloatingActionButton(
-                                                    heroTag:
-                                                        'add_to_now_playing',
+                                                    heroTag: 'add_to_now_playing',
                                                     onPressed: () {
                                                       Playback.instance.open(
                                                         tracks,
@@ -1137,8 +1061,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                     child: Icon(
                                                       Icons.queue_music,
                                                     ),
-                                                    tooltip: Language.instance
-                                                        .ADD_TO_NOW_PLAYING,
+                                                    tooltip: Language.instance.ADD_TO_NOW_PLAYING,
                                                   ),
                                                 ],
                                               ),
@@ -1149,45 +1072,32 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                           height: 1.0,
                                         ),
                                         LayoutBuilder(
-                                          builder: (context, constraints) =>
-                                              Column(
+                                          builder: (context, constraints) => Column(
                                             children: [
                                                   Row(
                                                     children: [
                                                       Container(
                                                         width: 64.0,
                                                         height: 56.0,
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(
+                                                        padding: const EdgeInsets.only(
                                                           right: 8.0,
                                                         ),
-                                                        alignment:
-                                                            Alignment.center,
+                                                        alignment: Alignment.center,
                                                         child: Text(
                                                           '#',
-                                                          style:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .titleSmall,
+                                                          style: Theme.of(context).textTheme.titleSmall,
                                                         ),
                                                       ),
                                                       Expanded(
                                                         child: Container(
                                                           height: 56.0,
-                                                          padding:
-                                                              EdgeInsets.only(
+                                                          padding: EdgeInsets.only(
                                                             right: 8.0,
                                                           ),
-                                                          alignment: Alignment
-                                                              .centerLeft,
+                                                          alignment: Alignment.centerLeft,
                                                           child: Text(
-                                                            Language.instance
-                                                                .TRACK_SINGLE,
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .titleSmall,
+                                                            Language.instance.TRACK_SINGLE,
+                                                            style: Theme.of(context).textTheme.titleSmall,
                                                           ),
                                                         ),
                                                         flex: 3,
@@ -1195,20 +1105,13 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                       Expanded(
                                                         child: Container(
                                                           height: 56.0,
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .only(
+                                                          padding: const EdgeInsets.only(
                                                             right: 8.0,
                                                           ),
-                                                          alignment: Alignment
-                                                              .centerLeft,
+                                                          alignment: Alignment.centerLeft,
                                                           child: Text(
-                                                            Language.instance
-                                                                .ARTIST,
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .titleSmall,
+                                                            Language.instance.ARTIST,
+                                                            style: Theme.of(context).textTheme.titleSmall,
                                                           ),
                                                         ),
                                                         flex: 2,
@@ -1234,65 +1137,31 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                         },
                                                         child: Listener(
                                                           onPointerDown: (e) {
-                                                            reactToSecondaryPress = e
-                                                                        .kind ==
-                                                                    PointerDeviceKind
-                                                                        .mouse &&
-                                                                e.buttons ==
-                                                                    kSecondaryMouseButton;
+                                                            reactToSecondaryPress = e.kind == PointerDeviceKind.mouse && e.buttons == kSecondaryMouseButton;
                                                           },
-                                                          onPointerUp:
-                                                              (e) async {
-                                                            if (!reactToSecondaryPress)
-                                                              return;
+                                                          onPointerUp: (e) async {
+                                                            if (!reactToSecondaryPress) return;
                                                             await showCustomMenu(
                                                               elevation: 4.0,
                                                               context: context,
-                                                              position:
-                                                                  RelativeRect
-                                                                      .fromLTRB(
+                                                              position: RelativeRect.fromLTRB(
                                                                 e.position.dx,
                                                                 e.position.dy,
-                                                                MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width,
-                                                                MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width,
+                                                                MediaQuery.of(context).size.width,
+                                                                MediaQuery.of(context).size.width,
                                                               ),
                                                               items: [
-                                                                PopupMenuItem<
-                                                                    int>(
-                                                                  padding:
-                                                                      EdgeInsets
-                                                                          .zero,
-                                                                  onTap:
-                                                                      () async {
-                                                                    Collection
-                                                                        .instance
-                                                                        .playlistRemoveTrack(
-                                                                            widget.playlist,
-                                                                            track.value);
+                                                                PopupMenuItem<int>(
+                                                                  padding: EdgeInsets.zero,
+                                                                  onTap: () async {
+                                                                    Collection.instance.playlistRemoveTrack(widget.playlist, track.value);
                                                                   },
                                                                   value: 4,
-                                                                  child:
-                                                                      ListTile(
-                                                                    leading: Icon(Platform.isWindows
-                                                                        ? FluentIcons
-                                                                            .delete_20_regular
-                                                                        : Icons
-                                                                            .delete),
+                                                                  child: ListTile(
+                                                                    leading: Icon(Platform.isWindows ? FluentIcons.delete_20_regular : Icons.delete),
                                                                     title: Text(
-                                                                      Language
-                                                                          .instance
-                                                                          .REMOVE_FROM_PLAYLIST,
-                                                                      style: isDesktop
-                                                                          ? Theme.of(context)
-                                                                              .textTheme
-                                                                              .bodyLarge
-                                                                          : null,
+                                                                      Language.instance.REMOVE_FROM_PLAYLIST,
+                                                                      style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                                                                     ),
                                                                   ),
                                                                 ),
@@ -1300,118 +1169,68 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                             );
                                                           },
                                                           child: Material(
-                                                            color: Colors
-                                                                .transparent,
+                                                            color: Colors.transparent,
                                                             child: InkWell(
                                                               onTap: () {
-                                                                Playback
-                                                                    .instance
-                                                                    .open(
+                                                                Playback.instance.open(
                                                                   [
-                                                                    ...widget
-                                                                        .playlist
-                                                                        .tracks,
-                                                                    if (Configuration
-                                                                        .instance
-                                                                        .seamlessPlayback)
-                                                                      ...[
-                                                                        ...Collection
-                                                                            .instance
-                                                                            .tracks
-                                                                      ]..shuffle()
+                                                                    ...widget.playlist.tracks,
+                                                                    if (Configuration.instance.seamlessPlayback) ...[...Collection.instance.tracks]..shuffle()
                                                                   ],
-                                                                  index:
-                                                                      track.key,
+                                                                  index: track.key,
                                                                 );
                                                               },
                                                               child: Row(
                                                                 children: [
                                                                   Container(
                                                                     width: 64.0,
-                                                                    height:
-                                                                        48.0,
-                                                                    padding:
-                                                                        const EdgeInsets
-                                                                            .only(
-                                                                      right:
-                                                                          8.0,
+                                                                    height: 48.0,
+                                                                    padding: const EdgeInsets.only(
+                                                                      right: 8.0,
                                                                     ),
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .center,
-                                                                    child: hovered ==
-                                                                            track.key
+                                                                    alignment: Alignment.center,
+                                                                    child: hovered == track.key
                                                                         ? IconButton(
-                                                                            onPressed:
-                                                                                () {
+                                                                            onPressed: () {
                                                                               Playback.instance.open(
                                                                                 tracks,
                                                                                 index: track.key,
                                                                               );
                                                                             },
-                                                                            icon:
-                                                                                Icon(Icons.play_arrow),
-                                                                            splashRadius:
-                                                                                20.0,
+                                                                            icon: Icon(Icons.play_arrow),
+                                                                            splashRadius: 20.0,
                                                                           )
                                                                         : Text(
                                                                             '${track.key + 1}',
-                                                                            style:
-                                                                                Theme.of(context).textTheme.bodyLarge,
+                                                                            style: Theme.of(context).textTheme.bodyLarge,
                                                                           ),
                                                                   ),
                                                                   Expanded(
-                                                                    child:
-                                                                        Container(
-                                                                      height:
-                                                                          48.0,
-                                                                      padding:
-                                                                          const EdgeInsets
-                                                                              .only(
-                                                                        right:
-                                                                            8.0,
+                                                                    child: Container(
+                                                                      height: 48.0,
+                                                                      padding: const EdgeInsets.only(
+                                                                        right: 8.0,
                                                                       ),
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .centerLeft,
-                                                                      child:
-                                                                          Text(
-                                                                        track
-                                                                            .value
-                                                                            .trackName,
-                                                                        style: Theme.of(context)
-                                                                            .textTheme
-                                                                            .bodyLarge,
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis,
+                                                                      alignment: Alignment.centerLeft,
+                                                                      child: Text(
+                                                                        track.value.trackName,
+                                                                        style: Theme.of(context).textTheme.bodyLarge,
+                                                                        overflow: TextOverflow.ellipsis,
                                                                       ),
                                                                     ),
                                                                     flex: 3,
                                                                   ),
                                                                   Expanded(
-                                                                    child:
-                                                                        Container(
-                                                                      height:
-                                                                          48.0,
-                                                                      padding:
-                                                                          const EdgeInsets
-                                                                              .only(
-                                                                        right:
-                                                                            8.0,
+                                                                    child: Container(
+                                                                      height: 48.0,
+                                                                      padding: const EdgeInsets.only(
+                                                                        right: 8.0,
                                                                       ),
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .centerLeft,
-                                                                      child:
-                                                                          Text(
-                                                                        track
-                                                                            .value
-                                                                            .albumArtistName,
-                                                                        style: Theme.of(context)
-                                                                            .textTheme
-                                                                            .bodyLarge,
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis,
+                                                                      alignment: Alignment.centerLeft,
+                                                                      child: Text(
+                                                                        track.value.albumArtistName,
+                                                                        style: Theme.of(context).textTheme.bodyLarge,
+                                                                        overflow: TextOverflow.ellipsis,
                                                                       ),
                                                                     ),
                                                                     flex: 2,
@@ -1450,12 +1269,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                           statusBarColor: Colors.transparent,
                           statusBarIconBrightness: detailsVisible
                               ? Brightness.light
-                              : (color?.computeLuminance() ??
-                                          (Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? 0.0
-                                              : 1.0)) <
-                                      0.5
+                              : (color?.computeLuminance() ?? (Theme.of(context).brightness == Brightness.dark ? 0.0 : 1.0)) < 0.5
                                   ? Brightness.light
                                   : Brightness.dark,
                         ),
@@ -1468,24 +1282,11 @@ class PlaylistScreenState extends State<PlaylistScreen>
                             icon: Icon(
                               Icons.arrow_back,
                               color: detailsVisible
-                                  ? Theme.of(context)
-                                      .extension<IconColors>()
-                                      ?.appBarDark
+                                  ? Theme.of(context).extension<IconColors>()?.appBarDark
                                   : [
-                                      Theme.of(context)
-                                          .extension<IconColors>()
-                                          ?.appBarLight,
-                                      Theme.of(context)
-                                          .extension<IconColors>()
-                                          ?.appBarDark,
-                                    ][(color?.computeLuminance() ??
-                                              (Theme.of(context).brightness ==
-                                                      Brightness.dark
-                                                  ? 0.0
-                                                  : 1.0)) >
-                                          0.5
-                                      ? 0
-                                      : 1],
+                                      Theme.of(context).extension<IconColors>()?.appBarLight,
+                                      Theme.of(context).extension<IconColors>()?.appBarDark,
+                                    ][(color?.computeLuminance() ?? (Theme.of(context).brightness == Brightness.dark ? 0.0 : 1.0)) > 0.5 ? 0 : 1],
                             ),
                             iconSize: 24.0,
                             splashRadius: 20.0,
@@ -1509,35 +1310,20 @@ class PlaylistScreenState extends State<PlaylistScreen>
                             begin: 1.0,
                             end: detailsVisible ? 0.0 : 1.0,
                           ),
-                          duration: Theme.of(context)
-                                  .extension<AnimationDuration>()
-                                  ?.fast ??
-                              Duration.zero,
+                          duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
                           builder: (context, value, _) => Opacity(
                             opacity: value,
                             child: Text(
                               {
                                     kHistoryPlaylist: Language.instance.HISTORY,
-                                    kLikedSongsPlaylist:
-                                        Language.instance.LIKED_SONGS,
+                                    kLikedSongsPlaylist: Language.instance.LIKED_SONGS,
                                   }[widget.playlist.id] ??
                                   widget.playlist.name.overflow,
                               style: TextStyle(
                                 color: [
-                                  Theme.of(context)
-                                      .extension<TextColors>()
-                                      ?.lightPrimary,
-                                  Theme.of(context)
-                                      .extension<TextColors>()
-                                      ?.darkPrimary,
-                                ][(color?.computeLuminance() ??
-                                            (Theme.of(context).brightness ==
-                                                    Brightness.dark
-                                                ? 0.0
-                                                : 1.0)) >
-                                        0.5
-                                    ? 0
-                                    : 1],
+                                  Theme.of(context).extension<TextColors>()?.lightPrimary,
+                                  Theme.of(context).extension<TextColors>()?.darkPrimary,
+                                ][(color?.computeLuminance() ?? (Theme.of(context).brightness == Brightness.dark ? 0.0 : 1.0)) > 0.5 ? 0 : 1],
                               ),
                             ),
                           ),
@@ -1553,26 +1339,22 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                     children: [
                                       Positioned.fill(
                                         child: Container(
-                                          color:
-                                              Theme.of(context).cardTheme.color,
+                                          color: Theme.of(context).cardTheme.color,
                                         ),
                                       ),
                                       Container(
                                         height: mobileSliverContentHeight,
-                                        width:
-                                            MediaQuery.of(context).size.width,
+                                        width: MediaQuery.of(context).size.width,
                                         child: PlaylistThumbnail(
                                           tracks: widget.playlist.tracks,
                                           height: mobileSliverContentHeight,
-                                          width:
-                                              MediaQuery.of(context).size.width,
+                                          width: MediaQuery.of(context).size.width,
                                           mini: false,
                                           encircle: false,
                                         ),
                                       ),
                                       Container(
-                                        width:
-                                            MediaQuery.of(context).size.width,
+                                        width: MediaQuery.of(context).size.width,
                                         height: mobileSliverContentHeight,
                                         decoration: BoxDecoration(
                                           gradient: LinearGradient(
@@ -1596,91 +1378,47 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                       begin: 1.0,
                                       end: detailsVisible ? 1.0 : 0.0,
                                     ),
-                                    duration: Theme.of(context)
-                                            .extension<AnimationDuration>()
-                                            ?.fast ??
-                                        Duration.zero,
+                                    duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
                                     builder: (context, value, _) => Opacity(
                                       opacity: value,
                                       child: Container(
                                         color: color,
                                         height: mobileSliverLabelHeight,
-                                        width:
-                                            MediaQuery.of(context).size.width,
+                                        width: MediaQuery.of(context).size.width,
                                         padding: const EdgeInsets.all(16.0),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               {
-                                                    kHistoryPlaylist: Language
-                                                        .instance.HISTORY,
-                                                    kLikedSongsPlaylist:
-                                                        Language.instance
-                                                            .LIKED_SONGS,
+                                                    kHistoryPlaylist: Language.instance.HISTORY,
+                                                    kLikedSongsPlaylist: Language.instance.LIKED_SONGS,
                                                   }[widget.playlist.id] ??
                                                   widget.playlist.name.overflow,
-                                              style:
-                                                  Theme.of(context)
-                                                      .textTheme
-                                                      .headlineSmall
-                                                      ?.copyWith(
-                                                        color: [
-                                                          Theme.of(context)
-                                                              .extension<
-                                                                  TextColors>()
-                                                              ?.lightPrimary,
-                                                          Theme.of(context)
-                                                              .extension<
-                                                                  TextColors>()
-                                                              ?.darkPrimary,
-                                                        ][(color?.computeLuminance() ??
-                                                                    (Theme.of(context).brightness ==
-                                                                            Brightness.dark
-                                                                        ? 0.0
-                                                                        : 1.0)) >
-                                                                0.5
-                                                            ? 0
-                                                            : 1],
-                                                      ),
+                                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                                    color: [
+                                                      Theme.of(context).extension<TextColors>()?.lightPrimary,
+                                                      Theme.of(context).extension<TextColors>()?.darkPrimary,
+                                                    ][(color?.computeLuminance() ?? (Theme.of(context).brightness == Brightness.dark ? 0.0 : 1.0)) > 0.5 ? 0 : 1],
+                                                  ),
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                             const SizedBox(height: 4.0),
                                             Text(
-                                              Language.instance.N_TRACKS
-                                                  .replaceAll(
+                                              Language.instance.N_TRACKS.replaceAll(
                                                 'N',
                                                 '${widget.playlist.tracks.length}',
                                               ),
-                                              style:
-                                                  Theme.of(context)
-                                                      .textTheme
-                                                      .bodyMedium
-                                                      ?.copyWith(
-                                                        color: [
-                                                          Theme.of(context)
-                                                              .extension<
-                                                                  TextColors>()
-                                                              ?.lightSecondary,
-                                                          Theme.of(context)
-                                                              .extension<
-                                                                  TextColors>()
-                                                              ?.darkSecondary,
-                                                        ][(color?.computeLuminance() ??
-                                                                    (Theme.of(context).brightness ==
-                                                                            Brightness.dark
-                                                                        ? 0.0
-                                                                        : 1.0)) >
-                                                                0.5
-                                                            ? 0
-                                                            : 1],
-                                                        fontSize: 16.0,
-                                                      ),
+                                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                                    color: [
+                                                      Theme.of(context).extension<TextColors>()?.lightSecondary,
+                                                      Theme.of(context).extension<TextColors>()?.darkSecondary,
+                                                    ][(color?.computeLuminance() ?? (Theme.of(context).brightness == Brightness.dark ? 0.0 : 1.0)) > 0.5 ? 0 : 1],
+                                                    fontSize: 16.0,
+                                                  ),
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
@@ -1697,13 +1435,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                               right: 16.0 + 64.0,
                               child: TweenAnimationBuilder(
                                 curve: Curves.easeOut,
-                                tween: Tween<double>(
-                                    begin: 0.0,
-                                    end: detailsVisible ? 1.0 : 0.0),
-                                duration: Theme.of(context)
-                                        .extension<AnimationDuration>()
-                                        ?.fast ??
-                                    Duration.zero,
+                                tween: Tween<double>(begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
+                                duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
                                 builder: (context, value, _) => Transform.scale(
                                   scale: value as double,
                                   child: Transform.rotate(
@@ -1714,24 +1447,13 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                       foregroundColor: [
                                         kFABDarkForegroundColor,
                                         kFABLightForegroundColor,
-                                      ][((secondary ??
-                                                          Theme.of(context)
-                                                              .floatingActionButtonTheme
-                                                              .backgroundColor)
-                                                      ?.computeLuminance() ??
-                                                  0.0) >
-                                              0.5
-                                          ? 1
-                                          : 0],
+                                      ][((secondary ?? Theme.of(context).floatingActionButtonTheme.backgroundColor)?.computeLuminance() ?? 0.0) > 0.5 ? 1 : 0],
                                       child: Icon(Icons.play_arrow),
                                       onPressed: () {
                                         Playback.instance.open(
                                           [
                                             ...widget.playlist.tracks,
-                                            if (Configuration
-                                                .instance.seamlessPlayback)
-                                              ...[...Collection.instance.tracks]
-                                                ..shuffle()
+                                            if (Configuration.instance.seamlessPlayback) ...[...Collection.instance.tracks]..shuffle()
                                           ],
                                         );
                                       },
@@ -1745,13 +1467,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                               right: 16.0,
                               child: TweenAnimationBuilder(
                                 curve: Curves.easeOut,
-                                tween: Tween<double>(
-                                    begin: 0.0,
-                                    end: detailsVisible ? 1.0 : 0.0),
-                                duration: Theme.of(context)
-                                        .extension<AnimationDuration>()
-                                        ?.fast ??
-                                    Duration.zero,
+                                tween: Tween<double>(begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
+                                duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
                                 builder: (context, value, _) => Transform.scale(
                                   scale: value as double,
                                   child: Transform.rotate(
@@ -1762,20 +1479,11 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                       foregroundColor: [
                                         kFABDarkForegroundColor,
                                         kFABLightForegroundColor,
-                                      ][((secondary ??
-                                                          Theme.of(context)
-                                                              .floatingActionButtonTheme
-                                                              .backgroundColor)
-                                                      ?.computeLuminance() ??
-                                                  0.0) >
-                                              0.5
-                                          ? 1
-                                          : 0],
+                                      ][((secondary ?? Theme.of(context).floatingActionButtonTheme.backgroundColor)?.computeLuminance() ?? 0.0) > 0.5 ? 1 : 0],
                                       child: Icon(Icons.shuffle),
                                       onPressed: () {
                                         Playback.instance.open(
-                                          [...widget.playlist.tracks]
-                                            ..shuffle(),
+                                          [...widget.playlist.tracks]..shuffle(),
                                         );
                                       },
                                     ),
@@ -1793,10 +1501,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                         delegate: SliverChildBuilderDelegate(
                           (context, i) {
                             final subtitle = [
-                              if (!tracks[i].albumNameNotPresent)
-                                tracks[i].albumName.overflow,
-                              if (!tracks[i].trackArtistNamesNotPresent)
-                                tracks[i].trackArtistNames.take(2).join(', ')
+                              if (!tracks[i].albumNameNotPresent) tracks[i].albumName.overflow,
+                              if (!tracks[i].trackArtistNamesNotPresent) tracks[i].trackArtistNames.take(2).join(', ')
                             ].join(' • ');
 
                             void handler() async {
@@ -1807,20 +1513,17 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                     Language.instance.REMOVE,
                                   ),
                                   content: Text(
-                                    Language.instance
-                                        .COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY
+                                    Language.instance.COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY
                                         .replaceAll(
                                           'TRACK_NAME',
                                           tracks[i].trackName,
                                         )
-                                        .replaceAll('PLAYLIST_NAME',
-                                            widget.playlist.name),
+                                        .replaceAll('PLAYLIST_NAME', widget.playlist.name),
                                   ),
                                   actions: [
                                     TextButton(
                                       onPressed: () async {
-                                        await Collection.instance
-                                            .playlistRemoveTrack(
+                                        await Collection.instance.playlistRemoveTrack(
                                           widget.playlist,
                                           tracks[i],
                                         );
@@ -1853,9 +1556,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                 onTap: () => Playback.instance.open(
                                   [
                                     ...tracks,
-                                    if (Configuration.instance.seamlessPlayback)
-                                      ...[...Collection.instance.tracks]
-                                        ..shuffle()
+                                    if (Configuration.instance.seamlessPlayback) ...[...Collection.instance.tracks]..shuffle()
                                   ],
                                   index: i,
                                 ),
@@ -1870,8 +1571,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                         vertical: 4.0,
                                       ),
                                       child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           const SizedBox(width: 12.0),
                                           Container(
@@ -1880,29 +1580,21 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                             alignment: Alignment.center,
                                             child: Text(
                                               (i + 1).toString(),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium
-                                                  ?.copyWith(fontSize: 18.0),
+                                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 18.0),
                                             ),
                                           ),
                                           const SizedBox(width: 12.0),
                                           Expanded(
                                             child: Column(
                                               mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   tracks[i].trackName.overflow,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                                  overflow: TextOverflow.ellipsis,
                                                   maxLines: 1,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleMedium,
+                                                  style: Theme.of(context).textTheme.titleMedium,
                                                 ),
                                                 if (subtitle.isNotEmpty) ...[
                                                   const SizedBox(
@@ -1910,8 +1602,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                   ),
                                                   Text(
                                                     subtitle,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                                    overflow: TextOverflow.ellipsis,
                                                     maxLines: 1,
                                                   ),
                                                 ],
@@ -1949,10 +1640,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                       ),
                       SliverPadding(
                         padding: EdgeInsets.only(
-                          top: 12.0 +
-                              (detailsLoaded
-                                  ? 0.0
-                                  : MediaQuery.of(context).size.height),
+                          top: 12.0 + (detailsLoaded ? 0.0 : MediaQuery.of(context).size.height),
                         ),
                       ),
                     ],

@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -30,8 +22,7 @@ import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/constants/language.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-final FloatingSearchBarController floatingSearchBarController =
-    FloatingSearchBarController();
+final FloatingSearchBarController floatingSearchBarController = FloatingSearchBarController();
 
 class _NavigatorObserver extends NavigatorObserver {
   final VoidCallback onPushRoute;
@@ -49,8 +40,7 @@ class Home extends StatefulWidget {
   HomeState createState() => HomeState();
 }
 
-class HomeState extends State<Home>
-    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+class HomeState extends State<Home> with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   final ValueNotifier<TabRoute> tabControllerNotifier = ValueNotifier<TabRoute>(
     TabRoute(
       Configuration.instance.libraryTab,
@@ -110,14 +100,12 @@ class HomeState extends State<Home>
 
   void onTabChange() {
     debugPrint(tabControllerNotifier.value.sender.toString());
-    if (tabControllerRouteStack.last.index ==
-        tabControllerNotifier.value.index) {
+    if (tabControllerRouteStack.last.index == tabControllerNotifier.value.index) {
       return;
     }
     // Remove any pushed [Route]s from the navigator stack upon tab
     // change.
-    if (tabControllerNotifier.value.sender ==
-        TabRouteSender.bottomNavigationBar) {
+    if (tabControllerNotifier.value.sender == TabRouteSender.bottomNavigationBar) {
       if (floatingSearchBarController.isOpen) {
         floatingSearchBarController.close();
       }
@@ -136,8 +124,7 @@ class HomeState extends State<Home>
     // [TabRouteSender.bottomNavigationBar] as well & ends up
     // adding it to the stack, the subsequent listener call is
     // avoided.
-    else if (this.tabControllerNotifier.value.sender ==
-        TabRouteSender.systemNavigationBackButton) {
+    else if (this.tabControllerNotifier.value.sender == TabRouteSender.systemNavigationBackButton) {
       isSystemNavigationBackButtonUsed = true;
     }
     // Do nothing. Additional [TabRouteSender.pageView] sender
@@ -180,8 +167,7 @@ class HomeState extends State<Home>
           tabControllerRouteStack.last.index,
           TabRouteSender.systemNavigationBackButton,
         );
-        debugPrint(
-            '${TabRouteSender.systemNavigationBackButton}: ${tabControllerRouteStack.last.index}');
+        debugPrint('${TabRouteSender.systemNavigationBackButton}: ${tabControllerRouteStack.last.index}');
       } else {
         SystemNavigator.pop();
       }
@@ -199,16 +185,9 @@ class HomeState extends State<Home>
               if (Configuration.instance.modernNowPlayingScreen) {
                 Navigator.of(context).push(
                   PageRouteBuilder(
-                    transitionDuration: Theme.of(context)
-                            .extension<AnimationDuration>()
-                            ?.slow ??
-                        Duration.zero,
-                    reverseTransitionDuration: Theme.of(context)
-                            .extension<AnimationDuration>()
-                            ?.medium ??
-                        Duration.zero,
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        SharedAxisTransition(
+                    transitionDuration: Theme.of(context).extension<AnimationDuration>()?.slow ?? Duration.zero,
+                    reverseTransitionDuration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+                    pageBuilder: (context, animation, secondaryAnimation) => SharedAxisTransition(
                       transitionType: SharedAxisTransitionType.vertical,
                       fillColor: Colors.transparent,
                       animation: animation,
@@ -244,8 +223,7 @@ class HomeState extends State<Home>
                       builder: (context, _, __) => Scaffold(
                         resizeToAvoidBottomInset: false,
                         body: HeroControllerScope(
-                          controller:
-                              MaterialApp.createMaterialHeroController(),
+                          controller: MaterialApp.createMaterialHeroController(),
                           child: Navigator(
                             key: navigatorKey,
                             initialRoute: '/collection_screen',
@@ -253,30 +231,18 @@ class HomeState extends State<Home>
                               Route<dynamic>? route;
                               if (routeSettings.name == '/collection_screen') {
                                 route = MaterialRoute(
-                                  builder: (BuildContext context) =>
-                                      CollectionScreen(
-                                    tabControllerNotifier:
-                                        tabControllerNotifier,
-                                    floatingSearchBarController:
-                                        floatingSearchBarController,
+                                  builder: (BuildContext context) => CollectionScreen(
+                                    tabControllerNotifier: tabControllerNotifier,
+                                    floatingSearchBarController: floatingSearchBarController,
                                   ),
                                 );
                               }
                               if (routeSettings.name == '/now_playing') {
                                 route = PageRouteBuilder(
-                                  transitionDuration: Theme.of(context)
-                                          .extension<AnimationDuration>()
-                                          ?.slow ??
-                                      Duration.zero,
-                                  reverseTransitionDuration: Theme.of(context)
-                                          .extension<AnimationDuration>()
-                                          ?.medium ??
-                                      Duration.zero,
-                                  pageBuilder: (context, animation,
-                                          secondaryAnimation) =>
-                                      SharedAxisTransition(
-                                    transitionType:
-                                        SharedAxisTransitionType.vertical,
+                                  transitionDuration: Theme.of(context).extension<AnimationDuration>()?.slow ?? Duration.zero,
+                                  reverseTransitionDuration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+                                  pageBuilder: (context, animation, secondaryAnimation) => SharedAxisTransition(
+                                    transitionType: SharedAxisTransitionType.vertical,
                                     fillColor: Colors.transparent,
                                     animation: animation,
                                     secondaryAnimation: secondaryAnimation,
@@ -309,13 +275,10 @@ class HomeState extends State<Home>
                             Route<dynamic>? route;
                             if (routeSettings.name == '/collection_screen') {
                               route = MaterialRoute(
-                                builder: (BuildContext context) =>
-                                    NowPlayingBarScrollHideNotifier(
+                                builder: (BuildContext context) => NowPlayingBarScrollHideNotifier(
                                   child: CollectionScreen(
-                                    tabControllerNotifier:
-                                        tabControllerNotifier,
-                                    floatingSearchBarController:
-                                        floatingSearchBarController,
+                                    tabControllerNotifier: tabControllerNotifier,
+                                    floatingSearchBarController: floatingSearchBarController,
                                   ),
                                 ),
                               );
@@ -330,8 +293,7 @@ class HomeState extends State<Home>
                     ],
                   ),
                   bottomNavigationBar: ValueListenableBuilder<double>(
-                    valueListenable:
-                        MobileNowPlayingController.instance.bottomNavigationBar,
+                    valueListenable: MobileNowPlayingController.instance.bottomNavigationBar,
                     child: M2MobileBottomNavigationBar(
                       tabControllerNotifier: tabControllerNotifier,
                     ),
@@ -340,8 +302,7 @@ class HomeState extends State<Home>
                               // [MobileBottomNavigationBar] only visible on mobile.
                               isMobile &&
                                   // On-screen keyboard is hidden (not visible).
-                                  MediaQuery.of(context).viewInsets.bottom <
-                                      180.0)
+                                  MediaQuery.of(context).viewInsets.bottom < 180.0)
                           ? height * navigationBarHeight(context)
                           : 0.0,
                       child: SingleChildScrollView(

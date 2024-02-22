@@ -1,17 +1,8 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 import 'dart:math';
-import 'package:flutter/material.dart'
-    hide ReorderableDragStartListener, Intent;
+import 'package:flutter/material.dart' hide ReorderableDragStartListener, Intent;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -73,8 +64,7 @@ class CustomListView extends StatelessWidget {
     return ListView(
       cacheExtent: cacheExtent,
       physics: physics,
-      keyboardDismissBehavior:
-          keyboardDismissBehavior ?? ScrollViewKeyboardDismissBehavior.onDrag,
+      keyboardDismissBehavior: keyboardDismissBehavior ?? ScrollViewKeyboardDismissBehavior.onDrag,
       padding: padding ?? EdgeInsets.zero,
       controller: controller,
       scrollDirection: scrollDirection ?? Axis.vertical,
@@ -153,9 +143,7 @@ class CustomListViewSeparated extends StatelessWidget {
         (i) => i % 2 == 0 ? itemExtents[i ~/ 2] : separatorExtent,
       ),
       itemCount: 2 * itemCount - 1,
-      itemBuilder: (context, i) => i % 2 == 0
-          ? itemBuilder(context, i ~/ 2)
-          : separatorBuilder(context, i ~/ 2),
+      itemBuilder: (context, i) => i % 2 == 0 ? itemBuilder(context, i ~/ 2) : separatorBuilder(context, i ~/ 2),
       controller: controller,
       scrollDirection: scrollDirection ?? Axis.vertical,
       padding: padding,
@@ -196,9 +184,7 @@ class _CustomFutureBuilderState<T> extends State<CustomFutureBuilder<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return data == null
-        ? widget.loadingBuilder(context)
-        : widget.builder(context, data);
+    return data == null ? widget.loadingBuilder(context) : widget.builder(context, data);
   }
 }
 
@@ -415,9 +401,7 @@ class SortBarFixedHolderState extends State<SortBarFixedHolder> {
                     Language.instance.PLAY_ALL,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
-                          decoration: hover0
-                              ? TextDecoration.underline
-                              : TextDecoration.none,
+                          decoration: hover0 ? TextDecoration.underline : TextDecoration.none,
                         ),
                   ),
                 ],
@@ -459,9 +443,7 @@ class SortBarFixedHolderState extends State<SortBarFixedHolder> {
                     Language.instance.SHUFFLE,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
-                          decoration: hover1
-                              ? TextDecoration.underline
-                              : TextDecoration.none,
+                          decoration: hover1 ? TextDecoration.underline : TextDecoration.none,
                         ),
                   ),
                 ],
@@ -519,8 +501,7 @@ class _SortBarState extends State<SortBar> {
                 ),
                 position: RelativeRect.fromLTRB(
                   _key0.globalPaintBounds!.left - (widget.fixed ? 0.0 : 8.0),
-                  _key0.globalPaintBounds!.bottom +
-                      tileMargin(context) / (widget.fixed ? 2.0 : 1.0),
+                  _key0.globalPaintBounds!.bottom + tileMargin(context) / (widget.fixed ? 2.0 : 1.0),
                   MediaQuery.of(context).size.width,
                   MediaQuery.of(context).size.height,
                 ),
@@ -528,8 +509,7 @@ class _SortBarState extends State<SortBar> {
                   ...{
                     kAlbumTabIndex: <PopupMenuItem>[
                       CheckedPopupMenuItem(
-                        checked:
-                            Collection.instance.albumsSort == AlbumsSort.aToZ,
+                        checked: Collection.instance.albumsSort == AlbumsSort.aToZ,
                         value: AlbumsSort.aToZ,
                         padding: EdgeInsets.zero,
                         child: ListTile(
@@ -537,15 +517,12 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.A_TO_Z,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.bodyLarge
-                                : null,
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                           ),
                         ),
                       ),
                       CheckedPopupMenuItem(
-                        checked: Collection.instance.albumsSort ==
-                            AlbumsSort.dateAdded,
+                        checked: Collection.instance.albumsSort == AlbumsSort.dateAdded,
                         value: AlbumsSort.dateAdded,
                         padding: EdgeInsets.zero,
                         child: ListTile(
@@ -553,15 +530,12 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.DATE_ADDED,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.bodyLarge
-                                : null,
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                           ),
                         ),
                       ),
                       CheckedPopupMenuItem(
-                        checked:
-                            Collection.instance.albumsSort == AlbumsSort.year,
+                        checked: Collection.instance.albumsSort == AlbumsSort.year,
                         value: AlbumsSort.year,
                         padding: EdgeInsets.zero,
                         child: ListTile(
@@ -569,15 +543,12 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.YEAR,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.bodyLarge
-                                : null,
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                           ),
                         ),
                       ),
                       CheckedPopupMenuItem(
-                        checked:
-                            Collection.instance.albumsSort == AlbumsSort.artist,
+                        checked: Collection.instance.albumsSort == AlbumsSort.artist,
                         value: AlbumsSort.artist,
                         padding: EdgeInsets.zero,
                         child: ListTile(
@@ -585,17 +556,14 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.ALBUM_ARTIST,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.bodyLarge
-                                : null,
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                           ),
                         ),
                       ),
                     ],
                     kTrackTabIndex: <PopupMenuItem>[
                       CheckedPopupMenuItem(
-                        checked:
-                            Collection.instance.tracksSort == TracksSort.aToZ,
+                        checked: Collection.instance.tracksSort == TracksSort.aToZ,
                         value: TracksSort.aToZ,
                         padding: EdgeInsets.zero,
                         child: ListTile(
@@ -603,15 +571,12 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.A_TO_Z,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.bodyLarge
-                                : null,
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                           ),
                         ),
                       ),
                       CheckedPopupMenuItem(
-                        checked: Collection.instance.tracksSort ==
-                            TracksSort.dateAdded,
+                        checked: Collection.instance.tracksSort == TracksSort.dateAdded,
                         value: TracksSort.dateAdded,
                         padding: EdgeInsets.zero,
                         child: ListTile(
@@ -619,15 +584,12 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.DATE_ADDED,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.bodyLarge
-                                : null,
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                           ),
                         ),
                       ),
                       CheckedPopupMenuItem(
-                        checked:
-                            Collection.instance.tracksSort == TracksSort.year,
+                        checked: Collection.instance.tracksSort == TracksSort.year,
                         value: TracksSort.year,
                         padding: EdgeInsets.zero,
                         child: ListTile(
@@ -635,17 +597,14 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.YEAR,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.bodyLarge
-                                : null,
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                           ),
                         ),
                       ),
                     ],
                     kArtistTabIndex: <PopupMenuItem>[
                       CheckedPopupMenuItem(
-                        checked:
-                            Collection.instance.artistsSort == ArtistsSort.aToZ,
+                        checked: Collection.instance.artistsSort == ArtistsSort.aToZ,
                         value: ArtistsSort.aToZ,
                         padding: EdgeInsets.zero,
                         child: ListTile(
@@ -653,15 +612,12 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.A_TO_Z,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.bodyLarge
-                                : null,
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                           ),
                         ),
                       ),
                       CheckedPopupMenuItem(
-                        checked: Collection.instance.artistsSort ==
-                            ArtistsSort.dateAdded,
+                        checked: Collection.instance.artistsSort == ArtistsSort.dateAdded,
                         value: ArtistsSort.dateAdded,
                         padding: EdgeInsets.zero,
                         child: ListTile(
@@ -669,9 +625,7 @@ class _SortBarState extends State<SortBar> {
                           dense: true,
                           title: Text(
                             Language.instance.DATE_ADDED,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.bodyLarge
-                                : null,
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                           ),
                         ),
                       ),
@@ -717,31 +671,23 @@ class _SortBarState extends State<SortBar> {
                             text: {
                               kAlbumTabIndex: {
                                 AlbumsSort.aToZ: Language.instance.A_TO_Z,
-                                AlbumsSort.dateAdded:
-                                    Language.instance.DATE_ADDED,
+                                AlbumsSort.dateAdded: Language.instance.DATE_ADDED,
                                 AlbumsSort.year: Language.instance.YEAR,
-                                AlbumsSort.artist:
-                                    Language.instance.ALBUM_ARTIST,
+                                AlbumsSort.artist: Language.instance.ALBUM_ARTIST,
                               }[collection.albumsSort]!,
                               kTrackTabIndex: {
                                 TracksSort.aToZ: Language.instance.A_TO_Z,
-                                TracksSort.dateAdded:
-                                    Language.instance.DATE_ADDED,
+                                TracksSort.dateAdded: Language.instance.DATE_ADDED,
                                 TracksSort.year: Language.instance.YEAR,
                               }[collection.tracksSort]!,
                               kArtistTabIndex: {
                                 ArtistsSort.aToZ: Language.instance.A_TO_Z,
-                                ArtistsSort.dateAdded:
-                                    Language.instance.DATE_ADDED,
+                                ArtistsSort.dateAdded: Language.instance.DATE_ADDED,
                               }[collection.artistsSort]!,
                             }[tab]!,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge
-                                ?.copyWith(
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                   color: Theme.of(context).colorScheme.primary,
-                                  decoration:
-                                      _hover0 ? TextDecoration.underline : null,
+                                  decoration: _hover0 ? TextDecoration.underline : null,
                                 ),
                           ),
                         ],
@@ -770,20 +716,16 @@ class _SortBarState extends State<SortBar> {
                 ),
                 position: RelativeRect.fromLTRB(
                   MediaQuery.of(context).size.width,
-                  _key1.globalPaintBounds!.bottom +
-                      tileMargin(context) / (widget.fixed ? 2.0 : 1.0),
+                  _key1.globalPaintBounds!.bottom + tileMargin(context) / (widget.fixed ? 2.0 : 1.0),
                   tileMargin(context) + (widget.fixed ? 8.0 : 0.0),
                   0.0,
                 ),
                 items: <PopupMenuEntry>[
                   CheckedPopupMenuItem(
                     checked: {
-                      kAlbumTabIndex: Collection.instance.albumsOrderType ==
-                          OrderType.ascending,
-                      kTrackTabIndex: Collection.instance.tracksOrderType ==
-                          OrderType.ascending,
-                      kArtistTabIndex: Collection.instance.artistsOrderType ==
-                          OrderType.ascending,
+                      kAlbumTabIndex: Collection.instance.albumsOrderType == OrderType.ascending,
+                      kTrackTabIndex: Collection.instance.tracksOrderType == OrderType.ascending,
+                      kArtistTabIndex: Collection.instance.artistsOrderType == OrderType.ascending,
                     }[tab]!,
                     value: OrderType.ascending,
                     padding: EdgeInsets.zero,
@@ -792,20 +734,15 @@ class _SortBarState extends State<SortBar> {
                       dense: true,
                       title: Text(
                         Language.instance.ASCENDING,
-                        style: isDesktop
-                            ? Theme.of(context).textTheme.bodyLarge
-                            : null,
+                        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                       ),
                     ),
                   ),
                   CheckedPopupMenuItem(
                     checked: {
-                      kAlbumTabIndex: Collection.instance.albumsOrderType ==
-                          OrderType.descending,
-                      kTrackTabIndex: Collection.instance.tracksOrderType ==
-                          OrderType.descending,
-                      kArtistTabIndex: Collection.instance.artistsOrderType ==
-                          OrderType.descending,
+                      kAlbumTabIndex: Collection.instance.albumsOrderType == OrderType.descending,
+                      kTrackTabIndex: Collection.instance.tracksOrderType == OrderType.descending,
+                      kArtistTabIndex: Collection.instance.artistsOrderType == OrderType.descending,
                     }[tab]!,
                     value: OrderType.descending,
                     padding: EdgeInsets.zero,
@@ -837,8 +774,7 @@ class _SortBarState extends State<SortBar> {
                   case kArtistTabIndex:
                     {
                       await Collection.instance.sort(artistsOrderType: value);
-                      await Configuration.instance
-                          .save(artistsOrderType: value);
+                      await Configuration.instance.save(artistsOrderType: value);
                       break;
                     }
                 }
@@ -868,31 +804,21 @@ class _SortBarState extends State<SortBar> {
                           TextSpan(
                             text: {
                               kAlbumTabIndex: {
-                                OrderType.ascending:
-                                    Language.instance.ASCENDING,
-                                OrderType.descending:
-                                    Language.instance.DESCENDING,
+                                OrderType.ascending: Language.instance.ASCENDING,
+                                OrderType.descending: Language.instance.DESCENDING,
                               }[collection.albumsOrderType]!,
                               kTrackTabIndex: {
-                                OrderType.ascending:
-                                    Language.instance.ASCENDING,
-                                OrderType.descending:
-                                    Language.instance.DESCENDING,
+                                OrderType.ascending: Language.instance.ASCENDING,
+                                OrderType.descending: Language.instance.DESCENDING,
                               }[collection.tracksOrderType]!,
                               kArtistTabIndex: {
-                                OrderType.ascending:
-                                    Language.instance.ASCENDING,
-                                OrderType.descending:
-                                    Language.instance.DESCENDING,
+                                OrderType.ascending: Language.instance.ASCENDING,
+                                OrderType.descending: Language.instance.DESCENDING,
                               }[collection.artistsOrderType]!,
                             }[tab]!,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge
-                                ?.copyWith(
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                   color: Theme.of(context).colorScheme.primary,
-                                  decoration:
-                                      _hover1 ? TextDecoration.underline : null,
+                                  decoration: _hover1 ? TextDecoration.underline : null,
                                 ),
                           ),
                         ],
@@ -928,9 +854,7 @@ class _SortBarState extends State<SortBar> {
             child: child,
             builder: (context, hover, child) => AnimatedPositioned(
               curve: Curves.easeInOut,
-              duration:
-                  Theme.of(context).extension<AnimationDuration>()?.fast ??
-                      Duration.zero,
+              duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
               top: hover
                   ? widget.tab == 1
                       ? 28.0
@@ -974,8 +898,7 @@ class _ScaleOnHoverState extends State<ScaleOnHover> {
         scale = 1.00;
       }),
       child: TweenAnimationBuilder(
-        duration: Theme.of(context).extension<AnimationDuration>()?.fast ??
-            Duration.zero,
+        duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
         tween: Tween<double>(begin: 1.0, end: scale),
         builder: (BuildContext context, double value, _) {
           return Transform.scale(scale: value, child: widget.child);
@@ -1089,15 +1012,12 @@ class DesktopAppBar extends StatelessWidget {
     return ClipRect(
       clipBehavior: Clip.antiAlias,
       child: Container(
-        height: (height ?? kDesktopAppBarHeight) +
-            WindowPlus.instance.captionHeight +
-            8.0,
+        height: (height ?? kDesktopAppBarHeight) + WindowPlus.instance.captionHeight + 8.0,
         alignment: Alignment.topLeft,
         padding: EdgeInsets.only(bottom: 8.0),
         child: Material(
           animationDuration: Duration.zero,
-          elevation:
-              elevation ?? Theme.of(context).appBarTheme.elevation ?? 4.0,
+          elevation: elevation ?? Theme.of(context).appBarTheme.elevation ?? 4.0,
           color: color ?? Theme.of(context).appBarTheme.backgroundColor,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1115,12 +1035,8 @@ class DesktopAppBar extends StatelessWidget {
                         NavigatorPopButton(
                           color: color != null
                               ? isDark
-                                  ? Theme.of(context)
-                                      .extension<IconColors>()
-                                      ?.appBarDark
-                                  : Theme.of(context)
-                                      .extension<IconColors>()
-                                      ?.appBarLight
+                                  ? Theme.of(context).extension<IconColors>()?.appBarDark
+                                  : Theme.of(context).extension<IconColors>()?.appBarLight
                               : null,
                         ),
                     SizedBox(
@@ -1149,11 +1065,7 @@ class DesktopAppBar extends StatelessWidget {
     );
   }
 
-  bool get isDark =>
-      (0.299 * (color?.red ?? 256.0)) +
-          (0.587 * (color?.green ?? 256.0)) +
-          (0.114 * (color?.blue ?? 256.0)) <
-      128.0;
+  bool get isDark => (0.299 * (color?.red ?? 256.0)) + (0.587 * (color?.green ?? 256.0)) + (0.114 * (color?.blue ?? 256.0)) < 128.0;
 }
 
 class RefreshCollectionButton extends StatefulWidget {
@@ -1164,8 +1076,7 @@ class RefreshCollectionButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _RefreshCollectionButtonState createState() =>
-      _RefreshCollectionButtonState();
+  _RefreshCollectionButtonState createState() => _RefreshCollectionButtonState();
 }
 
 class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
@@ -1188,8 +1099,7 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
               onPressed: () {
                 if (lock) return;
                 lock = true;
-                Collection.instance.refresh(
-                    onProgress: (progress, total, completed) {
+                Collection.instance.refresh(onProgress: (progress, total, completed) {
                   CollectionRefresh.instance.set(progress, total);
                   if (completed) {
                     setState(() {
@@ -1232,8 +1142,7 @@ class _HyperLinkState extends State<HyperLink> {
                 text: (e as TextSpan).text?.overflow,
                 style: e.recognizer != null
                     ? widget.style?.copyWith(
-                        decoration:
-                            hover == e.text! ? TextDecoration.underline : null,
+                        decoration: hover == e.text! ? TextDecoration.underline : null,
                       )
                     : null,
                 recognizer: e.recognizer,
@@ -1288,11 +1197,9 @@ class ExceptionWidget extends StatelessWidget {
             {
               Language.instance.NO_COLLECTION_TITLE: VisualAssets.library,
               Language.instance.NO_INTERNET_TITLE: VisualAssets.library,
-              Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE:
-                  VisualAssets.searchPage,
+              Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE: VisualAssets.searchPage,
               Language.instance.WEB_WELCOME_TITLE: VisualAssets.searchNotes,
-              Language.instance.COLLECTION_SEARCH_LABEL:
-                  VisualAssets.searchPage,
+              Language.instance.COLLECTION_SEARCH_LABEL: VisualAssets.searchPage,
             }[title]!,
             height: 164.0,
             width: 164.0,
@@ -1356,9 +1263,7 @@ class ClosedTile extends StatelessWidget {
         title: Text(
           title!,
           style: TextStyle(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white
-                : Colors.black,
+            color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
             fontWeight: FontWeight.w600,
             fontSize: 24.0,
           ),
@@ -1366,9 +1271,7 @@ class ClosedTile extends StatelessWidget {
         subtitle: Text(
           subtitle!,
           style: TextStyle(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white.withOpacity(0.8)
-                : Colors.black.withOpacity(0.8),
+            color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withOpacity(0.8) : Colors.black.withOpacity(0.8),
             fontSize: 14.0,
           ),
         ),
@@ -1415,11 +1318,7 @@ class DesktopCaptionBar extends StatelessWidget {
                         Text(
                           kCaption,
                           style: TextStyle(
-                            color:
-                                (brightness ?? Theme.of(context).brightness) ==
-                                        Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
+                            color: (brightness ?? Theme.of(context).brightness) == Brightness.dark ? Colors.white : Colors.black,
                             fontSize: 12.0,
                           ),
                         ),
@@ -1437,12 +1336,7 @@ class DesktopCaptionBar extends StatelessWidget {
     if (color == null) {
       return null;
     }
-    return (0.299 * (color?.red ?? 256.0)) +
-                (0.587 * (color?.green ?? 256.0)) +
-                (0.114 * (color?.blue ?? 256.0)) <
-            128.0
-        ? Brightness.dark
-        : Brightness.light;
+    return (0.299 * (color?.red ?? 256.0)) + (0.587 * (color?.green ?? 256.0)) + (0.114 * (color?.blue ?? 256.0)) < 128.0 ? Brightness.dark : Brightness.light;
   }
 }
 
@@ -1454,12 +1348,10 @@ class M2MobileBottomNavigationBar extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<M2MobileBottomNavigationBar> createState() =>
-      _M2MobileBottomNavigationBarState();
+  State<M2MobileBottomNavigationBar> createState() => _M2MobileBottomNavigationBarState();
 }
 
-class _M2MobileBottomNavigationBarState
-    extends State<M2MobileBottomNavigationBar> {
+class _M2MobileBottomNavigationBarState extends State<M2MobileBottomNavigationBar> {
   late int _index;
 
   @override
@@ -1488,8 +1380,7 @@ class _M2MobileBottomNavigationBarState
     return ValueListenableBuilder<Iterable<Color>?>(
       valueListenable: MobileNowPlayingController.instance.palette,
       builder: (context, value, _) => TweenAnimationBuilder<Color?>(
-        duration: Theme.of(context).extension<AnimationDuration>()?.medium ??
-            Duration.zero,
+        duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
         tween: ColorTween(
           begin: Theme.of(context).colorScheme.primary,
           end: value?.first ?? Theme.of(context).colorScheme.primary,
@@ -1523,18 +1414,13 @@ class _M2MobileBottomNavigationBarState
                 ),
                 child: BottomNavigationBar(
                   currentIndex: _index,
-                  selectedItemColor: (color?.computeLuminance() ?? 0.0) < 0.5
-                      ? null
-                      : Colors.black87,
-                  unselectedItemColor: (color?.computeLuminance() ?? 0.0) < 0.5
-                      ? null
-                      : Colors.black45,
+                  selectedItemColor: (color?.computeLuminance() ?? 0.0) < 0.5 ? null : Colors.black87,
+                  unselectedItemColor: (color?.computeLuminance() ?? 0.0) < 0.5 ? null : Colors.black45,
                   type: BottomNavigationBarType.shifting,
                   onTap: (index) {
                     MobileNowPlayingController.instance.restore();
                     if (index != _index) {
-                      widget.tabControllerNotifier.value =
-                          TabRoute(index, TabRouteSender.bottomNavigationBar);
+                      widget.tabControllerNotifier.value = TabRoute(index, TabRouteSender.bottomNavigationBar);
                     }
                     setState(() {
                       _index = index;
@@ -1544,26 +1430,22 @@ class _M2MobileBottomNavigationBarState
                     BottomNavigationBarItem(
                       icon: Icon(Icons.album),
                       label: Language.instance.ALBUM,
-                      backgroundColor:
-                          color ?? Theme.of(context).colorScheme.primary,
+                      backgroundColor: color ?? Theme.of(context).colorScheme.primary,
                     ),
                     BottomNavigationBarItem(
                       icon: Icon(Icons.music_note),
                       label: Language.instance.TRACK,
-                      backgroundColor:
-                          color ?? Theme.of(context).colorScheme.primary,
+                      backgroundColor: color ?? Theme.of(context).colorScheme.primary,
                     ),
                     BottomNavigationBarItem(
                       icon: Icon(Icons.person),
                       label: Language.instance.ARTIST,
-                      backgroundColor:
-                          color ?? Theme.of(context).colorScheme.primary,
+                      backgroundColor: color ?? Theme.of(context).colorScheme.primary,
                     ),
                     BottomNavigationBarItem(
                       icon: Icon(Icons.playlist_play),
                       label: Language.instance.PLAYLIST,
-                      backgroundColor:
-                          color ?? Theme.of(context).colorScheme.primary,
+                      backgroundColor: color ?? Theme.of(context).colorScheme.primary,
                     ),
                   ],
                 ),
@@ -1578,13 +1460,10 @@ class DoNotGCCleanThisWidgetFromMemory extends StatefulWidget {
   DoNotGCCleanThisWidgetFromMemory(this.child, {Key? key}) : super(key: key);
 
   @override
-  State<DoNotGCCleanThisWidgetFromMemory> createState() =>
-      _DoNotGCCleanThisWidgetFromMemoryState();
+  State<DoNotGCCleanThisWidgetFromMemory> createState() => _DoNotGCCleanThisWidgetFromMemoryState();
 }
 
-class _DoNotGCCleanThisWidgetFromMemoryState
-    extends State<DoNotGCCleanThisWidgetFromMemory>
-    with AutomaticKeepAliveClientMixin {
+class _DoNotGCCleanThisWidgetFromMemoryState extends State<DoNotGCCleanThisWidgetFromMemory> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -1696,25 +1575,15 @@ class ScrollableSlider extends StatelessWidget {
                   pressedElevation: 4.0,
                   elevation: 2.0,
                 ),
-          overlayShape: (mobile && isMobile)
-              ? null
-              : RoundSliderOverlayShape(overlayRadius: 12.0),
-          overlayColor:
-              (color ?? Theme.of(context).colorScheme.primary).withOpacity(0.4),
-          thumbColor: enabled
-              ? (color ?? Theme.of(context).colorScheme.primary)
-              : Theme.of(context).disabledColor,
-          activeTrackColor: enabled
-              ? (color ?? Theme.of(context).colorScheme.primary)
-              : Theme.of(context).disabledColor,
+          overlayShape: (mobile && isMobile) ? null : RoundSliderOverlayShape(overlayRadius: 12.0),
+          overlayColor: (color ?? Theme.of(context).colorScheme.primary).withOpacity(0.4),
+          thumbColor: enabled ? (color ?? Theme.of(context).colorScheme.primary) : Theme.of(context).disabledColor,
+          activeTrackColor: enabled ? (color ?? Theme.of(context).colorScheme.primary) : Theme.of(context).disabledColor,
           inactiveTrackColor: enabled
               ? ((mobile && isMobile)
                   ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
                   : inferSliderInactiveTrackColor
-                      ? ((secondaryColor != null
-                              ? (secondaryColor?.computeLuminance() ?? 0.0) <
-                                  0.5
-                              : Theme.of(context).brightness == Brightness.dark)
+                      ? ((secondaryColor != null ? (secondaryColor?.computeLuminance() ?? 0.0) < 0.5 : Theme.of(context).brightness == Brightness.dark)
                           ? Colors.white.withOpacity(0.4)
                           : Colors.black.withOpacity(0.2))
                       : Colors.white.withOpacity(0.4))
@@ -1741,8 +1610,7 @@ class CustomTrackShape extends RoundedRectSliderTrackShape {
   }) {
     final double trackHeight = sliderTheme.trackHeight!;
     final double trackLeft = offset.dx;
-    final double trackTop =
-        offset.dy + (parentBox.size.height - trackHeight) / 2;
+    final double trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2;
     final double trackWidth = parentBox.size.width;
     return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }
@@ -1819,12 +1687,8 @@ class _HorizontalListState extends State<HorizontalList> {
                     heroTag: ValueKey(Random().nextInt(1 << 32)),
                     onPressed: () {
                       controller.animateTo(
-                        controller.offset +
-                            MediaQuery.of(context).size.width / 2,
-                        duration: Theme.of(context)
-                                .extension<AnimationDuration>()
-                                ?.fast ??
-                            Duration.zero,
+                        controller.offset + MediaQuery.of(context).size.width / 2,
+                        duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
                         curve: Curves.easeInOut,
                       );
                     },
@@ -1844,12 +1708,8 @@ class _HorizontalListState extends State<HorizontalList> {
                     heroTag: ValueKey(Random().nextInt(1 << 32)),
                     onPressed: () {
                       controller.animateTo(
-                        controller.offset -
-                            MediaQuery.of(context).size.width / 2,
-                        duration: Theme.of(context)
-                                .extension<AnimationDuration>()
-                                ?.fast ??
-                            Duration.zero,
+                        controller.offset - MediaQuery.of(context).size.width / 2,
+                        duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
                         curve: Curves.easeInOut,
                       );
                     },
@@ -1930,9 +1790,7 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.A_TO_Z,
-                    style: isDesktop
-                        ? Theme.of(context).textTheme.bodyLarge
-                        : null,
+                    style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                   ),
                 ),
               ),
@@ -1945,9 +1803,7 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.DATE_ADDED,
-                    style: isDesktop
-                        ? Theme.of(context).textTheme.bodyLarge
-                        : null,
+                    style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                   ),
                 ),
               ),
@@ -1960,9 +1816,7 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.YEAR,
-                    style: isDesktop
-                        ? Theme.of(context).textTheme.bodyLarge
-                        : null,
+                    style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                   ),
                 ),
               ),
@@ -1975,9 +1829,7 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.ALBUM_ARTIST,
-                    style: isDesktop
-                        ? Theme.of(context).textTheme.bodyLarge
-                        : null,
+                    style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                   ),
                 ),
               ),
@@ -2009,9 +1861,7 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.DATE_ADDED,
-                    style: isDesktop
-                        ? Theme.of(context).textTheme.bodyLarge
-                        : null,
+                    style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                   ),
                 ),
               ),
@@ -2024,9 +1874,7 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.YEAR,
-                    style: isDesktop
-                        ? Theme.of(context).textTheme.bodyLarge
-                        : null,
+                    style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                   ),
                 ),
               ),
@@ -2041,15 +1889,12 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.A_TO_Z,
-                    style: isDesktop
-                        ? Theme.of(context).textTheme.bodyLarge
-                        : null,
+                    style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                   ),
                 ),
               ),
               CheckedPopupMenuItem(
-                checked:
-                    Collection.instance.artistsSort == ArtistsSort.dateAdded,
+                checked: Collection.instance.artistsSort == ArtistsSort.dateAdded,
                 value: ArtistsSort.dateAdded,
                 padding: EdgeInsets.zero,
                 child: ListTile(
@@ -2057,9 +1902,7 @@ class CollectionSortButton extends StatelessWidget {
                   dense: true,
                   title: Text(
                     Language.instance.DATE_ADDED,
-                    style: isDesktop
-                        ? Theme.of(context).textTheme.bodyLarge
-                        : null,
+                    style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                   ),
                 ),
               ),
@@ -2069,12 +1912,9 @@ class CollectionSortButton extends StatelessWidget {
           ...[
             CheckedPopupMenuItem(
               checked: {
-                kAlbumTabIndex:
-                    Collection.instance.albumsOrderType == OrderType.ascending,
-                kTrackTabIndex:
-                    Collection.instance.tracksOrderType == OrderType.ascending,
-                kArtistTabIndex:
-                    Collection.instance.artistsOrderType == OrderType.ascending,
+                kAlbumTabIndex: Collection.instance.albumsOrderType == OrderType.ascending,
+                kTrackTabIndex: Collection.instance.tracksOrderType == OrderType.ascending,
+                kArtistTabIndex: Collection.instance.artistsOrderType == OrderType.ascending,
               }[tab]!,
               value: OrderType.ascending,
               padding: EdgeInsets.zero,
@@ -2083,19 +1923,15 @@ class CollectionSortButton extends StatelessWidget {
                 dense: true,
                 title: Text(
                   Language.instance.ASCENDING,
-                  style:
-                      isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
               ),
             ),
             CheckedPopupMenuItem(
               checked: {
-                kAlbumTabIndex:
-                    Collection.instance.albumsOrderType == OrderType.descending,
-                kTrackTabIndex:
-                    Collection.instance.tracksOrderType == OrderType.descending,
-                kArtistTabIndex: Collection.instance.artistsOrderType ==
-                    OrderType.descending,
+                kAlbumTabIndex: Collection.instance.albumsOrderType == OrderType.descending,
+                kTrackTabIndex: Collection.instance.tracksOrderType == OrderType.descending,
+                kArtistTabIndex: Collection.instance.artistsOrderType == OrderType.descending,
               }[tab]!,
               value: OrderType.descending,
               padding: EdgeInsets.zero,
@@ -2104,8 +1940,7 @@ class CollectionSortButton extends StatelessWidget {
                 dense: true,
                 title: Text(
                   Language.instance.DESCENDING,
-                  style:
-                      isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
               ),
             ),
@@ -2355,14 +2190,10 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
         CustomCheckedPopupMenuItem(
           onTap: () => handle(OrderType.ascending),
           checked: {
-            kAlbumTabIndex:
-                Collection.instance.albumsOrderType == OrderType.ascending,
-            kTrackTabIndex:
-                Collection.instance.tracksOrderType == OrderType.ascending,
-            kArtistTabIndex:
-                Collection.instance.artistsOrderType == OrderType.ascending,
-            kGenreTabIndex:
-                Collection.instance.genresOrderType == OrderType.ascending,
+            kAlbumTabIndex: Collection.instance.albumsOrderType == OrderType.ascending,
+            kTrackTabIndex: Collection.instance.tracksOrderType == OrderType.ascending,
+            kArtistTabIndex: Collection.instance.artistsOrderType == OrderType.ascending,
+            kGenreTabIndex: Collection.instance.genresOrderType == OrderType.ascending,
           }[widget.tab]!,
           value: OrderType.ascending,
           padding: EdgeInsets.zero,
@@ -2374,14 +2205,10 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
         CustomCheckedPopupMenuItem(
           onTap: () => handle(OrderType.descending),
           checked: {
-            kAlbumTabIndex:
-                Collection.instance.albumsOrderType == OrderType.descending,
-            kTrackTabIndex:
-                Collection.instance.tracksOrderType == OrderType.descending,
-            kArtistTabIndex:
-                Collection.instance.artistsOrderType == OrderType.descending,
-            kGenreTabIndex:
-                Collection.instance.genresOrderType == OrderType.descending,
+            kAlbumTabIndex: Collection.instance.albumsOrderType == OrderType.descending,
+            kTrackTabIndex: Collection.instance.tracksOrderType == OrderType.descending,
+            kArtistTabIndex: Collection.instance.artistsOrderType == OrderType.descending,
+            kGenreTabIndex: Collection.instance.genresOrderType == OrderType.descending,
           }[widget.tab]!,
           value: OrderType.descending,
           padding: EdgeInsets.zero,
@@ -2394,14 +2221,9 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
 
   @override
   Widget build(BuildContext context) {
-    final color =
-        isMaterial2(context) && Theme.of(context).brightness == Brightness.light
-            ? Theme.of(context).colorScheme.primary
-            : Theme.of(context).textTheme.bodyLarge?.color;
+    final color = isMaterial2(context) && Theme.of(context).brightness == Brightness.light ? Theme.of(context).colorScheme.primary : Theme.of(context).textTheme.bodyLarge?.color;
     return InkWell(
-      borderRadius: isMaterial2(context)
-          ? BorderRadius.circular(4.0)
-          : BorderRadius.circular(20.0),
+      borderRadius: isMaterial2(context) ? BorderRadius.circular(4.0) : BorderRadius.circular(20.0),
       onTap: () async {
         if (widget.tab == 3) return;
         await showModalBottomSheet(
@@ -2420,9 +2242,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                     ...sort,
                     PopupMenuDivider(),
                     ...order,
-                    if (!isDesktop &&
-                        !MobileNowPlayingController.instance.isHidden)
-                      const SizedBox(height: kMobileNowPlayingBarHeight),
+                    if (!isDesktop && !MobileNowPlayingController.instance.isHidden) const SizedBox(height: kMobileNowPlayingBarHeight),
                   ],
                 ),
               );
@@ -2436,9 +2256,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
           children: [
             Text(
               String.fromCharCode(
-                order.firstWhere((e) => e.checked).value == OrderType.ascending
-                    ? Icons.arrow_upward.codePoint
-                    : Icons.arrow_downward.codePoint,
+                order.firstWhere((e) => e.checked).value == OrderType.ascending ? Icons.arrow_upward.codePoint : Icons.arrow_downward.codePoint,
               ),
               style: TextStyle(
                 inherit: false,
@@ -2453,9 +2271,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
             Text(
               label(
                 context,
-                (sort.firstWhere((e) => e.checked).child as Text)
-                    .data
-                    .toString(),
+                (sort.firstWhere((e) => e.checked).child as Text).data.toString(),
               ),
               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                     color: color,
@@ -2653,9 +2469,7 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                                     return null;
                                   },
                                   onFieldSubmitted: (value) async {
-                                    if (value.isNotEmpty &&
-                                        (formKey.currentState?.validate() ??
-                                            false)) {
+                                    if (value.isNotEmpty && (formKey.currentState?.validate() ?? false)) {
                                       Navigator.of(ctx).maybePop();
                                       await Intent.instance.playURI(value);
                                     }
@@ -2681,8 +2495,7 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                             ),
                           ),
                           onPressed: () async {
-                            if (input.isNotEmpty &&
-                                (formKey.currentState?.validate() ?? false)) {
+                            if (input.isNotEmpty && (formKey.currentState?.validate() ?? false)) {
                               Navigator.of(ctx).maybePop();
                               await Intent.instance.playURI(input);
                             }
@@ -2741,8 +2554,7 @@ class _ContextMenuAreaState extends State<ContextMenuArea> {
   Widget build(BuildContext context) {
     return Listener(
       onPointerDown: (e) async {
-        reactToSecondaryPress = e.kind == PointerDeviceKind.mouse &&
-            e.buttons == kSecondaryMouseButton;
+        reactToSecondaryPress = e.kind == PointerDeviceKind.mouse && e.buttons == kSecondaryMouseButton;
       },
       onPointerUp: (e) {
         if (!reactToSecondaryPress) return;
@@ -2836,8 +2648,7 @@ class _StillGIFState extends State<StillGIF> {
       final HttpClientResponse response = await request.close();
       final data = await consolidateHttpClientResponseBytes(response);
       final buffer = await ImmutableBuffer.fromUint8List(data);
-      final codec = await PaintingBinding.instance
-          .instantiateImageCodecFromBuffer(buffer);
+      final codec = await PaintingBinding.instance.instantiateImageCodecFromBuffer(buffer);
       final frame = await codec.getNextFrame();
       setState(() {
         image = RawImage(
@@ -2851,8 +2662,7 @@ class _StillGIFState extends State<StillGIF> {
       final buffer = await ImmutableBuffer.fromAsset(
         (widget.image as AssetImage).assetName,
       );
-      final codec = await PaintingBinding.instance
-          .instantiateImageCodecFromBuffer(buffer);
+      final codec = await PaintingBinding.instance.instantiateImageCodecFromBuffer(buffer);
       final frame = await codec.getNextFrame();
       setState(() {
         image = RawImage(
@@ -2865,8 +2675,7 @@ class _StillGIFState extends State<StillGIF> {
     } else if (widget.image is FileImage) {
       final data = await (widget.image as FileImage).file.readAsBytes();
       final buffer = await ImmutableBuffer.fromUint8List(data);
-      final codec = await PaintingBinding.instance
-          .instantiateImageCodecFromBuffer(buffer);
+      final codec = await PaintingBinding.instance.instantiateImageCodecFromBuffer(buffer);
       final frame = await codec.getNextFrame();
       setState(() {
         image = RawImage(
@@ -2903,19 +2712,16 @@ class MobileAppBarOverflowButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<MobileAppBarOverflowButton> createState() =>
-      _MobileAppBarOverflowButtonState();
+  State<MobileAppBarOverflowButton> createState() => _MobileAppBarOverflowButtonState();
 }
 
-class _MobileAppBarOverflowButtonState
-    extends State<MobileAppBarOverflowButton> {
+class _MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> {
   @override
   Widget build(BuildContext context) {
     return CircularButton(
       icon: Icon(
         Icons.more_vert,
-        color: widget.color ??
-            Theme.of(context).appBarTheme.actionsIconTheme?.color,
+        color: widget.color ?? Theme.of(context).appBarTheme.actionsIconTheme?.color,
       ),
       onPressed: () async {
         Completer<int> completer = Completer<int>();
@@ -2937,9 +2743,7 @@ class _MobileAppBarOverflowButtonState
                     leading: Icon(Icons.file_open),
                     title: Text(
                       Language.instance.OPEN_FILE_OR_URL,
-                      style: isDesktop
-                          ? Theme.of(context).textTheme.bodyLarge
-                          : null,
+                      style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                     ),
                   ),
                 ),
@@ -2952,9 +2756,7 @@ class _MobileAppBarOverflowButtonState
                     leading: Icon(Icons.code),
                     title: Text(
                       Language.instance.READ_METADATA,
-                      style: isDesktop
-                          ? Theme.of(context).textTheme.bodyLarge
-                          : null,
+                      style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                     ),
                   ),
                 ),
@@ -2967,9 +2769,7 @@ class _MobileAppBarOverflowButtonState
                     leading: Icon(Icons.settings),
                     title: Text(
                       Language.instance.SETTING,
-                      style: isDesktop
-                          ? Theme.of(context).textTheme.bodyLarge
-                          : null,
+                      style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                     ),
                   ),
                 ),
@@ -2982,14 +2782,11 @@ class _MobileAppBarOverflowButtonState
                     leading: Icon(Icons.info),
                     title: Text(
                       Language.instance.ABOUT_TITLE,
-                      style: isDesktop
-                          ? Theme.of(context).textTheme.bodyLarge
-                          : null,
+                      style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                     ),
                   ),
                 ),
-                if (!isDesktop && !MobileNowPlayingController.instance.isHidden)
-                  const SizedBox(height: kMobileNowPlayingBarHeight),
+                if (!isDesktop && !MobileNowPlayingController.instance.isHidden) const SizedBox(height: kMobileNowPlayingBarHeight),
               ],
             ),
           ),
@@ -3027,17 +2824,14 @@ class _MobileAppBarOverflowButtonState
                         ),
                         title: Text(
                           Language.instance.FILE,
-                          style: isDesktop
-                              ? Theme.of(ctx).textTheme.bodyLarge
-                              : null,
+                          style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
                         ),
                       ),
                       ListTile(
                         onTap: () async {
                           await Navigator.of(ctx).maybePop();
                           String input = '';
-                          final GlobalKey<FormState> formKey =
-                              GlobalKey<FormState>();
+                          final GlobalKey<FormState> formKey = GlobalKey<FormState>();
                           await showModalBottomSheet(
                             isScrollControlled: true,
                             context: context,
@@ -3047,16 +2841,12 @@ class _MobileAppBarOverflowButtonState
                               builder: (context, setState) {
                                 return Container(
                                   margin: EdgeInsets.only(
-                                    bottom: MediaQuery.of(context)
-                                            .viewInsets
-                                            .bottom -
-                                        MediaQuery.of(context).padding.bottom,
+                                    bottom: MediaQuery.of(context).viewInsets.bottom - MediaQuery.of(context).padding.bottom,
                                   ),
                                   padding: EdgeInsets.all(8.0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
                                     children: [
                                       const SizedBox(height: 4.0),
                                       Form(
@@ -3075,27 +2865,18 @@ class _MobileAppBarOverflowButtonState
                                           },
                                           onChanged: (value) => input = value,
                                           keyboardType: TextInputType.url,
-                                          textCapitalization:
-                                              TextCapitalization.none,
+                                          textCapitalization: TextCapitalization.none,
                                           textInputAction: TextInputAction.done,
                                           onFieldSubmitted: (value) async {
-                                            if (formKey.currentState
-                                                    ?.validate() ??
-                                                false) {
-                                              await Navigator.of(context)
-                                                  .maybePop();
-                                              await Intent.instance
-                                                  .playURI(value);
+                                            if (formKey.currentState?.validate() ?? false) {
+                                              await Navigator.of(context).maybePop();
+                                              await Intent.instance.playURI(value);
                                             }
                                           },
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge
-                                              ?.copyWith(
+                                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                                 fontSize: 16.0,
                                               ),
-                                          decoration:
-                                              mobileUnderlinedInputDecoration(
+                                          decoration: mobileUnderlinedInputDecoration(
                                             context,
                                             Language.instance.FILE_PATH_OR_URL,
                                           ),
@@ -3104,13 +2885,9 @@ class _MobileAppBarOverflowButtonState
                                       const SizedBox(height: 4.0),
                                       ElevatedButton(
                                         onPressed: () async {
-                                          if (formKey.currentState
-                                                  ?.validate() ??
-                                              false) {
-                                            await Navigator.of(context)
-                                                .maybePop();
-                                            await Intent.instance
-                                                .playURI(input);
+                                          if (formKey.currentState?.validate() ?? false) {
+                                            await Navigator.of(context).maybePop();
+                                            await Intent.instance.playURI(input);
                                           }
                                         },
                                         child: Text(
@@ -3136,9 +2913,7 @@ class _MobileAppBarOverflowButtonState
                         ),
                         title: Text(
                           Language.instance.URL,
-                          style: isDesktop
-                              ? Theme.of(ctx).textTheme.bodyLarge
-                              : null,
+                          style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
                         ),
                       ),
                     ],
@@ -3180,8 +2955,7 @@ class _MobileAppBarOverflowButtonState
 
 class NoOverscrollGlowBehavior extends ScrollBehavior {
   @override
-  Widget buildOverscrollIndicator(
-      BuildContext context, Widget child, ScrollableDetails details) {
+  Widget buildOverscrollIndicator(BuildContext context, Widget child, ScrollableDetails details) {
     return child;
   }
 }
@@ -3201,14 +2975,11 @@ class ScrollUnderFlexibleSpace extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     late final ThemeData theme = Theme.of(context);
-    final FlexibleSpaceBarSettings settings =
-        context.dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>()!;
-    final double topPadding =
-        primary ? MediaQuery.of(context).viewPadding.top : 0;
+    final FlexibleSpaceBarSettings settings = context.dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>()!;
+    final double topPadding = primary ? MediaQuery.of(context).viewPadding.top : 0;
     final double collapsedHeight = settings.minExtent - topPadding;
     final double scrollUnderHeight = settings.maxExtent - settings.minExtent;
-    final LargeScrollUnderFlexibleConfig config =
-        LargeScrollUnderFlexibleConfig(context);
+    final LargeScrollUnderFlexibleConfig config = LargeScrollUnderFlexibleConfig(context);
 
     late final Widget? collapsedTitle;
     late final Widget? expandedTitle;
@@ -3242,9 +3013,7 @@ class ScrollUnderFlexibleSpace extends StatelessWidget {
         }
       }
 
-      centerTitle = centerCollapsedTitle ??
-          theme.appBarTheme.centerTitle ??
-          platformCenter();
+      centerTitle = centerCollapsedTitle ?? theme.appBarTheme.centerTitle ?? platformCenter();
     }
 
     final bool isCollapsed = settings.isScrolledUnder ?? false;
@@ -3254,18 +3023,12 @@ class ScrollUnderFlexibleSpace extends StatelessWidget {
           padding: EdgeInsets.only(top: topPadding),
           child: Container(
             height: collapsedHeight,
-            padding: centerTitle
-                ? config.collapsedCenteredTitlePadding
-                : config.collapsedTitlePadding,
+            padding: centerTitle ? config.collapsedCenteredTitlePadding : config.collapsedTitlePadding,
             child: AnimatedOpacity(
               opacity: isCollapsed ? 1 : 0,
               duration: const Duration(milliseconds: 500),
               curve: const Cubic(0.2, 0.0, 0.0, 1.0),
-              child: Align(
-                  alignment: centerTitle
-                      ? Alignment.center
-                      : AlignmentDirectional.centerStart,
-                  child: collapsedTitle),
+              child: Align(alignment: centerTitle ? Alignment.center : AlignmentDirectional.centerStart, child: collapsedTitle),
             ),
           ),
         ),
@@ -3299,20 +3062,15 @@ class LargeScrollUnderFlexibleConfig {
   static const double collapsedHeight = 64.0;
   static const double expandedHeight = 152.0;
 
-  TextStyle? get collapsedTextStyle =>
-      _textTheme.titleLarge?.apply(color: _colors.onSurface);
+  TextStyle? get collapsedTextStyle => _textTheme.titleLarge?.apply(color: _colors.onSurface);
 
-  TextStyle? get expandedTextStyle =>
-      _textTheme.headlineMedium?.apply(color: _colors.onSurface);
+  TextStyle? get expandedTextStyle => _textTheme.headlineMedium?.apply(color: _colors.onSurface);
 
-  EdgeInsetsGeometry? get collapsedTitlePadding =>
-      const EdgeInsets.fromLTRB(48 + 16, 0, 16, 0);
+  EdgeInsetsGeometry? get collapsedTitlePadding => const EdgeInsets.fromLTRB(48 + 16, 0, 16, 0);
 
-  EdgeInsetsGeometry? get collapsedCenteredTitlePadding =>
-      const EdgeInsets.fromLTRB(16, 0, 16, 0);
+  EdgeInsetsGeometry? get collapsedCenteredTitlePadding => const EdgeInsets.fromLTRB(16, 0, 16, 0);
 
-  EdgeInsetsGeometry? get expandedTitlePadding =>
-      const EdgeInsets.fromLTRB(16, 0, 16, 28);
+  EdgeInsetsGeometry? get expandedTitlePadding => const EdgeInsets.fromLTRB(16, 0, 16, 28);
 }
 
 class CustomCheckedPopupMenuItem<T> extends StatelessWidget {
@@ -3342,8 +3100,7 @@ class CustomCheckedPopupMenuItem<T> extends StatelessWidget {
         leading: AnimatedOpacity(
           opacity: checked ? 1.0 : 0.0,
           curve: Curves.easeInOut,
-          duration: Theme.of(context).extension<AnimationDuration>()?.fast ??
-              Duration.zero,
+          duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
           child: Icon(Icons.done),
         ),
         title: child,

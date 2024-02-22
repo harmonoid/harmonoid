@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -63,8 +55,7 @@ class _AboutPageState extends State<AboutPage> {
                 margin: EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: Theme.of(context).dividerTheme.color ??
-                        Theme.of(context).dividerColor,
+                    color: Theme.of(context).dividerTheme.color ?? Theme.of(context).dividerColor,
                     width: 1.0,
                   ),
                   borderRadius: BorderRadius.circular(8.0),
@@ -95,14 +86,11 @@ class _AboutPageState extends State<AboutPage> {
                             children: [
                               Text(
                                 kTitle,
-                                style:
-                                    Theme.of(context).textTheme.headlineSmall,
+                                style: Theme.of(context).textTheme.headlineSmall,
                               ),
                               const SizedBox(height: 2.0),
                               Text(
-                                Platform.isAndroid
-                                    ? '$kVersion • Google Play'
-                                    : kVersion,
+                                Platform.isAndroid ? '$kVersion • Google Play' : kVersion,
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                             ],
@@ -125,9 +113,7 @@ class _AboutPageState extends State<AboutPage> {
                         ),
                         title: Text(
                           Label.github,
-                          style: isDesktop
-                              ? Theme.of(context).textTheme.bodyLarge
-                              : null,
+                          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                         ),
                       ),
                       // Hide Patreon & PayPal from Android.
@@ -146,9 +132,7 @@ class _AboutPageState extends State<AboutPage> {
                           ),
                           title: Text(
                             Label.become_a_patreon,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.bodyLarge
-                                : null,
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                           ),
                         ),
                       if (!Platform.isAndroid)
@@ -166,9 +150,7 @@ class _AboutPageState extends State<AboutPage> {
                           ),
                           title: Text(
                             Label.donate_with_paypal,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.bodyLarge
-                                : null,
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                           ),
                         ),
                       ListTile(
@@ -183,9 +165,7 @@ class _AboutPageState extends State<AboutPage> {
                         ),
                         title: Text(
                           Label.license,
-                          style: isDesktop
-                              ? Theme.of(context).textTheme.bodyLarge
-                              : null,
+                          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                         ),
                       ),
                       ListTile(
@@ -200,9 +180,7 @@ class _AboutPageState extends State<AboutPage> {
                         ),
                         title: Text(
                           Label.translate,
-                          style: isDesktop
-                              ? Theme.of(context).textTheme.bodyLarge
-                              : null,
+                          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                         ),
                       ),
                       if (Platform.isAndroid)
@@ -218,9 +196,7 @@ class _AboutPageState extends State<AboutPage> {
                           ),
                           title: Text(
                             Label.privacy,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.bodyLarge
-                                : null,
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                           ),
                         ),
                     ],
@@ -231,8 +207,7 @@ class _AboutPageState extends State<AboutPage> {
                 margin: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: Theme.of(context).dividerTheme.color ??
-                        Theme.of(context).dividerColor,
+                    color: Theme.of(context).dividerTheme.color ?? Theme.of(context).dividerColor,
                     width: 1.0,
                   ),
                   borderRadius: BorderRadius.circular(8.0),
@@ -255,9 +230,7 @@ class _AboutPageState extends State<AboutPage> {
                         ),
                         title: Text(
                           Label.alexmercerind,
-                          style: isDesktop
-                              ? Theme.of(context).textTheme.bodyLarge
-                              : null,
+                          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                         ),
                       ),
                       ListTile(
@@ -272,9 +245,7 @@ class _AboutPageState extends State<AboutPage> {
                         ),
                         title: Text(
                           Label.follow_on_github,
-                          style: isDesktop
-                              ? Theme.of(context).textTheme.bodyLarge
-                              : null,
+                          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                         ),
                       ),
                       ListTile(
@@ -289,9 +260,7 @@ class _AboutPageState extends State<AboutPage> {
                         ),
                         title: Text(
                           Label.follow_on_twitter,
-                          style: isDesktop
-                              ? Theme.of(context).textTheme.bodyLarge
-                              : null,
+                          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                         ),
                       ),
                     ],
@@ -310,8 +279,7 @@ class _AboutPageState extends State<AboutPage> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(
-                    top: WindowPlus.instance.captionHeight +
-                        kDesktopAppBarHeight,
+                    top: WindowPlus.instance.captionHeight + kDesktopAppBarHeight,
                   ),
                   child: content,
                 ),
@@ -356,11 +324,9 @@ abstract class URL {
   static const github = 'https://github.com/harmonoid/harmonoid';
   static const patreon = 'https://www.patreon.com/harmonoid';
   static const paypal = 'https://www.paypal.me/alexmercerind';
-  static const license =
-      'https://github.com/harmonoid/harmonoid/tree/master/EULA.txt?raw=true';
+  static const license = 'https://github.com/harmonoid/harmonoid/tree/master/EULA.txt?raw=true';
   static const translate = 'https://github.com/harmonoid/translations.git';
-  static const privacy =
-      'https://github.com/harmonoid/harmonoid/wiki/Privacy-Policy-%5BPlay-Store%5D';
+  static const privacy = 'https://github.com/harmonoid/harmonoid/wiki/Privacy-Policy-%5BPlay-Store%5D';
   static const alexmercerind = 'https://alexmercerind.github.io';
   static const alexmercerind_github = 'https://github.com/alexmercerind';
   static const alexmercerind_twitter = 'https://twitter.com/alexmercerind';

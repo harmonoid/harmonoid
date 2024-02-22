@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -43,8 +35,7 @@ class Settings extends StatelessWidget {
               children: [
                 Container(
                   margin: EdgeInsets.only(
-                    top: WindowPlus.instance.captionHeight +
-                        kDesktopAppBarHeight,
+                    top: WindowPlus.instance.captionHeight + kDesktopAppBarHeight,
                   ),
                   child: SingleChildScrollView(
                     child: Container(
@@ -85,10 +76,7 @@ class Settings extends StatelessWidget {
                           alignment: Alignment.center,
                           child: SvgPicture.string(
                             SVG.github,
-                            color: Theme.of(context)
-                                .appBarTheme
-                                .actionsIconTheme
-                                ?.color,
+                            color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
                             height: 20.0,
                             width: 20.0,
                           ),
@@ -106,10 +94,7 @@ class Settings extends StatelessWidget {
                           alignment: Alignment.center,
                           child: SvgPicture.string(
                             SVG.patreon,
-                            color: Theme.of(context)
-                                .appBarTheme
-                                .actionsIconTheme
-                                ?.color,
+                            color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
                             height: 18.0,
                             width: 18.0,
                           ),
@@ -132,10 +117,7 @@ class Settings extends StatelessWidget {
                           width: 40.0,
                           child: Icon(
                             Icons.info,
-                            color: Theme.of(context)
-                                .appBarTheme
-                                .actionsIconTheme
-                                ?.color,
+                            color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
                           ),
                         ),
                       ),
@@ -156,8 +138,7 @@ class Settings extends StatelessWidget {
                           IconButton(
                             onPressed: Navigator.of(context).maybePop,
                             icon: const Icon(Icons.arrow_back),
-                            color:
-                                Theme.of(context).appBarTheme.iconTheme?.color,
+                            color: Theme.of(context).appBarTheme.iconTheme?.color,
                             splashRadius: 24.0,
                           ),
                         ],
@@ -168,12 +149,9 @@ class Settings extends StatelessWidget {
                     snap: false,
                     stretch: false,
                     stretchTriggerOffset: 100.0,
-                    toolbarHeight:
-                        LargeScrollUnderFlexibleConfig.collapsedHeight,
-                    collapsedHeight:
-                        LargeScrollUnderFlexibleConfig.collapsedHeight,
-                    expandedHeight:
-                        LargeScrollUnderFlexibleConfig.expandedHeight,
+                    toolbarHeight: LargeScrollUnderFlexibleConfig.collapsedHeight,
+                    collapsedHeight: LargeScrollUnderFlexibleConfig.collapsedHeight,
+                    expandedHeight: LargeScrollUnderFlexibleConfig.expandedHeight,
                     flexibleSpace: ScrollUnderFlexibleSpace(
                       title: Text(Language.instance.SETTING),
                     ),
@@ -300,9 +278,7 @@ class MobileIndexingProgressIndicator extends StatelessWidget {
             height: 4.0,
             width: double.infinity,
             child: LinearProgressIndicator(
-              value: controller.progress == null
-                  ? null
-                  : controller.progress! / controller.total,
+              value: controller.progress == null ? null : controller.progress! / controller.total,
             ),
           );
         } else {

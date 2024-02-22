@@ -1,10 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
@@ -25,12 +18,10 @@ class MissingDirectoriesScreen extends StatefulWidget {
   MissingDirectoriesScreen({Key? key}) : super(key: key);
 
   @override
-  State<MissingDirectoriesScreen> createState() =>
-      _MissingDirectoriesScreenState();
+  State<MissingDirectoriesScreen> createState() => _MissingDirectoriesScreenState();
 }
 
-class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
-    with SingleTickerProviderStateMixin {
+class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen> with SingleTickerProviderStateMixin {
   bool loaded = false;
   List<Directory> missing = [];
 
@@ -226,33 +217,22 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                 children: [
                   DesktopAppBar(
                     leading: NavigatorPopButton(
-                      color: Theme.of(context)
-                                  .colorScheme
-                                  .error
-                                  .computeLuminance() >
-                              0.5
-                          ? Theme.of(context)
-                              .extension<IconColors>()
-                              ?.appBarLight
-                          : Theme.of(context)
-                              .extension<IconColors>()
-                              ?.appBarDark,
+                      color:
+                          Theme.of(context).colorScheme.error.computeLuminance() > 0.5 ? Theme.of(context).extension<IconColors>()?.appBarLight : Theme.of(context).extension<IconColors>()?.appBarDark,
                       onTap: refresh,
                     ),
                     color: Theme.of(context).colorScheme.error,
                     height: MediaQuery.of(context).size.height / 3,
                   ),
                   Container(
-                    height: MediaQuery.of(context).size.height -
-                        kDesktopNowPlayingBarHeight,
+                    height: MediaQuery.of(context).size.height - kDesktopNowPlayingBarHeight,
                     width: MediaQuery.of(context).size.width,
                     child: Container(
                       alignment: Alignment.center,
                       child: Card(
                         clipBehavior: Clip.antiAlias,
                         margin: EdgeInsets.only(top: 96.0, bottom: 4.0),
-                        elevation: Theme.of(context).cardTheme.elevation ??
-                            kDefaultCardElevation,
+                        elevation: Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
                         child: Container(
                           constraints: const BoxConstraints(
                             maxWidth: 12 / 6 * 720.0,
@@ -272,26 +252,19 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                                     ),
                                     alignment: Alignment.centerLeft,
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           Language.instance.FOLDERS_NOT_FOUND,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headlineSmall,
+                                          style: Theme.of(context).textTheme.headlineSmall,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                         SizedBox(height: 8.0),
                                         Text(
-                                          Language.instance
-                                              .FOLDERS_NOT_FOUND_SUBTITLE,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium,
+                                          Language.instance.FOLDERS_NOT_FOUND_SUBTITLE,
+                                          style: Theme.of(context).textTheme.bodyMedium,
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ],
@@ -315,15 +288,13 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                                           onPressed: () {
                                             Navigator.of(context).push(
                                               MaterialRoute(
-                                                builder: (context) =>
-                                                    Settings(),
+                                                builder: (context) => Settings(),
                                               ),
                                             );
                                           },
                                           mini: true,
                                           child: const Icon(Icons.settings),
-                                          tooltip:
-                                              Language.instance.GO_TO_SETTINGS,
+                                          tooltip: Language.instance.GO_TO_SETTINGS,
                                         ),
                                         const SizedBox(width: 8.0),
                                       ],
@@ -365,10 +336,8 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                     },
                     child: const Icon(Icons.settings),
                     tooltip: Language.instance.GO_TO_SETTINGS,
-                    foregroundColor:
-                        Theme.of(context).colorScheme.onSecondaryContainer,
-                    backgroundColor:
-                        Theme.of(context).colorScheme.secondaryContainer,
+                    foregroundColor: Theme.of(context).colorScheme.onSecondaryContainer,
+                    backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
                   ),
                   const SizedBox(height: 16.0),
                   FloatingActionButton(
@@ -387,8 +356,7 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                       data: Theme.of(context).copyWith(
                         // Change [_LargeScrollUnderFlexibleConfig.expandedTextStyle].
                         textTheme: Theme.of(context).textTheme.copyWith(
-                              headlineMedium:
-                                  Theme.of(context).textTheme.headlineSmall,
+                              headlineMedium: Theme.of(context).textTheme.headlineSmall,
                             ),
                       ),
                       // TODO(@alexmercerind): https://github.com/flutter/flutter/issues/120516
@@ -404,12 +372,9 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                         snap: false,
                         stretch: false,
                         stretchTriggerOffset: 100.0,
-                        toolbarHeight:
-                            LargeScrollUnderFlexibleConfig.collapsedHeight,
-                        collapsedHeight:
-                            LargeScrollUnderFlexibleConfig.collapsedHeight,
-                        expandedHeight:
-                            LargeScrollUnderFlexibleConfig.expandedHeight,
+                        toolbarHeight: LargeScrollUnderFlexibleConfig.collapsedHeight,
+                        collapsedHeight: LargeScrollUnderFlexibleConfig.collapsedHeight,
+                        expandedHeight: LargeScrollUnderFlexibleConfig.expandedHeight,
                         flexibleSpace: ScrollUnderFlexibleSpace(
                           title: Text(Language.instance.FOLDERS_NOT_FOUND),
                         ),
@@ -420,11 +385,9 @@ class _MissingDirectoriesScreenState extends State<MissingDirectoriesScreen>
                         [
                           const SizedBox(height: 16.0),
                           Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
                             child: Text(
-                              Language.instance.FOLDERS_NOT_FOUND_SUBTITLE
-                                  .replaceAll('\n', ' '),
+                              Language.instance.FOLDERS_NOT_FOUND_SUBTITLE.replaceAll('\n', ' '),
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ),

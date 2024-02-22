@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,8 +18,7 @@ class IndexingSetting extends StatefulWidget {
   IndexingState createState() => IndexingState();
 }
 
-class IndexingState extends State<IndexingSetting>
-    with AutomaticKeepAliveClientMixin {
+class IndexingState extends State<IndexingSetting> with AutomaticKeepAliveClientMixin {
   List<Directory>? volumes;
   bool hovered = false;
 
@@ -56,9 +47,7 @@ class IndexingState extends State<IndexingSetting>
             if (isMobile) ...[
               ListTile(
                 dense: false,
-                onTap: controller.completed
-                    ? pickNewFolder
-                    : showIndexingAlreadyUnderProgressDialog,
+                onTap: controller.completed ? pickNewFolder : showIndexingAlreadyUnderProgressDialog,
                 title: Text(Language.instance.ADD_NEW_FOLDER),
                 subtitle: Text(Language.instance.ADD_NEW_FOLDER_SUBTITLE),
               ),
@@ -94,8 +83,7 @@ class IndexingState extends State<IndexingSetting>
                 onTap: showEditAlbumParametersDialog,
                 dense: false,
                 title: Text(Language.instance.EDIT_ALBUM_PARAMETERS_TITLE),
-                subtitle:
-                    Text(Language.instance.EDIT_ALBUM_PARAMETERS_SUBTITLE),
+                subtitle: Text(Language.instance.EDIT_ALBUM_PARAMETERS_SUBTITLE),
               ),
               ListTile(
                 onTap: showEditMinimumFileSizeDialog,
@@ -117,9 +105,7 @@ class IndexingState extends State<IndexingSetting>
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         TextButton(
-                          onPressed: CollectionRefresh.instance.completed
-                              ? pickNewFolder
-                              : showIndexingAlreadyUnderProgressDialog,
+                          onPressed: CollectionRefresh.instance.completed ? pickNewFolder : showIndexingAlreadyUnderProgressDialog,
                           child: Text(
                             label(context, Language.instance.ADD_NEW_FOLDER),
                           ),
@@ -143,15 +129,11 @@ class IndexingState extends State<IndexingSetting>
                           ...Configuration.instance.collectionDirectories
                               .map(
                                 (directory) => Container(
-                                  width: isDesktop
-                                      ? 572.0
-                                      : MediaQuery.of(context).size.width,
+                                  width: isDesktop ? 572.0 : MediaQuery.of(context).size.width,
                                   height: isDesktop ? 40.0 : 56.0,
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 2.0),
+                                  margin: const EdgeInsets.symmetric(vertical: 2.0),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Container(
                                         width: 40.0,
@@ -175,9 +157,7 @@ class IndexingState extends State<IndexingSetting>
                                                     Language.instance.SD_CARD,
                                                   )
                                                   .overflow,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge,
+                                          style: Theme.of(context).textTheme.bodyLarge,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -188,15 +168,12 @@ class IndexingState extends State<IndexingSetting>
                                             debugPrint(directory.toString());
                                             final c = Collection.instance;
                                             final conf = Configuration.instance;
-                                            final cr =
-                                                CollectionRefresh.instance;
+                                            final cr = CollectionRefresh.instance;
                                             if (!cr.completed) {
                                               await showIndexingAlreadyUnderProgressDialog();
                                               return;
                                             }
-                                            if (conf.collectionDirectories
-                                                    .length ==
-                                                1) {
+                                            if (conf.collectionDirectories.length == 1) {
                                               await showAtleastOneDirectoryMustStayDialog();
                                               return;
                                             }
@@ -208,9 +185,7 @@ class IndexingState extends State<IndexingSetting>
                                               },
                                             );
                                             await conf.save(
-                                              collectionDirectories: c
-                                                  .collectionDirectories
-                                                  .difference(
+                                              collectionDirectories: c.collectionDirectories.difference(
                                                 {
                                                   directory,
                                                 },
@@ -252,25 +227,18 @@ class IndexingState extends State<IndexingSetting>
                                 children: [
                                   controller.progress == null
                                       ? Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              Language
-                                                  .instance.DISCOVERING_FILES,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyLarge,
+                                              Language.instance.DISCOVERING_FILES,
+                                              style: Theme.of(context).textTheme.bodyLarge,
                                             ),
                                             Container(
                                               margin: const EdgeInsets.only(
                                                 top: 6.0,
                                               ),
                                               height: 4.0,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width -
-                                                  32.0,
+                                              width: MediaQuery.of(context).size.width - 32.0,
                                               child: LinearProgressIndicator(
                                                 value: null,
                                               ),
@@ -280,35 +248,23 @@ class IndexingState extends State<IndexingSetting>
                                       : TweenAnimationBuilder(
                                           tween: Tween<double>(
                                             begin: 0,
-                                            end: (controller.progress ?? 0) /
-                                                controller.total,
+                                            end: (controller.progress ?? 0) / controller.total,
                                           ),
-                                          duration: Theme.of(context)
-                                                  .extension<
-                                                      AnimationDuration>()
-                                                  ?.medium ??
-                                              Duration.zero,
-                                          builder: (_, dynamic value, child) =>
-                                              Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                          duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+                                          builder: (_, dynamic value, child) => Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                Language.instance
-                                                    .SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
+                                                Language.instance.SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
                                                     .replaceAll(
                                                       'COMPLETED',
-                                                      controller.progress
-                                                          .toString(),
+                                                      controller.progress.toString(),
                                                     )
                                                     .replaceAll(
                                                       'TOTAL',
-                                                      controller.total
-                                                          .toString(),
+                                                      controller.total.toString(),
                                                     ),
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge,
+                                                style: Theme.of(context).textTheme.bodyLarge,
                                               ),
                                               Container(
                                                 margin: const EdgeInsets.only(
@@ -439,8 +395,7 @@ class IndexingState extends State<IndexingSetting>
   void pickNewFolder() async {
     final directory = await pickDirectory();
     if (directory != null) {
-      if (Configuration.instance.collectionDirectories
-          .contains(directory.path)) {
+      if (Configuration.instance.collectionDirectories.contains(directory.path)) {
         return;
       }
       await Configuration.instance.save(
@@ -562,9 +517,7 @@ class IndexingState extends State<IndexingSetting>
                               },
                               title: Text(
                                 '${e.value} ${e.key == 1024 * 1024 ? Language.instance.RECOMMENDED_HINT : ''}',
-                                style: isDesktop
-                                    ? Theme.of(ctx).textTheme.bodyLarge
-                                    : null,
+                                style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
                               ),
                             ),
                           )
@@ -640,8 +593,7 @@ class IndexingState extends State<IndexingSetting>
   }
 
   Future<void> showEditAlbumParametersDialog() {
-    Set<AlbumHashCodeParameter> parameters =
-        Collection.instance.albumHashCodeParameters;
+    Set<AlbumHashCodeParameter> parameters = Collection.instance.albumHashCodeParameters;
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -672,9 +624,7 @@ class IndexingState extends State<IndexingSetting>
                           ),
                           title: Text(
                             Language.instance.TITLE,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.bodyLarge
-                                : null,
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                           ),
                         ),
                         ...AlbumHashCodeParameter.values.skip(1).map((e) {
@@ -695,14 +645,10 @@ class IndexingState extends State<IndexingSetting>
                             onTap: edit,
                             title: Text(
                               {
-                                AlbumHashCodeParameter.albumArtistName:
-                                    Language.instance.ALBUM_ARTIST,
-                                AlbumHashCodeParameter.year:
-                                    Language.instance.YEAR,
+                                AlbumHashCodeParameter.albumArtistName: Language.instance.ALBUM_ARTIST,
+                                AlbumHashCodeParameter.year: Language.instance.YEAR,
                               }[e]!,
-                              style: isDesktop
-                                  ? Theme.of(context).textTheme.bodyLarge
-                                  : null,
+                              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                             ),
                           );
                         })

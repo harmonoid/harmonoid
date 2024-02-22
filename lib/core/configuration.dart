@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 import 'dart:io';
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
@@ -184,8 +176,7 @@ class Configuration extends ConfigurationKeys {
       this.modernNowPlayingScreen = modernNowPlayingScreen;
     }
     if (modernNowPlayingScreenCarouselIndex != null) {
-      this.modernNowPlayingScreenCarouselIndex =
-          modernNowPlayingScreenCarouselIndex;
+      this.modernNowPlayingScreenCarouselIndex = modernNowPlayingScreenCarouselIndex;
     }
     if (lyricsVisible != null) {
       this.lyricsVisible = lyricsVisible;
@@ -239,12 +230,10 @@ class Configuration extends ConfigurationKeys {
       this.displayAudioFormat = displayAudioFormat;
     }
     if (mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen != null) {
-      this.mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen =
-          mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen;
+      this.mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen = mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen;
     }
     if (mobileEnableNowPlayingScreenRippleEffect != null) {
-      this.mobileEnableNowPlayingScreenRippleEffect =
-          mobileEnableNowPlayingScreenRippleEffect;
+      this.mobileEnableNowPlayingScreenRippleEffect = mobileEnableNowPlayingScreenRippleEffect;
     }
     if (mobileAlbumsGridSize != null) {
       this.mobileAlbumsGridSize = mobileAlbumsGridSize;
@@ -265,8 +254,7 @@ class Configuration extends ConfigurationKeys {
       this.disableAnimations = disableAnimations;
     }
     if (addLibraryToPlaylistWhenPlayingFromTracksTab != null) {
-      this.addLibraryToPlaylistWhenPlayingFromTracksTab =
-          addLibraryToPlaylistWhenPlayingFromTracksTab;
+      this.addLibraryToPlaylistWhenPlayingFromTracksTab = addLibraryToPlaylistWhenPlayingFromTracksTab;
     }
     if (fallbackAlbumArtFileNames != null) {
       this.fallbackAlbumArtFileNames = fallbackAlbumArtFileNames;
@@ -279,11 +267,7 @@ class Configuration extends ConfigurationKeys {
     }
     await storage.write(
       {
-        'collectionDirectories': this
-            .collectionDirectories
-            .map((directory) => directory.path)
-            .toList()
-            .cast<String>(),
+        'collectionDirectories': this.collectionDirectories.map((directory) => directory.path).toList().cast<String>(),
         'language': this.language.toJson(),
         'themeMode': this.themeMode.index,
         'automaticAccent': this.automaticAccent,
@@ -296,8 +280,7 @@ class Configuration extends ConfigurationKeys {
         'automaticMusicLookup': this.automaticMusicLookup,
         'dynamicNowPlayingBarColoring': this.dynamicNowPlayingBarColoring,
         'modernNowPlayingScreen': this.modernNowPlayingScreen,
-        'modernNowPlayingScreenCarouselIndex':
-            this.modernNowPlayingScreenCarouselIndex,
+        'modernNowPlayingScreenCarouselIndex': this.modernNowPlayingScreenCarouselIndex,
         'lyricsVisible': this.lyricsVisible,
         'discordRPC': this.discordRPC,
         'highlightedLyricsSize': this.highlightedLyricsSize,
@@ -315,19 +298,15 @@ class Configuration extends ConfigurationKeys {
         'useLRCFromTrackDirectory': this.useLRCFromTrackDirectory,
         'lookupForFallbackAlbumArt': this.lookupForFallbackAlbumArt,
         'displayAudioFormat': this.displayAudioFormat,
-        'mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen':
-            this.mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen,
-        'mobileEnableNowPlayingScreenRippleEffect':
-            this.mobileEnableNowPlayingScreenRippleEffect,
+        'mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen': this.mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen,
+        'mobileEnableNowPlayingScreenRippleEffect': this.mobileEnableNowPlayingScreenRippleEffect,
         'mobileAlbumsGridSize': this.mobileAlbumsGridSize,
         'mobileArtistsGridSize': this.mobileArtistsGridSize,
         'mobileGenresGridSize': this.mobileGenresGridSize,
-        'albumHashCodeParameters':
-            this.albumHashCodeParameters.map((e) => e.index).toList(),
+        'albumHashCodeParameters': this.albumHashCodeParameters.map((e) => e.index).toList(),
         'userLibmpvOptions': this.userLibmpvOptions,
         'disableAnimations': this.disableAnimations,
-        'addLibraryToPlaylistWhenPlayingFromTracksTab':
-            this.addLibraryToPlaylistWhenPlayingFromTracksTab,
+        'addLibraryToPlaylistWhenPlayingFromTracksTab': this.addLibraryToPlaylistWhenPlayingFromTracksTab,
         'fallbackAlbumArtFileNames': this.fallbackAlbumArtFileNames,
         'androidEnableVolumeBoostFilter': this.androidEnableVolumeBoostFilter,
         'animationDuration': this.animationDuration.toJson(),
@@ -345,9 +324,7 @@ class Configuration extends ConfigurationKeys {
     debugPrint(current.toString());
     try {
       // Check for actual keys from the cache.
-      collectionDirectories = Set<String>.from(current['collectionDirectories'])
-          .map((directory) => Directory(directory))
-          .toSet();
+      collectionDirectories = Set<String>.from(current['collectionDirectories']).map((directory) => Directory(directory)).toSet();
       language = LanguageData.fromJson(current['language']);
       themeMode = ThemeMode.values[current['themeMode']];
       automaticAccent = current['automaticAccent'];
@@ -360,8 +337,7 @@ class Configuration extends ConfigurationKeys {
       automaticMusicLookup = current['automaticMusicLookup'];
       dynamicNowPlayingBarColoring = current['dynamicNowPlayingBarColoring'];
       modernNowPlayingScreen = current['modernNowPlayingScreen'];
-      modernNowPlayingScreenCarouselIndex =
-          current['modernNowPlayingScreenCarouselIndex'];
+      modernNowPlayingScreenCarouselIndex = current['modernNowPlayingScreenCarouselIndex'];
       lyricsVisible = current['lyricsVisible'];
       discordRPC = current['discordRPC'];
       highlightedLyricsSize = current['highlightedLyricsSize'];
@@ -379,10 +355,8 @@ class Configuration extends ConfigurationKeys {
       useLRCFromTrackDirectory = current['useLRCFromTrackDirectory'];
       lookupForFallbackAlbumArt = current['lookupForFallbackAlbumArt'];
       displayAudioFormat = current['displayAudioFormat'];
-      mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen =
-          current['mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen'];
-      mobileEnableNowPlayingScreenRippleEffect =
-          current['mobileEnableNowPlayingScreenRippleEffect'];
+      mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen = current['mobileDisplayVolumeSliderDirectlyOnNowPlayingScreen'];
+      mobileEnableNowPlayingScreenRippleEffect = current['mobileEnableNowPlayingScreenRippleEffect'];
       mobileAlbumsGridSize = current['mobileAlbumsGridSize'];
       mobileArtistsGridSize = current['mobileArtistsGridSize'];
       mobileGenresGridSize = current['mobileGenresGridSize'];
@@ -391,17 +365,12 @@ class Configuration extends ConfigurationKeys {
           (i) => AlbumHashCodeParameter.values[i],
         ),
       );
-      userLibmpvOptions =
-          Map<String, String>.from(current['userLibmpvOptions']);
+      userLibmpvOptions = Map<String, String>.from(current['userLibmpvOptions']);
       disableAnimations = current['disableAnimations'];
-      addLibraryToPlaylistWhenPlayingFromTracksTab =
-          current['addLibraryToPlaylistWhenPlayingFromTracksTab'];
-      fallbackAlbumArtFileNames =
-          current['fallbackAlbumArtFileNames'].cast<String>();
-      androidEnableVolumeBoostFilter =
-          current['androidEnableVolumeBoostFilter'];
-      animationDuration =
-          AnimationDuration.fromJson(current['animationDuration']);
+      addLibraryToPlaylistWhenPlayingFromTracksTab = current['addLibraryToPlaylistWhenPlayingFromTracksTab'];
+      fallbackAlbumArtFileNames = current['fallbackAlbumArtFileNames'].cast<String>();
+      androidEnableVolumeBoostFilter = current['androidEnableVolumeBoostFilter'];
+      animationDuration = AnimationDuration.fromJson(current['animationDuration']);
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
@@ -469,28 +438,23 @@ class Configuration extends ConfigurationKeys {
           'name': 'English',
           'country': 'United States',
         },
-        'themeMode':
-            Platform.isWindows || Platform.isLinux || Platform.isMacOS ? 1 : 0,
+        'themeMode': Platform.isWindows || Platform.isLinux || Platform.isMacOS ? 1 : 0,
         'automaticAccent': false,
         'notificationLyrics': true,
         'collectionSearchRecent': const [],
         'webRecent': const [],
         'taskbarIndicator': false,
         'seamlessPlayback': false,
-        'jumpToNowPlayingScreenOnPlay':
-            Platform.isWindows || Platform.isLinux || Platform.isMacOS,
+        'jumpToNowPlayingScreenOnPlay': Platform.isWindows || Platform.isLinux || Platform.isMacOS,
         'automaticMusicLookup': false,
-        'dynamicNowPlayingBarColoring':
-            Platform.isWindows || Platform.isLinux || Platform.isMacOS,
-        'modernNowPlayingScreen':
-            Platform.isWindows || Platform.isLinux || Platform.isMacOS,
+        'dynamicNowPlayingBarColoring': Platform.isWindows || Platform.isLinux || Platform.isMacOS,
+        'modernNowPlayingScreen': Platform.isWindows || Platform.isLinux || Platform.isMacOS,
         'modernNowPlayingScreenCarouselIndex': 0,
         'lyricsVisible': true,
         'discordRPC': true,
         'highlightedLyricsSize': 38.0,
         'unhighlightedLyricsSize': 14.0,
-        'albumsSort':
-            Platform.isWindows || Platform.isLinux || Platform.isMacOS ? 3 : 0,
+        'albumsSort': Platform.isWindows || Platform.isLinux || Platform.isMacOS ? 3 : 0,
         'tracksSort': 0,
         'artistsSort': 0,
         'genresSort': 0,
@@ -513,8 +477,7 @@ class Configuration extends ConfigurationKeys {
         ],
         'userLibmpvOptions': <String, String>{},
         'disableAnimations': false,
-        'addLibraryToPlaylistWhenPlayingFromTracksTab':
-            Platform.isAndroid || Platform.isIOS,
+        'addLibraryToPlaylistWhenPlayingFromTracksTab': Platform.isAndroid || Platform.isIOS,
         'fallbackAlbumArtFileNames': kDefaultFallbackAlbumArtFileNames,
         'androidEnableVolumeBoostFilter': false,
         'animationDuration': AnimationDuration().toJson(),

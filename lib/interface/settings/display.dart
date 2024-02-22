@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -55,35 +47,28 @@ class _DisplaySettingState extends State<DisplaySetting> {
                   value: ThemeMode.system,
                   title: Text(
                     Language.instance.THEME_MODE_SYSTEM,
-                    style: isDesktop
-                        ? Theme.of(context).textTheme.bodyLarge
-                        : null,
+                    style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                   ),
                   groupValue: visuals.themeMode,
-                  onChanged: (ThemeMode? themeMode) =>
-                      visuals.update(themeMode: themeMode),
+                  onChanged: (ThemeMode? themeMode) => visuals.update(themeMode: themeMode),
                 ),
               RadioListTile(
                 value: ThemeMode.light,
                 title: Text(
                   Language.instance.THEME_MODE_LIGHT,
-                  style:
-                      isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
                 groupValue: visuals.themeMode,
-                onChanged: (ThemeMode? themeMode) =>
-                    visuals.update(themeMode: themeMode),
+                onChanged: (ThemeMode? themeMode) => visuals.update(themeMode: themeMode),
               ),
               RadioListTile(
                 value: ThemeMode.dark,
                 title: Text(
                   Language.instance.THEME_MODE_DARK,
-                  style:
-                      isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
                 groupValue: visuals.themeMode,
-                onChanged: (ThemeMode? themeMode) =>
-                    visuals.update(themeMode: themeMode),
+                onChanged: (ThemeMode? themeMode) => visuals.update(themeMode: themeMode),
               ),
               const SizedBox(height: 8.0),
             ],
@@ -100,12 +85,9 @@ class _DisplaySettingState extends State<DisplaySetting> {
                               (e) => RadioListTile<ThemeMode>(
                                 title: Text(
                                   {
-                                    ThemeMode.system:
-                                        Language.instance.THEME_MODE_SYSTEM,
-                                    ThemeMode.light:
-                                        Language.instance.THEME_MODE_LIGHT,
-                                    ThemeMode.dark:
-                                        Language.instance.THEME_MODE_DARK,
+                                    ThemeMode.system: Language.instance.THEME_MODE_SYSTEM,
+                                    ThemeMode.light: Language.instance.THEME_MODE_LIGHT,
+                                    ThemeMode.dark: Language.instance.THEME_MODE_DARK,
                                   }[e]!,
                                 ),
                                 groupValue: visuals.themeMode,
@@ -166,12 +148,8 @@ class _DisplaySettingState extends State<DisplaySetting> {
                     ScrollableSlider(
                       min: 50.0,
                       max: 1000.0,
-                      value: Configuration
-                          .instance.animationDuration.medium.inMilliseconds
-                          .toDouble()
-                          .clamp(50.0, 1000.0),
-                      enabled: Configuration.instance.animationDuration !=
-                          AnimationDuration.disabled(),
+                      value: Configuration.instance.animationDuration.medium.inMilliseconds.toDouble().clamp(50.0, 1000.0),
+                      enabled: Configuration.instance.animationDuration != AnimationDuration.disabled(),
                       onScrolledUp: () async {},
                       onScrolledDown: () async {},
                       onChanged: (v) async {
@@ -208,14 +186,10 @@ class _DisplaySettingState extends State<DisplaySetting> {
             ),
             const SizedBox(height: 8.0),
             SwitchListTile(
-              value: Configuration.instance.animationDuration !=
-                  AnimationDuration.disabled(),
+              value: Configuration.instance.animationDuration != AnimationDuration.disabled(),
               onChanged: (enabled) async {
                 await Visuals.instance.update(
-                  animationDuration: Configuration.instance.animationDuration ==
-                          AnimationDuration.disabled()
-                      ? AnimationDuration()
-                      : AnimationDuration.disabled(),
+                  animationDuration: Configuration.instance.animationDuration == AnimationDuration.disabled() ? AnimationDuration() : AnimationDuration.disabled(),
                 );
               },
               title: Text(
@@ -224,18 +198,14 @@ class _DisplaySettingState extends State<DisplaySetting> {
               ),
             ),
             CorrectedSwitchListTile(
-              title: Language
-                  .instance.CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC_TITLE,
-              subtitle:
-                  Language.instance.CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC,
+              title: Language.instance.CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC_TITLE,
+              subtitle: Language.instance.CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC,
               onChanged: (_) => Configuration.instance
                   .save(
-                    dynamicNowPlayingBarColoring:
-                        !Configuration.instance.dynamicNowPlayingBarColoring,
+                    dynamicNowPlayingBarColoring: !Configuration.instance.dynamicNowPlayingBarColoring,
                   )
                   .then((_) => setState(() {
-                        if (!Configuration
-                            .instance.dynamicNowPlayingBarColoring) {
+                        if (!Configuration.instance.dynamicNowPlayingBarColoring) {
                           NowPlayingColorPalette.instance.cleanup();
                         } else {
                           try {

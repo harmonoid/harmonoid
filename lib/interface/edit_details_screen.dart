@@ -1,10 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
@@ -67,15 +60,10 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                     });
                     debugPrint(edited.toString());
                     debugPrint(copy.toJson().toString());
-                    await Collection.instance
-                        .delete(widget.track, delete: false);
+                    await Collection.instance.delete(widget.track, delete: false);
                     // [copy]'s album & artists names could've been changed.
                     await Collection.instance.arrange(copy);
-                    String from = (getAlbumArt(widget.track)
-                                as ExtendedFileImageProvider)
-                            .file
-                            .uri
-                            .toFilePath(),
+                    String from = (getAlbumArt(widget.track) as ExtendedFileImageProvider).file.uri.toFilePath(),
                         to = join(
                           Collection.instance.albumArtDirectory.path,
                           copy.albumArtFileName,
@@ -124,15 +112,12 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                     setState(() {
                       loading = true;
                     });
-                    await Collection.instance
-                        .delete(widget.track, delete: false);
+                    await Collection.instance.delete(widget.track, delete: false);
                     // [copy]'s album & artists names could've been changed.
-                    await Collection.instance
-                        .add(file: File(copy.uri.toFilePath()));
+                    await Collection.instance.add(file: File(copy.uri.toFilePath()));
                     imageCache.clear();
                     imageCache.clearLiveImages();
-                    await ExtendedFileImageProvider(File(copy.uri.toFilePath()))
-                        .evict();
+                    await ExtendedFileImageProvider(File(copy.uri.toFilePath())).evict();
                     while (Navigator.of(context).canPop()) {
                       Navigator.of(context).pop();
                     }
@@ -164,8 +149,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
               children: [
                 Container(
                   margin: EdgeInsets.only(
-                    top: WindowPlus.instance.captionHeight +
-                        kDesktopAppBarHeight,
+                    top: WindowPlus.instance.captionHeight + kDesktopAppBarHeight,
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -206,20 +190,15 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                           );
                                           if (file != null) {
                                             final path = join(
-                                              Collection.instance
-                                                  .albumArtDirectory.path,
+                                              Collection.instance.albumArtDirectory.path,
                                               copy.albumArtFileName,
                                             );
                                             await file.copy_(path);
                                             imageCache.clear();
                                             imageCache.clearLiveImages();
-                                            await ExtendedFileImageProvider(
-                                                    File(path))
-                                                .evict();
+                                            await ExtendedFileImageProvider(File(path)).evict();
                                             setState(() {
-                                              provider =
-                                                  ExtendedFileImageProvider(
-                                                      file);
+                                              provider = ExtendedFileImageProvider(file);
                                             });
                                           }
                                         },
@@ -258,19 +237,13 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                   const SizedBox(height: 24.0),
                                 ] +
                                 <String, dynamic>{
-                                  Language.instance.TRACK_SINGLE:
-                                      copy.trackName,
-                                  Language.instance.ALBUM_SINGLE:
-                                      copy.albumName,
-                                  Language.instance.ALBUM_ARTIST:
-                                      copy.albumArtistName,
-                                  Language.instance.ARTIST:
-                                      copy.trackArtistNames.join('/'),
+                                  Language.instance.TRACK_SINGLE: copy.trackName,
+                                  Language.instance.ALBUM_SINGLE: copy.albumName,
+                                  Language.instance.ALBUM_ARTIST: copy.albumArtistName,
+                                  Language.instance.ARTIST: copy.trackArtistNames.join('/'),
                                   Language.instance.YEAR: copy.year,
-                                  Language.instance.GENRE:
-                                      copy.genres.join('/'),
-                                  Language.instance.TRACK_NUMBER:
-                                      copy.trackNumber,
+                                  Language.instance.GENRE: copy.genres.join('/'),
+                                  Language.instance.TRACK_NUMBER: copy.trackNumber,
                                 }
                                     .entries
                                     .map(
@@ -284,9 +257,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                               width: 156.0,
                                               child: Text(
                                                 e.key + ' : ',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge,
+                                                style: Theme.of(context).textTheme.bodyLarge,
                                               ),
                                             ),
                                             ConstrainedBox(
@@ -295,81 +266,59 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                                 maxHeight: 40.0,
                                               ),
                                               child: CustomTextFormField(
-                                                initialValue: e.value == null
-                                                    ? null
-                                                    : e.value.toString(),
+                                                initialValue: e.value == null ? null : e.value.toString(),
                                                 decoration: inputDecoration(
                                                   context,
                                                   '',
                                                 ),
                                                 cursorWidth: 1.0,
                                                 onChanged: (v) {
-                                                  final value = v.isEmpty
-                                                      ? null
-                                                      : v.trim();
+                                                  final value = v.isEmpty ? null : v.trim();
                                                   edited[e.key] = value;
-                                                  if (e.key ==
-                                                      Language.instance
-                                                          .TRACK_SINGLE) {
+                                                  if (e.key == Language.instance.TRACK_SINGLE) {
                                                     copy = copy.copyWith(
                                                       trackName: value ??
                                                           value ??
                                                           basename(
-                                                            widget.track.uri
-                                                                .toFilePath(),
+                                                            widget.track.uri.toFilePath(),
                                                           ),
                                                     );
                                                   }
-                                                  if (e.key ==
-                                                      Language.instance
-                                                          .ALBUM_SINGLE) {
+                                                  if (e.key == Language.instance.ALBUM_SINGLE) {
                                                     copy = copy.copyWith(
-                                                      albumName: value ??
-                                                          kUnknownAlbum,
+                                                      albumName: value ?? kUnknownAlbum,
                                                     );
                                                   }
-                                                  if (e.key ==
-                                                      Language.instance
-                                                          .ALBUM_ARTIST) {
+                                                  if (e.key == Language.instance.ALBUM_ARTIST) {
                                                     copy = copy.copyWith(
-                                                      albumArtistName: value ??
-                                                          kUnknownArtist,
+                                                      albumArtistName: value ?? kUnknownArtist,
                                                     );
                                                   }
-                                                  if (e.key ==
-                                                      Language
-                                                          .instance.ARTIST) {
+                                                  if (e.key == Language.instance.ARTIST) {
                                                     copy = copy.copyWith(
-                                                      trackArtistNames:
-                                                          Utils.splitTagValue(
-                                                                value,
-                                                              ) ??
-                                                              [kUnknownArtist],
+                                                      trackArtistNames: Utils.splitTagValue(
+                                                            value,
+                                                          ) ??
+                                                          [kUnknownArtist],
                                                     );
                                                   }
-                                                  if (e.key ==
-                                                      Language.instance.YEAR) {
+                                                  if (e.key == Language.instance.YEAR) {
                                                     copy = copy.copyWith(
-                                                      year: Utils
-                                                              .splitDateTagValue(
+                                                      year: Utils.splitDateTagValue(
                                                             value,
                                                           ) ??
                                                           kUnknownYear,
                                                     );
                                                   }
-                                                  if (e.key ==
-                                                      Language.instance.GENRE) {
+                                                  if (e.key == Language.instance.GENRE) {
                                                     copy = copy.copyWith(
-                                                      genres:
-                                                          Utils.splitTagValue(
-                                                                value,
-                                                              ) ??
-                                                              [kUnknownGenre],
+                                                      genres: Utils.splitTagValue(
+                                                            value,
+                                                          ) ??
+                                                          [kUnknownGenre],
                                                     );
                                                   }
-                                                  if (e.key ==
-                                                      Language.instance
-                                                          .TRACK_NUMBER) {
+                                                  if (e.key == Language.instance.TRACK_NUMBER) {
                                                     copy = copy.copyWith(
                                                       trackNumber: int.tryParse(
                                                         value ?? '1',
@@ -377,21 +326,13 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                                     );
                                                   }
                                                 },
-                                                inputFormatters: [
-                                                  Language.instance.YEAR,
-                                                  Language.instance.TRACK_NUMBER
-                                                ].contains(e.key)
+                                                inputFormatters: [Language.instance.YEAR, Language.instance.TRACK_NUMBER].contains(e.key)
                                                     ? <TextInputFormatter>[
-                                                        FilteringTextInputFormatter
-                                                            .allow(RegExp(
-                                                                r'[0-9]')),
+                                                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                                                       ]
                                                     : null,
-                                                textAlignVertical:
-                                                    TextAlignVertical.center,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge,
+                                                textAlignVertical: TextAlignVertical.center,
+                                                style: Theme.of(context).textTheme.bodyLarge,
                                               ),
                                             ),
                                           ],
@@ -405,11 +346,8 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                       Icon(Icons.info),
                                       const SizedBox(width: 8.0),
                                       Text(
-                                        Language.instance
-                                            .USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium,
+                                        Language.instance.USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS,
+                                        style: Theme.of(context).textTheme.bodyMedium,
                                       ),
                                     ],
                                   ),
@@ -461,15 +399,10 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                           });
                           debugPrint(edited.toString());
                           debugPrint(copy.toJson().toString());
-                          await Collection.instance
-                              .delete(widget.track, delete: false);
+                          await Collection.instance.delete(widget.track, delete: false);
                           // [copy]'s album & artists names could've been changed.
                           await Collection.instance.arrange(copy);
-                          String from = (getAlbumArt(widget.track)
-                                      as ExtendedFileImageProvider)
-                                  .file
-                                  .uri
-                                  .toFilePath(),
+                          String from = (getAlbumArt(widget.track) as ExtendedFileImageProvider).file.uri.toFilePath(),
                               to = join(
                                 Collection.instance.albumArtDirectory.path,
                                 copy.albumArtFileName,
@@ -515,13 +448,10 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                             delete: false,
                           );
                           // [copy]'s album & artists names could've been changed.
-                          await Collection.instance
-                              .add(file: File(copy.uri.toFilePath()));
+                          await Collection.instance.add(file: File(copy.uri.toFilePath()));
                           imageCache.clear();
                           imageCache.clearLiveImages();
-                          await ExtendedFileImageProvider(
-                                  File(copy.uri.toFilePath()))
-                              .evict();
+                          await ExtendedFileImageProvider(File(copy.uri.toFilePath())).evict();
                           while (Navigator.of(context).canPop()) {
                             Navigator.of(context).pop();
                           }
@@ -536,8 +466,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
             ),
             body: NowPlayingBarScrollHideNotifier(
               child: CustomListView(
-                keyboardDismissBehavior:
-                    ScrollViewKeyboardDismissBehavior.manual,
+                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
                 shrinkWrap: true,
                 children: [
                   Stack(
@@ -564,8 +493,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                               await file.copy_(path);
                               imageCache.clear();
                               imageCache.clearLiveImages();
-                              await ExtendedFileImageProvider(File(path))
-                                  .evict();
+                              await ExtendedFileImageProvider(File(path)).evict();
                               setState(() {
                                 provider = ExtendedFileImageProvider(file);
                               });
@@ -596,10 +524,8 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                             <String, dynamic>{
                               Language.instance.TRACK_SINGLE: copy.trackName,
                               Language.instance.ALBUM_SINGLE: copy.albumName,
-                              Language.instance.ALBUM_ARTIST:
-                                  copy.albumArtistName,
-                              Language.instance.ARTIST:
-                                  copy.trackArtistNames.join('/'),
+                              Language.instance.ALBUM_ARTIST: copy.albumArtistName,
+                              Language.instance.ARTIST: copy.trackArtistNames.join('/'),
                               Language.instance.YEAR: copy.year,
                               Language.instance.GENRE: copy.genres.join('/'),
                               Language.instance.TRACK_NUMBER: copy.trackNumber,
@@ -610,15 +536,12 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                     alignment: Alignment.topLeft,
                                     width: double.infinity,
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Container(
                                           child: Text(
                                             e.key,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge,
+                                            style: Theme.of(context).textTheme.bodyLarge,
                                           ),
                                           margin: EdgeInsets.only(
                                             left: 4.0,
@@ -631,57 +554,42 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                             maxHeight: 44.0,
                                           ),
                                           child: CustomTextFormField(
-                                            initialValue: e.value == null
-                                                ? null
-                                                : e.value.toString(),
+                                            initialValue: e.value == null ? null : e.value.toString(),
                                             decoration: inputDecoration(
                                               context,
                                               '',
                                             ),
                                             onChanged: (v) {
-                                              final value =
-                                                  v.isEmpty ? null : v.trim();
+                                              final value = v.isEmpty ? null : v.trim();
                                               edited[e.key] = value;
-                                              if (e.key ==
-                                                  Language
-                                                      .instance.TRACK_SINGLE) {
+                                              if (e.key == Language.instance.TRACK_SINGLE) {
                                                 copy = copy.copyWith(
                                                   trackName: value ??
                                                       value ??
                                                       basename(
-                                                        widget.track.uri
-                                                            .toFilePath(),
+                                                        widget.track.uri.toFilePath(),
                                                       ),
                                                 );
                                               }
-                                              if (e.key ==
-                                                  Language
-                                                      .instance.ALBUM_SINGLE) {
+                                              if (e.key == Language.instance.ALBUM_SINGLE) {
                                                 copy = copy.copyWith(
-                                                  albumName:
-                                                      value ?? kUnknownAlbum,
+                                                  albumName: value ?? kUnknownAlbum,
                                                 );
                                               }
-                                              if (e.key ==
-                                                  Language
-                                                      .instance.ALBUM_ARTIST) {
+                                              if (e.key == Language.instance.ALBUM_ARTIST) {
                                                 copy = copy.copyWith(
-                                                  albumArtistName:
-                                                      value ?? kUnknownArtist,
+                                                  albumArtistName: value ?? kUnknownArtist,
                                                 );
                                               }
-                                              if (e.key ==
-                                                  Language.instance.ARTIST) {
+                                              if (e.key == Language.instance.ARTIST) {
                                                 copy = copy.copyWith(
-                                                  trackArtistNames:
-                                                      Utils.splitTagValue(
-                                                            value,
-                                                          ) ??
-                                                          [kUnknownArtist],
+                                                  trackArtistNames: Utils.splitTagValue(
+                                                        value,
+                                                      ) ??
+                                                      [kUnknownArtist],
                                                 );
                                               }
-                                              if (e.key ==
-                                                  Language.instance.YEAR) {
+                                              if (e.key == Language.instance.YEAR) {
                                                 copy = copy.copyWith(
                                                   year: Utils.splitDateTagValue(
                                                         value,
@@ -689,8 +597,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                                       kUnknownYear,
                                                 );
                                               }
-                                              if (e.key ==
-                                                  Language.instance.GENRE) {
+                                              if (e.key == Language.instance.GENRE) {
                                                 copy = copy.copyWith(
                                                   genres: Utils.splitTagValue(
                                                         value,
@@ -698,9 +605,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                                       [kUnknownGenre],
                                                 );
                                               }
-                                              if (e.key ==
-                                                  Language
-                                                      .instance.TRACK_NUMBER) {
+                                              if (e.key == Language.instance.TRACK_NUMBER) {
                                                 copy = copy.copyWith(
                                                   trackNumber: int.tryParse(
                                                     value ?? '1',
@@ -708,21 +613,13 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                                 );
                                               }
                                             },
-                                            inputFormatters: [
-                                              Language.instance.YEAR,
-                                              Language.instance.TRACK_NUMBER
-                                            ].contains(e.key)
+                                            inputFormatters: [Language.instance.YEAR, Language.instance.TRACK_NUMBER].contains(e.key)
                                                 ? <TextInputFormatter>[
-                                                    FilteringTextInputFormatter
-                                                        .allow(
-                                                            RegExp(r'[0-9]')),
+                                                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                                                   ]
                                                 : null,
-                                            textAlignVertical:
-                                                TextAlignVertical.center,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge,
+                                            textAlignVertical: TextAlignVertical.center,
+                                            style: Theme.of(context).textTheme.bodyLarge,
                                           ),
                                         ),
                                       ],
@@ -733,10 +630,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                             [
                               const SizedBox(height: 24.0),
                               Text(
-                                Language
-                                    .instance
-                                    .USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS
-                                    .overflow,
+                                Language.instance.USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS.overflow,
                                 style: Theme.of(context).textTheme.bodyMedium,
                                 overflow: TextOverflow.ellipsis,
                               ),

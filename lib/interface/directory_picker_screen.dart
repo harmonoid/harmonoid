@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 // ignore_for_file: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
 
 import 'dart:io';
@@ -50,8 +42,7 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
 
   void scrollAddressBarToRight() async {
     await Future.delayed(const Duration(milliseconds: 400));
-    final duration =
-        Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero;
+    final duration = Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero;
     try {
       debugPrint(
         addressBarScrollController.position.maxScrollExtent.toString(),
@@ -75,8 +66,7 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
     }
   }
 
-  Future<void> pushDirectoryIntoStack(
-      BuildContext context, Directory directory) async {
+  Future<void> pushDirectoryIntoStack(BuildContext context, Directory directory) async {
     if (stack.value.length == 1) {
       stack.value.add(directory.path);
     } else {
@@ -87,15 +77,12 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
     debugPrint(stack.value.toString());
     final root = await compute(dir, directory);
     final controller = ScrollController();
-    final shouldShowMoveUpButton = volumes!.length > 1
-        ? (stack.value.length > 1)
-        : (stack.value.length > 2);
+    final shouldShowMoveUpButton = volumes!.length > 1 ? (stack.value.length > 1) : (stack.value.length > 2);
     await Navigator.of(key.currentContext!).pushNamed(
       '/',
       arguments: DraggableScrollbar.semicircle(
         heightScrollThumb: 56.0,
-        backgroundColor: Theme.of(key.currentContext!).cardTheme.color ??
-            Theme.of(key.currentContext!).cardColor,
+        backgroundColor: Theme.of(key.currentContext!).cardTheme.color ?? Theme.of(key.currentContext!).cardColor,
         controller: controller,
         child: ListView.separated(
           controller: controller,
@@ -135,10 +122,7 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
                 child: ListTile(
                   dense: false,
                   enabled: root[i] is Directory,
-                  onTap: root[i] is Directory
-                      ? () =>
-                          pushDirectoryIntoStack(context, root[i] as Directory)
-                      : null,
+                  onTap: root[i] is Directory ? () => pushDirectoryIntoStack(context, root[i] as Directory) : null,
                   leading: CircleAvatar(
                     child: root[i] is Directory
                         ? const Icon(
@@ -209,9 +193,7 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
                     foregroundColor: Theme.of(context).iconTheme.color,
                     backgroundColor: Colors.transparent,
                   ),
-                  title: i == 0
-                      ? Text(Language.instance.PHONE)
-                      : Text(Language.instance.SD_CARD),
+                  title: i == 0 ? Text(Language.instance.PHONE) : Text(Language.instance.SD_CARD),
                 ),
               ),
               separatorBuilder: (context, i) => const Divider(
@@ -246,9 +228,7 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
           //
         }
         await Navigator.of(key.currentContext!).maybePop();
-        final value = (volumes?.length ?? 1) > 1
-            ? (stack.value.length < 1)
-            : (stack.value.length < 2);
+        final value = (volumes?.length ?? 1) > 1 ? (stack.value.length < 1) : (stack.value.length < 2);
         if (!value) {
           stack.notifyListeners();
         }
@@ -289,8 +269,7 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
                         : Theme(
                             data: Theme.of(context).copyWith(
                               // ignore: deprecated_member_use
-                              androidOverscrollIndicator:
-                                  AndroidOverscrollIndicator.glow,
+                              androidOverscrollIndicator: AndroidOverscrollIndicator.glow,
                             ),
                             child: ScrollConfiguration(
                               behavior: NoOverscrollGlowBehavior(),
@@ -341,16 +320,9 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
               child: Navigator(
                 key: key,
                 onGenerateRoute: (settings) => PageRouteBuilder(
-                  transitionDuration: Theme.of(context)
-                          .extension<AnimationDuration>()
-                          ?.medium ??
-                      Duration.zero,
-                  reverseTransitionDuration: Theme.of(context)
-                          .extension<AnimationDuration>()
-                          ?.medium ??
-                      Duration.zero,
-                  pageBuilder: (_, animation, secondaryAnimation) =>
-                      SharedAxisTransition(
+                  transitionDuration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+                  reverseTransitionDuration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+                  pageBuilder: (_, animation, secondaryAnimation) => SharedAxisTransition(
                     fillColor: Theme.of(context).scaffoldBackgroundColor,
                     transitionType: SharedAxisTransitionType.vertical,
                     animation: animation,

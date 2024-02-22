@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 // DO NOT IMPORT ANYTHING FROM `package:harmonoid` IN THIS FILE.
 
 /// Typography
@@ -76,8 +68,7 @@ ThemeData createM3Theme({
 }) {
   // TODO(@alexmercerind): WIP
   final isLightMode = mode == ThemeMode.light;
-  final isDesktopPlatform =
-      Platform.isWindows || Platform.isLinux || Platform.isMacOS;
+  final isDesktopPlatform = Platform.isWindows || Platform.isLinux || Platform.isMacOS;
 
   // TYPOGRAPHY
 
@@ -91,10 +82,8 @@ ThemeData createM3Theme({
     colorScheme.onSurface,
     colorScheme.onSurfaceVariant,
   );
-  final primaryTextColor =
-      isLightMode ? textColors.lightPrimary : textColors.darkPrimary;
-  final secondaryTextColor =
-      isLightMode ? textColors.lightSecondary : textColors.darkSecondary;
+  final primaryTextColor = isLightMode ? textColors.lightPrimary : textColors.darkPrimary;
+  final secondaryTextColor = isLightMode ? textColors.lightSecondary : textColors.darkSecondary;
   // Enforce `Inter` font family on GNU/Linux.
   final fontFamily = Platform.isLinux ? 'Inter' : null;
   final theme = typography.englishLike
@@ -248,8 +237,7 @@ ThemeData createM3Theme({
       backgroundColor: navigationBarColor,
       surfaceTintColor: navigationBarColor,
       labelTextStyle: MaterialStateProperty.resolveWith((states) {
-        if (states.contains(MaterialState.selected) ||
-            states.contains(MaterialState.focused)) {
+        if (states.contains(MaterialState.selected) || states.contains(MaterialState.focused)) {
           return theme.labelMedium?.copyWith(
             color: colorScheme.onSurface,
           );
@@ -259,8 +247,7 @@ ThemeData createM3Theme({
         );
       }),
       iconTheme: MaterialStateProperty.resolveWith((states) {
-        if (states.contains(MaterialState.selected) ||
-            states.contains(MaterialState.focused)) {
+        if (states.contains(MaterialState.selected) || states.contains(MaterialState.focused)) {
           return IconThemeData(
             color: colorScheme.onSecondaryContainer,
           );
@@ -327,17 +314,14 @@ ThemeData createM3Theme({
       foregroundColor: primaryTextColor,
       systemOverlayStyle: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness:
-            isLightMode ? Brightness.dark : Brightness.light,
+        statusBarIconBrightness: isLightMode ? Brightness.dark : Brightness.light,
       ),
       iconTheme: IconThemeData(
         color: isLightMode ? iconColors.appBarLight : iconColors.appBarDark,
         size: 24.0,
       ),
       actionsIconTheme: IconThemeData(
-        color: isLightMode
-            ? iconColors.appBarActionLight
-            : iconColors.appBarActionDark,
+        color: isLightMode ? iconColors.appBarActionLight : iconColors.appBarActionDark,
         size: 24.0,
       ),
     ),
@@ -382,8 +366,7 @@ ThemeData createM2Theme({
   AnimationDuration animationDuration = const AnimationDuration(),
 }) {
   final isLightMode = mode == ThemeMode.light;
-  final isDesktopPlatform =
-      Platform.isWindows || Platform.isLinux || Platform.isMacOS;
+  final isDesktopPlatform = Platform.isWindows || Platform.isLinux || Platform.isMacOS;
 
   // TYPOGRAPHY
 
@@ -395,17 +378,11 @@ ThemeData createM2Theme({
   final textColors = TextColors(
     isDesktopPlatform ? Colors.black : Colors.black.withOpacity(0.87),
     isDesktopPlatform ? Colors.white : Colors.white.withOpacity(1.00),
-    isDesktopPlatform
-        ? Colors.black.withOpacity(0.87)
-        : Colors.black.withOpacity(0.54),
-    isDesktopPlatform
-        ? Colors.white.withOpacity(0.87)
-        : Colors.white.withOpacity(0.87),
+    isDesktopPlatform ? Colors.black.withOpacity(0.87) : Colors.black.withOpacity(0.54),
+    isDesktopPlatform ? Colors.white.withOpacity(0.87) : Colors.white.withOpacity(0.87),
   );
-  final primaryTextColor =
-      isLightMode ? textColors.lightPrimary : textColors.darkPrimary;
-  final secondaryTextColor =
-      isLightMode ? textColors.lightSecondary : textColors.darkSecondary;
+  final primaryTextColor = isLightMode ? textColors.lightPrimary : textColors.darkPrimary;
+  final secondaryTextColor = isLightMode ? textColors.lightSecondary : textColors.darkSecondary;
   // Enforce `Inter` font family on GNU/Linux.
   final fontFamily = Platform.isLinux ? 'Inter' : null;
   final theme = typography.englishLike
@@ -437,34 +414,22 @@ ThemeData createM2Theme({
       .merge(
         TextTheme(
           headlineLarge: TextStyle(
-            fontWeight: isDesktopPlatform
-                ? FontWeight.w600
-                : FontWeight.w500, // Default: `FontWeight.w400`
+            fontWeight: isDesktopPlatform ? FontWeight.w600 : FontWeight.w500, // Default: `FontWeight.w400`
           ),
           headlineMedium: TextStyle(
-            fontWeight: isDesktopPlatform
-                ? FontWeight.w600
-                : FontWeight.w500, // Default: `FontWeight.w400`
+            fontWeight: isDesktopPlatform ? FontWeight.w600 : FontWeight.w500, // Default: `FontWeight.w400`
           ),
           headlineSmall: TextStyle(
-            fontWeight: isDesktopPlatform
-                ? FontWeight.w600
-                : FontWeight.w500, // Default: `FontWeight.w400`
+            fontWeight: isDesktopPlatform ? FontWeight.w600 : FontWeight.w500, // Default: `FontWeight.w400`
           ),
           titleLarge: TextStyle(
-            fontWeight: isDesktopPlatform
-                ? FontWeight.w600
-                : FontWeight.w500, // Default: `FontWeight.w500`
+            fontWeight: isDesktopPlatform ? FontWeight.w600 : FontWeight.w500, // Default: `FontWeight.w500`
           ),
           titleMedium: TextStyle(
-            fontWeight: isDesktopPlatform
-                ? FontWeight.w600
-                : null, // Default: `FontWeight.w400`
+            fontWeight: isDesktopPlatform ? FontWeight.w600 : null, // Default: `FontWeight.w400`
           ),
           titleSmall: TextStyle(
-            fontWeight: isDesktopPlatform
-                ? FontWeight.w600
-                : FontWeight.w500, // Default: `FontWeight.w500`
+            fontWeight: isDesktopPlatform ? FontWeight.w600 : FontWeight.w500, // Default: `FontWeight.w500`
           ),
           bodyLarge: TextStyle(
             fontWeight: FontWeight.w400, // Default: `FontWeight.w500`
@@ -495,12 +460,8 @@ ThemeData createM2Theme({
     // [Card] color.
     surface: isLightMode ? Colors.white : const Color(0xFF222222),
     onSurface: primaryTextColor,
-    surfaceVariant: isLightMode
-        ? Color.lerp(Colors.white, Colors.black, 0.04)
-        : Color.lerp(Colors.black, Colors.white, 0.12),
-    onSurfaceVariant: isLightMode
-        ? Color.lerp(Colors.white, Colors.black, 0.54)
-        : Color.lerp(Colors.black, Colors.white, 0.54),
+    surfaceVariant: isLightMode ? Color.lerp(Colors.white, Colors.black, 0.04) : Color.lerp(Colors.black, Colors.white, 0.12),
+    onSurfaceVariant: isLightMode ? Color.lerp(Colors.white, Colors.black, 0.54) : Color.lerp(Colors.black, Colors.white, 0.54),
     // Remove the fucking tint from popup menus, bottom sheets etc.
     surfaceTint: Colors.transparent,
     // Keep the Material Design 2 shadow.
@@ -519,15 +480,10 @@ ThemeData createM2Theme({
     Color.lerp(Colors.white, Colors.black, 0.38)!,
     Color.lerp(Colors.black, Colors.white, 0.38)!,
   );
-  final focusColor = isLightMode
-      ? Colors.black.withOpacity(0.12)
-      : Colors.white.withOpacity(0.12);
-  final hoverColor = isLightMode
-      ? Colors.black.withOpacity(0.04)
-      : Colors.white.withOpacity(0.04);
+  final focusColor = isLightMode ? Colors.black.withOpacity(0.12) : Colors.white.withOpacity(0.12);
+  final hoverColor = isLightMode ? Colors.black.withOpacity(0.04) : Colors.white.withOpacity(0.04);
   final splashColor = isLightMode ? const Color(0x40CCCCCC) : Color(0x40CCCCCC);
-  final disabledColor =
-      isLightMode ? iconColors.lightDisabled : iconColors.darkDisabled;
+  final disabledColor = isLightMode ? iconColors.lightDisabled : iconColors.darkDisabled;
   // Keep the Material Design 2 shadow.
   final shadowColor = Colors.black;
   final highlightColor = isDesktopPlatform
@@ -539,8 +495,7 @@ ThemeData createM2Theme({
       Colors.transparent;
   final cardColor = isLightMode ? Colors.white : const Color(0xFF222222);
   final scaffoldBackgroundColor = isLightMode ? Colors.white : Colors.black;
-  final dialogBackgroundColor =
-      isLightMode ? Colors.white : const Color(0xFF202020);
+  final dialogBackgroundColor = isLightMode ? Colors.white : const Color(0xFF202020);
   final unselectedWidgetColor = isLightMode ? Colors.black54 : Colors.white70;
   final popupMenuColor = isLightMode ? Colors.white : const Color(0xFF282828);
   final snackBarColor = isLightMode ? Colors.white : const Color(0xFF282828);
@@ -847,8 +802,7 @@ ThemeData createM2Theme({
       foregroundColor: primaryTextColor,
       systemOverlayStyle: SystemUiOverlayStyle(
         statusBarColor: isLightMode ? Colors.white12 : Colors.black12,
-        statusBarIconBrightness:
-            isLightMode ? Brightness.dark : Brightness.light,
+        statusBarIconBrightness: isLightMode ? Brightness.dark : Brightness.light,
       ),
       elevation: 4.0,
       iconTheme: IconThemeData(
@@ -856,9 +810,7 @@ ThemeData createM2Theme({
         size: 24.0,
       ),
       actionsIconTheme: IconThemeData(
-        color: isLightMode
-            ? iconColors.appBarActionLight
-            : iconColors.appBarActionDark,
+        color: isLightMode ? iconColors.appBarActionLight : iconColors.appBarActionDark,
         size: 24.0,
       ),
     ),
@@ -872,7 +824,7 @@ ThemeData createM2Theme({
           allowEnterRouteSnapshotting: false,
         ),
         TargetPlatform.android: ZoomPageTransitionsBuilder(
-         allowEnterRouteSnapshotting: false,
+          allowEnterRouteSnapshotting: false,
         ),
         TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
         TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
@@ -1009,10 +961,8 @@ ThemeData createM2Theme({
     scrollbarTheme: ScrollbarThemeData(
       thumbVisibility: MaterialStatePropertyAll(true),
       thickness: MaterialStatePropertyAll(8.0),
-      trackBorderColor: MaterialStatePropertyAll(
-          isLightMode ? Colors.black12 : Colors.white24),
-      trackColor: MaterialStatePropertyAll(
-          isLightMode ? Colors.black12 : Colors.white24),
+      trackBorderColor: MaterialStatePropertyAll(isLightMode ? Colors.black12 : Colors.white24),
+      trackColor: MaterialStatePropertyAll(isLightMode ? Colors.black12 : Colors.white24),
       crossAxisMargin: 0.0,
       radius: Radius.zero,
       minThumbLength: 96.0,
@@ -1062,12 +1012,8 @@ ThemeData createM2Theme({
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: colorScheme.primary,
-      selectedItemColor: color.computeLuminance() > 0.7
-          ? Colors.black.withOpacity(0.87)
-          : Colors.white.withOpacity(0.87),
-      unselectedItemColor: color.computeLuminance() > 0.7
-          ? Colors.black.withOpacity(0.54)
-          : Colors.white.withOpacity(0.54),
+      selectedItemColor: color.computeLuminance() > 0.7 ? Colors.black.withOpacity(0.87) : Colors.white.withOpacity(0.87),
+      unselectedItemColor: color.computeLuminance() > 0.7 ? Colors.black.withOpacity(0.54) : Colors.white.withOpacity(0.54),
     ),
 
     // MAY NEED REVIEW
@@ -1099,8 +1045,7 @@ class MaterialRoute extends MaterialPageRoute {
   static const kDefaultTransitionDuration = Duration(milliseconds: 300);
 
   @override
-  Duration get transitionDuration =>
-      animationDuration?.medium ?? kDefaultTransitionDuration;
+  Duration get transitionDuration => animationDuration?.medium ?? kDefaultTransitionDuration;
 }
 
 /// Theme extension for providing style for the search bar used on mobile devices.
@@ -1250,10 +1195,7 @@ class AnimationDuration extends ThemeExtension<AnimationDuration> {
   operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is AnimationDuration &&
-        other.fast == fast &&
-        other.medium == medium &&
-        other.slow == slow;
+    return other is AnimationDuration && other.fast == fast && other.medium == medium && other.slow == slow;
   }
 
   @override

@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2022, Mitja Ševerkar <mytja@protonmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 import 'package:flutter/material.dart';
 
 import 'package:harmonoid/core/configuration.dart';
@@ -36,8 +28,7 @@ class NowPlayingScreenState extends State<NowPlayingScreenSetting> {
             subtitle: Language.instance.SHOW_NOW_PLAYING_AFTER_PLAYING_SUBTITLE,
             onChanged: (_) => Configuration.instance
                 .save(
-                  jumpToNowPlayingScreenOnPlay:
-                      !Configuration.instance.jumpToNowPlayingScreenOnPlay,
+                  jumpToNowPlayingScreenOnPlay: !Configuration.instance.jumpToNowPlayingScreenOnPlay,
                 )
                 .then((_) => setState(() {})),
             value: Configuration.instance.jumpToNowPlayingScreenOnPlay,
@@ -45,19 +36,16 @@ class NowPlayingScreenState extends State<NowPlayingScreenSetting> {
           if (isMobile) ...[
             CorrectedSwitchListTile(
               title: Language.instance.MOBILE_ENABLE_NOW_PLAYING_RIPPLE_EFFECT,
-              subtitle:
-                  Language.instance.MOBILE_ENABLE_NOW_PLAYING_RIPPLE_EFFECT,
+              subtitle: Language.instance.MOBILE_ENABLE_NOW_PLAYING_RIPPLE_EFFECT,
               onChanged: (_) => Configuration.instance
                   .save(
-                mobileEnableNowPlayingScreenRippleEffect: !Configuration
-                    .instance.mobileEnableNowPlayingScreenRippleEffect,
+                mobileEnableNowPlayingScreenRippleEffect: !Configuration.instance.mobileEnableNowPlayingScreenRippleEffect,
               )
                   .then((_) {
                 setState(() {});
                 MobileNowPlayingController.instance.hide();
               }),
-              value: Configuration
-                  .instance.mobileEnableNowPlayingScreenRippleEffect,
+              value: Configuration.instance.mobileEnableNowPlayingScreenRippleEffect,
             ),
           ],
           if (isDesktop) ...[
@@ -66,15 +54,13 @@ class NowPlayingScreenState extends State<NowPlayingScreenSetting> {
               subtitle: Language.instance.USE_MODERN_NOW_PLAYING_SCREEN,
               onChanged: (_) => Configuration.instance
                   .save(
-                    modernNowPlayingScreen:
-                        !Configuration.instance.modernNowPlayingScreen,
+                    modernNowPlayingScreen: !Configuration.instance.modernNowPlayingScreen,
                   )
                   .then((value) => setState(() {})),
               value: Configuration.instance.modernNowPlayingScreen,
             ),
             Container(
-              width:
-                  isDesktop ? 540.0 : MediaQuery.of(context).size.width - 32.0,
+              width: isDesktop ? 540.0 : MediaQuery.of(context).size.width - 32.0,
               alignment: Alignment.center,
               padding: isDesktop ? EdgeInsets.only(top: 2.0) : null,
               child: Padding(
@@ -187,8 +173,7 @@ class NowPlayingScreenState extends State<NowPlayingScreenSetting> {
                                     color: Colors.transparent,
                                     child: InkWell(
                                       onTap: () async {
-                                        await NowPlayingVisuals.instance
-                                            .remove(e);
+                                        await NowPlayingVisuals.instance.remove(e);
                                         setState(() {});
                                       },
                                       child: Container(

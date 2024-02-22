@@ -1,10 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -19,8 +12,7 @@ class AndroidPermissionsSetting extends StatefulWidget {
   AndroidPermissionsSetting({Key? key}) : super(key: key);
 
   @override
-  AndroidPermissionsSettingState createState() =>
-      AndroidPermissionsSettingState();
+  AndroidPermissionsSettingState createState() => AndroidPermissionsSettingState();
 }
 
 class AndroidPermissionsSettingState extends State<AndroidPermissionsSetting> {
@@ -28,17 +20,16 @@ class AndroidPermissionsSettingState extends State<AndroidPermissionsSetting> {
   bool notification = false;
   bool photos = false;
 
-  MaterialStateProperty<Icon?>? thumbIcon(BuildContext context) =>
-      isMaterial2(context)
-          ? null
-          : MaterialStateProperty.resolveWith(
-              (states) {
-                if (states.contains(MaterialState.selected)) {
-                  return const Icon(Icons.check);
-                }
-                return const Icon(Icons.close);
-              },
-            );
+  MaterialStateProperty<Icon?>? thumbIcon(BuildContext context) => isMaterial2(context)
+      ? null
+      : MaterialStateProperty.resolveWith(
+          (states) {
+            if (states.contains(MaterialState.selected)) {
+              return const Icon(Icons.check);
+            }
+            return const Icon(Icons.close);
+          },
+        );
 
   @override
   void initState() {
@@ -175,8 +166,7 @@ class AndroidPermissionsSettingState extends State<AndroidPermissionsSetting> {
                 Language.instance.PERMISSION_IMAGES_AND_PHOTOS,
               ),
               subtitle: Text(
-                Language
-                    .instance.PERMISSION_IMAGES_AND_PHOTOS_SUBTITLE.overflow,
+                Language.instance.PERMISSION_IMAGES_AND_PHOTOS_SUBTITLE.overflow,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),

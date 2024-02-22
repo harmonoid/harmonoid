@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -21,8 +13,7 @@ import 'package:harmonoid/utils/constants.dart';
 class ExceptionApp extends StatelessWidget {
   final Object exception;
   final StackTrace stacktrace;
-  ExceptionApp({Key? key, required this.exception, required this.stacktrace})
-      : super(key: key);
+  ExceptionApp({Key? key, required this.exception, required this.stacktrace}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -71,13 +62,7 @@ class _ExceptionAppState extends State<_ExceptionApp> {
     setState(() {
       padding = EdgeInsetsDirectional.only(
         start: 16.0,
-        bottom: (48.0 *
-                (1 -
-                    controller.offset /
-                        (196.0 -
-                            kToolbarHeight -
-                            MediaQuery.of(context).padding.top)))
-            .clamp(
+        bottom: (48.0 * (1 - controller.offset / (196.0 - kToolbarHeight - MediaQuery.of(context).padding.top))).clamp(
           16.0,
           48.0,
         ),
@@ -128,20 +113,14 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                               children: [
                                 Padding(
                                   padding: EdgeInsets.only(
-                                    top: WindowPlus.instance.captionHeight +
-                                        16.0,
+                                    top: WindowPlus.instance.captionHeight + 16.0,
                                     left: kDesktopHorizontalPadding,
                                     right: kDesktopHorizontalPadding,
                                   ),
                                   child: Text(
                                     Label.error,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displayLarge
-                                        ?.copyWith(
-                                          color: Theme.of(context)
-                                              .extension<TextColors>()
-                                              ?.darkPrimary,
+                                    style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                                          color: Theme.of(context).extension<TextColors>()?.darkPrimary,
                                         ),
                                   ),
                                 ),
@@ -155,13 +134,8 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                                   child: Text(
                                     widget.exception.toString().overflow,
                                     overflow: TextOverflow.ellipsis,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(
-                                          color: Theme.of(context)
-                                              .extension<TextColors>()
-                                              ?.darkSecondary,
+                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                          color: Theme.of(context).extension<TextColors>()?.darkSecondary,
                                         ),
                                     maxLines: 1,
                                   ),
@@ -172,8 +146,7 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                                   child: Padding(
                                     padding: EdgeInsets.symmetric(
                                       vertical: 16.0,
-                                      horizontal:
-                                          kDesktopHorizontalPadding - 16.0,
+                                      horizontal: kDesktopHorizontalPadding - 16.0,
                                     ),
                                     child: ButtonBar(
                                       alignment: MainAxisAlignment.start,
@@ -182,17 +155,14 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                                           onPressed: () {
                                             Clipboard.setData(
                                               ClipboardData(
-                                                text:
-                                                    '${Label.exception}: ${widget.exception.toString()}\n${Label.stack_trace}: ${widget.stacktrace.toString()}',
+                                                text: '${Label.exception}: ${widget.exception.toString()}\n${Label.stack_trace}: ${widget.stacktrace.toString()}',
                                               ),
                                             );
                                           },
                                           child: Text(
                                             Label.copy.toUpperCase(),
                                             style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onPrimary,
+                                              color: Theme.of(context).colorScheme.onPrimary,
                                             ),
                                           ),
                                         ),
@@ -203,16 +173,13 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                                                 'github.com',
                                                 '/harmonoid/harmonoid/issues/new/choose',
                                               ),
-                                              mode: LaunchMode
-                                                  .externalApplication,
+                                              mode: LaunchMode.externalApplication,
                                             );
                                           },
                                           child: Text(
                                             Label.report.toUpperCase(),
                                             style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onPrimary,
+                                              color: Theme.of(context).colorScheme.onPrimary,
                                             ),
                                           ),
                                         ),
@@ -225,8 +192,7 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                           ),
                         ],
                       ),
-                      elevation: Theme.of(context).cardTheme.elevation ??
-                          kDefaultCardElevation,
+                      elevation: Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
                     ),
                     if (Platform.isWindows)
                       DesktopCaptionBar(
@@ -277,9 +243,7 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                     title: Text(
                       Label.error,
                       style: TextStyle(
-                        color: Theme.of(context)
-                            .extension<TextColors>()
-                            ?.darkPrimary,
+                        color: Theme.of(context).extension<TextColors>()?.darkPrimary,
                       ),
                     ),
                     titlePadding: padding,
@@ -309,10 +273,7 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                             widget.exception.toString().overflow,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onPrimary
-                                  .withOpacity(0.87),
+                              color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.87),
                               fontSize: 14.0,
                             ),
                             maxLines: 1,
@@ -339,8 +300,7 @@ class _ExceptionAppState extends State<_ExceptionApp> {
                                 widget.stacktrace.toString(),
                               ),
                             ),
-                            for (int i = 0; i <= 100; i++)
-                              const SizedBox(height: 16.0),
+                            for (int i = 0; i <= 100; i++) const SizedBox(height: 16.0),
                           ],
                         ),
                       ),

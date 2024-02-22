@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
@@ -198,8 +190,7 @@ class Playback extends ChangeNotifier {
     playlistLoopMode = value;
     try {
       if (Platform.isLinux) {
-        instance.mpris?.loopStatus =
-            MPRISLoopStatus.values[instance.playlistLoopMode.index];
+        instance.mpris?.loopStatus = MPRISLoopStatus.values[instance.playlistLoopMode.index];
       }
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
@@ -576,8 +567,7 @@ class Playback extends ChangeNotifier {
               Collection.instance.historyPlaylist,
               track,
             );
-          } else if (Collection.instance.historyPlaylist.tracks.first !=
-              track) {
+          } else if (Collection.instance.historyPlaylist.tracks.first != track) {
             Collection.instance.playlistAddTrack(
               Collection.instance.historyPlaylist,
               track,
@@ -589,16 +579,13 @@ class Playback extends ChangeNotifier {
           try {
             if (Configuration.instance.taskbarIndicator) {
               WindowsTaskbar.setProgressMode(
-                buffering
-                    ? TaskbarProgressMode.indeterminate
-                    : TaskbarProgressMode.normal,
+                buffering ? TaskbarProgressMode.indeterminate : TaskbarProgressMode.normal,
               );
             }
             WindowsTaskbar.setWindowTitle(
               [
                 track.trackName,
-                if (!track.trackArtistNamesNotPresent)
-                  track.trackArtistNames.take(2).join(', '),
+                if (!track.trackArtistNamesNotPresent) track.trackArtistNames.take(2).join(', '),
                 'Harmonoid',
               ].join(' • '),
             );
@@ -612,9 +599,7 @@ class Playback extends ChangeNotifier {
                 ),
                 ThumbnailToolbarButton(
                   ThumbnailToolbarAssetIcon(
-                    playing
-                        ? 'assets/icons/pause.ico'
-                        : 'assets/icons/play.ico',
+                    playing ? 'assets/icons/pause.ico' : 'assets/icons/play.ico',
                   ),
                   playing ? Language.instance.PAUSE : Language.instance.PLAY,
                   playing ? pause : play,
@@ -623,9 +608,7 @@ class Playback extends ChangeNotifier {
                   ThumbnailToolbarAssetIcon('assets/icons/next.ico'),
                   Language.instance.NEXT,
                   next,
-                  mode: index == tracks.length - 1
-                      ? ThumbnailToolbarButtonMode.disabled
-                      : 0,
+                  mode: index == tracks.length - 1 ? ThumbnailToolbarButtonMode.disabled : 0,
                 ),
               ],
             );
@@ -640,12 +623,8 @@ class Playback extends ChangeNotifier {
             );
             SystemMediaTransportControls.instance.setMusicData(
               title: track.trackName,
-              artist: track.trackArtistNamesNotPresent
-                  ? null
-                  : track.trackArtistNames.take(2).join(', '),
-              albumArtist: track.albumArtistNameNotPresent
-                  ? null
-                  : track.albumArtistName,
+              artist: track.trackArtistNamesNotPresent ? null : track.trackArtistNames.take(2).join(', '),
+              albumArtist: track.albumArtistNameNotPresent ? null : track.albumArtistName,
               albumTitle: track.albumName,
               trackNumber: track.trackNumber,
             );
@@ -686,12 +665,8 @@ class Playback extends ChangeNotifier {
             length: duration,
             title: track.trackName,
             album: track.albumArtistNameNotPresent ? null : track.albumName,
-            artist: track.trackArtistNamesNotPresent
-                ? null
-                : track.trackArtistNames,
-            albumArtist: track.albumArtistNameNotPresent
-                ? null
-                : [track.albumArtistName],
+            artist: track.trackArtistNamesNotPresent ? null : track.trackArtistNames,
+            albumArtist: track.albumArtistNameNotPresent ? null : [track.albumArtistName],
             trackNumber: track.trackNumber,
             discNumber: track.discNumber,
             firstUsed: track.timeAdded,
@@ -706,9 +681,7 @@ class Playback extends ChangeNotifier {
                 ? ExternalMedia.thumbnail(track.uri, small: true).toString()
                 : await (() async {
                     // Chances are file has no tagged metadata, thus fallback to the default album art.
-                    if (track.albumNameNotPresent &&
-                        track.trackArtistNamesNotPresent &&
-                        track.albumArtistNameNotPresent) {
+                    if (track.albumNameNotPresent && track.trackArtistNamesNotPresent && track.albumArtistNameNotPresent) {
                       return 'default_album_art';
                     }
                     final search = [
@@ -725,10 +698,7 @@ class Playback extends ChangeNotifier {
                         search,
                         filter: SearchFilter.track,
                       );
-                      return (result.values.first.first as dynamic)
-                          .thumbnails
-                          .values
-                          .first;
+                      return (result.values.first.first as dynamic).thumbnails.values.first;
                     } catch (exception, stacktrace) {
                       debugPrint(exception.toString());
                       debugPrint(stacktrace.toString());
@@ -746,8 +716,7 @@ class Playback extends ChangeNotifier {
                             },
                           ),
                         );
-                        return jsonDecode(response.body)['results'][0]
-                            ['artworkUrl100'];
+                        return jsonDecode(response.body)['results'][0]['artworkUrl100'];
                       } catch (exception, stacktrace) {
                         debugPrint(exception.toString());
                         debugPrint(stacktrace.toString());
@@ -777,10 +746,7 @@ class Playback extends ChangeNotifier {
           final track = tracks[index];
           final search = [
             track.trackName,
-            if (!track.trackArtistNamesNotPresent)
-              track.trackArtistNames.take(1).join('')
-            else if (!track.albumArtistNameNotPresent)
-              track.albumArtistName,
+            if (!track.trackArtistNamesNotPresent) track.trackArtistNames.take(1).join('') else if (!track.albumArtistNameNotPresent) track.albumArtistName,
           ].join(' ');
           if (!completed) {
             final title = track.trackName,
@@ -789,30 +755,20 @@ class Playback extends ChangeNotifier {
                     : !track.albumArtistNameNotPresent
                         ? track.albumArtistName
                         : '';
-            final details = track.uri.isScheme('FILE')
-                ? [title, subtitle].join(' • ')
-                : track.trackName;
-            final state =
-                track.uri.isScheme('FILE') ? audioFormatLabelSmall : subtitle;
+            final details = track.uri.isScheme('FILE') ? [title, subtitle].join(' • ') : track.trackName;
+            final state = track.uri.isScheme('FILE') ? audioFormatLabelSmall : subtitle;
             discord?.start(autoRegister: true);
             discord?.updatePresence(
               DiscordPresence(
                 details: details,
                 state: state,
                 largeImageKey: _discordPreviousLargeImageKey,
-                largeImageText:
-                    !track.albumNameNotPresent ? track.albumName : null,
+                largeImageText: !track.albumNameNotPresent ? track.albumName : null,
                 smallImageKey: playing ? 'play' : 'pause',
                 smallImageText: playing ? 'Playing' : 'Paused',
                 button1Label: track.uri.isScheme('FILE') ? 'Find' : 'Listen',
-                button1Url: track.uri.isScheme('FILE')
-                    ? 'https://www.google.com/search?q=${Uri.encodeComponent(search)}'
-                    : track.uri.toString(),
-                endTimeStamp: playing
-                    ? DateTime.now().millisecondsSinceEpoch +
-                        duration.inMilliseconds -
-                        position.inMilliseconds
-                    : null,
+                button1Url: track.uri.isScheme('FILE') ? 'https://www.google.com/search?q=${Uri.encodeComponent(search)}' : track.uri.toString(),
+                endTimeStamp: playing ? DateTime.now().millisecondsSinceEpoch + duration.inMilliseconds - position.inMilliseconds : null,
               ),
             );
           }
@@ -897,8 +853,7 @@ abstract class DefaultPlaybackValues {
   static List<Track> tracks = [];
   static double rate = 1.0;
   static double pitch = 1.0;
-  static double volume =
-      Platform.isWindows || Platform.isLinux || Platform.isMacOS ? 50.0 : 100.0;
+  static double volume = Platform.isWindows || Platform.isLinux || Platform.isMacOS ? 50.0 : 100.0;
   static bool shuffling = false;
   static PlaylistLoopMode playlistLoopMode = PlaylistLoopMode.none;
 }
@@ -909,15 +864,11 @@ abstract class DefaultPlaybackValues {
 ///
 /// This class is used in composition with the parent [Playback] class & can be accessed from its singleton available as [Playback.instance].
 /// Takes existing [Playback] reference as [playback]. This is tightly coupled with the parent [Playback] class.
-class _HarmonoidMobilePlayer extends BaseAudioHandler
-    with SeekHandler, QueueHandler {
+class _HarmonoidMobilePlayer extends BaseAudioHandler with SeekHandler, QueueHandler {
   _HarmonoidMobilePlayer(this.playback) {
     _player = AudioPlayer(
       audioPipeline: AudioPipeline(
-        androidAudioEffects:
-            Configuration.instance.androidEnableVolumeBoostFilter
-                ? [_androidLoudnessEnhancer]
-                : null,
+        androidAudioEffects: Configuration.instance.androidEnableVolumeBoostFilter ? [_androidLoudnessEnhancer] : null,
       ),
     );
     _player.playbackEventStream.listen((e) {
@@ -951,8 +902,7 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
                     Track.fromJson(queue.value[e].extras),
                     small: true,
                   );
-                  image =
-                      Uri.parse((artwork as ExtendedNetworkImageProvider).url);
+                  image = Uri.parse((artwork as ExtendedNetworkImageProvider).url);
                 } else {
                   final artwork = getAlbumArt(
                     Track.fromJson(
@@ -997,8 +947,7 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
     );
     _player.positionStream
         .distinct(
-          (previous, next) =>
-              (next - previous).abs() < const Duration(milliseconds: 200),
+          (previous, next) => (next - previous).abs() < const Duration(milliseconds: 200),
         )
         .listen(
           (e) => playback
@@ -1275,8 +1224,7 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
         ProcessingState.completed: AudioProcessingState.idle,
       }[_player.processingState]!,
       // The audio playback needs to be interpreted as paused once the playback of a media is completed.
-      playing:
-          _player.playing && _player.processingState == ProcessingState.ready,
+      playing: _player.playing && _player.processingState == ProcessingState.ready,
       updatePosition: _player.position,
       bufferedPosition: _player.bufferedPosition,
       speed: _player.speed,
@@ -1299,8 +1247,7 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
 
   /// [AudioPlayer] instance from `package:just_audio`.
   late final AudioPlayer _player;
-  final AndroidLoudnessEnhancer _androidLoudnessEnhancer =
-      AndroidLoudnessEnhancer();
+  final AndroidLoudnessEnhancer _androidLoudnessEnhancer = AndroidLoudnessEnhancer();
 
   final Playback playback;
 

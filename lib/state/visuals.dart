@@ -1,10 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
 // ignore_for_file: implementation_imports
 
 import 'dart:io';
@@ -220,9 +213,7 @@ class Visuals extends ChangeNotifier {
     animationDuration ??= this.animationDuration;
     if (context != null) {
       if (Platform.isAndroid || Platform.isIOS) {
-        final brightness = Theme.of(context).brightness == Brightness.dark
-            ? Brightness.light
-            : Brightness.dark;
+        final brightness = Theme.of(context).brightness == Brightness.dark ? Brightness.light : Brightness.dark;
         switch (standard) {
           case 3:
             SystemChrome.setSystemUIOverlayStyle(
@@ -232,10 +223,8 @@ class Visuals extends ChangeNotifier {
                 statusBarColor: Colors.transparent,
                 // Edge-to-edge effect.
                 systemNavigationBarIconBrightness: brightness,
-                systemNavigationBarColor:
-                    adaptive.navigationBarTheme.backgroundColor,
-                systemNavigationBarDividerColor:
-                    adaptive.navigationBarTheme.backgroundColor,
+                systemNavigationBarColor: adaptive.navigationBarTheme.backgroundColor,
+                systemNavigationBarDividerColor: adaptive.navigationBarTheme.backgroundColor,
               ),
             );
             break;

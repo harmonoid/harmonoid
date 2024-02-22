@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:window_plus/window_plus.dart';
@@ -32,19 +24,15 @@ class NowPlayingScreen extends StatefulWidget {
   NowPlayingState createState() => NowPlayingState();
 }
 
-class NowPlayingState extends State<NowPlayingScreen>
-    with TickerProviderStateMixin {
-  final ScrollController scrollController = ScrollController(
-      initialScrollOffset:
-          48.0 * (Playback.instance.index - 2).clamp(0, 9223372036854775807));
+class NowPlayingState extends State<NowPlayingScreen> with TickerProviderStateMixin {
+  final ScrollController scrollController = ScrollController(initialScrollOffset: 48.0 * (Playback.instance.index - 2).clamp(0, 9223372036854775807));
   double scale = 0.0;
   int index = Playback.instance.index;
   List<Track> tracks = Playback.instance.tracks;
   Track? track;
 
   void listener() {
-    if (Playback.instance.index < 0 ||
-        Playback.instance.index >= Playback.instance.tracks.length) {
+    if (Playback.instance.index < 0 || Playback.instance.index >= Playback.instance.tracks.length) {
       return;
     }
     final current = Playback.instance.tracks[Playback.instance.index];
@@ -95,12 +83,8 @@ class NowPlayingState extends State<NowPlayingScreen>
                           clipBehavior: Clip.antiAlias,
                           elevation: kDefaultHeavyElevation,
                           child: AnimatedSwitcher(
-                            duration: Theme.of(context)
-                                    .extension<AnimationDuration>()
-                                    ?.medium ??
-                                Duration.zero,
-                            transitionBuilder: (child, animation) =>
-                                FadeTransition(
+                            duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+                            transitionBuilder: (child, animation) => FadeTransition(
                               opacity: animation,
                               child: child,
                             ),
@@ -140,16 +124,10 @@ class NowPlayingState extends State<NowPlayingScreen>
                             children: [
                               CustomListViewBuilder(
                                 controller: scrollController,
-                                itemExtents: List.generate(
-                                    tracks.length, (index) => 48.0),
+                                itemExtents: List.generate(tracks.length, (index) => 48.0),
                                 itemCount: tracks.length,
                                 itemBuilder: (context, i) => Material(
-                                  color: index == i
-                                      ? Theme.of(context)
-                                          .dividerTheme
-                                          .color
-                                          ?.withOpacity(0.12)
-                                      : Colors.transparent,
+                                  color: index == i ? Theme.of(context).dividerTheme.color?.withOpacity(0.12) : Colors.transparent,
                                   child: TrackTile(
                                     leading: index == i
                                         ? Icon(
@@ -158,9 +136,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                                           )
                                         : Text(
                                             '${i + 1}',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge,
+                                            style: Theme.of(context).textTheme.bodyLarge,
                                           ),
                                     track: tracks[i],
                                     index: 0,
@@ -173,8 +149,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                                 ),
                               ),
                               Consumer<Lyrics>(
-                                builder: (context, lyrics, _) => lyrics
-                                        .current.isNotEmpty
+                                builder: (context, lyrics, _) => lyrics.current.isNotEmpty
                                     ? CustomListView(
                                         shrinkWrap: true,
                                         padding: EdgeInsets.all(16.0),
@@ -182,9 +157,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                                             .map(
                                               (lyric) => Text(
                                                 lyric.words,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge,
+                                                style: Theme.of(context).textTheme.bodyLarge,
                                                 textAlign: TextAlign.start,
                                               ),
                                             )
@@ -193,9 +166,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                                     : Center(
                                         child: Text(
                                           Language.instance.LYRICS_NOT_FOUND,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge,
+                                          style: Theme.of(context).textTheme.bodyLarge,
                                           textAlign: TextAlign.start,
                                         ),
                                       ),
