@@ -7,30 +7,40 @@ import 'package:flutter/services.dart';
 
 import 'package:harmonoid/constants/strings.dart';
 
-/// [LanguageData] model to represent a language, which will be displayed in the UI.
+/// {@template language_data}
 ///
-/// See: https://github.com/harmonoid/translations.git
+/// LanguageData
+/// ------------
 ///
-/// The mentioned repository is kept as a submodule to the Harmonoid repository.
-///
+/// {@endtemplate}
 class LanguageData {
-  /// Language & country code. e.g. `en-US`.
-  /// This should match the name of the file.
+  /// Code.
+  /// e.g. `en-US`.
   final String code;
 
-  /// Language name. e.g. `English (United States)`.
-  /// Must be in the same language.
+  /// Name.
+  /// e.g. `English (United States)`.
   final String name;
 
-  /// Name of the country. e.g. `United States`.
-  /// Must be in the same language.
+  /// Country.
+  /// e.g. `United States`.
   final String country;
 
+  /// {@macro language_data}
   const LanguageData({
     required this.code,
     required this.name,
     required this.country,
   });
+
+  @override
+  int get hashCode => code.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is LanguageData && other.code == code && other.name == name && other.country == country;
+  }
 
   factory LanguageData.fromJson(dynamic json) => LanguageData(
         code: json['code'],
@@ -43,44 +53,37 @@ class LanguageData {
         'name': name,
         'country': country,
       };
-
-  @override
-  int get hashCode => code.hashCode;
-
-  @override
-  bool operator ==(Object other) {
-    if (other is LanguageData) {
-      return code == other.code;
-    }
-    return false;
-  }
 }
 
-/// Provides the [String] labels localized for the [current] language to show inside the UI.
+/// {@template language}
+///
+/// Language
+/// --------
+/// Application's localization provider.
+///
+/// {@endtemplate}
 class Language extends Strings with ChangeNotifier {
-  /// [Language] object singleton instance.
-  static final Language instance = Language();
+  /// Singleton instance.
+  static final Language instance = Language._();
 
-  /// Must be called before [runApp].
-  static Future<void> initialize({
-    required LanguageData language,
-  }) =>
-      instance.set(value: language);
+  /// Initializes the [instance].
+  static Future<void> ensureInitialized({required LanguageData language}) => instance.set(value: language);
+
+  /// {@macro language}
+  Language._();
+
+  /// Current language.
+  late LanguageData current;
 
   /// Returns all the available languages after reading the assets.
-  Future<Set<LanguageData>> get available async {
+  Future<Set<LanguageData>> get all async {
     final data = await rootBundle.loadString('assets/translations/index.json');
     return Set.from(json.decode(data).map((e) => LanguageData.fromJson(e)));
   }
 
-  /// Updates the [current] language & notifies the listeners.
-  Future<void> set({
-    required LanguageData value,
-  }) async {
-    final data = await rootBundle.loadString(
-      'assets/translations/translations/${value.code}.json',
-      cache: true,
-    );
+  /// Sets the current language.
+  Future<void> set({required LanguageData value}) async {
+    final data = await rootBundle.loadString('assets/translations/translations/${value.code}.json');
     final map = json.decode(data);
     ABOUT_TITLE = map['ABOUT_TITLE']!;
     ADD = map['ADD']!;
@@ -366,11 +369,4 @@ class Language extends Strings with ChangeNotifier {
     current = value;
     notifyListeners();
   }
-
-  /// Currently selected & displayed [Language].
-  late LanguageData current;
-
-  @override
-  // ignore: must_call_super
-  void dispose() {}
 }
