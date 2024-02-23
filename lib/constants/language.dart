@@ -66,8 +66,15 @@ class Language extends Strings with ChangeNotifier {
   /// Singleton instance.
   static final Language instance = Language._();
 
+  /// Whether the [instance] is initialized.
+  static bool initialized = false;
+
   /// Initializes the [instance].
-  static Future<void> ensureInitialized({required LanguageData language}) => instance.set(value: language);
+  static Future<void> ensureInitialized({required LanguageData language}) async {
+    if (initialized) return;
+    initialized = true;
+    await instance.set(value: language);
+  }
 
   /// {@macro language}
   Language._();

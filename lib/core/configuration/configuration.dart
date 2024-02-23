@@ -9,7 +9,7 @@ import 'package:win32/win32.dart';
 import 'package:harmonoid/core/configuration/constants.dart';
 import 'package:harmonoid/core/configuration/database.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/utils/storage_retriever.dart';
+import 'package:harmonoid/utils/android_storage_controller.dart';
 
 /// {@template configuration}
 ///
@@ -22,11 +22,16 @@ class Configuration {
   /// Singleton instance.
   static final Configuration instance = Configuration._();
 
+  /// Whether the [instance] is initialized.
+  static bool initialized = false;
+
   /// {@macro configuration}
   Configuration._();
 
   /// Initializes the [instance].
   Future<void> ensureInitialized() async {
+    if (initialized) return;
+    initialized = true;
     if (Platform.environment['HARMONOID_CACHE_DIR'] == null) {
       // Default directory.
       directory = Directory(path.join(await getDefaultDirectory(), '.Harmonoid'));
