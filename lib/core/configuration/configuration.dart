@@ -15,7 +15,7 @@ import 'package:harmonoid/utils/android_storage_controller.dart';
 ///
 /// Configuration
 /// -------------
-/// Application's persistent configuration & settings provider.
+/// Implementation to retrieve & save persistent configuration & settings.
 ///
 /// {@endtemplate}
 class Configuration {
@@ -24,9 +24,6 @@ class Configuration {
 
   /// Whether the [instance] is initialized.
   static bool initialized = false;
-
-  /// {@macro configuration}
-  Configuration._();
 
   /// Initializes the [instance].
   Future<void> ensureInitialized() async {
@@ -43,50 +40,14 @@ class Configuration {
     await refresh();
   }
 
+  /// {@macro configuration}
+  Configuration._();
+
   /// Directory used to store configuration.
   late Directory directory;
 
   /// Database used to store configuration.
   late Database db;
-
-  AnimationDuration? _animationDuration;
-  bool? _audioFormatDisplay;
-  bool? _discordRPC;
-  bool? _fallbackAlbumArt;
-  LanguageData? _language;
-  bool? _launchNowPlayingOnFileOpen;
-  bool? _lrcFromDirectory;
-  int? _mobileAlbumGridSpanCount;
-  int? _mobileArtistGridSpanCount;
-  int? _mobileGenreGridSpanCount;
-  bool? _mobileNowPlayingRipple;
-  bool? _mobileNowPlayingSlider;
-  bool? _modernNowPlaying;
-  int? _modernNowPlayingCarousel;
-  int? _modernNowPlayingHighlightedLyricsSize;
-  int? _modernNowPlayingUnhighlightedLyricsSize;
-  bool? _modernNowPlayingLyrics;
-  Map<String, String>? _mpvOptions;
-  String? _mpvPath;
-  bool? _musicLibraryAddTracksToPlaylist;
-  Set<AlbumGroupingParameter>? _musicLibraryAlbumGroupingParameters;
-  bool? _musicLibraryAlbumSortAscending;
-  AlbumSortType? _musicLibraryAlbumSortType;
-  bool? _musicLibraryArtistSortAscending;
-  ArtistSortType? _musicLibraryArtistSortType;
-  Set<Directory>? _musicLibraryDirectories;
-  bool? _musicLibraryGenreSortAscending;
-  GenreSortType? _musicLibraryGenreSortType;
-  int? _musicLibraryMinimumFileSize;
-  bool? _musicLibraryRefreshOnLaunch;
-  int? _musicLibraryTab;
-  bool? _musicLibraryTrackSortAscending;
-  TrackSortType? _musicLibraryTrackSortType;
-  bool? _notificationLyrics;
-  bool? _themeDynamicColor;
-  int? _themeMaterialVersion;
-  ThemeMode? _themeMode;
-  bool? _windowsTaskbarProgress;
 
   AnimationDuration get animationDuration => _animationDuration!;
   bool get audioFormatDisplay => _audioFormatDisplay!;
@@ -451,7 +412,7 @@ class Configuration {
     } else if (Platform.isLinux) {
       return path.normalize(Platform.environment['HOME']!);
     } else if (Platform.isAndroid) {
-      final result = await StorageRetriever.instance.cache;
+      final result = await AndroidStorageController.instance.cache;
       return result.path;
     }
     throw UnsupportedError('Unsupported platform: ${Platform.operatingSystem}');
@@ -499,11 +460,50 @@ class Configuration {
         return path.join(path.normalize(Platform.environment['HOME']!), 'Music');
       }
     } else if (Platform.isAndroid) {
-      final result = await StorageRetriever.instance.external;
-      return result.path;
+      final result = await AndroidStorageController.instance.external;
+      return result.first.path;
     }
     throw UnsupportedError('Unsupported platform: ${Platform.operatingSystem}');
   }
+
+  AnimationDuration? _animationDuration;
+  bool? _audioFormatDisplay;
+  bool? _discordRPC;
+  bool? _fallbackAlbumArt;
+  LanguageData? _language;
+  bool? _launchNowPlayingOnFileOpen;
+  bool? _lrcFromDirectory;
+  int? _mobileAlbumGridSpanCount;
+  int? _mobileArtistGridSpanCount;
+  int? _mobileGenreGridSpanCount;
+  bool? _mobileNowPlayingRipple;
+  bool? _mobileNowPlayingSlider;
+  bool? _modernNowPlaying;
+  int? _modernNowPlayingCarousel;
+  int? _modernNowPlayingHighlightedLyricsSize;
+  int? _modernNowPlayingUnhighlightedLyricsSize;
+  bool? _modernNowPlayingLyrics;
+  Map<String, String>? _mpvOptions;
+  String? _mpvPath;
+  bool? _musicLibraryAddTracksToPlaylist;
+  Set<AlbumGroupingParameter>? _musicLibraryAlbumGroupingParameters;
+  bool? _musicLibraryAlbumSortAscending;
+  AlbumSortType? _musicLibraryAlbumSortType;
+  bool? _musicLibraryArtistSortAscending;
+  ArtistSortType? _musicLibraryArtistSortType;
+  Set<Directory>? _musicLibraryDirectories;
+  bool? _musicLibraryGenreSortAscending;
+  GenreSortType? _musicLibraryGenreSortType;
+  int? _musicLibraryMinimumFileSize;
+  bool? _musicLibraryRefreshOnLaunch;
+  int? _musicLibraryTab;
+  bool? _musicLibraryTrackSortAscending;
+  TrackSortType? _musicLibraryTrackSortType;
+  bool? _notificationLyrics;
+  bool? _themeDynamicColor;
+  int? _themeMaterialVersion;
+  ThemeMode? _themeMode;
+  bool? _windowsTaskbarProgress;
 
   static bool get isDesktop => Platform.isWindows || Platform.isMacOS || Platform.isLinux;
   static bool get isMobile => Platform.isAndroid || Platform.isIOS;

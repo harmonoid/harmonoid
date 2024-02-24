@@ -59,7 +59,7 @@ class LanguageData {
 ///
 /// Language
 /// --------
-/// Application's localization provider.
+/// Implementation to set the current language & retrieve localized strings from the assets.
 ///
 /// {@endtemplate}
 class Language extends Strings with ChangeNotifier {
