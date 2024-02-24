@@ -87,6 +87,22 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
     );
   }
 
+  /// Progress: Current.
+  int? current;
+
+  /// Progress: Total.
+  int total = 0;
+
+  /// Progress: Done.
+  bool done = true;
+
+  /// Progress: Callback.
+  void callback(int? current, int total, bool done) {
+    this.current = current;
+    this.total = total;
+    this.done = done;
+  }
+
   /// Invoked for performing the delete operation on Android.
   ///
   /// Modern Android i.e. API 29 or higher have stricter file policies.
@@ -120,9 +136,9 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
 
   /// Disposes the [instance]. Releases allocated resources back to the system.
   @override
-  Future<void> dispose() async {
+  void dispose() {
     super.dispose();
-    await _tagReader.dispose();
+    _tagReader.dispose();
   }
 
   /// Tag reader.

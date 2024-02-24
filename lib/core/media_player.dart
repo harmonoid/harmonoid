@@ -26,7 +26,7 @@ import 'package:harmonoid/models/playback_state.dart';
 /// {@endtemplate}
 class MediaPlayer extends ChangeNotifier {
   /// Singleton instance.
-  static final MediaPlayer instance = MediaPlayer._();
+  static late final MediaPlayer instance = MediaPlayer._();
 
   /// Whether the [instance] is initialized.
   static bool initialized = false;

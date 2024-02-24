@@ -9,7 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3/sqlite3.dart';
 import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 
-import 'package:harmonoid/core/configuration/constants.dart';
+import 'package:harmonoid/core/configuration/database/constants.dart';
 
 part 'tables/entries.dart';
 

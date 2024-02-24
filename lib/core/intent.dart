@@ -22,7 +22,7 @@ import 'package:harmonoid/models/playback_state.dart';
 /// {@endtemplate}
 class Intent {
   /// Singleton instance.
-  static final Intent instance = Intent._();
+  static late final Intent instance = Intent._();
 
   /// Whether the [instance] is initialized.
   static bool initialized = false;
@@ -198,8 +198,8 @@ class Intent {
   }
 
   /// Disposes the [instance]. Releases allocated resources back to the system.
-  Future<void> dispose() async {
-    await _tagReader.dispose();
+  void dispose() {
+    _tagReader.dispose();
   }
 
   /// Resource.

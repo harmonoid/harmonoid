@@ -6,8 +6,8 @@ import 'package:media_library/media_library.dart';
 import 'package:path/path.dart' as path;
 import 'package:win32/win32.dart';
 
-import 'package:harmonoid/core/configuration/constants.dart';
-import 'package:harmonoid/core/configuration/database.dart';
+import 'package:harmonoid/core/configuration/database/constants.dart';
+import 'package:harmonoid/core/configuration/database/database.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 
@@ -20,7 +20,7 @@ import 'package:harmonoid/utils/android_storage_controller.dart';
 /// {@endtemplate}
 class Configuration {
   /// Singleton instance.
-  static final Configuration instance = Configuration._();
+  static late final Configuration instance = Configuration._();
 
   /// Whether the [instance] is initialized.
   static bool initialized = false;
@@ -505,8 +505,8 @@ class Configuration {
   ThemeMode? _themeMode;
   bool? _windowsTaskbarProgress;
 
-  static bool get isDesktop => Platform.isWindows || Platform.isMacOS || Platform.isLinux;
   static bool get isMobile => Platform.isAndroid || Platform.isIOS;
+  static bool get isDesktop => Platform.isLinux || Platform.isMacOS || Platform.isWindows;
 
   // ----- Keys -----
 
