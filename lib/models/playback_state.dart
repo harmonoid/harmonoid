@@ -10,28 +10,28 @@ import 'package:harmonoid/models/playable.dart';
 /// {@endtemplate}
 class PlaybackState {
   /// Index.
-  int index;
+  final int index;
 
   /// Playables.
-  List<Playable> playables;
+  final List<Playable> playables;
 
   /// Rate.
-  double rate;
+  final double rate;
 
   /// Pitch.
-  double pitch;
+  final double pitch;
 
   /// Volume.
-  double volume;
+  final double volume;
 
   /// Shuffle.
-  bool shuffle;
+  final bool shuffle;
 
   /// Loop.
-  Loop loop;
+  final Loop loop;
 
   /// {@macro playback_state}
-  PlaybackState({
+  const PlaybackState({
     required this.index,
     required this.playables,
     required this.rate,

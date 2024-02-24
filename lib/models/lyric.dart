@@ -12,7 +12,7 @@ class Lyric {
   final String words;
 
   /// {@macro lyric}
-  Lyric({
+  const Lyric({
     required this.time,
     required this.words,
   });

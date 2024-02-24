@@ -20,7 +20,7 @@ class Playable {
   final List<String> description;
 
   /// {@macro playable}
-  Playable({
+  const Playable({
     required this.uri,
     required this.title,
     required this.subtitle,
