@@ -9,9 +9,6 @@ extension TrackExtension on Track {
         uri: uri,
         title: title,
         subtitle: [...artists],
-        description: [
-          if (album.isNotEmpty) album.toString(),
-          if (year > 0) year.toString(),
-        ],
+        description: [if (album.isNotEmpty) album.toString(), if (year > 0) year.toString()],
       );
 }
