@@ -34,7 +34,13 @@ class Lyric {
   }
 
   @override
-  int get hashCode => time.hashCode ^ words.hashCode;
+  int get hashCode => Object.hash(
+        time,
+        words,
+      );
+
+  @override
+  String toString() => 'Lyric(time: $time, words: $words)';
 
   Map<String, dynamic> toJson() => {
         'time': time,

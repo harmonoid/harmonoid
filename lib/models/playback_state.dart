@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:harmonoid/models/loop.dart';
 import 'package:harmonoid/models/playable.dart';
 
@@ -65,7 +66,7 @@ class PlaybackState {
     if (identical(this, other)) return true;
     return other is PlaybackState &&
         other.index == index &&
-        other.playables == playables &&
+        ListEquality().equals(other.playables, playables) &&
         other.rate == rate &&
         other.pitch == pitch &&
         other.volume == volume &&
@@ -74,7 +75,18 @@ class PlaybackState {
   }
 
   @override
-  int get hashCode => index.hashCode ^ playables.hashCode ^ rate.hashCode ^ pitch.hashCode ^ volume.hashCode ^ shuffle.hashCode ^ loop.hashCode;
+  int get hashCode => Object.hash(
+        index,
+        ListEquality().hash(playables),
+        rate,
+        pitch,
+        volume,
+        shuffle,
+        loop,
+      );
+
+  @override
+  String toString() => 'PlaybackState(index: $index, playables: $playables, rate: $rate, pitch: $pitch, volume: $volume, shuffle: $shuffle, loop: $loop)';
 
   Map<String, dynamic> toJson() => {
         'index': index,
