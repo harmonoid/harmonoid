@@ -96,20 +96,27 @@ class MediaPlayer extends ChangeNotifier {
     state = state.copyWith(index: index, playables: playables);
   }
 
+  Future<void> add(List<Playable> playables) async {
+    for (final playable in playables) {
+      await _player.add(playable.toMedia());
+    }
+    state = state.copyWith(playables: [...state.playables, ...playables]);
+  }
+
   Future<void> setPlaybackState(
     PlaybackState playbackState, {
     bool play = true,
   }) async {
     state = playbackState.toMediaPlayerState();
-    setRate(state.rate);
-    setPitch(state.pitch);
-    setVolume(state.volume);
-    setLoop(state.loop);
+    await setRate(state.rate);
+    await setPitch(state.pitch);
+    await setVolume(state.volume);
+    await setLoop(state.loop);
     if (play) {
       await open(
         state.playables,
         index: state.index,
-        play: play,
+        play: false,
       );
     }
   }
