@@ -38,11 +38,17 @@ dependencies:
       ref: master
   lrc: ^1.0.1
   material_floating_search_bar:
-    git: https://github.com/alexmercerind/material_floating_search_bar_bxqm.git
+    git:
+      url: https://github.com/alexmercerind/material_floating_search_bar_bxqm.git
+      ref: master
   media_kit: ^1.1.10
   media_kit_libs_audio: ^1.0.4
   media_library:
     path: external/media_library
+  mpris_service:
+    git:
+      url: https://github.com/alexmercerind/mpris_service.git
+      ref: master
   path: ^1.9.0
   path_provider: ^2.1.2
   permission_handler: ^11.3.0
