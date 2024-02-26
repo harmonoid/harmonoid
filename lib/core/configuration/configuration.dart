@@ -20,7 +20,7 @@ import 'package:harmonoid/utils/android_storage_controller.dart';
 /// {@endtemplate}
 class Configuration {
   /// Singleton instance.
-  static late final Configuration instance = Configuration._();
+  static final Configuration instance = Configuration._();
 
   /// Whether the [instance] is initialized.
   static bool initialized = false;
@@ -52,37 +52,38 @@ class Configuration {
   AnimationDuration get animationDuration => _animationDuration!;
   bool get audioFormatDisplay => _audioFormatDisplay!;
   bool get discordRPC => _discordRPC!;
-  bool get fallbackAlbumArt => _fallbackAlbumArt!;
   LanguageData get language => _language!;
   bool get launchNowPlayingOnFileOpen => _launchNowPlayingOnFileOpen!;
   bool get lrcFromDirectory => _lrcFromDirectory!;
-  int get mobileAlbumGridSpanCount => _mobileAlbumGridSpanCount!;
-  int get mobileArtistGridSpanCount => _mobileArtistGridSpanCount!;
-  int get mobileGenreGridSpanCount => _mobileGenreGridSpanCount!;
+  bool get mediaLibraryAddTracksToPlaylist => _mediaLibraryAddTracksToPlaylist!;
+  Set<AlbumGroupingParameter> get mediaLibraryAlbumGroupingParameters => _mediaLibraryAlbumGroupingParameters!;
+  bool get mediaLibraryAlbumSortAscending => _mediaLibraryAlbumSortAscending!;
+  AlbumSortType get mediaLibraryAlbumSortType => _mediaLibraryAlbumSortType!;
+  bool get mediaLibraryArtistSortAscending => _mediaLibraryArtistSortAscending!;
+  ArtistSortType get mediaLibraryArtistSortType => _mediaLibraryArtistSortType!;
+  bool get mediaLibraryCoverFallback => _mediaLibraryCoverFallback!;
+  Set<Directory> get mediaLibraryDirectories => _mediaLibraryDirectories!;
+  bool get mediaLibraryGenreSortAscending => _mediaLibraryGenreSortAscending!;
+  GenreSortType get mediaLibraryGenreSortType => _mediaLibraryGenreSortType!;
+  int get mediaLibraryMinimumFileSize => _mediaLibraryMinimumFileSize!;
+  bool get mediaLibraryRefreshOnLaunch => _mediaLibraryRefreshOnLaunch!;
+  int get mediaLibraryTab => _mediaLibraryTab!;
+  bool get mediaLibraryTrackSortAscending => _mediaLibraryTrackSortAscending!;
+  TrackSortType get mediaLibraryTrackSortType => _mediaLibraryTrackSortType!;
+  int get mobileAlbumGridSpan => _mobileAlbumGridSpan!;
+  int get mobileArtistGridSpan => _mobileArtistGridSpan!;
+  int get mobileGenreGridSpan => _mobileGenreGridSpan!;
   bool get mobileNowPlayingRipple => _mobileNowPlayingRipple!;
   bool get mobileNowPlayingSlider => _mobileNowPlayingSlider!;
   bool get modernNowPlaying => _modernNowPlaying!;
   int get modernNowPlayingCarousel => _modernNowPlayingCarousel!;
   int get modernNowPlayingHighlightedLyricsSize => _modernNowPlayingHighlightedLyricsSize!;
-  int get modernNowPlayingUnhighlightedLyricsSize => _modernNowPlayingUnhighlightedLyricsSize!;
   bool get modernNowPlayingLyrics => _modernNowPlayingLyrics!;
+  int get modernNowPlayingUnhighlightedLyricsSize => _modernNowPlayingUnhighlightedLyricsSize!;
   Map<String, String> get mpvOptions => _mpvOptions!;
-  String get mpvPath => _mpvPath!;
-  bool get musicLibraryAddTracksToPlaylist => _musicLibraryAddTracksToPlaylist!;
-  Set<AlbumGroupingParameter> get musicLibraryAlbumGroupingParameters => _musicLibraryAlbumGroupingParameters!;
-  bool get musicLibraryAlbumSortAscending => _musicLibraryAlbumSortAscending!;
-  AlbumSortType get musicLibraryAlbumSortType => _musicLibraryAlbumSortType!;
-  bool get musicLibraryArtistSortAscending => _musicLibraryArtistSortAscending!;
-  ArtistSortType get musicLibraryArtistSortType => _musicLibraryArtistSortType!;
-  Set<Directory> get musicLibraryDirectories => _musicLibraryDirectories!;
-  bool get musicLibraryGenreSortAscending => _musicLibraryGenreSortAscending!;
-  GenreSortType get musicLibraryGenreSortType => _musicLibraryGenreSortType!;
-  int get musicLibraryMinimumFileSize => _musicLibraryMinimumFileSize!;
-  bool get musicLibraryRefreshOnLaunch => _musicLibraryRefreshOnLaunch!;
-  int get musicLibraryTab => _musicLibraryTab!;
-  bool get musicLibraryTrackSortAscending => _musicLibraryTrackSortAscending!;
-  TrackSortType get musicLibraryTrackSortType => _musicLibraryTrackSortType!;
+  String? get mpvPath => _mpvPath!;
   bool get notificationLyrics => _notificationLyrics!;
+  bool get nowPlayingBarColorPalette => _nowPlayingBarColorPalette!;
   bool get themeDynamicColor => _themeDynamicColor!;
   int get themeMaterialVersion => _themeMaterialVersion!;
   ThemeMode get themeMode => _themeMode!;
@@ -92,13 +93,27 @@ class Configuration {
     AnimationDuration? animationDuration,
     bool? audioFormatDisplay,
     bool? discordRPC,
-    bool? fallbackAlbumArt,
     LanguageData? language,
     bool? launchNowPlayingOnFileOpen,
     bool? lrcFromDirectory,
-    int? mobileAlbumGridSpanCount,
-    int? mobileArtistGridSpanCount,
-    int? mobileGenreGridSpanCount,
+    bool? mediaLibraryAddTracksToPlaylist,
+    Set<AlbumGroupingParameter>? mediaLibraryAlbumGroupingParameters,
+    bool? mediaLibraryAlbumSortAscending,
+    AlbumSortType? mediaLibraryAlbumSortType,
+    bool? mediaLibraryArtistSortAscending,
+    ArtistSortType? mediaLibraryArtistSortType,
+    bool? mediaLibraryCoverFallback,
+    Set<Directory>? mediaLibraryDirectories,
+    bool? mediaLibraryGenreSortAscending,
+    GenreSortType? mediaLibraryGenreSortType,
+    int? mediaLibraryMinimumFileSize,
+    bool? mediaLibraryRefreshOnLaunch,
+    int? mediaLibraryTab,
+    bool? mediaLibraryTrackSortAscending,
+    TrackSortType? mediaLibraryTrackSortType,
+    int? mobileAlbumGridSpan,
+    int? mobileArtistGridSpan,
+    int? mobileGenreGridSpan,
     bool? mobileNowPlayingRipple,
     bool? mobileNowPlayingSlider,
     bool? modernNowPlaying,
@@ -108,20 +123,6 @@ class Configuration {
     bool? modernNowPlayingLyrics,
     Map<String, String>? mpvOptions,
     String? mpvPath,
-    bool? musicLibraryAddTracksToPlaylist,
-    Set<AlbumGroupingParameter>? musicLibraryAlbumGroupingParameters,
-    bool? musicLibraryAlbumSortAscending,
-    AlbumSortType? musicLibraryAlbumSortType,
-    bool? musicLibraryArtistSortAscending,
-    ArtistSortType? musicLibraryArtistSortType,
-    Set<Directory>? musicLibraryDirectories,
-    bool? musicLibraryGenreSortAscending,
-    GenreSortType? musicLibraryGenreSortType,
-    int? musicLibraryMinimumFileSize,
-    bool? musicLibraryRefreshOnLaunch,
-    int? musicLibraryTab,
-    bool? musicLibraryTrackSortAscending,
-    TrackSortType? musicLibraryTrackSortType,
     bool? notificationLyrics,
     bool? themeDynamicColor,
     int? themeMaterialVersion,
@@ -140,10 +141,6 @@ class Configuration {
       _discordRPC = discordRPC;
       await db.setValue(_kKeyDiscordRPC, kTypeBoolean, booleanValue: discordRPC);
     }
-    if (fallbackAlbumArt != null) {
-      _fallbackAlbumArt = fallbackAlbumArt;
-      await db.setValue(_kKeyFallbackAlbumArt, kTypeBoolean, booleanValue: fallbackAlbumArt);
-    }
     if (language != null) {
       _language = language;
       await db.setValue(_kKeyLanguage, kTypeJson, jsonValue: language);
@@ -156,17 +153,77 @@ class Configuration {
       _lrcFromDirectory = lrcFromDirectory;
       await db.setValue(_kKeyLRCFromDirectory, kTypeBoolean, booleanValue: lrcFromDirectory);
     }
-    if (mobileAlbumGridSpanCount != null) {
-      _mobileAlbumGridSpanCount = mobileAlbumGridSpanCount;
-      await db.setValue(_kKeyMobileAlbumGridSpanCount, kTypeInteger, integerValue: mobileAlbumGridSpanCount);
+    if (mediaLibraryAddTracksToPlaylist != null) {
+      _mediaLibraryAddTracksToPlaylist = mediaLibraryAddTracksToPlaylist;
+      await db.setValue(_kKeyMediaLibraryAddTracksToPlaylist, kTypeBoolean, booleanValue: mediaLibraryAddTracksToPlaylist);
     }
-    if (mobileArtistGridSpanCount != null) {
-      _mobileArtistGridSpanCount = mobileArtistGridSpanCount;
-      await db.setValue(_kKeyMobileArtistGridSpanCount, kTypeInteger, integerValue: mobileArtistGridSpanCount);
+    if (mediaLibraryAlbumGroupingParameters != null) {
+      _mediaLibraryAlbumGroupingParameters = mediaLibraryAlbumGroupingParameters;
+      await db.setValue(_kKeyMediaLibraryAlbumGroupingParameters, kTypeJson, jsonValue: mediaLibraryAlbumGroupingParameters.map((e) => e.index).toList());
     }
-    if (mobileGenreGridSpanCount != null) {
-      _mobileGenreGridSpanCount = mobileGenreGridSpanCount;
-      await db.setValue(_kKeyMobileGenreGridSpanCount, kTypeInteger, integerValue: mobileGenreGridSpanCount);
+    if (mediaLibraryAlbumSortAscending != null) {
+      _mediaLibraryAlbumSortAscending = mediaLibraryAlbumSortAscending;
+      await db.setValue(_kKeyMediaLibraryAlbumSortAscending, kTypeBoolean, booleanValue: mediaLibraryAlbumSortAscending);
+    }
+    if (mediaLibraryAlbumSortType != null) {
+      _mediaLibraryAlbumSortType = mediaLibraryAlbumSortType;
+      await db.setValue(_kKeyMediaLibraryAlbumSortType, kTypeInteger, integerValue: mediaLibraryAlbumSortType.index);
+    }
+    if (mediaLibraryArtistSortAscending != null) {
+      _mediaLibraryArtistSortAscending = mediaLibraryArtistSortAscending;
+      await db.setValue(_kKeyMediaLibraryArtistSortAscending, kTypeBoolean, booleanValue: mediaLibraryArtistSortAscending);
+    }
+    if (mediaLibraryArtistSortType != null) {
+      _mediaLibraryArtistSortType = mediaLibraryArtistSortType;
+      await db.setValue(_kKeyMediaLibraryArtistSortType, kTypeInteger, integerValue: mediaLibraryArtistSortType.index);
+    }
+    if (mediaLibraryCoverFallback != null) {
+      _mediaLibraryCoverFallback = mediaLibraryCoverFallback;
+      await db.setValue(_kKeyMediaLibraryCoverFallback, kTypeBoolean, booleanValue: mediaLibraryCoverFallback);
+    }
+    if (mediaLibraryDirectories != null) {
+      _mediaLibraryDirectories = mediaLibraryDirectories;
+      await db.setValue(_kKeyMediaLibraryDirectories, kTypeJson, jsonValue: mediaLibraryDirectories.map((e) => e.path).toList());
+    }
+    if (mediaLibraryGenreSortAscending != null) {
+      _mediaLibraryGenreSortAscending = mediaLibraryGenreSortAscending;
+      await db.setValue(_kKeyMediaLibraryGenreSortAscending, kTypeBoolean, booleanValue: mediaLibraryGenreSortAscending);
+    }
+    if (mediaLibraryGenreSortType != null) {
+      _mediaLibraryGenreSortType = mediaLibraryGenreSortType;
+      await db.setValue(_kKeyMediaLibraryGenreSortType, kTypeInteger, integerValue: mediaLibraryGenreSortType.index);
+    }
+    if (mediaLibraryMinimumFileSize != null) {
+      _mediaLibraryMinimumFileSize = mediaLibraryMinimumFileSize;
+      await db.setValue(_kKeyMediaLibraryMinimumFileSize, kTypeInteger, integerValue: mediaLibraryMinimumFileSize);
+    }
+    if (mediaLibraryRefreshOnLaunch != null) {
+      _mediaLibraryRefreshOnLaunch = mediaLibraryRefreshOnLaunch;
+      await db.setValue(_kKeyMediaLibraryRefreshOnLaunch, kTypeBoolean, booleanValue: mediaLibraryRefreshOnLaunch);
+    }
+    if (mediaLibraryTab != null) {
+      _mediaLibraryTab = mediaLibraryTab;
+      await db.setValue(_kKeyMediaLibraryTab, kTypeInteger, integerValue: mediaLibraryTab);
+    }
+    if (mediaLibraryTrackSortAscending != null) {
+      _mediaLibraryTrackSortAscending = mediaLibraryTrackSortAscending;
+      await db.setValue(_kKeyMediaLibraryTrackSortAscending, kTypeBoolean, booleanValue: mediaLibraryTrackSortAscending);
+    }
+    if (mediaLibraryTrackSortType != null) {
+      _mediaLibraryTrackSortType = mediaLibraryTrackSortType;
+      await db.setValue(_kKeyMediaLibraryTrackSortType, kTypeInteger, integerValue: mediaLibraryTrackSortType.index);
+    }
+    if (mobileAlbumGridSpan != null) {
+      _mobileAlbumGridSpan = mobileAlbumGridSpan;
+      await db.setValue(_kKeyMobileAlbumGridSpan, kTypeInteger, integerValue: mobileAlbumGridSpan);
+    }
+    if (mobileArtistGridSpan != null) {
+      _mobileArtistGridSpan = mobileArtistGridSpan;
+      await db.setValue(_kKeyMobileArtistGridSpan, kTypeInteger, integerValue: mobileArtistGridSpan);
+    }
+    if (mobileGenreGridSpan != null) {
+      _mobileGenreGridSpan = mobileGenreGridSpan;
+      await db.setValue(_kKeyMobileGenreGridSpan, kTypeInteger, integerValue: mobileGenreGridSpan);
     }
     if (mobileNowPlayingRipple != null) {
       _mobileNowPlayingRipple = mobileNowPlayingRipple;
@@ -204,62 +261,6 @@ class Configuration {
       _mpvPath = mpvPath;
       await db.setValue(_kKeyMpvPath, kTypeString, stringValue: mpvPath);
     }
-    if (musicLibraryAddTracksToPlaylist != null) {
-      _musicLibraryAddTracksToPlaylist = musicLibraryAddTracksToPlaylist;
-      await db.setValue(_kKeyMusicLibraryAddTracksToPlaylist, kTypeBoolean, booleanValue: musicLibraryAddTracksToPlaylist);
-    }
-    if (musicLibraryAlbumGroupingParameters != null) {
-      _musicLibraryAlbumGroupingParameters = musicLibraryAlbumGroupingParameters;
-      await db.setValue(_kKeyMusicLibraryAlbumGroupingParameters, kTypeJson, jsonValue: musicLibraryAlbumGroupingParameters.map((e) => e.index).toList());
-    }
-    if (musicLibraryAlbumSortAscending != null) {
-      _musicLibraryAlbumSortAscending = musicLibraryAlbumSortAscending;
-      await db.setValue(_kKeyMusicLibraryAlbumSortAscending, kTypeBoolean, booleanValue: musicLibraryAlbumSortAscending);
-    }
-    if (musicLibraryAlbumSortType != null) {
-      _musicLibraryAlbumSortType = musicLibraryAlbumSortType;
-      await db.setValue(_kKeyMusicLibraryAlbumSortType, kTypeInteger, integerValue: musicLibraryAlbumSortType.index);
-    }
-    if (musicLibraryArtistSortAscending != null) {
-      _musicLibraryArtistSortAscending = musicLibraryArtistSortAscending;
-      await db.setValue(_kKeyMusicLibraryArtistSortAscending, kTypeBoolean, booleanValue: musicLibraryArtistSortAscending);
-    }
-    if (musicLibraryArtistSortType != null) {
-      _musicLibraryArtistSortType = musicLibraryArtistSortType;
-      await db.setValue(_kKeyMusicLibraryArtistSortType, kTypeInteger, integerValue: musicLibraryArtistSortType.index);
-    }
-    if (musicLibraryDirectories != null) {
-      _musicLibraryDirectories = musicLibraryDirectories;
-      await db.setValue(_kKeyMusicLibraryDirectories, kTypeJson, jsonValue: musicLibraryDirectories.map((e) => e.path).toList());
-    }
-    if (musicLibraryGenreSortAscending != null) {
-      _musicLibraryGenreSortAscending = musicLibraryGenreSortAscending;
-      await db.setValue(_kKeyMusicLibraryGenreSortAscending, kTypeBoolean, booleanValue: musicLibraryGenreSortAscending);
-    }
-    if (musicLibraryGenreSortType != null) {
-      _musicLibraryGenreSortType = musicLibraryGenreSortType;
-      await db.setValue(_kKeyMusicLibraryGenreSortType, kTypeInteger, integerValue: musicLibraryGenreSortType.index);
-    }
-    if (musicLibraryMinimumFileSize != null) {
-      _musicLibraryMinimumFileSize = musicLibraryMinimumFileSize;
-      await db.setValue(_kKeyMusicLibraryMinimumFileSize, kTypeInteger, integerValue: musicLibraryMinimumFileSize);
-    }
-    if (musicLibraryRefreshOnLaunch != null) {
-      _musicLibraryRefreshOnLaunch = musicLibraryRefreshOnLaunch;
-      await db.setValue(_kKeyMusicLibraryRefreshOnLaunch, kTypeBoolean, booleanValue: musicLibraryRefreshOnLaunch);
-    }
-    if (musicLibraryTab != null) {
-      _musicLibraryTab = musicLibraryTab;
-      await db.setValue(_kKeyMusicLibraryTab, kTypeInteger, integerValue: musicLibraryTab);
-    }
-    if (musicLibraryTrackSortAscending != null) {
-      _musicLibraryTrackSortAscending = musicLibraryTrackSortAscending;
-      await db.setValue(_kKeyMusicLibraryTrackSortAscending, kTypeBoolean, booleanValue: musicLibraryTrackSortAscending);
-    }
-    if (musicLibraryTrackSortType != null) {
-      _musicLibraryTrackSortType = musicLibraryTrackSortType;
-      await db.setValue(_kKeyMusicLibraryTrackSortType, kTypeInteger, integerValue: musicLibraryTrackSortType.index);
-    }
     if (notificationLyrics != null) {
       _notificationLyrics = notificationLyrics;
       await db.setValue(_kKeyNotificationLyrics, kTypeBoolean, booleanValue: notificationLyrics);
@@ -292,7 +293,7 @@ class Configuration {
         await db.setValueIfAbsent(key, kTypeBoolean, booleanValue: value);
       } else if (value is int) {
         await db.setValueIfAbsent(key, kTypeInteger, integerValue: value);
-      } else if (value is String) {
+      } else if (value is String || value == null) {
         await db.setValueIfAbsent(key, kTypeString, stringValue: value);
       } else {
         await db.setValueIfAbsent(key, kTypeJson, jsonValue: value);
@@ -302,13 +303,27 @@ class Configuration {
     _animationDuration = AnimationDuration.fromJson(await db.getJson(_kKeyAnimationDuration));
     _audioFormatDisplay = await db.getBoolean(_kKeyAudioFormatDisplay);
     _discordRPC = await db.getBoolean(_kKeyDiscordRPC);
-    _fallbackAlbumArt = await db.getBoolean(_kKeyFallbackAlbumArt);
     _language = LanguageData.fromJson(await db.getJson(_kKeyLanguage));
     _launchNowPlayingOnFileOpen = await db.getBoolean(_kKeyLaunchNowPlayingOnFileOpen);
     _lrcFromDirectory = await db.getBoolean(_kKeyLRCFromDirectory);
-    _mobileAlbumGridSpanCount = await db.getInteger(_kKeyMobileAlbumGridSpanCount);
-    _mobileArtistGridSpanCount = await db.getInteger(_kKeyMobileArtistGridSpanCount);
-    _mobileGenreGridSpanCount = await db.getInteger(_kKeyMobileGenreGridSpanCount);
+    _mediaLibraryAddTracksToPlaylist = await db.getBoolean(_kKeyMediaLibraryAddTracksToPlaylist);
+    _mediaLibraryAlbumGroupingParameters = (await db.getJson(_kKeyMediaLibraryAlbumGroupingParameters)).map((e) => AlbumGroupingParameter.values[e]).toSet();
+    _mediaLibraryAlbumSortAscending = await db.getBoolean(_kKeyMediaLibraryAlbumSortAscending);
+    _mediaLibraryAlbumSortType = AlbumSortType.values[(await db.getInteger(_kKeyMediaLibraryAlbumSortType))!];
+    _mediaLibraryArtistSortAscending = await db.getBoolean(_kKeyMediaLibraryArtistSortAscending);
+    _mediaLibraryArtistSortType = ArtistSortType.values[(await db.getInteger(_kKeyMediaLibraryArtistSortType))!];
+    _mediaLibraryCoverFallback = await db.getBoolean(_kKeyMediaLibraryCoverFallback);
+    _mediaLibraryDirectories = (await db.getJson(_kKeyMediaLibraryDirectories)).map((e) => Directory(e)).toSet();
+    _mediaLibraryGenreSortAscending = await db.getBoolean(_kKeyMediaLibraryGenreSortAscending);
+    _mediaLibraryGenreSortType = GenreSortType.values[(await db.getInteger(_kKeyMediaLibraryGenreSortType))!];
+    _mediaLibraryMinimumFileSize = await db.getInteger(_kKeyMediaLibraryMinimumFileSize);
+    _mediaLibraryRefreshOnLaunch = await db.getBoolean(_kKeyMediaLibraryRefreshOnLaunch);
+    _mediaLibraryTab = await db.getInteger(_kKeyMediaLibraryTab);
+    _mediaLibraryTrackSortAscending = await db.getBoolean(_kKeyMediaLibraryTrackSortAscending);
+    _mediaLibraryTrackSortType = TrackSortType.values[(await db.getInteger(_kKeyMediaLibraryTrackSortType))!];
+    _mobileAlbumGridSpan = await db.getInteger(_kKeyMobileAlbumGridSpan);
+    _mobileArtistGridSpan = await db.getInteger(_kKeyMobileArtistGridSpan);
+    _mobileGenreGridSpan = await db.getInteger(_kKeyMobileGenreGridSpan);
     _mobileNowPlayingRipple = await db.getBoolean(_kKeyMobileNowPlayingRipple);
     _mobileNowPlayingSlider = await db.getBoolean(_kKeyMobileNowPlayingSlider);
     _modernNowPlaying = await db.getBoolean(_kKeyModernNowPlaying);
@@ -318,21 +333,8 @@ class Configuration {
     _modernNowPlayingLyrics = await db.getBoolean(_kKeyModernNowPlayingLyrics);
     _mpvOptions = Map<String, String>.from(await db.getJson(_kKeyMpvOptions));
     _mpvPath = await db.getString(_kKeyMpvPath);
-    _musicLibraryAddTracksToPlaylist = await db.getBoolean(_kKeyMusicLibraryAddTracksToPlaylist);
-    _musicLibraryAlbumGroupingParameters = (await db.getJson(_kKeyMusicLibraryAlbumGroupingParameters)).map((e) => AlbumGroupingParameter.values[e]).toSet();
-    _musicLibraryAlbumSortAscending = await db.getBoolean(_kKeyMusicLibraryAlbumSortAscending);
-    _musicLibraryAlbumSortType = AlbumSortType.values[(await db.getInteger(_kKeyMusicLibraryAlbumSortType))!];
-    _musicLibraryArtistSortAscending = await db.getBoolean(_kKeyMusicLibraryArtistSortAscending);
-    _musicLibraryArtistSortType = ArtistSortType.values[(await db.getInteger(_kKeyMusicLibraryArtistSortType))!];
-    _musicLibraryDirectories = (await db.getJson(_kKeyMusicLibraryDirectories)).map((e) => Directory(e)).toSet();
-    _musicLibraryGenreSortAscending = await db.getBoolean(_kKeyMusicLibraryGenreSortAscending);
-    _musicLibraryGenreSortType = GenreSortType.values[(await db.getInteger(_kKeyMusicLibraryGenreSortType))!];
-    _musicLibraryMinimumFileSize = await db.getInteger(_kKeyMusicLibraryMinimumFileSize);
-    _musicLibraryRefreshOnLaunch = await db.getBoolean(_kKeyMusicLibraryRefreshOnLaunch);
-    _musicLibraryTab = await db.getInteger(_kKeyMusicLibraryTab);
-    _musicLibraryTrackSortAscending = await db.getBoolean(_kKeyMusicLibraryTrackSortAscending);
-    _musicLibraryTrackSortType = TrackSortType.values[(await db.getInteger(_kKeyMusicLibraryTrackSortType))!];
     _notificationLyrics = await db.getBoolean(_kKeyNotificationLyrics);
+    _nowPlayingBarColorPalette = await db.getBoolean(_kKeyNowPlayingBarColorPalette);
     _themeDynamicColor = await db.getBoolean(_kKeyThemeDynamicColor);
     _themeMaterialVersion = await db.getInteger(_kKeyThemeMaterialVersion);
     _themeMode = ThemeMode.values[(await db.getInteger(_kKeyThemeMode))!];
@@ -341,40 +343,41 @@ class Configuration {
 
   Future<Map<String, dynamic>> getDefaults() async {
     return {
-      /* JSON    */ _kKeyAnimationDuration: AnimationDuration(),
+      /* JSON    */ _kKeyAnimationDuration: const AnimationDuration(),
       /* Boolean */ _kKeyAudioFormatDisplay: true,
       /* Boolean */ _kKeyDiscordRPC: true,
-      /* Boolean */ _kKeyFallbackAlbumArt: false,
-      /* JSON    */ _kKeyLanguage: LanguageData(code: 'en-US', name: 'English (United States)', country: 'United States'),
+      /* JSON    */ _kKeyLanguage: const LanguageData(code: 'en-US', name: 'English (United States)', country: 'United States'),
       /* Boolean */ _kKeyLaunchNowPlayingOnFileOpen: isDesktop,
       /* Boolean */ _kKeyLRCFromDirectory: false,
-      /* Integer */ _kKeyMobileAlbumGridSpanCount: 2,
-      /* Integer */ _kKeyMobileArtistGridSpanCount: 3,
-      /* Integer */ _kKeyMobileGenreGridSpanCount: 3,
+      /* Boolean */ _kKeyMediaLibraryAddTracksToPlaylist: true,
+      /* JSON    */ _kKeyMediaLibraryAlbumGroupingParameters: [AlbumGroupingParameter.album.index],
+      /* Boolean */ _kKeyMediaLibraryAlbumSortAscending: true,
+      /* Integer */ _kKeyMediaLibraryAlbumSortType: AlbumSortType.album.index,
+      /* Boolean */ _kKeyMediaLibraryArtistSortAscending: true,
+      /* Integer */ _kKeyMediaLibraryArtistSortType: ArtistSortType.artist.index,
+      /* Boolean */ _kKeyMediaLibraryCoverFallback: false,
+      /* JSON    */ _kKeyMediaLibraryDirectories: [await getDefaultMediaLibraryDirectory()],
+      /* Boolean */ _kKeyMediaLibraryGenreSortAscending: true,
+      /* Integer */ _kKeyMediaLibraryGenreSortType: GenreSortType.genre.index,
+      /* Integer */ _kKeyMediaLibraryMinimumFileSize: 0,
+      /* Boolean */ _kKeyMediaLibraryRefreshOnLaunch: true,
+      /* Integer */ _kKeyMediaLibraryTab: 0,
+      /* Boolean */ _kKeyMediaLibraryTrackSortAscending: true,
+      /* Integer */ _kKeyMediaLibraryTrackSortType: TrackSortType.title.index,
+      /* Integer */ _kKeyMobileAlbumGridSpan: 2,
+      /* Integer */ _kKeyMobileArtistGridSpan: 3,
+      /* Integer */ _kKeyMobileGenreGridSpan: 3,
       /* Boolean */ _kKeyMobileNowPlayingRipple: true,
       /* Boolean */ _kKeyMobileNowPlayingSlider: true,
       /* Boolean */ _kKeyModernNowPlaying: true,
       /* Integer */ _kKeyModernNowPlayingCarousel: 0,
       /* Integer */ _kKeyModernNowPlayingHighlightedLyricsSize: 32,
-      /* Integer */ _kKeyModernNowPlayingUnhighlightedLyricsSize: 14,
       /* Boolean */ _kKeyModernNowPlayingLyrics: true,
+      /* Integer */ _kKeyModernNowPlayingUnhighlightedLyricsSize: 14,
       /* JSON    */ _kKeyMpvOptions: <String, String>{},
-      /* String  */ _kKeyMpvPath: '',
-      /* Boolean */ _kKeyMusicLibraryAddTracksToPlaylist: true,
-      /* JSON    */ _kKeyMusicLibraryAlbumGroupingParameters: [AlbumGroupingParameter.album.index],
-      /* Boolean */ _kKeyMusicLibraryAlbumSortAscending: true,
-      /* Integer */ _kKeyMusicLibraryAlbumSortType: AlbumSortType.album.index,
-      /* Boolean */ _kKeyMusicLibraryArtistSortAscending: true,
-      /* Integer */ _kKeyMusicLibraryArtistSortType: ArtistSortType.artist.index,
-      /* JSON    */ _kKeyMusicLibraryDirectories: [await getDefaultMusicLibraryDirectory()],
-      /* Boolean */ _kKeyMusicLibraryGenreSortAscending: true,
-      /* Integer */ _kKeyMusicLibraryGenreSortType: GenreSortType.genre.index,
-      /* Integer */ _kKeyMusicLibraryMinimumFileSize: 0,
-      /* Boolean */ _kKeyMusicLibraryRefreshOnLaunch: true,
-      /* Integer */ _kKeyMusicLibraryTab: 0,
-      /* Boolean */ _kKeyMusicLibraryTrackSortAscending: true,
-      /* Integer */ _kKeyMusicLibraryTrackSortType: TrackSortType.title.index,
+      /* String  */ _kKeyMpvPath: null,
       /* Boolean */ _kKeyNotificationLyrics: true,
+      /* Boolean */ _kKeyNowPlayingBarColorPalette: true,
       /* Boolean */ _kKeyThemeDynamicColor: true,
       /* Integer */ _kKeyThemeMaterialVersion: 2,
       /* Integer */ _kKeyThemeMode: ThemeMode.system.index,
@@ -418,7 +421,7 @@ class Configuration {
     throw UnsupportedError('Unsupported platform: ${Platform.operatingSystem}');
   }
 
-  Future<String> getDefaultMusicLibraryDirectory() async {
+  Future<String> getDefaultMediaLibraryDirectory() async {
     if (Platform.isWindows) {
       // SHGetKnownFolderPath Win32 API call.
       final rfid = GUIDFromString(FOLDERID_Music);
@@ -469,37 +472,38 @@ class Configuration {
   AnimationDuration? _animationDuration;
   bool? _audioFormatDisplay;
   bool? _discordRPC;
-  bool? _fallbackAlbumArt;
   LanguageData? _language;
   bool? _launchNowPlayingOnFileOpen;
   bool? _lrcFromDirectory;
-  int? _mobileAlbumGridSpanCount;
-  int? _mobileArtistGridSpanCount;
-  int? _mobileGenreGridSpanCount;
+  bool? _mediaLibraryAddTracksToPlaylist;
+  Set<AlbumGroupingParameter>? _mediaLibraryAlbumGroupingParameters;
+  bool? _mediaLibraryAlbumSortAscending;
+  AlbumSortType? _mediaLibraryAlbumSortType;
+  bool? _mediaLibraryArtistSortAscending;
+  ArtistSortType? _mediaLibraryArtistSortType;
+  bool? _mediaLibraryCoverFallback;
+  Set<Directory>? _mediaLibraryDirectories;
+  bool? _mediaLibraryGenreSortAscending;
+  GenreSortType? _mediaLibraryGenreSortType;
+  int? _mediaLibraryMinimumFileSize;
+  bool? _mediaLibraryRefreshOnLaunch;
+  int? _mediaLibraryTab;
+  bool? _mediaLibraryTrackSortAscending;
+  TrackSortType? _mediaLibraryTrackSortType;
+  int? _mobileAlbumGridSpan;
+  int? _mobileArtistGridSpan;
+  int? _mobileGenreGridSpan;
   bool? _mobileNowPlayingRipple;
   bool? _mobileNowPlayingSlider;
   bool? _modernNowPlaying;
   int? _modernNowPlayingCarousel;
   int? _modernNowPlayingHighlightedLyricsSize;
-  int? _modernNowPlayingUnhighlightedLyricsSize;
   bool? _modernNowPlayingLyrics;
+  int? _modernNowPlayingUnhighlightedLyricsSize;
   Map<String, String>? _mpvOptions;
   String? _mpvPath;
-  bool? _musicLibraryAddTracksToPlaylist;
-  Set<AlbumGroupingParameter>? _musicLibraryAlbumGroupingParameters;
-  bool? _musicLibraryAlbumSortAscending;
-  AlbumSortType? _musicLibraryAlbumSortType;
-  bool? _musicLibraryArtistSortAscending;
-  ArtistSortType? _musicLibraryArtistSortType;
-  Set<Directory>? _musicLibraryDirectories;
-  bool? _musicLibraryGenreSortAscending;
-  GenreSortType? _musicLibraryGenreSortType;
-  int? _musicLibraryMinimumFileSize;
-  bool? _musicLibraryRefreshOnLaunch;
-  int? _musicLibraryTab;
-  bool? _musicLibraryTrackSortAscending;
-  TrackSortType? _musicLibraryTrackSortType;
   bool? _notificationLyrics;
+  bool? _nowPlayingBarColorPalette;
   bool? _themeDynamicColor;
   int? _themeMaterialVersion;
   ThemeMode? _themeMode;
@@ -513,37 +517,38 @@ class Configuration {
   static const _kKeyAnimationDuration = 'ANIMATION_DURATION';
   static const _kKeyAudioFormatDisplay = 'AUDIO_FORMAT_DISPLAY';
   static const _kKeyDiscordRPC = 'DISCORD_RPC';
-  static const _kKeyFallbackAlbumArt = 'FALLBACK_ALBUM_ART';
   static const _kKeyLanguage = 'LANGUAGE';
   static const _kKeyLaunchNowPlayingOnFileOpen = 'LAUNCH_NOW_PLAYING_ON_FILE_OPEN';
   static const _kKeyLRCFromDirectory = 'LRC_FROM_DIRECTORY';
-  static const _kKeyMobileAlbumGridSpanCount = 'MOBILE_ALBUM_GRID_SPAN_COUNT';
-  static const _kKeyMobileArtistGridSpanCount = 'MOBILE_ARTIST_GRID_SPAN_COUNT';
-  static const _kKeyMobileGenreGridSpanCount = 'MOBILE_GENRE_GRID_SPAN_COUNT';
+  static const _kKeyMediaLibraryAddTracksToPlaylist = 'MEDIA_LIBRARY_ADD_TRACKS_TO_PLAYLIST';
+  static const _kKeyMediaLibraryAlbumGroupingParameters = 'MEDIA_LIBRARY_ALBUM_GROUPING_PARAMETERS';
+  static const _kKeyMediaLibraryAlbumSortAscending = 'MEDIA_LIBRARY_ALBUM_SORT_ASCENDING';
+  static const _kKeyMediaLibraryAlbumSortType = 'MEDIA_LIBRARY_ALBUM_SORT_TYPE';
+  static const _kKeyMediaLibraryArtistSortAscending = 'MEDIA_LIBRARY_ARTIST_SORT_ASCENDING';
+  static const _kKeyMediaLibraryArtistSortType = 'MEDIA_LIBRARY_ARTIST_SORT_TYPE';
+  static const _kKeyMediaLibraryCoverFallback = 'MEDIA_LIBRARY_COVER_FALLBACK';
+  static const _kKeyMediaLibraryDirectories = 'MEDIA_LIBRARY_DIRECTORIES';
+  static const _kKeyMediaLibraryGenreSortAscending = 'MEDIA_LIBRARY_GENRE_SORT_ASCENDING';
+  static const _kKeyMediaLibraryGenreSortType = 'MEDIA_LIBRARY_GENRE_SORT_TYPE';
+  static const _kKeyMediaLibraryMinimumFileSize = 'MEDIA_LIBRARY_MINIMUM_FILE_SIZE';
+  static const _kKeyMediaLibraryRefreshOnLaunch = 'MEDIA_LIBRARY_REFRESH_ON_LAUNCH';
+  static const _kKeyMediaLibraryTab = 'MEDIA_LIBRARY_TAB';
+  static const _kKeyMediaLibraryTrackSortAscending = 'MEDIA_LIBRARY_TRACK_SORT_ASCENDING';
+  static const _kKeyMediaLibraryTrackSortType = 'MEDIA_LIBRARY_TRACK_SORT_TYPE';
+  static const _kKeyMobileAlbumGridSpan = 'MOBILE_ALBUM_GRID_SPAN';
+  static const _kKeyMobileArtistGridSpan = 'MOBILE_ARTIST_GRID_SPAN';
+  static const _kKeyMobileGenreGridSpan = 'MOBILE_GENRE_GRID_SPAN';
   static const _kKeyMobileNowPlayingRipple = 'MOBILE_NOW_PLAYING_RIPPLE';
   static const _kKeyMobileNowPlayingSlider = 'MOBILE_NOW_PLAYING_SLIDER';
   static const _kKeyModernNowPlaying = 'MODERN_NOW_PLAYING';
   static const _kKeyModernNowPlayingCarousel = 'MODERN_NOW_PLAYING_CAROUSEL';
   static const _kKeyModernNowPlayingHighlightedLyricsSize = 'MODERN_NOW_PLAYING_HIGHLIGHTED_LYRICS_SIZE';
-  static const _kKeyModernNowPlayingUnhighlightedLyricsSize = 'MODERN_NOW_PLAYING_UNHIGHLIGHTED_LYRICS_SIZE';
   static const _kKeyModernNowPlayingLyrics = 'MODERN_NOW_PLAYING_LYRICS';
+  static const _kKeyModernNowPlayingUnhighlightedLyricsSize = 'MODERN_NOW_PLAYING_UNHIGHLIGHTED_LYRICS_SIZE';
   static const _kKeyMpvOptions = 'MPV_OPTIONS';
   static const _kKeyMpvPath = 'MPV_PATH';
-  static const _kKeyMusicLibraryAddTracksToPlaylist = 'MUSIC_LIBRARY_ADD_TRACKS_TO_PLAYLIST';
-  static const _kKeyMusicLibraryAlbumGroupingParameters = 'MUSIC_LIBRARY_ALBUM_GROUPING_PARAMETERS';
-  static const _kKeyMusicLibraryAlbumSortAscending = 'MUSIC_LIBRARY_ALBUM_SORT_ASCENDING';
-  static const _kKeyMusicLibraryAlbumSortType = 'MUSIC_LIBRARY_ALBUM_SORT_TYPE';
-  static const _kKeyMusicLibraryArtistSortAscending = 'MUSIC_LIBRARY_ARTIST_SORT_ASCENDING';
-  static const _kKeyMusicLibraryArtistSortType = 'MUSIC_LIBRARY_ARTIST_SORT_TYPE';
-  static const _kKeyMusicLibraryDirectories = 'MUSIC_LIBRARY_DIRECTORIES';
-  static const _kKeyMusicLibraryGenreSortAscending = 'MUSIC_LIBRARY_GENRE_SORT_ASCENDING';
-  static const _kKeyMusicLibraryGenreSortType = 'MUSIC_LIBRARY_GENRE_SORT_TYPE';
-  static const _kKeyMusicLibraryMinimumFileSize = 'MUSIC_LIBRARY_MINIMUM_FILE_SIZE';
-  static const _kKeyMusicLibraryRefreshOnLaunch = 'MUSIC_LIBRARY_REFRESH_ON_LAUNCH';
-  static const _kKeyMusicLibraryTab = 'MUSIC_LIBRARY_TAB';
-  static const _kKeyMusicLibraryTrackSortAscending = 'MUSIC_LIBRARY_TRACK_SORT_ASCENDING';
-  static const _kKeyMusicLibraryTrackSortType = 'MUSIC_LIBRARY_TRACK_SORT_TYPE';
   static const _kKeyNotificationLyrics = 'NOTIFICATION_LYRICS';
+  static const _kKeyNowPlayingBarColorPalette = 'NOW_PLAYING_COLOR_PALETTE';
   static const _kKeyThemeDynamicColor = 'THEME_DYNAMIC_COLOR';
   static const _kKeyThemeMaterialVersion = 'THEME_MATERIAL_VERSION';
   static const _kKeyThemeMode = 'THEME_MODE';
