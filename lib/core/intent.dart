@@ -22,7 +22,7 @@ import 'package:harmonoid/models/playback_state.dart';
 /// {@endtemplate}
 class Intent {
   /// Singleton instance.
-  static late final Intent instance = Intent._();
+  static final Intent instance = Intent._();
 
   /// Whether the [instance] is initialized.
   static bool initialized = false;

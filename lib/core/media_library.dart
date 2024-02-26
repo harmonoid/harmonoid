@@ -23,32 +23,19 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
 
   /// {@macro media_library}
   MediaLibrary._({
-    required Set<Directory> directories,
-    required Directory cache,
-    required AlbumSortType albumSortType,
-    required ArtistSortType artistSortType,
-    required GenreSortType genreSortType,
-    required TrackSortType trackSortType,
-    required bool albumSortAscending,
-    required bool artistSortAscending,
-    required bool genreSortAscending,
-    required bool trackSortAscending,
-    required int minimumFileSize,
-    required Set<AlbumGroupingParameter> albumGroupingParameters,
-  }) : super(
-          directories: directories,
-          cache: cache,
-          albumSortType: albumSortType,
-          artistSortType: artistSortType,
-          genreSortType: genreSortType,
-          trackSortType: trackSortType,
-          albumSortAscending: albumSortAscending,
-          artistSortAscending: artistSortAscending,
-          genreSortAscending: genreSortAscending,
-          trackSortAscending: trackSortAscending,
-          minimumFileSize: minimumFileSize,
-          albumGroupingParameters: albumGroupingParameters,
-        );
+    required super.directories,
+    required super.cache,
+    required super.albumSortType,
+    required super.artistSortType,
+    required super.genreSortType,
+    required super.trackSortType,
+    required super.albumSortAscending,
+    required super.artistSortAscending,
+    required super.genreSortAscending,
+    required super.trackSortAscending,
+    required super.minimumFileSize,
+    required super.albumGroupingParameters,
+  });
 
   /// Initializes the [instance].
   static Future<void> ensureInitialized({
@@ -97,7 +84,7 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
   bool done = true;
 
   /// Progress: Callback.
-  void callback(int? current, int total, bool done) {
+  void progress(int? current, int total, bool done) {
     this.current = current;
     this.total = total;
     this.done = done;
