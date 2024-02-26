@@ -4,8 +4,7 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
-
-import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/core/media_player.dart';
 
 enum SlideDirection {
   UP,
@@ -211,9 +210,9 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
   VelocityTracker _vt = new VelocityTracker.withKind(PointerDeviceKind.touch);
 
   bool _isPanelVisible = true;
-  // `com.alexmercerind.harmonoid`.
+  // --------------------------------------------------
   bool restored = false;
-  // `com.alexmercerind.harmonoid`.
+  // --------------------------------------------------
 
   @override
   void initState() {
@@ -230,7 +229,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
 
         if (widget.onPanelClosed != null && _ac.value == 0.0) widget.onPanelClosed!();
 
-        // `com.alexmercerind.harmonoid`.
+        // --------------------------------------------------
         if (_ac.value == 0.0) {
           restored = false;
         } else if (_ac.value != 1.0) {
@@ -238,12 +237,12 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
           _scrollingEnabled = false;
         } else if (_ac.value == 1.0 && !restored) {
           restored = true;
-          _sc.jumpTo((Playback.instance.index + 1) * (72.0 + 1.0));
+          _sc.jumpTo((MediaPlayer.instance.state.index + 1) * (72.0 + 1.0));
           _scrollingEnabled = true;
         } else {
           _scrollingEnabled = true;
         }
-        // `com.alexmercerind.harmonoid`.
+        // --------------------------------------------------
       });
 
     _sc = ScrollController();

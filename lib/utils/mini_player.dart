@@ -20,6 +20,8 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
+// ignore_for_file: deprecated_member_use
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 
@@ -67,8 +69,7 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
   bool dismissed = false;
   bool animating = false;
   int updateCount = 0;
-  StreamController<double> _heightController =
-      StreamController<double>.broadcast();
+  StreamController<double> _heightController = StreamController<double>.broadcast();
   AnimationController? _animationController;
 
   void _statusListener(AnimationStatus status) {
@@ -131,8 +132,7 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
       child: ValueListenableBuilder(
         valueListenable: heightNotifier,
         builder: (BuildContext context, double height, Widget? _) {
-          final _percentage = ((height - widget.minHeight)) /
-              (widget.maxHeight - widget.minHeight);
+          final _percentage = ((height - widget.minHeight)) / (widget.maxHeight - widget.minHeight);
           return Stack(
             alignment: Alignment.bottomCenter,
             children: [
@@ -140,8 +140,7 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
                 GestureDetector(
                   onTap: () => _animateToHeight(widget.minHeight),
                   child: Opacity(
-                    opacity: borderDouble(
-                        minRange: 0.0, maxRange: 1.0, value: _percentage),
+                    opacity: borderDouble(minRange: 0.0, maxRange: 1.0, value: _percentage),
                     child: Container(color: widget.backgroundColor),
                   ),
                 ),
@@ -152,13 +151,9 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
                   child: GestureDetector(
                     child: ValueListenableBuilder(
                       valueListenable: dragDownPercentage,
-                      builder:
-                          (BuildContext context, double value, Widget? child) {
+                      builder: (BuildContext context, double value, Widget? child) {
                         return Opacity(
-                          opacity: borderDouble(
-                              minRange: 0.0,
-                              maxRange: 1.0,
-                              value: 1 - value * 0.8),
+                          opacity: borderDouble(minRange: 0.0, maxRange: 1.0, value: 1 - value * 0.8),
                           child: Transform.translate(
                             offset: Offset(0.0, widget.minHeight * value * 0.5),
                             child: child,
@@ -170,23 +165,14 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
                           constraints: BoxConstraints.expand(),
                           child: widget.builder(height, _percentage),
                           decoration: BoxDecoration(
-                            boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: Colors.black45,
-                                  blurRadius: widget.elevation,
-                                  offset: Offset(0.0, 4))
-                            ],
+                            boxShadow: <BoxShadow>[BoxShadow(color: Colors.black45, blurRadius: widget.elevation, offset: Offset(0.0, 4))],
                             color: Theme.of(context).canvasColor,
                           ),
                         ),
                       ),
                     ),
                     onTap: () =>
-                        _dragHeight == widget.maxHeight && !widget.tapToCollapse
-                            ? null
-                            : _snapToPosition(_dragHeight != widget.maxHeight
-                                ? MiniPlayerPanelState.MAX
-                                : MiniPlayerPanelState.MIN),
+                        _dragHeight == widget.maxHeight && !widget.tapToCollapse ? null : _snapToPosition(_dragHeight != widget.maxHeight ? MiniPlayerPanelState.MAX : MiniPlayerPanelState.MIN),
                     onPanStart: (details) {
                       _startHeight = _dragHeight;
                       updateCount = 0;
@@ -196,12 +182,7 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
                       }
                     },
                     onPanEnd: (details) async {
-                      double speed = (_dragHeight - _startHeight * _dragHeight <
-                                  _startHeight
-                              ? 1
-                              : -1) /
-                          updateCount *
-                          100;
+                      double speed = (_dragHeight - _startHeight * _dragHeight < _startHeight ? 1 : -1) / updateCount * 100;
                       double snapPercentage = 0.005;
                       if (speed <= 4) {
                         snapPercentage = 0.2;
@@ -211,10 +192,7 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
                         snapPercentage = 0.01;
                       }
                       MiniPlayerPanelState snap = MiniPlayerPanelState.MIN;
-                      final _percentageMax = percentageFromValueInRange(
-                          min: widget.minHeight,
-                          max: widget.maxHeight,
-                          value: _dragHeight);
+                      final _percentageMax = percentageFromValueInRange(min: widget.minHeight, max: widget.maxHeight, value: _dragHeight);
 
                       if (_startHeight > widget.minHeight) {
                         if (_percentageMax > 1 - snapPercentage) {
@@ -259,11 +237,7 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
       if (_dragHeight > widget.maxHeight) return;
       heightNotifier.value = _dragHeight;
     } else if (onDismissed != null) {
-      final percentageDown = borderDouble(
-          minRange: 0.0,
-          maxRange: 1.0,
-          value: percentageFromValueInRange(
-              min: widget.minHeight, max: 0, value: _dragHeight));
+      final percentageDown = borderDouble(minRange: 0.0, maxRange: 1.0, value: percentageFromValueInRange(min: widget.minHeight, max: 0, value: _dragHeight));
       if (dragDownPercentage.value != percentageDown) {
         dragDownPercentage.value = percentageDown;
       }
@@ -299,8 +273,7 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
     Animation<double> _sizeAnimation = Tween(
       begin: startHeight,
       end: h,
-    ).animate(
-        CurvedAnimation(parent: _animationController!, curve: widget.curve));
+    ).animate(CurvedAnimation(parent: _animationController!, curve: widget.curve));
     _sizeAnimation.addListener(() {
       if (_sizeAnimation.value == startHeight) return;
       _dragHeight = _sizeAnimation.value;
@@ -453,8 +426,7 @@ extension SelectedColorExtension on MiniPlayerPanelState {
   }
 }
 
-double percentageFromValueInRange(
-    {required double min, required double max, required double value}) {
+double percentageFromValueInRange({required double min, required double max, required double value}) {
   return (value - min) / (max - min);
 }
 

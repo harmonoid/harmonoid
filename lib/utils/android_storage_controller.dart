@@ -1,14 +1,14 @@
-import 'dart:io';
 import 'dart:async';
-import 'package:flutter/services.dart';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
 
 /// {@template android_storage_controller}
 ///
 /// AndroidStorageController
 /// ------------------------
-/// The implementation allows to retrieve cache & external storage directories on Android.
+/// Implementation to retrieve cache & external storage directories on Android.
 ///
 /// {@endtemplate}
 class AndroidStorageController {
@@ -33,7 +33,7 @@ class AndroidStorageController {
     int? result;
     while (result == null) {
       try {
-        result = await instance._getVersion();
+        result = await instance.getVersion();
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
@@ -49,7 +49,7 @@ class AndroidStorageController {
         debugPrint(call.method.toString());
         debugPrint(call.arguments.toString());
         switch (call.method) {
-          case 'com.alexmercerind.harmonoid.AndroidStorageController/delete':
+          case 'delete':
             {
               _deleteCompleter.complete(call.arguments);
               break;
@@ -92,7 +92,7 @@ class AndroidStorageController {
   }
 
   /// Returns the value of `android.os.Build.VERSION.SDK_INT`. This is used to determine the Android version.
-  Future<int> _getVersion() async {
+  Future<int> getVersion() async {
     final result = await _channel.invokeMethod('version');
     return result;
   }

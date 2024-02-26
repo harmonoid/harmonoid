@@ -1,10 +1,12 @@
+// Copyright 2013 The Flutter Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
+
 import 'dart:async';
 import 'dart:collection';
 import 'dart:ui' as ui;
 import 'dart:math' as math;
 
-import 'package:collection/collection.dart'
-    show PriorityQueue, HeapPriorityQueue;
+import 'package:collection/collection.dart' show PriorityQueue, HeapPriorityQueue;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 
@@ -35,24 +37,15 @@ class PaletteGenerator with Diagnosticable {
     EncodedImage encodedImage, {
     Rect? region,
     int maximumColorCount = _defaultCalculateNumberColors,
-    List<PaletteFilter> filters = const <PaletteFilter>[
-      avoidRedBlackWhitePaletteFilter
-    ],
+    List<PaletteFilter> filters = const <PaletteFilter>[avoidRedBlackWhitePaletteFilter],
     List<PaletteTarget> targets = const <PaletteTarget>[],
   }) async {
     assert(region == null || region != Rect.zero);
-    assert(
-        region == null ||
-            (region.topLeft.dx >= 0.0 && region.topLeft.dy >= 0.0),
+    assert(region == null || (region.topLeft.dx >= 0.0 && region.topLeft.dy >= 0.0), 'Region $region is outside the image ${encodedImage.width}x${encodedImage.height}');
+    assert(region == null || (region.bottomRight.dx <= encodedImage.width && region.bottomRight.dy <= encodedImage.height),
         'Region $region is outside the image ${encodedImage.width}x${encodedImage.height}');
     assert(
-        region == null ||
-            (region.bottomRight.dx <= encodedImage.width &&
-                region.bottomRight.dy <= encodedImage.height),
-        'Region $region is outside the image ${encodedImage.width}x${encodedImage.height}');
-    assert(
-      encodedImage.byteData.lengthInBytes ~/ 4 ==
-          encodedImage.width * encodedImage.height,
+      encodedImage.byteData.lengthInBytes ~/ 4 == encodedImage.width * encodedImage.height,
       "Image byte data doesn't match the image size, or has invalid encoding. "
       'The encoding must be RGBA with 8 bits per channel.',
     );
@@ -74,13 +67,10 @@ class PaletteGenerator with Diagnosticable {
     ui.Image image, {
     Rect? region,
     int maximumColorCount = _defaultCalculateNumberColors,
-    List<PaletteFilter> filters = const <PaletteFilter>[
-      avoidRedBlackWhitePaletteFilter
-    ],
+    List<PaletteFilter> filters = const <PaletteFilter>[avoidRedBlackWhitePaletteFilter],
     List<PaletteTarget> targets = const <PaletteTarget>[],
   }) async {
-    final ByteData? imageData =
-        await image.toByteData(format: ui.ImageByteFormat.rawRgba);
+    final ByteData? imageData = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
     if (imageData == null) {
       throw 'Failed to encode the image.';
     }
@@ -103,25 +93,15 @@ class PaletteGenerator with Diagnosticable {
     Size? size,
     Rect? region,
     int maximumColorCount = _defaultCalculateNumberColors,
-    List<PaletteFilter> filters = const <PaletteFilter>[
-      avoidRedBlackWhitePaletteFilter
-    ],
+    List<PaletteFilter> filters = const <PaletteFilter>[avoidRedBlackWhitePaletteFilter],
     List<PaletteTarget> targets = const <PaletteTarget>[],
     Duration timeout = const Duration(seconds: 5),
   }) async {
     assert(region == null || size != null);
     assert(region == null || region != Rect.zero);
-    assert(
-        region == null ||
-            (region.topLeft.dx >= 0.0 && region.topLeft.dy >= 0.0),
-        'Region $region is outside the image ${size!.width}x${size.height}');
-    assert(region == null || size!.contains(region.topLeft),
-        'Region $region is outside the image $size');
-    assert(
-        region == null ||
-            (region.bottomRight.dx <= size!.width &&
-                region.bottomRight.dy <= size.height),
-        'Region $region is outside the image $size');
+    assert(region == null || (region.topLeft.dx >= 0.0 && region.topLeft.dy >= 0.0), 'Region $region is outside the image ${size!.width}x${size.height}');
+    assert(region == null || size!.contains(region.topLeft), 'Region $region is outside the image $size');
+    assert(region == null || (region.bottomRight.dx <= size!.width && region.bottomRight.dy <= size.height), 'Region $region is outside the image $size');
     final ImageStream stream = imageProvider.resolve(
       ImageConfiguration(size: size, devicePixelRatio: 1.0),
     );
@@ -138,8 +118,7 @@ class PaletteGenerator with Diagnosticable {
       loadFailureTimeout = Timer(timeout, () {
         stream.removeListener(listener);
         imageCompleter.completeError(
-          TimeoutException(
-              'Timeout occurred trying to load from $imageProvider'),
+          TimeoutException('Timeout occurred trying to load from $imageProvider'),
         );
       });
     }
@@ -181,16 +160,13 @@ class PaletteGenerator with Diagnosticable {
 
   PaletteColor? get vibrantColor => selectedSwatches[PaletteTarget.vibrant];
 
-  PaletteColor? get lightVibrantColor =>
-      selectedSwatches[PaletteTarget.lightVibrant];
+  PaletteColor? get lightVibrantColor => selectedSwatches[PaletteTarget.lightVibrant];
 
-  PaletteColor? get darkVibrantColor =>
-      selectedSwatches[PaletteTarget.darkVibrant];
+  PaletteColor? get darkVibrantColor => selectedSwatches[PaletteTarget.darkVibrant];
 
   PaletteColor? get mutedColor => selectedSwatches[PaletteTarget.muted];
 
-  PaletteColor? get lightMutedColor =>
-      selectedSwatches[PaletteTarget.lightMuted];
+  PaletteColor? get lightMutedColor => selectedSwatches[PaletteTarget.lightMuted];
 
   PaletteColor? get darkMutedColor => selectedSwatches[PaletteTarget.darkMuted];
 
@@ -209,22 +185,14 @@ class PaletteGenerator with Diagnosticable {
     _dominantColor = paletteColors[0];
 
     paletteColors.sort((PaletteColor a, PaletteColor b) {
-      final aScore = ((a.color.red - a.color.green).abs() +
-                  (a.color.green - a.color.blue).abs() +
-                  (a.color.blue - a.color.red).abs()) *
-              a.color.computeLuminance(),
-          bScore = ((b.color.red - b.color.green).abs() +
-                  (b.color.green - b.color.blue).abs() +
-                  (b.color.blue - b.color.red).abs()) *
-              b.color.computeLuminance();
+      final aScore = ((a.color.red - a.color.green).abs() + (a.color.green - a.color.blue).abs() + (a.color.blue - a.color.red).abs()) * a.color.computeLuminance(),
+          bScore = ((b.color.red - b.color.green).abs() + (b.color.green - b.color.blue).abs() + (b.color.blue - b.color.red).abs()) * b.color.computeLuminance();
       return aScore.compareTo(bScore);
     });
     final data = [...paletteColors];
     data.removeWhere((paletteColor) {
       // Remove any colors that are too close to white or black (i.e. R, G & B values are nearly same), but not perfectly black or perfectly white.
-      final r = paletteColor.color.red,
-          g = paletteColor.color.green,
-          b = paletteColor.color.blue;
+      final r = paletteColor.color.red, g = paletteColor.color.green, b = paletteColor.color.blue;
       final d1 = (r - g).abs(), d2 = (g - b).abs(), d3 = (b - r).abs();
       final average = (r + g + b) / 3;
       return d1 < 16 && d2 < 16 && d3 < 16 && average >= 120 && average <= 220;
@@ -232,9 +200,7 @@ class PaletteGenerator with Diagnosticable {
 
     // If the first & last colors are too similar, push the black or white color to the end based on contrast.
     final first = data.first, last = data.last;
-    final d1 = (first.color.red - last.color.red).abs(),
-        d2 = (first.color.green - last.color.green).abs(),
-        d3 = (first.color.blue - last.color.blue).abs();
+    final d1 = (first.color.red - last.color.red).abs(), d2 = (first.color.green - last.color.green).abs(), d3 = (first.color.blue - last.color.blue).abs();
     if (d1 < 16 && d2 < 16 && d3 < 16) {
       data.removeLast();
       data.add(
@@ -258,31 +224,26 @@ class PaletteGenerator with Diagnosticable {
   }
 
   void _selectSwatches() {
-    final Set<PaletteTarget> allTargets =
-        Set<PaletteTarget>.from(targets + PaletteTarget.baseTargets);
+    final Set<PaletteTarget> allTargets = Set<PaletteTarget>.from(targets + PaletteTarget.baseTargets);
     final Set<Color> usedColors = <Color>{};
     for (final PaletteTarget target in allTargets) {
       target._normalizeWeights();
-      final PaletteColor? targetScore =
-          _generateScoredTarget(target, usedColors);
+      final PaletteColor? targetScore = _generateScoredTarget(target, usedColors);
       if (targetScore != null) {
         selectedSwatches[target] = targetScore;
       }
     }
   }
 
-  PaletteColor? _generateScoredTarget(
-      PaletteTarget target, Set<Color> usedColors) {
-    final PaletteColor? maxScoreSwatch =
-        _getMaxScoredSwatchForTarget(target, usedColors);
+  PaletteColor? _generateScoredTarget(PaletteTarget target, Set<Color> usedColors) {
+    final PaletteColor? maxScoreSwatch = _getMaxScoredSwatchForTarget(target, usedColors);
     if (maxScoreSwatch != null && target.isExclusive) {
       usedColors.add(maxScoreSwatch.color);
     }
     return maxScoreSwatch;
   }
 
-  PaletteColor? _getMaxScoredSwatchForTarget(
-      PaletteTarget target, Set<Color> usedColors) {
+  PaletteColor? _getMaxScoredSwatchForTarget(PaletteTarget target, Set<Color> usedColors) {
     double maxScore = 0.0;
     PaletteColor? maxScoreSwatch;
     for (final PaletteColor paletteColor in paletteColors) {
@@ -297,8 +258,7 @@ class PaletteGenerator with Diagnosticable {
     return maxScoreSwatch;
   }
 
-  bool _shouldBeScoredForTarget(
-      PaletteColor paletteColor, PaletteTarget target, Set<Color> usedColors) {
+  bool _shouldBeScoredForTarget(PaletteColor paletteColor, PaletteTarget target, Set<Color> usedColors) {
     final HSLColor hslColor = HSLColor.fromColor(paletteColor.color);
     return hslColor.saturation >= target.minimumSaturation &&
         hslColor.saturation <= target.maximumSaturation &&
@@ -315,16 +275,13 @@ class PaletteGenerator with Diagnosticable {
     double populationScore = 0.0;
 
     if (target.saturationWeight > 0.0) {
-      saturationScore = target.saturationWeight *
-          (1.0 - (hslColor.saturation - target.targetSaturation).abs());
+      saturationScore = target.saturationWeight * (1.0 - (hslColor.saturation - target.targetSaturation).abs());
     }
     if (target.lightnessWeight > 0.0) {
-      valueScore = target.lightnessWeight *
-          (1.0 - (hslColor.lightness - target.targetLightness).abs());
+      valueScore = target.lightnessWeight * (1.0 - (hslColor.lightness - target.targetLightness).abs());
     }
     if (_dominantColor != null && target.populationWeight > 0.0) {
-      populationScore = target.populationWeight *
-          (paletteColor.population / _dominantColor!.population);
+      populationScore = target.populationWeight * (paletteColor.population / _dominantColor!.population);
     }
 
     return saturationScore + valueScore + populationScore;
@@ -333,11 +290,8 @@ class PaletteGenerator with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(IterableProperty<PaletteColor>(
-        'paletteColors', paletteColors,
-        defaultValue: <PaletteColor>[]));
-    properties.add(IterableProperty<PaletteTarget>('targets', targets,
-        defaultValue: PaletteTarget.baseTargets));
+    properties.add(IterableProperty<PaletteColor>('paletteColors', paletteColors, defaultValue: <PaletteColor>[]));
+    properties.add(IterableProperty<PaletteTarget>('targets', targets, defaultValue: PaletteTarget.baseTargets));
   }
 }
 
@@ -484,24 +438,15 @@ class PaletteTarget with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     final PaletteTarget defaultTarget = PaletteTarget();
-    properties.add(DoubleProperty('minimumSaturation', minimumSaturation,
-        defaultValue: defaultTarget.minimumSaturation));
-    properties.add(DoubleProperty('targetSaturation', targetSaturation,
-        defaultValue: defaultTarget.targetSaturation));
-    properties.add(DoubleProperty('maximumSaturation', maximumSaturation,
-        defaultValue: defaultTarget.maximumSaturation));
-    properties.add(DoubleProperty('minimumLightness', minimumLightness,
-        defaultValue: defaultTarget.minimumLightness));
-    properties.add(DoubleProperty('targetLightness', targetLightness,
-        defaultValue: defaultTarget.targetLightness));
-    properties.add(DoubleProperty('maximumLightness', maximumLightness,
-        defaultValue: defaultTarget.maximumLightness));
-    properties.add(DoubleProperty('saturationWeight', saturationWeight,
-        defaultValue: defaultTarget.saturationWeight));
-    properties.add(DoubleProperty('lightnessWeight', lightnessWeight,
-        defaultValue: defaultTarget.lightnessWeight));
-    properties.add(DoubleProperty('populationWeight', populationWeight,
-        defaultValue: defaultTarget.populationWeight));
+    properties.add(DoubleProperty('minimumSaturation', minimumSaturation, defaultValue: defaultTarget.minimumSaturation));
+    properties.add(DoubleProperty('targetSaturation', targetSaturation, defaultValue: defaultTarget.targetSaturation));
+    properties.add(DoubleProperty('maximumSaturation', maximumSaturation, defaultValue: defaultTarget.maximumSaturation));
+    properties.add(DoubleProperty('minimumLightness', minimumLightness, defaultValue: defaultTarget.minimumLightness));
+    properties.add(DoubleProperty('targetLightness', targetLightness, defaultValue: defaultTarget.targetLightness));
+    properties.add(DoubleProperty('maximumLightness', maximumLightness, defaultValue: defaultTarget.maximumLightness));
+    properties.add(DoubleProperty('saturationWeight', saturationWeight, defaultValue: defaultTarget.saturationWeight));
+    properties.add(DoubleProperty('lightnessWeight', lightnessWeight, defaultValue: defaultTarget.lightnessWeight));
+    properties.add(DoubleProperty('populationWeight', populationWeight, defaultValue: defaultTarget.populationWeight));
   }
 }
 
@@ -540,10 +485,8 @@ class PaletteColor with Diagnosticable {
       const Color white = Color(0xffffffff);
       const Color black = Color(0xff000000);
 
-      final int? lightBodyAlpha =
-          _calculateMinimumAlpha(white, color, _minContrastBodyText);
-      final int? lightTitleAlpha =
-          _calculateMinimumAlpha(white, color, _minContrastTitleText);
+      final int? lightBodyAlpha = _calculateMinimumAlpha(white, color, _minContrastBodyText);
+      final int? lightTitleAlpha = _calculateMinimumAlpha(white, color, _minContrastTitleText);
 
       if (lightBodyAlpha != null && lightTitleAlpha != null) {
         _bodyTextColor = white.withAlpha(lightBodyAlpha);
@@ -551,10 +494,8 @@ class PaletteColor with Diagnosticable {
         return;
       }
 
-      final int? darkBodyAlpha =
-          _calculateMinimumAlpha(black, color, _minContrastBodyText);
-      final int? darkTitleAlpha =
-          _calculateMinimumAlpha(black, color, _minContrastTitleText);
+      final int? darkBodyAlpha = _calculateMinimumAlpha(black, color, _minContrastBodyText);
+      final int? darkTitleAlpha = _calculateMinimumAlpha(black, color, _minContrastTitleText);
 
       if (darkBodyAlpha != null && darkTitleAlpha != null) {
         _bodyTextColor = black.withAlpha(darkBodyAlpha);
@@ -562,18 +503,13 @@ class PaletteColor with Diagnosticable {
         return;
       }
 
-      _bodyTextColor = lightBodyAlpha != null
-          ? white.withAlpha(lightBodyAlpha)
-          : black.withAlpha(darkBodyAlpha ?? 255);
-      _titleTextColor = lightTitleAlpha != null
-          ? white.withAlpha(lightTitleAlpha)
-          : black.withAlpha(darkTitleAlpha ?? 255);
+      _bodyTextColor = lightBodyAlpha != null ? white.withAlpha(lightBodyAlpha) : black.withAlpha(darkBodyAlpha ?? 255);
+      _titleTextColor = lightTitleAlpha != null ? white.withAlpha(lightTitleAlpha) : black.withAlpha(darkTitleAlpha ?? 255);
     }
   }
 
   static double _calculateContrast(Color foreground, Color background) {
-    assert(background.alpha == 0xff,
-        'background can not be translucent: $background.');
+    assert(background.alpha == 0xff, 'background can not be translucent: $background.');
     if (foreground.alpha < 0xff) {
       foreground = Color.alphaBlend(foreground, background);
     }
@@ -582,10 +518,8 @@ class PaletteColor with Diagnosticable {
     return math.max(lightness1, lightness2) / math.min(lightness1, lightness2);
   }
 
-  static int? _calculateMinimumAlpha(
-      Color foreground, Color background, double minContrastRatio) {
-    assert(background.alpha == 0xff,
-        'The background cannot be translucent: $background.');
+  static int? _calculateMinimumAlpha(Color foreground, Color background, double minContrastRatio) {
+    assert(background.alpha == 0xff, 'The background cannot be translucent: $background.');
     double contrastCalculator(Color fg, Color bg, int alpha) {
       final Color testForeground = fg.withAlpha(alpha);
       return _calculateContrast(testForeground, bg);
@@ -596,8 +530,7 @@ class PaletteColor with Diagnosticable {
       return null;
     }
     foreground = foreground.withAlpha(0xff);
-    return _binaryAlphaSearch(
-        foreground, background, minContrastRatio, contrastCalculator);
+    return _binaryAlphaSearch(foreground, background, minContrastRatio, contrastCalculator);
   }
 
   static int _binaryAlphaSearch(
@@ -606,16 +539,14 @@ class PaletteColor with Diagnosticable {
     double minContrastRatio,
     _ContrastCalculator calculator,
   ) {
-    assert(background.alpha == 0xff,
-        'The background cannot be translucent: $background.');
+    assert(background.alpha == 0xff, 'The background cannot be translucent: $background.');
     const int minAlphaSearchMaxIterations = 10;
     const int minAlphaSearchPrecision = 1;
 
     int numIterations = 0;
     int minAlpha = 0;
     int maxAlpha = 0xff;
-    while (numIterations <= minAlphaSearchMaxIterations &&
-        (maxAlpha - minAlpha) > minAlphaSearchPrecision) {
+    while (numIterations <= minAlphaSearchMaxIterations && (maxAlpha - minAlpha) > minAlphaSearchPrecision) {
       final int testAlpha = (minAlpha + maxAlpha) ~/ 2;
       final double testRatio = calculator(foreground, background, testAlpha);
       if (testRatio < minContrastRatio) {
@@ -633,8 +564,7 @@ class PaletteColor with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<Color>('color', color));
-    properties
-        .add(DiagnosticsProperty<Color>('titleTextColor', titleTextColor));
+    properties.add(DiagnosticsProperty<Color>('titleTextColor', titleTextColor));
     properties.add(DiagnosticsProperty<Color>('bodyTextColor', bodyTextColor));
     properties.add(IntProperty('population', population, defaultValue: 0));
   }
@@ -644,9 +574,7 @@ class PaletteColor with Diagnosticable {
 
   @override
   bool operator ==(Object other) {
-    return other is PaletteColor &&
-        color == other.color &&
-        population == other.population;
+    return other is PaletteColor && color == other.color && population == other.population;
   }
 }
 
@@ -667,9 +595,7 @@ bool avoidRedBlackWhitePaletteFilter(HSLColor color) {
     const double redLineMinHue = 10.0;
     const double redLineMaxHue = 37.0;
     const double redLineMaxSaturation = 0.82;
-    return hslColor.hue >= redLineMinHue &&
-        hslColor.hue <= redLineMaxHue &&
-        hslColor.saturation <= redLineMaxSaturation;
+    return hslColor.hue >= redLineMinHue && hslColor.hue <= redLineMaxHue && hslColor.saturation <= redLineMaxSaturation;
   }
 
   return !_isWhite(color) && !_isBlack(color) && !_isNearRedILine(color);
@@ -682,8 +608,7 @@ enum _ColorComponent {
 }
 
 class _ColorVolumeBox {
-  _ColorVolumeBox(
-      this._lowerIndex, this._upperIndex, this.histogram, this.colors) {
+  _ColorVolumeBox(this._lowerIndex, this._upperIndex, this.histogram, this.colors) {
     _fitMinimumBox();
   }
 
@@ -703,9 +628,7 @@ class _ColorVolumeBox {
   late int _maxBlue;
 
   int getVolume() {
-    return (_maxRed - _minRed + 1) *
-        (_maxGreen - _minGreen + 1) *
-        (_maxBlue - _minBlue + 1);
+    return (_maxRed - _minRed + 1) * (_maxGreen - _minGreen + 1) * (_maxBlue - _minBlue + 1);
   }
 
   bool canSplit() {
@@ -759,8 +682,7 @@ class _ColorVolumeBox {
     assert(canSplit(), "Can't split a box with only 1 color");
 
     final int splitPoint = _findSplitPoint();
-    final _ColorVolumeBox newBox =
-        _ColorVolumeBox(splitPoint + 1, _upperIndex, histogram, colors);
+    final _ColorVolumeBox newBox = _ColorVolumeBox(splitPoint + 1, _upperIndex, histogram, colors);
 
     _upperIndex = splitPoint;
     _fitMinimumBox();
@@ -803,8 +725,7 @@ class _ColorVolumeBox {
       }
     }
 
-    final List<Color> colorSubset =
-        colors.sublist(_lowerIndex, _upperIndex + 1);
+    final List<Color> colorSubset = colors.sublist(_lowerIndex, _upperIndex + 1);
     colorSubset.sort(compareColors);
     colors.replaceRange(_lowerIndex, _upperIndex + 1, colorSubset);
     final int median = (_population / 2).round();
@@ -845,8 +766,7 @@ class _ColorCount {
 }
 
 class _ColorHistogram {
-  final Map<int, Map<int, Map<int, _ColorCount>>> _hist =
-      <int, Map<int, Map<int, _ColorCount>>>{};
+  final Map<int, Map<int, Map<int, _ColorCount>>> _hist = <int, Map<int, Map<int, _ColorCount>>>{};
   final DoubleLinkedQueue<Color> _keys = DoubleLinkedQueue<Color>();
 
   _ColorCount? operator [](Color color) {
@@ -930,8 +850,7 @@ class _ColorCutQuantizer {
     return _paletteColorsCompleter!.future;
   }
 
-  Iterable<Color> _getImagePixels(ByteData pixels, int width, int height,
-      {Rect? region}) sync* {
+  Iterable<Color> _getImagePixels(ByteData pixels, int width, int height, {Rect? region}) sync* {
     final int rowStride = width * 4;
     int rowStart;
     int rowEnd;
@@ -982,8 +901,7 @@ class _ColorCutQuantizer {
     const int quantizeWordWidth = 5;
     const int quantizeChannelWidth = 8;
     const int quantizeShift = quantizeChannelWidth - quantizeWordWidth;
-    const int quantizeWordMask =
-        ((1 << quantizeWordWidth) - 1) << quantizeShift;
+    const int quantizeWordMask = ((1 << quantizeWordWidth) - 1) << quantizeShift;
 
     Color quantizeColor(Color color) {
       return Color.fromARGB(
@@ -1045,11 +963,9 @@ class _ColorCutQuantizer {
       return b.getVolume().compareTo(a.getVolume());
     }
 
-    final PriorityQueue<_ColorVolumeBox> priorityQueue =
-        HeapPriorityQueue<_ColorVolumeBox>(volumeComparator);
+    final PriorityQueue<_ColorVolumeBox> priorityQueue = HeapPriorityQueue<_ColorVolumeBox>(volumeComparator);
 
-    priorityQueue.add(_ColorVolumeBox(
-        0, histogram.length - 1, histogram, histogram.keys.toList()));
+    priorityQueue.add(_ColorVolumeBox(0, histogram.length - 1, histogram, histogram.keys.toList()));
 
     _splitBoxes(priorityQueue, maxColors);
 
@@ -1069,8 +985,7 @@ class _ColorCutQuantizer {
     }
   }
 
-  List<PaletteColor> _generateAverageColors(
-      PriorityQueue<_ColorVolumeBox> colorVolumeBoxes) {
+  List<PaletteColor> _generateAverageColors(PriorityQueue<_ColorVolumeBox> colorVolumeBoxes) {
     final List<PaletteColor> colors = <PaletteColor>[];
     for (final _ColorVolumeBox colorVolumeBox in colorVolumeBoxes.toList()) {
       final PaletteColor paletteColor = colorVolumeBox.getAverageColor();

@@ -1,51 +1,44 @@
+import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
-import 'package:window_plus/window_plus.dart';
 
-import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/core/media_player.dart';
 
+/// {@template keyboard_shortcuts}
+///
 /// KeyboardShortcuts
 /// -----------------
+/// Implementation to handle keyboard shortcuts.
 ///
-/// This class handles all the registered keyboard shortcuts in Harmonoid.
-///
-/// This class is a singleton class for accessing inside the relevant widgets i.e. [KeyboardShortcutsListener] & [KeyboardShortcutsInterceptor].
-///
+/// {@endtemplate}
 class KeyboardShortcuts {
-  /// [KeyboardShortcuts] object instance.
-  static final KeyboardShortcuts instance = KeyboardShortcuts();
+  /// Singleton instance.
+  static final KeyboardShortcuts instance = KeyboardShortcuts._();
 
-  /// List of all registered shortcuts.
+  /// {@macro keyboard_shortcuts}
+  KeyboardShortcuts._();
+
   final Map<LogicalKeySet, VoidCallback> bindings = {
-    // Harmonoid specific shortcuts.
-    LogicalKeySet(LogicalKeyboardKey.space): Playback.instance.playOrPause,
-    // Keyboard keys specifically for media playback control.
-    // Although these are already registered using System Media Transport Controls on Windows & MPRIS on Linux.
-    LogicalKeySet(
-      LogicalKeyboardKey.mediaPlayPause,
-    ): Playback.instance.playOrPause,
-    LogicalKeySet(
-      LogicalKeyboardKey.mediaTrackNext,
-    ): Playback.instance.next,
-    LogicalKeySet(
-      LogicalKeyboardKey.mediaTrackPrevious,
-    ): Playback.instance.previous,
-    LogicalKeySet(
-      LogicalKeyboardKey.control,
-      LogicalKeyboardKey.keyQ,
-    ): WindowPlus.instance.close,
+    LogicalKeySet(LogicalKeyboardKey.space): MediaPlayer.instance.playOrPause,
+    LogicalKeySet(LogicalKeyboardKey.mediaPlayPause): MediaPlayer.instance.playOrPause,
+    LogicalKeySet(LogicalKeyboardKey.mediaTrackNext): MediaPlayer.instance.next,
+    LogicalKeySet(LogicalKeyboardKey.mediaTrackPrevious): MediaPlayer.instance.previous,
+    LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyQ): exit(0),
   };
 }
 
-/// This widget listens all the keyboard shortcuts defined by [KeyboardShortcuts].
-/// This is placed right above the [MaterialApp].
+/// {@template keyboard_shortcuts_listener}
+///
+/// KeyboardShortcutsListener
+/// -------------------------
+/// Implementation to listen to keyboard shortcuts.
+///
+/// {@endtemplate}
 class KeyboardShortcutsListener extends StatelessWidget {
-  /// The descendant [Widget] of this [KeyboardShortcutsListener].
   final Widget child;
-  const KeyboardShortcutsListener({
-    super.key,
-    required this.child,
-  });
+
+  /// {@macro keyboard_shortcuts_listener}
+  const KeyboardShortcutsListener({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -56,26 +49,24 @@ class KeyboardShortcutsListener extends StatelessWidget {
   }
 }
 
-/// This widget intercepts all the keyboard shortcuts defined by [KeyboardShortcuts].
+/// {@template keyboard_shortcuts_interceptor}
 ///
-/// This must be used where the keyboard shortcuts must be ignored e.g. [CustomTextField] or [CustomTextFormField] etc.
-/// Until the [child] wrapped by [KeyboardShortcutsInterceptor] stays focused, the keyboard shortcuts will be ignored.
+/// KeyboardShortcutsInterceptor
+/// ----------------------------
+/// Implementation to intercept keyboard shortcuts.
+///
+/// {@endtemplate}
 class KeyboardShortcutsInterceptor extends StatelessWidget {
-  /// The descendant [Widget] of this [KeyboardShortcutsInterceptor].
   final Widget child;
-  const KeyboardShortcutsInterceptor({
-    super.key,
-    required this.child,
-  });
+
+  /// {@macro keyboard_shortcuts_interceptor}
+  const KeyboardShortcutsInterceptor({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
     return Shortcuts(
       shortcuts: KeyboardShortcuts.instance.bindings.map(
-        (key, _) => MapEntry(
-          key,
-          DoNothingAndStopPropagationTextIntent(),
-        ),
+        (key, _) => MapEntry(key, const DoNothingAndStopPropagationTextIntent()),
       ),
       child: child,
     );
