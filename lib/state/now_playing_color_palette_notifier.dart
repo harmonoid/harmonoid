@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
+import 'package:synchronized/synchronized.dart';
 
+import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/models/playable.dart';
-import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/state/desktop_now_playing_notifier.dart';
 import 'package:harmonoid/state/mobile_now_playing_notifier.dart';
-import 'package:synchronized/synchronized.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:harmonoid/utils/rendering.dart';
 
 /// {@template now_playing_color_palette_notifier}
 ///
@@ -20,7 +21,7 @@ class NowPlayingColorPaletteNotifier extends ChangeNotifier {
   static final NowPlayingColorPaletteNotifier instance = NowPlayingColorPaletteNotifier._();
 
   /// {@macro now_playing_color_palette_notifier}
-  NowPlayingColorPaletteNotifier._() {}
+  NowPlayingColorPaletteNotifier._();
 
   /// Current playable.
   Playable? current;
@@ -40,18 +41,20 @@ class NowPlayingColorPaletteNotifier extends ChangeNotifier {
     bool force = false,
   }) {
     return _lock.synchronized(() async {
-      if (current != playable || force) {
-        current = playable;
-        try {
-          final cover = getCover(playable, cacheWidth: 20);
-          final result = await PaletteGenerator.fromImageProvider(cover);
-          palette = result.colors?.toList();
-          notifyListeners();
-        } catch (exception, stacktrace) {
-          palette = null;
-          notifyListeners();
-          debugPrint(exception.toString());
-          debugPrint(stacktrace.toString());
+      if (Configuration.instance.nowPlayingBarColorPalette) {
+        if (current != playable || force) {
+          current = playable;
+          try {
+            final image = cover(uri: playable.uri, cacheWidth: 20);
+            final result = await PaletteGenerator.fromImageProvider(image);
+            palette = result.colors?.toList();
+            notifyListeners();
+          } catch (exception, stacktrace) {
+            debugPrint(exception.toString());
+            debugPrint(stacktrace.toString());
+            palette = null;
+            notifyListeners();
+          }
         }
       }
     });

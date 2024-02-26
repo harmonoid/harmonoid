@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 
 import 'package:harmonoid/core/media_player.dart';
-import 'package:harmonoid/mappers/media_player_state.dart';
-import 'package:harmonoid/utils/constants.dart';
+import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/interface/mini_now_playing_bar.dart';
+import 'package:harmonoid/utils/constants.dart';
 
 /// {@template mobile_now_playing_notifier}
 ///

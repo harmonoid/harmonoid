@@ -14,7 +14,7 @@ import 'package:harmonoid/core/configuration/configuration.dart';
 /// {@endtemplate}
 class NowPlayingVisualsNotifier {
   /// Singleton instance.
-  static late final NowPlayingVisualsNotifier instance = NowPlayingVisualsNotifier._();
+  static final NowPlayingVisualsNotifier instance = NowPlayingVisualsNotifier._();
 
   /// Whether the [instance] is initialized.
   static bool initialized = false;
@@ -37,14 +37,14 @@ class NowPlayingVisualsNotifier {
   late final Directory directory;
 
   /// Bundled now playing visuals.
-  final List<String> bundled = List.generate(kBundledVisualsCount, (index) => 'assets/preloaded_visuals/$index.webp');
+  final List<String> bundled = List.generate(kBundledVisualsCount, (index) => 'assets/visuals/$index.webp');
 
   /// External now playing visuals.
   final List<String> external = <String>[];
 
   /// Adds an external visual specified by [path].
   Future<void> add(String path) async {
-    final path = join(directory.path, Uuid().v4());
+    final path = join(directory.path, const Uuid().v4());
     await File(path).copy_(path);
     external.add(path);
   }
