@@ -2,7 +2,7 @@ import 'package:media_library/media_library.dart';
 import 'package:tag_reader/tag_reader.dart';
 
 /// Mappers for [Tags].
-extension TagsExtension on Tags {
+extension TagsMappers on Tags {
   /// Convert to [Track].
   Track toTrack() => Track(
         uri: uri,

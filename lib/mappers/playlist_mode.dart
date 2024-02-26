@@ -3,7 +3,7 @@ import 'package:media_kit/media_kit.dart';
 import 'package:harmonoid/models/loop.dart';
 
 /// Mappers for [PlaylistMode].
-extension PlaylistModeExtension on PlaylistMode {
+extension PlaylistModeMappers on PlaylistMode {
   /// Converts to [Loop].
   Loop toLoop() {
     switch (this) {
