@@ -26,7 +26,7 @@ import 'package:harmonoid/models/playback_state.dart';
 /// {@endtemplate}
 class MediaPlayer extends ChangeNotifier {
   /// Singleton instance.
-  static late final MediaPlayer instance = MediaPlayer._();
+  static final MediaPlayer instance = MediaPlayer._();
 
   /// Whether the [instance] is initialized.
   static bool initialized = false;
@@ -37,7 +37,7 @@ class MediaPlayer extends ChangeNotifier {
   }
 
   /// Initializes the [instance].
-  Future<void> ensureInitialized() async {
+  static Future<void> ensureInitialized() async {
     if (initialized) return;
     initialized = true;
   }
@@ -79,7 +79,15 @@ class MediaPlayer extends ChangeNotifier {
 
   Future<void> setVolume(double volume) => _player.setVolume(volume);
 
-  Future<void> muteOrUnmute() => _player.setAudioTrack(_player.state.track.audio == AudioTrack.no() ? AudioTrack.auto() : AudioTrack.no());
+  Future<void> setMute(bool mute) => _player.setAudioTrack(mute ? AudioTrack.no() : AudioTrack.auto());
+
+  Future<void> setShuffle(bool shuffle) => _player.setShuffle(shuffle).then((_) {
+        // NOTE: Handled separately.
+        state = state.copyWith(shuffle: state.shuffle);
+        notifyListeners();
+      });
+
+  Future<void> muteOrUnmute() => _player.setAudioTrack(_player.state.track.audio != AudioTrack.no() ? AudioTrack.no() : AudioTrack.auto());
 
   Future<void> shuffleOrUnshuffle() => _player.setShuffle(!state.shuffle).then((_) {
         // NOTE: Handled separately.
@@ -111,6 +119,7 @@ class MediaPlayer extends ChangeNotifier {
     await setRate(state.rate);
     await setPitch(state.pitch);
     await setVolume(state.volume);
+    await setShuffle(state.shuffle);
     await setLoop(state.loop);
     if (play) {
       await open(
@@ -141,18 +150,17 @@ class MediaPlayer extends ChangeNotifier {
 
   Future<void> notifyStateToAudioService() async {
     if (!(Platform.isAndroid || Platform.isMacOS)) return;
-    if (_audioServiceInstance == null) {
-      _audioServiceInstance = await AudioService.init(
-        builder: () => _AudioService(),
-        config: AudioServiceConfig(
-          androidNotificationChannelId: 'com.alexmercerind.harmonoid',
-          androidNotificationChannelName: 'Harmonoid',
-          androidNotificationIcon: 'drawable/ic_stat_music_note',
-          androidNotificationClickStartsActivity: true,
-          androidNotificationOngoing: true,
-        ),
-      );
-    }
+    _audioServiceInstance ??= await AudioService.init(
+      builder: () => _AudioService(),
+      config: const AudioServiceConfig(
+        androidNotificationChannelId: 'com.alexmercerind.harmonoid',
+        androidNotificationChannelName: 'Harmonoid',
+        androidNotificationIcon: 'drawable/ic_stat_music_note',
+        androidNotificationClickStartsActivity: true,
+        androidNotificationOngoing: true,
+      ),
+    );
+    // TODO:
   }
 
   Future<void> notifyStateToMPRIS() async {
@@ -183,7 +191,7 @@ class MediaPlayer extends ChangeNotifier {
     // TODO:
   }
 
-  late final Player _player = Player(configuration: PlayerConfiguration(title: 'Harmonoid', pitch: true));
+  late final Player _player = Player(configuration: const PlayerConfiguration(title: 'Harmonoid', pitch: true));
 
   _AudioService? _audioServiceInstance;
   _AudioService? get _audioService => _audioServiceInstance;
