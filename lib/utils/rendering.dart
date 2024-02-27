@@ -169,7 +169,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
           ),
         ),
       ),
-      if (LyricsNotifier.instance.contains(track))
+      if (LyricsNotifier.instance.contains(track.toPlayable()))
         PopupMenuItem<int>(
           padding: EdgeInsets.zero,
           value: 9,
@@ -355,7 +355,7 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
         extensions: Platform.isAndroid ? null : {'lrc'},
       );
       if (file != null) {
-        final result = await LyricsNotifier.instance.add(track, file);
+        final result = await LyricsNotifier.instance.add(track.toPlayable(), file);
         if (!result) {
           await showDialog(
             context: context,
@@ -375,7 +375,7 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
       }
       break;
     case 9:
-      LyricsNotifier.instance.remove(track);
+      LyricsNotifier.instance.remove(track.toPlayable());
       break;
   }
 }

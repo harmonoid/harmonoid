@@ -42,17 +42,16 @@ class Playable {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Playable && other.uri == uri && other.title == title && ListEquality().equals(other.subtitle, subtitle) && ListEquality().equals(other.description, description);
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Playable && uri == other.uri && title == other.title && const ListEquality().equals(subtitle, other.subtitle) && const ListEquality().equals(description, other.description);
 
   @override
   int get hashCode => Object.hash(
         uri,
         title,
-        ListEquality().hash(subtitle),
-        ListEquality().hash(description),
+        const ListEquality().hash(subtitle),
+        const ListEquality().hash(description),
       );
 
   @override

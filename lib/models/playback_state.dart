@@ -41,6 +41,17 @@ class PlaybackState {
     required this.loop,
   });
 
+  /// Returns [PlaybackState] with default values.
+  factory PlaybackState.defaults() => const PlaybackState(
+        index: _kDefaultIndex,
+        playables: _kDefaultPlayables,
+        rate: _kDefaultRate,
+        pitch: _kDefaultPitch,
+        volume: _kDefaultVolume,
+        shuffle: _kDefaultShuffle,
+        loop: _kDefaultLoop,
+      );
+
   PlaybackState copyWith({
     int? index,
     List<Playable>? playables,
@@ -62,22 +73,21 @@ class PlaybackState {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is PlaybackState &&
-        other.index == index &&
-        ListEquality().equals(other.playables, playables) &&
-        other.rate == rate &&
-        other.pitch == pitch &&
-        other.volume == volume &&
-        other.shuffle == shuffle &&
-        other.loop == loop;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PlaybackState &&
+          index == other.index &&
+          const ListEquality().equals(playables, other.playables) &&
+          rate == other.rate &&
+          pitch == other.pitch &&
+          volume == other.volume &&
+          shuffle == other.shuffle &&
+          loop == other.loop;
 
   @override
   int get hashCode => Object.hash(
         index,
-        ListEquality().hash(playables),
+        const ListEquality().hash(playables),
         rate,
         pitch,
         volume,
@@ -107,4 +117,12 @@ class PlaybackState {
         shuffle: map['shuffle'],
         loop: Loop.values[map['loop']],
       );
+
+  static const _kDefaultIndex = 0;
+  static const _kDefaultPlayables = <Playable>[];
+  static const _kDefaultRate = 1.0;
+  static const _kDefaultPitch = 1.0;
+  static const _kDefaultVolume = 1.0;
+  static const _kDefaultShuffle = false;
+  static const _kDefaultLoop = Loop.off;
 }

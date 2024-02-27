@@ -28,10 +28,7 @@ class Lyric {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Lyric && other.time == time && other.words == words;
-  }
+  bool operator ==(Object other) => identical(this, other) || other is Lyric && time == other.time && words == other.words;
 
   @override
   int get hashCode => Object.hash(

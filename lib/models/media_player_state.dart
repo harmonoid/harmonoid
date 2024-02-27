@@ -70,7 +70,7 @@ class MediaPlayerState {
   });
 
   /// Returns [MediaPlayerState] with default values.
-  factory MediaPlayerState.defaults() => MediaPlayerState(
+  factory MediaPlayerState.defaults() => const MediaPlayerState(
         index: _kDefaultIndex,
         playables: _kDefaultPlayables,
         rate: _kDefaultRate,
@@ -127,7 +127,7 @@ class MediaPlayerState {
       other is MediaPlayerState &&
           runtimeType == other.runtimeType &&
           index == other.index &&
-          ListEquality().equals(playables, other.playables) &&
+          const ListEquality().equals(playables, other.playables) &&
           rate == other.rate &&
           pitch == other.pitch &&
           volume == other.volume &&
@@ -144,7 +144,7 @@ class MediaPlayerState {
   @override
   int get hashCode => Object.hash(
         index,
-        ListEquality().hash(playables),
+        const ListEquality().hash(playables),
         rate,
         pitch,
         volume,
