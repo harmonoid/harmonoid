@@ -16,6 +16,7 @@ dependencies:
   audio_service: ^0.18.7
   awesome_notifications: ^0.7.0-beta.5
   collection: ^1.18.0
+  crypto: ^3.0.3
   dart_discord_rpc:
     git:
       url: https://github.com/alexmercerind/dart_discord_rpc.git
@@ -84,4 +85,4 @@ flutter:
     - assets/images/
     - assets/translations/
     - assets/translations/translations/
-    - assets/preloaded_visuals/
+    - assets/visuals/
