@@ -7,7 +7,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide ReorderableDragStartListener, Intent;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/interface/settings/about.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:provider/provider.dart';
@@ -19,6 +18,8 @@ import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/extensions/global_key.dart';
+import 'package:harmonoid/interface/settings/about.dart';
+
 import 'package:harmonoid/interface/file_info_screen.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/mappers/track.dart';
