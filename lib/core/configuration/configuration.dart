@@ -6,9 +6,10 @@ import 'package:media_library/media_library.dart';
 import 'package:path/path.dart' as path;
 import 'package:win32/win32.dart';
 
+import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/configuration/database/constants.dart';
 import 'package:harmonoid/core/configuration/database/database.dart';
-import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/models/playback_state.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 
 /// {@template configuration}
@@ -20,15 +21,19 @@ import 'package:harmonoid/utils/android_storage_controller.dart';
 /// {@endtemplate}
 class Configuration {
   /// Singleton instance.
-  static final Configuration instance = Configuration._();
+  static late final Configuration instance;
 
   /// Whether the [instance] is initialized.
   static bool initialized = false;
 
+  /// {@macro configuration}
+  Configuration._(this.directory) : db = Database(directory);
+
   /// Initializes the [instance].
-  Future<void> ensureInitialized() async {
+  static Future<void> ensureInitialized() async {
     if (initialized) return;
     initialized = true;
+    final Directory directory;
     if (Platform.environment['HARMONOID_CACHE_DIR'] == null) {
       // Default directory.
       directory = Directory(path.join(await getDefaultDirectory(), '.Harmonoid'));
@@ -36,18 +41,18 @@ class Configuration {
       // HARMONOID_CACHE_DIR
       directory = Directory(Platform.environment['HARMONOID_CACHE_DIR']!);
     }
-    db = Database(directory);
-    await refresh();
+    if (!await directory.exists_()) {
+      await directory.create_();
+    }
+    instance = Configuration._(directory);
+    await instance.refresh();
   }
 
-  /// {@macro configuration}
-  Configuration._();
-
   /// Directory used to store configuration.
-  late Directory directory;
+  final Directory directory;
 
   /// Database used to store configuration.
-  late Database db;
+  final Database db;
 
   AnimationDuration get animationDuration => _animationDuration!;
   bool get audioFormatDisplay => _audioFormatDisplay!;
@@ -81,9 +86,10 @@ class Configuration {
   bool get modernNowPlayingLyrics => _modernNowPlayingLyrics!;
   int get modernNowPlayingUnhighlightedLyricsSize => _modernNowPlayingUnhighlightedLyricsSize!;
   Map<String, String> get mpvOptions => _mpvOptions!;
-  String? get mpvPath => _mpvPath!;
+  String? get mpvPath => _mpvPath;
   bool get notificationLyrics => _notificationLyrics!;
   bool get nowPlayingBarColorPalette => _nowPlayingBarColorPalette!;
+  PlaybackState get playbackState => _playbackState!;
   bool get themeDynamicColor => _themeDynamicColor!;
   int get themeMaterialVersion => _themeMaterialVersion!;
   ThemeMode get themeMode => _themeMode!;
@@ -124,6 +130,7 @@ class Configuration {
     Map<String, String>? mpvOptions,
     String? mpvPath,
     bool? notificationLyrics,
+    PlaybackState? playbackState,
     bool? themeDynamicColor,
     int? themeMaterialVersion,
     ThemeMode? themeMode,
@@ -265,6 +272,10 @@ class Configuration {
       _notificationLyrics = notificationLyrics;
       await db.setValue(_kKeyNotificationLyrics, kTypeBoolean, booleanValue: notificationLyrics);
     }
+    if (playbackState != null) {
+      _playbackState = playbackState;
+      await db.setValue(_kKeyPlaybackState, kTypeJson, jsonValue: playbackState);
+    }
     if (themeDynamicColor != null) {
       _themeDynamicColor = themeDynamicColor;
       await db.setValue(_kKeyThemeDynamicColor, kTypeBoolean, booleanValue: themeDynamicColor);
@@ -335,13 +346,55 @@ class Configuration {
     _mpvPath = await db.getString(_kKeyMpvPath);
     _notificationLyrics = await db.getBoolean(_kKeyNotificationLyrics);
     _nowPlayingBarColorPalette = await db.getBoolean(_kKeyNowPlayingBarColorPalette);
+    _playbackState = PlaybackState.fromJson(await db.getJson(_kKeyPlaybackState));
     _themeDynamicColor = await db.getBoolean(_kKeyThemeDynamicColor);
     _themeMaterialVersion = await db.getInteger(_kKeyThemeMaterialVersion);
     _themeMode = ThemeMode.values[(await db.getInteger(_kKeyThemeMode))!];
     _windowsTaskbarProgress = await db.getBoolean(_kKeyWindowsTaskbarProgress);
   }
 
-  Future<Map<String, dynamic>> getDefaults() async {
+  AnimationDuration? _animationDuration;
+  bool? _audioFormatDisplay;
+  bool? _discordRPC;
+  LanguageData? _language;
+  bool? _launchNowPlayingOnFileOpen;
+  bool? _lrcFromDirectory;
+  bool? _mediaLibraryAddTracksToPlaylist;
+  Set<AlbumGroupingParameter>? _mediaLibraryAlbumGroupingParameters;
+  bool? _mediaLibraryAlbumSortAscending;
+  AlbumSortType? _mediaLibraryAlbumSortType;
+  bool? _mediaLibraryArtistSortAscending;
+  ArtistSortType? _mediaLibraryArtistSortType;
+  bool? _mediaLibraryCoverFallback;
+  Set<Directory>? _mediaLibraryDirectories;
+  bool? _mediaLibraryGenreSortAscending;
+  GenreSortType? _mediaLibraryGenreSortType;
+  int? _mediaLibraryMinimumFileSize;
+  bool? _mediaLibraryRefreshOnLaunch;
+  int? _mediaLibraryTab;
+  bool? _mediaLibraryTrackSortAscending;
+  TrackSortType? _mediaLibraryTrackSortType;
+  int? _mobileAlbumGridSpan;
+  int? _mobileArtistGridSpan;
+  int? _mobileGenreGridSpan;
+  bool? _mobileNowPlayingRipple;
+  bool? _mobileNowPlayingSlider;
+  bool? _modernNowPlaying;
+  int? _modernNowPlayingCarousel;
+  int? _modernNowPlayingHighlightedLyricsSize;
+  bool? _modernNowPlayingLyrics;
+  int? _modernNowPlayingUnhighlightedLyricsSize;
+  Map<String, String>? _mpvOptions;
+  String? _mpvPath;
+  bool? _notificationLyrics;
+  bool? _nowPlayingBarColorPalette;
+  PlaybackState? _playbackState;
+  bool? _themeDynamicColor;
+  int? _themeMaterialVersion;
+  ThemeMode? _themeMode;
+  bool? _windowsTaskbarProgress;
+
+  static Future<Map<String, dynamic>> getDefaults() async {
     return {
       /* JSON    */ _kKeyAnimationDuration: const AnimationDuration(),
       /* Boolean */ _kKeyAudioFormatDisplay: true,
@@ -378,6 +431,7 @@ class Configuration {
       /* String  */ _kKeyMpvPath: null,
       /* Boolean */ _kKeyNotificationLyrics: true,
       /* Boolean */ _kKeyNowPlayingBarColorPalette: true,
+      /* JSON    */ _kKeyPlaybackState: PlaybackState.defaults(),
       /* Boolean */ _kKeyThemeDynamicColor: true,
       /* Integer */ _kKeyThemeMaterialVersion: 2,
       /* Integer */ _kKeyThemeMode: ThemeMode.system.index,
@@ -385,7 +439,7 @@ class Configuration {
     };
   }
 
-  Future<String> getDefaultDirectory() async {
+  static Future<String> getDefaultDirectory() async {
     if (Platform.isWindows) {
       // SHGetKnownFolderPath Win32 API call.
       final rfid = GUIDFromString(FOLDERID_Profile);
@@ -421,7 +475,7 @@ class Configuration {
     throw UnsupportedError('Unsupported platform: ${Platform.operatingSystem}');
   }
 
-  Future<String> getDefaultMediaLibraryDirectory() async {
+  static Future<String> getDefaultMediaLibraryDirectory() async {
     if (Platform.isWindows) {
       // SHGetKnownFolderPath Win32 API call.
       final rfid = GUIDFromString(FOLDERID_Music);
@@ -469,46 +523,6 @@ class Configuration {
     throw UnsupportedError('Unsupported platform: ${Platform.operatingSystem}');
   }
 
-  AnimationDuration? _animationDuration;
-  bool? _audioFormatDisplay;
-  bool? _discordRPC;
-  LanguageData? _language;
-  bool? _launchNowPlayingOnFileOpen;
-  bool? _lrcFromDirectory;
-  bool? _mediaLibraryAddTracksToPlaylist;
-  Set<AlbumGroupingParameter>? _mediaLibraryAlbumGroupingParameters;
-  bool? _mediaLibraryAlbumSortAscending;
-  AlbumSortType? _mediaLibraryAlbumSortType;
-  bool? _mediaLibraryArtistSortAscending;
-  ArtistSortType? _mediaLibraryArtistSortType;
-  bool? _mediaLibraryCoverFallback;
-  Set<Directory>? _mediaLibraryDirectories;
-  bool? _mediaLibraryGenreSortAscending;
-  GenreSortType? _mediaLibraryGenreSortType;
-  int? _mediaLibraryMinimumFileSize;
-  bool? _mediaLibraryRefreshOnLaunch;
-  int? _mediaLibraryTab;
-  bool? _mediaLibraryTrackSortAscending;
-  TrackSortType? _mediaLibraryTrackSortType;
-  int? _mobileAlbumGridSpan;
-  int? _mobileArtistGridSpan;
-  int? _mobileGenreGridSpan;
-  bool? _mobileNowPlayingRipple;
-  bool? _mobileNowPlayingSlider;
-  bool? _modernNowPlaying;
-  int? _modernNowPlayingCarousel;
-  int? _modernNowPlayingHighlightedLyricsSize;
-  bool? _modernNowPlayingLyrics;
-  int? _modernNowPlayingUnhighlightedLyricsSize;
-  Map<String, String>? _mpvOptions;
-  String? _mpvPath;
-  bool? _notificationLyrics;
-  bool? _nowPlayingBarColorPalette;
-  bool? _themeDynamicColor;
-  int? _themeMaterialVersion;
-  ThemeMode? _themeMode;
-  bool? _windowsTaskbarProgress;
-
   static bool get isMobile => Platform.isAndroid || Platform.isIOS;
   static bool get isDesktop => Platform.isLinux || Platform.isMacOS || Platform.isWindows;
 
@@ -549,6 +563,7 @@ class Configuration {
   static const _kKeyMpvPath = 'MPV_PATH';
   static const _kKeyNotificationLyrics = 'NOTIFICATION_LYRICS';
   static const _kKeyNowPlayingBarColorPalette = 'NOW_PLAYING_COLOR_PALETTE';
+  static const _kKeyPlaybackState = 'PLAYBACK_STATE';
   static const _kKeyThemeDynamicColor = 'THEME_DYNAMIC_COLOR';
   static const _kKeyThemeMaterialVersion = 'THEME_MATERIAL_VERSION';
   static const _kKeyThemeMode = 'THEME_MODE';

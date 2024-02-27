@@ -208,6 +208,7 @@ class Intent {
   /// Current.
   String? _current;
 
+  /// Whether the playback state has been restored.
   bool _mediaPlayerPlaybackStateRestored = false;
 
   /// Whether [notify] has been invoked.
