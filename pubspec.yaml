@@ -31,6 +31,7 @@ dependencies:
       url: https://github.com/alexmercerind/flutter_lyric.git
       ref: master
   flutter_svg: ^1.1.4
+  go_router: ^13.2.0
   http: ^1.2.1
   known_extents_list_view_builder:
     git:
