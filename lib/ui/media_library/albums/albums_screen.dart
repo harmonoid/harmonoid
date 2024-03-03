@@ -56,9 +56,10 @@ class AlbumsScreenState extends State<AlbumsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.album;
     return Consumer<MediaLibrary>(
       builder: (context, mediaLibrary, _) {
+        final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.album;
+
         if (mediaLibrary.albumSortType == AlbumSortType.albumArtist) {
           return const AlbumsArtistsScreen();
         }
@@ -83,6 +84,8 @@ class AlbumsScreenState extends State<AlbumsScreen> {
                 width: w,
                 height: h,
               ),
+              labelConstraints: scrollViewBuilderHelperData.labelConstraints,
+              labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
               itemWidth: scrollViewBuilderHelperData.itemWidth,
               itemHeight: scrollViewBuilderHelperData.itemHeight,
             ),

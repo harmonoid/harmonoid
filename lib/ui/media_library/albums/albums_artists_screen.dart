@@ -46,12 +46,14 @@ class DesktopAlbumsArtistsScreenState extends State<DesktopAlbumsArtistsScreen> 
 
   @override
   Widget build(BuildContext context) {
-    final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.album;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Consumer<MediaLibrary>(
         builder: (context, mediaLibrary, _) {
+          final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.album;
+
           final albumArtists = mediaLibrary.albumArtists.entries.toList();
+
           return Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.start,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
 import 'package:harmonoid/utils/constants.dart';
@@ -37,13 +38,15 @@ class AlbumItem extends StatelessWidget {
               SizedBox(
                 width: width,
                 height: width,
-                child: Ink.image(
-                  width: width,
-                  height: width,
-                  fit: BoxFit.cover,
-                  image: cover(
-                    item: album,
-                    cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
+                child: ScaleOnHover(
+                  child: Ink.image(
+                    width: width,
+                    height: width,
+                    fit: BoxFit.cover,
+                    image: cover(
+                      item: album,
+                      cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
+                    ),
                   ),
                 ),
               ),
