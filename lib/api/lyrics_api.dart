@@ -39,8 +39,8 @@ class LyricsApi {
   }
 
   /// Base URL.
-  static const String _base = 'harmonoid-lyrics.vercel.app/api';
+  static const String _base = 'harmonoid-lyrics.vercel.app';
 
   /// Endpoint: [lyrics].
-  static const String _lyrics = '/lyrics';
+  static const String _lyrics = '/api/lyrics';
 }
