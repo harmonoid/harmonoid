@@ -415,7 +415,7 @@ class Configuration {
       /* Boolean */ _kKeyMediaLibraryGenreSortAscending: true,
       /* Integer */ _kKeyMediaLibraryGenreSortType: GenreSortType.genre.index,
       /* Integer */ _kKeyMediaLibraryMinimumFileSize: 0,
-      /* Integer */ _kKeyMediaLibraryPath: kAlbumPath,
+      /* Integer */ _kKeyMediaLibraryPath: kAlbumsPath,
       /* Boolean */ _kKeyMediaLibraryRefreshOnLaunch: true,
       /* Boolean */ _kKeyMediaLibraryTrackSortAscending: true,
       /* Integer */ _kKeyMediaLibraryTrackSortType: TrackSortType.title.index,
