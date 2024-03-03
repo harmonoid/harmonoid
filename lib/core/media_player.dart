@@ -12,6 +12,7 @@ import 'package:harmonoid/models/loop.dart';
 import 'package:harmonoid/models/media_player_state.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/models/playback_state.dart';
+import 'package:harmonoid/utils/methods.dart';
 
 /// {@template media_player}
 ///
@@ -99,9 +100,11 @@ class MediaPlayer extends ChangeNotifier {
     List<Playable> playables, {
     int index = 0,
     bool play = true,
+    void Function() onOpen = mediaPlayerOpenOnOpen,
   }) async {
     await _player.open(Playlist(playables.map((playable) => playable.toMedia()).toList(), index: index), play: play);
     state = state.copyWith(index: index, playables: playables);
+    mediaPlayerOpenOnOpen.call();
   }
 
   Future<void> add(List<Playable> playables) async {

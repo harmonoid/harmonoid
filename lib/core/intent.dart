@@ -12,6 +12,7 @@ import 'package:harmonoid/mappers/tags.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/models/playback_state.dart';
+import 'package:harmonoid/utils/methods.dart';
 
 /// {@template intent}
 ///
@@ -59,7 +60,10 @@ class Intent {
   }
 
   /// Notifies to [play] about externally opened resource.
-  Future<void> notify({PlaybackState? playbackState, void Function(bool)? onPlaybackStateRestored}) {
+  Future<void> notify({
+    PlaybackState? playbackState,
+    void Function() onPlaybackStateRestore = intentNotifyOnPlaybackStateRestore,
+  }) {
     return _notifyLock.synchronized(() async {
       _notifyInvoked = true;
 
@@ -93,7 +97,7 @@ class Intent {
         if (!_mediaPlayerPlaybackStateRestored && playbackState != null) {
           _mediaPlayerPlaybackStateRestored = true;
           await MediaPlayer.instance.setPlaybackState(playbackState, play: _current == null);
-          onPlaybackStateRestored?.call(true);
+          intentNotifyOnPlaybackStateRestore.call();
         }
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
@@ -112,7 +116,10 @@ class Intent {
   }
 
   /// Plays the [uri].
-  Future<void> play(String uri) async {
+  Future<void> play(
+    String uri, {
+    void Function() onMediaPlayerOpen = intentPlayOnMediaPlayerOpen,
+  }) async {
     return _playLock.synchronized(
       () async {
         _playInvoked = true;
@@ -128,6 +135,7 @@ class Intent {
                     playable,
                   ],
                 );
+                onMediaPlayerOpen.call();
               } catch (exception, stacktrace) {
                 debugPrint(exception.toString());
                 debugPrint(stacktrace.toString());
@@ -150,6 +158,7 @@ class Intent {
                         playable,
                       ],
                     );
+                    onMediaPlayerOpen.call();
                   } else {
                     await MediaPlayer.instance.add(
                       [
@@ -177,6 +186,7 @@ class Intent {
                   ),
                 ],
               );
+              onMediaPlayerOpen.call();
               break;
             }
           default:
@@ -194,7 +204,11 @@ class Intent {
       cover: MediaLibrary.instance.coverFromUri(uri),
       timeout: MediaLibrary.instance.timeout,
     );
-    return tags.toTrack().toPlayable();
+    final result = tags.toTrack().toPlayable();
+    debugPrint('Intent: parse: URI: $uri');
+    debugPrint('Intent: parse: Tags: $tags');
+    debugPrint('Intent: parse: Result: $result');
+    return result;
   }
 
   /// Disposes the [instance]. Releases allocated resources back to the system.

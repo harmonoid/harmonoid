@@ -23,8 +23,8 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
 
   /// {@macro media_library}
   MediaLibrary._({
-    required super.directories,
     required super.cache,
+    required super.directories,
     required super.albumSortType,
     required super.artistSortType,
     required super.genreSortType,
@@ -39,8 +39,8 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
 
   /// Initializes the [instance].
   static Future<void> ensureInitialized({
-    required Set<Directory> directories,
     required Directory cache,
+    required Set<Directory> directories,
     required AlbumSortType albumSortType,
     required ArtistSortType artistSortType,
     required GenreSortType genreSortType,
@@ -55,8 +55,8 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
     if (initialized) return;
     initialized = true;
     instance = MediaLibrary._(
-      directories: directories,
       cache: cache,
+      directories: directories,
       albumSortType: albumSortType,
       artistSortType: artistSortType,
       genreSortType: genreSortType,
@@ -68,26 +68,7 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
       minimumFileSize: minimumFileSize,
       albumGroupingParameters: albumGroupingParameters,
     );
-    await instance.refresh(
-      insert: false,
-      delete: false,
-    );
-  }
-
-  /// Progress: Current.
-  int? current;
-
-  /// Progress: Total.
-  int total = 0;
-
-  /// Progress: Done.
-  bool done = true;
-
-  /// Progress: Callback.
-  void progress(int? current, int total, bool done) {
-    this.current = current;
-    this.total = total;
-    this.done = done;
+    await instance.refresh();
   }
 
   /// Invoked for performing the delete operation on Android.
@@ -118,7 +99,11 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
       cover: cover,
       timeout: timeout,
     );
-    return tags.toTrack();
+    final result = tags.toTrack();
+    debugPrint('MediaLibrary: parse: URI: $uri');
+    debugPrint('MediaLibrary: parse: Tags: $tags');
+    debugPrint('MediaLibrary: parse: Result: $result');
+    return result;
   }
 
   /// Disposes the [instance]. Releases allocated resources back to the system.
