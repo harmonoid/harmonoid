@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_null_comparison
-
 import 'dart:convert';
 import 'dart:io';
 import 'package:drift/drift.dart';
@@ -38,16 +36,17 @@ class Database extends _$Database {
     String? stringValue,
     dynamic jsonValue,
   }) async {
-    if (!(type == kTypeBoolean && booleanValue != null && integerValue == null && stringValue == null && jsonValue == null)) {
+    if (type == kTypeBoolean && !(booleanValue != null && integerValue == null && stringValue == null && jsonValue == null)) {
       throw ArgumentError('Invalid type: boolean', 'type');
     }
-    if (!(type == kTypeInteger && booleanValue == null && integerValue != null && stringValue == null && jsonValue == null)) {
+    if (type == kTypeInteger && !(booleanValue == null && integerValue != null && stringValue == null && jsonValue == null)) {
       throw ArgumentError('Invalid type: integer', 'type');
     }
-    if (!(type == kTypeString && booleanValue == null && integerValue == null && stringValue != null && jsonValue == null)) {
-      throw ArgumentError('Invalid type: string', 'type');
-    }
-    if (!(type == kTypeJson && booleanValue == null && integerValue == null && stringValue == null && jsonValue != null)) {
+    // NOTE: [kTypeString] may be null.
+    // if (type == kTypeString && !(booleanValue == null && integerValue == null && stringValue != null && jsonValue == null)) {
+    //   throw ArgumentError('Invalid type: string', 'type');
+    // }
+    if (type == kTypeJson && !(booleanValue == null && integerValue == null && stringValue == null && jsonValue != null)) {
       throw ArgumentError('Invalid type: json', 'type');
     }
 
@@ -58,7 +57,7 @@ class Database extends _$Database {
         booleanValue: booleanValue,
         integerValue: integerValue,
         stringValue: stringValue,
-        jsonValue: json.encode(jsonValue),
+        jsonValue: jsonValue == null ? null : json.encode(jsonValue),
       ),
       mode: InsertMode.replace,
     );
@@ -73,16 +72,17 @@ class Database extends _$Database {
     String? stringValue,
     dynamic jsonValue,
   }) async {
-    if (!(type == kTypeBoolean && booleanValue != null && integerValue == null && stringValue == null && jsonValue == null)) {
+    if (type == kTypeBoolean && !(booleanValue != null && integerValue == null && stringValue == null && jsonValue == null)) {
       throw ArgumentError('Invalid type: boolean', 'type');
     }
-    if (!(type == kTypeInteger && booleanValue == null && integerValue != null && stringValue == null && jsonValue == null)) {
+    if (type == kTypeInteger && !(booleanValue == null && integerValue != null && stringValue == null && jsonValue == null)) {
       throw ArgumentError('Invalid type: integer', 'type');
     }
-    if (!(type == kTypeString && booleanValue == null && integerValue == null && stringValue != null && jsonValue == null)) {
-      throw ArgumentError('Invalid type: string', 'type');
-    }
-    if (!(type == kTypeJson && booleanValue == null && integerValue == null && stringValue == null && jsonValue != null)) {
+    // NOTE: [kTypeString] may be null.
+    // if (type == kTypeString && !(booleanValue == null && integerValue == null && stringValue != null && jsonValue == null)) {
+    //   throw ArgumentError('Invalid type: string', 'type');
+    // }
+    if (type == kTypeJson && !(booleanValue == null && integerValue == null && stringValue == null && jsonValue != null)) {
       throw ArgumentError('Invalid type: json', 'type');
     }
 
@@ -93,7 +93,7 @@ class Database extends _$Database {
         booleanValue: booleanValue,
         integerValue: integerValue,
         stringValue: stringValue,
-        jsonValue: json.encode(jsonValue),
+        jsonValue: jsonValue == null ? null : json.encode(jsonValue),
       ),
       mode: InsertMode.insertOrIgnore,
     );
@@ -120,7 +120,7 @@ class Database extends _$Database {
   /// Gets the JSON value of the entry with the given [key].
   Future<dynamic> getJson(String key) async {
     final entry = await (select(entries)..where((e) => e.key.equals(key))).getSingleOrNull();
-    return entry == null ? null : json.decode(entry.jsonValue);
+    return entry == null ? null : json.decode(entry.jsonValue!);
   }
 
   static LazyDatabase _openConnection(Directory directory) {

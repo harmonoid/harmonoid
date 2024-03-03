@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:ffi/ffi.dart';
@@ -10,6 +11,7 @@ import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/configuration/database/constants.dart';
 import 'package:harmonoid/core/configuration/database/database.dart';
 import 'package:harmonoid/models/playback_state.dart';
+import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 
 /// {@template configuration}
@@ -71,8 +73,8 @@ class Configuration {
   bool get mediaLibraryGenreSortAscending => _mediaLibraryGenreSortAscending!;
   GenreSortType get mediaLibraryGenreSortType => _mediaLibraryGenreSortType!;
   int get mediaLibraryMinimumFileSize => _mediaLibraryMinimumFileSize!;
+  String get mediaLibraryPath => _mediaLibraryPath!;
   bool get mediaLibraryRefreshOnLaunch => _mediaLibraryRefreshOnLaunch!;
-  int get mediaLibraryTab => _mediaLibraryTab!;
   bool get mediaLibraryTrackSortAscending => _mediaLibraryTrackSortAscending!;
   TrackSortType get mediaLibraryTrackSortType => _mediaLibraryTrackSortType!;
   int get mobileAlbumGridSpan => _mobileAlbumGridSpan!;
@@ -90,9 +92,9 @@ class Configuration {
   bool get notificationLyrics => _notificationLyrics!;
   bool get nowPlayingBarColorPalette => _nowPlayingBarColorPalette!;
   PlaybackState get playbackState => _playbackState!;
-  bool get themeDynamicColor => _themeDynamicColor!;
   int get themeMaterialVersion => _themeMaterialVersion!;
   ThemeMode get themeMode => _themeMode!;
+  bool get themeSystemColorScheme => _themeSystemColorScheme!;
   bool get windowsTaskbarProgress => _windowsTaskbarProgress!;
 
   Future<void> set({
@@ -113,8 +115,8 @@ class Configuration {
     bool? mediaLibraryGenreSortAscending,
     GenreSortType? mediaLibraryGenreSortType,
     int? mediaLibraryMinimumFileSize,
+    String? mediaLibraryPath,
     bool? mediaLibraryRefreshOnLaunch,
-    int? mediaLibraryTab,
     bool? mediaLibraryTrackSortAscending,
     TrackSortType? mediaLibraryTrackSortType,
     int? mobileAlbumGridSpan,
@@ -131,9 +133,9 @@ class Configuration {
     String? mpvPath,
     bool? notificationLyrics,
     PlaybackState? playbackState,
-    bool? themeDynamicColor,
     int? themeMaterialVersion,
     ThemeMode? themeMode,
+    bool? themeSystemColorScheme,
     bool? windowsTaskbarProgress,
   }) async {
     if (animationDuration != null) {
@@ -204,13 +206,13 @@ class Configuration {
       _mediaLibraryMinimumFileSize = mediaLibraryMinimumFileSize;
       await db.setValue(_kKeyMediaLibraryMinimumFileSize, kTypeInteger, integerValue: mediaLibraryMinimumFileSize);
     }
+    if (mediaLibraryPath != null) {
+      _mediaLibraryPath = mediaLibraryPath;
+      await db.setValue(_kKeyMediaLibraryPath, kTypeString, stringValue: mediaLibraryPath);
+    }
     if (mediaLibraryRefreshOnLaunch != null) {
       _mediaLibraryRefreshOnLaunch = mediaLibraryRefreshOnLaunch;
       await db.setValue(_kKeyMediaLibraryRefreshOnLaunch, kTypeBoolean, booleanValue: mediaLibraryRefreshOnLaunch);
-    }
-    if (mediaLibraryTab != null) {
-      _mediaLibraryTab = mediaLibraryTab;
-      await db.setValue(_kKeyMediaLibraryTab, kTypeInteger, integerValue: mediaLibraryTab);
     }
     if (mediaLibraryTrackSortAscending != null) {
       _mediaLibraryTrackSortAscending = mediaLibraryTrackSortAscending;
@@ -276,10 +278,6 @@ class Configuration {
       _playbackState = playbackState;
       await db.setValue(_kKeyPlaybackState, kTypeJson, jsonValue: playbackState);
     }
-    if (themeDynamicColor != null) {
-      _themeDynamicColor = themeDynamicColor;
-      await db.setValue(_kKeyThemeDynamicColor, kTypeBoolean, booleanValue: themeDynamicColor);
-    }
     if (themeMaterialVersion != null) {
       _themeMaterialVersion = themeMaterialVersion;
       await db.setValue(_kKeyThemeMaterialVersion, kTypeInteger, integerValue: themeMaterialVersion);
@@ -287,6 +285,10 @@ class Configuration {
     if (themeMode != null) {
       _themeMode = themeMode;
       await db.setValue(_kKeyThemeMode, kTypeInteger, integerValue: themeMode.index);
+    }
+    if (themeSystemColorScheme != null) {
+      _themeSystemColorScheme = themeSystemColorScheme;
+      await db.setValue(_kKeyThemeSystemColorScheme, kTypeBoolean, booleanValue: themeSystemColorScheme);
     }
     if (windowsTaskbarProgress != null) {
       _windowsTaskbarProgress = windowsTaskbarProgress;
@@ -318,18 +320,18 @@ class Configuration {
     _launchNowPlayingOnFileOpen = await db.getBoolean(_kKeyLaunchNowPlayingOnFileOpen);
     _lrcFromDirectory = await db.getBoolean(_kKeyLRCFromDirectory);
     _mediaLibraryAddTracksToPlaylist = await db.getBoolean(_kKeyMediaLibraryAddTracksToPlaylist);
-    _mediaLibraryAlbumGroupingParameters = (await db.getJson(_kKeyMediaLibraryAlbumGroupingParameters)).map((e) => AlbumGroupingParameter.values[e]).toSet();
+    _mediaLibraryAlbumGroupingParameters = (await db.getJson(_kKeyMediaLibraryAlbumGroupingParameters)).map<AlbumGroupingParameter>((e) => AlbumGroupingParameter.values[e]).toSet();
     _mediaLibraryAlbumSortAscending = await db.getBoolean(_kKeyMediaLibraryAlbumSortAscending);
     _mediaLibraryAlbumSortType = AlbumSortType.values[(await db.getInteger(_kKeyMediaLibraryAlbumSortType))!];
     _mediaLibraryArtistSortAscending = await db.getBoolean(_kKeyMediaLibraryArtistSortAscending);
     _mediaLibraryArtistSortType = ArtistSortType.values[(await db.getInteger(_kKeyMediaLibraryArtistSortType))!];
     _mediaLibraryCoverFallback = await db.getBoolean(_kKeyMediaLibraryCoverFallback);
-    _mediaLibraryDirectories = (await db.getJson(_kKeyMediaLibraryDirectories)).map((e) => Directory(e)).toSet();
+    _mediaLibraryDirectories = (await db.getJson(_kKeyMediaLibraryDirectories)).map<Directory>((e) => Directory(e)).toSet();
     _mediaLibraryGenreSortAscending = await db.getBoolean(_kKeyMediaLibraryGenreSortAscending);
     _mediaLibraryGenreSortType = GenreSortType.values[(await db.getInteger(_kKeyMediaLibraryGenreSortType))!];
     _mediaLibraryMinimumFileSize = await db.getInteger(_kKeyMediaLibraryMinimumFileSize);
+    _mediaLibraryPath = await db.getString(_kKeyMediaLibraryPath);
     _mediaLibraryRefreshOnLaunch = await db.getBoolean(_kKeyMediaLibraryRefreshOnLaunch);
-    _mediaLibraryTab = await db.getInteger(_kKeyMediaLibraryTab);
     _mediaLibraryTrackSortAscending = await db.getBoolean(_kKeyMediaLibraryTrackSortAscending);
     _mediaLibraryTrackSortType = TrackSortType.values[(await db.getInteger(_kKeyMediaLibraryTrackSortType))!];
     _mobileAlbumGridSpan = await db.getInteger(_kKeyMobileAlbumGridSpan);
@@ -347,9 +349,9 @@ class Configuration {
     _notificationLyrics = await db.getBoolean(_kKeyNotificationLyrics);
     _nowPlayingBarColorPalette = await db.getBoolean(_kKeyNowPlayingBarColorPalette);
     _playbackState = PlaybackState.fromJson(await db.getJson(_kKeyPlaybackState));
-    _themeDynamicColor = await db.getBoolean(_kKeyThemeDynamicColor);
     _themeMaterialVersion = await db.getInteger(_kKeyThemeMaterialVersion);
     _themeMode = ThemeMode.values[(await db.getInteger(_kKeyThemeMode))!];
+    _themeSystemColorScheme = await db.getBoolean(_kKeyThemeSystemColorScheme);
     _windowsTaskbarProgress = await db.getBoolean(_kKeyWindowsTaskbarProgress);
   }
 
@@ -370,8 +372,8 @@ class Configuration {
   bool? _mediaLibraryGenreSortAscending;
   GenreSortType? _mediaLibraryGenreSortType;
   int? _mediaLibraryMinimumFileSize;
+  String? _mediaLibraryPath;
   bool? _mediaLibraryRefreshOnLaunch;
-  int? _mediaLibraryTab;
   bool? _mediaLibraryTrackSortAscending;
   TrackSortType? _mediaLibraryTrackSortType;
   int? _mobileAlbumGridSpan;
@@ -389,9 +391,9 @@ class Configuration {
   bool? _notificationLyrics;
   bool? _nowPlayingBarColorPalette;
   PlaybackState? _playbackState;
-  bool? _themeDynamicColor;
   int? _themeMaterialVersion;
   ThemeMode? _themeMode;
+  bool? _themeSystemColorScheme;
   bool? _windowsTaskbarProgress;
 
   static Future<Map<String, dynamic>> getDefaults() async {
@@ -399,13 +401,13 @@ class Configuration {
       /* JSON    */ _kKeyAnimationDuration: const AnimationDuration(),
       /* Boolean */ _kKeyAudioFormatDisplay: true,
       /* Boolean */ _kKeyDiscordRPC: true,
-      /* JSON    */ _kKeyLanguage: const LanguageData(code: 'en-US', name: 'English (United States)', country: 'United States'),
+      /* JSON    */ _kKeyLanguage: const LanguageData(code: 'en_US', name: 'English (United States)', country: 'United States'),
       /* Boolean */ _kKeyLaunchNowPlayingOnFileOpen: isDesktop,
       /* Boolean */ _kKeyLRCFromDirectory: false,
       /* Boolean */ _kKeyMediaLibraryAddTracksToPlaylist: true,
       /* JSON    */ _kKeyMediaLibraryAlbumGroupingParameters: [AlbumGroupingParameter.album.index],
       /* Boolean */ _kKeyMediaLibraryAlbumSortAscending: true,
-      /* Integer */ _kKeyMediaLibraryAlbumSortType: AlbumSortType.album.index,
+      /* Integer */ _kKeyMediaLibraryAlbumSortType: isDesktop ? AlbumSortType.albumArtist.index : AlbumSortType.album.index,
       /* Boolean */ _kKeyMediaLibraryArtistSortAscending: true,
       /* Integer */ _kKeyMediaLibraryArtistSortType: ArtistSortType.artist.index,
       /* Boolean */ _kKeyMediaLibraryCoverFallback: false,
@@ -413,8 +415,8 @@ class Configuration {
       /* Boolean */ _kKeyMediaLibraryGenreSortAscending: true,
       /* Integer */ _kKeyMediaLibraryGenreSortType: GenreSortType.genre.index,
       /* Integer */ _kKeyMediaLibraryMinimumFileSize: 0,
+      /* Integer */ _kKeyMediaLibraryPath: kAlbumPath,
       /* Boolean */ _kKeyMediaLibraryRefreshOnLaunch: true,
-      /* Integer */ _kKeyMediaLibraryTab: 0,
       /* Boolean */ _kKeyMediaLibraryTrackSortAscending: true,
       /* Integer */ _kKeyMediaLibraryTrackSortType: TrackSortType.title.index,
       /* Integer */ _kKeyMobileAlbumGridSpan: 2,
@@ -432,9 +434,9 @@ class Configuration {
       /* Boolean */ _kKeyNotificationLyrics: true,
       /* Boolean */ _kKeyNowPlayingBarColorPalette: true,
       /* JSON    */ _kKeyPlaybackState: PlaybackState.defaults(),
-      /* Boolean */ _kKeyThemeDynamicColor: true,
-      /* Integer */ _kKeyThemeMaterialVersion: 2,
+      /* Integer */ _kKeyThemeMaterialVersion: isDesktop ? 2 : 3,
       /* Integer */ _kKeyThemeMode: ThemeMode.system.index,
+      /* Boolean */ _kKeyThemeSystemColorScheme: true,
       /* Boolean */ _kKeyWindowsTaskbarProgress: false,
     };
   }
@@ -465,7 +467,7 @@ class Configuration {
         calloc.free(result);
       }
     } else if (Platform.isMacOS) {
-      return path.normalize(Platform.environment['HOME']!);
+      // TODO:
     } else if (Platform.isLinux) {
       return path.normalize(Platform.environment['HOME']!);
     } else if (Platform.isAndroid) {
@@ -545,8 +547,8 @@ class Configuration {
   static const _kKeyMediaLibraryGenreSortAscending = 'MEDIA_LIBRARY_GENRE_SORT_ASCENDING';
   static const _kKeyMediaLibraryGenreSortType = 'MEDIA_LIBRARY_GENRE_SORT_TYPE';
   static const _kKeyMediaLibraryMinimumFileSize = 'MEDIA_LIBRARY_MINIMUM_FILE_SIZE';
+  static const _kKeyMediaLibraryPath = 'MEDIA_LIBRARY_PATH';
   static const _kKeyMediaLibraryRefreshOnLaunch = 'MEDIA_LIBRARY_REFRESH_ON_LAUNCH';
-  static const _kKeyMediaLibraryTab = 'MEDIA_LIBRARY_TAB';
   static const _kKeyMediaLibraryTrackSortAscending = 'MEDIA_LIBRARY_TRACK_SORT_ASCENDING';
   static const _kKeyMediaLibraryTrackSortType = 'MEDIA_LIBRARY_TRACK_SORT_TYPE';
   static const _kKeyMobileAlbumGridSpan = 'MOBILE_ALBUM_GRID_SPAN';
@@ -564,8 +566,8 @@ class Configuration {
   static const _kKeyNotificationLyrics = 'NOTIFICATION_LYRICS';
   static const _kKeyNowPlayingBarColorPalette = 'NOW_PLAYING_COLOR_PALETTE';
   static const _kKeyPlaybackState = 'PLAYBACK_STATE';
-  static const _kKeyThemeDynamicColor = 'THEME_DYNAMIC_COLOR';
   static const _kKeyThemeMaterialVersion = 'THEME_MATERIAL_VERSION';
   static const _kKeyThemeMode = 'THEME_MODE';
+  static const _kKeyThemeSystemColorScheme = 'THEME_SYSTEM_COLOR_SCHEME';
   static const _kKeyWindowsTaskbarProgress = 'WINDOWS_TASKBAR_PROGRESS';
 }

@@ -17,16 +17,16 @@ class Entries extends Table {
   IntColumn get type => integer().named('type')();
 
   /// Boolean value.
-  BoolColumn get booleanValue => boolean().named('boolean')();
+  BoolColumn get booleanValue => boolean().named('boolean').nullable()();
 
   /// Integer value.
-  IntColumn get integerValue => integer().named('integer')();
+  IntColumn get integerValue => integer().named('integer').nullable()();
 
   /// String value.
-  TextColumn get stringValue => text().named('string')();
+  TextColumn get stringValue => text().named('string').nullable()();
 
   /// JSON value.
-  TextColumn get jsonValue => text().named('json')();
+  TextColumn get jsonValue => text().named('json').nullable()();
 
   @override
   Set<Column> get primaryKey => {key};

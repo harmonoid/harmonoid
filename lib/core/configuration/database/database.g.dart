@@ -22,29 +22,29 @@ class $EntriesTable extends Entries with TableInfo<$EntriesTable, Entry> {
       const VerificationMeta('booleanValue');
   @override
   late final GeneratedColumn<bool> booleanValue = GeneratedColumn<bool>(
-      'boolean', aliasedName, false,
+      'boolean', aliasedName, true,
       type: DriftSqlType.bool,
-      requiredDuringInsert: true,
+      requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('CHECK ("boolean" IN (0, 1))'));
   static const VerificationMeta _integerValueMeta =
       const VerificationMeta('integerValue');
   @override
   late final GeneratedColumn<int> integerValue = GeneratedColumn<int>(
-      'integer', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+      'integer', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _stringValueMeta =
       const VerificationMeta('stringValue');
   @override
   late final GeneratedColumn<String> stringValue = GeneratedColumn<String>(
-      'string', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      'string', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _jsonValueMeta =
       const VerificationMeta('jsonValue');
   @override
   late final GeneratedColumn<String> jsonValue = GeneratedColumn<String>(
-      'json', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      'json', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns =>
       [key, type, booleanValue, integerValue, stringValue, jsonValue];
@@ -75,28 +75,20 @@ class $EntriesTable extends Entries with TableInfo<$EntriesTable, Entry> {
           _booleanValueMeta,
           booleanValue.isAcceptableOrUnknown(
               data['boolean']!, _booleanValueMeta));
-    } else if (isInserting) {
-      context.missing(_booleanValueMeta);
     }
     if (data.containsKey('integer')) {
       context.handle(
           _integerValueMeta,
           integerValue.isAcceptableOrUnknown(
               data['integer']!, _integerValueMeta));
-    } else if (isInserting) {
-      context.missing(_integerValueMeta);
     }
     if (data.containsKey('string')) {
       context.handle(_stringValueMeta,
           stringValue.isAcceptableOrUnknown(data['string']!, _stringValueMeta));
-    } else if (isInserting) {
-      context.missing(_stringValueMeta);
     }
     if (data.containsKey('json')) {
       context.handle(_jsonValueMeta,
           jsonValue.isAcceptableOrUnknown(data['json']!, _jsonValueMeta));
-    } else if (isInserting) {
-      context.missing(_jsonValueMeta);
     }
     return context;
   }
@@ -112,13 +104,13 @@ class $EntriesTable extends Entries with TableInfo<$EntriesTable, Entry> {
       type: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}type'])!,
       booleanValue: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}boolean'])!,
+          .read(DriftSqlType.bool, data['${effectivePrefix}boolean']),
       integerValue: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}integer'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}integer']),
       stringValue: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}string'])!,
+          .read(DriftSqlType.string, data['${effectivePrefix}string']),
       jsonValue: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}json'])!,
+          .read(DriftSqlType.string, data['${effectivePrefix}json']),
     );
   }
 
@@ -136,32 +128,40 @@ class Entry extends DataClass implements Insertable<Entry> {
   final int type;
 
   /// Boolean value.
-  final bool booleanValue;
+  final bool? booleanValue;
 
   /// Integer value.
-  final int integerValue;
+  final int? integerValue;
 
   /// String value.
-  final String stringValue;
+  final String? stringValue;
 
   /// JSON value.
-  final String jsonValue;
+  final String? jsonValue;
   const Entry(
       {required this.key,
       required this.type,
-      required this.booleanValue,
-      required this.integerValue,
-      required this.stringValue,
-      required this.jsonValue});
+      this.booleanValue,
+      this.integerValue,
+      this.stringValue,
+      this.jsonValue});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['key'] = Variable<String>(key);
     map['type'] = Variable<int>(type);
-    map['boolean'] = Variable<bool>(booleanValue);
-    map['integer'] = Variable<int>(integerValue);
-    map['string'] = Variable<String>(stringValue);
-    map['json'] = Variable<String>(jsonValue);
+    if (!nullToAbsent || booleanValue != null) {
+      map['boolean'] = Variable<bool>(booleanValue);
+    }
+    if (!nullToAbsent || integerValue != null) {
+      map['integer'] = Variable<int>(integerValue);
+    }
+    if (!nullToAbsent || stringValue != null) {
+      map['string'] = Variable<String>(stringValue);
+    }
+    if (!nullToAbsent || jsonValue != null) {
+      map['json'] = Variable<String>(jsonValue);
+    }
     return map;
   }
 
@@ -169,10 +169,18 @@ class Entry extends DataClass implements Insertable<Entry> {
     return EntriesCompanion(
       key: Value(key),
       type: Value(type),
-      booleanValue: Value(booleanValue),
-      integerValue: Value(integerValue),
-      stringValue: Value(stringValue),
-      jsonValue: Value(jsonValue),
+      booleanValue: booleanValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(booleanValue),
+      integerValue: integerValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(integerValue),
+      stringValue: stringValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(stringValue),
+      jsonValue: jsonValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(jsonValue),
     );
   }
 
@@ -182,10 +190,10 @@ class Entry extends DataClass implements Insertable<Entry> {
     return Entry(
       key: serializer.fromJson<String>(json['key']),
       type: serializer.fromJson<int>(json['type']),
-      booleanValue: serializer.fromJson<bool>(json['booleanValue']),
-      integerValue: serializer.fromJson<int>(json['integerValue']),
-      stringValue: serializer.fromJson<String>(json['stringValue']),
-      jsonValue: serializer.fromJson<String>(json['jsonValue']),
+      booleanValue: serializer.fromJson<bool?>(json['booleanValue']),
+      integerValue: serializer.fromJson<int?>(json['integerValue']),
+      stringValue: serializer.fromJson<String?>(json['stringValue']),
+      jsonValue: serializer.fromJson<String?>(json['jsonValue']),
     );
   }
   @override
@@ -194,27 +202,29 @@ class Entry extends DataClass implements Insertable<Entry> {
     return <String, dynamic>{
       'key': serializer.toJson<String>(key),
       'type': serializer.toJson<int>(type),
-      'booleanValue': serializer.toJson<bool>(booleanValue),
-      'integerValue': serializer.toJson<int>(integerValue),
-      'stringValue': serializer.toJson<String>(stringValue),
-      'jsonValue': serializer.toJson<String>(jsonValue),
+      'booleanValue': serializer.toJson<bool?>(booleanValue),
+      'integerValue': serializer.toJson<int?>(integerValue),
+      'stringValue': serializer.toJson<String?>(stringValue),
+      'jsonValue': serializer.toJson<String?>(jsonValue),
     };
   }
 
   Entry copyWith(
           {String? key,
           int? type,
-          bool? booleanValue,
-          int? integerValue,
-          String? stringValue,
-          String? jsonValue}) =>
+          Value<bool?> booleanValue = const Value.absent(),
+          Value<int?> integerValue = const Value.absent(),
+          Value<String?> stringValue = const Value.absent(),
+          Value<String?> jsonValue = const Value.absent()}) =>
       Entry(
         key: key ?? this.key,
         type: type ?? this.type,
-        booleanValue: booleanValue ?? this.booleanValue,
-        integerValue: integerValue ?? this.integerValue,
-        stringValue: stringValue ?? this.stringValue,
-        jsonValue: jsonValue ?? this.jsonValue,
+        booleanValue:
+            booleanValue.present ? booleanValue.value : this.booleanValue,
+        integerValue:
+            integerValue.present ? integerValue.value : this.integerValue,
+        stringValue: stringValue.present ? stringValue.value : this.stringValue,
+        jsonValue: jsonValue.present ? jsonValue.value : this.jsonValue,
       );
   @override
   String toString() {
@@ -247,10 +257,10 @@ class Entry extends DataClass implements Insertable<Entry> {
 class EntriesCompanion extends UpdateCompanion<Entry> {
   final Value<String> key;
   final Value<int> type;
-  final Value<bool> booleanValue;
-  final Value<int> integerValue;
-  final Value<String> stringValue;
-  final Value<String> jsonValue;
+  final Value<bool?> booleanValue;
+  final Value<int?> integerValue;
+  final Value<String?> stringValue;
+  final Value<String?> jsonValue;
   final Value<int> rowid;
   const EntriesCompanion({
     this.key = const Value.absent(),
@@ -264,17 +274,13 @@ class EntriesCompanion extends UpdateCompanion<Entry> {
   EntriesCompanion.insert({
     required String key,
     required int type,
-    required bool booleanValue,
-    required int integerValue,
-    required String stringValue,
-    required String jsonValue,
+    this.booleanValue = const Value.absent(),
+    this.integerValue = const Value.absent(),
+    this.stringValue = const Value.absent(),
+    this.jsonValue = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : key = Value(key),
-        type = Value(type),
-        booleanValue = Value(booleanValue),
-        integerValue = Value(integerValue),
-        stringValue = Value(stringValue),
-        jsonValue = Value(jsonValue);
+        type = Value(type);
   static Insertable<Entry> custom({
     Expression<String>? key,
     Expression<int>? type,
@@ -298,10 +304,10 @@ class EntriesCompanion extends UpdateCompanion<Entry> {
   EntriesCompanion copyWith(
       {Value<String>? key,
       Value<int>? type,
-      Value<bool>? booleanValue,
-      Value<int>? integerValue,
-      Value<String>? stringValue,
-      Value<String>? jsonValue,
+      Value<bool?>? booleanValue,
+      Value<int?>? integerValue,
+      Value<String?>? stringValue,
+      Value<String?>? jsonValue,
       Value<int>? rowid}) {
     return EntriesCompanion(
       key: key ?? this.key,
