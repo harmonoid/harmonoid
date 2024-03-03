@@ -29,6 +29,7 @@ const String kCoverDefaultFileName = 'Default.PNG';
 const String kDefaultAlbum = 'Unknown Album';
 const String kDefaultArtist = 'Unknown Artist';
 const String kDefaultGenre = 'Unknown Genre';
+const String kDefaultYear = 'Unknown Year';
 
 const String kApplication = 'com.alexmercerind.harmonoid';
 const String kAuthor = 'Hitesh Kumar Saini';

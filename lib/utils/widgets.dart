@@ -23,31 +23,27 @@ import 'package:harmonoid/extensions/global_key.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/state/mobile_now_playing_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
-// import 'package:harmonoid/ui/file_info_screen.dart';
-// import 'package:harmonoid/ui/settings/about.dart';
-// import 'package:harmonoid/ui/settings/settings.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/keyboard_shortcuts.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
-class DesktopHeader extends StatefulWidget {
+class DesktopMediaLibraryHeader extends StatefulWidget {
   final ValueNotifier<bool> floatingNotifier;
-  const DesktopHeader({
+  const DesktopMediaLibraryHeader({
     super.key,
     required this.floatingNotifier,
   });
 
   @override
-  DesktopHeaderState createState() => DesktopHeaderState();
+  DesktopMediaLibraryHeaderState createState() => DesktopMediaLibraryHeaderState();
 }
 
-class DesktopHeaderState extends State<DesktopHeader> {
+class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
   bool hover0 = false;
   bool hover1 = false;
 
   @override
   Widget build(BuildContext context) {
-    final path = GoRouterState.of(context).uri.pathSegments.last;
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -137,7 +133,7 @@ class DesktopHeaderState extends State<DesktopHeader> {
             duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
             child: child,
           ),
-          child: const DesktopSortButton(floating: false),
+          child: const DesktopMediaLibrarySortButton(floating: false),
         ),
         SizedBox(width: margin),
       ],
@@ -147,24 +143,24 @@ class DesktopHeaderState extends State<DesktopHeader> {
 
 // --------------------------------------------------
 
-class DesktopFloatingSortButton extends StatefulWidget {
+class DesktopMediaLibraryFloatingSortButton extends StatefulWidget {
   final ValueNotifier<bool> floatingNotifier;
-  const DesktopFloatingSortButton({
+  const DesktopMediaLibraryFloatingSortButton({
     super.key,
     required this.floatingNotifier,
   });
 
   @override
-  State<DesktopFloatingSortButton> createState() => DesktopFloatingSortButtonState();
+  State<DesktopMediaLibraryFloatingSortButton> createState() => DesktopMediaLibraryFloatingSortButtonState();
 }
 
-class DesktopFloatingSortButtonState extends State<DesktopFloatingSortButton> {
+class DesktopMediaLibraryFloatingSortButtonState extends State<DesktopMediaLibraryFloatingSortButton> {
   @override
   Widget build(BuildContext context) {
     final tab = GoRouterState.of(context).uri.pathSegments.last;
     return ValueListenableBuilder<bool>(
       valueListenable: widget.floatingNotifier,
-      child: const DesktopSortButton(floating: true),
+      child: const DesktopMediaLibrarySortButton(floating: true),
       builder: (context, floating, child) => AnimatedPositioned(
         curve: Curves.easeInOut,
         duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
@@ -186,16 +182,16 @@ class DesktopFloatingSortButtonState extends State<DesktopFloatingSortButton> {
 
 // --------------------------------------------------
 
-class DesktopSortButton extends StatefulWidget {
+class DesktopMediaLibrarySortButton extends StatefulWidget {
   final bool floating;
 
-  const DesktopSortButton({super.key, required this.floating});
+  const DesktopMediaLibrarySortButton({super.key, required this.floating});
 
   @override
-  State<DesktopSortButton> createState() => DesktopSortButtonState();
+  State<DesktopMediaLibrarySortButton> createState() => DesktopMediaLibrarySortButtonState();
 }
 
-class DesktopSortButtonState extends State<DesktopSortButton> {
+class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortButton> {
   bool _hover0 = false;
   bool _hover1 = false;
   final GlobalKey _key0 = GlobalKey();
@@ -375,7 +371,7 @@ class DesktopSortButtonState extends State<DesktopSortButton> {
                 context: context,
                 constraints: const BoxConstraints(maxWidth: double.infinity),
                 position: RelativeRect.fromLTRB(
-                  _key1.globalPaintBounds!.left - margin,
+                  _key1.globalPaintBounds!.left - margin - 8.0,
                   widget.floating ? (_key1.globalPaintBounds!.bottom + margin) : (_key1.globalPaintBounds!.bottom + margin - captionHeight - kDesktopAppBarHeight),
                   MediaQuery.of(context).size.width,
                   MediaQuery.of(context).size.height,
@@ -489,9 +485,71 @@ class DesktopSortButtonState extends State<DesktopSortButton> {
 
 // --------------------------------------------------
 
-class MobileHeader extends StatelessWidget {
+class DesktopMediaLibraryRefreshIndicator extends StatelessWidget {
+  const DesktopMediaLibraryRefreshIndicator({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<MediaLibrary>(
+      builder: (context, mediaLibrary, _) {
+        if (!mediaLibrary.refreshing) {
+          return const SizedBox.shrink();
+        }
+        return Card(
+          elevation: kDefaultCardElevation,
+          clipBehavior: Clip.antiAlias,
+          margin: EdgeInsets.zero,
+          child: Container(
+            width: 328.0,
+            height: 56.0,
+            color: Theme.of(context).cardTheme.color,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                LinearProgressIndicator(
+                  value: mediaLibrary.current == null ? null : (mediaLibrary.current ?? 0) / (mediaLibrary.total == 0 ? 1 : mediaLibrary.total),
+                ),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(width: 16.0),
+                        const Icon(Icons.library_music),
+                        const SizedBox(width: 16.0),
+                        Text(
+                          mediaLibrary.current == null
+                              ? Language.instance.DISCOVERING_FILES
+                              : Language.instance.ADDED_M_OF_N_FILES
+                                  .replaceAll('M', (mediaLibrary.current ?? 0).toString())
+                                  .replaceAll('N', (mediaLibrary.total == 0 ? 1 : mediaLibrary.total).toString()),
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                        const SizedBox(width: 16.0),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+// --------------------------------------------------
+
+class MobileMediaLibraryHeader extends StatelessWidget {
   final int tab;
-  const MobileHeader({super.key, required this.tab});
+  const MobileMediaLibraryHeader({super.key, required this.tab});
 
   @override
   Widget build(BuildContext context) {
@@ -512,7 +570,7 @@ class MobileHeader extends StatelessWidget {
           else if (path == kGenresPath)
             Text('${MediaLibrary.instance.genres.length} ${Language.instance.GENRES}'),
           const Spacer(),
-          MobileSortByButton(path: path),
+          MobileMediaLibrarySortButton(path: path),
         ],
       ),
     );
@@ -521,15 +579,15 @@ class MobileHeader extends StatelessWidget {
 
 // --------------------------------------------------
 
-class MobileSortByButton extends StatefulWidget {
+class MobileMediaLibrarySortButton extends StatefulWidget {
   final String path;
-  const MobileSortByButton({super.key, required this.path});
+  const MobileMediaLibrarySortButton({super.key, required this.path});
 
   @override
-  State<MobileSortByButton> createState() => MobileSortByButtonState();
+  State<MobileMediaLibrarySortButton> createState() => MobileMediaLibrarySortButtonState();
 }
 
-class MobileSortByButtonState extends State<MobileSortByButton> {
+class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButton> {
   Future<void> handle(dynamic value) async {
     if (value is AlbumSortType) {
       MediaLibrary.instance.populate(albumSortType: value);
@@ -588,10 +646,10 @@ class MobileSortByButtonState extends State<MobileSortByButton> {
 
   void Function(void Function())? setStateCallback;
 
-  List<MobileSortButtonPopupMenuItem> get sort => {
+  List<MobileMediaLibrarySortButtonPopupMenuItem> get sort => {
         kAlbumsPath: AlbumSortType.values
             .map(
-              (e) => MobileSortButtonPopupMenuItem(
+              (e) => MobileMediaLibrarySortButtonPopupMenuItem(
                 onTap: () => handle(e),
                 checked: MediaLibrary.instance.albumSortType == e,
                 value: e,
@@ -610,7 +668,7 @@ class MobileSortByButtonState extends State<MobileSortByButton> {
             .toList(),
         kTracksPath: TrackSortType.values
             .map(
-              (e) => MobileSortButtonPopupMenuItem(
+              (e) => MobileMediaLibrarySortButtonPopupMenuItem(
                 onTap: () => handle(e),
                 checked: MediaLibrary.instance.trackSortType == e,
                 value: e,
@@ -628,7 +686,7 @@ class MobileSortByButtonState extends State<MobileSortByButton> {
             .toList(),
         kArtistsPath: ArtistSortType.values
             .map(
-              (e) => MobileSortButtonPopupMenuItem(
+              (e) => MobileMediaLibrarySortButtonPopupMenuItem(
                 onTap: () => handle(e),
                 checked: MediaLibrary.instance.artistSortType == e,
                 value: e,
@@ -645,7 +703,7 @@ class MobileSortByButtonState extends State<MobileSortByButton> {
             .toList(),
         kGenresPath: GenreSortType.values
             .map(
-              (e) => MobileSortButtonPopupMenuItem(
+              (e) => MobileMediaLibrarySortButtonPopupMenuItem(
                 onTap: () => handle(e),
                 checked: MediaLibrary.instance.genreSortType == e,
                 value: e,
@@ -662,8 +720,8 @@ class MobileSortByButtonState extends State<MobileSortByButton> {
             .toList(),
       }[widget.path]!;
 
-  List<MobileSortButtonPopupMenuItem> get order => [
-        MobileSortButtonPopupMenuItem(
+  List<MobileMediaLibrarySortButtonPopupMenuItem> get order => [
+        MobileMediaLibrarySortButtonPopupMenuItem(
           onTap: () => handle(true),
           checked: {
             kAlbumsPath: MediaLibrary.instance.albumSortAscending,
@@ -678,7 +736,7 @@ class MobileSortByButtonState extends State<MobileSortByButton> {
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
-        MobileSortButtonPopupMenuItem(
+        MobileMediaLibrarySortButtonPopupMenuItem(
           onTap: () => handle(false),
           checked: {
             kAlbumsPath: !MediaLibrary.instance.albumSortAscending,
@@ -753,14 +811,14 @@ class MobileSortByButtonState extends State<MobileSortByButton> {
 
 // --------------------------------------------------
 
-class MobileSortButtonPopupMenuItem<T> extends StatelessWidget {
+class MobileMediaLibrarySortButtonPopupMenuItem<T> extends StatelessWidget {
   final T value;
   final bool checked;
   final VoidCallback onTap;
   final Widget child;
   final EdgeInsets? padding;
 
-  const MobileSortButtonPopupMenuItem({
+  const MobileMediaLibrarySortButtonPopupMenuItem({
     super.key,
     required this.value,
     this.checked = false,
