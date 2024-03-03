@@ -206,11 +206,11 @@ class PaletteGenerator with Diagnosticable {
       data.add(
         PaletteColor(
           Color.lerp(
-                Color(0xFFFFFFFF),
-                Color(0xFF000000),
+                const Color(0xFFFFFFFF),
+                const Color(0xFF000000),
                 first.color.computeLuminance() > 0.5 ? 0.87 : 0.13,
               ) ??
-              Color(0xFFFFFFFF),
+              const Color(0xFFFFFFFF),
           0,
         ),
       );
@@ -581,24 +581,24 @@ class PaletteColor with Diagnosticable {
 typedef PaletteFilter = bool Function(HSLColor color);
 
 bool avoidRedBlackWhitePaletteFilter(HSLColor color) {
-  bool _isBlack(HSLColor hslColor) {
-    const double _blackMaxLightness = 0.05;
-    return hslColor.lightness <= _blackMaxLightness;
+  bool isBlack(HSLColor hslColor) {
+    const double blackMaxLightness = 0.05;
+    return hslColor.lightness <= blackMaxLightness;
   }
 
-  bool _isWhite(HSLColor hslColor) {
-    const double _whiteMinLightness = 0.95;
-    return hslColor.lightness >= _whiteMinLightness;
+  bool isWhite(HSLColor hslColor) {
+    const double whiteMinLightness = 0.95;
+    return hslColor.lightness >= whiteMinLightness;
   }
 
-  bool _isNearRedILine(HSLColor hslColor) {
+  bool isNearRedILine(HSLColor hslColor) {
     const double redLineMinHue = 10.0;
     const double redLineMaxHue = 37.0;
     const double redLineMaxSaturation = 0.82;
     return hslColor.hue >= redLineMinHue && hslColor.hue <= redLineMaxHue && hslColor.saturation <= redLineMaxSaturation;
   }
 
-  return !_isWhite(color) && !_isBlack(color) && !_isNearRedILine(color);
+  return !isWhite(color) && !isBlack(color) && !isNearRedILine(color);
 }
 
 enum _ColorComponent {

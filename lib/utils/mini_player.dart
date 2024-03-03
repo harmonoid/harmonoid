@@ -20,13 +20,13 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, constant_identifier_names, dangling_library_doc_comments
 
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-typedef Widget MiniplayerBuilder(double height, double percentage);
-typedef void DismissCallback(double percentage);
+typedef MiniplayerBuilder = Widget Function(double height, double percentage);
+typedef DismissCallback = void Function(double percentage);
 
 class Miniplayer extends StatefulWidget {
   final double minHeight;
@@ -42,7 +42,7 @@ class Miniplayer extends StatefulWidget {
   final bool tapToCollapse;
 
   const Miniplayer({
-    Key? key,
+    super.key,
     required this.minHeight,
     required this.maxHeight,
     required this.builder,
@@ -54,13 +54,13 @@ class Miniplayer extends StatefulWidget {
     this.onDismissed,
     this.controller,
     this.tapToCollapse = true,
-  }) : super(key: key);
+  });
 
   @override
-  _MiniplayerState createState() => _MiniplayerState();
+  MiniplayerState createState() => MiniplayerState();
 }
 
-class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
+class MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
   late ValueNotifier<double> heightNotifier;
   ValueNotifier<double> dragDownPercentage = ValueNotifier(0);
   Function? onDismissed;
@@ -69,7 +69,7 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
   bool dismissed = false;
   bool animating = false;
   int updateCount = 0;
-  StreamController<double> _heightController = StreamController<double>.broadcast();
+  final StreamController<double> _heightController = StreamController<double>.broadcast();
   AnimationController? _animationController;
 
   void _statusListener(AnimationStatus status) {
@@ -132,15 +132,15 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
       child: ValueListenableBuilder(
         valueListenable: heightNotifier,
         builder: (BuildContext context, double height, Widget? _) {
-          final _percentage = ((height - widget.minHeight)) / (widget.maxHeight - widget.minHeight);
+          final percentage = ((height - widget.minHeight)) / (widget.maxHeight - widget.minHeight);
           return Stack(
             alignment: Alignment.bottomCenter,
             children: [
-              if (_percentage > 0)
+              if (percentage > 0)
                 GestureDetector(
                   onTap: () => _animateToHeight(widget.minHeight),
                   child: Opacity(
-                    opacity: borderDouble(minRange: 0.0, maxRange: 1.0, value: _percentage),
+                    opacity: borderDouble(minRange: 0.0, maxRange: 1.0, value: percentage),
                     child: Container(color: widget.backgroundColor),
                   ),
                 ),
@@ -162,12 +162,12 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
                       },
                       child: Material(
                         child: Container(
-                          constraints: BoxConstraints.expand(),
-                          child: widget.builder(height, _percentage),
+                          constraints: const BoxConstraints.expand(),
                           decoration: BoxDecoration(
-                            boxShadow: <BoxShadow>[BoxShadow(color: Colors.black45, blurRadius: widget.elevation, offset: Offset(0.0, 4))],
+                            boxShadow: <BoxShadow>[BoxShadow(color: Colors.black45, blurRadius: widget.elevation, offset: const Offset(0.0, 4))],
                             color: Theme.of(context).canvasColor,
                           ),
+                          child: widget.builder(height, percentage),
                         ),
                       ),
                     ),
@@ -192,14 +192,14 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
                         snapPercentage = 0.01;
                       }
                       MiniPlayerPanelState snap = MiniPlayerPanelState.MIN;
-                      final _percentageMax = percentageFromValueInRange(min: widget.minHeight, max: widget.maxHeight, value: _dragHeight);
+                      final percentageMax = percentageFromValueInRange(min: widget.minHeight, max: widget.maxHeight, value: _dragHeight);
 
                       if (_startHeight > widget.minHeight) {
-                        if (_percentageMax > 1 - snapPercentage) {
+                        if (percentageMax > 1 - snapPercentage) {
                           snap = MiniPlayerPanelState.MAX;
                         }
                       } else {
-                        if (_percentageMax > snapPercentage) {
+                        if (percentageMax > snapPercentage) {
                           snap = MiniPlayerPanelState.MAX;
                         } else if (onDismissed != null &&
                             percentageFromValueInRange(
@@ -270,13 +270,13 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
     if (duration != null) {
       _resetAnimationController(duration: duration);
     }
-    Animation<double> _sizeAnimation = Tween(
+    Animation<double> sizeAnimation = Tween(
       begin: startHeight,
       end: h,
     ).animate(CurvedAnimation(parent: _animationController!, curve: widget.curve));
-    _sizeAnimation.addListener(() {
-      if (_sizeAnimation.value == startHeight) return;
-      _dragHeight = _sizeAnimation.value;
+    sizeAnimation.addListener(() {
+      if (sizeAnimation.value == startHeight) return;
+      _dragHeight = sizeAnimation.value;
       _handleHeightChange(animation: true);
     });
     animating = true;
@@ -350,25 +350,25 @@ class MiniplayerController extends ValueNotifier<ControllerData?> {
 
 class MiniplayerWillPopScope extends StatefulWidget {
   const MiniplayerWillPopScope({
-    Key? key,
+    super.key,
     required this.child,
     required this.onWillPop,
-  }) : super(key: key);
+  });
 
   final Widget child;
   final WillPopCallback onWillPop;
 
   @override
-  _MiniplayerWillPopScopeState createState() => _MiniplayerWillPopScopeState();
+  MiniplayerWillPopScopeState createState() => MiniplayerWillPopScopeState();
 
-  static _MiniplayerWillPopScopeState? of(BuildContext context) {
-    return context.findAncestorStateOfType<_MiniplayerWillPopScopeState>();
+  static MiniplayerWillPopScopeState? of(BuildContext context) {
+    return context.findAncestorStateOfType<MiniplayerWillPopScopeState>();
   }
 }
 
-class _MiniplayerWillPopScopeState extends State<MiniplayerWillPopScope> {
+class MiniplayerWillPopScopeState extends State<MiniplayerWillPopScope> {
   ModalRoute<dynamic>? _route;
-  _MiniplayerWillPopScopeState? _descendant;
+  MiniplayerWillPopScopeState? _descendant;
   set descendant(state) {
     _descendant = state;
     updateRouteCallback();

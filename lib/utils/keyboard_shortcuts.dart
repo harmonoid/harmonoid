@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 
@@ -23,7 +22,7 @@ class KeyboardShortcuts {
     LogicalKeySet(LogicalKeyboardKey.mediaPlayPause): MediaPlayer.instance.playOrPause,
     LogicalKeySet(LogicalKeyboardKey.mediaTrackNext): MediaPlayer.instance.next,
     LogicalKeySet(LogicalKeyboardKey.mediaTrackPrevious): MediaPlayer.instance.previous,
-    LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyQ): exit(0),
+    LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyQ): SystemNavigator.pop,
   };
 }
 

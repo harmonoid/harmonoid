@@ -28,7 +28,7 @@ class AsyncFileImage extends ImageProvider<AsyncFileImage> {
 
   final FutureOr<File?> _file;
 
-  final Future<File> Function() _default;
+  final FutureOr<File> Function() _default;
 
   final double scale = 1.0;
 

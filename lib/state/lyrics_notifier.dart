@@ -8,6 +8,7 @@ import 'package:lrc/lrc.dart';
 import 'package:media_library/media_library.dart';
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:synchronized/synchronized.dart';
 
 import 'package:harmonoid/api/lyrics_api.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -18,7 +19,6 @@ import 'package:harmonoid/extensions/playable.dart';
 import 'package:harmonoid/models/lyric.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
-import 'package:synchronized/synchronized.dart';
 
 /// {@template lyrics_notifier}
 ///
@@ -109,8 +109,8 @@ class LyricsNotifier extends ChangeNotifier {
     lyrics.clear();
     notifyListeners();
 
-    // 1. Cache.
-    debugPrint('LyricsNotifier: retrieve: Cache: ${playable.uri}');
+    // 1. LRC.
+    debugPrint('LyricsNotifier: retrieve: LRC: ${playable.uri}');
     try {
       final lrc = lrcFromUri(playable.uri);
       if (await lrc.exists_()) {

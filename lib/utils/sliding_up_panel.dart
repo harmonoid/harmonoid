@@ -1,4 +1,5 @@
-/// This product includes software developed by Akshath Jain (https://akshathjain.com).
+// This product includes software developed by Akshath Jain (https://akshathjain.com).
+// ignore_for_file: constant_identifier_names
 
 import 'dart:math';
 import 'package:flutter/gestures.dart';
@@ -156,59 +157,57 @@ class SlidingUpPanel extends StatefulWidget {
   /// by default the Panel is open and must be swiped closed by the user.
   final PanelState defaultPanelState;
 
-  SlidingUpPanel(
-      {Key? key,
-      this.panel,
-      this.panelBuilder,
-      this.body,
-      this.collapsed,
-      this.minHeight = 100.0,
-      this.maxHeight = 500.0,
-      this.snapPoint,
-      this.border,
-      this.borderRadius,
-      this.boxShadow = const <BoxShadow>[
-        BoxShadow(
-          blurRadius: 8.0,
-          color: Color.fromRGBO(0, 0, 0, 0.25),
-        )
-      ],
-      this.color = Colors.white,
-      this.padding,
-      this.margin,
-      this.renderPanelSheet = true,
-      this.panelSnapping = true,
-      this.controller,
-      this.backdropEnabled = false,
-      this.backdropColor = Colors.black,
-      this.backdropOpacity = 0.5,
-      this.backdropTapClosesPanel = true,
-      this.onPanelSlide,
-      this.onPanelOpened,
-      this.onPanelClosed,
-      this.parallaxEnabled = false,
-      this.parallaxOffset = 0.1,
-      this.isDraggable = true,
-      this.slideDirection = SlideDirection.UP,
-      this.defaultPanelState = PanelState.CLOSED,
-      this.header,
-      this.footer})
-      : assert(panel != null || panelBuilder != null),
+  const SlidingUpPanel({
+    super.key,
+    this.panel,
+    this.panelBuilder,
+    this.body,
+    this.collapsed,
+    this.minHeight = 100.0,
+    this.maxHeight = 500.0,
+    this.snapPoint,
+    this.border,
+    this.borderRadius,
+    this.boxShadow = const <BoxShadow>[
+      BoxShadow(
+        blurRadius: 8.0,
+        color: Color.fromRGBO(0, 0, 0, 0.25),
+      )
+    ],
+    this.color = Colors.white,
+    this.padding,
+    this.margin,
+    this.renderPanelSheet = true,
+    this.panelSnapping = true,
+    this.controller,
+    this.backdropEnabled = false,
+    this.backdropColor = Colors.black,
+    this.backdropOpacity = 0.5,
+    this.backdropTapClosesPanel = true,
+    this.onPanelSlide,
+    this.onPanelOpened,
+    this.onPanelClosed,
+    this.parallaxEnabled = false,
+    this.parallaxOffset = 0.1,
+    this.isDraggable = true,
+    this.slideDirection = SlideDirection.UP,
+    this.defaultPanelState = PanelState.CLOSED,
+    this.header,
+    this.footer,
+  })  : assert(panel != null || panelBuilder != null),
         assert(0 <= backdropOpacity && backdropOpacity <= 1.0),
-        assert(snapPoint == null || 0 < snapPoint && snapPoint < 1.0),
-        super(key: key);
+        assert(snapPoint == null || 0 < snapPoint && snapPoint < 1.0);
 
   @override
-  _SlidingUpPanelState createState() => _SlidingUpPanelState();
+  SlidingUpPanelState createState() => SlidingUpPanelState();
 }
 
-class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProviderStateMixin {
+class SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProviderStateMixin {
   late AnimationController _ac;
   late ScrollController _sc;
 
+  final VelocityTracker _vt = VelocityTracker.withKind(PointerDeviceKind.touch);
   bool _scrollingEnabled = false;
-  VelocityTracker _vt = new VelocityTracker.withKind(PointerDeviceKind.touch);
-
   bool _isPanelVisible = true;
   // --------------------------------------------------
   bool restored = false;
@@ -265,10 +264,10 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
                 builder: (context, child) {
                   return Positioned(
                     top: widget.parallaxEnabled ? _getParallax() : 0.0,
-                    child: child ?? SizedBox(),
+                    child: child ?? const SizedBox(),
                   );
                 },
-                child: Container(
+                child: SizedBox(
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
                   child: widget.body,
@@ -321,26 +320,29 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
                           top: widget.slideDirection == SlideDirection.UP ? 0.0 : null,
                           bottom: widget.slideDirection == SlideDirection.DOWN ? 0.0 : null,
                           width: MediaQuery.of(context).size.width - (widget.margin != null ? widget.margin!.horizontal : 0) - (widget.padding != null ? widget.padding!.horizontal : 0),
-                          child: Container(
+                          child: SizedBox(
                             height: widget.maxHeight,
-                            child: widget.panel != null ? widget.panel : widget.panelBuilder!(_sc),
+                            child: widget.panel ?? widget.panelBuilder!(_sc),
                           )),
                       widget.header != null
                           ? Positioned(
                               top: widget.slideDirection == SlideDirection.UP ? 0.0 : null,
                               bottom: widget.slideDirection == SlideDirection.DOWN ? 0.0 : null,
-                              child: widget.header ?? SizedBox(),
+                              child: widget.header ?? const SizedBox(),
                             )
                           : Container(),
                       widget.footer != null
                           ? Positioned(
-                              top: widget.slideDirection == SlideDirection.UP ? null : 0.0, bottom: widget.slideDirection == SlideDirection.DOWN ? null : 0.0, child: widget.footer ?? SizedBox())
+                              top: widget.slideDirection == SlideDirection.UP ? null : 0.0,
+                              bottom: widget.slideDirection == SlideDirection.DOWN ? null : 0.0,
+                              child: widget.footer ?? const SizedBox(),
+                            )
                           : Container(),
                       Positioned(
                         top: widget.slideDirection == SlideDirection.UP ? 0.0 : null,
                         bottom: widget.slideDirection == SlideDirection.DOWN ? 0.0 : null,
                         width: MediaQuery.of(context).size.width - (widget.margin != null ? widget.margin!.horizontal : 0) - (widget.padding != null ? widget.padding!.horizontal : 0),
-                        // `com.alexmercerind.harmonoid`.
+                        // --------------------------------------------------
                         child: SizedBox(
                           height: widget.maxHeight,
                           child: AnimatedBuilder(
@@ -350,7 +352,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
                             },
                           ),
                         ),
-                        // `com.alexmercerind.harmonoid`.
+                        // --------------------------------------------------
                       ),
                     ],
                   ),
@@ -367,10 +369,11 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
   }
 
   double _getParallax() {
-    if (widget.slideDirection == SlideDirection.UP)
+    if (widget.slideDirection == SlideDirection.UP) {
       return -_ac.value * (widget.maxHeight - widget.minHeight) * widget.parallaxOffset;
-    else
+    } else {
       return _ac.value * (widget.maxHeight - widget.minHeight) * widget.parallaxOffset;
+    }
   }
 
   Widget _gestureHandler({required Widget child}) {
@@ -401,10 +404,11 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
 
   void _onGestureSlide(double dy) {
     if (!_scrollingEnabled) {
-      if (widget.slideDirection == SlideDirection.UP)
+      if (widget.slideDirection == SlideDirection.UP) {
         _ac.value -= dy / (widget.maxHeight - widget.minHeight);
-      else
+      } else {
         _ac.value += dy / (widget.maxHeight - widget.minHeight);
+      }
     }
     if (_isPanelOpen && _sc.hasClients && _sc.offset <= 0) {
       if (dy < 0) {
@@ -432,16 +436,17 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
 
     if (v.pixelsPerSecond.dy.abs() >= minFlingVelocity) {
       if (widget.panelSnapping && widget.snapPoint != null) {
-        if (v.pixelsPerSecond.dy.abs() >= kSnap * minFlingVelocity || minDistance == d2Snap)
+        if (v.pixelsPerSecond.dy.abs() >= kSnap * minFlingVelocity || minDistance == d2Snap) {
           _ac.fling(velocity: visualVelocity);
-        else
+        } else {
           _flingPanelToPosition(widget.snapPoint!, visualVelocity);
+        }
       } else if (widget.panelSnapping) {
         _ac.fling(velocity: visualVelocity);
       } else {
         _ac.animateTo(
           _ac.value + visualVelocity * 0.16,
-          duration: Duration(milliseconds: 410),
+          duration: const Duration(milliseconds: 410),
           curve: Curves.decelerate,
         );
       }
@@ -553,10 +558,10 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
 }
 
 class PanelController {
-  _SlidingUpPanelState? _panelState;
+  SlidingUpPanelState? _panelState;
 
-  void _addState(_SlidingUpPanelState panelState) {
-    this._panelState = panelState;
+  void _addState(SlidingUpPanelState panelState) {
+    _panelState = panelState;
   }
 
   /// Determine if the panelController is attached to an instance

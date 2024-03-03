@@ -5,7 +5,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:harmonoid/ui/router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
+import 'package:path/path.dart';
 import 'package:share_plus/share_plus.dart';
 
 export 'package:harmonoid/extensions/string.dart';
@@ -14,30 +16,50 @@ import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/extensions/track.dart';
-import 'package:harmonoid/interface/collection/playlist.dart';
-import 'package:harmonoid/interface/directory_picker_screen.dart';
-import 'package:harmonoid/interface/edit_details_screen.dart';
-import 'package:harmonoid/interface/file_info_screen.dart';
-import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/mobile_now_playing_notifier.dart';
+// import 'package:harmonoid/ui/media_library/playlist.dart';
+// import 'package:harmonoid/ui/directory_picker_screen.dart';
+// import 'package:harmonoid/ui/edit_details_screen.dart';
+// import 'package:harmonoid/ui/file_info_screen.dart';
+// import 'package:harmonoid/ui/home_screen.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/constants.dart';
 
-final isMobile = Platform.isAndroid || Platform.isIOS;
-final isDesktop = Platform.isLinux || Platform.isMacOS || Platform.isWindows;
+bool get isMaterial3 => Theme.of(navigatorKey.currentContext!).extension<MaterialStandard>()?.value == 3;
 
-double tileMargin(BuildContext context) => isDesktop ? kDesktopTileMargin : kMobileTileMargin;
+bool get isMaterial2 => Theme.of(navigatorKey.currentContext!).extension<MaterialStandard>()?.value == 2;
 
-bool isMaterial3(BuildContext context) => Theme.of(context).extension<MaterialStandard>()?.value == 3;
+bool get isDesktop => Theme.of(navigatorKey.currentContext!).extension<LayoutVariantThemeExtension>()?.value == LayoutVariant.desktop;
 
-bool isMaterial2(BuildContext context) => Theme.of(context).extension<MaterialStandard>()?.value == 2;
+bool get isTablet => Theme.of(navigatorKey.currentContext!).extension<LayoutVariantThemeExtension>()?.value == LayoutVariant.tablet;
 
-String label(BuildContext context, String value) => isMaterial2(context) ? value.toUpperCase() : value;
+bool get isMobile => Theme.of(navigatorKey.currentContext!).extension<LayoutVariantThemeExtension>()?.value == LayoutVariant.mobile;
 
-double navigationBarHeight(BuildContext context) => isMaterial3(context) ? 80.0 : kBottomNavigationBarHeight;
+double get margin {
+  if (isDesktop) {
+    return kDesktopTileMargin;
+  } else if (isTablet) {
+    throw UnimplementedError();
+  } else if (isMobile) {
+    return kMobileTileMargin;
+  }
+  throw UnimplementedError();
+}
+
+double get captionHeight {
+  try {
+    return WindowPlus.instance.captionHeight;
+  } catch (_) {
+    return 0.0;
+  }
+}
+
+double get navigationBarHeight => isMaterial3 ? 80.0 : kBottomNavigationBarHeight;
+
+String label(String value) => isMaterial2 ? value.toUpperCase() : value;
 
 ImageProvider cover({MediaLibraryItem? item, String? uri, int? cacheWidth, int? cacheHeight}) {
   final key = '${item.runtimeType}-${item.hashCode}';
@@ -60,7 +82,7 @@ ImageProvider cover({MediaLibraryItem? item, String? uri, int? cacheWidth, int? 
       file,
       () async {
         // Save default cover, if it does not exist.
-        final cover = File(kCoverDefaultFileName);
+        final cover = File(join(MediaLibrary.instance.covers.path, kCoverDefaultFileName));
         if (!await cover.exists_()) {
           final data = await rootBundle.load(kCoverDefaultAssetKey);
           await cover.write_(data.buffer.asUint8List());
@@ -197,7 +219,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
             ),
           ),
         ),
-      if (!isDesktop && !MobileNowPlayingNotifier.instance.hidden)
+      if (!isDesktop && MobileNowPlayingNotifier.instance.restored)
         const PopupMenuItem<int>(
           padding: EdgeInsets.zero,
           child: SizedBox(height: kMobileNowPlayingBarHeight),
@@ -257,7 +279,7 @@ List<PopupMenuItem<int>> albumPopupMenuItems(BuildContext context, Album album) 
           ),
         ),
       ),
-      if (!isDesktop && !MobileNowPlayingNotifier.instance.hidden)
+      if (!isDesktop && MobileNowPlayingNotifier.instance.restored)
         const PopupMenuItem<int>(
           padding: EdgeInsets.zero,
           child: SizedBox(height: kMobileNowPlayingBarHeight),
@@ -279,9 +301,9 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
               while (Navigator.of(context).canPop()) {
                 await Navigator.of(context).maybePop();
               }
-              if (floatingSearchBarController.isOpen) {
-                floatingSearchBarController.close();
-              }
+              // if (floatingSearchBarController.isOpen) {
+              //   floatingSearchBarController.close();
+              // }
             }
           }
           return;
@@ -290,8 +312,8 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
       await showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: Text(Language.instance.COLLECTION_TRACK_DELETE_DIALOG_HEADER),
-          content: Text(Language.instance.COLLECTION_TRACK_DELETE_DIALOG_BODY.replaceAll('NAME', track.title)),
+          title: Text(Language.instance.TRACK_DELETE_DIALOG_HEADER),
+          content: Text(Language.instance.TRACK_DELETE_DIALOG_BODY.replaceAll('NAME', track.title)),
           actions: [
             TextButton(
               onPressed: () async {
@@ -302,21 +324,17 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
                     while (Navigator.of(context).canPop()) {
                       await Navigator.of(context).maybePop();
                     }
-                    if (floatingSearchBarController.isOpen) {
-                      floatingSearchBarController.close();
-                    }
+                    // if (floatingSearchBarController.isOpen) {
+                    //   floatingSearchBarController.close();
+                    // }
                   }
                 }
               },
-              child: Text(
-                label(context, Language.instance.YES),
-              ),
+              child: Text(label(Language.instance.YES)),
             ),
             TextButton(
               onPressed: Navigator.of(ctx).pop,
-              child: Text(
-                label(context, Language.instance.NO),
-              ),
+              child: Text(label(Language.instance.NO)),
             ),
           ],
         ),
@@ -342,12 +360,12 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
     case 5:
       File(track.uri).explore_();
       break;
-    case 6:
-      await Navigator.of(context).push(MaterialRoute(builder: (context) => EditDetailsScreen(track: track)));
-      break;
-    case 7:
-      await FileInfoScreen.show(context, uri: Uri.file(track.uri));
-      break;
+    // case 6:
+    //   await Navigator.of(context).push(MaterialRoute(builder: (context) => EditDetailsScreen(track: track)));
+    //   break;
+    // case 7:
+    //   await FileInfoScreen.show(context, uri: Uri.file(track.uri));
+    //   break;
     case 8:
       final file = await pickFile(
         label: 'LRC',
@@ -366,7 +384,7 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
               actions: [
                 TextButton(
                   onPressed: Navigator.of(context).pop,
-                  child: Text(label(context, Language.instance.OK)),
+                  child: Text(label(Language.instance.OK)),
                 ),
               ],
             ),
@@ -401,17 +419,17 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
           while (Navigator.of(context).canPop()) {
             await Navigator.of(context).maybePop();
           }
-          if (floatingSearchBarController.isOpen) {
-            floatingSearchBarController.close();
-          }
+          // if (floatingSearchBarController.isOpen) {
+          //   floatingSearchBarController.close();
+          // }
           return;
         }
       }
       await showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: Text(Language.instance.COLLECTION_ALBUM_DELETE_DIALOG_HEADER),
-          content: Text(Language.instance.COLLECTION_ALBUM_DELETE_DIALOG_BODY.replaceAll('NAME', album.album)),
+          title: Text(Language.instance.ALBUM_DELETE_DIALOG_HEADER),
+          content: Text(Language.instance.ALBUM_DELETE_DIALOG_BODY.replaceAll('NAME', album.album)),
           actions: [
             TextButton(
               onPressed: () async {
@@ -420,24 +438,18 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
                 while (Navigator.of(context).canPop()) {
                   await Navigator.of(context).maybePop();
                 }
-                if (floatingSearchBarController.isOpen) {
-                  floatingSearchBarController.close();
-                }
+                // if (floatingSearchBarController.isOpen) {
+                //   floatingSearchBarController.close();
+                // }
               },
               child: Text(
-                label(
-                  context,
-                  Language.instance.YES,
-                ),
+                label(Language.instance.YES),
               ),
             ),
             TextButton(
               onPressed: Navigator.of(ctx).pop,
               child: Text(
-                label(
-                  context,
-                  Language.instance.NO,
-                ),
+                label(Language.instance.NO),
               ),
             ),
           ],
@@ -472,13 +484,13 @@ Future<Directory?> pickDirectory({bool native = false}) async {
     final path = await FilePicker.platform.getDirectoryPath();
     return path != null ? Directory(path) : null;
   } else {
-    return showGeneralDialog(
-      context: navigatorKey.currentContext!,
-      useRootNavigator: true,
-      barrierDismissible: false,
-      barrierColor: Colors.transparent,
-      pageBuilder: (context, animation, secondaryAnimation) => DirectoryPickerScreen(),
-    );
+    // return showGeneralDialog(
+    //   context: navigatorKey.currentContext!,
+    //   useRootNavigator: true,
+    //   barrierDismissible: false,
+    //   barrierColor: Colors.transparent,
+    //   pageBuilder: (context, animation, secondaryAnimation) => DirectoryPickerScreen(),
+    // );
   }
 }
 
@@ -499,19 +511,19 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Divider(height: 1.0),
-              Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: playlists.length,
-                  itemBuilder: (context, i) => PlaylistTile(
-                    playlist: playlists[i],
-                    onTap: () async {
-                      await MediaLibrary.instance.playlists.createEntry(playlists[i], track.uri, track.playlistEntryTitle);
-                      Navigator.of(subContext).pop();
-                    },
-                  ),
-                ),
-              ),
+              // Expanded(
+              //   child: ListView.builder(
+              //     shrinkWrap: true,
+              //     itemCount: playlists.length,
+              //     itemBuilder: (context, i) => PlaylistTile(
+              //       playlist: playlists[i],
+              //       onTap: () async {
+              //         await MediaLibrary.instance.playlists.createEntry(playlists[i], track.uri, track.playlistEntryTitle);
+              //         Navigator.of(subContext).pop();
+              //       },
+              //     ),
+              //   ),
+              // ),
               const Divider(height: 1.0),
             ],
           ),
@@ -519,36 +531,37 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
         actions: [
           TextButton(
             onPressed: Navigator.of(subContext).pop,
-            child: Text(label(context, Language.instance.CANCEL)),
+            child: Text(label(Language.instance.CANCEL)),
           ),
         ],
       ),
     );
   } else {
-    return showModalBottomSheet(
-      isScrollControlled: true,
-      context: context,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.6,
-        maxChildSize: 0.8,
-        expand: false,
-        builder: (context, controller) => ListView.builder(
-          padding: EdgeInsets.zero,
-          controller: controller,
-          shrinkWrap: true,
-          itemCount: playlists.length,
-          itemBuilder: (context, i) {
-            return PlaylistTile(
-              playlist: playlists[i],
-              onTap: () async {
-                await MediaLibrary.instance.playlists.createEntry(playlists[i], track.uri, track.playlistEntryTitle);
-                Navigator.of(context).pop();
-              },
-            );
-          },
-        ),
-      ),
-    );
+    // return showModalBottomSheet(
+    //   isScrollControlled: true,
+    //   context: context,
+    //   builder: (context) => DraggableScrollableSheet(
+    //     initialChildSize: 0.6,
+    //     maxChildSize: 0.8,
+    //     expand: false,
+    //     builder: (context, controller) => ListView.builder(
+    //       padding: EdgeInsets.zero,
+    //       controller: controller,
+    //       shrinkWrap: true,
+    //       itemCount: playlists.length,
+    //       itemBuilder: (context, i) {
+    //         return PlaylistTile(
+    //           playlist: playlists[i],
+    //           onTap: () async {
+    //             await MediaLibrary.instance.playlists.createEntry(playlists[i], track.uri, track.playlistEntryTitle);
+    //             Navigator.of(context).pop();
+    //           },
+    //         );
+    //       },
+    //     ),
+    //   ),
+    // );
+    return Future.value();
   }
 }
 
@@ -565,9 +578,9 @@ InputDecoration inputDecoration(BuildContext context, String hintText, {Widget? 
               color: Colors.transparent,
               child: IconButton(
                 icon: suffixIcon,
+                iconSize: 18.0,
+                splashRadius: 12.0,
                 onPressed: onSuffixIconPressed,
-                iconSize: 24.0,
-                splashRadius: 8.0,
                 highlightColor: Colors.transparent,
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),

@@ -25,36 +25,33 @@ class DesktopNowPlayingNotifier extends ChangeNotifier {
   /// Invoked when the now playing screen is exited.
   final VoidCallback exit;
 
-  /// Whether the now playing screen is hidden.
-  bool hidden = true;
+  /// Whether the now playing screen is restored.
+  bool restored = true;
 
-  /// Color palette.
-  final ValueNotifier<Iterable<Color>?> palette = ValueNotifier(null);
-
-  /// Show the now playing screen.
-  void show() {
-    if (hidden) {
-      hidden = false;
+  /// Maximize the now playing screen.
+  void maximize() {
+    if (restored) {
+      restored = false;
       notifyListeners();
       enter();
     }
   }
 
-  /// Hide the now playing screen.
-  void hide() {
-    if (!hidden) {
-      hidden = true;
+  /// Restore the now playing screen.
+  void restore() {
+    if (!restored) {
+      restored = true;
       notifyListeners();
       exit();
     }
   }
 
   /// Show or hide the now playing screen.
-  void showOrHide() {
-    if (hidden) {
-      show();
+  void maximizeOrRestore() {
+    if (restored) {
+      maximize();
     } else {
-      hide();
+      restore();
     }
   }
 }

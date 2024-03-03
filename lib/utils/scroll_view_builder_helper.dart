@@ -22,28 +22,44 @@ class ScrollViewBuilderHelper {
     final span = isDesktop ? null : Configuration.instance.mobileAlbumGridSpan;
     final itemWidth = span != 1 ? kAlbumTileWidth : double.infinity;
     final itemHeight = span != 1 ? kAlbumTileHeight : kAlbumListTileHeight;
-    return ScrollViewBuilderHelperData(span, itemWidth, itemHeight);
+    return ScrollViewBuilderHelperData(
+      span,
+      itemWidth,
+      itemHeight,
+    );
   }
 
   ScrollViewBuilderHelperData get track {
     const span = 1;
     const itemWidth = double.infinity;
     final itemHeight = isDesktop ? kDesktopTrackTileHeight : kMobileTrackTileHeight;
-    return ScrollViewBuilderHelperData(span, itemWidth, itemHeight);
+    return ScrollViewBuilderHelperData(
+      span,
+      itemWidth,
+      itemHeight,
+    );
   }
 
   ScrollViewBuilderHelperData get artist {
     final span = isDesktop ? null : Configuration.instance.mobileArtistGridSpan;
     final itemWidth = span != 1 ? kArtistTileWidth : double.infinity;
     final itemHeight = span != 1 ? kArtistTileHeight : kArtistListTileHeight;
-    return ScrollViewBuilderHelperData(span, itemWidth, itemHeight);
+    return ScrollViewBuilderHelperData(
+      span,
+      itemWidth,
+      itemHeight,
+    );
   }
 
   ScrollViewBuilderHelperData get genre {
     final span = isDesktop ? null : Configuration.instance.mobileGenreGridSpan;
     final itemWidth = span != 1 ? kGenreTileWidth : double.infinity;
     final itemHeight = span != 1 ? kGenreTileHeight : kArtistListTileHeight;
-    return ScrollViewBuilderHelperData(span, itemWidth, itemHeight);
+    return ScrollViewBuilderHelperData(
+      span,
+      itemWidth,
+      itemHeight,
+    );
   }
 }
 

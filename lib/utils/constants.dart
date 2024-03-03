@@ -1,10 +1,3 @@
-const int kAlbumTab = 0;
-const int kTrackTab = 1;
-const int kArtistTab = 2;
-const int kPlaylistTab = 3;
-const int kGenreTab = 4;
-const int kFolderTab = 5;
-
 const double kDesktopHeaderHeight = 44.0;
 const double kMobileHeaderHeight = 56.0;
 
@@ -32,3 +25,14 @@ const double kMobileSearchBarHeight = 56.0;
 
 const String kCoverDefaultAssetKey = 'assets/images/cover_default.png';
 const String kCoverDefaultFileName = 'Default.PNG';
+
+const String kDefaultAlbum = 'Unknown Album';
+const String kDefaultArtist = 'Unknown Artist';
+const String kDefaultGenre = 'Unknown Genre';
+
+const String kApplication = 'com.alexmercerind.harmonoid';
+const String kAuthor = 'Hitesh Kumar Saini';
+const String kCaption = 'Harmonoid Music';
+const String kLicense = 'PolyForm Strict License 1.0.0';
+const String kTitle = 'Harmonoid';
+const String kVersion = 'v0.3.9';

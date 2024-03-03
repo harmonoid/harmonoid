@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:dynamic_color/src/corepalette_to_colorscheme.dart';
 import 'package:dynamic_color/src/dynamic_color_plugin.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -23,8 +22,8 @@ class ThemeNotifier extends ChangeNotifier {
 
   /// {@macro theme_notifier}
   ThemeNotifier._({
-    required this.standard,
     required this.themeMode,
+    required this.materialVersion,
     required this.systemColorScheme,
     required this.animationDuration,
     required this.systemLightColorScheme,
@@ -35,8 +34,8 @@ class ThemeNotifier extends ChangeNotifier {
 
   /// Initializes the [instance].
   static Future<void> ensureInitialized({
-    required int standard,
     required ThemeMode themeMode,
+    required int materialVersion,
     required bool systemColorScheme,
     required AnimationDuration animationDuration,
   }) async {
@@ -47,36 +46,32 @@ class ThemeNotifier extends ChangeNotifier {
     ColorScheme? systemDarkColorScheme;
     Color? systemLightColor;
     Color? systemDarkColor;
-    await () async {
-      try {
-        final corePalette = await DynamicColorPlugin.getCorePalette();
-        if (corePalette != null) {
-          systemLightColorScheme = corePalette.toColorScheme(brightness: Brightness.light);
-          systemDarkColorScheme = corePalette.toColorScheme(brightness: Brightness.dark);
-          return;
-        }
-      } catch (exception, stacktrace) {
-        debugPrint(exception.toString());
-        debugPrint(stacktrace.toString());
+    try {
+      final corePalette = await DynamicColorPlugin.getCorePalette();
+      if (corePalette != null) {
+        systemLightColorScheme = corePalette.toColorScheme(brightness: Brightness.light);
+        systemDarkColorScheme = corePalette.toColorScheme(brightness: Brightness.dark);
       }
-      try {
-        final accentColor = await DynamicColorPlugin.getAccentColor();
-        if (accentColor != null) {
-          systemLightColorScheme = ColorScheme.fromSeed(seedColor: accentColor, brightness: Brightness.light);
-          systemDarkColorScheme = ColorScheme.fromSeed(seedColor: accentColor, brightness: Brightness.dark);
-          systemLightColor = systemLightColorScheme?.primary;
-          systemDarkColor = systemDarkColorScheme?.primary;
-          return;
-        }
-      } catch (exception, stacktrace) {
-        debugPrint(exception.toString());
-        debugPrint(stacktrace.toString());
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
+    try {
+      final accentColor = await DynamicColorPlugin.getAccentColor();
+      if (accentColor != null) {
+        systemLightColorScheme = ColorScheme.fromSeed(seedColor: accentColor, brightness: Brightness.light);
+        systemDarkColorScheme = ColorScheme.fromSeed(seedColor: accentColor, brightness: Brightness.dark);
+        systemLightColor = systemLightColorScheme.primary;
+        systemDarkColor = systemDarkColorScheme.primary;
       }
-    }();
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
 
     instance = ThemeNotifier._(
-      standard: standard,
       themeMode: themeMode,
+      materialVersion: materialVersion,
       systemColorScheme: systemColorScheme,
       animationDuration: animationDuration,
       systemLightColorScheme: systemLightColorScheme,
@@ -92,7 +87,6 @@ class ThemeNotifier extends ChangeNotifier {
           lightColorScheme: _lightColorScheme,
           darkColorScheme: _darkColorScheme,
           mode: ThemeMode.light,
-          platform: defaultTargetPlatform,
           animationDuration: animationDuration,
         ),
         2: createM2Theme(
@@ -101,7 +95,7 @@ class ThemeNotifier extends ChangeNotifier {
           mode: ThemeMode.light,
           animationDuration: animationDuration,
         )
-      }[standard]!;
+      }[materialVersion]!;
 
   ThemeData get darkTheme => {
         3: createM3Theme(
@@ -109,7 +103,6 @@ class ThemeNotifier extends ChangeNotifier {
           lightColorScheme: _lightColorScheme,
           darkColorScheme: _darkColorScheme,
           mode: ThemeMode.dark,
-          platform: defaultTargetPlatform,
           animationDuration: animationDuration,
         ),
         2: createM2Theme(
@@ -118,10 +111,10 @@ class ThemeNotifier extends ChangeNotifier {
           mode: ThemeMode.dark,
           animationDuration: animationDuration,
         )
-      }[standard]!;
+      }[materialVersion]!;
 
-  int standard;
   ThemeMode themeMode;
+  int materialVersion;
   bool systemColorScheme;
   BuildContext? context;
   AnimationDuration animationDuration;
@@ -133,23 +126,23 @@ class ThemeNotifier extends ChangeNotifier {
 
   Future<void> update({
     BuildContext? context,
-    int? standard,
     ThemeMode? themeMode,
+    int? materialVersion,
     AnimationDuration? animationDuration,
   }) async {
     this.context = context ?? this.context;
-    this.standard = standard ?? this.standard;
     this.themeMode = themeMode ?? this.themeMode;
+    this.materialVersion = materialVersion ?? this.materialVersion;
     this.animationDuration = animationDuration ?? this.animationDuration;
     context ??= this.context;
-    standard ??= this.standard;
     themeMode ??= this.themeMode;
+    materialVersion ??= this.materialVersion;
     animationDuration ??= this.animationDuration;
     if (context != null) {
       if (Platform.isAndroid || Platform.isIOS) {
         final theme = Theme.of(context);
         final brightness = theme.brightness == Brightness.dark ? Brightness.light : Brightness.dark;
-        switch (standard) {
+        switch (materialVersion) {
           case 3:
             SystemChrome.setSystemUIOverlayStyle(
               SystemUiOverlayStyle(
@@ -178,7 +171,7 @@ class ThemeNotifier extends ChangeNotifier {
             break;
           default:
             throw ArgumentError.value(
-              standard,
+              materialVersion,
               'standard',
               'Only valid values are 2 & 3.',
             );

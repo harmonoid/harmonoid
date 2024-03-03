@@ -7,6 +7,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide ReorderableDragStartListener, Intent;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
+import 'package:harmonoid/ui/router.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:provider/provider.dart';
@@ -18,23 +20,20 @@ import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/extensions/global_key.dart';
-import 'package:harmonoid/interface/settings/about.dart';
-
-import 'package:harmonoid/interface/file_info_screen.dart';
-import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/mappers/track.dart';
-import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/state/mobile_now_playing_notifier.dart';
+import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
+// import 'package:harmonoid/ui/file_info_screen.dart';
+// import 'package:harmonoid/ui/settings/about.dart';
+// import 'package:harmonoid/ui/settings/settings.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/keyboard_shortcuts.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 class DesktopHeader extends StatefulWidget {
-  final int tab;
   final ValueNotifier<bool> floatingNotifier;
   const DesktopHeader({
     super.key,
-    required this.tab,
     required this.floatingNotifier,
   });
 
@@ -48,41 +47,16 @@ class DesktopHeaderState extends State<DesktopHeader> {
 
   @override
   Widget build(BuildContext context) {
+    final path = GoRouterState.of(context).uri.pathSegments.last;
     return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const SizedBox(width: 4.0),
         GestureDetector(
           onTap: () async {
-            switch (widget.tab) {
-              case kAlbumTab:
-                final playables = <Playable>[];
-                for (final album in MediaLibrary.instance.albums) {
-                  final tracks = await MediaLibrary.instance.tracksFromAlbum(album);
-                  playables.addAll(tracks.map((e) => e.toPlayable()));
-                }
-                await MediaPlayer.instance.open(playables);
-                break;
-              case kTrackTab:
-                await MediaPlayer.instance.open(MediaLibrary.instance.tracks.map((e) => e.toPlayable()).toList());
-                break;
-              case kArtistTab:
-                final playables = <Playable>[];
-                for (final artist in MediaLibrary.instance.artists) {
-                  final tracks = await MediaLibrary.instance.tracksFromArtist(artist);
-                  playables.addAll(tracks.map((e) => e.toPlayable()));
-                }
-                await MediaPlayer.instance.open(playables);
-                break;
-              case kGenreTab:
-                final playables = <Playable>[];
-                for (final genre in MediaLibrary.instance.genres) {
-                  final tracks = await MediaLibrary.instance.tracksFromGenre(genre);
-                  playables.addAll(tracks.map((e) => e.toPlayable()));
-                }
-                await MediaPlayer.instance.open(playables);
-                break;
-            }
+            await MediaPlayer.instance.open(MediaLibrary.instance.tracks.map((e) => e.toPlayable()).toList());
           },
           child: MouseRegion(
             cursor: SystemMouseCursors.click,
@@ -158,15 +132,14 @@ class DesktopHeaderState extends State<DesktopHeader> {
         const Spacer(),
         ValueListenableBuilder<bool>(
           valueListenable: widget.floatingNotifier,
-          builder: (context, floating, _) => AnimatedOpacity(
+          builder: (context, floating, child) => AnimatedOpacity(
             opacity: floating ? 0.0 : 1.0,
             duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
+            child: child,
           ),
-          child: DesktopSortButton(
-            tab: widget.tab,
-            floating: false,
-          ),
+          child: const DesktopSortButton(floating: false),
         ),
+        SizedBox(width: margin),
       ],
     );
   }
@@ -175,11 +148,9 @@ class DesktopHeaderState extends State<DesktopHeader> {
 // --------------------------------------------------
 
 class DesktopFloatingSortButton extends StatefulWidget {
-  final int tab;
   final ValueNotifier<bool> floatingNotifier;
   const DesktopFloatingSortButton({
     super.key,
-    required this.tab,
     required this.floatingNotifier,
   });
 
@@ -190,25 +161,19 @@ class DesktopFloatingSortButton extends StatefulWidget {
 class DesktopFloatingSortButtonState extends State<DesktopFloatingSortButton> {
   @override
   Widget build(BuildContext context) {
+    final tab = GoRouterState.of(context).uri.pathSegments.last;
     return ValueListenableBuilder<bool>(
       valueListenable: widget.floatingNotifier,
-      child: DesktopSortButton(
-        tab: widget.tab,
-        floating: true,
-      ),
+      child: const DesktopSortButton(floating: true),
       builder: (context, floating, child) => AnimatedPositioned(
         curve: Curves.easeInOut,
         duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
-        top: floating
-            ? widget.tab == kTrackTab
-                ? 28.0
-                : 0
-            : -72.0,
-        right: tileMargin(context),
+        top: margin + captionHeight + kDesktopAppBarHeight + (floating ? (tab == 'tracks' ? 28.0 : 0) : -72.0),
+        right: margin,
         child: Card(
-          color: Theme.of(context).appBarTheme.backgroundColor,
-          margin: EdgeInsets.only(top: tileMargin(context)),
           elevation: 4.0,
+          margin: EdgeInsets.zero,
+          color: Theme.of(context).appBarTheme.backgroundColor,
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: child,
@@ -222,14 +187,9 @@ class DesktopFloatingSortButtonState extends State<DesktopFloatingSortButton> {
 // --------------------------------------------------
 
 class DesktopSortButton extends StatefulWidget {
-  final int tab;
   final bool floating;
 
-  const DesktopSortButton({
-    super.key,
-    required this.tab,
-    required this.floating,
-  });
+  const DesktopSortButton({super.key, required this.floating});
 
   @override
   State<DesktopSortButton> createState() => DesktopSortButtonState();
@@ -243,7 +203,7 @@ class DesktopSortButtonState extends State<DesktopSortButton> {
 
   @override
   Widget build(BuildContext context) {
-    final tab = widget.tab;
+    final path = GoRouterState.of(context).uri.pathSegments.last;
     return Consumer<MediaLibrary>(
       builder: (context, mediaLibrary, _) => Row(
         mainAxisSize: MainAxisSize.min,
@@ -259,177 +219,89 @@ class DesktopSortButtonState extends State<DesktopSortButton> {
                 context: context,
                 constraints: const BoxConstraints(maxWidth: double.infinity),
                 position: RelativeRect.fromLTRB(
-                  _key0.globalPaintBounds!.left - (widget.floating ? 8.0 : 0.0),
-                  _key0.globalPaintBounds!.bottom + tileMargin(context) / (widget.floating ? 1.0 : 2.0),
+                  _key0.globalPaintBounds!.left - 8.0,
+                  widget.floating ? (_key0.globalPaintBounds!.bottom + margin) : (_key1.globalPaintBounds!.bottom + margin - captionHeight - kDesktopAppBarHeight),
                   MediaQuery.of(context).size.width,
                   MediaQuery.of(context).size.height,
                 ),
                 items: {
-                  kAlbumTab: <PopupMenuItem>[
-                    CheckedPopupMenuItem(
-                      checked: mediaLibrary.albumSortType == AlbumSortType.album,
-                      value: AlbumSortType.album,
-                      padding: EdgeInsets.zero,
-                      child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                        title: Text(
-                          Language.instance.A_TO_Z,
-                          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                  kAlbumsPath: AlbumSortType.values
+                      .map(
+                        (e) => CheckedPopupMenuItem(
+                          value: e,
+                          checked: e == mediaLibrary.albumSortType,
+                          child: Text(
+                            {
+                              AlbumSortType.album: Language.instance.A_TO_Z,
+                              AlbumSortType.timestamp: Language.instance.DATE_ADDED,
+                              AlbumSortType.year: Language.instance.YEAR,
+                              AlbumSortType.albumArtist: Language.instance.ALBUM_ARTIST,
+                            }[e]!,
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                          ),
                         ),
-                      ),
-                    ),
-                    CheckedPopupMenuItem(
-                      checked: mediaLibrary.albumSortType == AlbumSortType.timestamp,
-                      value: AlbumSortType.timestamp,
-                      padding: EdgeInsets.zero,
-                      child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                        title: Text(
-                          Language.instance.DATE_ADDED,
-                          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                      )
+                      .toList(),
+                  kTracksPath: TrackSortType.values
+                      .map(
+                        (e) => CheckedPopupMenuItem(
+                          value: e,
+                          checked: e == mediaLibrary.trackSortType,
+                          child: Text(
+                            {
+                              TrackSortType.title: Language.instance.A_TO_Z,
+                              TrackSortType.timestamp: Language.instance.DATE_ADDED,
+                              TrackSortType.year: Language.instance.YEAR,
+                            }[e]!,
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                          ),
                         ),
-                      ),
-                    ),
-                    CheckedPopupMenuItem(
-                      checked: mediaLibrary.albumSortType == AlbumSortType.year,
-                      value: AlbumSortType.year,
-                      padding: EdgeInsets.zero,
-                      child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                        title: Text(
-                          Language.instance.YEAR,
-                          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                      )
+                      .toList(),
+                  kArtistsPath: ArtistSortType.values
+                      .map(
+                        (e) => CheckedPopupMenuItem(
+                          value: e,
+                          checked: e == mediaLibrary.artistSortType,
+                          child: Text(
+                            {
+                              ArtistSortType.artist: Language.instance.A_TO_Z,
+                              ArtistSortType.timestamp: Language.instance.DATE_ADDED,
+                            }[e]!,
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                          ),
                         ),
-                      ),
-                    ),
-                    CheckedPopupMenuItem(
-                      checked: mediaLibrary.albumSortType == AlbumSortType.albumArtist,
-                      value: AlbumSortType.albumArtist,
-                      padding: EdgeInsets.zero,
-                      child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                        title: Text(
-                          Language.instance.ALBUM_ARTIST,
-                          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                      )
+                      .toList(),
+                  kGenresPath: GenreSortType.values
+                      .map(
+                        (e) => CheckedPopupMenuItem(
+                          value: e,
+                          checked: e == mediaLibrary.genreSortType,
+                          child: Text(
+                            {
+                              GenreSortType.genre: Language.instance.A_TO_Z,
+                              GenreSortType.timestamp: Language.instance.DATE_ADDED,
+                            }[e]!,
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
-                  kTrackTab: <PopupMenuItem>[
-                    CheckedPopupMenuItem(
-                      checked: mediaLibrary.trackSortType == TrackSortType.title,
-                      value: TrackSortType.title,
-                      padding: EdgeInsets.zero,
-                      child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                        title: Text(
-                          Language.instance.A_TO_Z,
-                          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                        ),
-                      ),
-                    ),
-                    CheckedPopupMenuItem(
-                      checked: mediaLibrary.trackSortType == TrackSortType.timestamp,
-                      value: TrackSortType.timestamp,
-                      padding: EdgeInsets.zero,
-                      child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                        title: Text(
-                          Language.instance.DATE_ADDED,
-                          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                        ),
-                      ),
-                    ),
-                    CheckedPopupMenuItem(
-                      checked: mediaLibrary.trackSortType == TrackSortType.year,
-                      value: TrackSortType.year,
-                      padding: EdgeInsets.zero,
-                      child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                        title: Text(
-                          Language.instance.YEAR,
-                          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                        ),
-                      ),
-                    ),
-                  ],
-                  kArtistTab: <PopupMenuItem>[
-                    CheckedPopupMenuItem(
-                      checked: mediaLibrary.artistSortType == ArtistSortType.artist,
-                      value: ArtistSortType.artist,
-                      padding: EdgeInsets.zero,
-                      child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                        title: Text(
-                          Language.instance.A_TO_Z,
-                          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                        ),
-                      ),
-                    ),
-                    CheckedPopupMenuItem(
-                      checked: mediaLibrary.artistSortType == ArtistSortType.timestamp,
-                      value: ArtistSortType.timestamp,
-                      padding: EdgeInsets.zero,
-                      child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                        title: Text(
-                          Language.instance.DATE_ADDED,
-                          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                        ),
-                      ),
-                    ),
-                  ],
-                  kGenreTab: <PopupMenuItem>[
-                    CheckedPopupMenuItem(
-                      checked: mediaLibrary.genreSortType == GenreSortType.genre,
-                      value: GenreSortType.genre,
-                      padding: EdgeInsets.zero,
-                      child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                        title: Text(
-                          Language.instance.A_TO_Z,
-                          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                        ),
-                      ),
-                    ),
-                    CheckedPopupMenuItem(
-                      checked: mediaLibrary.genreSortType == GenreSortType.timestamp,
-                      value: GenreSortType.timestamp,
-                      padding: EdgeInsets.zero,
-                      child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                        title: Text(
-                          Language.instance.DATE_ADDED,
-                          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                        ),
-                      ),
-                    ),
-                  ],
-                }[tab]!,
+                      )
+                      .toList(),
+                }[path]!,
               );
               if (value is AlbumSortType) {
-                mediaLibrary.populate(albumSortType: value);
-                Configuration.instance.set(mediaLibraryAlbumSortType: value);
+                await mediaLibrary.populate(albumSortType: value);
+                await Configuration.instance.set(mediaLibraryAlbumSortType: value);
               } else if (value is TrackSortType) {
-                mediaLibrary.populate(trackSortType: value);
-                Configuration.instance.set(mediaLibraryTrackSortType: value);
+                await mediaLibrary.populate(trackSortType: value);
+                await Configuration.instance.set(mediaLibraryTrackSortType: value);
               } else if (value is ArtistSortType) {
-                mediaLibrary.populate(artistSortType: value);
-                Configuration.instance.set(mediaLibraryArtistSortType: value);
+                await mediaLibrary.populate(artistSortType: value);
+                await Configuration.instance.set(mediaLibraryArtistSortType: value);
               } else if (value is GenreSortType) {
-                mediaLibrary.populate(genreSortType: value);
-                Configuration.instance.set(mediaLibraryGenreSortType: value);
+                await mediaLibrary.populate(genreSortType: value);
+                await Configuration.instance.set(mediaLibraryGenreSortType: value);
               }
             },
             child: MouseRegion(
@@ -455,26 +327,26 @@ class DesktopSortButtonState extends State<DesktopSortButton> {
                           ),
                           TextSpan(
                             text: {
-                              kAlbumTab: {
+                              kAlbumsPath: {
                                 AlbumSortType.album: Language.instance.A_TO_Z,
                                 AlbumSortType.timestamp: Language.instance.DATE_ADDED,
                                 AlbumSortType.year: Language.instance.YEAR,
                                 AlbumSortType.albumArtist: Language.instance.ALBUM_ARTIST,
                               }[mediaLibrary.albumSortType]!,
-                              kTrackTab: {
+                              kTracksPath: {
                                 TrackSortType.title: Language.instance.A_TO_Z,
                                 TrackSortType.timestamp: Language.instance.DATE_ADDED,
                                 TrackSortType.year: Language.instance.YEAR,
                               }[mediaLibrary.trackSortType]!,
-                              kArtistTab: {
+                              kArtistsPath: {
                                 ArtistSortType.artist: Language.instance.A_TO_Z,
                                 ArtistSortType.timestamp: Language.instance.DATE_ADDED,
                               }[mediaLibrary.artistSortType]!,
-                              kGenreTab: {
+                              kGenresPath: {
                                 GenreSortType.genre: Language.instance.A_TO_Z,
                                 GenreSortType.timestamp: Language.instance.DATE_ADDED,
                               }[mediaLibrary.genreSortType]!,
-                            }[tab]!,
+                            }[path]!,
                             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                   color: Theme.of(context).colorScheme.primary,
                                   decoration: _hover0 ? TextDecoration.underline : null,
@@ -503,67 +375,59 @@ class DesktopSortButtonState extends State<DesktopSortButton> {
                 context: context,
                 constraints: const BoxConstraints(maxWidth: double.infinity),
                 position: RelativeRect.fromLTRB(
+                  _key1.globalPaintBounds!.left - margin,
+                  widget.floating ? (_key1.globalPaintBounds!.bottom + margin) : (_key1.globalPaintBounds!.bottom + margin - captionHeight - kDesktopAppBarHeight),
                   MediaQuery.of(context).size.width,
-                  _key1.globalPaintBounds!.bottom + tileMargin(context) / (widget.floating ? 1.0 : 2.0),
-                  tileMargin(context) + (widget.floating ? 0.0 : 8.0),
-                  0.0,
+                  MediaQuery.of(context).size.height,
                 ),
                 items: <PopupMenuEntry<bool>>[
                   CheckedPopupMenuItem<bool>(
                     checked: {
-                      kAlbumTab: mediaLibrary.albumSortAscending,
-                      kTrackTab: mediaLibrary.trackSortAscending,
-                      kArtistTab: mediaLibrary.artistSortAscending,
-                      kGenreTab: mediaLibrary.genreSortAscending,
-                    }[tab]!,
+                      kAlbumsPath: mediaLibrary.albumSortAscending,
+                      kTracksPath: mediaLibrary.trackSortAscending,
+                      kArtistsPath: mediaLibrary.artistSortAscending,
+                      kGenresPath: mediaLibrary.genreSortAscending,
+                    }[path]!,
                     value: true,
-                    padding: EdgeInsets.zero,
-                    child: ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      dense: true,
-                      title: Text(
-                        Language.instance.ASCENDING,
-                        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                      ),
+                    child: Text(
+                      Language.instance.ASCENDING,
+                      style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                     ),
                   ),
                   CheckedPopupMenuItem<bool>(
                     checked: {
-                      kAlbumTab: !mediaLibrary.albumSortAscending,
-                      kTrackTab: !mediaLibrary.trackSortAscending,
-                      kArtistTab: !mediaLibrary.artistSortAscending,
-                      kGenreTab: !mediaLibrary.genreSortAscending,
-                    }[tab]!,
+                      kAlbumsPath: !mediaLibrary.albumSortAscending,
+                      kTracksPath: !mediaLibrary.trackSortAscending,
+                      kArtistsPath: !mediaLibrary.artistSortAscending,
+                      kGenresPath: !mediaLibrary.genreSortAscending,
+                    }[path]!,
                     value: false,
-                    padding: EdgeInsets.zero,
-                    child: ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      dense: true,
-                      title: Text(
-                        Language.instance.DESCENDING,
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
+                    child: Text(
+                      Language.instance.DESCENDING,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   ),
                 ],
               );
-              switch (tab) {
-                case kAlbumTab:
-                  mediaLibrary.populate(albumSortAscending: value!);
-                  Configuration.instance.set(mediaLibraryAlbumSortAscending: value);
-                  break;
-                case kTrackTab:
-                  mediaLibrary.populate(trackSortAscending: value!);
-                  Configuration.instance.set(mediaLibraryTrackSortAscending: value);
-                  break;
-                case kArtistTab:
-                  mediaLibrary.populate(artistSortAscending: value!);
-                  Configuration.instance.set(mediaLibraryArtistSortAscending: value);
-                  break;
-                case kGenreTab:
-                  mediaLibrary.populate(genreSortAscending: value!);
-                  Configuration.instance.set(mediaLibraryGenreSortAscending: value);
-                  break;
+              if (value != null) {
+                switch (path) {
+                  case kAlbumsPath:
+                    await mediaLibrary.populate(albumSortAscending: value);
+                    await Configuration.instance.set(mediaLibraryAlbumSortAscending: value);
+                    break;
+                  case kTracksPath:
+                    await mediaLibrary.populate(trackSortAscending: value);
+                    await Configuration.instance.set(mediaLibraryTrackSortAscending: value);
+                    break;
+                  case kArtistsPath:
+                    await mediaLibrary.populate(artistSortAscending: value);
+                    await Configuration.instance.set(mediaLibraryArtistSortAscending: value);
+                    break;
+                  case kGenresPath:
+                    await mediaLibrary.populate(genreSortAscending: value);
+                    await Configuration.instance.set(mediaLibraryGenreSortAscending: value);
+                    break;
+                }
               }
             },
             child: MouseRegion(
@@ -592,11 +456,11 @@ class DesktopSortButtonState extends State<DesktopSortButton> {
                               true: Language.instance.ASCENDING,
                               false: Language.instance.DESCENDING,
                             }[{
-                              kAlbumTab: mediaLibrary.albumSortAscending,
-                              kTrackTab: mediaLibrary.trackSortAscending,
-                              kArtistTab: mediaLibrary.artistSortAscending,
-                              kGenreTab: mediaLibrary.genreSortAscending,
-                            }[tab]!]!,
+                              kAlbumsPath: mediaLibrary.albumSortAscending,
+                              kTracksPath: mediaLibrary.trackSortAscending,
+                              kArtistsPath: mediaLibrary.artistSortAscending,
+                              kGenresPath: mediaLibrary.genreSortAscending,
+                            }[path]!]!,
                             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                   color: Theme.of(context).colorScheme.primary,
                                   decoration: _hover1 ? TextDecoration.underline : null,
@@ -631,23 +495,24 @@ class MobileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final path = GoRouterState.of(context).uri.pathSegments.last;
     return Container(
       height: kMobileHeaderHeight,
-      padding: EdgeInsets.symmetric(horizontal: tileMargin(context)),
+      padding: EdgeInsets.symmetric(horizontal: margin),
       alignment: Alignment.centerRight,
       child: Row(
         children: [
           const SizedBox(width: 8.0),
-          if (tab == kAlbumTab)
-            Text('${MediaLibrary.instance.albums.length} ${Language.instance.ALBUM}')
-          else if (tab == kTrackTab)
-            Text('${MediaLibrary.instance.tracks.length} ${Language.instance.TRACK}')
-          else if (tab == kArtistTab)
-            Text('${MediaLibrary.instance.artists.length} ${Language.instance.ARTIST}')
-          else if (tab == kGenreTab)
-            Text('${MediaLibrary.instance.genres.length} ${Language.instance.GENRE}'),
+          if (path == kAlbumsPath)
+            Text('${MediaLibrary.instance.albums.length} ${Language.instance.ALBUMS}')
+          else if (path == kTracksPath)
+            Text('${MediaLibrary.instance.tracks.length} ${Language.instance.TRACKS}')
+          else if (path == kArtistsPath)
+            Text('${MediaLibrary.instance.artists.length} ${Language.instance.ARTISTS}')
+          else if (path == kGenresPath)
+            Text('${MediaLibrary.instance.genres.length} ${Language.instance.GENRES}'),
           const Spacer(),
-          MobileSortByButton(tab: tab),
+          MobileSortByButton(path: path),
         ],
       ),
     );
@@ -657,8 +522,8 @@ class MobileHeader extends StatelessWidget {
 // --------------------------------------------------
 
 class MobileSortByButton extends StatefulWidget {
-  final int tab;
-  const MobileSortByButton({super.key, required this.tab});
+  final String path;
+  const MobileSortByButton({super.key, required this.path});
 
   @override
   State<MobileSortByButton> createState() => MobileSortByButtonState();
@@ -680,41 +545,41 @@ class MobileSortByButtonState extends State<MobileSortByButton> {
       Configuration.instance.set(mediaLibraryGenreSortType: value);
     }
     if (value == true) {
-      switch (widget.tab) {
-        case kAlbumTab:
-          MediaLibrary.instance.populate(albumSortAscending: true);
-          Configuration.instance.set(mediaLibraryAlbumSortAscending: true);
+      switch (widget.path) {
+        case kAlbumsPath:
+          await MediaLibrary.instance.populate(albumSortAscending: true);
+          await Configuration.instance.set(mediaLibraryAlbumSortAscending: true);
           break;
-        case kTrackTab:
-          MediaLibrary.instance.populate(trackSortAscending: true);
-          Configuration.instance.set(mediaLibraryTrackSortAscending: true);
+        case kTracksPath:
+          await MediaLibrary.instance.populate(trackSortAscending: true);
+          await Configuration.instance.set(mediaLibraryTrackSortAscending: true);
           break;
-        case kArtistTab:
-          MediaLibrary.instance.populate(artistSortAscending: true);
-          Configuration.instance.set(mediaLibraryArtistSortAscending: true);
+        case kArtistsPath:
+          await MediaLibrary.instance.populate(artistSortAscending: true);
+          await Configuration.instance.set(mediaLibraryArtistSortAscending: true);
           break;
-        case kGenreTab:
-          MediaLibrary.instance.populate(genreSortAscending: true);
-          Configuration.instance.set(mediaLibraryGenreSortAscending: true);
+        case kGenresPath:
+          await MediaLibrary.instance.populate(genreSortAscending: true);
+          await Configuration.instance.set(mediaLibraryGenreSortAscending: true);
           break;
       }
     } else if (value == false) {
-      switch (widget.tab) {
-        case kAlbumTab:
-          MediaLibrary.instance.populate(albumSortAscending: false);
-          Configuration.instance.set(mediaLibraryAlbumSortAscending: false);
+      switch (widget.path) {
+        case kAlbumsPath:
+          await MediaLibrary.instance.populate(albumSortAscending: false);
+          await Configuration.instance.set(mediaLibraryAlbumSortAscending: false);
           break;
-        case kTrackTab:
-          MediaLibrary.instance.populate(trackSortAscending: false);
-          Configuration.instance.set(mediaLibraryTrackSortAscending: false);
+        case kTracksPath:
+          await MediaLibrary.instance.populate(trackSortAscending: false);
+          await Configuration.instance.set(mediaLibraryTrackSortAscending: false);
           break;
-        case kArtistTab:
-          MediaLibrary.instance.populate(artistSortAscending: false);
-          Configuration.instance.set(mediaLibraryArtistSortAscending: false);
+        case kArtistsPath:
+          await MediaLibrary.instance.populate(artistSortAscending: false);
+          await Configuration.instance.set(mediaLibraryArtistSortAscending: false);
           break;
-        case kGenreTab:
-          MediaLibrary.instance.populate(genreSortAscending: false);
-          Configuration.instance.set(mediaLibraryGenreSortAscending: false);
+        case kGenresPath:
+          await MediaLibrary.instance.populate(genreSortAscending: false);
+          await Configuration.instance.set(mediaLibraryGenreSortAscending: false);
           break;
       }
     }
@@ -724,135 +589,88 @@ class MobileSortByButtonState extends State<MobileSortByButton> {
   void Function(void Function())? setStateCallback;
 
   List<MobileSortButtonPopupMenuItem> get sort => {
-        kAlbumTab: <MobileSortButtonPopupMenuItem>[
-          MobileSortButtonPopupMenuItem(
-            onTap: () => handle(AlbumSortType.album),
-            checked: MediaLibrary.instance.albumSortType == AlbumSortType.album,
-            value: AlbumSortType.album,
-            padding: EdgeInsets.zero,
-            child: Text(
-              Language.instance.A_TO_Z,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-          MobileSortButtonPopupMenuItem(
-            onTap: () => handle(AlbumSortType.timestamp),
-            checked: MediaLibrary.instance.albumSortType == AlbumSortType.timestamp,
-            value: AlbumSortType.timestamp,
-            padding: EdgeInsets.zero,
-            child: Text(
-              Language.instance.DATE_ADDED,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-          MobileSortButtonPopupMenuItem(
-            onTap: () => handle(AlbumSortType.year),
-            checked: MediaLibrary.instance.albumSortType == AlbumSortType.year,
-            value: AlbumSortType.year,
-            padding: EdgeInsets.zero,
-            child: Text(
-              Language.instance.YEAR,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-          MobileSortButtonPopupMenuItem(
-            onTap: () => handle(AlbumSortType.albumArtist),
-            checked: MediaLibrary.instance.albumSortType == AlbumSortType.albumArtist,
-            value: AlbumSortType.albumArtist,
-            padding: EdgeInsets.zero,
-            child: Text(
-              Language.instance.ALBUM_ARTIST,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-        ],
-        kTrackTab: <MobileSortButtonPopupMenuItem>[
-          MobileSortButtonPopupMenuItem(
-            onTap: () => handle(TrackSortType.title),
-            checked: MediaLibrary.instance.trackSortType == TrackSortType.title,
-            value: TrackSortType.title,
-            padding: EdgeInsets.zero,
-            child: Text(
-              Language.instance.A_TO_Z,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-          MobileSortButtonPopupMenuItem(
-            onTap: () => handle(TrackSortType.timestamp),
-            checked: MediaLibrary.instance.trackSortType == TrackSortType.timestamp,
-            value: TrackSortType.timestamp,
-            padding: EdgeInsets.zero,
-            child: Text(
-              Language.instance.DATE_ADDED,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-          MobileSortButtonPopupMenuItem(
-            onTap: () => handle(TrackSortType.year),
-            checked: MediaLibrary.instance.trackSortType == TrackSortType.year,
-            value: TrackSortType.year,
-            padding: EdgeInsets.zero,
-            child: Text(
-              Language.instance.YEAR,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-        ],
-        kArtistTab: <MobileSortButtonPopupMenuItem>[
-          MobileSortButtonPopupMenuItem(
-            onTap: () => handle(ArtistSortType.artist),
-            checked: MediaLibrary.instance.artistSortType == ArtistSortType.artist,
-            value: ArtistSortType.artist,
-            padding: EdgeInsets.zero,
-            child: Text(
-              Language.instance.A_TO_Z,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-          MobileSortButtonPopupMenuItem(
-            onTap: () => handle(ArtistSortType.timestamp),
-            checked: MediaLibrary.instance.artistSortType == ArtistSortType.timestamp,
-            value: ArtistSortType.timestamp,
-            padding: EdgeInsets.zero,
-            child: Text(
-              Language.instance.DATE_ADDED,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-        ],
-        kGenreTab: <MobileSortButtonPopupMenuItem>[
-          MobileSortButtonPopupMenuItem(
-            onTap: () => handle(GenreSortType.genre),
-            checked: MediaLibrary.instance.genreSortType == GenreSortType.genre,
-            value: GenreSortType.genre,
-            padding: EdgeInsets.zero,
-            child: Text(
-              Language.instance.A_TO_Z,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-          MobileSortButtonPopupMenuItem(
-            onTap: () => handle(GenreSortType.timestamp),
-            checked: MediaLibrary.instance.genreSortType == GenreSortType.timestamp,
-            value: GenreSortType.timestamp,
-            padding: EdgeInsets.zero,
-            child: Text(
-              Language.instance.DATE_ADDED,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-        ],
-      }[widget.tab]!;
+        kAlbumsPath: AlbumSortType.values
+            .map(
+              (e) => MobileSortButtonPopupMenuItem(
+                onTap: () => handle(e),
+                checked: MediaLibrary.instance.albumSortType == e,
+                value: e,
+                padding: EdgeInsets.zero,
+                child: Text(
+                  {
+                    AlbumSortType.album: Language.instance.A_TO_Z,
+                    AlbumSortType.timestamp: Language.instance.DATE_ADDED,
+                    AlbumSortType.year: Language.instance.YEAR,
+                    AlbumSortType.albumArtist: Language.instance.ALBUM_ARTIST,
+                  }[e]!,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                ),
+              ),
+            )
+            .toList(),
+        kTracksPath: TrackSortType.values
+            .map(
+              (e) => MobileSortButtonPopupMenuItem(
+                onTap: () => handle(e),
+                checked: MediaLibrary.instance.trackSortType == e,
+                value: e,
+                padding: EdgeInsets.zero,
+                child: Text(
+                  {
+                    TrackSortType.title: Language.instance.A_TO_Z,
+                    TrackSortType.timestamp: Language.instance.DATE_ADDED,
+                    TrackSortType.year: Language.instance.YEAR,
+                  }[e]!,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                ),
+              ),
+            )
+            .toList(),
+        kArtistsPath: ArtistSortType.values
+            .map(
+              (e) => MobileSortButtonPopupMenuItem(
+                onTap: () => handle(e),
+                checked: MediaLibrary.instance.artistSortType == e,
+                value: e,
+                padding: EdgeInsets.zero,
+                child: Text(
+                  {
+                    ArtistSortType.artist: Language.instance.A_TO_Z,
+                    ArtistSortType.timestamp: Language.instance.DATE_ADDED,
+                  }[e]!,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                ),
+              ),
+            )
+            .toList(),
+        kGenresPath: GenreSortType.values
+            .map(
+              (e) => MobileSortButtonPopupMenuItem(
+                onTap: () => handle(e),
+                checked: MediaLibrary.instance.genreSortType == e,
+                value: e,
+                padding: EdgeInsets.zero,
+                child: Text(
+                  {
+                    GenreSortType.genre: Language.instance.A_TO_Z,
+                    GenreSortType.timestamp: Language.instance.DATE_ADDED,
+                  }[e]!,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                ),
+              ),
+            )
+            .toList(),
+      }[widget.path]!;
 
   List<MobileSortButtonPopupMenuItem> get order => [
         MobileSortButtonPopupMenuItem(
           onTap: () => handle(true),
           checked: {
-            kAlbumTab: MediaLibrary.instance.albumSortAscending,
-            kTrackTab: MediaLibrary.instance.trackSortAscending,
-            kArtistTab: MediaLibrary.instance.artistSortAscending,
-            kGenreTab: MediaLibrary.instance.genreSortAscending,
-          }[widget.tab]!,
+            kAlbumsPath: MediaLibrary.instance.albumSortAscending,
+            kTracksPath: MediaLibrary.instance.trackSortAscending,
+            kArtistsPath: MediaLibrary.instance.artistSortAscending,
+            kGenresPath: MediaLibrary.instance.genreSortAscending,
+          }[widget.path]!,
           value: true,
           padding: EdgeInsets.zero,
           child: Text(
@@ -863,11 +681,11 @@ class MobileSortByButtonState extends State<MobileSortByButton> {
         MobileSortButtonPopupMenuItem(
           onTap: () => handle(false),
           checked: {
-            kAlbumTab: !MediaLibrary.instance.albumSortAscending,
-            kTrackTab: !MediaLibrary.instance.trackSortAscending,
-            kArtistTab: !MediaLibrary.instance.artistSortAscending,
-            kGenreTab: !MediaLibrary.instance.genreSortAscending,
-          }[widget.tab]!,
+            kAlbumsPath: !MediaLibrary.instance.albumSortAscending,
+            kTracksPath: !MediaLibrary.instance.trackSortAscending,
+            kArtistsPath: !MediaLibrary.instance.artistSortAscending,
+            kGenresPath: !MediaLibrary.instance.genreSortAscending,
+          }[widget.path]!,
           value: false,
           padding: EdgeInsets.zero,
           child: Text(
@@ -879,11 +697,10 @@ class MobileSortByButtonState extends State<MobileSortByButton> {
 
   @override
   Widget build(BuildContext context) {
-    final color = isMaterial2(context) && Theme.of(context).brightness == Brightness.light ? Theme.of(context).colorScheme.primary : Theme.of(context).textTheme.bodyLarge?.color;
+    final color = isMaterial2 && Theme.of(context).brightness == Brightness.light ? Theme.of(context).colorScheme.primary : Theme.of(context).textTheme.bodyLarge?.color;
     return InkWell(
-      borderRadius: isMaterial2(context) ? BorderRadius.circular(4.0) : BorderRadius.circular(20.0),
+      borderRadius: isMaterial2 ? BorderRadius.circular(4.0) : BorderRadius.circular(20.0),
       onTap: () async {
-        if (widget.tab == 3) return;
         await showModalBottomSheet(
           isScrollControlled: true,
           context: context,
@@ -899,7 +716,7 @@ class MobileSortByButtonState extends State<MobileSortByButton> {
                   ...sort,
                   const PopupMenuDivider(),
                   ...order,
-                  if (!isDesktop && !MobileNowPlayingNotifier.instance.hidden) const SizedBox(height: kMobileNowPlayingBarHeight),
+                  if (!isDesktop && MobileNowPlayingNotifier.instance.restored) const SizedBox(height: kMobileNowPlayingBarHeight),
                 ],
               );
             },
@@ -923,7 +740,7 @@ class MobileSortByButtonState extends State<MobileSortByButton> {
             ),
             const SizedBox(width: 10.0),
             Text(
-              label(context, (sort.firstWhere((e) => e.checked).child as Text).data.toString()),
+              label((sort.firstWhere((e) => e.checked).child as Text).data.toString()),
               style: Theme.of(context).textTheme.labelLarge?.copyWith(color: color),
             ),
             const SizedBox(width: 4.0),
@@ -1015,12 +832,12 @@ class SubHeader extends StatelessWidget {
     final horizontal = isDesktop ? 24.0 : 16.0;
     final fontSize = isDesktop ? 16.0 : null;
     final TextStyle? style;
-    if (isMaterial2(context) && isMobile) {
+    if (isMaterial2 && isMobile) {
       style = Theme.of(context).textTheme.titleSmall?.copyWith(
             color: Theme.of(context).colorScheme.onSurfaceVariant,
             fontSize: fontSize,
           );
-    } else if (isMaterial2(context) && isDesktop) {
+    } else if (isMaterial2 && isDesktop) {
       style = Theme.of(context).textTheme.titleSmall?.copyWith(
             fontSize: fontSize,
           );
@@ -1044,36 +861,19 @@ class SubHeader extends StatelessWidget {
 
 // --------------------------------------------------
 
-class RefreshMediaLibraryButton extends StatefulWidget {
-  const RefreshMediaLibraryButton({super.key});
-
-  @override
-  RefreshMediaLibraryButtonState createState() => RefreshMediaLibraryButtonState();
-}
-
-class RefreshMediaLibraryButtonState extends State<RefreshMediaLibraryButton> {
-  bool lock = false;
+class MediaLibraryRefreshButton extends StatelessWidget {
+  const MediaLibraryRefreshButton({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<MediaLibrary>(
-      builder: (context, mediaLibrary, _) => mediaLibrary.done
-          ? FloatingActionButton(
-              heroTag: 'collection_refresh_button',
+      builder: (context, mediaLibrary, _) => mediaLibrary.refreshing
+          ? const SizedBox.shrink()
+          : FloatingActionButton(
+              heroTag: 'MediaLibraryRefreshButton',
+              onPressed: mediaLibrary.refresh,
               child: const Icon(Icons.refresh),
-              onPressed: () {
-                if (lock) return;
-                lock = true;
-                mediaLibrary.refresh(progress: (current, total, done) {
-                  mediaLibrary.progress(current, total, done);
-
-                  if (done) {
-                    lock = false;
-                  }
-                });
-              },
-            )
-          : const SizedBox.shrink(),
+            ),
     );
   }
 }
@@ -1155,11 +955,11 @@ class Banner extends StatelessWidget {
           Image.memory(
             {
               // TODO:
-              // Language.instance.NO_COLLECTION_TITLE: VisualAssets.library,
+              // Language.instance.NO_TITLE: VisualAssets.library,
               // Language.instance.NO_INTERNET_TITLE: VisualAssets.library,
-              // Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE: VisualAssets.searchPage,
+              // Language.instance.SEARCH_NO_RESULTS_TITLE: VisualAssets.searchPage,
               // Language.instance.WEB_WELCOME_TITLE: VisualAssets.searchNotes,
-              // Language.instance.COLLECTION_SEARCH_LABEL: VisualAssets.searchPage,
+              // Language.instance.SEARCH_LABEL: VisualAssets.searchPage,
             }[title]!,
             height: 164.0,
             width: 164.0,
@@ -1178,21 +978,21 @@ class Banner extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),
-          if (title == Language.instance.NO_COLLECTION_TITLE) ...[
-            const SizedBox(height: 8.0),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialRoute(
-                    builder: (context) => Settings(),
-                  ),
-                );
-              },
-              child: Text(
-                label(context, Language.instance.GO_TO_SETTINGS),
-              ),
-            ),
-          ],
+          // if (title == Language.instance.NO_TITLE) ...[
+          //   const SizedBox(height: 8.0),
+          //   TextButton(
+          //     onPressed: () {
+          //       Navigator.of(context).push(
+          //         MaterialRoute(
+          //           builder: (context) => Settings(),
+          //         ),
+          //       );
+          //     },
+          //     child: Text(
+          //       label(context, Language.instance.GO_TO_SETTINGS),
+          //     ),
+          //   ),
+          // ],
         ],
       ),
     );
@@ -1233,7 +1033,7 @@ class MobileNavigationBarState extends State<MobileNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    return isMaterial3(context)
+    return isMaterial3
         ? NavigationBar(
             destinations: [
               NavigationDestination(
@@ -1255,7 +1055,7 @@ class MobileNavigationBarState extends State<MobileNavigationBar> {
             ],
           )
         : ValueListenableBuilder<Iterable<Color>?>(
-            valueListenable: MobileNowPlayingNotifier.instance.palette,
+            valueListenable: NowPlayingColorPaletteNotifier.instance.palette,
             builder: (context, value, _) => TweenAnimationBuilder<Color?>(
               duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
               tween: ColorTween(
@@ -1660,12 +1460,10 @@ class PlayFileOrURLButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       tooltip: Language.instance.OPEN_FILE_OR_URL,
-      icon: Icon(
-        Icons.file_open,
-        color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
-      ),
-      splashRadius: 20.0,
+      icon: const Icon(Icons.file_open),
       iconSize: 20.0,
+      splashRadius: 18.0,
+      color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
       onPressed: () async {
         await showDialog(
           context: context,
@@ -1751,10 +1549,7 @@ class PlayFileOrURLButton extends StatelessWidget {
                       actions: [
                         TextButton(
                           child: Text(
-                            label(
-                              context,
-                              Language.instance.PLAY,
-                            ),
+                            label(Language.instance.PLAY),
                           ),
                           onPressed: () async {
                             if (input.isNotEmpty && (formKey.currentState?.validate() ?? false)) {
@@ -1765,7 +1560,7 @@ class PlayFileOrURLButton extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: Navigator.of(ctx).maybePop,
-                          child: Text(label(context, Language.instance.CANCEL)),
+                          child: Text(label(Language.instance.CANCEL)),
                         ),
                       ],
                     ),
@@ -1798,14 +1593,12 @@ class ReadFileOrURLMetadataButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       tooltip: Language.instance.READ_METADATA,
-      icon: Icon(
-        Icons.file_open,
-        color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
-      ),
-      splashRadius: 20.0,
+      icon: const Icon(Icons.code),
       iconSize: 20.0,
+      splashRadius: 18.0,
+      color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
       onPressed: () async {
-        FileInfoScreen.show(context);
+        // FileInfoScreen.show(context);
       },
     );
   }
@@ -1872,7 +1665,7 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                 child: ListTile(
                   leading: const Icon(Icons.settings),
                   title: Text(
-                    Language.instance.SETTING,
+                    Language.instance.SETTINGS,
                     style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                   ),
                 ),
@@ -1885,12 +1678,12 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                 child: ListTile(
                   leading: const Icon(Icons.info),
                   title: Text(
-                    Language.instance.ABOUT_TITLE,
+                    Language.instance.ABOUT,
                     style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                   ),
                 ),
               ),
-              if (!isDesktop && !MobileNowPlayingNotifier.instance.hidden) const SizedBox(height: kMobileNowPlayingBarHeight),
+              if (!isDesktop && MobileNowPlayingNotifier.instance.restored) const SizedBox(height: kMobileNowPlayingBarHeight),
             ],
           ),
         );
@@ -1987,12 +1780,7 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                                             await Intent.instance.play(input);
                                           }
                                         },
-                                        child: Text(
-                                          label(
-                                            context,
-                                            Language.instance.PLAY,
-                                          ),
-                                        ),
+                                        child: Text(label(Language.instance.PLAY)),
                                       ),
                                     ],
                                   ),
@@ -2016,31 +1804,31 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                 );
                 break;
               }
-            case 1:
-              {
-                await FileInfoScreen.show(context);
-                break;
-              }
-            case 2:
-              {
-                await Navigator.push(
-                  context,
-                  MaterialRoute(
-                    builder: (context) => Settings(),
-                  ),
-                );
-                break;
-              }
-            case 3:
-              {
-                await Navigator.push(
-                  context,
-                  MaterialRoute(
-                    builder: (context) => AboutPage(),
-                  ),
-                );
-                break;
-              }
+            // case 1:
+            //   {
+            //     await FileInfoScreen.show(context);
+            //     break;
+            //   }
+            // case 2:
+            //   {
+            //     await Navigator.push(
+            //       context,
+            //       MaterialRoute(
+            //         builder: (context) => Settings(),
+            //       ),
+            //     );
+            //     break;
+            //   }
+            // case 3:
+            //   {
+            //     await Navigator.push(
+            //       context,
+            //       MaterialRoute(
+            //         builder: (context) => AboutPage(),
+            //       ),
+            //     );
+            //     break;
+            //   }
           }
         });
       },
