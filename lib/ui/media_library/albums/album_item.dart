@@ -53,6 +53,7 @@ class AlbumItem extends StatelessWidget {
               Expanded(
                 child: Container(
                   width: width,
+                  alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,

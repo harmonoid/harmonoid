@@ -15,7 +15,7 @@ const double kDesktopTrackTileHeight = 36.0;
 const double kMobileTrackTileHeight = 32.0 + 8.0 + 1.0;
 
 const double kArtistTileWidth = 142.0;
-const double kArtistTileHeight = 142.0 + 48.0;
+const double kArtistTileHeight = 142.0 + 36.0;
 const double kArtistListTileHeight = 72.0 + 1.0;
 
 const double kGenreTileWidth = 142.0;

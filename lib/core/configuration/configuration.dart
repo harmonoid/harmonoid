@@ -445,7 +445,7 @@ class Configuration {
       /* JSON    */ _kKeyPlaybackState: PlaybackState.defaults(),
       /* Integer */ _kKeyThemeMaterialVersion: isDesktop ? 2 : 3,
       /* Integer */ _kKeyThemeMode: ThemeMode.system.index,
-      /* Boolean */ _kKeyThemeSystemColorScheme: true,
+      /* Boolean */ _kKeyThemeSystemColorScheme: isMobile,
       /* Boolean */ _kKeyWindowsTaskbarProgress: false,
     };
   }

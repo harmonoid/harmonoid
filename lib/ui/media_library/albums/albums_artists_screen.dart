@@ -104,7 +104,9 @@ class DesktopAlbumsArtistsScreenState extends State<DesktopAlbumsArtistsScreen> 
               Expanded(
                 child: NotificationListener<ScrollNotification>(
                   onNotification: (notification) {
-                    _floatingNotifier.value = notification.metrics.pixels > 0.0;
+                    if (notification.metrics.axis == Axis.vertical) {
+                      _floatingNotifier.value = notification.metrics.pixels > 0.0;
+                    }
                     return false;
                   },
                   child: ScrollViewBuilder(

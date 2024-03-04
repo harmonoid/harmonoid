@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/ui/media_library/albums/albums_screen.dart';
+import 'package:harmonoid/ui/media_library/artists/artists_screen.dart';
+import 'package:harmonoid/ui/media_library/genres/genres_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_screen.dart';
 import 'package:harmonoid/ui/media_library/tracks/tracks_screen.dart';
 
@@ -62,14 +64,22 @@ final router = GoRouter(
             ),
             GoRoute(
               path: kArtistsPath,
-              builder: (context, state) {
-                return const SizedBox();
+              pageBuilder: (context, state) {
+                return buildPageWithMediaLibraryTransition(
+                  context: context,
+                  state: state,
+                  child: const ArtistsScreen(),
+                );
               },
             ),
             GoRoute(
               path: kGenresPath,
-              builder: (context, state) {
-                return const SizedBox();
+              pageBuilder: (context, state) {
+                return buildPageWithMediaLibraryTransition(
+                  context: context,
+                  state: state,
+                  child: const GenresScreen(),
+                );
               },
             ),
             GoRoute(

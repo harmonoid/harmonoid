@@ -87,8 +87,8 @@ Future<void> main(List<String> args) async {
     await MediaPlayer.ensureInitialized();
     await Intent.ensureInitialized(args: args);
     await ThemeNotifier.ensureInitialized(
-      themeMode: ThemeMode.dark,
-      materialVersion: 3,
+      themeMode: Configuration.instance.themeMode,
+      materialVersion: Configuration.instance.themeMaterialVersion,
       systemColorScheme: Configuration.instance.themeSystemColorScheme,
       animationDuration: Configuration.instance.animationDuration,
     );

@@ -1,18 +1,18 @@
+// ignore_for_file: depend_on_referenced_packages
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/core/configuration/configuration.dart';
-import 'package:harmonoid/utils/debouncer.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/utils/constants.dart';
+import 'package:harmonoid/utils/debouncer.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:synchronized/synchronized.dart';
 
 class TracksScreen extends StatefulWidget {
   const TracksScreen({super.key});
