@@ -69,6 +69,7 @@ class Configuration {
   bool get mediaLibraryArtistSortAscending => _mediaLibraryArtistSortAscending!;
   ArtistSortType get mediaLibraryArtistSortType => _mediaLibraryArtistSortType!;
   bool get mediaLibraryCoverFallback => _mediaLibraryCoverFallback!;
+  Map<String, double> get mediaLibraryDesktopTracksScreenColumnWidths => _mediaLibraryDesktopTracksScreenColumnWidths!;
   Set<Directory> get mediaLibraryDirectories => _mediaLibraryDirectories!;
   bool get mediaLibraryGenreSortAscending => _mediaLibraryGenreSortAscending!;
   GenreSortType get mediaLibraryGenreSortType => _mediaLibraryGenreSortType!;
@@ -111,6 +112,7 @@ class Configuration {
     bool? mediaLibraryArtistSortAscending,
     ArtistSortType? mediaLibraryArtistSortType,
     bool? mediaLibraryCoverFallback,
+    Map<String, double>? mediaLibraryDesktopTracksScreenColumnWidths,
     Set<Directory>? mediaLibraryDirectories,
     bool? mediaLibraryGenreSortAscending,
     GenreSortType? mediaLibraryGenreSortType,
@@ -189,6 +191,10 @@ class Configuration {
     if (mediaLibraryCoverFallback != null) {
       _mediaLibraryCoverFallback = mediaLibraryCoverFallback;
       await db.setValue(_kKeyMediaLibraryCoverFallback, kTypeBoolean, booleanValue: mediaLibraryCoverFallback);
+    }
+    if (mediaLibraryDesktopTracksScreenColumnWidths != null) {
+      _mediaLibraryDesktopTracksScreenColumnWidths = mediaLibraryDesktopTracksScreenColumnWidths;
+      await db.setValue(_kKeyMediaLibraryDesktopTracksScreenColumnWidths, kTypeJson, jsonValue: mediaLibraryDesktopTracksScreenColumnWidths);
     }
     if (mediaLibraryDirectories != null) {
       _mediaLibraryDirectories = mediaLibraryDirectories;
@@ -326,6 +332,7 @@ class Configuration {
     _mediaLibraryArtistSortAscending = await db.getBoolean(_kKeyMediaLibraryArtistSortAscending);
     _mediaLibraryArtistSortType = ArtistSortType.values[(await db.getInteger(_kKeyMediaLibraryArtistSortType))!];
     _mediaLibraryCoverFallback = await db.getBoolean(_kKeyMediaLibraryCoverFallback);
+    _mediaLibraryDesktopTracksScreenColumnWidths = Map<String, double>.from(await db.getJson(_kKeyMediaLibraryDesktopTracksScreenColumnWidths));
     _mediaLibraryDirectories = (await db.getJson(_kKeyMediaLibraryDirectories)).map<Directory>((e) => Directory(e)).toSet();
     _mediaLibraryGenreSortAscending = await db.getBoolean(_kKeyMediaLibraryGenreSortAscending);
     _mediaLibraryGenreSortType = GenreSortType.values[(await db.getInteger(_kKeyMediaLibraryGenreSortType))!];
@@ -368,6 +375,7 @@ class Configuration {
   bool? _mediaLibraryArtistSortAscending;
   ArtistSortType? _mediaLibraryArtistSortType;
   bool? _mediaLibraryCoverFallback;
+  Map<String, double>? _mediaLibraryDesktopTracksScreenColumnWidths;
   Set<Directory>? _mediaLibraryDirectories;
   bool? _mediaLibraryGenreSortAscending;
   GenreSortType? _mediaLibraryGenreSortType;
@@ -411,6 +419,7 @@ class Configuration {
       /* Boolean */ _kKeyMediaLibraryArtistSortAscending: true,
       /* Integer */ _kKeyMediaLibraryArtistSortType: ArtistSortType.artist.index,
       /* Boolean */ _kKeyMediaLibraryCoverFallback: false,
+      /* JSON    */ _kKeyMediaLibraryDesktopTracksScreenColumnWidths: <String, double>{},
       /* JSON    */ _kKeyMediaLibraryDirectories: [await getDefaultMediaLibraryDirectory()],
       /* Boolean */ _kKeyMediaLibraryGenreSortAscending: true,
       /* Integer */ _kKeyMediaLibraryGenreSortType: GenreSortType.genre.index,
@@ -543,6 +552,7 @@ class Configuration {
   static const _kKeyMediaLibraryArtistSortAscending = 'MEDIA_LIBRARY_ARTIST_SORT_ASCENDING';
   static const _kKeyMediaLibraryArtistSortType = 'MEDIA_LIBRARY_ARTIST_SORT_TYPE';
   static const _kKeyMediaLibraryCoverFallback = 'MEDIA_LIBRARY_COVER_FALLBACK';
+  static const _kKeyMediaLibraryDesktopTracksScreenColumnWidths = 'MEDIA_LIBRARY_DESKTOP_TRACKS_SCREEN_COLUMN_WIDTHS';
   static const _kKeyMediaLibraryDirectories = 'MEDIA_LIBRARY_DIRECTORIES';
   static const _kKeyMediaLibraryGenreSortAscending = 'MEDIA_LIBRARY_GENRE_SORT_ASCENDING';
   static const _kKeyMediaLibraryGenreSortType = 'MEDIA_LIBRARY_GENRE_SORT_TYPE';
