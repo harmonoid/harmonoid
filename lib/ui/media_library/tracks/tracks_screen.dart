@@ -1,4 +1,5 @@
 // ignore_for_file: depend_on_referenced_packages
+import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
@@ -56,15 +57,12 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_widthsNotifier.value.isEmpty) {
-      _widthsNotifier.value = {
-        TracksDataSource.kTrackNumber: kDesktopTrackTileHeight + 8.0,
-        TracksDataSource.kTitle: (MediaQuery.of(context).size.width - kDesktopTrackTileHeight - 8.0) * 5 / 14,
-        TracksDataSource.kArtists: (MediaQuery.of(context).size.width - kDesktopTrackTileHeight - 8.0) * 4 / 14,
-        TracksDataSource.kAlbum: (MediaQuery.of(context).size.width - kDesktopTrackTileHeight - 8.0) * 3 / 14,
-        TracksDataSource.kYear: (MediaQuery.of(context).size.width - kDesktopTrackTileHeight - 8.0) * 2 / 14,
-      };
-    }
+    _widthsNotifier.value[TracksDataSource.kTrackNumber] ??= kDesktopTrackTileHeight + 8.0;
+    _widthsNotifier.value[TracksDataSource.kTitle] ??= (MediaQuery.of(context).size.width - kDesktopTrackTileHeight - 8.0) * 5 / 17;
+    _widthsNotifier.value[TracksDataSource.kArtists] ??= (MediaQuery.of(context).size.width - kDesktopTrackTileHeight - 8.0) * 4 / 17;
+    _widthsNotifier.value[TracksDataSource.kAlbum] ??= (MediaQuery.of(context).size.width - kDesktopTrackTileHeight - 8.0) * 3 / 17;
+    _widthsNotifier.value[TracksDataSource.kAlbum] ??= (MediaQuery.of(context).size.width - kDesktopTrackTileHeight - 8.0) * 3 / 17;
+    _widthsNotifier.value[TracksDataSource.kYear] ??= (MediaQuery.of(context).size.width - kDesktopTrackTileHeight - 8.0) * 2 / 17;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -110,11 +108,32 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
                       },
                       onCellTap: (e) {
                         // TODO:
-                        debugPrint('#1');
                       },
-                      onCellSecondaryTap: (e) {
+                      onCellSecondaryTap: (e) async {
                         // TODO:
-                        debugPrint('#2');
+                        final result = await showMaterialMenu(
+                          context: context,
+                          constraints: const BoxConstraints(
+                            maxWidth: double.infinity,
+                          ),
+                          position: RelativeRect.fromLTRB(
+                            e.globalPosition.dx,
+                            e.globalPosition.dy - captionHeight - kDesktopAppBarHeight,
+                            MediaQuery.of(context).size.width,
+                            MediaQuery.of(context).size.height,
+                          ),
+                          items: trackPopupMenuItems(
+                            context,
+                            mediaLibrary.tracks[e.rowColumnIndex.rowIndex - 1],
+                          ),
+                        );
+                        if (result != null) {
+                          await trackPopupMenuHandle(
+                            context,
+                            mediaLibrary.tracks[e.rowColumnIndex.rowIndex - 1],
+                            result,
+                          );
+                        }
                       },
                       columns: [
                         GridColumn(
@@ -182,6 +201,22 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
                           ),
                         ),
                         GridColumn(
+                          columnName: TracksDataSource.kGenres,
+                          width: widths[TracksDataSource.kGenres]!,
+                          columnWidthMode: ColumnWidthMode.none,
+                          minimumWidth: 200.0,
+                          label: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              Language.instance.GENRES,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                          ),
+                        ),
+                        GridColumn(
                           columnName: TracksDataSource.kYear,
                           width: widths[TracksDataSource.kYear]!,
                           columnWidthMode: ColumnWidthMode.none,
@@ -237,6 +272,10 @@ class TracksDataSource extends DataGridSource {
               value: track.album.isEmpty ? kDefaultAlbum : track.album,
             ),
             DataGridCell(
+              columnName: kGenres,
+              value: track.genres.isEmpty ? {kDefaultGenre} : track.genres,
+            ),
+            DataGridCell(
               columnName: kYear,
               value: track.year == 0 ? kDefaultYear : track.year.toString(),
             ),
@@ -259,6 +298,7 @@ class TracksDataSource extends DataGridSource {
             kTitle: Alignment.centerLeft,
             kArtists: Alignment.centerLeft,
             kAlbum: Alignment.centerLeft,
+            kGenres: Alignment.centerLeft,
             kYear: Alignment.centerLeft,
           }[cell.columnName]!;
           return Container(
@@ -286,7 +326,6 @@ class TracksDataSource extends DataGridSource {
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 // TODO:
-                                debugPrint('#3');
                               },
                           ),
                           const TextSpan(
@@ -297,10 +336,40 @@ class TracksDataSource extends DataGridSource {
                     ),
                     style: style,
                   ),
-              kAlbum: () => Text(
-                    cell.value as String,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+              kAlbum: () => HyperLink(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: cell.value as String,
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              // TODO:
+                            },
+                        ),
+                        const TextSpan(
+                          text: ', ',
+                        ),
+                      ],
+                    ),
+                    style: style,
+                  ),
+              kGenres: () => HyperLink(
+                    text: TextSpan(
+                      children: [
+                        for (final e in cell.value as Set<String>) ...[
+                          TextSpan(
+                            text: e,
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                // TODO:
+                              },
+                          ),
+                          const TextSpan(
+                            text: ', ',
+                          ),
+                        ]
+                      ]..removeLast(),
+                    ),
                     style: style,
                   ),
               kYear: () => Text(
@@ -321,5 +390,6 @@ class TracksDataSource extends DataGridSource {
   static const String kTitle = '1';
   static const String kArtists = '2';
   static const String kAlbum = '3';
-  static const String kYear = '4';
+  static const String kGenres = '4';
+  static const String kYear = '5';
 }

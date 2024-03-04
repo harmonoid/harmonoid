@@ -101,7 +101,6 @@ ImageProvider cover({MediaLibraryItem? item, String? uri, int? cacheWidth, int? 
 
 List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) => [
       PopupMenuItem<int>(
-        padding: EdgeInsets.zero,
         value: 0,
         child: ListTile(
           leading: Icon(Platform.isWindows ? FluentIcons.delete_16_regular : Icons.delete),
@@ -113,7 +112,6 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
       ),
       if (Platform.isAndroid || Platform.isIOS)
         PopupMenuItem<int>(
-          padding: EdgeInsets.zero,
           value: 1,
           child: ListTile(
             leading: Icon(Platform.isWindows ? FluentIcons.share_16_regular : Icons.share),
@@ -124,7 +122,6 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
           ),
         ),
       PopupMenuItem<int>(
-        padding: EdgeInsets.zero,
         value: 3,
         child: ListTile(
           leading: Icon(Platform.isWindows ? FluentIcons.music_note_2_16_regular : Icons.music_note),
@@ -135,7 +132,6 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
         ),
       ),
       PopupMenuItem<int>(
-        padding: EdgeInsets.zero,
         value: 2,
         child: ListTile(
           leading: Icon(Platform.isWindows ? FluentIcons.list_16_regular : Icons.queue_music),
@@ -147,7 +143,6 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
       ),
       if (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
         PopupMenuItem<int>(
-          padding: EdgeInsets.zero,
           value: 5,
           child: ListTile(
             leading: Icon(Platform.isWindows ? FluentIcons.folder_24_regular : Icons.folder),
@@ -158,7 +153,6 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
           ),
         ),
       PopupMenuItem<int>(
-        padding: EdgeInsets.zero,
         value: 6,
         child: ListTile(
           leading: Icon(Platform.isWindows ? FluentIcons.edit_24_regular : Icons.edit),
@@ -169,7 +163,6 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
         ),
       ),
       PopupMenuItem<int>(
-        padding: EdgeInsets.zero,
         value: 4,
         child: ListTile(
           leading: Icon(Platform.isWindows ? FluentIcons.album_24_regular : Icons.album),
@@ -180,7 +173,6 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
         ),
       ),
       PopupMenuItem<int>(
-        padding: EdgeInsets.zero,
         value: 7,
         child: ListTile(
           leading: Icon(Platform.isWindows ? FluentIcons.info_24_regular : Icons.info),
@@ -192,7 +184,6 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
       ),
       if (LyricsNotifier.instance.contains(track.toPlayable()))
         PopupMenuItem<int>(
-          padding: EdgeInsets.zero,
           value: 9,
           child: ListTile(
             leading: Icon(
@@ -206,7 +197,6 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
         )
       else
         PopupMenuItem<int>(
-          padding: EdgeInsets.zero,
           value: 8,
           child: ListTile(
             leading: Icon(
@@ -227,7 +217,6 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
 
 List<PopupMenuItem<int>> albumPopupMenuItems(BuildContext context, Album album) => [
       PopupMenuItem<int>(
-        padding: EdgeInsets.zero,
         value: 0,
         child: ListTile(
           leading: Icon(
@@ -240,7 +229,6 @@ List<PopupMenuItem<int>> albumPopupMenuItems(BuildContext context, Album album) 
         ),
       ),
       PopupMenuItem<int>(
-        padding: EdgeInsets.zero,
         value: 1,
         child: ListTile(
           leading: Icon(
@@ -253,7 +241,6 @@ List<PopupMenuItem<int>> albumPopupMenuItems(BuildContext context, Album album) 
         ),
       ),
       PopupMenuItem<int>(
-        padding: EdgeInsets.zero,
         value: 2,
         child: ListTile(
           leading: Icon(
@@ -266,7 +253,6 @@ List<PopupMenuItem<int>> albumPopupMenuItems(BuildContext context, Album album) 
         ),
       ),
       PopupMenuItem<int>(
-        padding: EdgeInsets.zero,
         value: 3,
         child: ListTile(
           leading: Icon(
