@@ -56,22 +56,22 @@ class AlbumsScreenState extends State<AlbumsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MediaLibrary>(
-      builder: (context, mediaLibrary, _) {
-        final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.album;
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Consumer<MediaLibrary>(
+        builder: (context, mediaLibrary, _) {
+          if (mediaLibrary.albumSortType == AlbumSortType.albumArtist) {
+            return const AlbumsArtistsScreen();
+          }
 
-        if (mediaLibrary.albumSortType == AlbumSortType.albumArtist) {
-          return const AlbumsArtistsScreen();
-        }
+          final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.album;
 
-        return NotificationListener<ScrollNotification>(
-          onNotification: (notification) {
-            _floatingNotifier.value = notification.metrics.pixels > 0.0;
-            return false;
-          },
-          child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            body: ScrollViewBuilder(
+          return NotificationListener<ScrollNotification>(
+            onNotification: (notification) {
+              _floatingNotifier.value = notification.metrics.pixels > 0.0;
+              return false;
+            },
+            child: ScrollViewBuilder(
               margin: margin,
               span: scrollViewBuilderHelperData.span,
               headerCount: 1,
@@ -89,9 +89,9 @@ class AlbumsScreenState extends State<AlbumsScreen> {
               itemWidth: scrollViewBuilderHelperData.itemWidth,
               itemHeight: scrollViewBuilderHelperData.itemHeight,
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

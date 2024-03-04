@@ -11,7 +11,7 @@ const double kAlbumTileWidth = 148.0;
 const double kAlbumTileHeight = 148.0 + 64.0;
 const double kAlbumListTileHeight = 72.0 + 1.0;
 
-const double kDesktopTrackTileHeight = 32.0;
+const double kDesktopTrackTileHeight = 36.0;
 const double kMobileTrackTileHeight = 32.0 + 8.0 + 1.0;
 
 const double kArtistTileWidth = 142.0;

@@ -1,9 +1,12 @@
+import 'package:adaptive_layouts/adaptive_layouts.dart';
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/ui/media_library/albums/albums_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_screen.dart';
+import 'package:harmonoid/ui/media_library/tracks/tracks_screen.dart';
 
 const String kMediaLibraryPath = 'media-library';
 const String kAlbumsPath = 'albums';
@@ -39,14 +42,22 @@ final router = GoRouter(
           routes: [
             GoRoute(
               path: kAlbumsPath,
-              builder: (context, state) {
-                return const AlbumsScreen();
+              pageBuilder: (context, state) {
+                return buildPageWithMediaLibraryTransition(
+                  context: context,
+                  state: state,
+                  child: const AlbumsScreen(),
+                );
               },
             ),
             GoRoute(
               path: kTracksPath,
-              builder: (context, state) {
-                return const SizedBox();
+              pageBuilder: (context, state) {
+                return buildPageWithMediaLibraryTransition(
+                  context: context,
+                  state: state,
+                  child: const TracksScreen(),
+                );
               },
             ),
             GoRoute(
@@ -115,3 +126,22 @@ final router = GoRouter(
     ),
   ],
 );
+
+CustomTransitionPage buildPageWithMediaLibraryTransition<T>({
+  required BuildContext context,
+  required GoRouterState state,
+  required Widget child,
+}) {
+  return CustomTransitionPage<T>(
+    key: state.pageKey,
+    child: child,
+    transitionDuration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+    reverseTransitionDuration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) => SharedAxisTransition(
+      animation: animation,
+      secondaryAnimation: secondaryAnimation,
+      transitionType: SharedAxisTransitionType.vertical,
+      child: child,
+    ),
+  );
+}

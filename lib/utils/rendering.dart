@@ -10,7 +10,6 @@ import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:path/path.dart';
 import 'package:share_plus/share_plus.dart';
 
-export 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
@@ -312,8 +311,8 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
       await showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: Text(Language.instance.TRACK_DELETE_DIALOG_HEADER),
-          content: Text(Language.instance.TRACK_DELETE_DIALOG_BODY.replaceAll('NAME', track.title)),
+          title: Text(Language.instance.DELETE),
+          content: Text(Language.instance.TRACK_DELETE_DIALOG_SUBTITLE.replaceAll('NAME', track.title)),
           actions: [
             TextButton(
               onPressed: () async {
@@ -428,8 +427,8 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
       await showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: Text(Language.instance.ALBUM_DELETE_DIALOG_HEADER),
-          content: Text(Language.instance.ALBUM_DELETE_DIALOG_BODY.replaceAll('NAME', album.album)),
+          title: Text(Language.instance.DELETE),
+          content: Text(Language.instance.ALBUM_DELETE_DIALOG_SUBTITLE.replaceAll('NAME', album.album)),
           actions: [
             TextButton(
               onPressed: () async {

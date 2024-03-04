@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/extensions/media_library.dart';
+import 'package:harmonoid/ui/media_library/media_library_no_items_banner.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -49,14 +51,20 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                 padding: EdgeInsets.only(
                   top: captionHeight + kDesktopAppBarHeight,
                 ),
-                child: NotificationListener<ScrollNotification>(
-                  onNotification: (notification) {
-                    _floatingNotifier.value = notification.metrics.pixels > 0.0;
-                    _desktopAppBarElevatedNotifier.value = notification.metrics.pixels > 0.0;
-                    return false;
-                  },
-                  child: widget.child,
-                ),
+                child: mediaLibrary.isEmpty
+                    ? const Center(
+                        child: MediaLibraryNoItemsBanner(),
+                      )
+                    : NotificationListener<ScrollNotification>(
+                        onNotification: (notification) {
+                          if (notification.metrics.axis == Axis.vertical) {
+                            _floatingNotifier.value = notification.metrics.pixels > 0.0;
+                            _desktopAppBarElevatedNotifier.value = notification.metrics.pixels > 0.0;
+                          }
+                          return false;
+                        },
+                        child: widget.child,
+                      ),
               ),
               DesktopMediaLibraryFloatingSortButton(
                 floatingNotifier: _floatingNotifier,
@@ -86,7 +94,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                               Theme.of(context).appBarTheme.surfaceTintColor,
                               0.08,
                             )
-                          : null,
+                          : Theme.of(context).appBarTheme.backgroundColor,
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -169,7 +177,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                           style: Theme.of(context).textTheme.bodyMedium,
                                           decoration: inputDecoration(
                                             context,
-                                            Language.instance.SEARCH_SUBTITLE,
+                                            Language.instance.SEARCH_BANNER_SUBTITLE,
                                             suffixIcon: Transform.rotate(
                                               angle: pi / 2,
                                               child: Tooltip(

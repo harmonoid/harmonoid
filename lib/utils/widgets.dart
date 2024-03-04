@@ -28,10 +28,10 @@ import 'package:harmonoid/utils/keyboard_shortcuts.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 class DesktopMediaLibraryHeader extends StatefulWidget {
-  final ValueNotifier<bool> floatingNotifier;
+  final ValueNotifier<bool>? floatingNotifier;
   const DesktopMediaLibraryHeader({
     super.key,
-    required this.floatingNotifier,
+    this.floatingNotifier,
   });
 
   @override
@@ -127,7 +127,7 @@ class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
         ),
         const Spacer(),
         ValueListenableBuilder<bool>(
-          valueListenable: widget.floatingNotifier,
+          valueListenable: widget.floatingNotifier ?? ValueNotifier(false),
           builder: (context, floating, child) => AnimatedOpacity(
             opacity: floating ? 0.0 : 1.0,
             duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
@@ -157,14 +157,19 @@ class DesktopMediaLibraryFloatingSortButton extends StatefulWidget {
 class DesktopMediaLibraryFloatingSortButtonState extends State<DesktopMediaLibraryFloatingSortButton> {
   @override
   Widget build(BuildContext context) {
-    final tab = GoRouterState.of(context).uri.pathSegments.last;
+    final path = GoRouterState.of(context).uri.pathSegments.last;
+
+    if (![kAlbumsPath, /* kTracksPath, */ kArtistsPath, kGenresPath].contains(path)) {
+      return const SizedBox.shrink();
+    }
+
     return ValueListenableBuilder<bool>(
       valueListenable: widget.floatingNotifier,
       child: const DesktopMediaLibrarySortButton(floating: true),
       builder: (context, floating, child) => AnimatedPositioned(
         curve: Curves.easeInOut,
         duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
-        top: margin + captionHeight + kDesktopAppBarHeight + (floating ? (tab == 'tracks' ? 28.0 : 0) : -72.0),
+        top: margin + captionHeight + kDesktopAppBarHeight + (floating ? 0.0 : -72.0),
         right: margin,
         child: Card(
           elevation: 4.0,
@@ -964,7 +969,7 @@ class HyperLinkState extends State<HyperLink> {
         children: widget.text.children!
             .map(
               (e) => TextSpan(
-                text: (e as TextSpan).text?.overflow,
+                text: (e as TextSpan).text,
                 style: e.recognizer != null
                     ? widget.style?.copyWith(
                         decoration: hover == e.text! ? TextDecoration.underline : null,
