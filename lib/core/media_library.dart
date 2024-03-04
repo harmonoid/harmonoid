@@ -4,6 +4,7 @@ import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:media_library/media_library.dart' as _ show MediaLibrary;
 import 'package:tag_reader/tag_reader.dart';
 
+import 'package:harmonoid/extensions/media_library.dart';
 import 'package:harmonoid/mappers/tags.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 
@@ -68,7 +69,15 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
       minimumFileSize: minimumFileSize,
       albumGroupingParameters: albumGroupingParameters,
     );
-    await instance.refresh();
+    // Populate the media library from the database.
+    await instance.refresh(
+      insert: false,
+      delete: false,
+    );
+    if (instance.isEmpty) {
+      // Look for updates from the file-system if the media library is empty.
+      await instance.refresh();
+    }
   }
 
   /// Invoked for performing the delete operation on Android.
