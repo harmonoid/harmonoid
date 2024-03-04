@@ -86,4 +86,5 @@ flutter:
     - assets/images/
     - assets/translations/
     - assets/translations/translations/
+    - assets/vectors/
     - assets/visuals/
