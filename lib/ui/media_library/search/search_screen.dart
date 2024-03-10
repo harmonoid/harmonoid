@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/mappers/track.dart';
+import 'package:harmonoid/ui/router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
 import 'package:harmonoid/constants/language.dart';
@@ -68,7 +70,13 @@ class SearchScreenState extends State<SearchScreen> {
                 if (_albums.length > kLimit)
                   ShowAllButton(
                     onPressed: () {
-                      // TODO:
+                      context.push(
+                        '/$kMediaLibraryPath/$kSearchItemsPath',
+                        extra: SearchItemsPathExtra(
+                          query: widget.query,
+                          items: MediaLibrary.instance.search(widget.query).whereType<Album>().toList(),
+                        ),
+                      );
                     },
                   ),
                 SizedBox(width: margin),
@@ -103,7 +111,13 @@ class SearchScreenState extends State<SearchScreen> {
                 if (_artists.length > kLimit)
                   ShowAllButton(
                     onPressed: () {
-                      // TODO:
+                      context.push(
+                        '/$kMediaLibraryPath/$kSearchItemsPath',
+                        extra: SearchItemsPathExtra(
+                          query: widget.query,
+                          items: MediaLibrary.instance.search(widget.query).whereType<Artist>().toList(),
+                        ),
+                      );
                     },
                   ),
                 SizedBox(width: margin),
@@ -138,7 +152,13 @@ class SearchScreenState extends State<SearchScreen> {
                 if (_genres.length > kLimit)
                   ShowAllButton(
                     onPressed: () {
-                      // TODO:
+                      context.push(
+                        '/$kMediaLibraryPath/$kSearchItemsPath',
+                        extra: SearchItemsPathExtra(
+                          query: widget.query,
+                          items: MediaLibrary.instance.search(widget.query).whereType<Genre>().toList(),
+                        ),
+                      );
                     },
                   ),
                 SizedBox(width: margin),
@@ -173,7 +193,13 @@ class SearchScreenState extends State<SearchScreen> {
                 if (_tracks.length > kLimit)
                   ShowAllButton(
                     onPressed: () {
-                      // TODO:
+                      context.push(
+                        '/$kMediaLibraryPath/$kSearchItemsPath',
+                        extra: SearchItemsPathExtra(
+                          query: widget.query,
+                          items: MediaLibrary.instance.search(widget.query).whereType<Track>().toList(),
+                        ),
+                      );
                     },
                   ),
                 SizedBox(width: margin),

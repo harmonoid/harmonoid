@@ -2,6 +2,7 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:harmonoid/ui/media_library/search/search_items_screen.dart';
 import 'package:media_library/media_library.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
@@ -30,8 +31,12 @@ const String kSearchArgQuery = 'query';
 const String kSearchItemsPath = 'search-items';
 
 class SearchItemsPathExtra {
+  final String query;
   final List<MediaLibraryItem> items;
-  SearchItemsPathExtra({required this.items});
+  SearchItemsPathExtra({
+    required this.query,
+    required this.items,
+  });
 }
 
 const String kAlbumPath = 'album';
@@ -123,6 +128,16 @@ final router = GoRouter(
               },
             ),
           ],
+        ),
+        GoRoute(
+          path: kSearchItemsPath,
+          builder: (context, state) {
+            final extra = state.extra as SearchItemsPathExtra;
+            return SearchItemsScreen(
+              query: extra.query,
+              items: extra.items,
+            );
+          },
         ),
         GoRoute(
           path: kAlbumPath,

@@ -24,28 +24,31 @@ class ArtistItem extends StatelessWidget {
       height: height,
       child: Column(
         children: [
-          Card(
-            margin: EdgeInsets.zero,
-            clipBehavior: Clip.antiAlias,
-            shape: const CircleBorder(),
-            child: Container(
-              width: width,
-              height: width,
-              padding: const EdgeInsets.all(4.0),
-              child: ClipOval(
-                child: Material(
-                  child: InkWell(
-                    onTap: () {
-                      // TODO:
-                    },
-                    child: ScaleOnHover(
-                      child: Ink.image(
-                        width: width,
-                        height: width,
-                        fit: BoxFit.cover,
-                        image: cover(
-                          item: artist,
-                          cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
+          Hero(
+            tag: artist,
+            child: Card(
+              margin: EdgeInsets.zero,
+              clipBehavior: Clip.antiAlias,
+              shape: const CircleBorder(),
+              child: Container(
+                width: width,
+                height: width,
+                padding: const EdgeInsets.all(4.0),
+                child: ClipOval(
+                  child: Material(
+                    child: InkWell(
+                      onTap: () {
+                        // TODO:
+                      },
+                      child: ScaleOnHover(
+                        child: Ink.image(
+                          width: width,
+                          height: width,
+                          fit: BoxFit.cover,
+                          image: cover(
+                            item: artist,
+                            cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
+                          ),
                         ),
                       ),
                     ),

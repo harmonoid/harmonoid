@@ -112,7 +112,7 @@ class DesktopAlbumsArtistsScreenState extends State<DesktopAlbumsArtistsScreen> 
                       return const DesktopMediaLibraryHeader(key: ValueKey(''));
                     } else {
                       return SubHeader(
-                        key: albumArtists[i - 1].value[0].scrollViewBuilderKey,
+                        key: ValueKey(albumArtists[i - 1].key.isEmpty ? kDefaultArtist[0] : albumArtists[i - 1].key[0]),
                         albumArtists[i - 1].key.isEmpty ? kDefaultArtist : albumArtists[i - 1].key,
                         padding: EdgeInsets.only(
                           left: margin,

@@ -20,25 +20,28 @@ class GenreItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = kGenreColors[genre.genre.hashCode % kGenreColors.length];
-    return Card(
-      margin: EdgeInsets.zero,
-      color: color,
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () {
-          // TODO:
-        },
-        child: Container(
-          width: width,
-          height: height,
-          alignment: Alignment.center,
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            title,
-            maxLines: 3,
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(color: color.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+    return Hero(
+      tag: genre,
+      child: Card(
+        margin: EdgeInsets.zero,
+        color: color,
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () {
+            // TODO:
+          },
+          child: Container(
+            width: width,
+            height: height,
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              title,
+              maxLines: 3,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: color.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+            ),
           ),
         ),
       ),
