@@ -22,9 +22,10 @@ class MediaLibraryScreen extends StatefulWidget {
 }
 
 class MediaLibraryScreenState extends State<MediaLibraryScreen> {
-  final FocusNode _node = FocusNode();
   final ValueNotifier<bool> _floatingNotifier = ValueNotifier(false);
   final ValueNotifier<bool> _desktopAppBarElevatedNotifier = ValueNotifier<bool>(false);
+  final FocusNode _queryTextFieldFocusNode = FocusNode();
+  final TextEditingController _queryTextFieldEditingController = TextEditingController();
 
   String? _current;
 
@@ -38,6 +39,15 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
       _floatingNotifier.value = false;
       _desktopAppBarElevatedNotifier.value = false;
     }
+  }
+
+  @override
+  void dispose() {
+    _floatingNotifier.dispose();
+    _desktopAppBarElevatedNotifier.dispose();
+    _queryTextFieldFocusNode.dispose();
+    _queryTextFieldEditingController.dispose();
+    super.dispose();
   }
 
   Widget _buildDesktopLayout(BuildContext context) {
@@ -167,11 +177,13 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                         height: 40.0,
                                         width: 280.0,
                                         child: DefaultTextField(
-                                          focusNode: _node,
+                                          focusNode: _queryTextFieldFocusNode,
+                                          controller: _queryTextFieldEditingController,
                                           cursorWidth: 1.0,
-                                          onSubmitted: (value) {
-                                            _node.requestFocus();
-                                            // TODO:
+                                          onSubmitted: (value) async {
+                                            context.go(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: value}).toString());
+                                            await Future.delayed(MaterialRoute.animationDuration?.medium ?? const Duration(milliseconds: 300));
+                                            _queryTextFieldFocusNode.requestFocus();
                                           },
                                           textAlignVertical: TextAlignVertical.center,
                                           style: Theme.of(context).textTheme.bodyMedium,
@@ -189,9 +201,10 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                                 ),
                                               ),
                                             ),
-                                            onSuffixIconPressed: () {
-                                              _node.requestFocus();
-                                              // TODO:
+                                            onSuffixIconPressed: () async {
+                                              context.go(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: _queryTextFieldEditingController.value}).toString());
+                                              await Future.delayed(MaterialRoute.animationDuration?.medium ?? const Duration(milliseconds: 300));
+                                              _queryTextFieldFocusNode.requestFocus();
                                             },
                                           ),
                                         ),
