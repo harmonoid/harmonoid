@@ -28,11 +28,7 @@ import 'package:harmonoid/utils/keyboard_shortcuts.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 class DesktopMediaLibraryHeader extends StatefulWidget {
-  final ValueNotifier<bool>? floatingNotifier;
-  const DesktopMediaLibraryHeader({
-    super.key,
-    this.floatingNotifier,
-  });
+  const DesktopMediaLibraryHeader({super.key});
 
   @override
   DesktopMediaLibraryHeaderState createState() => DesktopMediaLibraryHeaderState();
@@ -44,6 +40,12 @@ class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
 
   @override
   Widget build(BuildContext context) {
+    final path = GoRouterState.of(context).uri.pathSegments.last;
+
+    if (![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath].contains(path)) {
+      return const SizedBox.shrink();
+    }
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -126,15 +128,7 @@ class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
           ),
         ),
         const Spacer(),
-        ValueListenableBuilder<bool>(
-          valueListenable: widget.floatingNotifier ?? ValueNotifier(false),
-          builder: (context, floating, child) => AnimatedOpacity(
-            opacity: floating ? 0.0 : 1.0,
-            duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
-            child: child,
-          ),
-          child: const DesktopMediaLibrarySortButton(floating: false),
-        ),
+        const DesktopMediaLibrarySortButton(floating: false),
         SizedBox(width: margin),
       ],
     );
@@ -376,9 +370,9 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
                 context: context,
                 constraints: const BoxConstraints(maxWidth: double.infinity),
                 position: RelativeRect.fromLTRB(
-                  _key1.globalPaintBounds!.left - margin - 8.0,
+                  margin,
                   widget.floating ? (_key1.globalPaintBounds!.bottom + margin) : (_key1.globalPaintBounds!.bottom + margin - captionHeight - kDesktopAppBarHeight),
-                  MediaQuery.of(context).size.width,
+                  margin - 1.0,
                   MediaQuery.of(context).size.height,
                 ),
                 items: <PopupMenuEntry<bool>>[
@@ -553,8 +547,7 @@ class DesktopMediaLibraryRefreshIndicator extends StatelessWidget {
 // --------------------------------------------------
 
 class MobileMediaLibraryHeader extends StatelessWidget {
-  final int tab;
-  const MobileMediaLibraryHeader({super.key, required this.tab});
+  const MobileMediaLibraryHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -993,70 +986,6 @@ class HyperLinkState extends State<HyperLink> {
               ),
             )
             .toList(),
-      ),
-    );
-  }
-}
-
-// --------------------------------------------------
-
-class Banner extends StatelessWidget {
-  final String title;
-  final String subtitle;
-
-  const Banner({super.key, required this.title, required this.subtitle});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-      width: 480.0,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.memory(
-            {
-              // TODO:
-              // Language.instance.NO_TITLE: VisualAssets.library,
-              // Language.instance.NO_INTERNET_TITLE: VisualAssets.library,
-              // Language.instance.SEARCH_NO_RESULTS_TITLE: VisualAssets.searchPage,
-              // Language.instance.WEB_WELCOME_TITLE: VisualAssets.searchNotes,
-              // Language.instance.SEARCH_LABEL: VisualAssets.searchPage,
-            }[title]!,
-            height: 164.0,
-            width: 164.0,
-            filterQuality: FilterQuality.high,
-            fit: BoxFit.contain,
-          ),
-          const SizedBox(height: 12.0),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.titleLarge,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 4.0),
-          Text(
-            subtitle,
-            style: Theme.of(context).textTheme.bodyMedium,
-            textAlign: TextAlign.center,
-          ),
-          // if (title == Language.instance.NO_TITLE) ...[
-          //   const SizedBox(height: 8.0),
-          //   TextButton(
-          //     onPressed: () {
-          //       Navigator.of(context).push(
-          //         MaterialRoute(
-          //           builder: (context) => Settings(),
-          //         ),
-          //       );
-          //     },
-          //     child: Text(
-          //       label(context, Language.instance.GO_TO_SETTINGS),
-          //     ),
-          //   ),
-          // ],
-        ],
       ),
     );
   }

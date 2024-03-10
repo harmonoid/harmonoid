@@ -18,8 +18,6 @@ class GenresScreen extends StatefulWidget {
 }
 
 class GenresScreenState extends State<GenresScreen> {
-  final _floatingNotifier = ValueNotifier<bool>(false);
-
   double get headerHeight {
     if (isDesktop) {
       return kDesktopHeaderHeight;
@@ -35,19 +33,13 @@ class GenresScreenState extends State<GenresScreen> {
 
   Widget headerBuilder(BuildContext context, int i, double h) {
     if (isDesktop) {
-      return DesktopMediaLibraryHeader(
-        key: const ValueKey(''),
-        floatingNotifier: _floatingNotifier,
-      );
+      return const DesktopMediaLibraryHeader(key: ValueKey(''));
     }
     if (isTablet) {
       throw UnimplementedError();
     }
     if (isMobile) {
-      return const MobileMediaLibraryHeader(
-        key: ValueKey(''),
-        tab: 0,
-      );
+      return const MobileMediaLibraryHeader(key: ValueKey(''));
     }
     throw UnimplementedError();
   }
@@ -60,31 +52,23 @@ class GenresScreenState extends State<GenresScreen> {
         builder: (context, mediaLibrary, _) {
           final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.genre;
 
-          return NotificationListener<ScrollNotification>(
-            onNotification: (notification) {
-              if (notification.metrics.axis == Axis.vertical) {
-                _floatingNotifier.value = notification.metrics.pixels > 0.0;
-              }
-              return false;
-            },
-            child: ScrollViewBuilder(
-              margin: margin,
-              span: scrollViewBuilderHelperData.span,
-              headerCount: 1,
-              headerBuilder: headerBuilder,
-              headerHeight: headerHeight,
-              itemCounts: [mediaLibrary.genres.length],
-              itemBuilder: (context, i, j, w, h) => GenreItem(
-                key: mediaLibrary.genres[j].scrollViewBuilderKey,
-                genre: mediaLibrary.genres[j],
-                width: w,
-                height: h,
-              ),
-              labelConstraints: scrollViewBuilderHelperData.labelConstraints,
-              labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
-              itemWidth: scrollViewBuilderHelperData.itemWidth,
-              itemHeight: scrollViewBuilderHelperData.itemHeight,
+          return ScrollViewBuilder(
+            margin: margin,
+            span: scrollViewBuilderHelperData.span,
+            headerCount: 1,
+            headerBuilder: headerBuilder,
+            headerHeight: headerHeight,
+            itemCounts: [mediaLibrary.genres.length],
+            itemBuilder: (context, i, j, w, h) => GenreItem(
+              key: mediaLibrary.genres[j].scrollViewBuilderKey,
+              genre: mediaLibrary.genres[j],
+              width: w,
+              height: h,
             ),
+            labelConstraints: scrollViewBuilderHelperData.labelConstraints,
+            labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
+            itemWidth: scrollViewBuilderHelperData.itemWidth,
+            itemHeight: scrollViewBuilderHelperData.itemHeight,
           );
         },
       ),

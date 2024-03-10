@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'package:audio_service/audio_service.dart' hide PlaybackState;
 import 'package:flutter/foundation.dart';
-import 'package:harmonoid/mappers/playback_state.dart';
 import 'package:media_kit/media_kit.dart' hide Playable;
 
 import 'package:harmonoid/mappers/loop.dart';
 import 'package:harmonoid/mappers/media.dart';
 import 'package:harmonoid/mappers/playable.dart';
+import 'package:harmonoid/mappers/playback_state.dart';
 import 'package:harmonoid/mappers/playlist_mode.dart';
 import 'package:harmonoid/models/loop.dart';
 import 'package:harmonoid/models/media_player_state.dart';

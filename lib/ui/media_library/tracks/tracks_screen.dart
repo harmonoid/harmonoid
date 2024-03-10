@@ -10,6 +10,8 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/debouncer.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -53,6 +55,13 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
   void initState() {
     super.initState();
     _debouncer.dispose();
+  }
+
+  @override
+  void dispose() {
+    _debouncer.dispose();
+    _widthsNotifier.dispose();
+    super.dispose();
   }
 
   @override
@@ -106,11 +115,13 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
                         });
                         return true;
                       },
-                      onCellTap: (e) {
-                        // TODO:
+                      onCellTap: (e) async {
+                        await MediaPlayer.instance.open(
+                          mediaLibrary.tracks.map((e) => e.toPlayable()).toList(),
+                          index: e.rowColumnIndex.rowIndex - 1,
+                        );
                       },
                       onCellSecondaryTap: (e) async {
-                        // TODO:
                         final result = await showMaterialMenu(
                           context: context,
                           constraints: const BoxConstraints(
@@ -251,38 +262,7 @@ class TracksDataSource extends DataGridSource {
 
   TracksDataSource({required this.tracks, required this.context});
 
-  late final _rows = tracks
-      .map(
-        (track) => DataGridRow(
-          cells: [
-            DataGridCell(
-              columnName: kTrackNumber,
-              value: track.trackNumber == 0 ? '1' : track.trackNumber.toString(),
-            ),
-            DataGridCell(
-              columnName: kTitle,
-              value: track.title,
-            ),
-            DataGridCell(
-              columnName: kArtists,
-              value: track.artists.isEmpty ? {kDefaultArtist} : track.artists,
-            ),
-            DataGridCell(
-              columnName: kAlbum,
-              value: track.album.isEmpty ? kDefaultAlbum : track.album,
-            ),
-            DataGridCell(
-              columnName: kGenres,
-              value: track.genres.isEmpty ? {kDefaultGenre} : track.genres,
-            ),
-            DataGridCell(
-              columnName: kYear,
-              value: track.year == 0 ? kDefaultYear : track.year.toString(),
-            ),
-          ],
-        ),
-      )
-      .toList();
+  late final List<DataGridRow> _rows = tracks.map((track) => track.toDataGridRow()).toList();
 
   @override
   List<DataGridRow> get rows => _rows;
@@ -345,9 +325,6 @@ class TracksDataSource extends DataGridSource {
                             ..onTap = () {
                               // TODO:
                             },
-                        ),
-                        const TextSpan(
-                          text: ', ',
                         ),
                       ],
                     ),

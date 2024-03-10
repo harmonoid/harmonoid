@@ -39,11 +39,11 @@ bool get isMobile => Theme.of(navigatorKey.currentContext!).extension<LayoutVari
 
 double get margin {
   if (isDesktop) {
-    return kDesktopTileMargin;
+    return kDesktopMargin;
   } else if (isTablet) {
     throw UnimplementedError();
   } else if (isMobile) {
-    return kMobileTileMargin;
+    return kMobileMargin;
   }
   throw UnimplementedError();
 }

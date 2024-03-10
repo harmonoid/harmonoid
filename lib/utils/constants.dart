@@ -4,15 +4,15 @@ const double kMobileHeaderHeight = 56.0;
 const double kDesktopNowPlayingBarHeight = 84.0;
 const double kMobileNowPlayingBarHeight = 66.0;
 
-const double kDesktopTileMargin = 16.0;
-const double kMobileTileMargin = 8.0;
+const double kDesktopMargin = 16.0;
+const double kMobileMargin = 8.0;
 
 const double kAlbumTileWidth = 148.0;
 const double kAlbumTileHeight = 148.0 + 64.0;
 const double kAlbumListTileHeight = 72.0 + 1.0;
 
 const double kDesktopTrackTileHeight = 36.0;
-const double kMobileTrackTileHeight = 32.0 + 8.0 + 1.0;
+const double kMobileTrackTileHeight = 72.0;
 
 const double kArtistTileWidth = 142.0;
 const double kArtistTileHeight = 142.0 + 36.0;

@@ -42,7 +42,6 @@ class DesktopAlbumsArtistsScreen extends StatefulWidget {
 
 class DesktopAlbumsArtistsScreenState extends State<DesktopAlbumsArtistsScreen> {
   final _key = GlobalKey<ScrollViewBuilderState>();
-  final _floatingNotifier = ValueNotifier<bool>(false);
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +74,7 @@ class DesktopAlbumsArtistsScreenState extends State<DesktopAlbumsArtistsScreen> 
                       return InkWell(
                         key: const ValueKey(''),
                         onTap: () {
-                          _key.currentState?.jumpToHeader(
+                          _key.currentState?.animateToHeader(
                             i + 1,
                             difference: -8.0,
                           );
@@ -84,7 +83,7 @@ class DesktopAlbumsArtistsScreenState extends State<DesktopAlbumsArtistsScreen> 
                           alignment: Alignment.centerLeft,
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(
-                            albumArtists[i].key,
+                            albumArtists[i].key.isEmpty ? kDefaultArtist : albumArtists[i].key,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -102,48 +101,37 @@ class DesktopAlbumsArtistsScreenState extends State<DesktopAlbumsArtistsScreen> 
                 thickness: 1.0,
               ),
               Expanded(
-                child: NotificationListener<ScrollNotification>(
-                  onNotification: (notification) {
-                    if (notification.metrics.axis == Axis.vertical) {
-                      _floatingNotifier.value = notification.metrics.pixels > 0.0;
+                child: ScrollViewBuilder(
+                  key: _key,
+                  margin: margin,
+                  span: scrollViewBuilderHelperData.span,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  headerCount: 1 + albumArtists.length,
+                  headerBuilder: (context, i, h) {
+                    if (i == 0) {
+                      return const DesktopMediaLibraryHeader(key: ValueKey(''));
+                    } else {
+                      return SubHeader(
+                        key: albumArtists[i - 1].value[0].scrollViewBuilderKey,
+                        albumArtists[i - 1].key.isEmpty ? kDefaultArtist : albumArtists[i - 1].key,
+                        padding: EdgeInsets.only(
+                          left: margin,
+                          right: margin,
+                          bottom: margin,
+                        ),
+                      );
                     }
-                    return false;
                   },
-                  child: ScrollViewBuilder(
-                    key: _key,
-                    margin: margin,
-                    span: scrollViewBuilderHelperData.span,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    headerCount: 1 + albumArtists.length,
-                    headerBuilder: (context, i, h) {
-                      if (i == 0) {
-                        return DesktopMediaLibraryHeader(
-                          key: const ValueKey(''),
-                          floatingNotifier: _floatingNotifier,
-                        );
-                      } else {
-                        return SubHeader(
-                          key: albumArtists[i - 1].value[0].scrollViewBuilderKey,
-                          albumArtists[i - 1].key,
-                          padding: EdgeInsets.only(
-                            left: margin,
-                            right: margin,
-                            bottom: margin,
-                          ),
-                        );
-                      }
-                    },
-                    headerHeight: kDesktopHeaderHeight,
-                    itemCounts: [0, ...albumArtists.map((e) => e.value.length)],
-                    itemBuilder: (context, i, j, w, h) => AlbumItem(
-                      key: albumArtists[i - 1].value[j].scrollViewBuilderKey,
-                      album: albumArtists[i - 1].value[j],
-                      width: w,
-                      height: h,
-                    ),
-                    itemWidth: scrollViewBuilderHelperData.itemWidth,
-                    itemHeight: scrollViewBuilderHelperData.itemHeight,
+                  headerHeight: kDesktopHeaderHeight,
+                  itemCounts: [0, ...albumArtists.map((e) => e.value.length)],
+                  itemBuilder: (context, i, j, w, h) => AlbumItem(
+                    key: albumArtists[i - 1].value[j].scrollViewBuilderKey,
+                    album: albumArtists[i - 1].value[j],
+                    width: w,
+                    height: h,
                   ),
+                  itemWidth: scrollViewBuilderHelperData.itemWidth,
+                  itemHeight: scrollViewBuilderHelperData.itemHeight,
                 ),
               ),
             ],
