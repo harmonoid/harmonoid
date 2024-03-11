@@ -196,7 +196,98 @@ class TrackItem extends StatelessWidget {
   }
 
   Widget _buildMobileLayout(BuildContext context) {
-    throw UnimplementedError();
+    Future<void> onLongPress() async {
+      int? result;
+      final items = trackPopupMenuItems(context, track);
+      await showModalBottomSheet(
+        context: context,
+        showDragHandle: true,
+        isScrollControlled: true,
+        elevation: kDefaultHeavyElevation,
+        builder: (context) => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (int i = 0; i < items.length; i++) ...[
+              InkWell(
+                onTap: () {
+                  result = i;
+                  Navigator.of(context).pop();
+                },
+                child: items[i].child,
+              ),
+            ],
+          ],
+        ),
+      );
+      await trackPopupMenuHandle(context, track, result);
+    }
+
+    return SizedBox(
+      height: kMobileTrackTileHeight,
+      child: InkWell(
+        onTap: () {
+          // TODO:
+        },
+        onLongPress: onLongPress,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Divider(height: 1.0),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image(
+                  width: kMobileTrackTileHeight - 1.0,
+                  height: kMobileTrackTileHeight - 1.0,
+                  image: cover(
+                    item: track,
+                    cacheWidth: (kMobileHeaderHeight * MediaQuery.of(context).devicePixelRatio).toInt(),
+                  ),
+                  fit: BoxFit.cover,
+                ),
+                const SizedBox(width: 16.0),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        track.title,
+                        style: Theme.of(context).textTheme.titleMedium,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        [
+                          ...track.artists.take(2),
+                          if (track.album.isNotEmpty) track.album.toString(),
+                          if (track.year != 0) track.year.toString(),
+                        ].join(' • '),
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8.0),
+                IconButton(
+                  onPressed: onLongPress,
+                  icon: const Icon(Icons.more_vert),
+                  color: Theme.of(context).iconTheme.color,
+                ),
+                const SizedBox(width: 8.0),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override

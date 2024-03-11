@@ -1,4 +1,5 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
@@ -107,7 +108,68 @@ class AlbumItem extends StatelessWidget {
   }
 
   Widget _buildMobileLayout(BuildContext context) {
-    throw UnimplementedError();
+    return OpenContainer(
+      transitionDuration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+      closedColor: Theme.of(context).cardTheme.color ?? Colors.transparent,
+      closedShape: Theme.of(context).cardTheme.shape ?? const RoundedRectangleBorder(),
+      closedElevation: Theme.of(context).cardTheme.elevation ?? 0.0,
+      openElevation: Theme.of(context).cardTheme.elevation ?? 0.0,
+      closedBuilder: (context, action) {
+        return InkWell(
+          onTap: action,
+          child: SizedBox(
+            width: width,
+            height: height,
+            child: Column(
+              children: [
+                SizedBox(
+                  width: width,
+                  height: width,
+                  child: Ink.image(
+                    width: width,
+                    height: width,
+                    fit: BoxFit.cover,
+                    image: cover(
+                      item: album,
+                      cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    width: width,
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (title.isNotEmpty)
+                          Text(
+                            title,
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        if (subtitle.isNotEmpty)
+                          Text(
+                            subtitle,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      openBuilder: (context, _) => const SizedBox.shrink(),
+    );
   }
 
   @override
