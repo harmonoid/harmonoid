@@ -753,13 +753,13 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
 
   @override
   Widget build(BuildContext context) {
-    final color = isMaterial2 && Theme.of(context).brightness == Brightness.light ? Theme.of(context).colorScheme.primary : Theme.of(context).textTheme.bodyLarge?.color;
     return InkWell(
       borderRadius: isMaterial2 ? BorderRadius.circular(4.0) : BorderRadius.circular(20.0),
       onTap: () async {
         await showModalBottomSheet(
-          isScrollControlled: true,
           context: context,
+          showDragHandle: true,
+          isScrollControlled: true,
           elevation: kDefaultHeavyElevation,
           builder: (context) => StatefulBuilder(
             builder: (context, setState) {
@@ -791,13 +791,13 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
                 fontWeight: FontWeight.w700,
                 fontFamily: Icons.arrow_downward.fontFamily,
                 package: Icons.arrow_downward.fontPackage,
-                color: color,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
             const SizedBox(width: 10.0),
             Text(
               label((sort.firstWhere((e) => e.checked).child as Text).data.toString()),
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(color: color),
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
             ),
             const SizedBox(width: 4.0),
           ],
@@ -827,18 +827,15 @@ class MobileMediaLibrarySortButtonPopupMenuItem<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PopupMenuItem(
-      padding: padding,
-      child: ListTile(
-        onTap: onTap,
-        leading: AnimatedOpacity(
-          opacity: checked ? 1.0 : 0.0,
-          curve: Curves.easeInOut,
-          duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
-          child: const Icon(Icons.done),
-        ),
-        title: child,
+    return ListTile(
+      onTap: onTap,
+      leading: AnimatedOpacity(
+        opacity: checked ? 1.0 : 0.0,
+        curve: Curves.easeInOut,
+        duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
+        child: const Icon(Icons.done),
       ),
+      title: child,
     );
   }
 }
@@ -1032,56 +1029,50 @@ class HyperLinkState extends State<HyperLink> {
 
 // --------------------------------------------------
 
-class MobileNavigationBar extends StatefulWidget {
-  final ValueNotifier<TabRoute> tabRouteNotifier;
-  const MobileNavigationBar({super.key, required this.tabRouteNotifier});
-
-  @override
-  State<MobileNavigationBar> createState() => MobileNavigationBarState();
-}
-
-class MobileNavigationBarState extends State<MobileNavigationBar> {
-  late int _tab;
-
-  @override
-  void initState() {
-    super.initState();
-    _tab = widget.tabRouteNotifier.value.tab;
-    widget.tabRouteNotifier.addListener(onChange);
-  }
-
-  @override
-  void dispose() {
-    widget.tabRouteNotifier.removeListener(onChange);
-    super.dispose();
-  }
-
-  void onChange() {
-    if (_tab != widget.tabRouteNotifier.value.tab) {
-      setState(() => _tab = widget.tabRouteNotifier.value.tab);
-    }
-  }
+class MobileNavigationBar extends StatelessWidget {
+  const MobileNavigationBar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final path = GoRouterState.of(context).uri.pathSegments.last;
+    final paths = [
+      kAlbumsPath,
+      kTracksPath,
+      kArtistsPath,
+      kGenresPath,
+      kPlaylistsPath,
+    ];
+    final index = paths.indexOf(path);
+
     return isMaterial3
         ? NavigationBar(
+            selectedIndex: index,
+            onDestinationSelected: (i) {
+              if (index == i) return;
+              context.push('/$kMediaLibraryPath/${paths[i]}');
+              Configuration.instance.set(mediaLibraryPath: paths[i]);
+              MobileNowPlayingNotifier.instance.restore();
+            },
             destinations: [
               NavigationDestination(
                 icon: const Icon(Icons.album),
-                label: Language.instance.ALBUM,
+                label: Language.instance.ALBUMS,
               ),
               NavigationDestination(
                 icon: const Icon(Icons.music_note),
-                label: Language.instance.TRACK,
+                label: Language.instance.TRACKS,
               ),
               NavigationDestination(
                 icon: const Icon(Icons.person),
-                label: Language.instance.ARTIST,
+                label: Language.instance.ARTISTS,
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.piano),
+                label: Language.instance.GENRES,
               ),
               NavigationDestination(
                 icon: const Icon(Icons.playlist_play),
-                label: Language.instance.PLAYLIST,
+                label: Language.instance.PLAYLISTS,
               ),
             ],
           )
@@ -1100,38 +1091,40 @@ class MobileNavigationBarState extends State<MobileNavigationBar> {
                   ],
                 ),
                 child: BottomNavigationBar(
-                  currentIndex: _tab,
+                  currentIndex: index,
                   selectedItemColor: (color?.computeLuminance() ?? 0.0) < 0.5 ? null : Colors.black87,
                   unselectedItemColor: (color?.computeLuminance() ?? 0.0) < 0.5 ? null : Colors.black45,
                   type: BottomNavigationBarType.shifting,
-                  onTap: (tab) {
+                  onTap: (i) {
+                    if (index == i) return;
+                    context.push('/$kMediaLibraryPath/${paths[i]}');
+                    Configuration.instance.set(mediaLibraryPath: paths[i]);
                     MobileNowPlayingNotifier.instance.restore();
-                    if (tab != _tab) {
-                      widget.tabRouteNotifier.value = TabRoute(tab, TabRouteSender.bottomNavigationBar);
-                    }
-                    setState(() {
-                      _tab = tab;
-                    });
                   },
                   items: [
                     BottomNavigationBarItem(
                       icon: const Icon(Icons.album),
-                      label: Language.instance.ALBUM,
+                      label: Language.instance.ALBUMS,
                       backgroundColor: color ?? Theme.of(context).colorScheme.primary,
                     ),
                     BottomNavigationBarItem(
                       icon: const Icon(Icons.music_note),
-                      label: Language.instance.TRACK,
+                      label: Language.instance.TRACKS,
                       backgroundColor: color ?? Theme.of(context).colorScheme.primary,
                     ),
                     BottomNavigationBarItem(
                       icon: const Icon(Icons.person),
-                      label: Language.instance.ARTIST,
+                      label: Language.instance.ARTISTS,
+                      backgroundColor: color ?? Theme.of(context).colorScheme.primary,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: const Icon(Icons.piano),
+                      label: Language.instance.GENRES,
                       backgroundColor: color ?? Theme.of(context).colorScheme.primary,
                     ),
                     BottomNavigationBarItem(
                       icon: const Icon(Icons.playlist_play),
-                      label: Language.instance.PLAYLIST,
+                      label: Language.instance.PLAYLISTS,
                       backgroundColor: color ?? Theme.of(context).colorScheme.primary,
                     ),
                   ],
@@ -1655,10 +1648,10 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
       onPressed: () async {
         Completer<int> completer = Completer<int>();
         await showModalBottomSheet(
-          isScrollControlled: true,
           context: context,
+          showDragHandle: true,
+          isScrollControlled: true,
           elevation: kDefaultHeavyElevation,
-          useRootNavigator: false,
           builder: (context) => Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -1757,8 +1750,9 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                           String input = '';
                           final GlobalKey<FormState> formKey = GlobalKey<FormState>();
                           await showModalBottomSheet(
-                            isScrollControlled: true,
                             context: context,
+                            showDragHandle: true,
+                            isScrollControlled: true,
                             elevation: kDefaultHeavyElevation,
                             useRootNavigator: true,
                             builder: (context) => StatefulBuilder(

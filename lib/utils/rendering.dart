@@ -62,6 +62,13 @@ double get navigationBarHeight => isMaterial3 ? 80.0 : kBottomNavigationBarHeigh
 String label(String value) => isMaterial2 ? value.toUpperCase() : value;
 
 ImageProvider cover({MediaLibraryItem? item, String? uri, int? cacheWidth, int? cacheHeight}) {
+  if (cacheWidth != null) {
+    cacheWidth *= 2;
+  }
+  if (cacheHeight != null) {
+    cacheHeight *= 2;
+  }
+
   final Future<File?> file;
   if (item != null) {
     file = MediaLibrary.instance.coverForMediaLibraryItem(item, fallback: Configuration.instance.mediaLibraryCoverFallback);
