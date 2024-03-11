@@ -1,17 +1,15 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/mappers/track.dart';
-import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
-class TrackItem extends StatefulWidget {
+class TrackItem extends StatelessWidget {
   final Track track;
   final double width;
   final double height;
@@ -24,37 +22,18 @@ class TrackItem extends StatefulWidget {
     this.onTap,
   });
 
-  @override
-  State<TrackItem> createState() => TrackItemState();
-}
-
-class TrackItemState extends State<TrackItem> {
-  bool _reactToSecondaryPress = false;
-
   Widget _buildDesktopLayout(BuildContext context) {
-    return Listener(
-      onPointerDown: (e) {
-        _reactToSecondaryPress = e.kind == PointerDeviceKind.mouse && e.buttons == kSecondaryMouseButton;
-      },
-      onPointerUp: (e) async {
-        if (!_reactToSecondaryPress) {
-          return;
-        }
-        final path = GoRouterState.of(context).uri.pathSegments.last;
+    return ContextMenuListener(
+      onSecondaryPress: (position) async {
         final result = await showMaterialMenu(
           context: context,
           constraints: const BoxConstraints(
             maxWidth: double.infinity,
           ),
-          position: RelativeRect.fromLTRB(
-            e.position.dx,
-            e.position.dy - (path != kSearchPath ? 0.0 : captionHeight + kDesktopAppBarHeight),
-            MediaQuery.of(context).size.width,
-            MediaQuery.of(context).size.height,
-          ),
-          items: trackPopupMenuItems(context, widget.track),
+          position: position,
+          items: trackPopupMenuItems(context, track),
         );
-        await trackPopupMenuHandle(context, widget.track, result);
+        await trackPopupMenuHandle(context, track, result);
       },
       child: SizedBox(
         height: kDesktopTrackTileHeight,
@@ -63,9 +42,9 @@ class TrackItemState extends State<TrackItem> {
           children: [
             Positioned.fill(
               child: InkWell(
-                onTap: widget.onTap ??
+                onTap: onTap ??
                     () {
-                      MediaPlayer.instance.open([widget.track.toPlayable()]);
+                      MediaPlayer.instance.open([track.toPlayable()]);
                     },
               ),
             ),
@@ -86,7 +65,7 @@ class TrackItemState extends State<TrackItem> {
                         width: kDesktopTrackTileHeight + 8.0,
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text(
-                          widget.track.trackNumber == 0 ? '1' : widget.track.trackNumber.toString(),
+                          track.trackNumber == 0 ? '1' : track.trackNumber.toString(),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.bodyLarge,
@@ -100,7 +79,7 @@ class TrackItemState extends State<TrackItem> {
                           width: kDesktopTrackTileHeight,
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(
-                            widget.track.title,
+                            track.title,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.bodyLarge,
@@ -117,7 +96,7 @@ class TrackItemState extends State<TrackItem> {
                           child: HyperLink(
                             text: TextSpan(
                               children: [
-                                for (final artist in (widget.track.artists.isEmpty ? {kDefaultArtist} : widget.track.artists)) ...[
+                                for (final artist in (track.artists.isEmpty ? {kDefaultArtist} : track.artists)) ...[
                                   TextSpan(
                                     text: artist,
                                     recognizer: TapGestureRecognizer()
@@ -146,7 +125,7 @@ class TrackItemState extends State<TrackItem> {
                             text: TextSpan(
                               children: [
                                 TextSpan(
-                                  text: widget.track.album.isEmpty ? kDefaultAlbum : widget.track.album,
+                                  text: track.album.isEmpty ? kDefaultAlbum : track.album,
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       // TODO:
@@ -168,7 +147,7 @@ class TrackItemState extends State<TrackItem> {
                           child: HyperLink(
                             text: TextSpan(
                               children: [
-                                for (final genre in (widget.track.genres.isEmpty ? {kDefaultGenre} : widget.track.genres)) ...[
+                                for (final genre in (track.genres.isEmpty ? {kDefaultGenre} : track.genres)) ...[
                                   TextSpan(
                                     text: genre,
                                     recognizer: TapGestureRecognizer()
@@ -194,7 +173,7 @@ class TrackItemState extends State<TrackItem> {
                           width: kDesktopTrackTileHeight,
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(
-                            widget.track.year == 0 ? kDefaultYear : widget.track.year.toString(),
+                            track.year == 0 ? kDefaultYear : track.year.toString(),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.bodyLarge,

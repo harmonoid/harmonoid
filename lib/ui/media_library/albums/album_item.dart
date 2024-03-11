@@ -1,3 +1,4 @@
+import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
@@ -25,62 +26,75 @@ class AlbumItem extends StatelessWidget {
   Widget _buildDesktopLayout(BuildContext context) {
     return Hero(
       tag: album,
-      child: Card(
-        margin: EdgeInsets.zero,
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: () {
-            // TODO:
-          },
-          child: SizedBox(
-            width: width,
-            height: height,
-            child: Column(
-              children: [
-                SizedBox(
-                  width: width,
-                  height: width,
-                  child: ScaleOnHover(
-                    child: Ink.image(
-                      width: width,
-                      height: width,
-                      fit: BoxFit.cover,
-                      image: cover(
-                        item: album,
-                        cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
+      child: ContextMenuListener(
+        onSecondaryPress: (position) async {
+          final result = await showMaterialMenu(
+            context: context,
+            constraints: const BoxConstraints(
+              maxWidth: double.infinity,
+            ),
+            position: position,
+            items: albumPopupMenuItems(context, album),
+          );
+          await albumPopupMenuHandle(context, album, result);
+        },
+        child: Card(
+          margin: EdgeInsets.zero,
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: () {
+              // TODO:
+            },
+            child: SizedBox(
+              width: width,
+              height: height,
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: width,
+                    height: width,
+                    child: ScaleOnHover(
+                      child: Ink.image(
+                        width: width,
+                        height: width,
+                        fit: BoxFit.cover,
+                        image: cover(
+                          item: album,
+                          cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Container(
-                    width: width,
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (title.isNotEmpty)
-                          Text(
-                            title,
-                            style: Theme.of(context).textTheme.titleSmall,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        if (subtitle.isNotEmpty)
-                          Text(
-                            subtitle,
-                            style: Theme.of(context).textTheme.bodySmall,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                      ],
+                  Expanded(
+                    child: Container(
+                      width: width,
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (title.isNotEmpty)
+                            Text(
+                              title,
+                              style: Theme.of(context).textTheme.titleSmall,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          if (subtitle.isNotEmpty)
+                            Text(
+                              subtitle,
+                              style: Theme.of(context).textTheme.bodySmall,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
