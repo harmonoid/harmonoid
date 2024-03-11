@@ -2,7 +2,6 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:harmonoid/ui/media_library/search/search_items_screen.dart';
 import 'package:media_library/media_library.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
@@ -10,6 +9,8 @@ import 'package:harmonoid/ui/media_library/albums/albums_screen.dart';
 import 'package:harmonoid/ui/media_library/artists/artists_screen.dart';
 import 'package:harmonoid/ui/media_library/genres/genres_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_screen.dart';
+import 'package:harmonoid/ui/media_library/playlists/playlists_screen.dart';
+import 'package:harmonoid/ui/media_library/search/search_items_screen.dart';
 import 'package:harmonoid/ui/media_library/search/search_screen.dart';
 import 'package:harmonoid/ui/media_library/tracks/tracks_screen.dart';
 
@@ -111,8 +112,12 @@ final router = GoRouter(
             ),
             GoRoute(
               path: kPlaylistsPath,
-              builder: (context, state) {
-                return const SizedBox();
+              pageBuilder: (context, state) {
+                return buildPageWithMediaLibraryTransition(
+                  context: context,
+                  state: state,
+                  child: const PlaylistsScreen(),
+                );
               },
             ),
             GoRoute(

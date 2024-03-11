@@ -78,6 +78,7 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
       // Look for updates from the file-system if the media library is empty.
       await instance.refresh();
     }
+    await instance.playlists.refresh();
   }
 
   /// Invoked for performing the delete operation on Android.

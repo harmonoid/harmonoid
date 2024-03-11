@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/extensions/media_library.dart';
 import 'package:harmonoid/ui/media_library/media_library_no_items_banner.dart';
@@ -140,6 +141,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                           borderRadius: BorderRadius.circular(4.0),
                                           onTap: () {
                                             context.go('/$kMediaLibraryPath/${e.key}');
+                                            Configuration.instance.set(mediaLibraryPath: e.key);
                                           },
                                           child: Container(
                                             height: kDesktopAppBarHeight - 20.0,

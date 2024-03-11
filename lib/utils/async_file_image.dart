@@ -80,7 +80,7 @@ class AsyncFileImage extends ImageProvider<AsyncFileImage> {
       PaintingBinding.instance.imageCache.evict(key);
       throw StateError('$_key is empty and cannot be loaded as an image.');
     }
-    return (instance.runtimeType == File) ? decode(await ui.ImmutableBuffer.fromFilePath(instance.path)) : decode(await ui.ImmutableBuffer.fromUint8List((await instance.readAsBytes_())!));
+    return decode(await ui.ImmutableBuffer.fromFilePath(instance.path));
   }
 
   Future<T?> _resolve<T>(FutureOr<T?> future) async {

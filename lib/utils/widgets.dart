@@ -871,6 +871,45 @@ class ScaleOnHoverState extends State<ScaleOnHover> {
 
 // --------------------------------------------------
 
+class ContextMenuListener extends StatefulWidget {
+  final Widget child;
+  final void Function(RelativeRect position) onSecondaryPress;
+  const ContextMenuListener({super.key, required this.child, required this.onSecondaryPress});
+
+  @override
+  State<ContextMenuListener> createState() => ContextMenuListenerState();
+}
+
+class ContextMenuListenerState extends State<ContextMenuListener> {
+  bool _reactToSecondaryPress = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Listener(
+      onPointerDown: (e) {
+        _reactToSecondaryPress = e.kind == PointerDeviceKind.mouse && e.buttons == kSecondaryMouseButton;
+      },
+      onPointerUp: (e) async {
+        if (!_reactToSecondaryPress) {
+          return;
+        }
+        final path = GoRouterState.of(context).uri.pathSegments.last;
+        widget.onSecondaryPress(
+          RelativeRect.fromLTRB(
+            e.position.dx,
+            e.position.dy - (![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath, kSearchPath].contains(path) ? 0.0 : captionHeight + kDesktopAppBarHeight),
+            MediaQuery.of(context).size.width,
+            MediaQuery.of(context).size.height,
+          ),
+        );
+      },
+      child: widget.child,
+    );
+  }
+}
+
+// --------------------------------------------------
+
 class SubHeader extends StatelessWidget {
   final String text;
   final EdgeInsets? padding;

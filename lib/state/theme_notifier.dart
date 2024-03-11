@@ -46,32 +46,32 @@ class ThemeNotifier extends ChangeNotifier {
     ColorScheme? systemDarkColorScheme;
     Color? systemLightColor;
     Color? systemDarkColor;
-    // await () async {
-    //   try {
-    //     final corePalette = await DynamicColorPlugin.getCorePalette();
-    //     if (corePalette != null) {
-    //       systemLightColorScheme = corePalette.toColorScheme(brightness: Brightness.light);
-    //       systemDarkColorScheme = corePalette.toColorScheme(brightness: Brightness.dark);
-    //     }
-    //     return;
-    //   } catch (exception, stacktrace) {
-    //     debugPrint(exception.toString());
-    //     debugPrint(stacktrace.toString());
-    //   }
-    //   try {
-    //     final accentColor = await DynamicColorPlugin.getAccentColor();
-    //     if (accentColor != null) {
-    //       systemLightColorScheme = ColorScheme.fromSeed(seedColor: accentColor, brightness: Brightness.light);
-    //       systemDarkColorScheme = ColorScheme.fromSeed(seedColor: accentColor, brightness: Brightness.dark);
-    //       systemLightColor = systemLightColorScheme?.primary;
-    //       systemDarkColor = systemDarkColorScheme?.primary;
-    //       return;
-    //     }
-    //   } catch (exception, stacktrace) {
-    //     debugPrint(exception.toString());
-    //     debugPrint(stacktrace.toString());
-    //   }
-    // }();
+    await () async {
+      try {
+        final corePalette = await DynamicColorPlugin.getCorePalette();
+        if (corePalette != null) {
+          systemLightColorScheme = corePalette.toColorScheme(brightness: Brightness.light);
+          systemDarkColorScheme = corePalette.toColorScheme(brightness: Brightness.dark);
+        }
+        return;
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+      try {
+        final accentColor = await DynamicColorPlugin.getAccentColor();
+        if (accentColor != null) {
+          systemLightColorScheme = ColorScheme.fromSeed(seedColor: accentColor, brightness: Brightness.light);
+          systemDarkColorScheme = ColorScheme.fromSeed(seedColor: accentColor, brightness: Brightness.dark);
+          systemLightColor = systemLightColorScheme?.primary;
+          systemDarkColor = systemDarkColorScheme?.primary;
+          return;
+        }
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+    }();
 
     instance = ThemeNotifier._(
       themeMode: themeMode,

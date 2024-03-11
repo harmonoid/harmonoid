@@ -18,6 +18,7 @@ import 'package:harmonoid/extensions/track.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/mobile_now_playing_notifier.dart';
+import 'package:harmonoid/ui/media_library/playlists/playlist_item.dart';
 // import 'package:harmonoid/ui/media_library/playlist.dart';
 // import 'package:harmonoid/ui/directory_picker_screen.dart';
 // import 'package:harmonoid/ui/edit_details_screen.dart';
@@ -61,8 +62,6 @@ double get navigationBarHeight => isMaterial3 ? 80.0 : kBottomNavigationBarHeigh
 String label(String value) => isMaterial2 ? value.toUpperCase() : value;
 
 ImageProvider cover({MediaLibraryItem? item, String? uri, int? cacheWidth, int? cacheHeight}) {
-  final key = '${item.runtimeType}-${item.hashCode}';
-
   final Future<File?> file;
   if (item != null) {
     file = MediaLibrary.instance.coverForMediaLibraryItem(item, fallback: Configuration.instance.mediaLibraryCoverFallback);
@@ -71,6 +70,8 @@ ImageProvider cover({MediaLibraryItem? item, String? uri, int? cacheWidth, int? 
   } else {
     throw ArgumentError('Both item & uri are null.');
   }
+
+  final key = item != null ? '${item.runtimeType}-${item.hashCode}' : '$uri';
 
   final result = AsyncFileImage.cache[key];
 
@@ -496,19 +497,20 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Divider(height: 1.0),
-              // Expanded(
-              //   child: ListView.builder(
-              //     shrinkWrap: true,
-              //     itemCount: playlists.length,
-              //     itemBuilder: (context, i) => PlaylistTile(
-              //       playlist: playlists[i],
-              //       onTap: () async {
-              //         await MediaLibrary.instance.playlists.createEntry(playlists[i], track.uri, track.playlistEntryTitle);
-              //         Navigator.of(subContext).pop();
-              //       },
-              //     ),
-              //   ),
-              // ),
+              Expanded(
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: playlists.length,
+                  itemBuilder: (context, i) => PlaylistItem(
+                    playlist: playlists[i],
+                    onTap: () async {
+                      await MediaLibrary.instance.playlists.createEntry(playlists[i], track.uri, track.playlistEntryTitle);
+                      Navigator.of(subContext).pop();
+                    },
+                  ),
+                  separatorBuilder: (context, i) => const Divider(height: 1.0),
+                ),
+              ),
               const Divider(height: 1.0),
             ],
           ),
