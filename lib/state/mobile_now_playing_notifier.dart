@@ -13,12 +13,10 @@ import 'package:harmonoid/extensions/media_player_state.dart';
 /// {@endtemplate}
 class MobileNowPlayingNotifier {
   /// Singleton instance.
-  static late MobileNowPlayingNotifier instance;
+  static final MobileNowPlayingNotifier instance = MobileNowPlayingNotifier._();
 
   /// {@macro desktop_now_playing_notifier}
-  MobileNowPlayingNotifier() {
-    instance = this;
-  }
+  MobileNowPlayingNotifier._();
 
   /// [GlobalKey] to access now playing bar.
   // final GlobalKey<MobileNowPlayingBarState> key;
@@ -26,7 +24,7 @@ class MobileNowPlayingNotifier {
   /// Offset for the bottom navigation bar & floating action button.
   final ValueNotifier<double> bottomNavigationBarOffset = ValueNotifier<double>(0.0);
 
-  bool get restored =>  true;
+  bool get restored => false;
 
   void show() {
     if (MediaPlayer.instance.state.isEmpty) return;

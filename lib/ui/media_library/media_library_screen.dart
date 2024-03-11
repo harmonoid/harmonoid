@@ -246,7 +246,24 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
   }
 
   Widget _buildMobileLayout(BuildContext context) {
-    throw UnimplementedError();
+    return Consumer<MediaLibrary>(
+      builder: (context, mediaLibrary, _) {
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: Stack(
+            children: [
+              widget.child,
+              const Positioned(
+                right: 16.0,
+                bottom: 16.0,
+                child: MediaLibraryRefreshButton(),
+              ),
+            ],
+          ),
+          bottomNavigationBar: const MobileNavigationBar(),
+        );
+      },
+    );
   }
 
   @override

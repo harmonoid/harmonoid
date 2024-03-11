@@ -11,10 +11,13 @@ import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/extensions/track.dart';
 import 'package:harmonoid/mappers/track.dart';
+import 'package:harmonoid/ui/media_library/tracks/track_item.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/debouncer.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/scroll_view_builder_helper.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
 class TracksScreen extends StatefulWidget {
@@ -34,9 +37,48 @@ class TracksScreenState extends State<TracksScreen> {
       throw UnimplementedError();
     }
     if (isMobile) {
-      throw UnimplementedError();
+      return const MobileTrackScreen();
     }
     throw UnimplementedError();
+  }
+}
+
+class MobileTrackScreen extends StatelessWidget {
+  const MobileTrackScreen({super.key});
+
+  double get headerHeight => kMobileHeaderHeight;
+
+  Widget headerBuilder(BuildContext context, int i, double h) => const MobileMediaLibraryHeader(key: ValueKey(''));
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Consumer<MediaLibrary>(
+        builder: (context, mediaLibrary, _) {
+          final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.track;
+
+          return ScrollViewBuilder(
+            margin: margin,
+            span: scrollViewBuilderHelperData.span,
+            headerCount: 1,
+            headerBuilder: headerBuilder,
+            headerHeight: headerHeight,
+            itemCounts: [mediaLibrary.tracks.length],
+            itemBuilder: (context, i, j, w, h) => TrackItem(
+              key: mediaLibrary.tracks[j].scrollViewBuilderKey,
+              track: mediaLibrary.tracks[j],
+              width: w,
+              height: h,
+            ),
+            labelConstraints: scrollViewBuilderHelperData.labelConstraints,
+            labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
+            itemWidth: scrollViewBuilderHelperData.itemWidth,
+            itemHeight: scrollViewBuilderHelperData.itemHeight,
+          );
+        },
+      ),
+    );
   }
 }
 

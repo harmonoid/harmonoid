@@ -12,7 +12,7 @@ import 'package:harmonoid/utils/android_storage_controller.dart';
 ///
 /// MediaLibrary
 /// ------------
-/// Application's media library to cache, index, manage & retrieve album artists, albums, artists, genres, tracks & playlists.
+/// Implementation to cache, index, manage & retrieve album artists, albums, artists, genres, tracks & playlists.
 ///
 /// {@endtemplate}
 class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
