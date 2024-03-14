@@ -29,6 +29,34 @@ class AlbumItem extends StatelessWidget {
     if (album.year != 0) album.year.toString(),
   ].join(' • ');
 
+  Future<void> navigate(BuildContext context) async {
+    final tracks = await MediaLibrary.instance.tracksFromAlbum(album);
+
+    List<Color>? palette;
+    if (isMaterial2) {
+      final result = await PaletteGenerator.fromImageProvider(
+        cover(
+          item: album,
+          cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
+        ),
+      );
+      palette = result.colors?.toList();
+    }
+
+    await precacheImage(cover(item: album), context);
+
+    await Future.delayed(const Duration(milliseconds: 200));
+
+    await context.push(
+      '/$kMediaLibraryPath/$kAlbumPath',
+      extra: AlbumPathExtra(
+        album: album,
+        tracks: tracks,
+        palette: palette,
+      ),
+    );
+  }
+
   Widget _buildDesktopLayout(BuildContext context) {
     return ContextMenuListener(
       onSecondaryPress: (position) async {
@@ -47,31 +75,7 @@ class AlbumItem extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: () async {
-            final tracks = await MediaLibrary.instance.tracksFromAlbum(album);
-
-            List<Color>? palette;
-            if (isMaterial2) {
-              final result = await PaletteGenerator.fromImageProvider(
-                cover(
-                  item: album,
-                  cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
-                ),
-              );
-              palette = result.colors?.toList();
-            }
-
-            await precacheImage(cover(item: album), context);
-
-            await Future.delayed(const Duration(milliseconds: 200));
-
-            await context.push(
-              '/$kMediaLibraryPath/$kAlbumPath',
-              extra: AlbumPathExtra(
-                album: album,
-                tracks: tracks,
-                palette: palette,
-              ),
-            );
+            navigate(context);
           },
           child: SizedBox(
             width: width,
@@ -167,32 +171,8 @@ class AlbumItem extends StatelessWidget {
       return SizedBox(
         height: height,
         child: InkWell(
-          onTap: () async {
-            final tracks = await MediaLibrary.instance.tracksFromAlbum(album);
-
-            List<Color>? palette;
-            if (isMaterial2) {
-              final result = await PaletteGenerator.fromImageProvider(
-                cover(
-                  item: album,
-                  cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
-                ),
-              );
-              palette = result.colors?.toList();
-            }
-
-            await precacheImage(cover(item: album), context);
-
-            await Future.delayed(const Duration(milliseconds: 200));
-
-            await context.push(
-              '/$kMediaLibraryPath/$kAlbumPath',
-              extra: AlbumPathExtra(
-                album: album,
-                tracks: tracks,
-                palette: palette,
-              ),
-            );
+          onTap: () {
+            navigate(context);
           },
           onLongPress: onLongPress,
           child: Column(

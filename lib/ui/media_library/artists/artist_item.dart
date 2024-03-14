@@ -1,6 +1,11 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/ui/media_library/artists/artist_screen.dart';
+import 'package:harmonoid/ui/router.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
 import 'package:harmonoid/utils/constants.dart';
@@ -19,6 +24,34 @@ class ArtistItem extends StatelessWidget {
   });
 
   late final title = artist.artist.isNotEmpty ? artist.artist : kDefaultArtist;
+
+  Future<void> navigate(BuildContext context) async {
+    final tracks = await MediaLibrary.instance.tracksFromArtist(artist);
+
+    List<Color>? palette;
+    if (isMaterial2) {
+      final result = await PaletteGenerator.fromImageProvider(
+        cover(
+          item: artist,
+          cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
+        ),
+      );
+      palette = result.colors?.toList();
+    }
+
+    await precacheImage(cover(item: artist), context);
+
+    await Future.delayed(const Duration(milliseconds: 200));
+
+    await context.push(
+      '/$kMediaLibraryPath/$kArtistPath',
+      extra: ArtistPathExtra(
+        artist: artist,
+        tracks: tracks,
+        palette: palette,
+      ),
+    );
+  }
 
   Widget _buildDesktopLayout(BuildContext context) {
     return SizedBox(
@@ -40,7 +73,7 @@ class ArtistItem extends StatelessWidget {
                   child: Material(
                     child: InkWell(
                       onTap: () {
-                        // TODO:
+                        navigate(context);
                       },
                       child: ScaleOnHover(
                         child: Ink.image(
@@ -86,7 +119,7 @@ class ArtistItem extends StatelessWidget {
         height: height,
         child: InkWell(
           onTap: () {
-            // TODO:
+            navigate(context);
           },
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -125,50 +158,73 @@ class ArtistItem extends StatelessWidget {
         ),
       );
     }
+
+    List<Track>? tracks;
+    List<Color>? palette;
+
     return SizedBox(
       width: width,
       height: height,
       child: Column(
         children: [
-          Hero(
-            tag: artist,
-            child: OpenContainer(
-              transitionDuration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
-              closedColor: Theme.of(context).cardTheme.color ?? Colors.transparent,
-              closedShape: const CircleBorder(),
-              closedElevation: Theme.of(context).cardTheme.elevation ?? 0.0,
-              openElevation: Theme.of(context).cardTheme.elevation ?? 0.0,
-              closedBuilder: (context, action) {
-                return Stack(
-                  children: [
-                    Container(
-                      width: width,
-                      height: width,
-                      padding: const EdgeInsets.all(4.0),
-                      child: ClipOval(
-                        child: Image(
-                          width: width,
-                          height: width,
-                          fit: BoxFit.cover,
-                          image: cover(
-                            item: artist,
-                            cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
-                          ),
+          OpenContainer(
+            transitionDuration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+            closedColor: Theme.of(context).cardTheme.color ?? Colors.transparent,
+            closedShape: const CircleBorder(),
+            closedElevation: Theme.of(context).cardTheme.elevation ?? 0.0,
+            openElevation: Theme.of(context).cardTheme.elevation ?? 0.0,
+            closedBuilder: (context, action) {
+              return Stack(
+                children: [
+                  Container(
+                    width: width,
+                    height: width,
+                    padding: const EdgeInsets.all(4.0),
+                    child: ClipOval(
+                      child: Image(
+                        width: width,
+                        height: width,
+                        fit: BoxFit.cover,
+                        image: cover(
+                          item: artist,
+                          cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
                         ),
                       ),
                     ),
-                    Positioned.fill(
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: action,
-                        ),
+                  ),
+                  Positioned.fill(
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () async {
+                          tracks = await MediaLibrary.instance.tracksFromArtist(artist);
+
+                          if (isMaterial2) {
+                            final result = await PaletteGenerator.fromImageProvider(
+                              cover(
+                                item: artist,
+                                cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
+                              ),
+                            );
+                            palette = result.colors?.toList();
+                          }
+
+                          await precacheImage(cover(item: artist), context);
+
+                          await Future.delayed(const Duration(milliseconds: 200));
+
+                          action();
+                        },
                       ),
                     ),
-                  ],
-                );
-              },
-              openBuilder: (context, action) => const SizedBox.shrink(),
+                  ),
+                ],
+              );
+            },
+            openBuilder: (context, _) => ArtistScreen(
+              artist: artist,
+              tracks: tracks!,
+              palette: palette,
             ),
           ),
           Expanded(
