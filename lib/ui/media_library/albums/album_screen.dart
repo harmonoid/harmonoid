@@ -155,6 +155,20 @@ class _AlbumScreenState extends State<AlbumScreen> {
         }
       },
       mergeHeroAndListItems: true,
+      actions: {
+        Icons.play_arrow: (_) => MediaPlayer.instance.open(_tracks.map((e) => e.toPlayable()).toList()),
+        Icons.shuffle: (_) => MediaPlayer.instance.open([..._tracks..shuffle()].map((e) => e.toPlayable()).toList()),
+        Icons.playlist_add: (_) => MediaPlayer.instance.add(_tracks.map((e) => e.toPlayable()).toList()),
+        Icons.delete: (_) {
+          albumPopupMenuHandle(context, widget.album, 2);
+        },
+      },
+      labels: {
+        Icons.play_arrow: Language.instance.PLAY,
+        Icons.shuffle: Language.instance.SHUFFLE,
+        Icons.playlist_add: Language.instance.ADD_TO_NOW_PLAYING,
+        Icons.delete: Language.instance.DELETE,
+      },
     );
   }
 }
