@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide ReorderableDragStartListener, Intent;
@@ -1042,7 +1043,14 @@ class MobileNavigationBar extends StatelessWidget {
       kPlaylistsPath,
     ];
     final index = paths.indexOf(path);
-
+    final displayLabels = {
+          Language.instance.ALBUMS,
+          Language.instance.TRACKS,
+          Language.instance.ARTISTS,
+          Language.instance.GENRES,
+          Language.instance.PLAYLISTS,
+        }.map((e) => e.length).max <=
+        10;
     return isMaterial3
         ? NavigationBar(
             selectedIndex: index,
@@ -1052,6 +1060,7 @@ class MobileNavigationBar extends StatelessWidget {
               Configuration.instance.set(mediaLibraryPath: paths[i]);
               MobileNowPlayingNotifier.instance.restore();
             },
+            labelBehavior: displayLabels ? NavigationDestinationLabelBehavior.alwaysShow : NavigationDestinationLabelBehavior.alwaysHide,
             destinations: [
               NavigationDestination(
                 icon: const Icon(Icons.album),
@@ -1103,27 +1112,27 @@ class MobileNavigationBar extends StatelessWidget {
                   items: [
                     BottomNavigationBarItem(
                       icon: const Icon(Icons.album),
-                      label: Language.instance.ALBUMS,
+                      label: displayLabels ? Language.instance.ALBUMS : null,
                       backgroundColor: color ?? Theme.of(context).colorScheme.primary,
                     ),
                     BottomNavigationBarItem(
                       icon: const Icon(Icons.music_note),
-                      label: Language.instance.TRACKS,
+                      label: displayLabels ? Language.instance.TRACKS : null,
                       backgroundColor: color ?? Theme.of(context).colorScheme.primary,
                     ),
                     BottomNavigationBarItem(
                       icon: const Icon(Icons.person),
-                      label: Language.instance.ARTISTS,
+                      label: displayLabels ? Language.instance.ARTISTS : null,
                       backgroundColor: color ?? Theme.of(context).colorScheme.primary,
                     ),
                     BottomNavigationBarItem(
                       icon: const Icon(Icons.piano),
-                      label: Language.instance.GENRES,
+                      label: displayLabels ? Language.instance.GENRES : null,
                       backgroundColor: color ?? Theme.of(context).colorScheme.primary,
                     ),
                     BottomNavigationBarItem(
                       icon: const Icon(Icons.playlist_play),
-                      label: Language.instance.PLAYLISTS,
+                      label: displayLabels ? Language.instance.PLAYLISTS : null,
                       backgroundColor: color ?? Theme.of(context).colorScheme.primary,
                     ),
                   ],

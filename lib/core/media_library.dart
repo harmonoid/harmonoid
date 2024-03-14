@@ -97,6 +97,16 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
   @override
   Future<bool> androidDeleteDelegate(List<Track> tracks) async => AndroidStorageController.instance.delete(tracks.map((track) => File(track.uri)).toList());
 
+  /// Removes specified [tracks] from the media library.
+  @override
+  Future<void> remove(List<Track> tracks, {bool delete = true}) async {
+    debugPrint('MediaLibrary: remove: Remove invoked: $_removeInvoked');
+    if (_removeInvoked) return;
+    _removeInvoked = true;
+    await super.remove(tracks, delete: delete);
+    _removeInvoked = false;
+  }
+
   /// Invoked for notifying about changes in the media library.
   @override
   Future<void> notify() async => notifyListeners();
@@ -125,4 +135,7 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
 
   /// Tag reader.
   final TagReader _tagReader = TagReader();
+
+  /// Whether [remove] has been invoked.
+  bool _removeInvoked = false;
 }
