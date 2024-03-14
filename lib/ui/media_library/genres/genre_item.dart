@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:harmonoid/ui/media_library/genres/constants.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
+import 'package:harmonoid/ui/media_library/genres/constants.dart';
 import 'package:harmonoid/utils/constants.dart';
 
 class GenreItem extends StatelessWidget {

@@ -32,6 +32,10 @@ bool get isMaterial3 => Theme.of(navigatorKey.currentContext!).extension<Materia
 
 bool get isMaterial2 => Theme.of(navigatorKey.currentContext!).extension<MaterialStandard>()?.value == 2;
 
+bool get isMaterial3OrGreater => (Theme.of(navigatorKey.currentContext!).extension<MaterialStandard>()?.value ?? 0) >= 3;
+
+bool get isMaterial2OrGreater => (Theme.of(navigatorKey.currentContext!).extension<MaterialStandard>()?.value ?? 0) >= 2;
+
 bool get isDesktop => Theme.of(navigatorKey.currentContext!).extension<LayoutVariantThemeExtension>()?.value == LayoutVariant.desktop;
 
 bool get isTablet => Theme.of(navigatorKey.currentContext!).extension<LayoutVariantThemeExtension>()?.value == LayoutVariant.tablet;
@@ -49,6 +53,39 @@ double get margin {
   throw UnimplementedError();
 }
 
+double get albumTileWidth {
+  if (isDesktop) {
+    return kDesktopAlbumTileWidth;
+  } else if (isTablet) {
+    throw UnimplementedError();
+  } else if (isMobile) {
+    return kMobileAlbumTileWidth;
+  }
+  throw UnimplementedError();
+}
+
+double get albumTileHeight {
+  if (isDesktop) {
+    return kDesktopAlbumTileHeight;
+  } else if (isTablet) {
+    throw UnimplementedError();
+  } else if (isMobile) {
+    return kMobileAlbumTileHeight;
+  }
+  throw UnimplementedError();
+}
+
+double get linearTileHeight {
+  if (isDesktop) {
+    return kDesktopLinearTileHeight;
+  } else if (isTablet) {
+    throw UnimplementedError();
+  } else if (isMobile) {
+    return kMobileLinearTileHeight;
+  }
+  throw UnimplementedError();
+}
+
 double get captionHeight {
   try {
     return WindowPlus.instance.captionHeight;
@@ -57,9 +94,20 @@ double get captionHeight {
   }
 }
 
+EdgeInsets get mediaLibraryScrollViewBuilderPadding {
+  if (isDesktop) {
+    return EdgeInsets.zero;
+  } else if (isTablet) {
+    throw UnimplementedError();
+  } else if (isMobile) {
+    return EdgeInsets.only(top: MediaQuery.of(navigatorKey.currentContext!).padding.top + margin + kMobileSearchBarHeight);
+  }
+  throw UnimplementedError();
+}
+
 double get navigationBarHeight => isMaterial3 ? 80.0 : kBottomNavigationBarHeight;
 
-String label(String value) => isMaterial2 ? value.toUpperCase() : value;
+String label(String value) => isMaterial3OrGreater ? value : value.toUpperCase();
 
 ImageProvider cover({MediaLibraryItem? item, String? uri, int? cacheWidth, int? cacheHeight}) {
   if (cacheWidth != null) {
@@ -306,7 +354,7 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
         context: context,
         builder: (ctx) => AlertDialog(
           title: Text(Language.instance.DELETE),
-          content: Text(Language.instance.TRACK_DELETE_DIALOG_SUBTITLE.replaceAll('NAME', track.title)),
+          content: Text(Language.instance.TRACK_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', track.title)),
           actions: [
             TextButton(
               onPressed: () async {
@@ -422,7 +470,7 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
         context: context,
         builder: (ctx) => AlertDialog(
           title: Text(Language.instance.DELETE),
-          content: Text(Language.instance.ALBUM_DELETE_DIALOG_SUBTITLE.replaceAll('NAME', album.album)),
+          content: Text(Language.instance.ALBUM_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', album.album)),
           actions: [
             TextButton(
               onPressed: () async {

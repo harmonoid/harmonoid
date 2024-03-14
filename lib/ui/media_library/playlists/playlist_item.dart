@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:harmonoid/ui/media_library/playlists/playlist_icon.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/ui/media_library/playlists/playlist_icon.dart';
 
 class PlaylistItem extends StatelessWidget {
   final Playlist playlist;

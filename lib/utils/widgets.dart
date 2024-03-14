@@ -9,7 +9,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:harmonoid/ui/router.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:provider/provider.dart';
 import 'package:uri_parser/uri_parser.dart';
@@ -524,8 +523,8 @@ class DesktopMediaLibraryRefreshIndicator extends StatelessWidget {
                           mediaLibrary.current == null
                               ? Language.instance.DISCOVERING_FILES
                               : Language.instance.ADDED_M_OF_N_FILES
-                                  .replaceAll('M', (mediaLibrary.current ?? 0).toString())
-                                  .replaceAll('N', (mediaLibrary.total == 0 ? 1 : mediaLibrary.total).toString()),
+                                  .replaceAll('"M"', (mediaLibrary.current ?? 0).toString())
+                                  .replaceAll('"N"', (mediaLibrary.total == 0 ? 1 : mediaLibrary.total).toString()),
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodyLarge,
@@ -560,13 +559,13 @@ class MobileMediaLibraryHeader extends StatelessWidget {
         children: [
           const SizedBox(width: 8.0),
           if (path == kAlbumsPath)
-            Text('${MediaLibrary.instance.albums.length} ${Language.instance.ALBUMS}')
+            Text(Language.instance.N_ALBUMS.replaceAll('"N"', MediaLibrary.instance.albums.length.toString()))
           else if (path == kTracksPath)
-            Text('${MediaLibrary.instance.tracks.length} ${Language.instance.TRACKS}')
+            Text(Language.instance.N_TRACKS.replaceAll('"N"', MediaLibrary.instance.tracks.length.toString()))
           else if (path == kArtistsPath)
-            Text('${MediaLibrary.instance.artists.length} ${Language.instance.ARTISTS}')
+            Text(Language.instance.N_ARTISTS.replaceAll('"N"', MediaLibrary.instance.artists.length.toString()))
           else if (path == kGenresPath)
-            Text('${MediaLibrary.instance.genres.length} ${Language.instance.GENRES}'),
+            Text(Language.instance.N_GENRES.replaceAll('"N"', MediaLibrary.instance.genres.length.toString())),
           const Spacer(),
           MobileMediaLibrarySortButton(path: path),
         ],
@@ -758,7 +757,7 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
       onTap: () async {
         await showModalBottomSheet(
           context: context,
-          showDragHandle: true,
+          showDragHandle: isMaterial3OrGreater,
           isScrollControlled: true,
           elevation: kDefaultHeavyElevation,
           builder: (context) => StatefulBuilder(
@@ -1640,16 +1639,13 @@ class MobileAppBarOverflowButton extends StatefulWidget {
 class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> {
   @override
   Widget build(BuildContext context) {
-    return CircularButton(
-      icon: Icon(
-        Icons.more_vert,
-        color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
-      ),
+    return IconButton(
+      icon: const Icon(Icons.more_vert),
       onPressed: () async {
         Completer<int> completer = Completer<int>();
         await showModalBottomSheet(
           context: context,
-          showDragHandle: true,
+          showDragHandle: isMaterial3OrGreater,
           isScrollControlled: true,
           elevation: kDefaultHeavyElevation,
           builder: (context) => Column(
@@ -1751,7 +1747,7 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                           final GlobalKey<FormState> formKey = GlobalKey<FormState>();
                           await showModalBottomSheet(
                             context: context,
-                            showDragHandle: true,
+                            showDragHandle: isMaterial3OrGreater,
                             isScrollControlled: true,
                             elevation: kDefaultHeavyElevation,
                             useRootNavigator: true,

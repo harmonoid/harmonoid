@@ -23,8 +23,8 @@ class ScrollViewBuilderHelper {
 
   ScrollViewBuilderHelperData get album {
     final span = isDesktop ? null : Configuration.instance.mobileAlbumGridSpan;
-    final itemWidth = span != 1 ? kAlbumTileWidth : double.infinity;
-    final itemHeight = span != 1 ? kAlbumTileHeight : kAlbumListTileHeight;
+    final itemWidth = span != 1 ? albumTileWidth : double.infinity;
+    final itemHeight = span != 1 ? albumTileHeight : linearTileHeight;
     final BoxConstraints labelConstraints;
     final TextStyle labelTextStyle;
     switch (Configuration.instance.mediaLibraryAlbumSortType) {
@@ -79,7 +79,7 @@ class ScrollViewBuilderHelper {
   ScrollViewBuilderHelperData get track {
     const span = 1;
     const itemWidth = double.infinity;
-    final itemHeight = isDesktop ? kDesktopTrackTileHeight : kMobileTrackTileHeight;
+    final itemHeight = linearTileHeight;
     final BoxConstraints labelConstraints;
     final TextStyle labelTextStyle;
     switch (Configuration.instance.mediaLibraryTrackSortType) {
@@ -125,7 +125,7 @@ class ScrollViewBuilderHelper {
   ScrollViewBuilderHelperData get artist {
     final span = isDesktop ? null : Configuration.instance.mobileArtistGridSpan;
     final itemWidth = span != 1 ? kArtistTileWidth : double.infinity;
-    final itemHeight = span != 1 ? kArtistTileHeight : kArtistListTileHeight;
+    final itemHeight = span != 1 ? kArtistTileHeight : linearTileHeight;
     final BoxConstraints labelConstraints;
     final TextStyle labelTextStyle;
     switch (Configuration.instance.mediaLibraryArtistSortType) {
@@ -162,7 +162,7 @@ class ScrollViewBuilderHelper {
   ScrollViewBuilderHelperData get genre {
     final span = isDesktop ? null : Configuration.instance.mobileGenreGridSpan;
     final itemWidth = span != 1 ? kGenreTileWidth : double.infinity;
-    final itemHeight = span != 1 ? kGenreTileHeight : kArtistListTileHeight;
+    final itemHeight = span != 1 ? kGenreTileHeight : linearTileHeight;
     final BoxConstraints labelConstraints;
     final TextStyle labelTextStyle;
     switch (Configuration.instance.mediaLibraryGenreSortType) {

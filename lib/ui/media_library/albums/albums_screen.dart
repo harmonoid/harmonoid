@@ -75,6 +75,7 @@ class AlbumsScreenState extends State<AlbumsScreen> {
             labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
             itemWidth: scrollViewBuilderHelperData.itemWidth,
             itemHeight: scrollViewBuilderHelperData.itemHeight,
+            padding: mediaLibraryScrollViewBuilderPadding,
           );
         },
       ),

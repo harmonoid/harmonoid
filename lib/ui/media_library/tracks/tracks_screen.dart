@@ -75,6 +75,7 @@ class MobileTrackScreen extends StatelessWidget {
             labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
             itemWidth: scrollViewBuilderHelperData.itemWidth,
             itemHeight: scrollViewBuilderHelperData.itemHeight,
+            padding: mediaLibraryScrollViewBuilderPadding,
           );
         },
       ),
@@ -108,12 +109,12 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _widthsNotifier.value[TracksDataSource.kTrackNumber] ??= kDesktopTrackTileHeight + 8.0;
-    _widthsNotifier.value[TracksDataSource.kTitle] ??= (MediaQuery.of(context).size.width - kDesktopTrackTileHeight - 8.0) * 5 / 17;
-    _widthsNotifier.value[TracksDataSource.kArtists] ??= (MediaQuery.of(context).size.width - kDesktopTrackTileHeight - 8.0) * 4 / 17;
-    _widthsNotifier.value[TracksDataSource.kAlbum] ??= (MediaQuery.of(context).size.width - kDesktopTrackTileHeight - 8.0) * 3 / 17;
-    _widthsNotifier.value[TracksDataSource.kAlbum] ??= (MediaQuery.of(context).size.width - kDesktopTrackTileHeight - 8.0) * 3 / 17;
-    _widthsNotifier.value[TracksDataSource.kYear] ??= (MediaQuery.of(context).size.width - kDesktopTrackTileHeight - 8.0) * 2 / 17;
+    _widthsNotifier.value[TracksDataSource.kTrackNumber] ??= linearTileHeight + 8.0;
+    _widthsNotifier.value[TracksDataSource.kTitle] ??= (MediaQuery.of(context).size.width - linearTileHeight - 8.0) * 5 / 17;
+    _widthsNotifier.value[TracksDataSource.kArtists] ??= (MediaQuery.of(context).size.width - linearTileHeight - 8.0) * 4 / 17;
+    _widthsNotifier.value[TracksDataSource.kAlbum] ??= (MediaQuery.of(context).size.width - linearTileHeight - 8.0) * 3 / 17;
+    _widthsNotifier.value[TracksDataSource.kAlbum] ??= (MediaQuery.of(context).size.width - linearTileHeight - 8.0) * 3 / 17;
+    _widthsNotifier.value[TracksDataSource.kYear] ??= (MediaQuery.of(context).size.width - linearTileHeight - 8.0) * 2 / 17;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -139,7 +140,7 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
                       gridLineStrokeWidth: 1.0,
                     ),
                     child: SfDataGrid(
-                      rowHeight: kDesktopTrackTileHeight,
+                      rowHeight: linearTileHeight,
                       headerRowHeight: kDesktopHeaderHeight,
                       allowColumnsResizing: true,
                       columnWidthMode: ColumnWidthMode.none,
@@ -193,7 +194,7 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
                           columnName: TracksDataSource.kTrackNumber,
                           width: widths[TracksDataSource.kTrackNumber]!,
                           columnWidthMode: ColumnWidthMode.none,
-                          minimumWidth: kDesktopTrackTileHeight,
+                          minimumWidth: linearTileHeight,
                           label: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8.0),
                             alignment: Alignment.center,

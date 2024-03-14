@@ -132,6 +132,7 @@ class DesktopAlbumsArtistsScreenState extends State<DesktopAlbumsArtistsScreen> 
                   ),
                   itemWidth: scrollViewBuilderHelperData.itemWidth,
                   itemHeight: scrollViewBuilderHelperData.itemHeight,
+                  padding: mediaLibraryScrollViewBuilderPadding,
                 ),
               ),
             ],

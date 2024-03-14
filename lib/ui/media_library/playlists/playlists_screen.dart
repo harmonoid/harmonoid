@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:harmonoid/ui/media_library/playlists/playlist_item.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/ui/media_library/playlists/playlist_item.dart';
+import 'package:harmonoid/utils/rendering.dart';
 
 class PlaylistsScreen extends StatefulWidget {
   const PlaylistsScreen({super.key});
@@ -26,6 +27,7 @@ class PlaylistsScreenState extends State<PlaylistsScreen> {
                 playlist: mediaLibrary.playlists.playlists[i],
               );
             },
+            padding: mediaLibraryScrollViewBuilderPadding + EdgeInsets.only(top: margin),
           );
         },
       ),

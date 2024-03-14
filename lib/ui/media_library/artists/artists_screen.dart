@@ -69,6 +69,7 @@ class ArtistsScreenState extends State<ArtistsScreen> {
             labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
             itemWidth: scrollViewBuilderHelperData.itemWidth,
             itemHeight: scrollViewBuilderHelperData.itemHeight,
+            padding: mediaLibraryScrollViewBuilderPadding,
           );
         },
       ),

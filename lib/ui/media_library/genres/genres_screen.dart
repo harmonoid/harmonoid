@@ -69,6 +69,7 @@ class GenresScreenState extends State<GenresScreen> {
             labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
             itemWidth: scrollViewBuilderHelperData.itemWidth,
             itemHeight: scrollViewBuilderHelperData.itemHeight,
+            padding: mediaLibraryScrollViewBuilderPadding,
           );
         },
       ),

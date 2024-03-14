@@ -36,7 +36,7 @@ class TrackItem extends StatelessWidget {
         await trackPopupMenuHandle(context, track, result);
       },
       child: SizedBox(
-        height: kDesktopTrackTileHeight,
+        height: height,
         width: double.infinity,
         child: Stack(
           children: [
@@ -62,7 +62,7 @@ class TrackItem extends StatelessWidget {
                     children: [
                       Container(
                         alignment: Alignment.center,
-                        width: kDesktopTrackTileHeight + 8.0,
+                        width: height + 8.0,
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text(
                           track.trackNumber == 0 ? '1' : track.trackNumber.toString(),
@@ -76,7 +76,7 @@ class TrackItem extends StatelessWidget {
                         flex: 5,
                         child: Container(
                           alignment: Alignment.centerLeft,
-                          width: kDesktopTrackTileHeight,
+                          width: height,
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(
                             track.title,
@@ -91,7 +91,7 @@ class TrackItem extends StatelessWidget {
                         flex: 4,
                         child: Container(
                           alignment: Alignment.centerLeft,
-                          width: kDesktopTrackTileHeight,
+                          width: height,
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: HyperLink(
                             text: TextSpan(
@@ -119,7 +119,7 @@ class TrackItem extends StatelessWidget {
                         flex: 4,
                         child: Container(
                           alignment: Alignment.centerLeft,
-                          width: kDesktopTrackTileHeight,
+                          width: height,
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: HyperLink(
                             text: TextSpan(
@@ -142,7 +142,7 @@ class TrackItem extends StatelessWidget {
                         flex: 4,
                         child: Container(
                           alignment: Alignment.centerLeft,
-                          width: kDesktopTrackTileHeight,
+                          width: height,
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: HyperLink(
                             text: TextSpan(
@@ -170,7 +170,7 @@ class TrackItem extends StatelessWidget {
                         flex: 2,
                         child: Container(
                           alignment: Alignment.centerLeft,
-                          width: kDesktopTrackTileHeight,
+                          width: height,
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(
                             track.year == 0 ? kDefaultYear : track.year.toString(),
@@ -201,7 +201,7 @@ class TrackItem extends StatelessWidget {
       final items = trackPopupMenuItems(context, track);
       await showModalBottomSheet(
         context: context,
-        showDragHandle: true,
+        showDragHandle: isMaterial3OrGreater,
         isScrollControlled: true,
         elevation: kDefaultHeavyElevation,
         builder: (context) => Column(
@@ -223,7 +223,7 @@ class TrackItem extends StatelessWidget {
     }
 
     return SizedBox(
-      height: kMobileTrackTileHeight,
+      height: height,
       child: InkWell(
         onTap: () {
           // TODO:
@@ -241,8 +241,8 @@ class TrackItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image(
-                  width: kMobileTrackTileHeight - 1.0,
-                  height: kMobileTrackTileHeight - 1.0,
+                  width: height - 1.0,
+                  height: height - 1.0,
                   image: cover(
                     item: track,
                     cacheWidth: (kMobileHeaderHeight * MediaQuery.of(context).devicePixelRatio).toInt(),
@@ -278,6 +278,7 @@ class TrackItem extends StatelessWidget {
                 const SizedBox(width: 8.0),
                 IconButton(
                   onPressed: onLongPress,
+                  splashRadius: 20.0,
                   icon: const Icon(Icons.more_vert),
                   color: Theme.of(context).iconTheme.color,
                 ),
