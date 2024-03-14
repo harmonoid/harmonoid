@@ -5,7 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/ui/router.dart';
+import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:path/path.dart';
 import 'package:share_plus/share_plus.dart';
@@ -18,29 +18,26 @@ import 'package:harmonoid/extensions/track.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/mobile_now_playing_notifier.dart';
+import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_item.dart';
-// import 'package:harmonoid/ui/media_library/playlist.dart';
-// import 'package:harmonoid/ui/directory_picker_screen.dart';
-// import 'package:harmonoid/ui/edit_details_screen.dart';
-// import 'package:harmonoid/ui/file_info_screen.dart';
-// import 'package:harmonoid/ui/home_screen.dart';
+import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/constants.dart';
 
-bool get isMaterial3 => Theme.of(navigatorKey.currentContext!).extension<MaterialStandard>()?.value == 3;
+bool get isMaterial3 => Theme.of(rootNavigatorKey.currentContext!).extension<MaterialStandard>()?.value == 3;
 
-bool get isMaterial2 => Theme.of(navigatorKey.currentContext!).extension<MaterialStandard>()?.value == 2;
+bool get isMaterial2 => Theme.of(rootNavigatorKey.currentContext!).extension<MaterialStandard>()?.value == 2;
 
-bool get isMaterial3OrGreater => (Theme.of(navigatorKey.currentContext!).extension<MaterialStandard>()?.value ?? 0) >= 3;
+bool get isMaterial3OrGreater => (Theme.of(rootNavigatorKey.currentContext!).extension<MaterialStandard>()?.value ?? 0) >= 3;
 
-bool get isMaterial2OrGreater => (Theme.of(navigatorKey.currentContext!).extension<MaterialStandard>()?.value ?? 0) >= 2;
+bool get isMaterial2OrGreater => (Theme.of(rootNavigatorKey.currentContext!).extension<MaterialStandard>()?.value ?? 0) >= 2;
 
-bool get isDesktop => Theme.of(navigatorKey.currentContext!).extension<LayoutVariantThemeExtension>()?.value == LayoutVariant.desktop;
+bool get isDesktop => Theme.of(rootNavigatorKey.currentContext!).extension<LayoutVariantThemeExtension>()?.value == LayoutVariant.desktop;
 
-bool get isTablet => Theme.of(navigatorKey.currentContext!).extension<LayoutVariantThemeExtension>()?.value == LayoutVariant.tablet;
+bool get isTablet => Theme.of(rootNavigatorKey.currentContext!).extension<LayoutVariantThemeExtension>()?.value == LayoutVariant.tablet;
 
-bool get isMobile => Theme.of(navigatorKey.currentContext!).extension<LayoutVariantThemeExtension>()?.value == LayoutVariant.mobile;
+bool get isMobile => Theme.of(rootNavigatorKey.currentContext!).extension<LayoutVariantThemeExtension>()?.value == LayoutVariant.mobile;
 
 double get margin {
   if (isDesktop) {
@@ -100,7 +97,7 @@ EdgeInsets get mediaLibraryScrollViewBuilderPadding {
   } else if (isTablet) {
     throw UnimplementedError();
   } else if (isMobile) {
-    return EdgeInsets.only(top: MediaQuery.of(navigatorKey.currentContext!).padding.top + margin + kMobileSearchBarHeight);
+    return EdgeInsets.only(top: MediaQuery.of(rootNavigatorKey.currentContext!).padding.top + margin + kMobileSearchBarHeight);
   }
   throw UnimplementedError();
 }
@@ -159,7 +156,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
       PopupMenuItem<int>(
         value: 0,
         child: ListTile(
-          leading: Icon(Platform.isWindows ? FluentIcons.delete_16_regular : Icons.delete),
+          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_16_regular : Icons.delete),
           title: Text(
             Language.instance.DELETE,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
@@ -170,7 +167,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
         PopupMenuItem<int>(
           value: 1,
           child: ListTile(
-            leading: Icon(Platform.isWindows ? FluentIcons.share_16_regular : Icons.share),
+            leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.share_16_regular : Icons.share),
             title: Text(
               Language.instance.SHARE,
               style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
@@ -180,7 +177,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
       PopupMenuItem<int>(
         value: 3,
         child: ListTile(
-          leading: Icon(Platform.isWindows ? FluentIcons.music_note_2_16_regular : Icons.music_note),
+          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.music_note_2_16_regular : Icons.music_note),
           title: Text(
             Language.instance.ADD_TO_NOW_PLAYING,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
@@ -190,18 +187,18 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
       PopupMenuItem<int>(
         value: 2,
         child: ListTile(
-          leading: Icon(Platform.isWindows ? FluentIcons.list_16_regular : Icons.queue_music),
+          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.list_16_regular : Icons.queue_music),
           title: Text(
             Language.instance.ADD_TO_PLAYLIST,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
       ),
-      if (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+      if (Theme.of(context).platform == TargetPlatform.windows || Platform.isLinux || Platform.isMacOS)
         PopupMenuItem<int>(
           value: 5,
           child: ListTile(
-            leading: Icon(Platform.isWindows ? FluentIcons.folder_24_regular : Icons.folder),
+            leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.folder_24_regular : Icons.folder),
             title: Text(
               Language.instance.SHOW_IN_FILE_MANAGER,
               style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
@@ -211,7 +208,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
       PopupMenuItem<int>(
         value: 6,
         child: ListTile(
-          leading: Icon(Platform.isWindows ? FluentIcons.edit_24_regular : Icons.edit),
+          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.edit_24_regular : Icons.edit),
           title: Text(
             Language.instance.EDIT_DETAILS,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
@@ -221,7 +218,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
       PopupMenuItem<int>(
         value: 4,
         child: ListTile(
-          leading: Icon(Platform.isWindows ? FluentIcons.album_24_regular : Icons.album),
+          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.album_24_regular : Icons.album),
           title: Text(
             Language.instance.SHOW_ALBUM,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
@@ -231,7 +228,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
       PopupMenuItem<int>(
         value: 7,
         child: ListTile(
-          leading: Icon(Platform.isWindows ? FluentIcons.info_24_regular : Icons.info),
+          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.info_24_regular : Icons.info),
           title: Text(
             Language.instance.FILE_INFORMATION,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
@@ -243,7 +240,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
           value: 9,
           child: ListTile(
             leading: Icon(
-              Platform.isWindows ? FluentIcons.clear_formatting_24_regular : Icons.clear,
+              Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.clear_formatting_24_regular : Icons.clear,
             ),
             title: Text(
               Language.instance.CLEAR_LRC_FILE,
@@ -256,7 +253,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
           value: 8,
           child: ListTile(
             leading: Icon(
-              Platform.isWindows ? FluentIcons.text_font_24_regular : Icons.abc,
+              Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.text_font_24_regular : Icons.abc,
             ),
             title: Text(
               Language.instance.SET_LRC_FILE,
@@ -276,7 +273,7 @@ List<PopupMenuItem<int>> albumPopupMenuItems(BuildContext context, Album album) 
         value: 0,
         child: ListTile(
           leading: Icon(
-            Platform.isWindows ? FluentIcons.play_24_regular : Icons.play_circle,
+            Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.play_24_regular : Icons.play_circle,
           ),
           title: Text(
             Language.instance.PLAY,
@@ -288,7 +285,7 @@ List<PopupMenuItem<int>> albumPopupMenuItems(BuildContext context, Album album) 
         value: 1,
         child: ListTile(
           leading: Icon(
-            Platform.isWindows ? FluentIcons.arrow_shuffle_24_regular : Icons.shuffle,
+            Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.arrow_shuffle_24_regular : Icons.shuffle,
           ),
           title: Text(
             Language.instance.SHUFFLE,
@@ -300,7 +297,7 @@ List<PopupMenuItem<int>> albumPopupMenuItems(BuildContext context, Album album) 
         value: 2,
         child: ListTile(
           leading: Icon(
-            Platform.isWindows ? FluentIcons.delete_16_regular : Icons.delete,
+            Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_16_regular : Icons.delete,
           ),
           title: Text(
             Language.instance.DELETE,
@@ -312,7 +309,7 @@ List<PopupMenuItem<int>> albumPopupMenuItems(BuildContext context, Album album) 
         value: 3,
         child: ListTile(
           leading: Icon(
-            Platform.isWindows ? FluentIcons.music_note_2_16_regular : Icons.queue_music,
+            Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.music_note_2_16_regular : Icons.queue_music,
           ),
           title: Text(
             Language.instance.ADD_TO_NOW_PLAYING,
@@ -327,7 +324,7 @@ List<PopupMenuItem<int>> albumPopupMenuItems(BuildContext context, Album album) 
         ),
     ];
 
-Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result, {bool Function()? recursivelyPopNavigatorOnDeleteIf}) async {
+Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result, {Future<bool> Function()? recursivelyPopNavigatorOnDeleteIf}) async {
   if (result == null) return;
   switch (result) {
     case 0:
@@ -338,13 +335,9 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
           // Android 11 or higher (API level 30) will ask for permissions from the user before deletion.
           await MediaLibrary.instance.remove([track]);
           if (recursivelyPopNavigatorOnDeleteIf != null) {
-            if (recursivelyPopNavigatorOnDeleteIf()) {
-              while (Navigator.of(context).canPop()) {
-                await Navigator.of(context).maybePop();
-              }
-              // if (floatingSearchBarController.isOpen) {
-              //   floatingSearchBarController.close();
-              // }
+            if (await recursivelyPopNavigatorOnDeleteIf()) {
+              rootNavigatorKey.currentContext?.go('/');
+              /* HACK: */ mediaLibrarySearchBarController.closeView(null);
             }
           }
           return;
@@ -361,13 +354,9 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
                 await MediaLibrary.instance.remove([track]);
                 await Navigator.of(ctx).maybePop();
                 if (recursivelyPopNavigatorOnDeleteIf != null) {
-                  if (recursivelyPopNavigatorOnDeleteIf()) {
-                    while (Navigator.of(context).canPop()) {
-                      await Navigator.of(context).maybePop();
-                    }
-                    // if (floatingSearchBarController.isOpen) {
-                    //   floatingSearchBarController.close();
-                    // }
+                  if (await recursivelyPopNavigatorOnDeleteIf()) {
+                    rootNavigatorKey.currentContext?.go('/');
+                    /* HACK: */ mediaLibrarySearchBarController.closeView(null);
                   }
                 }
               },
@@ -457,12 +446,8 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
           // No [AlertDialog] required for confirmation.
           // Android 11 or higher (API level 30) will ask for permissions from the user before deletion.
           await MediaLibrary.instance.remove(tracks);
-          while (Navigator.of(context).canPop()) {
-            await Navigator.of(context).maybePop();
-          }
-          // if (floatingSearchBarController.isOpen) {
-          //   floatingSearchBarController.close();
-          // }
+          rootNavigatorKey.currentContext?.go('/');
+          /* HACK: */ mediaLibrarySearchBarController.closeView(null);
           return;
         }
       }
@@ -476,12 +461,8 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
               onPressed: () async {
                 await MediaLibrary.instance.remove(tracks);
                 await Navigator.of(ctx).maybePop();
-                while (Navigator.of(context).canPop()) {
-                  await Navigator.of(context).maybePop();
-                }
-                // if (floatingSearchBarController.isOpen) {
-                //   floatingSearchBarController.close();
-                // }
+                rootNavigatorKey.currentContext?.go('/');
+                /* HACK: */ mediaLibrarySearchBarController.closeView(null);
               },
               child: Text(
                 label(Language.instance.YES),
@@ -526,7 +507,7 @@ Future<Directory?> pickDirectory({bool native = false}) async {
     return path != null ? Directory(path) : null;
   } else {
     // return showGeneralDialog(
-    //   context: navigatorKey.currentContext!,
+    //   context: rootNavigatorKey.currentContext!,
     //   useRootNavigator: true,
     //   barrierDismissible: false,
     //   barrierColor: Colors.transparent,
@@ -637,7 +618,7 @@ InputDecoration inputDecoration(BuildContext context, String hintText, {Widget? 
     contentPadding: EdgeInsets.only(
       left: 12.0,
       right: 12.0,
-      bottom: Platform.isWindows || Platform.isLinux || Platform.isMacOS ? 8.0 : 2.0,
+      bottom: Theme.of(context).platform == TargetPlatform.windows || Platform.isLinux || Platform.isMacOS ? 8.0 : 2.0,
     ),
     hintText: hintText,
     filled: true,

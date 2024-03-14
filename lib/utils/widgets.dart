@@ -1657,17 +1657,17 @@ class MobileGridSpanButton extends StatelessWidget {
           case kAlbumsPath:
             title = Language.instance.MOBILE_ALBUM_GRID_SIZE;
             groupValue = Configuration.instance.mobileAlbumGridSpan;
-            onChanged = (value) => Configuration.instance.set(mobileAlbumGridSpan: value).then((_) => Navigator.of(context).pop()).then((_) => MediaLibrary.instance.notify());
+            onChanged = (value) => Configuration.instance.set(mobileAlbumGridSpan: value);
             break;
           case kArtistsPath:
             title = Language.instance.MOBILE_ARTIST_GRID_SIZE;
             groupValue = Configuration.instance.mobileArtistGridSpan;
-            onChanged = (value) => Configuration.instance.set(mobileArtistGridSpan: value).then((_) => Navigator.of(context).pop()).then((_) => MediaLibrary.instance.notify());
+            onChanged = (value) => Configuration.instance.set(mobileArtistGridSpan: value);
             break;
           case kGenresPath:
             title = Language.instance.MOBILE_GENRE_GRID_SIZE;
             groupValue = Configuration.instance.mobileGenreGridSpan;
-            onChanged = (value) => Configuration.instance.set(mobileGenreGridSpan: value).then((_) => Navigator.of(context).pop()).then((_) => MediaLibrary.instance.notify());
+            onChanged = (value) => Configuration.instance.set(mobileGenreGridSpan: value);
             break;
           default:
             throw UnimplementedError();
@@ -1682,7 +1682,9 @@ class MobileGridSpanButton extends StatelessWidget {
                 RadioListTile<int>(
                   value: i,
                   groupValue: groupValue,
-                  onChanged: onChanged,
+                  onChanged: (value) {
+                    onChanged(value).then((_) => Navigator.of(context).pop()).then((_) => MediaLibrary.instance.notify());
+                  },
                   title: Text(
                     i.toString(),
                     style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
@@ -1720,56 +1722,48 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
           builder: (context) => Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              PopupMenuItem(
+              ListTile(
                 onTap: () {
                   completer.complete(0);
                   Navigator.of(context).maybePop();
                 },
-                child: ListTile(
-                  leading: const Icon(Icons.file_open),
-                  title: Text(
-                    Language.instance.OPEN_FILE_OR_URL,
-                    style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                  ),
+                leading: const Icon(Icons.file_open),
+                title: Text(
+                  Language.instance.OPEN_FILE_OR_URL,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
               ),
-              PopupMenuItem(
+              ListTile(
                 onTap: () {
                   completer.complete(1);
                   Navigator.of(context).maybePop();
                 },
-                child: ListTile(
-                  leading: const Icon(Icons.code),
-                  title: Text(
-                    Language.instance.READ_METADATA,
-                    style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                  ),
+                leading: const Icon(Icons.code),
+                title: Text(
+                  Language.instance.READ_METADATA,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
               ),
-              PopupMenuItem(
+              ListTile(
                 onTap: () {
                   completer.complete(2);
                   Navigator.of(context).maybePop();
                 },
-                child: ListTile(
-                  leading: const Icon(Icons.settings),
-                  title: Text(
-                    Language.instance.SETTINGS,
-                    style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                  ),
+                leading: const Icon(Icons.settings),
+                title: Text(
+                  Language.instance.SETTINGS,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
               ),
-              PopupMenuItem(
+              ListTile(
                 onTap: () {
                   completer.complete(3);
                   Navigator.of(context).maybePop();
                 },
-                child: ListTile(
-                  leading: const Icon(Icons.info),
-                  title: Text(
-                    Language.instance.ABOUT,
-                    style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                  ),
+                leading: const Icon(Icons.info),
+                title: Text(
+                  Language.instance.ABOUT,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
               ),
               if (!isDesktop && MobileNowPlayingNotifier.instance.restored) const SizedBox(height: kMobileNowPlayingBarHeight),

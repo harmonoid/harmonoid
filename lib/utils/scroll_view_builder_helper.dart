@@ -55,16 +55,16 @@ class ScrollViewBuilderHelper {
     }
     switch (Configuration.instance.mediaLibraryAlbumSortType) {
       case AlbumSortType.album:
-        labelTextStyle = Theme.of(navigatorKey.currentContext!).textTheme.titleLarge!;
+        labelTextStyle = Theme.of(rootNavigatorKey.currentContext!).textTheme.titleLarge!;
         break;
       case AlbumSortType.timestamp:
-        labelTextStyle = Theme.of(navigatorKey.currentContext!).textTheme.bodyLarge!;
+        labelTextStyle = Theme.of(rootNavigatorKey.currentContext!).textTheme.bodyLarge!;
         break;
       case AlbumSortType.year:
-        labelTextStyle = Theme.of(navigatorKey.currentContext!).textTheme.bodyLarge!;
+        labelTextStyle = Theme.of(rootNavigatorKey.currentContext!).textTheme.bodyLarge!;
         break;
       case AlbumSortType.albumArtist:
-        labelTextStyle = Theme.of(navigatorKey.currentContext!).textTheme.titleLarge!;
+        labelTextStyle = Theme.of(rootNavigatorKey.currentContext!).textTheme.titleLarge!;
         break;
     }
     return ScrollViewBuilderHelperData(
@@ -104,13 +104,13 @@ class ScrollViewBuilderHelper {
     }
     switch (Configuration.instance.mediaLibraryTrackSortType) {
       case TrackSortType.title:
-        labelTextStyle = Theme.of(navigatorKey.currentContext!).textTheme.titleLarge!;
+        labelTextStyle = Theme.of(rootNavigatorKey.currentContext!).textTheme.titleLarge!;
         break;
       case TrackSortType.timestamp:
-        labelTextStyle = Theme.of(navigatorKey.currentContext!).textTheme.bodyLarge!;
+        labelTextStyle = Theme.of(rootNavigatorKey.currentContext!).textTheme.bodyLarge!;
         break;
       case TrackSortType.year:
-        labelTextStyle = Theme.of(navigatorKey.currentContext!).textTheme.titleLarge!;
+        labelTextStyle = Theme.of(rootNavigatorKey.currentContext!).textTheme.titleLarge!;
         break;
     }
     return ScrollViewBuilderHelperData(
@@ -144,10 +144,10 @@ class ScrollViewBuilderHelper {
     }
     switch (Configuration.instance.mediaLibraryArtistSortType) {
       case ArtistSortType.artist:
-        labelTextStyle = Theme.of(navigatorKey.currentContext!).textTheme.titleLarge!;
+        labelTextStyle = Theme.of(rootNavigatorKey.currentContext!).textTheme.titleLarge!;
         break;
       case ArtistSortType.timestamp:
-        labelTextStyle = Theme.of(navigatorKey.currentContext!).textTheme.bodyLarge!;
+        labelTextStyle = Theme.of(rootNavigatorKey.currentContext!).textTheme.bodyLarge!;
         break;
     }
     return ScrollViewBuilderHelperData(
@@ -181,10 +181,10 @@ class ScrollViewBuilderHelper {
     }
     switch (Configuration.instance.mediaLibraryGenreSortType) {
       case GenreSortType.genre:
-        labelTextStyle = Theme.of(navigatorKey.currentContext!).textTheme.titleLarge!;
+        labelTextStyle = Theme.of(rootNavigatorKey.currentContext!).textTheme.titleLarge!;
         break;
       case GenreSortType.timestamp:
-        labelTextStyle = Theme.of(navigatorKey.currentContext!).textTheme.bodyLarge!;
+        labelTextStyle = Theme.of(rootNavigatorKey.currentContext!).textTheme.bodyLarge!;
         break;
     }
     return ScrollViewBuilderHelperData(

@@ -96,6 +96,7 @@ class Strings {
   late String MOBILE_ARTIST_GRID_SIZE;
   late String MOBILE_ENABLE_NOW_PLAYING_RIPPLE_EFFECT;
   late String MOBILE_ENABLE_VOLUME_SLIDER;
+  late String MOBILE_GENRE_GRID_SIZE;
   late String MORE;
   late String MUTE;
   late String M_TRACKS_AND_N_ALBUMS;
@@ -112,6 +113,10 @@ class Strings {
   late String NO_INTERNET_SUBTITLE;
   late String NO_INTERNET_TITLE;
   late String NO_PLAYLISTS_FOUND;
+  late String N_ALBUMS;
+  late String N_ARTISTS;
+  late String N_GENRES;
+  late String N_TRACKS;
   late String OK;
   late String OPEN_FILE_OR_URL;
   late String OPEN_IN_BROWSER;
@@ -232,13 +237,10 @@ class Strings {
   late String TRACK_NUMBER;
   late String TYPE;
   late String UNMUTE;
-  late String UPDATE_AVAILABLE;
   late String URL;
   late String USE_MODERN_NOW_PLAYING_SCREEN;
   late String USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS;
   late String VALUE;
-  late String VIDEO_SINGLE;
-  late String VOLUME_BOOST;
   late String WARNING;
   late String YEAR;
   late String YES;

@@ -187,6 +187,7 @@ class Language extends Strings with ChangeNotifier {
     MOBILE_ARTIST_GRID_SIZE = map['MOBILE_ARTIST_GRID_SIZE']!;
     MOBILE_ENABLE_NOW_PLAYING_RIPPLE_EFFECT = map['MOBILE_ENABLE_NOW_PLAYING_RIPPLE_EFFECT']!;
     MOBILE_ENABLE_VOLUME_SLIDER = map['MOBILE_ENABLE_VOLUME_SLIDER']!;
+    MOBILE_GENRE_GRID_SIZE = map['MOBILE_GENRE_GRID_SIZE']!;
     MORE = map['MORE']!;
     MUTE = map['MUTE']!;
     M_TRACKS_AND_N_ALBUMS = map['M_TRACKS_AND_N_ALBUMS']!;
@@ -203,6 +204,10 @@ class Language extends Strings with ChangeNotifier {
     NO_INTERNET_SUBTITLE = map['NO_INTERNET_SUBTITLE']!;
     NO_INTERNET_TITLE = map['NO_INTERNET_TITLE']!;
     NO_PLAYLISTS_FOUND = map['NO_PLAYLISTS_FOUND']!;
+    N_ALBUMS = map['N_ALBUMS']!;
+    N_ARTISTS = map['N_ARTISTS']!;
+    N_GENRES = map['N_GENRES']!;
+    N_TRACKS = map['N_TRACKS']!;
     OK = map['OK']!;
     OPEN_FILE_OR_URL = map['OPEN_FILE_OR_URL']!;
     OPEN_IN_BROWSER = map['OPEN_IN_BROWSER']!;
@@ -323,13 +328,10 @@ class Language extends Strings with ChangeNotifier {
     TRACK_NUMBER = map['TRACK_NUMBER']!;
     TYPE = map['TYPE']!;
     UNMUTE = map['UNMUTE']!;
-    UPDATE_AVAILABLE = map['UPDATE_AVAILABLE']!;
     URL = map['URL']!;
     USE_MODERN_NOW_PLAYING_SCREEN = map['USE_MODERN_NOW_PLAYING_SCREEN']!;
     USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS = map['USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS']!;
     VALUE = map['VALUE']!;
-    VIDEO_SINGLE = map['VIDEO_SINGLE']!;
-    VOLUME_BOOST = map['VOLUME_BOOST']!;
     WARNING = map['WARNING']!;
     YEAR = map['YEAR']!;
     YES = map['YES']!;
