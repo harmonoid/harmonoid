@@ -257,14 +257,22 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
           resizeToAvoidBottomInset: false,
           body: Stack(
             children: [
-              NotificationListener<UserScrollNotification>(
+              NotificationListener<ScrollNotification>(
                 onNotification: (notification) {
-                  if (notification.metrics.axis == Axis.vertical) {
-                    if (notification.direction == ScrollDirection.forward) {
-                      _mediaLibrarySearchBarOffsetNotifier.value = 0.0;
+                  if (notification is UserScrollNotification) {
+                    if (notification.metrics.axis == Axis.vertical) {
+                      if (notification.direction == ScrollDirection.forward) {
+                        _mediaLibrarySearchBarOffsetNotifier.value = 0.0;
+                      }
+                      if (notification.direction == ScrollDirection.reverse) {
+                        _mediaLibrarySearchBarOffsetNotifier.value = -1.0 * mediaLibraryScrollViewBuilderPadding.top;
+                      }
                     }
-                    if (notification.direction == ScrollDirection.reverse) {
-                      _mediaLibrarySearchBarOffsetNotifier.value = -1.0 * mediaLibraryScrollViewBuilderPadding.top;
+                  } else {
+                    if (notification.metrics.axis == Axis.vertical) {
+                      if (notification.metrics.pixels == 0.0) {
+                        _mediaLibrarySearchBarOffsetNotifier.value = 0.0;
+                      }
                     }
                   }
                   return false;
