@@ -1,0 +1,160 @@
+import 'package:adaptive_layouts/adaptive_layouts.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:media_library/media_library.dart' hide MediaLibrary;
+
+import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/mappers/track.dart';
+import 'package:harmonoid/utils/constants.dart';
+import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/widgets.dart';
+
+class AlbumScreen extends StatefulWidget {
+  final Album album;
+  final List<Track> tracks;
+  final List<Color>? palette;
+  const AlbumScreen({super.key, required this.album, required this.tracks, this.palette});
+
+  @override
+  State<AlbumScreen> createState() => _AlbumScreenState();
+}
+
+class _AlbumScreenState extends State<AlbumScreen> {
+  late final _tracks = widget.tracks;
+  late final String _title = widget.album.album;
+  late final String _subtitle = isDesktop
+      ? [
+          '${Language.instance.ARTIST}: ${widget.album.albumArtist.isEmpty ? kDefaultArtist : widget.album.albumArtist}',
+          '${Language.instance.YEAR}: ${widget.album.year == 0 ? kDefaultYear : widget.album.year}',
+          '${Language.instance.TRACKS}: ${_tracks.length}'
+        ].join('\n')
+      : [
+          widget.album.albumArtist.isEmpty ? kDefaultArtist : widget.album.albumArtist,
+          widget.album.year == 0 ? kDefaultYear : widget.album.year,
+        ].join('\n');
+
+  @override
+  Widget build(BuildContext context) {
+    return HeroListItemsScreen(
+      palette: widget.palette,
+      heroBuilder: (context) {
+        if (isDesktop) {
+          return Stack(
+            alignment: Alignment.center,
+            children: [
+              Hero(
+                tag: widget.album,
+                child: Card(
+                  margin: EdgeInsets.zero,
+                  color: Colors.white,
+                  elevation: Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ClipRRect(
+                      clipBehavior: Clip.antiAlias,
+                      borderRadius: Theme.of(context).cardTheme.shape is! RoundedRectangleBorder
+                          ? BorderRadius.zero
+                          : (Theme.of(context).cardTheme.shape as RoundedRectangleBorder).borderRadius.subtract(
+                                const BorderRadius.all(
+                                  Radius.circular(8.0),
+                                ),
+                              ),
+                      child: Image(
+                        image: cover(item: widget.album),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
+        if (isMobile) {
+          return Image(
+            image: cover(item: widget.album),
+            fit: BoxFit.cover,
+          );
+        }
+        throw UnimplementedError();
+      },
+      caption: kCaption,
+      title: _title,
+      subtitle: _subtitle,
+      listItemCount: _tracks.length,
+      listItemDisplayIndex: true,
+      listItemHeaders: [
+        Text(Language.instance.TRACK),
+        Text(Language.instance.ARTISTS),
+      ],
+      listItemBuilder: (context, i) {
+        if (isDesktop) {
+          return [
+            Text(
+              _tracks[i].title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            HyperLink(
+              text: TextSpan(
+                children: [
+                  for (final artist in (_tracks[i].artists.isEmpty ? {kDefaultArtist} : _tracks[i].artists)) ...[
+                    TextSpan(
+                      text: artist,
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          // TODO:
+                        },
+                    ),
+                    const TextSpan(
+                      text: ', ',
+                    ),
+                  ]
+                ]..removeLast(),
+              ),
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          ];
+        }
+        if (isMobile) {
+          return [
+            Text(
+              _tracks[i].title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            for (final artist in (_tracks[i].artists.isEmpty ? {kDefaultArtist} : _tracks[i].artists))
+              Text(
+                artist,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+          ];
+        }
+        throw UnimplementedError();
+      },
+      listItemPopupMenuBuilder: (context, i) => trackPopupMenuItems(context, _tracks[i]),
+      onListItemPressed: (context, i) => MediaPlayer.instance.open(_tracks.map((e) => e.toPlayable()).toList(), index: i),
+      onListItemPopupMenuItemSelected: (context, i, result) async {
+        await trackPopupMenuHandle(
+          context,
+          _tracks[i],
+          result,
+          recursivelyPopNavigatorOnDeleteIf: () => MediaLibrary.instance.tracksFromAlbum(widget.album).then((value) => value.isEmpty),
+        );
+        // NOTE: The track could've been deleted, so we need to check & update the list.
+        final tracks = await MediaLibrary.instance.tracksFromAlbum(widget.album);
+        if (tracks.length != _tracks.length) {
+          setState(() {
+            _tracks
+              ..clear()
+              ..addAll(tracks);
+          });
+        }
+      },
+      mergeHeroAndListItems: true,
+    );
+  }
+}

@@ -33,9 +33,7 @@ class SearchScreenState extends State<SearchScreen> {
   final List<Genre> _genres = <Genre>[];
   final List<Track> _tracks = <Track>[];
 
-  @override
-  void initState() {
-    super.initState();
+  void _listener() {
     final result = MediaLibrary.instance.search(widget.query, limit: kLimit);
     _albums
       ..clear()
@@ -49,6 +47,19 @@ class SearchScreenState extends State<SearchScreen> {
     _tracks
       ..clear()
       ..addAll(result.whereType<Track>());
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _listener();
+    MediaLibrary.instance.addListener(_listener);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    MediaLibrary.instance.removeListener(_listener);
   }
 
   @override

@@ -7,12 +7,15 @@ import 'package:harmonoid/ui/media_library/search/search_screen.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
+final SearchController mediaLibrarySearchBarController = SearchController();
+
 class MediaLibrarySearchBar extends StatelessWidget {
   const MediaLibrarySearchBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      alignment: Alignment.center,
       padding: EdgeInsets.only(
         top: MediaQuery.of(context).padding.top + margin,
         left: margin,
@@ -20,6 +23,7 @@ class MediaLibrarySearchBar extends StatelessWidget {
       ),
       child: SearchAnchor(
         isFullScreen: true,
+        searchController: mediaLibrarySearchBarController,
         viewHintText: Language.instance.SEARCH_HINT,
         builder: (context, controller) {
           return Consumer<MediaLibrary>(

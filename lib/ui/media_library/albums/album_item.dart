@@ -1,9 +1,14 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:harmonoid/ui/media_library/albums/album_screen.dart';
+import 'package:harmonoid/utils/open_container.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
+import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
@@ -25,37 +30,61 @@ class AlbumItem extends StatelessWidget {
   ].join(' • ');
 
   Widget _buildDesktopLayout(BuildContext context) {
-    return Hero(
-      tag: album,
-      child: ContextMenuListener(
-        onSecondaryPress: (position) async {
-          final result = await showMaterialMenu(
-            context: context,
-            constraints: const BoxConstraints(
-              maxWidth: double.infinity,
-            ),
-            position: position,
-            items: albumPopupMenuItems(context, album),
-          );
-          await albumPopupMenuHandle(context, album, result);
-        },
-        child: Card(
-          margin: EdgeInsets.zero,
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: () {
-              // TODO:
-            },
-            child: SizedBox(
-              width: width,
-              height: height,
-              child: Column(
-                children: [
-                  SizedBox(
+    return ContextMenuListener(
+      onSecondaryPress: (position) async {
+        final result = await showMaterialMenu(
+          context: context,
+          constraints: const BoxConstraints(
+            maxWidth: double.infinity,
+          ),
+          position: position,
+          items: albumPopupMenuItems(context, album),
+        );
+        await albumPopupMenuHandle(context, album, result);
+      },
+      child: Card(
+        margin: EdgeInsets.zero,
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () async {
+            final tracks = await MediaLibrary.instance.tracksFromAlbum(album);
+
+            List<Color>? palette;
+            if (isMaterial2) {
+              final result = await PaletteGenerator.fromImageProvider(
+                cover(
+                  item: album,
+                  cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
+                ),
+              );
+              palette = result.colors?.toList();
+            }
+
+            await precacheImage(cover(item: album), context);
+
+            await Future.delayed(const Duration(milliseconds: 200));
+
+            await context.push(
+              '/$kMediaLibraryPath/$kAlbumPath',
+              extra: AlbumPathExtra(
+                album: album,
+                tracks: tracks,
+                palette: palette,
+              ),
+            );
+          },
+          child: SizedBox(
+            width: width,
+            height: height,
+            child: Column(
+              children: [
+                Hero(
+                  tag: album,
+                  child: SizedBox(
                     width: width,
                     height: width,
                     child: ScaleOnHover(
-                      child: Ink.image(
+                      child: Image(
                         width: width,
                         height: width,
                         fit: BoxFit.cover,
@@ -66,36 +95,36 @@ class AlbumItem extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      width: width,
-                      alignment: Alignment.centerLeft,
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (title.isNotEmpty)
-                            Text(
-                              title,
-                              style: Theme.of(context).textTheme.titleSmall,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          if (subtitle.isNotEmpty)
-                            Text(
-                              subtitle,
-                              style: Theme.of(context).textTheme.bodySmall,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                        ],
-                      ),
+                ),
+                Expanded(
+                  child: Container(
+                    width: width,
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (title.isNotEmpty)
+                          Text(
+                            title,
+                            style: Theme.of(context).textTheme.titleSmall,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        if (subtitle.isNotEmpty)
+                          Text(
+                            subtitle,
+                            style: Theme.of(context).textTheme.bodySmall,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -138,8 +167,32 @@ class AlbumItem extends StatelessWidget {
       return SizedBox(
         height: height,
         child: InkWell(
-          onTap: () {
-            // TODO:
+          onTap: () async {
+            final tracks = await MediaLibrary.instance.tracksFromAlbum(album);
+
+            List<Color>? palette;
+            if (isMaterial2) {
+              final result = await PaletteGenerator.fromImageProvider(
+                cover(
+                  item: album,
+                  cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
+                ),
+              );
+              palette = result.colors?.toList();
+            }
+
+            await precacheImage(cover(item: album), context);
+
+            await Future.delayed(const Duration(milliseconds: 200));
+
+            await context.push(
+              '/$kMediaLibraryPath/$kAlbumPath',
+              extra: AlbumPathExtra(
+                album: album,
+                tracks: tracks,
+                palette: palette,
+              ),
+            );
           },
           onLongPress: onLongPress,
           child: Column(
@@ -199,7 +252,12 @@ class AlbumItem extends StatelessWidget {
         ),
       );
     }
+
+    List<Track>? tracks;
+    List<Color>? palette;
+
     return OpenContainer(
+      navigatorKey: homeNavigatorKey,
       transitionDuration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
       closedColor: Theme.of(context).cardTheme.color ?? Colors.transparent,
       closedShape: Theme.of(context).cardTheme.shape ?? const RoundedRectangleBorder(),
@@ -207,7 +265,25 @@ class AlbumItem extends StatelessWidget {
       openElevation: Theme.of(context).cardTheme.elevation ?? 0.0,
       closedBuilder: (context, action) {
         return InkWell(
-          onTap: action,
+          onTap: () async {
+            tracks = await MediaLibrary.instance.tracksFromAlbum(album);
+
+            if (isMaterial2) {
+              final result = await PaletteGenerator.fromImageProvider(
+                cover(
+                  item: album,
+                  cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
+                ),
+              );
+              palette = result.colors?.toList();
+            }
+
+            await precacheImage(cover(item: album), context);
+
+            await Future.delayed(const Duration(milliseconds: 200));
+
+            action();
+          },
           onLongPress: onLongPress,
           child: SizedBox(
             width: width,
@@ -269,7 +345,11 @@ class AlbumItem extends StatelessWidget {
           ),
         );
       },
-      openBuilder: (context, _) => const SizedBox.shrink(),
+      openBuilder: (context, _) => AlbumScreen(
+        album: album,
+        tracks: tracks!,
+        palette: palette,
+      ),
     );
   }
 

@@ -33,7 +33,7 @@ class TrackItem extends StatelessWidget {
           position: position,
           items: trackPopupMenuItems(context, track),
         );
-        await trackPopupMenuHandle(context, track, result);
+        await trackPopupMenuHandle(context, track, result, recursivelyPopNavigatorOnDeleteIf: () async => true);
       },
       child: SizedBox(
         height: height,
@@ -219,7 +219,7 @@ class TrackItem extends StatelessWidget {
           ],
         ),
       );
-      await trackPopupMenuHandle(context, track, result);
+      await trackPopupMenuHandle(context, track, result, recursivelyPopNavigatorOnDeleteIf: () async => true);
     }
 
     return SizedBox(
