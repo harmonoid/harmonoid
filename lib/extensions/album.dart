@@ -12,11 +12,11 @@ extension AlbumExtensions on Album {
     switch (Configuration.instance.mediaLibraryAlbumSortType) {
       case AlbumSortType.album:
         return ValueKey(
-          album.isEmpty ? kDefaultAlbum[0] : album[0],
+          album.isEmpty ? kDefaultAlbum[0].toUpperCase() : album[0].toUpperCase(),
         );
       case AlbumSortType.timestamp:
         return ValueKey(
-          timestamp.label,
+          timestamp.label.toUpperCase(),
         );
       case AlbumSortType.year:
         return ValueKey(
@@ -24,7 +24,7 @@ extension AlbumExtensions on Album {
         );
       case AlbumSortType.albumArtist:
         return ValueKey(
-          album.isEmpty ? kDefaultAlbum[0] : album[0],
+          album.isEmpty ? kDefaultAlbum[0].toUpperCase() : album[0].toUpperCase(),
         );
     }
   }

@@ -32,8 +32,14 @@ class PlaylistItem extends StatelessWidget {
                   small: true,
                 ),
               ),
-              title: Text(playlist.name),
-              subtitle: Text(entries == null ? '' : '${entries.length} ${Language.instance.TRACKS}'),
+              title: Text(
+                playlist.name,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              subtitle: Text(
+                entries == null ? '' : Language.instance.N_TRACKS.replaceAll('"N"', entries.length.toString()),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
             );
           },
         );

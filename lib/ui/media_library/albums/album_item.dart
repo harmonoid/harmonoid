@@ -108,6 +108,97 @@ class AlbumItem extends StatelessWidget {
   }
 
   Widget _buildMobileLayout(BuildContext context) {
+    Future<void> onLongPress() async {
+      int? result;
+      final items = albumPopupMenuItems(context, album);
+      await showModalBottomSheet(
+        context: context,
+        showDragHandle: isMaterial3OrGreater,
+        isScrollControlled: true,
+        elevation: kDefaultHeavyElevation,
+        builder: (context) => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (int i = 0; i < items.length; i++) ...[
+              InkWell(
+                onTap: () {
+                  result = i;
+                  Navigator.of(context).pop();
+                },
+                child: items[i].child,
+              ),
+            ],
+          ],
+        ),
+      );
+      await albumPopupMenuHandle(context, album, result);
+    }
+
+    if (width >= height) {
+      return SizedBox(
+        height: height,
+        child: InkWell(
+          onTap: () {
+            // TODO:
+          },
+          onLongPress: onLongPress,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Divider(height: 1.0),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image(
+                    width: height - 1.0,
+                    height: height - 1.0,
+                    image: cover(
+                      item: album,
+                      cacheWidth: (kMobileHeaderHeight * MediaQuery.of(context).devicePixelRatio).toInt(),
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                  const SizedBox(width: 16.0),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: Theme.of(context).textTheme.titleMedium,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          subtitle,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8.0),
+                  IconButton(
+                    onPressed: onLongPress,
+                    splashRadius: 20.0,
+                    icon: const Icon(Icons.more_vert),
+                    color: Theme.of(context).iconTheme.color,
+                  ),
+                  const SizedBox(width: 8.0),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    }
     return OpenContainer(
       transitionDuration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
       closedColor: Theme.of(context).cardTheme.color ?? Colors.transparent,
@@ -117,6 +208,7 @@ class AlbumItem extends StatelessWidget {
       closedBuilder: (context, action) {
         return InkWell(
           onTap: action,
+          onLongPress: onLongPress,
           child: SizedBox(
             width: width,
             height: height,
@@ -145,20 +237,29 @@ class AlbumItem extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (title.isNotEmpty)
+                        if (height - width >= 56.0) ...[
+                          if (title.isNotEmpty)
+                            Text(
+                              title,
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          if (subtitle.isNotEmpty)
+                            Text(
+                              subtitle,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                        ] else if (height - width >= 32.0) ...[
                           Text(
                             title,
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+                            style: Theme.of(context).textTheme.bodyLarge,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                        if (subtitle.isNotEmpty)
-                          Text(
-                            subtitle,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                        ],
                       ],
                     ),
                   ),

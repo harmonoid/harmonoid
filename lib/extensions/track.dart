@@ -26,7 +26,7 @@ extension TrackExtensions on Track {
     switch (Configuration.instance.mediaLibraryTrackSortType) {
       case TrackSortType.title:
         return ValueKey(
-          title[0],
+          title[0].toUpperCase(),
         );
       case TrackSortType.timestamp:
         return ValueKey(

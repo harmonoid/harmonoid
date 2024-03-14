@@ -140,7 +140,7 @@ class SearchItemsScreenState extends State<SearchItemsScreen> {
 
     return ContentScreen(
       caption: kCaption,
-      title: Language.instance.RESULTS_FOR_QUERY.replaceAll('QUERY', widget.query),
+      title: Language.instance.RESULTS_FOR_QUERY.replaceAll('"QUERY"', widget.query),
       content: scrollViewBuilder,
     );
   }

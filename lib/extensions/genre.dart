@@ -12,7 +12,7 @@ extension GenreExtensions on Genre {
     switch (Configuration.instance.mediaLibraryGenreSortType) {
       case GenreSortType.genre:
         return ValueKey(
-          genre.isEmpty ? kDefaultGenre[0] : genre[0],
+          genre.isEmpty ? kDefaultGenre[0].toUpperCase() : genre[0].toUpperCase(),
         );
       case GenreSortType.timestamp:
         return ValueKey(

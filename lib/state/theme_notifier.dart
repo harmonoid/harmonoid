@@ -92,12 +92,14 @@ class ThemeNotifier extends ChangeNotifier {
           darkColorScheme: _darkColorScheme,
           mode: ThemeMode.light,
           animationDuration: animationDuration,
+          platform: TargetPlatform.android,
         ),
         2: createM2Theme(
           context: context!,
           color: _lightColor,
           mode: ThemeMode.light,
           animationDuration: animationDuration,
+          platform: TargetPlatform.android,
         )
       }[materialVersion]!;
 
@@ -108,12 +110,14 @@ class ThemeNotifier extends ChangeNotifier {
           darkColorScheme: _darkColorScheme,
           mode: ThemeMode.dark,
           animationDuration: animationDuration,
+          platform: TargetPlatform.android,
         ),
         2: createM2Theme(
           context: context!,
           color: _darkColor,
           mode: ThemeMode.dark,
           animationDuration: animationDuration,
+          platform: TargetPlatform.android,
         )
       }[materialVersion]!;
 

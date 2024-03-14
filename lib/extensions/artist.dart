@@ -12,7 +12,7 @@ extension ArtistExtensions on Artist {
     switch (Configuration.instance.mediaLibraryArtistSortType) {
       case ArtistSortType.artist:
         return ValueKey(
-          artist.isEmpty ? kDefaultArtist[0] : artist[0],
+          artist.isEmpty ? kDefaultArtist[0].toUpperCase() : artist[0].toUpperCase(),
         );
       case ArtistSortType.timestamp:
         return ValueKey(

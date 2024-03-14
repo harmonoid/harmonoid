@@ -1629,6 +1629,66 @@ class ReadFileOrURLMetadataButton extends StatelessWidget {
 
 // --------------------------------------------------
 
+class MobileGridSpanButton extends StatelessWidget {
+  const MobileGridSpanButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final path = GoRouterState.of(context).uri.pathSegments.last;
+    if (![kAlbumsPath, kArtistsPath, kGenresPath].contains(path)) {
+      return const SizedBox.shrink();
+    }
+    return IconButton(
+      icon: const Icon(Icons.view_list_outlined),
+      onPressed: () async {
+        final String title;
+        final int groupValue;
+        Future<void> Function(int?) onChanged;
+        switch (path) {
+          case kAlbumsPath:
+            title = Language.instance.MOBILE_ALBUM_GRID_SIZE;
+            groupValue = Configuration.instance.mobileAlbumGridSpan;
+            onChanged = (value) => Configuration.instance.set(mobileAlbumGridSpan: value).then((_) => Navigator.of(context).pop()).then((_) => MediaLibrary.instance.notify());
+            break;
+          case kArtistsPath:
+            title = Language.instance.MOBILE_ARTIST_GRID_SIZE;
+            groupValue = Configuration.instance.mobileArtistGridSpan;
+            onChanged = (value) => Configuration.instance.set(mobileArtistGridSpan: value).then((_) => Navigator.of(context).pop()).then((_) => MediaLibrary.instance.notify());
+            break;
+          case kGenresPath:
+            title = Language.instance.MOBILE_GENRE_GRID_SIZE;
+            groupValue = Configuration.instance.mobileGenreGridSpan;
+            onChanged = (value) => Configuration.instance.set(mobileGenreGridSpan: value).then((_) => Navigator.of(context).pop()).then((_) => MediaLibrary.instance.notify());
+            break;
+          default:
+            throw UnimplementedError();
+        }
+
+        await showDialog(
+          context: context,
+          builder: (context) => SimpleDialog(
+            title: Text(title),
+            children: [
+              for (int i = 1; i <= 4; i++)
+                RadioListTile<int>(
+                  value: i,
+                  groupValue: groupValue,
+                  onChanged: onChanged,
+                  title: Text(
+                    i.toString(),
+                    style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+// --------------------------------------------------
+
 class MobileAppBarOverflowButton extends StatefulWidget {
   const MobileAppBarOverflowButton({super.key});
 
@@ -1986,39 +2046,3 @@ class StillGIFState extends State<StillGIF> {
         );
   }
 }
-
-// --------------------------------------------------
-
-/// {@template tab_route}
-///
-/// TabRoute
-/// --------
-///
-/// {@endtemplate}
-class TabRoute {
-  /// Tab.
-  final int tab;
-
-  /// Sender.
-  final TabRouteSender sender;
-
-  /// {@macro tab_route}
-  const TabRoute(
-    this.tab,
-    this.sender,
-  );
-}
-
-/// {@template tab_route_sender}
-///
-/// TabRouteSender
-/// --------------
-///
-/// {@endtemplate}
-enum TabRouteSender {
-  pageView,
-  bottomNavigationBar,
-  systemNavigationBackButton,
-}
-
-// --------------------------------------------------

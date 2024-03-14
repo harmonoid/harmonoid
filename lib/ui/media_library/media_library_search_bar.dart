@@ -41,6 +41,7 @@ class MediaLibrarySearchBar extends StatelessWidget {
                       controller.openView();
                     },
                     trailing: const [
+                      MobileGridSpanButton(),
                       MobileAppBarOverflowButton(),
                     ],
                     hintText: !mediaLibrary.refreshing

@@ -81,6 +81,50 @@ class ArtistItem extends StatelessWidget {
   }
 
   Widget _buildMobileLayout(BuildContext context) {
+    if (width > height) {
+      return SizedBox(
+        height: height,
+        child: InkWell(
+          onTap: () {
+            // TODO:
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Divider(height: 1.0),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image(
+                    width: height - 1.0,
+                    height: height - 1.0,
+                    image: cover(
+                      item: artist,
+                      cacheWidth: (kMobileHeaderHeight * MediaQuery.of(context).devicePixelRatio).toInt(),
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                  const SizedBox(width: 16.0),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: Theme.of(context).textTheme.titleMedium,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  const SizedBox(width: 16.0),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    }
     return SizedBox(
       width: width,
       height: height,
@@ -133,7 +177,7 @@ class ArtistItem extends StatelessWidget {
               alignment: Alignment.center,
               child: Text(
                 title,
-                style: Theme.of(context).textTheme.titleSmall,
+                style: height - width > 24.0 ? Theme.of(context).textTheme.titleSmall : Theme.of(context).textTheme.bodyLarge,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
