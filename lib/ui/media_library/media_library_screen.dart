@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +10,7 @@ import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/extensions/media_library.dart';
 import 'package:harmonoid/ui/media_library/media_library_no_items_banner.dart';
+import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -25,6 +27,7 @@ class MediaLibraryScreen extends StatefulWidget {
 class MediaLibraryScreenState extends State<MediaLibraryScreen> {
   final ValueNotifier<bool> _floatingNotifier = ValueNotifier(false);
   final ValueNotifier<bool> _desktopAppBarElevatedNotifier = ValueNotifier<bool>(false);
+  final ValueNotifier<double> _mediaLibrarySearchBarOffsetNotifier = ValueNotifier<double>(0.0);
   final FocusNode _queryTextFieldFocusNode = FocusNode();
   final TextEditingController _queryTextFieldEditingController = TextEditingController();
 
@@ -39,6 +42,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
       _current = _path;
       _floatingNotifier.value = false;
       _desktopAppBarElevatedNotifier.value = false;
+      _mediaLibrarySearchBarOffsetNotifier.value = 0.0;
     }
   }
 
@@ -46,6 +50,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
   void dispose() {
     _floatingNotifier.dispose();
     _desktopAppBarElevatedNotifier.dispose();
+    _mediaLibrarySearchBarOffsetNotifier.dispose();
     _queryTextFieldFocusNode.dispose();
     _queryTextFieldEditingController.dispose();
     super.dispose();
@@ -252,7 +257,37 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
           resizeToAvoidBottomInset: false,
           body: Stack(
             children: [
-              widget.child,
+              NotificationListener<UserScrollNotification>(
+                onNotification: (notification) {
+                  if (notification.metrics.axis == Axis.vertical) {
+                    if (notification.direction == ScrollDirection.forward) {
+                      _mediaLibrarySearchBarOffsetNotifier.value = 0.0;
+                    }
+                    if (notification.direction == ScrollDirection.reverse) {
+                      _mediaLibrarySearchBarOffsetNotifier.value = -1.0 * mediaLibraryScrollViewBuilderPadding.top;
+                    }
+                  }
+                  return false;
+                },
+                child: mediaLibrary.isEmpty
+                    ? const Center(
+                        child: MediaLibraryNoItemsBanner(),
+                      )
+                    : widget.child,
+              ),
+              ValueListenableBuilder<double>(
+                valueListenable: _mediaLibrarySearchBarOffsetNotifier,
+                builder: (context, offset, _) {
+                  return AnimatedPositioned(
+                    top: offset,
+                    left: 0.0,
+                    right: 0.0,
+                    curve: Curves.easeInOut,
+                    duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+                    child: const MediaLibrarySearchBar(),
+                  );
+                },
+              ),
               const Positioned(
                 right: 16.0,
                 bottom: 16.0,

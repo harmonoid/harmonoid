@@ -61,6 +61,8 @@ class SearchScreenState extends State<SearchScreen> {
     }
     return Scaffold(
       body: ListView(
+        shrinkWrap: true,
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         children: [
           if (_albums.isNotEmpty) ...[
             Row(
@@ -84,7 +86,7 @@ class SearchScreenState extends State<SearchScreen> {
             ),
             Container(
               alignment: Alignment.centerLeft,
-              height: kAlbumTileHeight + margin,
+              height: albumTileHeight + margin,
               child: ListView.separated(
                 shrinkWrap: true,
                 itemCount: _albums.length.clamp(0, kLimit),
@@ -96,8 +98,8 @@ class SearchScreenState extends State<SearchScreen> {
                 ),
                 itemBuilder: (context, i) => AlbumItem(
                   album: _albums[i],
-                  width: kAlbumTileWidth,
-                  height: kAlbumTileHeight,
+                  width: albumTileWidth,
+                  height: albumTileHeight,
                 ),
                 separatorBuilder: (context, _) => SizedBox(width: margin),
               ),
@@ -209,7 +211,7 @@ class SearchScreenState extends State<SearchScreen> {
               TrackItem(
                 track: _tracks[i],
                 width: double.infinity,
-                height: kDesktopTrackTileHeight,
+                height: linearTileHeight,
                 onTap: () {
                   MediaPlayer.instance.open(
                     _tracks.map((e) => e.toPlayable()).toList(),
