@@ -14,6 +14,9 @@ class MediaLibrarySearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final shape = Theme.of(context).searchBarTheme.shape?.resolve({});
+    final borderRadius = shape is! RoundedRectangleBorder ? null : shape.borderRadius as BorderRadius;
+
     return Container(
       alignment: Alignment.center,
       padding: EdgeInsets.only(
@@ -58,18 +61,14 @@ class MediaLibrarySearchBar extends StatelessWidget {
                   ),
                   if (mediaLibrary.refreshing)
                     Positioned(
-                      bottom: 0.0,
                       left: 0.0,
                       right: 0.0,
+                      top: 0.0,
+                      bottom: 0.0,
                       child: Container(
-                        height: 4.0,
                         clipBehavior: Clip.antiAlias,
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(4.0),
-                            bottomRight: Radius.circular(4.0),
-                          ),
-                        ),
+                        alignment: Alignment.bottomCenter,
+                        decoration: BoxDecoration(borderRadius: borderRadius),
                         child: LinearProgressIndicator(
                           value: mediaLibrary.current == null ? null : (mediaLibrary.current ?? 0) / (mediaLibrary.total == 0 ? 1 : mediaLibrary.total),
                         ),
