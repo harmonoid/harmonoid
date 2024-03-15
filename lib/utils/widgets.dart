@@ -1303,7 +1303,7 @@ class DefaultTextField extends StatelessWidget {
     this.onSubmitted,
     this.onEditingComplete,
     this.decoration,
-    this.textAlignVertical,
+    this.textAlignVertical = TextAlignVertical.center,
     this.autofocus,
     this.autocorrect,
     this.readOnly,
@@ -1377,7 +1377,7 @@ class DefaultTextFormField extends StatelessWidget {
     this.onFieldSubmitted,
     this.onEditingComplete,
     this.decoration,
-    this.textAlignVertical,
+    this.textAlignVertical = TextAlignVertical.center,
     this.autofocus,
     this.autocorrect,
     this.readOnly,
@@ -1857,7 +1857,7 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                                         ),
                                       ),
                                       const SizedBox(height: 4.0),
-                                      ElevatedButton(
+                                      FilledButton(
                                         onPressed: () async {
                                           if (formKey.currentState?.validate() ?? false) {
                                             await Navigator.of(context).maybePop();

@@ -162,14 +162,14 @@ class _GenreScreenState extends State<GenreScreen> {
           });
         }
       },
-      mergeHeroAndListItems: false,
+      mergeHeroAndListItems: true,
       actions: {
         Icons.play_arrow: (_) => MediaPlayer.instance.open(_tracks.map((e) => e.toPlayable()).toList()),
         Icons.shuffle: (_) => MediaPlayer.instance.open([..._tracks..shuffle()].map((e) => e.toPlayable()).toList()),
         Icons.playlist_add: (_) => MediaPlayer.instance.add(_tracks.map((e) => e.toPlayable()).toList()),
       },
       labels: {
-        Icons.play_arrow: Language.instance.PLAY,
+        Icons.play_arrow: Language.instance.PLAY_NOW,
         Icons.shuffle: Language.instance.SHUFFLE,
         Icons.playlist_add: Language.instance.ADD_TO_NOW_PLAYING,
       },

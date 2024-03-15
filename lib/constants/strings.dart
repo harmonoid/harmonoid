@@ -33,6 +33,7 @@ class Strings {
   late String COUNT;
   late String CREATE;
   late String CREATE_NEW_PLAYLIST;
+  late String CREATE_NEW_PLAYLIST_SUBTITLE;
   late String DATE_ADDED;
   late String DELETE;
   late String DESCENDING;
@@ -49,6 +50,8 @@ class Strings {
   late String ENABLE_DISCORD_RPC;
   late String ENABLE_VOLUME_BOOST_FILTER;
   late String ENABLE_VOLUME_BOOST_FILTER_WARNING;
+  late String ENTRIES;
+  late String ENTRY;
   late String ERROR;
   late String EXIT_FULLSCREEN;
   late String EXIT_NOW_PLAYING;
@@ -78,7 +81,6 @@ class Strings {
   late String INDEXING_ALREADY_GOING_ON_TITLE;
   late String INDEXING_LABEL;
   late String INTERNET_ERROR;
-  late String INVALID_PLAYLIST_URL;
   late String LAST_DIRECTORY_REMOVED;
   late String LESS;
   late String LIBRARY;
@@ -115,6 +117,7 @@ class Strings {
   late String NO_PLAYLISTS_FOUND;
   late String N_ALBUMS;
   late String N_ARTISTS;
+  late String N_ENTRIES;
   late String N_GENRES;
   late String N_TRACKS;
   late String OK;
@@ -136,19 +139,11 @@ class Strings {
   late String PLAY;
   late String PLAYLIST;
   late String PLAYLISTS;
-  late String PLAYLISTS_CREATE;
-  late String PLAYLISTS_SUBHEADER;
-  late String PLAYLISTS_TEXT_FIELD_HINT;
-  late String PLAYLISTS_TEXT_FIELD_LABEL;
   late String PLAYLIST_ADD_DIALOG_SUBTITLE;
   late String PLAYLIST_ADD_DIALOG_TITLE;
   late String PLAYLIST_DELETE_DIALOG_SUBTITLE;
   late String PLAYLIST_ENTRY_DELETE_DIALOG_SUBTITLE;
-  late String PLAYLIST_NAME;
-  late String PLAYLIST_SINGLE;
-  late String PLAYLIST_TRACKS_SUBHEADER;
   late String PLAY_ALL;
-  late String PLAY_INTERNET;
   late String PLAY_NOW;
   late String PLAY_URL;
   late String PLAY_URL_SUBTITLE;

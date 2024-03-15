@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_icon.dart';
+import 'package:harmonoid/ui/router.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:harmonoid/utils/rendering.dart';
 
 class PlaylistItem extends StatelessWidget {
   final Playlist playlist;
@@ -21,9 +25,33 @@ class PlaylistItem extends StatelessWidget {
             final entries = snapshot.data;
             return ListTile(
               onTap: onTap ??
-                  () {
-                    // TODO:
-                  },
+                  (entries == null
+                      ? null
+                      : () async {
+                          List<Color>? palette;
+                          if (isMaterial2) {
+                            try {
+                              final result = await PaletteGenerator.fromImageProvider(
+                                cover(
+                                  uri: entries[0].uri,
+                                  cacheWidth: 64,
+                                ),
+                              );
+                              palette = result.colors?.toList();
+                            } catch (exception, stacktrace) {
+                              debugPrint(exception.toString());
+                              debugPrint(stacktrace.toString());
+                            }
+                          }
+                          await context.push(
+                            '/$kMediaLibraryPath/$kPlaylistPath',
+                            extra: PlaylistPathExtra(
+                              playlist: playlist,
+                              entries: entries,
+                              palette: palette,
+                            ),
+                          );
+                        }),
               leading: SizedBox.square(
                 dimension: 56.0,
                 child: PlaylistIcon(

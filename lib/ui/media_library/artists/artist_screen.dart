@@ -42,7 +42,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
                   margin: EdgeInsets.zero,
                   shape: const CircleBorder(),
                   elevation: Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
-                  child: Padding(
+                  child: Container(
                     padding: const EdgeInsets.all(8.0),
                     child: ClipOval(
                       clipBehavior: Clip.antiAlias,
@@ -141,7 +141,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
         Icons.playlist_add: (_) => MediaPlayer.instance.add(_tracks.map((e) => e.toPlayable()).toList()),
       },
       labels: {
-        Icons.play_arrow: Language.instance.PLAY,
+        Icons.play_arrow: Language.instance.PLAY_NOW,
         Icons.shuffle: Language.instance.SHUFFLE,
         Icons.playlist_add: Language.instance.ADD_TO_NOW_PLAYING,
       },

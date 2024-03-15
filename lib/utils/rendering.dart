@@ -615,13 +615,10 @@ InputDecoration inputDecoration(BuildContext context, String hintText, {Widget? 
             minWidth: 0.0,
           )
         : null,
-    contentPadding: EdgeInsets.only(
-      left: 12.0,
-      right: 12.0,
-      bottom: Theme.of(context).platform == TargetPlatform.windows || Platform.isLinux || Platform.isMacOS ? 8.0 : 2.0,
-    ),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
     hintText: hintText,
     filled: true,
+    isCollapsed: true,
     fillColor: fillColor ?? Theme.of(context).colorScheme.surfaceVariant,
     border: UnderlineInputBorder(
       borderSide: BorderSide(

@@ -68,21 +68,21 @@ class AlbumItem extends StatelessWidget {
         );
         await albumPopupMenuHandle(context, album, result);
       },
-      child: Hero(
-        tag: album,
-        child: Card(
-          margin: EdgeInsets.zero,
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: () async {
-              navigate(context);
-            },
-            child: SizedBox(
-              width: width,
-              height: height,
-              child: Column(
-                children: [
-                  SizedBox(
+      child: Card(
+        margin: EdgeInsets.zero,
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () async {
+            navigate(context);
+          },
+          child: SizedBox(
+            width: width,
+            height: height,
+            child: Column(
+              children: [
+                Hero(
+                  tag: album,
+                  child: SizedBox(
                     width: width,
                     height: width,
                     child: ScaleOnHover(
@@ -97,36 +97,36 @@ class AlbumItem extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      width: width,
-                      alignment: Alignment.centerLeft,
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (title.isNotEmpty)
-                            Text(
-                              title,
-                              style: Theme.of(context).textTheme.titleSmall,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          if (subtitle.isNotEmpty)
-                            Text(
-                              subtitle,
-                              style: Theme.of(context).textTheme.bodySmall,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                        ],
-                      ),
+                ),
+                Expanded(
+                  child: Container(
+                    width: width,
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (title.isNotEmpty)
+                          Text(
+                            title,
+                            style: Theme.of(context).textTheme.titleSmall,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        if (subtitle.isNotEmpty)
+                          Text(
+                            subtitle,
+                            style: Theme.of(context).textTheme.bodySmall,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

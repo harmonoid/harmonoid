@@ -164,7 +164,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
         },
       },
       labels: {
-        Icons.play_arrow: Language.instance.PLAY,
+        Icons.play_arrow: Language.instance.PLAY_NOW,
         Icons.shuffle: Language.instance.SHUFFLE,
         Icons.playlist_add: Language.instance.ADD_TO_NOW_PLAYING,
         Icons.delete: Language.instance.DELETE,

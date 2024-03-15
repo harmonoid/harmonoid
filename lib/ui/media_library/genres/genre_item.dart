@@ -1,15 +1,14 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:harmonoid/ui/media_library/genres/genre_screen.dart';
-import 'package:harmonoid/utils/open_container.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/ui/media_library/genres/constants.dart';
+import 'package:harmonoid/ui/media_library/genres/genre_screen.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
-import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:harmonoid/utils/open_container.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 class GenreItem extends StatelessWidget {
@@ -28,17 +27,6 @@ class GenreItem extends StatelessWidget {
 
   Future<void> navigate(BuildContext context) async {
     final tracks = await MediaLibrary.instance.tracksFromGenre(genre);
-
-    List<Color>? palette;
-    if (isMaterial2) {
-      final result = await PaletteGenerator.fromImageProvider(
-        cover(
-          item: genre,
-          cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
-        ),
-      );
-      palette = result.colors?.toList();
-    }
 
     await precacheImage(cover(item: genre), context);
 
@@ -146,16 +134,6 @@ class GenreItem extends StatelessWidget {
           onTap: () async {
             tracks = await MediaLibrary.instance.tracksFromGenre(genre);
 
-            if (isMaterial2) {
-              final result = await PaletteGenerator.fromImageProvider(
-                cover(
-                  item: genre,
-                  cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
-                ),
-              );
-              palette = result.colors?.toList();
-            }
-
             await precacheImage(cover(item: genre), context);
 
             action();
@@ -207,5 +185,5 @@ class GenreItem extends StatelessWidget {
   }
 
   static List<Track>? tracks;
-  static List<Color>? palette;
+  static List<Color>? palette = [Colors.white, Color.lerp(Colors.white, Colors.black, 0.54)!];
 }

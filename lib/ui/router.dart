@@ -89,11 +89,11 @@ const String kPlaylistPath = 'playlist';
 
 class PlaylistPathExtra {
   final Playlist playlist;
-  final List<Track> tracks;
+  final List<PlaylistEntry> entries;
   final List<Color>? palette;
   const PlaylistPathExtra({
     required this.playlist,
-    required this.tracks,
+    required this.entries,
     required this.palette,
   });
 }
@@ -259,7 +259,7 @@ final router = GoRouter(
                   state: state,
                   child: PlaylistScreen(
                     playlist: extra.playlist,
-                    tracks: extra.tracks,
+                    entries: extra.entries,
                     palette: extra.palette,
                   ),
                 );
