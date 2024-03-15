@@ -23,7 +23,7 @@ class ArtistScreen extends StatefulWidget {
 
 class _ArtistScreenState extends State<ArtistScreen> {
   late final _tracks = widget.tracks;
-  late final String _title = widget.artist.artist;
+  late final String _title = widget.artist.artist.isEmpty ? kDefaultArtist : widget.artist.artist;
   late final String _subtitle = isDesktop ? '${Language.instance.TRACKS}: ${_tracks.length}' : Language.instance.N_TRACKS.replaceAll('"N"', _tracks.length.toString());
 
   @override
@@ -74,6 +74,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
         Text(Language.instance.TRACK),
         Text(Language.instance.ALBUM),
       ],
+      listItemIndexBuilder: (context, i) => _tracks[i].trackNumber == 0 ? kDefaultTrackNumber : _tracks[i].trackNumber,
       listItemBuilder: (context, i) {
         if (isDesktop) {
           return [
@@ -86,7 +87,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: _tracks[i].album,
+                    text: _tracks[i].album.isEmpty ? kDefaultAlbum : _tracks[i].album,
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
                         // TODO:
@@ -105,12 +106,11 @@ class _ArtistScreenState extends State<ArtistScreen> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            for (final artist in (_tracks[i].artists.isEmpty ? {kDefaultArtist} : _tracks[i].artists))
-              Text(
-                artist,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+            Text(
+              _tracks[i].album.isEmpty ? kDefaultAlbum : _tracks[i].album,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ];
         }
         throw UnimplementedError();

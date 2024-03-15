@@ -23,7 +23,7 @@ class AlbumScreen extends StatefulWidget {
 
 class _AlbumScreenState extends State<AlbumScreen> {
   late final _tracks = widget.tracks;
-  late final String _title = widget.album.album;
+  late final String _title = widget.album.album.isEmpty ? kDefaultAlbum : widget.album.album;
   late final String _subtitle = isDesktop
       ? [
           '${Language.instance.ARTIST}: ${widget.album.albumArtist.isEmpty ? kDefaultArtist : widget.album.albumArtist}',
@@ -89,6 +89,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
         Text(Language.instance.TRACK),
         Text(Language.instance.ARTISTS),
       ],
+      listItemIndexBuilder: (context, i) => _tracks[i].trackNumber == 0 ? kDefaultTrackNumber : _tracks[i].trackNumber,
       listItemBuilder: (context, i) {
         if (isDesktop) {
           return [
@@ -125,12 +126,11 @@ class _AlbumScreenState extends State<AlbumScreen> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            for (final artist in (_tracks[i].artists.isEmpty ? {kDefaultArtist} : _tracks[i].artists))
-              Text(
-                artist,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+            Text(
+              (_tracks[i].artists.isEmpty ? {kDefaultArtist} : _tracks[i].artists).join(', '),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ];
         }
         throw UnimplementedError();

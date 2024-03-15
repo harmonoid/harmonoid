@@ -337,7 +337,7 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
           if (recursivelyPopNavigatorOnDeleteIf != null) {
             if (await recursivelyPopNavigatorOnDeleteIf()) {
               rootNavigatorKey.currentContext?.go('/');
-              /* HACK: */ mediaLibrarySearchBarController.closeView(null);
+              /* HACK: */ if (mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
             }
           }
           return;
@@ -356,7 +356,7 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
                 if (recursivelyPopNavigatorOnDeleteIf != null) {
                   if (await recursivelyPopNavigatorOnDeleteIf()) {
                     rootNavigatorKey.currentContext?.go('/');
-                    /* HACK: */ mediaLibrarySearchBarController.closeView(null);
+                    /* HACK: */ if (mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
                   }
                 }
               },
@@ -447,7 +447,7 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
           // Android 11 or higher (API level 30) will ask for permissions from the user before deletion.
           await MediaLibrary.instance.remove(tracks);
           rootNavigatorKey.currentContext?.go('/');
-          /* HACK: */ mediaLibrarySearchBarController.closeView(null);
+          /* HACK: */ if (mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
           return;
         }
       }
@@ -462,7 +462,7 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
                 await MediaLibrary.instance.remove(tracks);
                 await Navigator.of(ctx).maybePop();
                 rootNavigatorKey.currentContext?.go('/');
-                /* HACK: */ mediaLibrarySearchBarController.closeView(null);
+                /* HACK: */ if (mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
               },
               child: Text(
                 label(Language.instance.YES),

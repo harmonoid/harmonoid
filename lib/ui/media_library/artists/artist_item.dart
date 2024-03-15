@@ -1,14 +1,14 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:media_library/media_library.dart' hide MediaLibrary;
+
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/ui/media_library/artists/artist_screen.dart';
 import 'package:harmonoid/ui/router.dart';
-import 'package:harmonoid/utils/palette_generator.dart';
-import 'package:media_library/media_library.dart' hide MediaLibrary;
-
 import 'package:harmonoid/utils/constants.dart';
+import 'package:harmonoid/utils/open_container.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
@@ -40,8 +40,6 @@ class ArtistItem extends StatelessWidget {
     }
 
     await precacheImage(cover(item: artist), context);
-
-    await Future.delayed(const Duration(milliseconds: 200));
 
     await context.push(
       '/$kMediaLibraryPath/$kArtistPath',
@@ -159,15 +157,13 @@ class ArtistItem extends StatelessWidget {
       );
     }
 
-    List<Track>? tracks;
-    List<Color>? palette;
-
     return SizedBox(
       width: width,
       height: height,
       child: Column(
         children: [
           OpenContainer(
+            navigatorKey: homeNavigatorKey,
             transitionDuration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
             closedColor: Theme.of(context).cardTheme.color ?? Colors.transparent,
             closedShape: const CircleBorder(),
@@ -195,7 +191,8 @@ class ArtistItem extends StatelessWidget {
                   Positioned.fill(
                     child: Material(
                       color: Colors.transparent,
-                      child: InkWell(
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
                         onTap: () async {
                           tracks = await MediaLibrary.instance.tracksFromArtist(artist);
 
@@ -210,8 +207,6 @@ class ArtistItem extends StatelessWidget {
                           }
 
                           await precacheImage(cover(item: artist), context);
-
-                          await Future.delayed(const Duration(milliseconds: 200));
 
                           action();
                         },
@@ -257,4 +252,7 @@ class ArtistItem extends StatelessWidget {
     }
     throw UnimplementedError();
   }
+
+  static List<Track>? tracks;
+  static List<Color>? palette;
 }

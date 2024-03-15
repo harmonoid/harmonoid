@@ -1,10 +1,15 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:harmonoid/ui/media_library/genres/genre_screen.dart';
+import 'package:harmonoid/utils/open_container.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
+import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/ui/media_library/genres/constants.dart';
+import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 class GenreItem extends StatelessWidget {
@@ -21,6 +26,32 @@ class GenreItem extends StatelessWidget {
   late final title = genre.genre.isNotEmpty ? genre.genre : kDefaultGenre;
   late final color = kGenreColors[genre.genre.hashCode % kGenreColors.length];
 
+  Future<void> navigate(BuildContext context) async {
+    final tracks = await MediaLibrary.instance.tracksFromGenre(genre);
+
+    List<Color>? palette;
+    if (isMaterial2) {
+      final result = await PaletteGenerator.fromImageProvider(
+        cover(
+          item: genre,
+          cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
+        ),
+      );
+      palette = result.colors?.toList();
+    }
+
+    await precacheImage(cover(item: genre), context);
+
+    await context.push(
+      '/$kMediaLibraryPath/$kGenrePath',
+      extra: GenrePathExtra(
+        genre: genre,
+        tracks: tracks,
+        palette: palette,
+      ),
+    );
+  }
+
   Widget _buildDesktopLayout(BuildContext context) {
     return Hero(
       tag: genre,
@@ -30,7 +61,7 @@ class GenreItem extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: () {
-            // TODO:
+            navigate(context);
           },
           child: Container(
             width: width,
@@ -60,7 +91,7 @@ class GenreItem extends StatelessWidget {
         height: height,
         child: InkWell(
           onTap: () {
-            // TODO:
+            navigate(context);
           },
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -103,6 +134,7 @@ class GenreItem extends StatelessWidget {
     return Hero(
       tag: genre,
       child: OpenContainer(
+        navigatorKey: rootNavigatorKey,
         transitionDuration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
         closedColor: color,
         closedShape: Theme.of(context).cardTheme.shape ?? const RoundedRectangleBorder(),
@@ -111,7 +143,23 @@ class GenreItem extends StatelessWidget {
         openElevation: Theme.of(context).cardTheme.elevation ?? 0.0,
         clipBehavior: Clip.antiAlias,
         closedBuilder: (context, action) => InkWell(
-          onTap: action,
+          onTap: () async {
+            tracks = await MediaLibrary.instance.tracksFromGenre(genre);
+
+            if (isMaterial2) {
+              final result = await PaletteGenerator.fromImageProvider(
+                cover(
+                  item: genre,
+                  cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
+                ),
+              );
+              palette = result.colors?.toList();
+            }
+
+            await precacheImage(cover(item: genre), context);
+
+            action();
+          },
           child: Container(
             width: width,
             height: height,
@@ -135,7 +183,11 @@ class GenreItem extends StatelessWidget {
             ),
           ),
         ),
-        openBuilder: (context, action) => const SizedBox(),
+        openBuilder: (context, action) => GenreScreen(
+          genre: genre,
+          tracks: tracks!,
+          palette: palette,
+        ),
       ),
     );
   }
@@ -153,4 +205,7 @@ class GenreItem extends StatelessWidget {
     }
     return throw UnimplementedError();
   }
+
+  static List<Track>? tracks;
+  static List<Color>? palette;
 }

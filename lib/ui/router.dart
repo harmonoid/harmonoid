@@ -18,6 +18,7 @@ import 'package:harmonoid/ui/media_library/playlists/playlists_screen.dart';
 import 'package:harmonoid/ui/media_library/search/search_items_screen.dart';
 import 'package:harmonoid/ui/media_library/search/search_screen.dart';
 import 'package:harmonoid/ui/media_library/tracks/tracks_screen.dart';
+import 'package:harmonoid/utils/material_transition_page.dart';
 
 const String kMediaLibraryPath = 'media-library';
 
@@ -192,55 +193,75 @@ final router = GoRouter(
             ),
             GoRoute(
               path: kSearchItemsPath,
-              builder: (context, state) {
+              pageBuilder: (context, state) {
                 final extra = state.extra as SearchItemsPathExtra;
-                return SearchItemsScreen(
-                  query: extra.query,
-                  items: extra.items,
+                return buildPageWithDefaultTransition(
+                  context: context,
+                  state: state,
+                  child: SearchItemsScreen(
+                    query: extra.query,
+                    items: extra.items,
+                  ),
                 );
               },
             ),
             GoRoute(
               path: kAlbumPath,
-              builder: (context, state) {
+              pageBuilder: (context, state) {
                 final extra = state.extra as AlbumPathExtra;
-                return AlbumScreen(
-                  album: extra.album,
-                  tracks: extra.tracks,
-                  palette: extra.palette,
+                return buildPageWithDefaultTransition(
+                  context: context,
+                  state: state,
+                  child: AlbumScreen(
+                    album: extra.album,
+                    tracks: extra.tracks,
+                    palette: extra.palette,
+                  ),
                 );
               },
             ),
             GoRoute(
               path: kArtistPath,
-              builder: (context, state) {
+              pageBuilder: (context, state) {
                 final extra = state.extra as ArtistPathExtra;
-                return ArtistScreen(
-                  artist: extra.artist,
-                  tracks: extra.tracks,
-                  palette: extra.palette,
+                return buildPageWithDefaultTransition(
+                  context: context,
+                  state: state,
+                  child: ArtistScreen(
+                    artist: extra.artist,
+                    tracks: extra.tracks,
+                    palette: extra.palette,
+                  ),
                 );
               },
             ),
             GoRoute(
               path: kGenrePath,
-              builder: (context, state) {
+              pageBuilder: (context, state) {
                 final extra = state.extra as GenrePathExtra;
-                return GenreScreen(
-                  genre: extra.genre,
-                  tracks: extra.tracks,
-                  palette: extra.palette,
+                return buildPageWithDefaultTransition(
+                  context: context,
+                  state: state,
+                  child: GenreScreen(
+                    genre: extra.genre,
+                    tracks: extra.tracks,
+                    palette: extra.palette,
+                  ),
                 );
               },
             ),
             GoRoute(
               path: kPlaylistPath,
-              builder: (context, state) {
+              pageBuilder: (context, state) {
                 final extra = state.extra as PlaylistPathExtra;
-                return PlaylistScreen(
-                  playlist: extra.playlist,
-                  tracks: extra.tracks,
-                  palette: extra.palette,
+                return buildPageWithDefaultTransition(
+                  context: context,
+                  state: state,
+                  child: PlaylistScreen(
+                    playlist: extra.playlist,
+                    tracks: extra.tracks,
+                    palette: extra.palette,
+                  ),
                 );
               },
             ),
@@ -248,14 +269,22 @@ final router = GoRouter(
         ),
         GoRoute(
           path: '/$kSettingsPath',
-          builder: (context, state) {
-            return const SizedBox();
+          pageBuilder: (context, state) {
+            return buildPageWithDefaultTransition(
+              context: context,
+              state: state,
+              child: const SizedBox(),
+            );
           },
         ),
         GoRoute(
           path: '/$kModernNowPlayingPath',
-          builder: (context, state) {
-            return const SizedBox();
+          pageBuilder: (context, state) {
+            return buildPageWithDefaultTransition(
+              context: context,
+              state: state,
+              child: const SizedBox(),
+            );
           },
         ),
       ],
@@ -263,7 +292,7 @@ final router = GoRouter(
   ],
 );
 
-CustomTransitionPage buildPageWithMediaLibraryTransition<T>({
+CustomTransitionPage<T> buildPageWithMediaLibraryTransition<T>({
   required BuildContext context,
   required GoRouterState state,
   required Widget child,
@@ -283,13 +312,13 @@ CustomTransitionPage buildPageWithMediaLibraryTransition<T>({
   );
 }
 
-MaterialPage buildPageWithDefaultTransition<T>({
+MaterialTransitionPage<T> buildPageWithDefaultTransition<T>({
   required BuildContext context,
   required GoRouterState state,
   required Widget child,
   ValueKey? key,
 }) {
-  return MaterialPage<T>(
+  return MaterialTransitionPage<T>(
     key: key ?? state.pageKey,
     child: child,
   );

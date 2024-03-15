@@ -52,6 +52,8 @@ class ThemeNotifier extends ChangeNotifier {
         if (corePalette != null) {
           systemLightColorScheme = corePalette.toColorScheme(brightness: Brightness.light);
           systemDarkColorScheme = corePalette.toColorScheme(brightness: Brightness.dark);
+          systemLightColor = systemLightColorScheme?.primary;
+          systemDarkColor = systemDarkColorScheme?.primary;
         }
         return;
       } catch (exception, stacktrace) {

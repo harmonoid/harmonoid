@@ -26,6 +26,7 @@ const double kMobileSearchBarHeight = 56.0;
 const String kCoverDefaultAssetKey = 'assets/images/cover_default.png';
 const String kCoverDefaultFileName = 'Default.PNG';
 
+const int kDefaultTrackNumber = 1;
 const String kDefaultAlbum = 'Unknown Album';
 const String kDefaultArtist = 'Unknown Artist';
 const String kDefaultGenre = 'Unknown Genre';
