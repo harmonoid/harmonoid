@@ -7,6 +7,7 @@ import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/mappers/track.dart';
+import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -101,12 +102,12 @@ class _AlbumScreenState extends State<AlbumScreen> {
             HyperLink(
               text: TextSpan(
                 children: [
-                  for (final artist in (_tracks[i].artists.isEmpty ? {kDefaultArtist} : _tracks[i].artists)) ...[
+                  for (final artist in (_tracks[i].artists.isEmpty ? {''} : _tracks[i].artists)) ...[
                     TextSpan(
-                      text: artist,
+                      text: artist.isEmpty ? kDefaultArtist : artist,
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          // TODO:
+                          navigateToArtist(context, ArtistLookupKey(artist: artist));
                         },
                     ),
                     const TextSpan(

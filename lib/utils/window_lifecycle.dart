@@ -5,7 +5,7 @@ import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
-// import 'package:harmonoid/ui/home_screen.dart';
+import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 /// {@template window_lifecycle}
@@ -50,32 +50,19 @@ class WindowLifecycle {
       await Future.delayed(const Duration(milliseconds: 500));
       return true;
     } else {
-      // await showDialog(
-      //   context: navigatorKey.currentContext!,
-      //   builder: (context) => AlertDialog(
-      //     title: Text(Language.instance.WARNING),
-      //     contentPadding: const EdgeInsets.fromLTRB(
-      //       24.0,
-      //       20.0,
-      //       24.0,
-      //       20.0,
-      //     ),
-      //     content: Text(
-      //       Language.instance.INDEXING_LABEL.replaceAll('\n', ' '),
-      //     ),
-      //     actions: [
-      //       TextButton(
-      //         onPressed: Navigator.of(context).maybePop,
-      //         child: Text(
-      //           label(
-      //             context,
-      //             Language.instance.OK,
-      //           ),
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // );
+      await showDialog(
+        context: rootNavigatorKey.currentContext!,
+        builder: (context) => AlertDialog(
+          title: Text(Language.instance.WARNING),
+          content: Text(Language.instance.MEDIA_LIBRARY_REFRESHING_DIALOG_SUBTITLE.replaceAll('\n', ' ')),
+          actions: [
+            TextButton(
+              onPressed: Navigator.of(context).maybePop,
+              child: Text(label(Language.instance.OK)),
+            ),
+          ],
+        ),
+      );
       return false;
     }
   }

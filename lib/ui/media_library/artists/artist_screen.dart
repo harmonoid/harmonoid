@@ -7,6 +7,7 @@ import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/mappers/track.dart';
+import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -23,8 +24,8 @@ class ArtistScreen extends StatefulWidget {
 
 class _ArtistScreenState extends State<ArtistScreen> {
   late final _tracks = widget.tracks;
-  String get  _title => widget.artist.artist.isEmpty ? kDefaultArtist : widget.artist.artist;
-  String get  _subtitle => isDesktop ? '${Language.instance.TRACKS}: ${_tracks.length}' : Language.instance.N_TRACKS.replaceAll('"N"', _tracks.length.toString());
+  String get _title => widget.artist.artist.isEmpty ? kDefaultArtist : widget.artist.artist;
+  String get _subtitle => isDesktop ? '${Language.instance.TRACKS}: ${_tracks.length}' : Language.instance.N_TRACKS.replaceAll('"N"', _tracks.length.toString());
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +91,14 @@ class _ArtistScreenState extends State<ArtistScreen> {
                     text: _tracks[i].album.isEmpty ? kDefaultAlbum : _tracks[i].album,
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-                        // TODO:
+                        navigateToAlbum(
+                          context,
+                          AlbumLookupKey(
+                            album: _tracks[i].album,
+                            albumArtist: _tracks[i].albumArtist,
+                            year: _tracks[i].year,
+                          ),
+                        );
                       },
                   ),
                 ],

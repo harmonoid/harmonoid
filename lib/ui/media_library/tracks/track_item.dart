@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
 import 'package:harmonoid/core/media_player.dart';
@@ -92,12 +93,12 @@ class TrackItem extends StatelessWidget {
                           child: HyperLink(
                             text: TextSpan(
                               children: [
-                                for (final artist in (track.artists.isEmpty ? {kDefaultArtist} : track.artists)) ...[
+                                for (final artist in (track.artists.isEmpty ? {''} : track.artists)) ...[
                                   TextSpan(
-                                    text: artist,
+                                    text: artist.isEmpty ? kDefaultArtist : artist,
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        // TODO:
+                                        navigateToArtist(context, ArtistLookupKey(artist: artist));
                                       },
                                   ),
                                   const TextSpan(
@@ -124,7 +125,7 @@ class TrackItem extends StatelessWidget {
                                   text: track.album.isEmpty ? kDefaultAlbum : track.album,
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      // TODO:
+                                      navigateToAlbum(context, AlbumLookupKey(album: track.album, albumArtist: track.albumArtist, year: track.year));
                                     },
                                 ),
                               ],
@@ -143,12 +144,12 @@ class TrackItem extends StatelessWidget {
                           child: HyperLink(
                             text: TextSpan(
                               children: [
-                                for (final genre in (track.genres.isEmpty ? {kDefaultGenre} : track.genres)) ...[
+                                for (final genre in (track.genres.isEmpty ? {''} : track.genres)) ...[
                                   TextSpan(
-                                    text: genre,
+                                    text: genre.isEmpty ? kDefaultGenre : genre,
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        // TODO:
+                                        navigateToGenre(context, GenreLookupKey(genre: genre));
                                       },
                                   ),
                                   const TextSpan(
@@ -199,9 +200,10 @@ class TrackItem extends StatelessWidget {
     return SizedBox(
       height: height,
       child: InkWell(
-        onTap: () {
-          // TODO:
-        },
+        onTap: onTap ??
+            () {
+              MediaPlayer.instance.open([track.toPlayable()]);
+            },
         onLongPress: onLongPress,
         child: Column(
           mainAxisSize: MainAxisSize.max,

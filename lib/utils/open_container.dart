@@ -67,8 +67,6 @@ typedef ClosedCallback<S> = void Function(S data);
 /// `T` refers to the type of data returned by the route when the container
 /// is closed. This value can be accessed in the `onClosed` function.
 ///
-// TODO(goderbauer): Add example animations and sample code.
-///
 /// See also:
 ///
 ///  * [Transitions with animated containers](https://material.io/design/motion/choreography.html#transformation)

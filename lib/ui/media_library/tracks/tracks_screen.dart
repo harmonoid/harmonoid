@@ -2,6 +2,7 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
@@ -312,8 +313,10 @@ class TracksDataSource extends DataGridSource {
 
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
+    final cells = row.getCells();
+    final track = cells[0].value as Track;
     return DataGridRowAdapter(
-      cells: row.getCells().map(
+      cells: cells.map(
         (cell) {
           final style = Theme.of(context).textTheme.bodyLarge;
           final alignment = {
@@ -329,13 +332,13 @@ class TracksDataSource extends DataGridSource {
             alignment: alignment,
             child: {
               kTrackNumber: () => Text(
-                    cell.value as String,
+                    track.trackNumber == 0 ? kDefaultTrackNumber.toString() : track.trackNumber.toString(),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: style,
                   ),
               kTitle: () => Text(
-                    cell.value as String,
+                    track.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: style,
@@ -343,12 +346,12 @@ class TracksDataSource extends DataGridSource {
               kArtists: () => HyperLink(
                     text: TextSpan(
                       children: [
-                        for (final e in cell.value as Set<String>) ...[
+                        for (final artist in (track.artists.isEmpty ? {''} : track.artists)) ...[
                           TextSpan(
-                            text: e,
+                            text: artist.isEmpty ? kDefaultArtist : artist,
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                // TODO:
+                                navigateToArtist(context, ArtistLookupKey(artist: artist));
                               },
                           ),
                           const TextSpan(
@@ -363,10 +366,17 @@ class TracksDataSource extends DataGridSource {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: cell.value as String,
+                          text: track.album.isEmpty ? kDefaultAlbum : track.album,
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              // TODO:
+                              navigateToAlbum(
+                                context,
+                                AlbumLookupKey(
+                                  album: track.album,
+                                  albumArtist: track.albumArtist,
+                                  year: track.year,
+                                ),
+                              );
                             },
                         ),
                       ],
@@ -376,12 +386,12 @@ class TracksDataSource extends DataGridSource {
               kGenres: () => HyperLink(
                     text: TextSpan(
                       children: [
-                        for (final e in cell.value as Set<String>) ...[
+                        for (final genre in (track.genres.isEmpty ? {''} : track.genres)) ...[
                           TextSpan(
-                            text: e,
+                            text: genre.isEmpty ? kDefaultGenre : genre,
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                // TODO:
+                                navigateToGenre(context, GenreLookupKey(genre: genre));
                               },
                           ),
                           const TextSpan(
@@ -393,7 +403,7 @@ class TracksDataSource extends DataGridSource {
                     style: style,
                   ),
               kYear: () => Text(
-                    cell.value as String,
+                    track.year == 0 ? kDefaultYear : track.year.toString(),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: style,

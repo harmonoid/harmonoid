@@ -8,6 +8,7 @@ import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/ui/media_library/genres/constants.dart';
+import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -118,7 +119,14 @@ class _GenreScreenState extends State<GenreScreen> {
                     text: _tracks[i].album.isEmpty ? kDefaultAlbum : _tracks[i].album,
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-                        // TODO:
+                        navigateToAlbum(
+                          context,
+                          AlbumLookupKey(
+                            album: _tracks[i].album,
+                            albumArtist: _tracks[i].albumArtist,
+                            year: _tracks[i].year,
+                          ),
+                        );
                       },
                   ),
                 ],

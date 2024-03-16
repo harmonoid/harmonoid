@@ -1,4 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
+// AUTO GENERATED FILE, DO NOT EDIT.
 class Strings {
   late String ABOUT;
   late String ADD;
@@ -73,11 +74,6 @@ class Strings {
   late String HISTORY;
   late String IMAGES;
   late String IMPORT;
-  late String IMPORT_PLAYLIST_SUBTITLE;
-  late String IMPORT_PLAYLIST_TITLE;
-  late String INDEXING_ALREADY_GOING_ON_SUBTITLE;
-  late String INDEXING_ALREADY_GOING_ON_TITLE;
-  late String INDEXING_LABEL;
   late String INTERNET_ERROR;
   late String LAST_DIRECTORY_REMOVED;
   late String LESS;
@@ -89,6 +85,7 @@ class Strings {
   late String MEDIA_FILES;
   late String MEDIA_LIBRARY_NO_ITEMS_SUBTITLE;
   late String MEDIA_LIBRARY_NO_ITEMS_TITLE;
+  late String MEDIA_LIBRARY_REFRESHING_DIALOG_SUBTITLE;
   late String MENU;
   late String MINIMUM_FILE_SIZE;
   late String MINIMUM_FILE_SIZE_WARNING;
