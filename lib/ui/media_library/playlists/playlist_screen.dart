@@ -1,5 +1,6 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/core/media_library.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
 import 'package:harmonoid/constants/language.dart';
@@ -21,8 +22,8 @@ class PlaylistScreen extends StatefulWidget {
 
 class _PlaylistScreenState extends State<PlaylistScreen> {
   late final _entries = widget.entries;
-  late final String _title = widget.playlist.name;
-  late final String _subtitle = isDesktop ? '${Language.instance.ENTRIES}: ${_entries.length}' : Language.instance.N_ENTRIES.replaceAll('"N"', _entries.length.toString());
+  String get _title => widget.playlist.name;
+  String get _subtitle => isDesktop ? '${Language.instance.ENTRIES}: ${_entries.length}' : Language.instance.N_ENTRIES.replaceAll('"N"', _entries.length.toString());
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                       child: ClipOval(
                         child: PlaylistImage(
                           playlist: widget.playlist,
-                          entries: widget.entries,
+                          entries: _entries,
                         ),
                       ),
                     ),
@@ -61,7 +62,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
         if (isMobile) {
           return PlaylistImage(
             playlist: widget.playlist,
-            entries: widget.entries,
+            entries: _entries,
           );
         }
         throw UnimplementedError();
@@ -95,10 +96,24 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
         }
         throw UnimplementedError();
       },
-      listItemPopupMenuBuilder: (context, i) => [/* TODO: */],
+      listItemPopupMenuBuilder: (context, i) => playlistEntryPopupMenuItems(context, _entries[i]),
       onListItemPressed: (context, i) => MediaPlayer.instance.open(_entries.map((e) => e.toPlayable()).toList(), index: i),
       onListItemPopupMenuItemSelected: (context, i, result) async {
-        // TODO:
+        await playlistEntryPopupMenuHandle(
+          context,
+          widget.playlist,
+          _entries[i],
+          result,
+        );
+        // NOTE: The track could've been deleted, so we need to check & update the list.
+        final entries = await MediaLibrary.instance.playlists.playlistEntries(widget.playlist);
+        if (entries.length != _entries.length) {
+          setState(() {
+            _entries
+              ..clear()
+              ..addAll(entries);
+          });
+        }
       },
       mergeHeroAndListItems: true,
       actions: {

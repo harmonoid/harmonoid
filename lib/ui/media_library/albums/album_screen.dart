@@ -23,8 +23,8 @@ class AlbumScreen extends StatefulWidget {
 
 class _AlbumScreenState extends State<AlbumScreen> {
   late final _tracks = widget.tracks;
-  late final String _title = widget.album.album.isEmpty ? kDefaultAlbum : widget.album.album;
-  late final String _subtitle = isDesktop
+  String get _title => widget.album.album.isEmpty ? kDefaultAlbum : widget.album.album;
+  String get _subtitle => isDesktop
       ? [
           '${Language.instance.ARTIST}: ${widget.album.albumArtist.isEmpty ? kDefaultArtist : widget.album.albumArtist}',
           '${Language.instance.YEAR}: ${widget.album.year == 0 ? kDefaultYear : widget.album.year}',

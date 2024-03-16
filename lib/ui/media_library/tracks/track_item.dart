@@ -1,4 +1,3 @@
-import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
@@ -22,18 +21,15 @@ class TrackItem extends StatelessWidget {
     this.onTap,
   });
 
+  Future<void> onSecondaryPress(BuildContext context, {RelativeRect? position}) async {
+    final result = await showMenuItems(context, trackPopupMenuItems(context, track), position: position);
+    await trackPopupMenuHandle(context, track, result, recursivelyPopNavigatorOnDeleteIf: () async => true);
+  }
+
   Widget _buildDesktopLayout(BuildContext context) {
     return ContextMenuListener(
-      onSecondaryPress: (position) async {
-        final result = await showMaterialMenu(
-          context: context,
-          constraints: const BoxConstraints(
-            maxWidth: double.infinity,
-          ),
-          position: position,
-          items: trackPopupMenuItems(context, track),
-        );
-        await trackPopupMenuHandle(context, track, result, recursivelyPopNavigatorOnDeleteIf: () async => true);
+      onSecondaryPress: (position) {
+        onSecondaryPress(context, position: position);
       },
       child: SizedBox(
         height: height,
@@ -197,29 +193,7 @@ class TrackItem extends StatelessWidget {
 
   Widget _buildMobileLayout(BuildContext context) {
     Future<void> onLongPress() async {
-      int? result;
-      final items = trackPopupMenuItems(context, track);
-      await showModalBottomSheet(
-        context: context,
-        showDragHandle: isMaterial3OrGreater,
-        isScrollControlled: true,
-        elevation: kDefaultHeavyElevation,
-        builder: (context) => Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (int i = 0; i < items.length; i++) ...[
-              InkWell(
-                onTap: () {
-                  result = i;
-                  Navigator.of(context).pop();
-                },
-                child: items[i].child,
-              ),
-            ],
-          ],
-        ),
-      );
-      await trackPopupMenuHandle(context, track, result, recursivelyPopNavigatorOnDeleteIf: () async => true);
+      onSecondaryPress(context);
     }
 
     return SizedBox(

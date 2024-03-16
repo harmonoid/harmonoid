@@ -23,8 +23,8 @@ class ArtistScreen extends StatefulWidget {
 
 class _ArtistScreenState extends State<ArtistScreen> {
   late final _tracks = widget.tracks;
-  late final String _title = widget.artist.artist.isEmpty ? kDefaultArtist : widget.artist.artist;
-  late final String _subtitle = isDesktop ? '${Language.instance.TRACKS}: ${_tracks.length}' : Language.instance.N_TRACKS.replaceAll('"N"', _tracks.length.toString());
+  String get  _title => widget.artist.artist.isEmpty ? kDefaultArtist : widget.artist.artist;
+  String get  _subtitle => isDesktop ? '${Language.instance.TRACKS}: ${_tracks.length}' : Language.instance.N_TRACKS.replaceAll('"N"', _tracks.length.toString());
 
   @override
   Widget build(BuildContext context) {

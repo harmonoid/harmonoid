@@ -53,8 +53,8 @@ class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
       children: [
         const SizedBox(width: 4.0),
         GestureDetector(
-          onTap: () async {
-            await MediaPlayer.instance.open(MediaLibrary.instance.tracks.map((e) => e.toPlayable()).toList());
+          onTap: () {
+            MediaPlayer.instance.open(MediaLibrary.instance.tracks.map((e) => e.toPlayable()).toList());
           },
           child: MouseRegion(
             cursor: SystemMouseCursors.click,
@@ -91,9 +91,7 @@ class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
         const SizedBox(width: 4.0),
         GestureDetector(
           onTap: () {
-            MediaPlayer.instance.open(
-              [...MediaLibrary.instance.tracks.map((e) => e.toPlayable())]..shuffle(),
-            );
+            MediaPlayer.instance.open([...MediaLibrary.instance.tracks.map((e) => e.toPlayable())]..shuffle());
           },
           child: MouseRegion(
             cursor: SystemMouseCursors.click,
@@ -1528,75 +1526,25 @@ class PlayFileOrURLButton extends StatelessWidget {
               ListTile(
                 onTap: () async {
                   await Navigator.of(ctx).maybePop();
-                  String input = '';
-                  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-                  await showDialog(
-                    context: ctx,
-                    builder: (ctx) => AlertDialog(
-                      title: Text(
-                        Language.instance.OPEN_FILE_OR_URL,
-                      ),
-                      content: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            height: 40.0,
-                            width: 420.0,
-                            alignment: Alignment.center,
-                            padding: const EdgeInsets.only(top: 2.0),
-                            child: Focus(
-                              child: Form(
-                                key: formKey,
-                                child: DefaultTextFormField(
-                                  autofocus: true,
-                                  cursorWidth: 1.0,
-                                  onChanged: (value) => input = value,
-                                  validator: (value) {
-                                    final parser = URIParser(value);
-                                    if (!parser.validate()) {
-                                      debugPrint(value);
-                                      return '';
-                                    }
-                                    return null;
-                                  },
-                                  onFieldSubmitted: (value) async {
-                                    if (value.isNotEmpty && (formKey.currentState?.validate() ?? false)) {
-                                      Navigator.of(ctx).maybePop();
-                                      await Intent.instance.play(value);
-                                    }
-                                  },
-                                  textAlignVertical: TextAlignVertical.center,
-                                  style: Theme.of(ctx).textTheme.bodyLarge,
-                                  decoration: inputDecoration(
-                                    ctx,
-                                    Language.instance.PLAY_URL_SUBTITLE,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      actions: [
-                        TextButton(
-                          child: Text(
-                            label(Language.instance.PLAY),
-                          ),
-                          onPressed: () async {
-                            if (input.isNotEmpty && (formKey.currentState?.validate() ?? false)) {
-                              Navigator.of(ctx).maybePop();
-                              await Intent.instance.play(input);
-                            }
-                          },
-                        ),
-                        TextButton(
-                          onPressed: Navigator.of(ctx).maybePop,
-                          child: Text(label(Language.instance.CANCEL)),
-                        ),
-                      ],
-                    ),
+                  final result = await showInput(
+                    context,
+                    Language.instance.PLAY_URL,
+                    Language.instance.PLAY_URL_SUBTITLE,
+                    Language.instance.PLAY,
+                    (value) {
+                      final parser = URIParser(value);
+                      if (!parser.validate()) {
+                        return '';
+                      }
+                      return null;
+                    },
+                    keyboardType: TextInputType.url,
+                    textCapitalization: TextCapitalization.none,
                   );
+
+                  if (result.isNotEmpty) {
+                    await Intent.instance.play(result);
+                  }
                 },
                 leading: CircleAvatar(
                   backgroundColor: Colors.transparent,
@@ -1727,6 +1675,28 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                   completer.complete(0);
                   Navigator.of(context).maybePop();
                 },
+                leading: const Icon(Icons.play_arrow),
+                title: Text(
+                  Language.instance.PLAY_ALL,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                ),
+              ),
+              ListTile(
+                onTap: () {
+                  completer.complete(1);
+                  Navigator.of(context).maybePop();
+                },
+                leading: const Icon(Icons.shuffle),
+                title: Text(
+                  Language.instance.SHUFFLE,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                ),
+              ),
+              ListTile(
+                onTap: () {
+                  completer.complete(2);
+                  Navigator.of(context).maybePop();
+                },
                 leading: const Icon(Icons.file_open),
                 title: Text(
                   Language.instance.OPEN_FILE_OR_URL,
@@ -1735,7 +1705,7 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
               ),
               ListTile(
                 onTap: () {
-                  completer.complete(1);
+                  completer.complete(3);
                   Navigator.of(context).maybePop();
                 },
                 leading: const Icon(Icons.code),
@@ -1746,7 +1716,7 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
               ),
               ListTile(
                 onTap: () {
-                  completer.complete(2);
+                  completer.complete(4);
                   Navigator.of(context).maybePop();
                 },
                 leading: const Icon(Icons.settings),
@@ -1757,7 +1727,7 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
               ),
               ListTile(
                 onTap: () {
-                  completer.complete(3);
+                  completer.complete(5);
                   Navigator.of(context).maybePop();
                 },
                 leading: const Icon(Icons.info),
@@ -1774,6 +1744,16 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
           await Future.delayed(const Duration(milliseconds: 300));
           switch (value) {
             case 0:
+              {
+                await MediaPlayer.instance.open(MediaLibrary.instance.tracks.map((e) => e.toPlayable()).toList());
+                break;
+              }
+            case 1:
+              {
+                MediaPlayer.instance.open([...MediaLibrary.instance.tracks.map((e) => e.toPlayable())]..shuffle());
+                break;
+              }
+            case 2:
               {
                 await showDialog(
                   context: context,
@@ -1806,72 +1786,25 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                       ListTile(
                         onTap: () async {
                           await Navigator.of(ctx).maybePop();
-                          String input = '';
-                          final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-                          await showModalBottomSheet(
-                            context: context,
-                            showDragHandle: isMaterial3OrGreater,
-                            isScrollControlled: true,
-                            elevation: kDefaultHeavyElevation,
-                            useRootNavigator: true,
-                            builder: (context) => StatefulBuilder(
-                              builder: (context, setState) {
-                                return Container(
-                                  margin: EdgeInsets.only(
-                                    bottom: MediaQuery.of(context).viewInsets.bottom - MediaQuery.of(context).padding.bottom,
-                                  ),
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                                    children: [
-                                      const SizedBox(height: 4.0),
-                                      Form(
-                                        key: formKey,
-                                        child: DefaultTextFormField(
-                                          autofocus: true,
-                                          autocorrect: false,
-                                          validator: (value) {
-                                            final parser = URIParser(value);
-                                            if (!parser.validate()) {
-                                              debugPrint(value);
-                                              // Empty [String] prevents the message from showing & does not distort the UI.
-                                              return '';
-                                            }
-                                            return null;
-                                          },
-                                          onChanged: (value) => input = value,
-                                          keyboardType: TextInputType.url,
-                                          textCapitalization: TextCapitalization.none,
-                                          textInputAction: TextInputAction.done,
-                                          onFieldSubmitted: (value) async {
-                                            if (formKey.currentState?.validate() ?? false) {
-                                              await Navigator.of(context).maybePop();
-                                              await Intent.instance.play(value);
-                                            }
-                                          },
-                                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                                fontSize: 16.0,
-                                              ),
-                                          decoration: inputDecorationMobile(context, Language.instance.FILE_PATH_OR_URL),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4.0),
-                                      FilledButton(
-                                        onPressed: () async {
-                                          if (formKey.currentState?.validate() ?? false) {
-                                            await Navigator.of(context).maybePop();
-                                            await Intent.instance.play(input);
-                                          }
-                                        },
-                                        child: Text(label(Language.instance.PLAY)),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
+                          final result = await showInput(
+                            context,
+                            Language.instance.PLAY_URL,
+                            Language.instance.PLAY_URL_SUBTITLE,
+                            Language.instance.PLAY,
+                            (value) {
+                              final parser = URIParser(value);
+                              if (!parser.validate()) {
+                                return '';
+                              }
+                              return null;
+                            },
+                            keyboardType: TextInputType.url,
+                            textCapitalization: TextCapitalization.none,
                           );
+
+                          if (result.isNotEmpty) {
+                            await Intent.instance.play(result);
+                          }
                         },
                         leading: CircleAvatar(
                           backgroundColor: Colors.transparent,
@@ -1888,12 +1821,12 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                 );
                 break;
               }
-            // case 1:
+            // case 3:
             //   {
             //     await FileInfoScreen.show(context);
             //     break;
             //   }
-            // case 2:
+            // case 4:
             //   {
             //     await Navigator.push(
             //       context,
@@ -1903,7 +1836,7 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
             //     );
             //     break;
             //   }
-            // case 3:
+            // case 5:
             //   {
             //     await Navigator.push(
             //       context,

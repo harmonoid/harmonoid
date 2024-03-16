@@ -34,19 +34,24 @@ class SearchScreenState extends State<SearchScreen> {
   final List<Track> _tracks = <Track>[];
 
   void _listener() {
+    debugPrint('SearchScreenState: _listener: Query: ${widget.query}');
     final result = MediaLibrary.instance.search(widget.query, limit: kLimit);
-    _albums
-      ..clear()
-      ..addAll(result.whereType<Album>());
-    _artists
-      ..clear()
-      ..addAll(result.whereType<Artist>());
-    _genres
-      ..clear()
-      ..addAll(result.whereType<Genre>());
-    _tracks
-      ..clear()
-      ..addAll(result.whereType<Track>());
+    if (context.mounted) {
+      setState(() {
+        _albums
+          ..clear()
+          ..addAll(result.whereType<Album>());
+        _artists
+          ..clear()
+          ..addAll(result.whereType<Artist>());
+        _genres
+          ..clear()
+          ..addAll(result.whereType<Genre>());
+        _tracks
+          ..clear()
+          ..addAll(result.whereType<Track>());
+      });
+    }
   }
 
   @override

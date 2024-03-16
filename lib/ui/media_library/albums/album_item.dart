@@ -55,18 +55,15 @@ class AlbumItem extends StatelessWidget {
     );
   }
 
+  Future<void> onSecondaryPress(BuildContext context, {RelativeRect? position}) async {
+    final result = await showMenuItems(context, albumPopupMenuItems(context, album), position: position);
+    await albumPopupMenuHandle(context, album, result);
+  }
+
   Widget _buildDesktopLayout(BuildContext context) {
     return ContextMenuListener(
-      onSecondaryPress: (position) async {
-        final result = await showMaterialMenu(
-          context: context,
-          constraints: const BoxConstraints(
-            maxWidth: double.infinity,
-          ),
-          position: position,
-          items: albumPopupMenuItems(context, album),
-        );
-        await albumPopupMenuHandle(context, album, result);
+      onSecondaryPress: (position) {
+        onSecondaryPress(context, position: position);
       },
       child: Card(
         margin: EdgeInsets.zero,
@@ -139,30 +136,8 @@ class AlbumItem extends StatelessWidget {
   }
 
   Widget _buildMobileLayout(BuildContext context) {
-    Future<void> onLongPress() async {
-      int? result;
-      final items = albumPopupMenuItems(context, album);
-      await showModalBottomSheet(
-        context: context,
-        showDragHandle: isMaterial3OrGreater,
-        isScrollControlled: true,
-        elevation: kDefaultHeavyElevation,
-        builder: (context) => Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (int i = 0; i < items.length; i++) ...[
-              InkWell(
-                onTap: () {
-                  result = i;
-                  Navigator.of(context).pop();
-                },
-                child: items[i].child,
-              ),
-            ],
-          ],
-        ),
-      );
-      await albumPopupMenuHandle(context, album, result);
+    void onLongPress() {
+      onSecondaryPress(context);
     }
 
     if (width >= height) {

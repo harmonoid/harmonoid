@@ -5,7 +5,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:path/path.dart';
 import 'package:share_plus/share_plus.dart';
@@ -24,6 +23,7 @@ import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/constants.dart';
+import 'package:harmonoid/utils/widgets.dart';
 
 bool get isMaterial3 => Theme.of(rootNavigatorKey.currentContext!).extension<MaterialStandard>()?.value == 3;
 
@@ -150,6 +150,201 @@ ImageProvider cover({MediaLibraryItem? item, String? uri, int? cacheWidth, int? 
     return ResizeImage.resizeIfNeeded(cacheWidth, cacheHeight, image);
   }
   return image;
+}
+
+Future<int?> showMenuItems(BuildContext context, List<PopupMenuItem<int>> items, {RelativeRect? position}) async {
+  if (isDesktop) {
+    return showMaterialMenu(
+      context: context,
+      constraints: const BoxConstraints(
+        maxWidth: double.infinity,
+      ),
+      position: position!,
+      items: items,
+    );
+  } else {
+    int? result;
+    await showModalBottomSheet(
+      context: context,
+      showDragHandle: isMaterial3OrGreater,
+      isScrollControlled: true,
+      elevation: kDefaultHeavyElevation,
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (int i = 0; i < items.length; i++) ...[
+            InkWell(
+              onTap: () {
+                result = i;
+                Navigator.of(context).pop();
+              },
+              child: items[i].child,
+            ),
+          ],
+        ],
+      ),
+    );
+    return result;
+  }
+}
+
+Future<String> showInput(
+  BuildContext context,
+  String title,
+  String subtitle,
+  String action,
+  String? Function(String? value) validator, {
+  TextInputType? keyboardType,
+  TextCapitalization? textCapitalization,
+}) async {
+  bool done = false;
+  String input = '';
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  if (isDesktop) {
+    await showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(title),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              height: 40.0,
+              width: 420.0,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.only(top: 2.0),
+              child: Focus(
+                child: Form(
+                  key: formKey,
+                  child: DefaultTextFormField(
+                    autofocus: true,
+                    cursorWidth: 1.0,
+                    onChanged: (value) => input = value,
+                    validator: validator,
+                    keyboardType: keyboardType,
+                    textCapitalization: textCapitalization,
+                    textInputAction: TextInputAction.done,
+                    onFieldSubmitted: (value) {
+                      input = value;
+                      if (formKey.currentState!.validate()) {
+                        done = true;
+                        Navigator.of(ctx).maybePop();
+                      }
+                    },
+                    style: Theme.of(ctx).textTheme.bodyLarge,
+                    decoration: inputDecoration(ctx, subtitle),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              if (formKey.currentState!.validate()) {
+                done = true;
+                Navigator.of(ctx).maybePop();
+              }
+            },
+            child: Text(label(action)),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(ctx).maybePop();
+            },
+            child: Text(label(Language.instance.CANCEL)),
+          ),
+        ],
+      ),
+    );
+  } else {
+    await showModalBottomSheet(
+      context: context,
+      showDragHandle: isMaterial3OrGreater,
+      isScrollControlled: true,
+      elevation: kDefaultHeavyElevation,
+      useRootNavigator: true,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setState) {
+          return Container(
+            margin: EdgeInsets.only(
+              bottom: MediaQuery.of(ctx).viewInsets.bottom - MediaQuery.of(ctx).padding.bottom,
+            ),
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 4.0),
+                Form(
+                  key: formKey,
+                  child: DefaultTextFormField(
+                    autofocus: true,
+                    autocorrect: false,
+                    validator: validator,
+                    onChanged: (value) => input = value,
+                    keyboardType: keyboardType,
+                    textCapitalization: textCapitalization,
+                    textInputAction: TextInputAction.done,
+                    onFieldSubmitted: (value) {
+                      input = value;
+                      if (formKey.currentState!.validate()) {
+                        done = true;
+                        Navigator.of(ctx).maybePop();
+                      }
+                    },
+                    style: Theme.of(ctx).textTheme.bodyLarge?.copyWith(fontSize: 16.0),
+                    decoration: inputDecorationMobile(ctx, subtitle),
+                  ),
+                ),
+                const SizedBox(height: 4.0),
+                FilledButton(
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
+                      done = true;
+                      Navigator.of(ctx).maybePop();
+                    }
+                  },
+                  child: Text(label(action)),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+  if (!done) {
+    input = '';
+  }
+  return input;
+}
+
+Future<bool> showConfirmation(BuildContext context, String title, String subtitle) async {
+  bool result = false;
+  await showDialog(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: Text(title),
+      content: Text(subtitle),
+      actions: [
+        TextButton(
+          onPressed: () {
+            result = true;
+            Navigator.of(ctx).pop();
+          },
+          child: Text(label(Language.instance.YES)),
+        ),
+        TextButton(
+          onPressed: Navigator.of(ctx).pop,
+          child: Text(label(Language.instance.NO)),
+        ),
+      ],
+    ),
+  );
+  return result;
 }
 
 List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) => [
@@ -324,6 +519,48 @@ List<PopupMenuItem<int>> albumPopupMenuItems(BuildContext context, Album album) 
         ),
     ];
 
+List<PopupMenuItem<int>> playlistPopupMenuItems(BuildContext context, Playlist playlist) => [
+      PopupMenuItem<int>(
+        value: 0,
+        child: ListTile(
+          leading: Icon(
+            Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_24_regular : Icons.delete,
+          ),
+          title: Text(
+            Language.instance.DELETE,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+      ),
+      PopupMenuItem<int>(
+        value: 1,
+        child: ListTile(
+          leading: Icon(
+            Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.rename_24_filled : Icons.drive_file_rename_outline,
+          ),
+          title: Text(
+            Language.instance.RENAME,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+      ),
+    ];
+
+List<PopupMenuItem<int>> playlistEntryPopupMenuItems(BuildContext context, PlaylistEntry entry) => [
+      PopupMenuItem<int>(
+        value: 0,
+        child: ListTile(
+          leading: Icon(
+            Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_24_regular : Icons.delete,
+          ),
+          title: Text(
+            Language.instance.DELETE,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+      ),
+    ];
+
 Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result, {Future<bool> Function()? recursivelyPopNavigatorOnDeleteIf}) async {
   if (result == null) return;
   switch (result) {
@@ -336,39 +573,37 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
           await MediaLibrary.instance.remove([track]);
           if (recursivelyPopNavigatorOnDeleteIf != null) {
             if (await recursivelyPopNavigatorOnDeleteIf()) {
-              rootNavigatorKey.currentContext?.go('/');
-              /* HACK: */ if (mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
+              while (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+                if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(router.routerDelegate.currentConfiguration.uri.pathSegments.last)) {
+                  break;
+                }
+              }
+              /* HACK: */ if (mediaLibrarySearchBarController.isAttached && mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
             }
           }
           return;
         }
       }
-      await showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text(Language.instance.DELETE),
-          content: Text(Language.instance.TRACK_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', track.title)),
-          actions: [
-            TextButton(
-              onPressed: () async {
-                await MediaLibrary.instance.remove([track]);
-                await Navigator.of(ctx).maybePop();
-                if (recursivelyPopNavigatorOnDeleteIf != null) {
-                  if (await recursivelyPopNavigatorOnDeleteIf()) {
-                    rootNavigatorKey.currentContext?.go('/');
-                    /* HACK: */ if (mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
-                  }
-                }
-              },
-              child: Text(label(Language.instance.YES)),
-            ),
-            TextButton(
-              onPressed: Navigator.of(ctx).pop,
-              child: Text(label(Language.instance.NO)),
-            ),
-          ],
-        ),
+      final result = await showConfirmation(
+        context,
+        Language.instance.DELETE,
+        Language.instance.TRACK_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', track.title),
       );
+      if (result) {
+        await MediaLibrary.instance.remove([track]);
+        if (recursivelyPopNavigatorOnDeleteIf != null) {
+          if (await recursivelyPopNavigatorOnDeleteIf()) {
+            while (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+              if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(router.routerDelegate.currentConfiguration.uri.pathSegments.last)) {
+                break;
+              }
+            }
+            /* HACK: */ if (mediaLibrarySearchBarController.isAttached && mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
+          }
+        }
+      }
       break;
     case 1:
       await Share.shareFiles(
@@ -400,7 +635,7 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
       final file = await pickFile(
         label: 'LRC',
         // Compatiblitity issues with Android 5.0: SDK 21.
-        extensions: Platform.isAndroid ? null : {'lrc'},
+        extensions: Platform.isAndroid ? null : {'LRC'},
       );
       if (file != null) {
         final result = await LyricsNotifier.instance.add(track.toPlayable(), file);
@@ -446,40 +681,91 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
           // No [AlertDialog] required for confirmation.
           // Android 11 or higher (API level 30) will ask for permissions from the user before deletion.
           await MediaLibrary.instance.remove(tracks);
-          rootNavigatorKey.currentContext?.go('/');
-          /* HACK: */ if (mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
+          while (Navigator.of(context).canPop()) {
+            Navigator.of(context).pop();
+            if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(router.routerDelegate.currentConfiguration.uri.pathSegments.last)) {
+              break;
+            }
+          }
+          /* HACK: */ if (mediaLibrarySearchBarController.isAttached && mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
           return;
         }
       }
-      await showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text(Language.instance.DELETE),
-          content: Text(Language.instance.ALBUM_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', album.album)),
-          actions: [
-            TextButton(
-              onPressed: () async {
-                await MediaLibrary.instance.remove(tracks);
-                await Navigator.of(ctx).maybePop();
-                rootNavigatorKey.currentContext?.go('/');
-                /* HACK: */ if (mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
-              },
-              child: Text(
-                label(Language.instance.YES),
-              ),
-            ),
-            TextButton(
-              onPressed: Navigator.of(ctx).pop,
-              child: Text(
-                label(Language.instance.NO),
-              ),
-            ),
-          ],
-        ),
+      final result = await showConfirmation(
+        context,
+        Language.instance.DELETE,
+        Language.instance.ALBUM_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', album.album),
       );
+      if (result) {
+        await MediaLibrary.instance.remove(tracks);
+        while (Navigator.of(context).canPop()) {
+          Navigator.of(context).pop();
+          if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(router.routerDelegate.currentConfiguration.uri.pathSegments.last)) {
+            break;
+          }
+        }
+        /* HACK: */ if (mediaLibrarySearchBarController.isAttached && mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
+      }
       break;
     case 3:
       await MediaPlayer.instance.add(tracks.map((e) => e.toPlayable()).toList());
+      break;
+  }
+}
+
+Future<void> playlistPopupMenuHandle(BuildContext context, Playlist playlist, int? result) async {
+  if (result == null) return;
+  if ({
+    MediaLibrary.instance.playlists.playlists[MediaLibrary.instance.playlists.playlists.length - 0],
+    MediaLibrary.instance.playlists.playlists[MediaLibrary.instance.playlists.playlists.length - 1],
+  }.contains(playlist)) return;
+  switch (result) {
+    case 0:
+      final result = await showConfirmation(
+        context,
+        Language.instance.DELETE,
+        Language.instance.PLAYLIST_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', playlist.name),
+      );
+      if (result) {
+        await MediaLibrary.instance.playlists.delete(playlist);
+      }
+      break;
+    case 1:
+      final name = await showInput(
+        context,
+        Language.instance.RENAME,
+        Language.instance.PLAYLIST_RENAME_DIALOG_SUBTITLE.replaceAll('"NAME"', playlist.name),
+        Language.instance.OK,
+        (value) {
+          if (value?.isEmpty ?? true) {
+            return '';
+          }
+          return null;
+        },
+      );
+      if (name.isNotEmpty) {
+        await MediaLibrary.instance.playlists.rename(playlist, name);
+      }
+      break;
+    default:
+      break;
+  }
+}
+
+Future<void> playlistEntryPopupMenuHandle(BuildContext context, Playlist playlist, PlaylistEntry entry, int? result) async {
+  if (result == null) return;
+  switch (result) {
+    case 0:
+      final result = await showConfirmation(
+        context,
+        Language.instance.DELETE,
+        Language.instance.PLAYLIST_ENTRY_DELETE_DIALOG_SUBTITLE.replaceAll('"ENTRY"', entry.title).replaceAll('"PLAYLIST"', playlist.name),
+      );
+      if (result) {
+        await MediaLibrary.instance.playlists.deleteEntry(entry);
+      }
+      break;
+    default:
       break;
   }
 }
@@ -560,31 +846,31 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
       ),
     );
   } else {
-    // return showModalBottomSheet(
-    //   isScrollControlled: true,
-    //   context: context,
-    //   builder: (context) => DraggableScrollableSheet(
-    //     initialChildSize: 0.6,
-    //     maxChildSize: 0.8,
-    //     expand: false,
-    //     builder: (context, controller) => ListView.builder(
-    //       padding: EdgeInsets.zero,
-    //       controller: controller,
-    //       shrinkWrap: true,
-    //       itemCount: playlists.length,
-    //       itemBuilder: (context, i) {
-    //         return PlaylistTile(
-    //           playlist: playlists[i],
-    //           onTap: () async {
-    //             await MediaLibrary.instance.playlists.createEntry(playlists[i], track.uri, track.playlistEntryTitle);
-    //             Navigator.of(context).pop();
-    //           },
-    //         );
-    //       },
-    //     ),
-    //   ),
-    // );
-    return Future.value();
+    return showModalBottomSheet(
+      context: context,
+      showDragHandle: isMaterial3OrGreater,
+      isScrollControlled: true,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.6,
+        maxChildSize: 0.8,
+        expand: false,
+        builder: (context, controller) => ListView.builder(
+          padding: EdgeInsets.zero,
+          controller: controller,
+          shrinkWrap: true,
+          itemCount: playlists.length,
+          itemBuilder: (context, i) {
+            return PlaylistItem(
+              playlist: playlists[i],
+              onTap: () async {
+                await MediaLibrary.instance.playlists.createEntry(playlists[i], track.uri, track.playlistEntryTitle);
+                Navigator.of(context).pop();
+              },
+            );
+          },
+        ),
+      ),
+    );
   }
 }
 

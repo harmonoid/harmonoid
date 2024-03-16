@@ -33,7 +33,6 @@ class Strings {
   late String COUNT;
   late String CREATE;
   late String CREATE_NEW_PLAYLIST;
-  late String CREATE_NEW_PLAYLIST_SUBTITLE;
   late String DATE_ADDED;
   late String DELETE;
   late String DESCENDING;
@@ -141,8 +140,10 @@ class Strings {
   late String PLAYLISTS;
   late String PLAYLIST_ADD_DIALOG_SUBTITLE;
   late String PLAYLIST_ADD_DIALOG_TITLE;
+  late String PLAYLIST_CREATE_DIALOG_SUBTITLE;
   late String PLAYLIST_DELETE_DIALOG_SUBTITLE;
   late String PLAYLIST_ENTRY_DELETE_DIALOG_SUBTITLE;
+  late String PLAYLIST_RENAME_DIALOG_SUBTITLE;
   late String PLAY_ALL;
   late String PLAY_NOW;
   late String PLAY_URL;
