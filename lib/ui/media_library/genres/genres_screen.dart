@@ -46,33 +46,37 @@ class GenresScreenState extends State<GenresScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Consumer<MediaLibrary>(
-        builder: (context, mediaLibrary, _) {
-          final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.genre;
+    return LayoutBuilder(
+      builder: (context, _) {
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: Consumer<MediaLibrary>(
+            builder: (context, mediaLibrary, _) {
+              final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.genre;
 
-          return ScrollViewBuilder(
-            margin: margin,
-            span: scrollViewBuilderHelperData.span,
-            headerCount: 1,
-            headerBuilder: headerBuilder,
-            headerHeight: headerHeight,
-            itemCounts: [mediaLibrary.genres.length],
-            itemBuilder: (context, i, j, w, h) => GenreItem(
-              key: mediaLibrary.genres[j].scrollViewBuilderKey,
-              genre: mediaLibrary.genres[j],
-              width: w,
-              height: h,
-            ),
-            labelConstraints: scrollViewBuilderHelperData.labelConstraints,
-            labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
-            itemWidth: scrollViewBuilderHelperData.itemWidth,
-            itemHeight: scrollViewBuilderHelperData.itemHeight,
-            padding: mediaLibraryScrollViewBuilderPadding,
-          );
-        },
-      ),
+              return ScrollViewBuilder(
+                margin: margin,
+                span: scrollViewBuilderHelperData.span,
+                headerCount: 1,
+                headerBuilder: headerBuilder,
+                headerHeight: headerHeight,
+                itemCounts: [mediaLibrary.genres.length],
+                itemBuilder: (context, i, j, w, h) => GenreItem(
+                  key: mediaLibrary.genres[j].scrollViewBuilderKey,
+                  genre: mediaLibrary.genres[j],
+                  width: w,
+                  height: h,
+                ),
+                labelConstraints: scrollViewBuilderHelperData.labelConstraints,
+                labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
+                itemWidth: scrollViewBuilderHelperData.itemWidth,
+                itemHeight: scrollViewBuilderHelperData.itemHeight,
+                padding: mediaLibraryScrollViewBuilderPadding,
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

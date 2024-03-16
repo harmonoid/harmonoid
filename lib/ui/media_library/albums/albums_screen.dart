@@ -48,37 +48,41 @@ class AlbumsScreenState extends State<AlbumsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Consumer<MediaLibrary>(
-        builder: (context, mediaLibrary, _) {
-          if (mediaLibrary.albumSortType == AlbumSortType.albumArtist) {
-            return const AlbumsArtistsScreen();
-          }
+    return LayoutBuilder(
+      builder: (context, _) {
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: Consumer<MediaLibrary>(
+            builder: (context, mediaLibrary, _) {
+              if (mediaLibrary.albumSortType == AlbumSortType.albumArtist) {
+                return const AlbumsArtistsScreen();
+              }
 
-          final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.album;
+              final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.album;
 
-          return ScrollViewBuilder(
-            margin: margin,
-            span: scrollViewBuilderHelperData.span,
-            headerCount: 1,
-            headerBuilder: headerBuilder,
-            headerHeight: headerHeight,
-            itemCounts: [mediaLibrary.albums.length],
-            itemBuilder: (context, i, j, w, h) => AlbumItem(
-              key: mediaLibrary.albums[j].scrollViewBuilderKey,
-              album: mediaLibrary.albums[j],
-              width: w,
-              height: h,
-            ),
-            labelConstraints: scrollViewBuilderHelperData.labelConstraints,
-            labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
-            itemWidth: scrollViewBuilderHelperData.itemWidth,
-            itemHeight: scrollViewBuilderHelperData.itemHeight,
-            padding: mediaLibraryScrollViewBuilderPadding,
-          );
-        },
-      ),
+              return ScrollViewBuilder(
+                margin: margin,
+                span: scrollViewBuilderHelperData.span,
+                headerCount: 1,
+                headerBuilder: headerBuilder,
+                headerHeight: headerHeight,
+                itemCounts: [mediaLibrary.albums.length],
+                itemBuilder: (context, i, j, w, h) => AlbumItem(
+                  key: mediaLibrary.albums[j].scrollViewBuilderKey,
+                  album: mediaLibrary.albums[j],
+                  width: w,
+                  height: h,
+                ),
+                labelConstraints: scrollViewBuilderHelperData.labelConstraints,
+                labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
+                itemWidth: scrollViewBuilderHelperData.itemWidth,
+                itemHeight: scrollViewBuilderHelperData.itemHeight,
+                padding: mediaLibraryScrollViewBuilderPadding,
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

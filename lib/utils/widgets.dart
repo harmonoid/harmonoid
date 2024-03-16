@@ -1629,15 +1629,15 @@ class MobileGridSpanButton extends StatelessWidget {
           builder: (context) => SimpleDialog(
             title: Text(title),
             children: [
-              for (int i = 1; i <= 4; i++)
-                RadioListTile<int>(
+              for (int i = 0; i <= 4; i++)
+                RadioListTile<int?>(
                   value: i,
                   groupValue: groupValue,
                   onChanged: (value) {
                     onChanged(value).then((_) => Navigator.of(context).pop()).then((_) => MediaLibrary.instance.notify());
                   },
                   title: Text(
-                    i.toString(),
+                    i == 0 ? '#' : i.toString(),
                     style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                   ),
                 ),

@@ -16,13 +16,17 @@ import 'package:harmonoid/utils/rendering.dart';
 /// {@endtemplate}
 class ScrollViewBuilderHelper {
   /// Singleton instance.
-  static const ScrollViewBuilderHelper instance = ScrollViewBuilderHelper._();
+  static final ScrollViewBuilderHelper instance = ScrollViewBuilderHelper._();
 
   /// {@macro scroll_view_builder_helper}
-  const ScrollViewBuilderHelper._();
+  ScrollViewBuilderHelper._();
 
   ScrollViewBuilderHelperData get album {
-    final span = isDesktop ? null : Configuration.instance.mobileAlbumGridSpan;
+    final span = isDesktop
+        ? null
+        : (Configuration.instance.mobileAlbumGridSpan == 0
+            ? (MediaQuery.of(rootNavigatorKey.currentContext!).size.width - margin) ~/ (albumTileWidth + margin)
+            : Configuration.instance.mobileAlbumGridSpan);
     final itemWidth = span != 1 ? albumTileWidth : double.infinity;
     final itemHeight = span != 1 ? albumTileHeight : linearTileHeight;
     final BoxConstraints labelConstraints;
@@ -123,7 +127,11 @@ class ScrollViewBuilderHelper {
   }
 
   ScrollViewBuilderHelperData get artist {
-    final span = isDesktop ? null : Configuration.instance.mobileArtistGridSpan;
+    final span = isDesktop
+        ? null
+        : (Configuration.instance.mobileArtistGridSpan == 0
+            ? (MediaQuery.of(rootNavigatorKey.currentContext!).size.width - margin) ~/ (kArtistTileWidth + margin)
+            : Configuration.instance.mobileArtistGridSpan);
     final itemWidth = span != 1 ? kArtistTileWidth : double.infinity;
     final itemHeight = span != 1 ? kArtistTileHeight : linearTileHeight;
     final BoxConstraints labelConstraints;
@@ -160,7 +168,11 @@ class ScrollViewBuilderHelper {
   }
 
   ScrollViewBuilderHelperData get genre {
-    final span = isDesktop ? null : Configuration.instance.mobileGenreGridSpan;
+    final span = isDesktop
+        ? null
+        : (Configuration.instance.mobileGenreGridSpan == 0
+            ? (MediaQuery.of(rootNavigatorKey.currentContext!).size.width - margin) ~/ (kGenreTileWidth + margin)
+            : Configuration.instance.mobileGenreGridSpan);
     final itemWidth = span != 1 ? kGenreTileWidth : double.infinity;
     final itemHeight = span != 1 ? kGenreTileHeight : linearTileHeight;
     final BoxConstraints labelConstraints;

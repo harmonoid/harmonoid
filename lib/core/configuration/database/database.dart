@@ -42,10 +42,9 @@ class Database extends _$Database {
     if (type == kTypeInteger && !(booleanValue == null && integerValue != null && stringValue == null && jsonValue == null)) {
       throw ArgumentError('Invalid type: integer', 'type');
     }
-    // NOTE: [kTypeString] may be null.
-    // if (type == kTypeString && !(booleanValue == null && integerValue == null && stringValue != null && jsonValue == null)) {
-    //   throw ArgumentError('Invalid type: string', 'type');
-    // }
+    if (type == kTypeString && !(booleanValue == null && integerValue == null && stringValue != null && jsonValue == null)) {
+      throw ArgumentError('Invalid type: string', 'type');
+    }
     if (type == kTypeJson && !(booleanValue == null && integerValue == null && stringValue == null && jsonValue != null)) {
       throw ArgumentError('Invalid type: json', 'type');
     }
@@ -78,10 +77,9 @@ class Database extends _$Database {
     if (type == kTypeInteger && !(booleanValue == null && integerValue != null && stringValue == null && jsonValue == null)) {
       throw ArgumentError('Invalid type: integer', 'type');
     }
-    // NOTE: [kTypeString] may be null.
-    // if (type == kTypeString && !(booleanValue == null && integerValue == null && stringValue != null && jsonValue == null)) {
-    //   throw ArgumentError('Invalid type: string', 'type');
-    // }
+    if (type == kTypeString && !(booleanValue == null && integerValue == null && stringValue != null && jsonValue == null)) {
+      throw ArgumentError('Invalid type: string', 'type');
+    }
     if (type == kTypeJson && !(booleanValue == null && integerValue == null && stringValue == null && jsonValue != null)) {
       throw ArgumentError('Invalid type: json', 'type');
     }

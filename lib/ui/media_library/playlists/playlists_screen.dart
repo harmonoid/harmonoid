@@ -15,22 +15,26 @@ class PlaylistsScreen extends StatefulWidget {
 class PlaylistsScreenState extends State<PlaylistsScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Consumer<MediaLibrary>(
-        builder: (context, mediaLibrary, _) {
-          return ListView.separated(
-            separatorBuilder: (context, i) => const Divider(height: 1.0),
-            itemCount: mediaLibrary.playlists.playlists.length,
-            itemBuilder: (context, i) {
-              return PlaylistItem(
-                playlist: mediaLibrary.playlists.playlists[i],
+    return LayoutBuilder(
+      builder: (context, _) {
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: Consumer<MediaLibrary>(
+            builder: (context, mediaLibrary, _) {
+              return ListView.separated(
+                separatorBuilder: (context, i) => const Divider(height: 1.0),
+                itemCount: mediaLibrary.playlists.playlists.length,
+                itemBuilder: (context, i) {
+                  return PlaylistItem(
+                    playlist: mediaLibrary.playlists.playlists[i],
+                  );
+                },
+                padding: mediaLibraryScrollViewBuilderPadding + EdgeInsets.only(top: margin),
               );
             },
-            padding: mediaLibraryScrollViewBuilderPadding + EdgeInsets.only(top: margin),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

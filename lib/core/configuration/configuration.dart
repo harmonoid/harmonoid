@@ -89,7 +89,7 @@ class Configuration {
   bool get modernNowPlayingLyrics => _modernNowPlayingLyrics!;
   int get modernNowPlayingUnhighlightedLyricsSize => _modernNowPlayingUnhighlightedLyricsSize!;
   Map<String, String> get mpvOptions => _mpvOptions!;
-  String? get mpvPath => _mpvPath;
+  String get mpvPath => _mpvPath!;
   bool get notificationLyrics => _notificationLyrics!;
   bool get nowPlayingBarColorPalette => _nowPlayingBarColorPalette!;
   PlaybackState get playbackState => _playbackState!;
@@ -312,7 +312,7 @@ class Configuration {
         await db.setValueIfAbsent(key, kTypeBoolean, booleanValue: value);
       } else if (value is int) {
         await db.setValueIfAbsent(key, kTypeInteger, integerValue: value);
-      } else if (value is String || value == null) {
+      } else if (value is String) {
         await db.setValueIfAbsent(key, kTypeString, stringValue: value);
       } else {
         await db.setValueIfAbsent(key, kTypeJson, jsonValue: value);
@@ -439,7 +439,7 @@ class Configuration {
       /* Boolean */ _kKeyModernNowPlayingLyrics: true,
       /* Integer */ _kKeyModernNowPlayingUnhighlightedLyricsSize: 14,
       /* JSON    */ _kKeyMpvOptions: <String, String>{},
-      /* String  */ _kKeyMpvPath: null,
+      /* String  */ _kKeyMpvPath: '',
       /* Boolean */ _kKeyNotificationLyrics: true,
       /* Boolean */ _kKeyNowPlayingBarColorPalette: true,
       /* JSON    */ _kKeyPlaybackState: PlaybackState.defaults(),

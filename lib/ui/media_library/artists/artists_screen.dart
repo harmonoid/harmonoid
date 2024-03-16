@@ -46,33 +46,37 @@ class ArtistsScreenState extends State<ArtistsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Consumer<MediaLibrary>(
-        builder: (context, mediaLibrary, _) {
-          final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.artist;
+    return LayoutBuilder(
+      builder: (context, _) {
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: Consumer<MediaLibrary>(
+            builder: (context, mediaLibrary, _) {
+              final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.artist;
 
-          return ScrollViewBuilder(
-            margin: margin,
-            span: scrollViewBuilderHelperData.span,
-            headerCount: 1,
-            headerBuilder: headerBuilder,
-            headerHeight: headerHeight,
-            itemCounts: [mediaLibrary.artists.length],
-            itemBuilder: (context, i, j, w, h) => ArtistItem(
-              key: mediaLibrary.artists[j].scrollViewBuilderKey,
-              artist: mediaLibrary.artists[j],
-              width: w,
-              height: h,
-            ),
-            labelConstraints: scrollViewBuilderHelperData.labelConstraints,
-            labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
-            itemWidth: scrollViewBuilderHelperData.itemWidth,
-            itemHeight: scrollViewBuilderHelperData.itemHeight,
-            padding: mediaLibraryScrollViewBuilderPadding,
-          );
-        },
-      ),
+              return ScrollViewBuilder(
+                margin: margin,
+                span: scrollViewBuilderHelperData.span,
+                headerCount: 1,
+                headerBuilder: headerBuilder,
+                headerHeight: headerHeight,
+                itemCounts: [mediaLibrary.artists.length],
+                itemBuilder: (context, i, j, w, h) => ArtistItem(
+                  key: mediaLibrary.artists[j].scrollViewBuilderKey,
+                  artist: mediaLibrary.artists[j],
+                  width: w,
+                  height: h,
+                ),
+                labelConstraints: scrollViewBuilderHelperData.labelConstraints,
+                labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
+                itemWidth: scrollViewBuilderHelperData.itemWidth,
+                itemHeight: scrollViewBuilderHelperData.itemHeight,
+                padding: mediaLibraryScrollViewBuilderPadding,
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
