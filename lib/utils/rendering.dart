@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:path/path.dart';
 import 'package:share_plus/share_plus.dart';
@@ -573,13 +574,24 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
           await MediaLibrary.instance.remove([track]);
           if (recursivelyPopNavigatorOnDeleteIf != null) {
             if (await recursivelyPopNavigatorOnDeleteIf()) {
-              while (Navigator.of(context).canPop()) {
-                Navigator.of(context).pop();
-                if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(router.routerDelegate.currentConfiguration.uri.pathSegments.last)) {
-                  break;
+              if (isDesktop) {
+                bool result;
+                try {
+                  result = ![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath, kSearchPath].contains(GoRouterState.of(context).uri.pathSegments.last);
+                } catch (_) {
+                  result = true;
+                }
+                if (result) rootNavigatorKey.currentContext!.go('/');
+                /* HACK: */ if (mediaLibrarySearchBarController.isAttached && mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
+              }
+              if (isMobile) {
+                while (Navigator.of(context).canPop()) {
+                  Navigator.of(context).pop();
+                  if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(router.routerDelegate.currentConfiguration.uri.pathSegments.last)) {
+                    break;
+                  }
                 }
               }
-              /* HACK: */ if (mediaLibrarySearchBarController.isAttached && mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
             }
           }
           return;
@@ -594,13 +606,24 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
         await MediaLibrary.instance.remove([track]);
         if (recursivelyPopNavigatorOnDeleteIf != null) {
           if (await recursivelyPopNavigatorOnDeleteIf()) {
-            while (Navigator.of(context).canPop()) {
-              Navigator.of(context).pop();
-              if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(router.routerDelegate.currentConfiguration.uri.pathSegments.last)) {
-                break;
+            if (isDesktop) {
+              bool result;
+              try {
+                result = ![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath, kSearchPath].contains(GoRouterState.of(context).uri.pathSegments.last);
+              } catch (_) {
+                result = true;
+              }
+              if (result) rootNavigatorKey.currentContext!.go('/');
+              /* HACK: */ if (mediaLibrarySearchBarController.isAttached && mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
+            }
+            if (isMobile) {
+              while (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+                if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(router.routerDelegate.currentConfiguration.uri.pathSegments.last)) {
+                  break;
+                }
               }
             }
-            /* HACK: */ if (mediaLibrarySearchBarController.isAttached && mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
           }
         }
       }
@@ -681,13 +704,25 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
           // No [AlertDialog] required for confirmation.
           // Android 11 or higher (API level 30) will ask for permissions from the user before deletion.
           await MediaLibrary.instance.remove(tracks);
-          while (Navigator.of(context).canPop()) {
-            Navigator.of(context).pop();
-            if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(router.routerDelegate.currentConfiguration.uri.pathSegments.last)) {
-              break;
+
+          if (isDesktop) {
+            bool result;
+            try {
+              result = ![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath, kSearchPath].contains(GoRouterState.of(context).uri.pathSegments.last);
+            } catch (_) {
+              result = true;
+            }
+            if (result) rootNavigatorKey.currentContext!.go('/');
+            /* HACK: */ if (mediaLibrarySearchBarController.isAttached && mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
+          }
+          if (isMobile) {
+            while (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+              if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(router.routerDelegate.currentConfiguration.uri.pathSegments.last)) {
+                break;
+              }
             }
           }
-          /* HACK: */ if (mediaLibrarySearchBarController.isAttached && mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
           return;
         }
       }
@@ -697,14 +732,24 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
         Language.instance.ALBUM_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', album.album),
       );
       if (result) {
-        await MediaLibrary.instance.remove(tracks);
-        while (Navigator.of(context).canPop()) {
-          Navigator.of(context).pop();
-          if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(router.routerDelegate.currentConfiguration.uri.pathSegments.last)) {
-            break;
+        if (isDesktop) {
+          bool result;
+          try {
+            result = ![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath, kSearchPath].contains(GoRouterState.of(context).uri.pathSegments.last);
+          } catch (_) {
+            result = true;
+          }
+          if (result) rootNavigatorKey.currentContext!.go('/');
+          /* HACK: */ if (mediaLibrarySearchBarController.isAttached && mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
+        }
+        if (isMobile) {
+          while (Navigator.of(context).canPop()) {
+            Navigator.of(context).pop();
+            if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(router.routerDelegate.currentConfiguration.uri.pathSegments.last)) {
+              break;
+            }
           }
         }
-        /* HACK: */ if (mediaLibrarySearchBarController.isAttached && mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
       }
       break;
     case 3:
