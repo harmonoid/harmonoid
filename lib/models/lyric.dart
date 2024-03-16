@@ -1,27 +1,51 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
+/// {@template lyric}
 ///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
+/// Lyric
+/// -----
 ///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
+/// {@endtemplate}
 class Lyric {
+  /// Time.
   final int time;
+
+  /// Words.
   final String words;
 
-  Lyric({
+  /// {@macro lyric}
+  const Lyric({
     required this.time,
     required this.words,
   });
 
+  Lyric copyWith({
+    int? time,
+    String? words,
+  }) {
+    return Lyric(
+      time: time ?? this.time,
+      words: words ?? this.words,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is Lyric && time == other.time && words == other.words;
+
+  @override
+  int get hashCode => Object.hash(
+        time,
+        words,
+      );
+
+  @override
+  String toString() => 'Lyric(time: $time, words: $words)';
+
   Map<String, dynamic> toJson() => {
-        'time': this.time,
-        'words': this.words,
+        'time': time,
+        'words': words,
       };
 
-  static Lyric fromJson(dynamic map) => Lyric(
-        time: map['time'],
-        words: map['words']?.replaceAll('\n', ' ')?.replaceAll('  ', ' '),
+  factory Lyric.fromJson(dynamic json) => Lyric(
+        time: json['time'],
+        words: json['words'],
       );
 }
