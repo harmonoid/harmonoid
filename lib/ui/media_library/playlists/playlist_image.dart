@@ -99,18 +99,18 @@ class PlaylistImage extends StatelessWidget {
         fit: BoxFit.cover,
       );
     } else {
-      return Container(
-        alignment: Alignment.center,
-        padding: small ? const EdgeInsets.all(8.0) : const EdgeInsets.all(56.0),
-        child: LayoutBuilder(
-          builder: (context, constraint) {
-            return Icon(
+      return LayoutBuilder(
+        builder: (context, constraint) {
+          return Container(
+            alignment: Alignment.center,
+            padding: EdgeInsets.all(constraint.biggest.height / 8),
+            child: Icon(
               Icons.music_note,
-              size: constraint.biggest.height,
+              size: constraint.biggest.height * 3 / 4,
               color: Theme.of(context).colorScheme.primary,
-            );
-          },
-        ),
+            ),
+          );
+        },
       );
     }
   }

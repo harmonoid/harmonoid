@@ -970,6 +970,41 @@ class MediaLibraryRefreshButton extends StatelessWidget {
 
 // --------------------------------------------------
 
+class MediaLibraryCreatePlaylistButton extends StatelessWidget {
+  const MediaLibraryCreatePlaylistButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<MediaLibrary>(
+      builder: (context, mediaLibrary, _) => FloatingActionButton(
+        heroTag: 'MediaLibraryCreatePlaylistButton',
+        onPressed: () async {
+          final result = await showInput(
+            context,
+            Language.instance.CREATE_NEW_PLAYLIST,
+            Language.instance.PLAYLIST_CREATE_DIALOG_SUBTITLE,
+            Language.instance.CREATE,
+            (value) {
+              if (value?.isEmpty ?? true) {
+                return '';
+              }
+              return null;
+            },
+            keyboardType: TextInputType.name,
+            textCapitalization: TextCapitalization.words,
+          );
+          if (result.isNotEmpty) {
+            await mediaLibrary.playlists.create(result);
+          }
+        },
+        child: const Icon(Icons.edit),
+      ),
+    );
+  }
+}
+
+// --------------------------------------------------
+
 class HyperLink extends StatefulWidget {
   final TextSpan text;
   final TextStyle? style;
@@ -1413,38 +1448,6 @@ class DefaultTextFormField extends StatelessWidget {
         scrollPhysics: scrollPhysics,
         textAlign: textAlign ?? TextAlign.start,
       ),
-    );
-  }
-}
-
-// --------------------------------------------------
-
-class DefaultSwitchListTile extends StatelessWidget {
-  final bool value;
-  final void Function(bool) onChanged;
-  final String title;
-  final String subtitle;
-  const DefaultSwitchListTile({
-    super.key,
-    required this.value,
-    required this.onChanged,
-    required this.title,
-    required this.subtitle,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SwitchListTile(
-      value: value,
-      title: Text(
-        isDesktop ? subtitle : title,
-        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
-      onChanged: (value) {
-        onChanged.call(value);
-      },
     );
   }
 }

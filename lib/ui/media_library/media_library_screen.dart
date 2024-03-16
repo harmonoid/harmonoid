@@ -48,12 +48,12 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
 
   @override
   void dispose() {
+    super.dispose();
     _floatingNotifier.dispose();
     _desktopAppBarElevatedNotifier.dispose();
     _mediaLibrarySearchBarOffsetNotifier.dispose();
     _queryTextFieldFocusNode.dispose();
     _queryTextFieldEditingController.dispose();
-    super.dispose();
   }
 
   Widget _buildDesktopLayout(BuildContext context) {
@@ -90,10 +90,10 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                 bottom: 16.0,
                 child: DesktopMediaLibraryRefreshIndicator(),
               ),
-              const Positioned(
+              Positioned(
                 right: 16.0,
                 bottom: 16.0,
-                child: MediaLibraryRefreshButton(),
+                child: _path == kPlaylistsPath ? const MediaLibraryCreatePlaylistButton() : const MediaLibraryRefreshButton(),
               ),
               ClipRect(
                 clipBehavior: Clip.antiAlias,
@@ -296,10 +296,10 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                   );
                 },
               ),
-              const Positioned(
+              Positioned(
                 right: 16.0,
                 bottom: 16.0,
-                child: MediaLibraryRefreshButton(),
+                child: _path == kPlaylistsPath ? const MediaLibraryCreatePlaylistButton() : const MediaLibraryRefreshButton(),
               ),
             ],
           ),

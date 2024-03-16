@@ -1,5 +1,4 @@
 // ignore_for_file: non_constant_identifier_names
-// AUTO GENERATED FILE, DO NOT EDIT.
 class Strings {
   late String ABOUT;
   late String ADD;
@@ -142,7 +141,7 @@ class Strings {
   late String PLAYLIST_ADD_DIALOG_TITLE;
   late String PLAYLIST_CREATE_DIALOG_SUBTITLE;
   late String PLAYLIST_DELETE_DIALOG_SUBTITLE;
-  late String PLAYLIST_ENTRY_DELETE_DIALOG_SUBTITLE;
+  late String PLAYLIST_ENTRY_REMOVE_DIALOG_SUBTITLE;
   late String PLAYLIST_RENAME_DIALOG_SUBTITLE;
   late String PLAY_ALL;
   late String PLAY_NOW;

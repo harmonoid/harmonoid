@@ -554,7 +554,7 @@ List<PopupMenuItem<int>> playlistEntryPopupMenuItems(BuildContext context, Playl
             Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_24_regular : Icons.delete,
           ),
           title: Text(
-            Language.instance.DELETE,
+            Language.instance.REMOVE,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
@@ -716,8 +716,8 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
 Future<void> playlistPopupMenuHandle(BuildContext context, Playlist playlist, int? result) async {
   if (result == null) return;
   if ({
-    MediaLibrary.instance.playlists.playlists[MediaLibrary.instance.playlists.playlists.length - 0],
     MediaLibrary.instance.playlists.playlists[MediaLibrary.instance.playlists.playlists.length - 1],
+    MediaLibrary.instance.playlists.playlists[MediaLibrary.instance.playlists.playlists.length - 2],
   }.contains(playlist)) return;
   switch (result) {
     case 0:
@@ -758,8 +758,8 @@ Future<void> playlistEntryPopupMenuHandle(BuildContext context, Playlist playlis
     case 0:
       final result = await showConfirmation(
         context,
-        Language.instance.DELETE,
-        Language.instance.PLAYLIST_ENTRY_DELETE_DIALOG_SUBTITLE.replaceAll('"ENTRY"', entry.title).replaceAll('"PLAYLIST"', playlist.name),
+        Language.instance.REMOVE,
+        Language.instance.PLAYLIST_ENTRY_REMOVE_DIALOG_SUBTITLE.replaceAll('"ENTRY"', entry.title).replaceAll('"PLAYLIST"', playlist.name),
       );
       if (result) {
         await MediaLibrary.instance.playlists.deleteEntry(entry);
