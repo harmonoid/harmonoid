@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:harmonoid/utils/constants.dart';
 import 'package:media_library/media_library.dart';
 
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/extensions/date_time.dart';
 

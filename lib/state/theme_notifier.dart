@@ -54,8 +54,8 @@ class ThemeNotifier extends ChangeNotifier {
           systemDarkColorScheme = corePalette.toColorScheme(brightness: Brightness.dark);
           systemLightColor = systemLightColorScheme?.primary;
           systemDarkColor = systemDarkColorScheme?.primary;
+          return;
         }
-        return;
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
