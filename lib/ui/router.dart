@@ -18,6 +18,7 @@ import 'package:harmonoid/ui/media_library/playlists/playlists_screen.dart';
 import 'package:harmonoid/ui/media_library/search/search_items_screen.dart';
 import 'package:harmonoid/ui/media_library/search/search_screen.dart';
 import 'package:harmonoid/ui/media_library/tracks/tracks_screen.dart';
+import 'package:harmonoid/ui/settings/settings_screen.dart';
 import 'package:harmonoid/utils/material_transition_page.dart';
 
 const String kMediaLibraryPath = 'media-library';
@@ -100,7 +101,7 @@ class PlaylistPathExtra {
 
 const String kSettingsPath = 'settings';
 
-const String kModernNowPlayingPath = 'modern-now-playing-screen';
+const String kNowPlayingPath = 'now-playing';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> homeNavigatorKey = GlobalKey<NavigatorState>();
@@ -273,12 +274,12 @@ final router = GoRouter(
             return buildPageWithDefaultTransition(
               context: context,
               state: state,
-              child: const SizedBox(),
+              child: const SettingsScreen(),
             );
           },
         ),
         GoRoute(
-          path: '/$kModernNowPlayingPath',
+          path: '/$kNowPlayingPath',
           pageBuilder: (context, state) {
             return buildPageWithDefaultTransition(
               context: context,
