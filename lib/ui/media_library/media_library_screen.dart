@@ -221,7 +221,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                       const ReadFileOrURLMetadataButton(),
                                       IconButton(
                                         onPressed: () {
-                                          // TODO:
+                                          context.push('/$kSettingsPath');
                                         },
                                         tooltip: Language.instance.SETTINGS,
                                         icon: const Icon(Icons.settings),

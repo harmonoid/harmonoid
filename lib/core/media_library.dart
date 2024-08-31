@@ -76,6 +76,7 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
     );
     if (instance.isEmpty) {
       // Look for updates from the file-system if the media library is empty.
+      // This situation occurs for the first-time application launch.
       await instance.refresh();
     }
     await instance.playlists.refresh();
@@ -129,6 +130,7 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
   /// Disposes the [instance]. Releases allocated resources back to the system.
   @override
   void dispose() {
+    super.close();
     super.dispose();
     _tagReader.dispose();
   }

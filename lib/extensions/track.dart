@@ -11,14 +11,8 @@ extension TrackExtensions on Track {
   String get shareSubject => [
         title,
         artists.take(2).join(', '),
-        album,
-        year.toString(),
-      ].where((e) => e.isNotEmpty).join(' • ');
-
-  /// Playlist entry title.
-  String get playlistEntryTitle => [
-        title,
-        artists.take(2).join(', '),
+        if (album.isNotEmpty) album,
+        if (year != 0) year.toString(),
       ].where((e) => e.isNotEmpty).join(' • ');
 
   /// [ValueKey] for [ScrollViewBuilder].

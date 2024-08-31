@@ -18,6 +18,7 @@ import 'package:harmonoid/extensions/track.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/mobile_now_playing_notifier.dart';
+import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_item.dart';
 import 'package:harmonoid/ui/router.dart';
@@ -108,18 +109,14 @@ double get navigationBarHeight => isMaterial3 ? 80.0 : kBottomNavigationBarHeigh
 String label(String value) => isMaterial3OrGreater ? value : value.toUpperCase();
 
 ImageProvider cover({MediaLibraryItem? item, String? uri, int? cacheWidth, int? cacheHeight}) {
-  if (cacheWidth != null) {
-    cacheWidth *= 2;
-  }
-  if (cacheHeight != null) {
-    cacheHeight *= 2;
-  }
+  if (cacheWidth != null) cacheWidth *= 2;
+  if (cacheHeight != null) cacheHeight *= 2;
 
   final Future<File?> file;
   if (item != null) {
-    file = MediaLibrary.instance.coverForMediaLibraryItem(item, fallback: Configuration.instance.mediaLibraryCoverFallback);
+    file = MediaLibrary.instance.coverFileForMediaLibraryItem(item, fallback: Configuration.instance.mediaLibraryCoverFallback);
   } else if (uri != null) {
-    file = MediaLibrary.instance.coverForUri(uri, fallback: Configuration.instance.mediaLibraryCoverFallback);
+    file = MediaLibrary.instance.coverFileForUri(uri, fallback: Configuration.instance.mediaLibraryCoverFallback);
   } else {
     throw ArgumentError('Both item & uri are null.');
   }
@@ -167,9 +164,10 @@ Future<int?> showMenuItems(BuildContext context, List<PopupMenuItem<int>> items,
     int? result;
     await showModalBottomSheet(
       context: context,
-      showDragHandle: isMaterial3OrGreater,
+      useRootNavigator: true,
       isScrollControlled: true,
       elevation: kDefaultHeavyElevation,
+      showDragHandle: isMaterial3OrGreater,
       builder: (context) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -642,7 +640,14 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
       break;
     case 4:
       {
-        // TODO:
+        await navigateToAlbum(
+          context,
+          AlbumLookupKey(
+            album: track.album,
+            albumArtist: track.albumArtist,
+            year: track.year,
+          ),
+        );
         break;
       }
     case 5:
@@ -871,7 +876,7 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
                   itemBuilder: (context, i) => PlaylistItem(
                     playlist: playlists[i],
                     onTap: () async {
-                      await MediaLibrary.instance.playlists.createEntry(playlists[i], track.uri, track.playlistEntryTitle);
+                      await MediaLibrary.instance.playlists.createEntry(playlists[i], track: track);
                       Navigator.of(subContext).pop();
                     },
                   ),
@@ -908,7 +913,7 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
             return PlaylistItem(
               playlist: playlists[i],
               onTap: () async {
-                await MediaLibrary.instance.playlists.createEntry(playlists[i], track.uri, track.playlistEntryTitle);
+                await MediaLibrary.instance.playlists.createEntry(playlists[i], track: track);
                 Navigator.of(context).pop();
               },
             );

@@ -201,7 +201,7 @@ class Intent {
   Future<Playable> parse(String uri) async {
     final tags = await _tagReader.parse(
       uri,
-      cover: MediaLibrary.instance.coverFromUri(uri),
+      cover: MediaLibrary.instance.uriToCoverFile(uri),
       timeout: MediaLibrary.instance.timeout,
     );
     final result = tags.toTrack().toPlayable();

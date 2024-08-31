@@ -1,6 +1,8 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/models/playable.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
 import 'package:harmonoid/constants/language.dart';
@@ -24,6 +26,11 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
   late final _entries = widget.entries;
   String get _title => widget.playlist.name;
   String get _subtitle => isDesktop ? '${Language.instance.ENTRIES}: ${_entries.length}' : Language.instance.N_ENTRIES.replaceAll('"N"', _entries.length.toString());
+
+  Future<List<Playable>> get _playables async {
+    final result = await Future.wait(_entries.map((e) => e.toPlayable(MediaLibrary.instance)));
+    return result.whereNotNull().toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +104,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
         throw UnimplementedError();
       },
       listItemPopupMenuBuilder: (context, i) => playlistEntryPopupMenuItems(context, _entries[i]),
-      onListItemPressed: (context, i) => MediaPlayer.instance.open(_entries.map((e) => e.toPlayable()).toList(), index: i),
+      onListItemPressed: (context, i) async => MediaPlayer.instance.open(await _playables, index: i),
       onListItemPopupMenuItemSelected: (context, i, result) async {
         await playlistEntryPopupMenuHandle(
           context,
@@ -117,9 +124,9 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
       },
       mergeHeroAndListItems: true,
       actions: {
-        Icons.play_arrow: (_) => MediaPlayer.instance.open(_entries.map((e) => e.toPlayable()).toList()),
-        Icons.shuffle: (_) => MediaPlayer.instance.open([..._entries..shuffle()].map((e) => e.toPlayable()).toList()),
-        Icons.playlist_add: (_) => MediaPlayer.instance.add(_entries.map((e) => e.toPlayable()).toList()),
+        Icons.play_arrow: (_) async => MediaPlayer.instance.open(await _playables),
+        Icons.shuffle: (_) async => MediaPlayer.instance.open([...await _playables]..shuffle()),
+        Icons.playlist_add: (_) async => MediaPlayer.instance.add(await _playables),
       },
       labels: {
         Icons.play_arrow: Language.instance.PLAY_NOW,

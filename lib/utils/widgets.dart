@@ -1829,16 +1829,11 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
             //     await FileInfoScreen.show(context);
             //     break;
             //   }
-            // case 4:
-            //   {
-            //     await Navigator.push(
-            //       context,
-            //       MaterialRoute(
-            //         builder: (context) => Settings(),
-            //       ),
-            //     );
-            //     break;
-            //   }
+            case 4:
+              {
+                await context.push('/$kSettingsPath');
+                break;
+              }
             // case 5:
             //   {
             //     await Navigator.push(
