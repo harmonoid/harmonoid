@@ -112,9 +112,9 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
   Widget build(BuildContext context) {
     _widthsNotifier.value[TracksDataSource.kTrackNumber] ??= linearTileHeight + 8.0;
     _widthsNotifier.value[TracksDataSource.kTitle] ??= (MediaQuery.of(context).size.width - linearTileHeight - 8.0) * 5 / 17;
-    _widthsNotifier.value[TracksDataSource.kArtists] ??= (MediaQuery.of(context).size.width - linearTileHeight - 8.0) * 4 / 17;
+    _widthsNotifier.value[TracksDataSource.kArtist] ??= (MediaQuery.of(context).size.width - linearTileHeight - 8.0) * 4 / 17;
     _widthsNotifier.value[TracksDataSource.kAlbum] ??= (MediaQuery.of(context).size.width - linearTileHeight - 8.0) * 3 / 17;
-    _widthsNotifier.value[TracksDataSource.kAlbum] ??= (MediaQuery.of(context).size.width - linearTileHeight - 8.0) * 3 / 17;
+    _widthsNotifier.value[TracksDataSource.kGenre] ??= (MediaQuery.of(context).size.width - linearTileHeight - 8.0) * 3 / 17;
     _widthsNotifier.value[TracksDataSource.kYear] ??= (MediaQuery.of(context).size.width - linearTileHeight - 8.0) * 2 / 17;
 
     return Scaffold(
@@ -224,8 +224,8 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
                           ),
                         ),
                         GridColumn(
-                          columnName: TracksDataSource.kArtists,
-                          width: widths[TracksDataSource.kArtists]!,
+                          columnName: TracksDataSource.kArtist,
+                          width: widths[TracksDataSource.kArtist]!,
                           columnWidthMode: ColumnWidthMode.none,
                           minimumWidth: 200.0,
                           label: Container(
@@ -256,8 +256,8 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
                           ),
                         ),
                         GridColumn(
-                          columnName: TracksDataSource.kGenres,
-                          width: widths[TracksDataSource.kGenres]!,
+                          columnName: TracksDataSource.kGenre,
+                          width: widths[TracksDataSource.kGenre]!,
                           columnWidthMode: ColumnWidthMode.none,
                           minimumWidth: 200.0,
                           label: Container(
@@ -322,9 +322,9 @@ class TracksDataSource extends DataGridSource {
           final alignment = {
             kTrackNumber: Alignment.center,
             kTitle: Alignment.centerLeft,
-            kArtists: Alignment.centerLeft,
+            kArtist: Alignment.centerLeft,
             kAlbum: Alignment.centerLeft,
-            kGenres: Alignment.centerLeft,
+            kGenre: Alignment.centerLeft,
             kYear: Alignment.centerLeft,
           }[cell.columnName]!;
           return Container(
@@ -343,7 +343,7 @@ class TracksDataSource extends DataGridSource {
                     overflow: TextOverflow.ellipsis,
                     style: style,
                   ),
-              kArtists: () => HyperLink(
+              kArtist: () => HyperLink(
                     text: TextSpan(
                       children: [
                         for (final artist in (track.artists.isEmpty ? {''} : track.artists)) ...[
@@ -383,7 +383,7 @@ class TracksDataSource extends DataGridSource {
                     ),
                     style: style,
                   ),
-              kGenres: () => HyperLink(
+              kGenre: () => HyperLink(
                     text: TextSpan(
                       children: [
                         for (final genre in (track.genres.isEmpty ? {''} : track.genres)) ...[
@@ -418,8 +418,8 @@ class TracksDataSource extends DataGridSource {
 
   static const String kTrackNumber = '0';
   static const String kTitle = '1';
-  static const String kArtists = '2';
+  static const String kArtist = '2';
   static const String kAlbum = '3';
-  static const String kGenres = '4';
+  static const String kGenre = '4';
   static const String kYear = '5';
 }

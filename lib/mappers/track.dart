@@ -19,9 +19,9 @@ extension TrackMappers on Track {
         cells: [
           DataGridCell(columnName: TracksDataSource.kTrackNumber, value: this),
           DataGridCell(columnName: TracksDataSource.kTitle, value: this),
-          DataGridCell(columnName: TracksDataSource.kArtists, value: this),
+          DataGridCell(columnName: TracksDataSource.kArtist, value: this),
           DataGridCell(columnName: TracksDataSource.kAlbum, value: this),
-          DataGridCell(columnName: TracksDataSource.kGenres, value: this),
+          DataGridCell(columnName: TracksDataSource.kGenre, value: this),
           DataGridCell(columnName: TracksDataSource.kYear, value: this),
         ],
       );

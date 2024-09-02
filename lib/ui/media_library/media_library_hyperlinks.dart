@@ -60,11 +60,12 @@ Future<void> navigateToGenre(BuildContext context, GenreLookupKey key) async {
   if (genre != null) {
     final tracks = await MediaLibrary.instance.tracksFromGenre(genre);
 
-    List<Color>? palette;
-    if (isMaterial2) {
-      final result = await PaletteGenerator.fromImageProvider(cover(item: genre, cacheWidth: 200));
-      palette = result.colors?.toList();
-    }
+    // NOTE: Palette is not used for genres.
+    // List<Color>? palette;
+    // if (isMaterial2) {
+    //   final result = await PaletteGenerator.fromImageProvider(cover(item: genre, cacheWidth: 200));
+    //   palette = result.colors?.toList();
+    // }
 
     await precacheImage(cover(item: genre), context);
 
@@ -73,7 +74,7 @@ Future<void> navigateToGenre(BuildContext context, GenreLookupKey key) async {
       extra: GenrePathExtra(
         genre: genre,
         tracks: tracks,
-        palette: palette,
+        palette: null,
       ),
     );
   }
