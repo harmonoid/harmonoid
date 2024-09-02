@@ -1980,3 +1980,81 @@ class StillGIFState extends State<StillGIF> {
         );
   }
 }
+
+// --------------------------------------------------
+
+class ListItem extends StatefulWidget {
+  final String title;
+  final String? subtitle;
+  final Widget? leading;
+  final VoidCallback? onTap;
+
+  // https://github.com/flutter/flutter/issues/29549
+  // https://stackoverflow.com/a/54113677/12825435
+
+  const ListItem({
+    super.key,
+    required this.title,
+    this.subtitle,
+    this.leading,
+    this.onTap,
+  });
+
+  @override
+  State<ListItem> createState() => ListItemState();
+}
+
+class ListItemState extends State<ListItem> {
+  final ValueNotifier<bool> isThreeLineNotifier = ValueNotifier<bool>(false);
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: isThreeLineNotifier,
+      builder: (context, isThreeLine, _) {
+        return ListTile(
+          leading: widget.leading,
+          title: Text(
+            widget.title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).listTileTheme.subtitleTextStyle,
+          ),
+          subtitle: widget.subtitle == null
+              ? null
+              : Stack(
+                  children: [
+                    Positioned.fill(
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          final textSpan = TextSpan(
+                            text: widget.subtitle,
+                            style: Theme.of(context).listTileTheme.subtitleTextStyle,
+                          );
+                          final textPainter = TextPainter(text: textSpan, textDirection: TextDirection.ltr);
+                          textPainter.layout(maxWidth: constraints.maxWidth);
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (textPainter.computeLineMetrics().length >= 2) {
+                              isThreeLineNotifier.value = true;
+                            } else {
+                              isThreeLineNotifier.value = false;
+                            }
+                          });
+                          return const SizedBox.shrink();
+                        },
+                      ),
+                    ),
+                    Text(
+                      widget.subtitle!,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+          isThreeLine: isThreeLine,
+          onTap: widget.onTap,
+        );
+      },
+    );
+  }
+}
