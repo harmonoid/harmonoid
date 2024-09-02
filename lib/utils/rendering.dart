@@ -346,6 +346,22 @@ Future<bool> showConfirmation(BuildContext context, String title, String subtitl
   return result;
 }
 
+Future<void> showMessage(BuildContext context, String title, String subtitle) async {
+  await showDialog(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: Text(title),
+      content: Text(subtitle),
+      actions: [
+        TextButton(
+          onPressed: Navigator.of(ctx).pop,
+          child: Text(label(Language.instance.OK)),
+        ),
+      ],
+    ),
+  );
+}
+
 List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) => [
       PopupMenuItem<int>(
         value: 0,
