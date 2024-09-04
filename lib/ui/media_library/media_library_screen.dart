@@ -25,6 +25,8 @@ class MediaLibraryScreen extends StatefulWidget {
 }
 
 class MediaLibraryScreenState extends State<MediaLibraryScreen> {
+  late final AnimationDuration? _duration = Theme.of(context).extension<AnimationDuration>();
+
   final ValueNotifier<bool> _floatingNotifier = ValueNotifier(false);
   final ValueNotifier<bool> _desktopAppBarElevatedNotifier = ValueNotifier<bool>(false);
   final ValueNotifier<double> _mediaLibrarySearchBarOffsetNotifier = ValueNotifier<double>(0.0);
@@ -102,138 +104,143 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: ValueListenableBuilder<bool>(
                     valueListenable: _desktopAppBarElevatedNotifier,
-                    builder: (context, desktopAppBarElevated, _) => Material(
-                      elevation: Theme.of(context).appBarTheme.elevation ?? kDefaultAppBarElevation,
-                      color: desktopAppBarElevated
-                          ? Color.lerp(
-                              Theme.of(context).appBarTheme.backgroundColor,
-                              Theme.of(context).appBarTheme.surfaceTintColor,
-                              0.08,
-                            )
-                          : Theme.of(context).appBarTheme.backgroundColor,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          DesktopCaptionBar(
-                            caption: kCaption,
-                            color: desktopAppBarElevated
+                    builder: (context, desktopAppBarElevated, _) => TweenAnimationBuilder<Color?>(
+                      tween: ColorTween(
+                        begin: Theme.of(context).appBarTheme.backgroundColor ?? Colors.transparent,
+                        end: (desktopAppBarElevated
                                 ? Color.lerp(
                                     Theme.of(context).appBarTheme.backgroundColor,
                                     Theme.of(context).appBarTheme.surfaceTintColor,
                                     0.08,
                                   )
-                                : null,
+                                : Theme.of(context).appBarTheme.backgroundColor) ??
+                            Colors.transparent,
+                      ),
+                      duration: _duration!.fast,
+                      builder: (context, value, child) {
+                        return Material(
+                          elevation: Theme.of(context).appBarTheme.elevation ?? kDefaultAppBarElevation,
+                          color: value,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              DesktopCaptionBar(
+                                caption: kCaption,
+                                color: value,
+                              ),
+                              Expanded(
+                                child: Container(
+                                  height: kDesktopAppBarHeight - 20.0,
+                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                  child: child!,
+                                ),
+                              ),
+                            ],
                           ),
-                          Expanded(
-                            child: Container(
-                              height: kDesktopAppBarHeight - 20.0,
-                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: {
-                                      kAlbumsPath: Language.instance.ALBUMS,
-                                      kTracksPath: Language.instance.TRACKS,
-                                      kArtistsPath: Language.instance.ARTISTS,
-                                      kGenresPath: Language.instance.GENRES,
-                                      kPlaylistsPath: Language.instance.PLAYLISTS,
-                                    }.entries.map<Widget>(
-                                      (e) {
-                                        return InkWell(
-                                          borderRadius: BorderRadius.circular(4.0),
-                                          onTap: () {
-                                            context.go('/$kMediaLibraryPath/${e.key}');
-                                            Configuration.instance.set(mediaLibraryPath: e.key);
-                                          },
-                                          child: Container(
-                                            height: kDesktopAppBarHeight - 20.0,
-                                            alignment: Alignment.center,
-                                            padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                                            child: Stack(
-                                              alignment: Alignment.center,
-                                              children: [
-                                                Text(
-                                                  e.value.toUpperCase(),
-                                                  style: TextStyle(
-                                                    fontSize: 20.0,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: e.key == _path ? Theme.of(context).textTheme.bodyLarge?.color : Colors.transparent,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  e.value.toUpperCase(),
-                                                  style: TextStyle(
-                                                    fontSize: 20.0,
-                                                    fontWeight: FontWeight.w300,
-                                                    color: e.key != _path ? Theme.of(context).textTheme.bodyMedium?.color : Colors.transparent,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ).toList() +
-                                    [
-                                      const Spacer(),
-                                      const SizedBox(width: 8.0),
-                                      SizedBox(
-                                        height: 40.0,
-                                        width: 280.0,
-                                        child: DefaultTextField(
-                                          focusNode: _queryTextFieldFocusNode,
-                                          controller: _queryTextFieldEditingController,
-                                          cursorWidth: 1.0,
-                                          onSubmitted: (value) async {
-                                            context.go(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: value}).toString());
-                                            await Future.delayed(MaterialRoute.animationDuration?.medium ?? const Duration(milliseconds: 300));
-                                            _queryTextFieldFocusNode.requestFocus();
-                                          },
-                                          textAlignVertical: TextAlignVertical.center,
-                                          style: Theme.of(context).textTheme.bodyMedium,
-                                          decoration: inputDecoration(
-                                            context,
-                                            Language.instance.SEARCH_BANNER_SUBTITLE,
-                                            suffixIcon: Transform.rotate(
-                                              angle: pi / 2,
-                                              child: Tooltip(
-                                                message: Language.instance.SEARCH,
-                                                child: Icon(
-                                                  Icons.search,
-                                                  size: 20.0,
-                                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                                ),
-                                              ),
-                                            ),
-                                            onSuffixIconPressed: () async {
-                                              context.go(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: _queryTextFieldEditingController.value}).toString());
-                                              await Future.delayed(MaterialRoute.animationDuration?.medium ?? const Duration(milliseconds: 300));
-                                              _queryTextFieldFocusNode.requestFocus();
-                                            },
+                        );
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: {
+                              kAlbumsPath: Language.instance.ALBUMS,
+                              kTracksPath: Language.instance.TRACKS,
+                              kArtistsPath: Language.instance.ARTISTS,
+                              kGenresPath: Language.instance.GENRES,
+                              kPlaylistsPath: Language.instance.PLAYLISTS,
+                            }.entries.map<Widget>(
+                              (e) {
+                                return InkWell(
+                                  borderRadius: BorderRadius.circular(4.0),
+                                  onTap: () {
+                                    context.go('/$kMediaLibraryPath/${e.key}');
+                                    Configuration.instance.set(mediaLibraryPath: e.key);
+                                  },
+                                  child: Container(
+                                    height: kDesktopAppBarHeight - 20.0,
+                                    alignment: Alignment.center,
+                                    padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        Text(
+                                          e.value.toUpperCase(),
+                                          style: TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.w600,
+                                            color: e.key == _path ? Theme.of(context).textTheme.bodyLarge?.color : Colors.transparent,
                                           ),
                                         ),
+                                        Text(
+                                          e.value.toUpperCase(),
+                                          style: TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.w300,
+                                            color: e.key != _path ? Theme.of(context).textTheme.bodyMedium?.color : Colors.transparent,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ).toList() +
+                            [
+                              const Spacer(),
+                              const SizedBox(width: 8.0),
+                              SizedBox(
+                                height: 40.0,
+                                width: 280.0,
+                                child: DefaultTextField(
+                                  focusNode: _queryTextFieldFocusNode,
+                                  controller: _queryTextFieldEditingController,
+                                  cursorWidth: 1.0,
+                                  onSubmitted: (value) async {
+                                    context.go(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: value}).toString());
+                                    await Future.delayed(MaterialRoute.animationDuration?.medium ?? const Duration(milliseconds: 300));
+                                    _queryTextFieldFocusNode.requestFocus();
+                                  },
+                                  textAlignVertical: TextAlignVertical.center,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  decoration: inputDecoration(
+                                    context,
+                                    Language.instance.SEARCH_BANNER_SUBTITLE,
+                                    suffixIcon: Transform.rotate(
+                                      angle: pi / 2,
+                                      child: Tooltip(
+                                        message: Language.instance.SEARCH,
+                                        child: Icon(
+                                          Icons.search,
+                                          size: 20.0,
+                                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                        ),
                                       ),
-                                      const SizedBox(width: 8.0),
-                                      const PlayFileOrURLButton(),
-                                      const ReadFileOrURLMetadataButton(),
-                                      IconButton(
-                                        onPressed: () {
-                                          context.push('/$kSettingsPath');
-                                        },
-                                        tooltip: Language.instance.SETTINGS,
-                                        icon: const Icon(Icons.settings),
-                                        iconSize: 20.0,
-                                        splashRadius: 18.0,
-                                        color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
-                                      ),
-                                    ],
+                                    ),
+                                    onSuffixIconPressed: () async {
+                                      context.go(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: _queryTextFieldEditingController.text}).toString());
+                                      await Future.delayed(MaterialRoute.animationDuration?.medium ?? const Duration(milliseconds: 300));
+                                      _queryTextFieldFocusNode.requestFocus();
+                                    },
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ],
+                              const SizedBox(width: 8.0),
+                              const PlayFileOrURLButton(),
+                              const ReadFileOrURLMetadataButton(),
+                              IconButton(
+                                onPressed: () {
+                                  context.push('/$kSettingsPath');
+                                },
+                                tooltip: Language.instance.SETTINGS,
+                                icon: const Icon(Icons.settings),
+                                iconSize: 20.0,
+                                splashRadius: 18.0,
+                                color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
+                              ),
+                            ],
                       ),
                     ),
                   ),
