@@ -4,7 +4,7 @@ publish_to: "none"
 version: 0.3.8+5017
 
 environment:
-  sdk: ">=2.17.0 <4.0.0"
+  sdk: ">=3.3.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -50,7 +50,7 @@ dependencies:
   sqlite3: ^2.4.0
   sqlite3_flutter_libs: ^0.5.0
   substring_highlight: ^1.0.33
-  syncfusion_flutter_datagrid: ^24.2.7
+  syncfusion_flutter_datagrid: 24.2.7
   synchronized: ^3.0.0+2
   system_media_transport_controls:
     path: external/smtc-win32/bindings/system_media_transport_controls.dart
