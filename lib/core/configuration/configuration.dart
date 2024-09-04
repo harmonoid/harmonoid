@@ -56,7 +56,6 @@ class Configuration {
   /// Database used to store configuration.
   final Database db;
 
-  AnimationDuration get animationDuration => _animationDuration!;
   bool get audioFormatDisplay => _audioFormatDisplay!;
   bool get discordRPC => _discordRPC!;
   LanguageData get language => _language!;
@@ -93,13 +92,13 @@ class Configuration {
   bool get notificationLyrics => _notificationLyrics!;
   bool get nowPlayingBarColorPalette => _nowPlayingBarColorPalette!;
   PlaybackState get playbackState => _playbackState!;
-  int get themeMaterialVersion => _themeMaterialVersion!;
+  AnimationDuration get themeAnimationDuration => _themeAnimationDuration!;
+  int get themeMaterialStandard => _themeMaterialStandard!;
   ThemeMode get themeMode => _themeMode!;
   bool get themeSystemColorScheme => _themeSystemColorScheme!;
   bool get windowsTaskbarProgress => _windowsTaskbarProgress!;
 
   Future<void> set({
-    AnimationDuration? animationDuration,
     bool? audioFormatDisplay,
     bool? discordRPC,
     LanguageData? language,
@@ -135,15 +134,12 @@ class Configuration {
     String? mpvPath,
     bool? notificationLyrics,
     PlaybackState? playbackState,
-    int? themeMaterialVersion,
+    AnimationDuration? themeAnimationDuration,
+    int? themeMaterialStandard,
     ThemeMode? themeMode,
     bool? themeSystemColorScheme,
     bool? windowsTaskbarProgress,
   }) async {
-    if (animationDuration != null) {
-      _animationDuration = animationDuration;
-      await db.setValue(_kKeyAnimationDuration, kTypeJson, jsonValue: animationDuration);
-    }
     if (audioFormatDisplay != null) {
       _audioFormatDisplay = audioFormatDisplay;
       await db.setValue(_kKeyAudioFormatDisplay, kTypeBoolean, booleanValue: audioFormatDisplay);
@@ -284,9 +280,13 @@ class Configuration {
       _playbackState = playbackState;
       await db.setValue(_kKeyPlaybackState, kTypeJson, jsonValue: playbackState);
     }
-    if (themeMaterialVersion != null) {
-      _themeMaterialVersion = themeMaterialVersion;
-      await db.setValue(_kKeyThemeMaterialVersion, kTypeInteger, integerValue: themeMaterialVersion);
+    if (themeAnimationDuration != null) {
+      _themeAnimationDuration = themeAnimationDuration;
+      await db.setValue(_kKeyThemeAnimationDuration, kTypeJson, jsonValue: themeAnimationDuration);
+    }
+    if (themeMaterialStandard != null) {
+      _themeMaterialStandard = themeMaterialStandard;
+      await db.setValue(_kKeyThemeMaterialStandard, kTypeInteger, integerValue: themeMaterialStandard);
     }
     if (themeMode != null) {
       _themeMode = themeMode;
@@ -319,7 +319,6 @@ class Configuration {
       }
     }
 
-    _animationDuration = AnimationDuration.fromJson(await db.getJson(_kKeyAnimationDuration));
     _audioFormatDisplay = await db.getBoolean(_kKeyAudioFormatDisplay);
     _discordRPC = await db.getBoolean(_kKeyDiscordRPC);
     _language = LanguageData.fromJson(await db.getJson(_kKeyLanguage));
@@ -356,13 +355,13 @@ class Configuration {
     _notificationLyrics = await db.getBoolean(_kKeyNotificationLyrics);
     _nowPlayingBarColorPalette = await db.getBoolean(_kKeyNowPlayingBarColorPalette);
     _playbackState = PlaybackState.fromJson(await db.getJson(_kKeyPlaybackState));
-    _themeMaterialVersion = await db.getInteger(_kKeyThemeMaterialVersion);
+    _themeAnimationDuration = AnimationDuration.fromJson(await db.getJson(_kKeyThemeAnimationDuration));
+    _themeMaterialStandard = await db.getInteger(_kKeyThemeMaterialStandard);
     _themeMode = ThemeMode.values[(await db.getInteger(_kKeyThemeMode))!];
     _themeSystemColorScheme = await db.getBoolean(_kKeyThemeSystemColorScheme);
     _windowsTaskbarProgress = await db.getBoolean(_kKeyWindowsTaskbarProgress);
   }
 
-  AnimationDuration? _animationDuration;
   bool? _audioFormatDisplay;
   bool? _discordRPC;
   LanguageData? _language;
@@ -399,14 +398,14 @@ class Configuration {
   bool? _notificationLyrics;
   bool? _nowPlayingBarColorPalette;
   PlaybackState? _playbackState;
-  int? _themeMaterialVersion;
+  AnimationDuration? _themeAnimationDuration;
+  int? _themeMaterialStandard;
   ThemeMode? _themeMode;
   bool? _themeSystemColorScheme;
   bool? _windowsTaskbarProgress;
 
   static Future<Map<String, dynamic>> getDefaults() async {
     return {
-      /* JSON    */ _kKeyAnimationDuration: const AnimationDuration(),
       /* Boolean */ _kKeyAudioFormatDisplay: true,
       /* Boolean */ _kKeyDiscordRPC: true,
       /* JSON    */ _kKeyLanguage: const LanguageData(code: 'en_US', name: 'English (United States)', country: 'United States'),
@@ -443,7 +442,8 @@ class Configuration {
       /* Boolean */ _kKeyNotificationLyrics: true,
       /* Boolean */ _kKeyNowPlayingBarColorPalette: true,
       /* JSON    */ _kKeyPlaybackState: PlaybackState.defaults(),
-      /* Integer */ _kKeyThemeMaterialVersion: isDesktop ? 2 : 3,
+      /* JSON    */ _kKeyThemeAnimationDuration: const AnimationDuration(),
+      /* Integer */ _kKeyThemeMaterialStandard: isDesktop ? 2 : 3,
       /* Integer */ _kKeyThemeMode: ThemeMode.system.index,
       /* Boolean */ _kKeyThemeSystemColorScheme: isMobile,
       /* Boolean */ _kKeyWindowsTaskbarProgress: false,
@@ -458,7 +458,7 @@ class Configuration {
       try {
         final hr = SHGetKnownFolderPath(
           rfid,
-          KF_FLAG_DEFAULT,
+          KNOWN_FOLDER_FLAG.KF_FLAG_DEFAULT,
           NULL,
           result,
         );
@@ -494,7 +494,7 @@ class Configuration {
       try {
         final hr = SHGetKnownFolderPath(
           rfid,
-          KF_FLAG_DEFAULT,
+          KNOWN_FOLDER_FLAG.KF_FLAG_DEFAULT,
           NULL,
           result,
         );
@@ -539,7 +539,6 @@ class Configuration {
 
   // ----- Keys -----
 
-  static const _kKeyAnimationDuration = 'ANIMATION_DURATION';
   static const _kKeyAudioFormatDisplay = 'AUDIO_FORMAT_DISPLAY';
   static const _kKeyDiscordRPC = 'DISCORD_RPC';
   static const _kKeyLanguage = 'LANGUAGE';
@@ -576,7 +575,8 @@ class Configuration {
   static const _kKeyNotificationLyrics = 'NOTIFICATION_LYRICS';
   static const _kKeyNowPlayingBarColorPalette = 'NOW_PLAYING_COLOR_PALETTE';
   static const _kKeyPlaybackState = 'PLAYBACK_STATE';
-  static const _kKeyThemeMaterialVersion = 'THEME_MATERIAL_VERSION';
+  static const _kKeyThemeAnimationDuration = 'THEME_ANIMATION_DURATION';
+  static const _kKeyThemeMaterialStandard = 'THEME_MATERIAL_STANDARD';
   static const _kKeyThemeMode = 'THEME_MODE';
   static const _kKeyThemeSystemColorScheme = 'THEME_SYSTEM_COLOR_SCHEME';
   static const _kKeyWindowsTaskbarProgress = 'WINDOWS_TASKBAR_PROGRESS';

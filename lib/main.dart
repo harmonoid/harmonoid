@@ -88,9 +88,9 @@ Future<void> main(List<String> args) async {
     await Intent.ensureInitialized(args: args);
     await ThemeNotifier.ensureInitialized(
       themeMode: Configuration.instance.themeMode,
-      materialVersion: Configuration.instance.themeMaterialVersion,
+      materialStandard: Configuration.instance.themeMaterialStandard,
       systemColorScheme: Configuration.instance.themeSystemColorScheme,
-      animationDuration: Configuration.instance.animationDuration,
+      animationDuration: Configuration.instance.themeAnimationDuration,
     );
     await LyricsNotifier.ensureInitialized();
     await NowPlayingVisualsNotifier.ensureInitialized();

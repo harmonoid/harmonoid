@@ -23,7 +23,7 @@ class ThemeNotifier extends ChangeNotifier {
   /// {@macro theme_notifier}
   ThemeNotifier._({
     required this.themeMode,
-    required this.materialVersion,
+    required this.materialStandard,
     required this.systemColorScheme,
     required this.animationDuration,
     required this.systemLightColorScheme,
@@ -35,7 +35,7 @@ class ThemeNotifier extends ChangeNotifier {
   /// Initializes the [instance].
   static Future<void> ensureInitialized({
     required ThemeMode themeMode,
-    required int materialVersion,
+    required int materialStandard,
     required bool systemColorScheme,
     required AnimationDuration animationDuration,
   }) async {
@@ -77,7 +77,7 @@ class ThemeNotifier extends ChangeNotifier {
 
     instance = ThemeNotifier._(
       themeMode: themeMode,
-      materialVersion: materialVersion,
+      materialStandard: materialStandard,
       systemColorScheme: systemColorScheme,
       animationDuration: animationDuration,
       systemLightColorScheme: systemLightColorScheme,
@@ -101,7 +101,7 @@ class ThemeNotifier extends ChangeNotifier {
           mode: ThemeMode.light,
           animationDuration: animationDuration,
         )
-      }[materialVersion]!;
+      }[materialStandard]!;
 
   ThemeData get darkTheme => {
         3: createM3Theme(
@@ -117,10 +117,10 @@ class ThemeNotifier extends ChangeNotifier {
           mode: ThemeMode.dark,
           animationDuration: animationDuration,
         )
-      }[materialVersion]!;
+      }[materialStandard]!;
 
   ThemeMode themeMode;
-  int materialVersion;
+  int materialStandard;
   bool systemColorScheme;
   BuildContext? context;
   AnimationDuration animationDuration;
@@ -133,22 +133,25 @@ class ThemeNotifier extends ChangeNotifier {
   Future<void> update({
     BuildContext? context,
     ThemeMode? themeMode,
-    int? materialVersion,
+    int? materialStandard,
+    bool? systemColorScheme,
     AnimationDuration? animationDuration,
   }) async {
     this.context = context ?? this.context;
     this.themeMode = themeMode ?? this.themeMode;
-    this.materialVersion = materialVersion ?? this.materialVersion;
+    this.materialStandard = materialStandard ?? this.materialStandard;
+    this.systemColorScheme = systemColorScheme ?? this.systemColorScheme;
     this.animationDuration = animationDuration ?? this.animationDuration;
     context ??= this.context;
     themeMode ??= this.themeMode;
-    materialVersion ??= this.materialVersion;
+    materialStandard ??= this.materialStandard;
+    systemColorScheme ??= this.systemColorScheme;
     animationDuration ??= this.animationDuration;
     if (context != null) {
       if (Platform.isAndroid || Platform.isIOS) {
         final theme = Theme.of(context);
         final brightness = theme.brightness == Brightness.dark ? Brightness.light : Brightness.dark;
-        switch (materialVersion) {
+        switch (materialStandard) {
           case 3:
             SystemChrome.setSystemUIOverlayStyle(
               SystemUiOverlayStyle(
@@ -177,7 +180,7 @@ class ThemeNotifier extends ChangeNotifier {
             break;
           default:
             throw ArgumentError.value(
-              materialVersion,
+              materialStandard,
               'standard',
               'Only valid values are 2 & 3.',
             );
