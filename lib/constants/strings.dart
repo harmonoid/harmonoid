@@ -6,6 +6,7 @@ class Strings {
   late String ADDED_M_OF_N_FILES;
   late String ADDING_YOUR_MUSIC;
   late String ADD_NEW_FOLDER;
+  late String ADD_NEW_FOLDER_SUBTITLE;
   late String ADD_THIS_FOLDER;
   late String ADD_TO_NOW_PLAYING;
   late String ADD_TO_PLAYLIST;
@@ -15,6 +16,7 @@ class Strings {
   late String ALBUM_ARTISTS;
   late String ALBUM_DELETE_DIALOG_SUBTITLE;
   late String ALL_FILES;
+  late String ANIMATION_SPEED;
   late String ARTIST;
   late String ARTISTS;
   late String ASCENDING;
@@ -33,6 +35,7 @@ class Strings {
   late String COUNT;
   late String CREATE;
   late String CREATE_NEW_PLAYLIST;
+  late String CURRENTLY_ADDED_FOLDERS;
   late String DATE_ADDED;
   late String DELETE;
   late String DESCENDING;
@@ -41,7 +44,6 @@ class Strings {
   late String DONE;
   late String EDIT;
   late String EDIT_ALBUM_PARAMETERS_SUBTITLE;
-  late String EDIT_ALBUM_PARAMETERS_SUBTITLE_;
   late String EDIT_ALBUM_PARAMETERS_TITLE;
   late String EDIT_DETAILS;
   late String EDIT_MINIMUM_FILE_SIZE;
@@ -77,12 +79,13 @@ class Strings {
   late String INTERNET_ERROR;
   late String LAST_DIRECTORY_REMOVED;
   late String LESS;
-  late String LIBRARY;
   late String LIKED_SONGS;
   late String LYRICS;
   late String LYRICS_NOT_FOUND;
   late String LYRICS_RETRIEVING;
+  late String MATERIAL_DESIGN;
   late String MEDIA_FILES;
+  late String MEDIA_LIBRARY;
   late String MEDIA_LIBRARY_NO_ITEMS_SUBTITLE;
   late String MEDIA_LIBRARY_NO_ITEMS_TITLE;
   late String MEDIA_LIBRARY_REFRESHING_DIALOG_SUBTITLE;
@@ -107,6 +110,7 @@ class Strings {
   late String NOW_PLAYING_SCREEN_SETTING_SUBTITLE;
   late String NOW_YOU_ARE_GOOD_TO_GO_BACK;
   late String NO_DOWNLOAD_UPDATE;
+  late String NO_FOLDERS_ADDED;
   late String NO_INTERNET_SUBTITLE;
   late String NO_INTERNET_TITLE;
   late String NO_PLAYLISTS_FOUND;
@@ -151,10 +155,8 @@ class Strings {
   late String RECOMMENDATIONS;
   late String RECOMMENDED_HINT;
   late String REFRESH;
-  late String REFRESH_INFORMATION;
   late String REFRESH_SUBTITLE;
   late String REINDEX;
-  late String REINDEX_INFORMATION;
   late String REINDEX_SUBTITLE;
   late String REMIND_ME_NEXT_TIME;
   late String REMOVE;
@@ -176,14 +178,16 @@ class Strings {
   late String SEARCH_BANNER_TITLE;
   late String SEARCH_HINT;
   late String SEE_ALL;
-  late String SELECTED_DIRECTORIES;
-  late String SELECTED_DIRECTORY;
   late String SETTINGS;
   late String SETTINGS_DISPLAY_AUDIO_FORMAT;
   late String SETTINGS_HIGHLIGHTED_LYRICS_SIZE;
   late String SETTINGS_LAUNCH_NOW_PLAYING_ON_FILE_OPEN;
   late String SETTINGS_LRC_FROM_DIRECTORY;
   late String SETTINGS_MEDIA_LIBRARY_REFRESH_ON_LAUNCH;
+  late String SETTINGS_SECTION_DISPLAY_SUBTITLE;
+  late String SETTINGS_SECTION_DISPLAY_TITLE;
+  late String SETTINGS_SECTION_MEDIA_LIBRARY_SUBTITLE;
+  late String SETTINGS_SECTION_MEDIA_LIBRARY_TITLE;
   late String SETTINGS_SECTION_STATS_SUBTITLE;
   late String SETTINGS_SECTION_STATS_TITLE;
   late String SETTINGS_SECTION_VISUALS_SUBTITLE;
@@ -199,16 +203,12 @@ class Strings {
   late String SETTING_APP_VERSION_LATEST;
   late String SETTING_APP_VERSION_SUBTITLE;
   late String SETTING_APP_VERSION_TITLE;
-  late String SETTING_DISPLAY_SUBTITLE;
-  late String SETTING_DISPLAY_TITLE;
   late String SETTING_INDEXING_SUBTITLE;
   late String SETTING_INDEXING_TITLE;
   late String SETTING_LANGUAGE_SUBTITLE;
   late String SETTING_LANGUAGE_TITLE;
   late String SETTING_MISCELLANEOUS_SUBTITLE;
   late String SETTING_MISCELLANEOUS_TITLE;
-  late String SETTING_THEME_SUBTITLE;
-  late String SETTING_THEME_TITLE;
   late String SET_LRC_FILE;
   late String SHARE;
   late String SHOW_ALBUM;
@@ -219,6 +219,7 @@ class Strings {
   late String SORT;
   late String SORT_BY;
   late String SPEED;
+  late String THEME;
   late String THEME_MODE_DARK;
   late String THEME_MODE_LIGHT;
   late String THEME_MODE_SYSTEM;
@@ -230,7 +231,7 @@ class Strings {
   late String TYPE;
   late String UNMUTE;
   late String URL;
-  late String USE_MODERN_NOW_PLAYING_SCREEN;
+  late String USE_SYSTEM_COLOR_SCHEME;
   late String USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS;
   late String VALUE;
   late String WARNING;
