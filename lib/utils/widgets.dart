@@ -1223,9 +1223,9 @@ class ScrollableSlider extends StatelessWidget {
   final double value;
   final Color? color;
   final Color? secondaryColor;
-  final VoidCallback onScrolledUp;
-  final VoidCallback onScrolledDown;
   final void Function(double) onChanged;
+  final VoidCallback? onScrolledUp;
+  final VoidCallback? onScrolledDown;
   final bool inferSliderInactiveTrackColor;
   final bool mobile;
 
@@ -1237,9 +1237,9 @@ class ScrollableSlider extends StatelessWidget {
     required this.value,
     this.color,
     this.secondaryColor,
-    required this.onScrolledUp,
-    required this.onScrolledDown,
     required this.onChanged,
+    this.onScrolledUp,
+    this.onScrolledDown,
     this.inferSliderInactiveTrackColor = true,
     this.mobile = false,
   });
@@ -1250,10 +1250,10 @@ class ScrollableSlider extends StatelessWidget {
       onPointerSignal: (event) {
         if (event is PointerScrollEvent) {
           if (event.scrollDelta.dy < 0) {
-            onScrolledUp();
+            onScrolledUp?.call();
           }
           if (event.scrollDelta.dy > 0) {
-            onScrolledDown();
+            onScrolledDown?.call();
           }
         }
       },
@@ -1987,6 +1987,7 @@ class ListItem extends StatefulWidget {
   final String title;
   final String? subtitle;
   final Widget? leading;
+  final Widget? trailing;
   final VoidCallback? onTap;
 
   // https://github.com/flutter/flutter/issues/29549
@@ -1997,6 +1998,7 @@ class ListItem extends StatefulWidget {
     required this.title,
     this.subtitle,
     this.leading,
+    this.trailing,
     this.onTap,
   });
 
@@ -2014,11 +2016,12 @@ class ListItemState extends State<ListItem> {
       builder: (context, isThreeLine, _) {
         return ListTile(
           leading: widget.leading,
+          trailing: widget.trailing,
           title: Text(
             widget.title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).listTileTheme.subtitleTextStyle,
+            style: Theme.of(context).listTileTheme.titleTextStyle,
           ),
           subtitle: widget.subtitle == null
               ? null
