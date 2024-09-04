@@ -175,7 +175,7 @@ Future<int?> showMenuItems(BuildContext context, List<PopupMenuItem<int>> items,
             InkWell(
               onTap: () {
                 result = i;
-                Navigator.of(context).pop();
+                Navigator.of(context).maybePop();
               },
               child: items[i].child,
             ),
@@ -250,9 +250,7 @@ Future<String> showInput(
             child: Text(label(action)),
           ),
           TextButton(
-            onPressed: () {
-              Navigator.of(ctx).maybePop();
-            },
+            onPressed: Navigator.of(ctx).maybePop,
             child: Text(label(Language.instance.CANCEL)),
           ),
         ],
@@ -332,7 +330,7 @@ Future<bool> showConfirmation(BuildContext context, String title, String subtitl
         TextButton(
           onPressed: () {
             result = true;
-            Navigator.of(ctx).pop();
+            Navigator.of(ctx).maybePop();
           },
           child: Text(label(Language.instance.YES)),
         ),
@@ -341,6 +339,80 @@ Future<bool> showConfirmation(BuildContext context, String title, String subtitl
           child: Text(label(Language.instance.NO)),
         ),
       ],
+    ),
+  );
+  return result;
+}
+
+Future<T?> showSelection<T>(BuildContext context, String title, List<T> values, T? selected, String Function(T) text, {bool actions = true}) async {
+  T? result;
+
+  await showDialog(
+    context: context,
+    builder: (ctx) => StatefulBuilder(
+      builder: (ctx, setState) {
+        void set(T? value) {
+          if (value != null) {
+            setState(() => result = value);
+          }
+        }
+
+        return AlertDialog(
+          clipBehavior: Clip.antiAlias,
+          titlePadding: actions ? const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 24.0) : const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 8.0),
+          contentPadding: EdgeInsets.zero,
+          title: Text(title),
+          content: Material(
+            color: Colors.transparent,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (actions) const Divider(height: 1.0, thickness: 1.0),
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: values
+                          .map(
+                            (size) => ListItem(
+                              leading: Radio(
+                                value: size,
+                                groupValue: result ?? selected,
+                                onChanged: set,
+                              ),
+                              onTap: () => set(size),
+                              title: text(size),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
+                if (actions) const Divider(height: 1.0, thickness: 1.0),
+                if (!actions) const SizedBox(height: 8.0),
+              ],
+            ),
+          ),
+          actions: actions
+              ? [
+                  TextButton(
+                    onPressed: Navigator.of(ctx).maybePop,
+                    child: Text(label(Language.instance.OK)),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      result = null;
+                      Navigator.of(ctx).maybePop();
+                    },
+                    child: Text(label(Language.instance.CANCEL)),
+                  ),
+                ]
+              : null,
+        );
+      },
     ),
   );
   return result;
@@ -600,7 +672,7 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
               }
               if (isMobile) {
                 while (Navigator.of(context).canPop()) {
-                  Navigator.of(context).pop();
+                  await Navigator.of(context).maybePop();
                   if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(router.routerDelegate.currentConfiguration.uri.pathSegments.last)) {
                     break;
                   }
@@ -738,7 +810,7 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
           }
           if (isMobile) {
             while (Navigator.of(context).canPop()) {
-              Navigator.of(context).pop();
+              await Navigator.of(context).maybePop();
               if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(router.routerDelegate.currentConfiguration.uri.pathSegments.last)) {
                 break;
               }
@@ -765,7 +837,7 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
         }
         if (isMobile) {
           while (Navigator.of(context).canPop()) {
-            Navigator.of(context).pop();
+            await Navigator.of(context).maybePop();
             if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(router.routerDelegate.currentConfiguration.uri.pathSegments.last)) {
               break;
             }
@@ -873,7 +945,7 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
   if (isDesktop) {
     return showDialog(
       context: context,
-      builder: (subContext) => AlertDialog(
+      builder: (ctx) => AlertDialog(
         contentPadding: const EdgeInsets.only(top: 20.0),
         title: Text(Language.instance.PLAYLIST_ADD_DIALOG_TITLE),
         content: SizedBox(
@@ -893,7 +965,7 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
                     playlist: playlists[i],
                     onTap: () async {
                       await MediaLibrary.instance.playlists.createEntry(playlists[i], track: track);
-                      Navigator.of(subContext).pop();
+                      await Navigator.of(ctx).maybePop();
                     },
                   ),
                   separatorBuilder: (context, i) => const Divider(height: 1.0),
@@ -905,7 +977,7 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
         ),
         actions: [
           TextButton(
-            onPressed: Navigator.of(subContext).pop,
+            onPressed: Navigator.of(ctx).pop,
             child: Text(label(Language.instance.CANCEL)),
           ),
         ],
@@ -930,7 +1002,7 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
               playlist: playlists[i],
               onTap: () async {
                 await MediaLibrary.instance.playlists.createEntry(playlists[i], track: track);
-                Navigator.of(context).pop();
+                await Navigator.of(context).maybePop();
               },
             );
           },
