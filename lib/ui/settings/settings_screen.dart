@@ -1,11 +1,14 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/ui/settings/sections/display_section.dart';
 import 'package:harmonoid/ui/settings/sections/media_library_section.dart';
+import 'package:harmonoid/ui/settings/sections/stats_section.dart';
+import 'package:harmonoid/ui/settings/settings_spacer.dart';
 import 'package:harmonoid/utils/constants.dart';
-import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -29,9 +32,11 @@ class SettingsScreen extends StatelessWidget {
       slivers: [
         SliverList.list(
           children: const [
-            SizedBox(height: 16.0),
+            SettingsSpacer(),
             MediaLibrarySection(),
-            SizedBox(height: 16.0),
+            StatsSection(),
+            DisplaySection(),
+            SettingsSpacer(),
           ],
         ),
       ],

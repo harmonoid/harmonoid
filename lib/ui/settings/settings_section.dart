@@ -1,44 +1,63 @@
 import 'package:flutter/material.dart';
 
+import 'package:harmonoid/ui/settings/settings_spacer.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
-class SettingsSection extends StatefulWidget {
+class SettingsSection extends StatelessWidget {
   final String title;
   final String subtitle;
   final List<Widget> children;
+  final EdgeInsets headerPadding;
+  final EdgeInsets contentPadding;
   const SettingsSection({
     super.key,
     required this.title,
     required this.children,
     required this.subtitle,
+    this.headerPadding = const EdgeInsets.symmetric(horizontal: 64.0),
+    this.contentPadding = const EdgeInsets.symmetric(horizontal: 64.0),
   });
 
-  @override
-  State<SettingsSection> createState() => _SettingsSectionState();
-}
-
-class _SettingsSectionState extends State<SettingsSection> {
   Widget _buildDesktopLayout(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 64.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            widget.title,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: 2.0),
-          Text(
-            widget.subtitle,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          const SizedBox(height: 8.0),
-          ...widget.children,
-        ],
+    return Center(
+      child: SizedBox(
+        width: 832.0,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              padding: headerPadding,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 2.0),
+                  Text(
+                    subtitle,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            Container(
+              padding: contentPadding,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: children,
+              ),
+            ),
+            const SettingsSpacer(),
+          ],
+        ),
       ),
     );
   }
@@ -53,11 +72,11 @@ class _SettingsSectionState extends State<SettingsSection> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SubHeader(widget.title),
+        SubHeader(title),
         const SizedBox(height: 2.0),
-        ...widget.children,
+        ...children,
         const Divider(height: 1.0, thickness: 1.0),
-        const SizedBox(height: 8.0),
+        const SettingsSpacer(),
       ],
     );
   }

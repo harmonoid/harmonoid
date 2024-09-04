@@ -73,9 +73,8 @@ class MediaLibrarySection extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: mediaLibrary.directories.map((directory) {
-          return Container(
+          return Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
-            constraints: BoxConstraints(maxWidth: isDesktop ? 600.0 : double.infinity),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -108,29 +107,26 @@ class MediaLibrarySection extends StatelessWidget {
     if (!mediaLibrary.refreshing) {
       return const SizedBox.shrink();
     }
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: isDesktop ? 600.0 : double.infinity),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 16.0),
-          Text(
-            mediaLibrary.current == null
-                ? Language.instance.DISCOVERING_FILES
-                : Language.instance.ADDED_M_OF_N_FILES.replaceAll('"M"', (mediaLibrary.current ?? 0).toString()).replaceAll('"N"', (mediaLibrary.total == 0 ? 1 : mediaLibrary.total).toString()),
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-          const SizedBox(height: 8.0),
-          LinearProgressIndicator(
-            value: mediaLibrary.current == null ? null : (mediaLibrary.current ?? 0) / (mediaLibrary.total == 0 ? 1 : mediaLibrary.total),
-          ),
-          const SizedBox(height: 16.0),
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const SizedBox(height: 16.0),
+        Text(
+          mediaLibrary.current == null
+              ? Language.instance.DISCOVERING_FILES
+              : Language.instance.ADDED_M_OF_N_FILES.replaceAll('"M"', (mediaLibrary.current ?? 0).toString()).replaceAll('"N"', (mediaLibrary.total == 0 ? 1 : mediaLibrary.total).toString()),
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        const SizedBox(height: 8.0),
+        LinearProgressIndicator(
+          value: mediaLibrary.current == null ? null : (mediaLibrary.current ?? 0) / (mediaLibrary.total == 0 ? 1 : mediaLibrary.total),
+        ),
+        const SizedBox(height: 16.0),
+      ],
     );
   }
 
@@ -276,84 +272,29 @@ class MediaLibrarySection extends StatelessWidget {
       });
 
   static Future<void> editMinimumFileSize(BuildContext context, MediaLibrary mediaLibrary) => ensureNotRefreshing(context, mediaLibrary, () async {
-        int result = mediaLibrary.minimumFileSize;
+        final result = await showSelection(
+          context,
+          Language.instance.EDIT_MINIMUM_FILE_SIZE,
+          kDefaultFileSizes,
+          mediaLibrary.minimumFileSize,
+          intFileSizeToLabelFileSize,
+        );
 
-        await showDialog(
-          context: context,
-          builder: (ctx) => StatefulBuilder(
-            builder: (ctx, setState) {
-              void set(int? value) {
-                if (value != null) {
-                  setState(() => result = value);
-                }
-              }
+        if (result != null) {
+          Configuration.instance.set(mediaLibraryMinimumFileSize: result);
+          mediaLibrary.setMinimumFileSize(result);
 
-              return AlertDialog(
-                titlePadding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 24.0),
-                contentPadding: EdgeInsets.zero,
-                title: Text(Language.instance.EDIT_ALBUM_PARAMETERS_TITLE),
-                content: Material(
-                  color: Colors.transparent,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Divider(height: 1.0, thickness: 1.0),
-                      Flexible(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: kDefaultFileSizes
-                                .map(
-                                  (size) => ListItem(
-                                    leading: Radio(
-                                      value: size,
-                                      groupValue: result,
-                                      onChanged: set,
-                                    ),
-                                    onTap: () => set(size),
-                                    title: intFileSizeToLabelFileSize(size),
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        ),
-                      ),
-                      const Divider(height: 1.0, thickness: 1.0),
-                    ],
-                  ),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Configuration.instance.set(mediaLibraryMinimumFileSize: result);
-                      mediaLibrary.setMinimumFileSize(result);
-                      Navigator.of(ctx).pop();
-
-                      Future.delayed(
-                        const Duration(milliseconds: 500),
-                        () {
-                          showMessage(
-                            context,
-                            Language.instance.WARNING,
-                            Language.instance.MINIMUM_FILE_SIZE_WARNING,
-                          );
-                        },
-                      );
-                    },
-                    child: Text(label(Language.instance.OK)),
-                  ),
-                  TextButton(
-                    onPressed: Navigator.of(ctx).pop,
-                    child: Text(label(Language.instance.CANCEL)),
-                  ),
-                ],
+          Future.delayed(
+            const Duration(milliseconds: 500),
+            () {
+              showMessage(
+                context,
+                Language.instance.WARNING,
+                Language.instance.MINIMUM_FILE_SIZE_WARNING,
               );
             },
-          ),
-        );
+          );
+        }
       });
 
   // --------------------------------------------------
