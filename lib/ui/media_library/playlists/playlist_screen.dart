@@ -5,7 +5,7 @@ import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
-import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/mappers/playlist_entry.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_image.dart';
@@ -25,7 +25,7 @@ class PlaylistScreen extends StatefulWidget {
 class _PlaylistScreenState extends State<PlaylistScreen> {
   late final _entries = widget.entries;
   String get _title => widget.playlist.name;
-  String get _subtitle => isDesktop ? '${Language.instance.ENTRIES}: ${_entries.length}' : Language.instance.N_ENTRIES.replaceAll('"N"', _entries.length.toString());
+  String get _subtitle => isDesktop ? '${Localization.instance.ENTRIES}: ${_entries.length}' : Localization.instance.N_ENTRIES.replaceAll('"N"', _entries.length.toString());
 
   Future<List<Playable>> get _playables async {
     final result = await Future.wait(_entries.map((e) => e.toPlayable(MediaLibrary.instance)));
@@ -80,7 +80,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
       listItemCount: _entries.length,
       listItemDisplayIndex: true,
       listItemHeaders: [
-        Text(Language.instance.TITLE),
+        Text(Localization.instance.TITLE),
       ],
       listItemBuilder: (context, i) {
         if (isDesktop) {
@@ -129,9 +129,9 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
         Icons.playlist_add: (_) async => MediaPlayer.instance.add(await _playables),
       },
       labels: {
-        Icons.play_arrow: Language.instance.PLAY_NOW,
-        Icons.shuffle: Language.instance.SHUFFLE,
-        Icons.playlist_add: Language.instance.ADD_TO_NOW_PLAYING,
+        Icons.play_arrow: Localization.instance.PLAY_NOW,
+        Icons.shuffle: Localization.instance.SHUFFLE,
+        Icons.playlist_add: Localization.instance.ADD_TO_NOW_PLAYING,
       },
     );
   }

@@ -1,8 +1,8 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
 import 'package:harmonoid/ui/settings/settings_section.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -35,32 +35,32 @@ class _DisplaySectionState extends State<DisplaySection> {
       ThemeMode.dark => Icons.dark_mode,
     };
     final themeModeSubtitle = switch (Configuration.instance.themeMode) {
-      ThemeMode.system => Language.instance.THEME_MODE_SYSTEM,
-      ThemeMode.light => Language.instance.THEME_MODE_LIGHT,
-      ThemeMode.dark => Language.instance.THEME_MODE_DARK,
+      ThemeMode.system => Localization.instance.THEME_MODE_SYSTEM,
+      ThemeMode.light => Localization.instance.THEME_MODE_LIGHT,
+      ThemeMode.dark => Localization.instance.THEME_MODE_DARK,
     };
 
     return SettingsSection(
-      title: Language.instance.SETTINGS_SECTION_DISPLAY_TITLE,
-      subtitle: Language.instance.SETTINGS_SECTION_DISPLAY_SUBTITLE,
+      title: Localization.instance.SETTINGS_SECTION_DISPLAY_TITLE,
+      subtitle: Localization.instance.SETTINGS_SECTION_DISPLAY_SUBTITLE,
       contentPadding: const EdgeInsets.symmetric(horizontal: 64.0 - 16.0),
       children: [
         ListItem(
           leading: CircleAvatar(
             child: Icon(themeModeIcon),
           ),
-          title: Language.instance.THEME,
+          title: Localization.instance.THEME,
           subtitle: themeModeSubtitle,
           onTap: () async {
             final result = await showSelection(
               context,
-              Language.instance.THEME,
+              Localization.instance.THEME,
               ThemeMode.values,
               Configuration.instance.themeMode,
               (value) => switch (value) {
-                ThemeMode.system => Language.instance.THEME_MODE_SYSTEM,
-                ThemeMode.light => Language.instance.THEME_MODE_LIGHT,
-                ThemeMode.dark => Language.instance.THEME_MODE_DARK,
+                ThemeMode.system => Localization.instance.THEME_MODE_SYSTEM,
+                ThemeMode.light => Localization.instance.THEME_MODE_LIGHT,
+                ThemeMode.dark => Localization.instance.THEME_MODE_DARK,
               },
               actions: false,
             );
@@ -75,12 +75,12 @@ class _DisplaySectionState extends State<DisplaySection> {
           leading: CircleAvatar(
             child: Text(List.generate(Configuration.instance.themeMaterialStandard, (_) => 'I').join()),
           ),
-          title: Language.instance.MATERIAL_DESIGN,
+          title: Localization.instance.MATERIAL_DESIGN,
           subtitle: Configuration.instance.themeMaterialStandard.toString(),
           onTap: () async {
             final result = await showSelection(
               context,
-              Language.instance.MATERIAL_DESIGN,
+              Localization.instance.MATERIAL_DESIGN,
               [2, 3],
               Configuration.instance.themeMaterialStandard,
               (value) => value.toString(),
@@ -97,7 +97,7 @@ class _DisplaySectionState extends State<DisplaySection> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Text(
-            Language.instance.ANIMATION_SPEED,
+            Localization.instance.ANIMATION_SPEED,
             style: Theme.of(context).textTheme.bodyLarge,
           ),
         ),
@@ -172,7 +172,7 @@ class _DisplaySectionState extends State<DisplaySection> {
             value: Configuration.instance.themeAnimationDuration.medium > Duration.zero,
             onChanged: (value) => setAnimationDuration(value ? 300 : 0),
           ),
-          title: Language.instance.ENABLE_ANIMATION_EFFECTS,
+          title: Localization.instance.ENABLE_ANIMATION_EFFECTS,
           onTap: () => setAnimationDuration(Configuration.instance.themeAnimationDuration.medium > Duration.zero ? 0 : 300),
         ),
         ListItem(
@@ -184,7 +184,7 @@ class _DisplaySectionState extends State<DisplaySection> {
               setState(() {});
             },
           ),
-          title: Language.instance.USE_SYSTEM_COLOR_SCHEME,
+          title: Localization.instance.USE_SYSTEM_COLOR_SCHEME,
           onTap: () async {
             final value = Configuration.instance.themeSystemColorScheme;
             await Configuration.instance.set(themeSystemColorScheme: !value);

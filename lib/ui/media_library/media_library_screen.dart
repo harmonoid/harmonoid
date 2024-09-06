@@ -5,10 +5,10 @@ import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/extensions/media_library.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/media_library/media_library_no_items_banner.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
 import 'package:harmonoid/ui/router.dart';
@@ -146,11 +146,11 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: {
-                              kAlbumsPath: Language.instance.ALBUMS,
-                              kTracksPath: Language.instance.TRACKS,
-                              kArtistsPath: Language.instance.ARTISTS,
-                              kGenresPath: Language.instance.GENRES,
-                              kPlaylistsPath: Language.instance.PLAYLISTS,
+                              kAlbumsPath: Localization.instance.ALBUMS,
+                              kTracksPath: Localization.instance.TRACKS,
+                              kArtistsPath: Localization.instance.ARTISTS,
+                              kGenresPath: Localization.instance.GENRES,
+                              kPlaylistsPath: Localization.instance.PLAYLISTS,
                             }.entries.map<Widget>(
                               (e) {
                                 return InkWell(
@@ -207,11 +207,11 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                   style: Theme.of(context).textTheme.bodyMedium,
                                   decoration: inputDecoration(
                                     context,
-                                    Language.instance.SEARCH_BANNER_SUBTITLE,
+                                    Localization.instance.SEARCH_BANNER_SUBTITLE,
                                     suffixIcon: Transform.rotate(
                                       angle: pi / 2,
                                       child: Tooltip(
-                                        message: Language.instance.SEARCH,
+                                        message: Localization.instance.SEARCH,
                                         child: Icon(
                                           Icons.search,
                                           size: 20.0,
@@ -234,7 +234,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                 onPressed: () {
                                   context.push('/$kSettingsPath');
                                 },
-                                tooltip: Language.instance.SETTINGS,
+                                tooltip: Localization.instance.SETTINGS,
                                 icon: const Icon(Icons.settings),
                                 iconSize: 20.0,
                                 splashRadius: 18.0,

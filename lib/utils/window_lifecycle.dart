@@ -1,10 +1,10 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart' hide Intent;
 
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
@@ -53,12 +53,12 @@ class WindowLifecycle {
       await showDialog(
         context: rootNavigatorKey.currentContext!,
         builder: (context) => AlertDialog(
-          title: Text(Language.instance.WARNING),
-          content: Text(Language.instance.MEDIA_LIBRARY_REFRESHING_DIALOG_SUBTITLE.replaceAll('\n', ' ')),
+          title: Text(Localization.instance.WARNING),
+          content: Text(Localization.instance.MEDIA_LIBRARY_REFRESHING_DIALOG_SUBTITLE.replaceAll('\n', ' ')),
           actions: [
             TextButton(
               onPressed: Navigator.of(context).maybePop,
-              child: Text(label(Language.instance.OK)),
+              child: Text(label(Localization.instance.OK)),
             ),
           ],
         ),

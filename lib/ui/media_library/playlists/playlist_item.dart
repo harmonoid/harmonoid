@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:harmonoid/utils/widgets.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_icon.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/widgets.dart';
 
 class PlaylistItem extends StatelessWidget {
   final Playlist playlist;
@@ -78,7 +78,7 @@ class PlaylistItem extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 subtitle: Text(
-                  entries == null ? '' : Language.instance.N_TRACKS.replaceAll('"N"', entries.length.toString()),
+                  entries == null ? '' : Localization.instance.N_TRACKS.replaceAll('"N"', entries.length.toString()),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),

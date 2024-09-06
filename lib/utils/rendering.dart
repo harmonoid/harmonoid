@@ -10,7 +10,7 @@ import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:path/path.dart';
 import 'package:share_plus/share_plus.dart';
 
-import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
@@ -251,7 +251,7 @@ Future<String> showInput(
           ),
           TextButton(
             onPressed: Navigator.of(ctx).maybePop,
-            child: Text(label(Language.instance.CANCEL)),
+            child: Text(label(Localization.instance.CANCEL)),
           ),
         ],
       ),
@@ -332,11 +332,11 @@ Future<bool> showConfirmation(BuildContext context, String title, String subtitl
             result = true;
             Navigator.of(ctx).maybePop();
           },
-          child: Text(label(Language.instance.YES)),
+          child: Text(label(Localization.instance.YES)),
         ),
         TextButton(
           onPressed: Navigator.of(ctx).pop,
-          child: Text(label(Language.instance.NO)),
+          child: Text(label(Localization.instance.NO)),
         ),
       ],
     ),
@@ -400,14 +400,14 @@ Future<T?> showSelection<T>(BuildContext context, String title, List<T> values, 
               ? [
                   TextButton(
                     onPressed: Navigator.of(ctx).maybePop,
-                    child: Text(label(Language.instance.OK)),
+                    child: Text(label(Localization.instance.OK)),
                   ),
                   TextButton(
                     onPressed: () {
                       result = null;
                       Navigator.of(ctx).maybePop();
                     },
-                    child: Text(label(Language.instance.CANCEL)),
+                    child: Text(label(Localization.instance.CANCEL)),
                   ),
                 ]
               : null,
@@ -427,7 +427,7 @@ Future<void> showMessage(BuildContext context, String title, String subtitle) as
       actions: [
         TextButton(
           onPressed: Navigator.of(ctx).pop,
-          child: Text(label(Language.instance.OK)),
+          child: Text(label(Localization.instance.OK)),
         ),
       ],
     ),
@@ -440,7 +440,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
         child: ListTile(
           leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_16_regular : Icons.delete),
           title: Text(
-            Language.instance.DELETE,
+            Localization.instance.DELETE,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
@@ -451,7 +451,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
           child: ListTile(
             leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.share_16_regular : Icons.share),
             title: Text(
-              Language.instance.SHARE,
+              Localization.instance.SHARE,
               style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
             ),
           ),
@@ -461,7 +461,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
         child: ListTile(
           leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.music_note_2_16_regular : Icons.music_note),
           title: Text(
-            Language.instance.ADD_TO_NOW_PLAYING,
+            Localization.instance.ADD_TO_NOW_PLAYING,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
@@ -471,7 +471,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
         child: ListTile(
           leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.list_16_regular : Icons.queue_music),
           title: Text(
-            Language.instance.ADD_TO_PLAYLIST,
+            Localization.instance.ADD_TO_PLAYLIST,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
@@ -482,7 +482,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
           child: ListTile(
             leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.folder_24_regular : Icons.folder),
             title: Text(
-              Language.instance.SHOW_IN_FILE_MANAGER,
+              Localization.instance.SHOW_IN_FILE_MANAGER,
               style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
             ),
           ),
@@ -492,7 +492,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
         child: ListTile(
           leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.edit_24_regular : Icons.edit),
           title: Text(
-            Language.instance.EDIT_DETAILS,
+            Localization.instance.EDIT_DETAILS,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
@@ -502,7 +502,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
         child: ListTile(
           leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.album_24_regular : Icons.album),
           title: Text(
-            Language.instance.SHOW_ALBUM,
+            Localization.instance.SHOW_ALBUM,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
@@ -512,7 +512,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
         child: ListTile(
           leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.info_24_regular : Icons.info),
           title: Text(
-            Language.instance.FILE_INFORMATION,
+            Localization.instance.FILE_INFORMATION,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
@@ -525,7 +525,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
               Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.clear_formatting_24_regular : Icons.clear,
             ),
             title: Text(
-              Language.instance.CLEAR_LRC_FILE,
+              Localization.instance.CLEAR_LRC_FILE,
               style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
             ),
           ),
@@ -538,7 +538,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
               Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.text_font_24_regular : Icons.abc,
             ),
             title: Text(
-              Language.instance.SET_LRC_FILE,
+              Localization.instance.SET_LRC_FILE,
               style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
             ),
           ),
@@ -558,7 +558,7 @@ List<PopupMenuItem<int>> albumPopupMenuItems(BuildContext context, Album album) 
             Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.play_24_regular : Icons.play_circle,
           ),
           title: Text(
-            Language.instance.PLAY,
+            Localization.instance.PLAY,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
@@ -570,7 +570,7 @@ List<PopupMenuItem<int>> albumPopupMenuItems(BuildContext context, Album album) 
             Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.arrow_shuffle_24_regular : Icons.shuffle,
           ),
           title: Text(
-            Language.instance.SHUFFLE,
+            Localization.instance.SHUFFLE,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
@@ -582,7 +582,7 @@ List<PopupMenuItem<int>> albumPopupMenuItems(BuildContext context, Album album) 
             Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_16_regular : Icons.delete,
           ),
           title: Text(
-            Language.instance.DELETE,
+            Localization.instance.DELETE,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
@@ -594,7 +594,7 @@ List<PopupMenuItem<int>> albumPopupMenuItems(BuildContext context, Album album) 
             Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.music_note_2_16_regular : Icons.queue_music,
           ),
           title: Text(
-            Language.instance.ADD_TO_NOW_PLAYING,
+            Localization.instance.ADD_TO_NOW_PLAYING,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
@@ -614,7 +614,7 @@ List<PopupMenuItem<int>> playlistPopupMenuItems(BuildContext context, Playlist p
             Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_24_regular : Icons.delete,
           ),
           title: Text(
-            Language.instance.DELETE,
+            Localization.instance.DELETE,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
@@ -626,7 +626,7 @@ List<PopupMenuItem<int>> playlistPopupMenuItems(BuildContext context, Playlist p
             Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.rename_24_filled : Icons.drive_file_rename_outline,
           ),
           title: Text(
-            Language.instance.RENAME,
+            Localization.instance.RENAME,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
@@ -641,7 +641,7 @@ List<PopupMenuItem<int>> playlistEntryPopupMenuItems(BuildContext context, Playl
             Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_24_regular : Icons.delete,
           ),
           title: Text(
-            Language.instance.REMOVE,
+            Localization.instance.REMOVE,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
@@ -685,8 +685,8 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
       }
       final result = await showConfirmation(
         context,
-        Language.instance.DELETE,
-        Language.instance.TRACK_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', track.title),
+        Localization.instance.DELETE,
+        Localization.instance.TRACK_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', track.title),
       );
       if (result) {
         await MediaLibrary.instance.remove([track]);
@@ -760,12 +760,12 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
             context: context,
             builder: (context) => AlertDialog(
               backgroundColor: Theme.of(context).cardTheme.color,
-              title: Text(Language.instance.ERROR),
-              content: Text(Language.instance.CORRUPT_LRC_FILE),
+              title: Text(Localization.instance.ERROR),
+              content: Text(Localization.instance.CORRUPT_LRC_FILE),
               actions: [
                 TextButton(
                   onPressed: Navigator.of(context).pop,
-                  child: Text(label(Language.instance.OK)),
+                  child: Text(label(Localization.instance.OK)),
                 ),
               ],
             ),
@@ -821,8 +821,8 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
       }
       final result = await showConfirmation(
         context,
-        Language.instance.DELETE,
-        Language.instance.ALBUM_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', album.album),
+        Localization.instance.DELETE,
+        Localization.instance.ALBUM_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', album.album),
       );
       if (result) {
         if (isDesktop) {
@@ -861,8 +861,8 @@ Future<void> playlistPopupMenuHandle(BuildContext context, Playlist playlist, in
     case 0:
       final result = await showConfirmation(
         context,
-        Language.instance.DELETE,
-        Language.instance.PLAYLIST_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', playlist.name),
+        Localization.instance.DELETE,
+        Localization.instance.PLAYLIST_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', playlist.name),
       );
       if (result) {
         await MediaLibrary.instance.playlists.delete(playlist);
@@ -871,9 +871,9 @@ Future<void> playlistPopupMenuHandle(BuildContext context, Playlist playlist, in
     case 1:
       final name = await showInput(
         context,
-        Language.instance.RENAME,
-        Language.instance.PLAYLIST_RENAME_DIALOG_SUBTITLE.replaceAll('"NAME"', playlist.name),
-        Language.instance.OK,
+        Localization.instance.RENAME,
+        Localization.instance.PLAYLIST_RENAME_DIALOG_SUBTITLE.replaceAll('"NAME"', playlist.name),
+        Localization.instance.OK,
         (value) {
           if (value?.isEmpty ?? true) {
             return '';
@@ -896,8 +896,8 @@ Future<void> playlistEntryPopupMenuHandle(BuildContext context, Playlist playlis
     case 0:
       final result = await showConfirmation(
         context,
-        Language.instance.REMOVE,
-        Language.instance.PLAYLIST_ENTRY_REMOVE_DIALOG_SUBTITLE.replaceAll('"ENTRY"', entry.title).replaceAll('"PLAYLIST"', playlist.name),
+        Localization.instance.REMOVE,
+        Localization.instance.PLAYLIST_ENTRY_REMOVE_DIALOG_SUBTITLE.replaceAll('"ENTRY"', entry.title).replaceAll('"PLAYLIST"', playlist.name),
       );
       if (result) {
         await MediaLibrary.instance.playlists.deleteEntry(entry);
@@ -947,7 +947,7 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
       context: context,
       builder: (ctx) => AlertDialog(
         contentPadding: const EdgeInsets.only(top: 20.0),
-        title: Text(Language.instance.PLAYLIST_ADD_DIALOG_TITLE),
+        title: Text(Localization.instance.PLAYLIST_ADD_DIALOG_TITLE),
         content: SizedBox(
           height: 480.0,
           width: 512.0,
@@ -978,7 +978,7 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
         actions: [
           TextButton(
             onPressed: Navigator.of(ctx).pop,
-            child: Text(label(Language.instance.CANCEL)),
+            child: Text(label(Localization.instance.CANCEL)),
           ),
         ],
       ),

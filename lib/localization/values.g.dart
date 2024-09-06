@@ -1,6 +1,10 @@
-// ignore_for_file: non_constant_identifier_names
 // AUTO GENERATED FILE, DO NOT EDIT.
-class Strings {
+
+// ignore_for_file: non_constant_identifier_names
+
+part of 'localization.dart';
+
+class Values {
   late String ABOUT;
   late String ADD;
   late String ADDED_M_OF_N_FILES;
@@ -21,7 +25,6 @@ class Strings {
   late String ARTISTS;
   late String ASCENDING;
   late String AVAILABLE_STORAGES;
-  late String AWESOME;
   late String A_TO_Z;
   late String BETA;
   late String BUFFERING;
@@ -40,6 +43,7 @@ class Strings {
   late String DELETE;
   late String DESCENDING;
   late String DISCOVERING_FILES;
+  late String DISPLAY_VOLUME_SLIDER;
   late String DONATE;
   late String DONE;
   late String EDIT;
@@ -49,6 +53,7 @@ class Strings {
   late String EDIT_MINIMUM_FILE_SIZE;
   late String ENABLE_ANIMATION_EFFECTS;
   late String ENABLE_DISCORD_RPC;
+  late String ENABLE_NOW_PLAYING_RIPPLE_EFFECT;
   late String ENABLE_VOLUME_BOOST_FILTER;
   late String ENABLE_VOLUME_BOOST_FILTER_WARNING;
   late String ENTRIES;
@@ -58,9 +63,6 @@ class Strings {
   late String EXIT_NOW_PLAYING;
   late String EXIT_SUBTITLE;
   late String EXIT_TITLE;
-  late String EXPERIMENTAL;
-  late String EXPERIMENTAL_SUBTITLE;
-  late String FALLBACK_ALBUM_ARTS;
   late String FILE;
   late String FILE_INFORMATION;
   late String FILE_PATH_OR_URL;
@@ -80,6 +82,7 @@ class Strings {
   late String LAST_DIRECTORY_REMOVED;
   late String LESS;
   late String LIKED_SONGS;
+  late String LOOKUP_FOR_FALLBACK_ALBUM_ARTS;
   late String LYRICS;
   late String LYRICS_NOT_FOUND;
   late String LYRICS_RETRIEVING;
@@ -94,8 +97,6 @@ class Strings {
   late String MINIMUM_FILE_SIZE_WARNING;
   late String MOBILE_ALBUM_GRID_SIZE;
   late String MOBILE_ARTIST_GRID_SIZE;
-  late String MOBILE_ENABLE_NOW_PLAYING_RIPPLE_EFFECT;
-  late String MOBILE_ENABLE_VOLUME_SLIDER;
   late String MOBILE_GENRE_GRID_SIZE;
   late String MORE;
   late String MUTE;
@@ -106,10 +107,7 @@ class Strings {
   late String NOTIFICATION_LYRICS_SUBTITLE;
   late String NOTIFICATION_LYRICS_TITLE;
   late String NOW_PLAYING;
-  late String NOW_PLAYING_SCREEN;
-  late String NOW_PLAYING_SCREEN_SETTING_SUBTITLE;
   late String NOW_YOU_ARE_GOOD_TO_GO_BACK;
-  late String NO_DOWNLOAD_UPDATE;
   late String NO_FOLDERS_ADDED;
   late String NO_INTERNET_SUBTITLE;
   late String NO_INTERNET_TITLE;
@@ -125,8 +123,6 @@ class Strings {
   late String OPTIONS;
   late String ORDER;
   late String PAUSE;
-  late String PERMISSIONS;
-  late String PERMISSIONS_SUBTITLE;
   late String PERMISSION_IMAGES_AND_PHOTOS;
   late String PERMISSION_IMAGES_AND_PHOTOS_SUBTITLE;
   late String PERMISSION_MUSIC_AND_AUDIO;
@@ -158,7 +154,6 @@ class Strings {
   late String REFRESH_SUBTITLE;
   late String REINDEX;
   late String REINDEX_SUBTITLE;
-  late String REMIND_ME_NEXT_TIME;
   late String REMOVE;
   late String REMOVE_FROM_PLAYLIST;
   late String RENAME;
@@ -179,36 +174,15 @@ class Strings {
   late String SEARCH_HINT;
   late String SEE_ALL;
   late String SETTINGS;
-  late String SETTINGS_DISPLAY_AUDIO_FORMAT;
-  late String SETTINGS_HIGHLIGHTED_LYRICS_SIZE;
-  late String SETTINGS_LAUNCH_NOW_PLAYING_ON_FILE_OPEN;
-  late String SETTINGS_LRC_FROM_DIRECTORY;
-  late String SETTINGS_MEDIA_LIBRARY_REFRESH_ON_LAUNCH;
   late String SETTINGS_SECTION_DISPLAY_SUBTITLE;
   late String SETTINGS_SECTION_DISPLAY_TITLE;
+  late String SETTINGS_SECTION_LANGUAGE_SUBTITLE;
+  late String SETTINGS_SECTION_LANGUAGE_TITLE;
   late String SETTINGS_SECTION_MEDIA_LIBRARY_SUBTITLE;
   late String SETTINGS_SECTION_MEDIA_LIBRARY_TITLE;
+  late String SETTINGS_SECTION_NOW_PLAYING_TITLE;
   late String SETTINGS_SECTION_STATS_SUBTITLE;
   late String SETTINGS_SECTION_STATS_TITLE;
-  late String SETTINGS_SECTION_VISUALS_SUBTITLE;
-  late String SETTINGS_SECTION_VISUALS_TITLE;
-  late String SETTINGS_SHOW_TRACK_PROGRESS_ON_TASKBAR;
-  late String SETTINGS_SHOW_TRACK_PROGRESS_ON_TASKBAR_SUBTITLE;
-  late String SETTINGS_SPEED_ANIMATION_EFFECTS;
-  late String SETTINGS_UNHIGHLIGHTED_LYRICS_SIZE;
-  late String SETTING_ACCENT_COLOR_AUTOMATIC;
-  late String SETTING_ACCENT_COLOR_SUBTITLE;
-  late String SETTING_ACCENT_COLOR_TITLE;
-  late String SETTING_APP_VERSION_INSTALLED;
-  late String SETTING_APP_VERSION_LATEST;
-  late String SETTING_APP_VERSION_SUBTITLE;
-  late String SETTING_APP_VERSION_TITLE;
-  late String SETTING_INDEXING_SUBTITLE;
-  late String SETTING_INDEXING_TITLE;
-  late String SETTING_LANGUAGE_SUBTITLE;
-  late String SETTING_LANGUAGE_TITLE;
-  late String SETTING_MISCELLANEOUS_SUBTITLE;
-  late String SETTING_MISCELLANEOUS_TITLE;
   late String SET_LRC_FILE;
   late String SHARE;
   late String SHOW_ALBUM;

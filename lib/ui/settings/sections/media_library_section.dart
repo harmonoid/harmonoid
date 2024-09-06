@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/extensions/configuration.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/settings/settings_section.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:harmonoid/core/configuration/configuration.dart';
-import 'package:harmonoid/extensions/configuration.dart';
 
 class MediaLibrarySection extends StatelessWidget {
   const MediaLibrarySection({super.key});
@@ -32,7 +32,7 @@ class MediaLibrarySection extends StatelessWidget {
     return switch (size) {
       0 => '0 MB',
       const (512 * 1024) => '512 KB',
-      const (1 * 1024 * 1024) => '1 MB ${Language.instance.RECOMMENDED_HINT}',
+      const (1 * 1024 * 1024) => '1 MB ${Localization.instance.RECOMMENDED_HINT}',
       const (2 * 1024 * 1024) => '2 MB',
       const (5 * 1024 * 1024) => '5 MB',
       const (10 * 1024 * 1024) => '10 MB',
@@ -56,7 +56,7 @@ class MediaLibrarySection extends StatelessWidget {
             const SizedBox(width: 8.0),
             Expanded(
               child: Text(
-                Language.instance.NO_FOLDERS_ADDED,
+                Localization.instance.NO_FOLDERS_ADDED,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyLarge,
@@ -93,7 +93,7 @@ class MediaLibrarySection extends StatelessWidget {
                 const SizedBox(width: 8.0),
                 TextButton(
                   onPressed: () => MediaLibrarySection.removeFolder(context, mediaLibrary, directory),
-                  child: Text(label(Language.instance.REMOVE)),
+                  child: Text(label(Localization.instance.REMOVE)),
                 ),
               ],
             ),
@@ -115,8 +115,8 @@ class MediaLibrarySection extends StatelessWidget {
         const SizedBox(height: 16.0),
         Text(
           mediaLibrary.current == null
-              ? Language.instance.DISCOVERING_FILES
-              : Language.instance.ADDED_M_OF_N_FILES.replaceAll('"M"', (mediaLibrary.current ?? 0).toString()).replaceAll('"N"', (mediaLibrary.total == 0 ? 1 : mediaLibrary.total).toString()),
+              ? Localization.instance.DISCOVERING_FILES
+              : Localization.instance.ADDED_M_OF_N_FILES.replaceAll('"M"', (mediaLibrary.current ?? 0).toString()).replaceAll('"N"', (mediaLibrary.total == 0 ? 1 : mediaLibrary.total).toString()),
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodyLarge,
@@ -136,8 +136,8 @@ class MediaLibrarySection extends StatelessWidget {
     if (mediaLibrary.refreshing) {
       await showMessage(
         context,
-        Language.instance.WARNING,
-        Language.instance.MEDIA_LIBRARY_REFRESHING_DIALOG_SUBTITLE,
+        Localization.instance.WARNING,
+        Localization.instance.MEDIA_LIBRARY_REFRESHING_DIALOG_SUBTITLE,
       );
       return;
     }
@@ -148,8 +148,8 @@ class MediaLibrarySection extends StatelessWidget {
         if (mediaLibrary.directories.length <= 1) {
           await showMessage(
             context,
-            Language.instance.WARNING,
-            Language.instance.LAST_DIRECTORY_REMOVED,
+            Localization.instance.WARNING,
+            Localization.instance.LAST_DIRECTORY_REMOVED,
           );
           return;
         }
@@ -204,7 +204,7 @@ class MediaLibrarySection extends StatelessWidget {
               return AlertDialog(
                 titlePadding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 24.0),
                 contentPadding: EdgeInsets.zero,
-                title: Text(Language.instance.EDIT_ALBUM_PARAMETERS_TITLE),
+                title: Text(Localization.instance.EDIT_ALBUM_PARAMETERS_TITLE),
                 content: Material(
                   color: Colors.transparent,
                   child: Column(
@@ -225,7 +225,7 @@ class MediaLibrarySection extends StatelessWidget {
                                   onChanged: (value) => addOrRemove(AlbumGroupingParameter.album, value),
                                 ),
                                 onTap: () => addOrRemove(AlbumGroupingParameter.album, null),
-                                title: Language.instance.TITLE,
+                                title: Localization.instance.TITLE,
                               ),
                               ListItem(
                                 leading: Checkbox(
@@ -233,7 +233,7 @@ class MediaLibrarySection extends StatelessWidget {
                                   onChanged: (value) => addOrRemove(AlbumGroupingParameter.albumArtist, value),
                                 ),
                                 onTap: () => addOrRemove(AlbumGroupingParameter.albumArtist, null),
-                                title: Language.instance.ALBUM_ARTIST,
+                                title: Localization.instance.ALBUM_ARTIST,
                               ),
                               ListItem(
                                 leading: Checkbox(
@@ -241,7 +241,7 @@ class MediaLibrarySection extends StatelessWidget {
                                   onChanged: (value) => addOrRemove(AlbumGroupingParameter.year, value),
                                 ),
                                 onTap: () => addOrRemove(AlbumGroupingParameter.year, null),
-                                title: Language.instance.YEAR,
+                                title: Localization.instance.YEAR,
                               ),
                             ],
                           ),
@@ -258,11 +258,11 @@ class MediaLibrarySection extends StatelessWidget {
                       mediaLibrary.setAlbumGroupingParameters(result.isNotEmpty ? result : AlbumGroupingParameter.values.toSet());
                       Navigator.of(ctx).pop();
                     },
-                    child: Text(label(Language.instance.OK)),
+                    child: Text(label(Localization.instance.OK)),
                   ),
                   TextButton(
                     onPressed: Navigator.of(ctx).pop,
-                    child: Text(label(Language.instance.CANCEL)),
+                    child: Text(label(Localization.instance.CANCEL)),
                   ),
                 ],
               );
@@ -274,7 +274,7 @@ class MediaLibrarySection extends StatelessWidget {
   static Future<void> editMinimumFileSize(BuildContext context, MediaLibrary mediaLibrary) => ensureNotRefreshing(context, mediaLibrary, () async {
         final result = await showSelection(
           context,
-          Language.instance.EDIT_MINIMUM_FILE_SIZE,
+          Localization.instance.EDIT_MINIMUM_FILE_SIZE,
           kDefaultFileSizes,
           mediaLibrary.minimumFileSize,
           intFileSizeToLabelFileSize,
@@ -289,8 +289,8 @@ class MediaLibrarySection extends StatelessWidget {
             () {
               showMessage(
                 context,
-                Language.instance.WARNING,
-                Language.instance.MINIMUM_FILE_SIZE_WARNING,
+                Localization.instance.WARNING,
+                Localization.instance.MINIMUM_FILE_SIZE_WARNING,
               );
             },
           );
@@ -334,18 +334,18 @@ class DesktopMediaLibrarySection extends StatelessWidget {
     return Consumer<MediaLibrary>(
       builder: (context, mediaLibrary, _) {
         return SettingsSection(
-          title: Language.instance.SETTINGS_SECTION_MEDIA_LIBRARY_TITLE,
-          subtitle: Language.instance.SETTINGS_SECTION_MEDIA_LIBRARY_SUBTITLE,
+          title: Localization.instance.SETTINGS_SECTION_MEDIA_LIBRARY_TITLE,
+          subtitle: Localization.instance.SETTINGS_SECTION_MEDIA_LIBRARY_SUBTITLE,
           children: [
             Transform.translate(
               offset: const Offset(-8.0, 0.0),
               child: TextButton(
                 onPressed: () => MediaLibrarySection.addFolder(context, mediaLibrary),
-                child: Text(label(Language.instance.ADD_NEW_FOLDER)),
+                child: Text(label(Localization.instance.ADD_NEW_FOLDER)),
               ),
             ),
             const SizedBox(height: 8.0),
-            Text(Language.instance.CURRENTLY_ADDED_FOLDERS),
+            Text(Localization.instance.CURRENTLY_ADDED_FOLDERS),
             MediaLibrarySection.buildAddedFolders(context, mediaLibrary),
             MediaLibrarySection.buildRefreshIndicator(context, mediaLibrary),
             Transform.translate(
@@ -354,11 +354,11 @@ class DesktopMediaLibrarySection extends StatelessWidget {
                 children: [
                   TextButton(
                     onPressed: () => MediaLibrarySection.refresh(context, mediaLibrary),
-                    child: Text(label(Language.instance.REFRESH)),
+                    child: Text(label(Localization.instance.REFRESH)),
                   ),
                   TextButton(
                     onPressed: () => MediaLibrarySection.reindex(context, mediaLibrary),
-                    child: Text(label(Language.instance.REINDEX)),
+                    child: Text(label(Localization.instance.REINDEX)),
                   ),
                 ],
               ),
@@ -368,7 +368,7 @@ class DesktopMediaLibrarySection extends StatelessWidget {
               offset: const Offset(-8.0, 0.0),
               child: TextButton(
                 onPressed: () => MediaLibrarySection.editAlbumParameters(context, mediaLibrary),
-                child: Text(label(Language.instance.EDIT_ALBUM_PARAMETERS_TITLE)),
+                child: Text(label(Localization.instance.EDIT_ALBUM_PARAMETERS_TITLE)),
               ),
             ),
             const SizedBox(height: 8.0),
@@ -376,7 +376,7 @@ class DesktopMediaLibrarySection extends StatelessWidget {
               offset: const Offset(-8.0, 0.0),
               child: TextButton(
                 onPressed: () => MediaLibrarySection.editMinimumFileSize(context, mediaLibrary),
-                child: Text(label(Language.instance.EDIT_MINIMUM_FILE_SIZE)),
+                child: Text(label(Localization.instance.EDIT_MINIMUM_FILE_SIZE)),
               ),
             ),
           ],
@@ -394,31 +394,31 @@ class MobileMediaLibrarySection extends StatelessWidget {
     return Consumer<MediaLibrary>(
       builder: (context, mediaLibrary, _) {
         return SettingsSection(
-          title: Language.instance.SETTINGS_SECTION_MEDIA_LIBRARY_TITLE,
-          subtitle: Language.instance.SETTINGS_SECTION_MEDIA_LIBRARY_SUBTITLE,
+          title: Localization.instance.SETTINGS_SECTION_MEDIA_LIBRARY_TITLE,
+          subtitle: Localization.instance.SETTINGS_SECTION_MEDIA_LIBRARY_SUBTITLE,
           children: [
             ListItem(
-              title: Language.instance.ADD_NEW_FOLDER,
-              subtitle: Language.instance.ADD_NEW_FOLDER_SUBTITLE,
+              title: Localization.instance.ADD_NEW_FOLDER,
+              subtitle: Localization.instance.ADD_NEW_FOLDER_SUBTITLE,
               onTap: () => MediaLibrarySection.addFolder(context, mediaLibrary),
             ),
             ListItem(
-              title: Language.instance.REFRESH,
-              subtitle: Language.instance.REFRESH_SUBTITLE,
+              title: Localization.instance.REFRESH,
+              subtitle: Localization.instance.REFRESH_SUBTITLE,
               onTap: () => MediaLibrarySection.refresh(context, mediaLibrary),
             ),
             ListItem(
-              title: Language.instance.REINDEX,
-              subtitle: Language.instance.REINDEX_SUBTITLE,
+              title: Localization.instance.REINDEX,
+              subtitle: Localization.instance.REINDEX_SUBTITLE,
               onTap: () => MediaLibrarySection.reindex(context, mediaLibrary),
             ),
             ListItem(
-              title: Language.instance.EDIT_ALBUM_PARAMETERS_TITLE,
-              subtitle: Language.instance.EDIT_ALBUM_PARAMETERS_SUBTITLE,
+              title: Localization.instance.EDIT_ALBUM_PARAMETERS_TITLE,
+              subtitle: Localization.instance.EDIT_ALBUM_PARAMETERS_SUBTITLE,
               onTap: () => MediaLibrarySection.editAlbumParameters(context, mediaLibrary),
             ),
             ListItem(
-              title: Language.instance.EDIT_MINIMUM_FILE_SIZE,
+              title: Localization.instance.EDIT_MINIMUM_FILE_SIZE,
               subtitle: MediaLibrarySection.intFileSizeToLabelFileSize(mediaLibrary.minimumFileSize),
               onTap: () => MediaLibrarySection.editMinimumFileSize(context, mediaLibrary),
             ),
@@ -426,7 +426,7 @@ class MobileMediaLibrarySection extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
-                Language.instance.CURRENTLY_ADDED_FOLDERS,
+                Localization.instance.CURRENTLY_ADDED_FOLDERS,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyLarge,

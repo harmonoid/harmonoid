@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 
-import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/color.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
@@ -69,13 +69,13 @@ class SearchNoItemsBannerState extends State<SearchNoItemsBanner> {
               _imagePicture ?? const SizedBox(height: _kImageHeight, width: _kImageWidth),
               const SizedBox(height: 16.0),
               Text(
-                Language.instance.SEARCH_BANNER_NO_ITEMS_TITLE,
+                Localization.instance.SEARCH_BANNER_NO_ITEMS_TITLE,
                 style: Theme.of(context).textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8.0),
               Text(
-                Language.instance.SEARCH_BANNER_NO_ITEMS_SUBTITLE,
+                Localization.instance.SEARCH_BANNER_NO_ITEMS_SUBTITLE,
                 style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),

@@ -5,8 +5,8 @@ import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/media_library/albums/album_item.dart';
 import 'package:harmonoid/ui/media_library/artists/artist_item.dart';
 import 'package:harmonoid/ui/media_library/genres/genre_item.dart';
@@ -83,7 +83,7 @@ class SearchScreenState extends State<SearchScreen> {
           if (_albums.isNotEmpty) ...[
             Row(
               children: [
-                SubHeader(Language.instance.ALBUMS),
+                SubHeader(Localization.instance.ALBUMS),
                 const Spacer(),
                 if (_albums.length > kLimit)
                   ShowAllButton(
@@ -124,7 +124,7 @@ class SearchScreenState extends State<SearchScreen> {
           if (_artists.isNotEmpty) ...[
             Row(
               children: [
-                SubHeader(Language.instance.ARTISTS),
+                SubHeader(Localization.instance.ARTISTS),
                 const Spacer(),
                 if (_artists.length > kLimit)
                   ShowAllButton(
@@ -165,7 +165,7 @@ class SearchScreenState extends State<SearchScreen> {
           if (_genres.isNotEmpty) ...[
             Row(
               children: [
-                SubHeader(Language.instance.GENRES),
+                SubHeader(Localization.instance.GENRES),
                 const Spacer(),
                 if (_genres.length > kLimit)
                   ShowAllButton(
@@ -206,7 +206,7 @@ class SearchScreenState extends State<SearchScreen> {
           if (_tracks.isNotEmpty) ...[
             Row(
               children: [
-                SubHeader(Language.instance.TRACKS),
+                SubHeader(Localization.instance.TRACKS),
                 const Spacer(),
                 if (_tracks.length > kLimit)
                   ShowAllButton(

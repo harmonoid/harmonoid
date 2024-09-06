@@ -18,7 +18,7 @@ class ConfigurationBase {
   bool get desktopNowPlayingLyrics => _desktopNowPlayingLyrics!;
   int get desktopNowPlayingUnhighlightedLyricsSize => _desktopNowPlayingUnhighlightedLyricsSize!;
   bool get discordRpc => _discordRpc!;
-  LanguageData get language => _language!;
+  LocalizationData get localization => _localization!;
   bool get lrcFromDirectory => _lrcFromDirectory!;
   bool get mediaLibraryAddTracksToPlaylist => _mediaLibraryAddTracksToPlaylist!;
   Set<AlbumGroupingParameter> get mediaLibraryAlbumGroupingParameters => _mediaLibraryAlbumGroupingParameters!;
@@ -58,7 +58,7 @@ class ConfigurationBase {
     bool? desktopNowPlayingLyrics,
     int? desktopNowPlayingUnhighlightedLyricsSize,
     bool? discordRpc,
-    LanguageData? language,
+    LocalizationData? localization,
     bool? lrcFromDirectory,
     bool? mediaLibraryAddTracksToPlaylist,
     Set<AlbumGroupingParameter>? mediaLibraryAlbumGroupingParameters,
@@ -115,9 +115,9 @@ class ConfigurationBase {
       _discordRpc = discordRpc;
       await db.setValue(kKeyDiscordRpc, kTypeBoolean, booleanValue: discordRpc);
     }
-    if (language != null) {
-      _language = language;
-      await db.setValue(kKeyLanguage, kTypeJson, jsonValue: language);
+    if (localization != null) {
+      _localization = localization;
+      await db.setValue(kKeyLocalization, kTypeJson, jsonValue: localization);
     }
     if (lrcFromDirectory != null) {
       _lrcFromDirectory = lrcFromDirectory;
@@ -245,7 +245,6 @@ class ConfigurationBase {
     }
   }
 
-
   Future<Map<String, dynamic>> getDefaults() async {
     return {
       /* Boolean */ kKeyAudioFormatDisplay: true,
@@ -254,7 +253,7 @@ class ConfigurationBase {
       /* Boolean */ kKeyDesktopNowPlayingLyrics: true,
       /* Integer */ kKeyDesktopNowPlayingUnhighlightedLyricsSize: 14,
       /* Boolean */ kKeyDiscordRpc: true,
-      /* Json    */ kKeyLanguage: const LanguageData(code: 'en_US', name: 'English (United States)', country: 'United States'),
+      /* Json    */ kKeyLocalization: const LocalizationData(code: 'en_US', name: 'English (United States)', country: 'United States'),
       /* Boolean */ kKeyLrcFromDirectory: false,
       /* Boolean */ kKeyMediaLibraryAddTracksToPlaylist: true,
       /* Json    */ kKeyMediaLibraryAlbumGroupingParameters: [AlbumGroupingParameter.album.index],
@@ -295,7 +294,7 @@ class ConfigurationBase {
   bool? _desktopNowPlayingLyrics;
   int? _desktopNowPlayingUnhighlightedLyricsSize;
   bool? _discordRpc;
-  LanguageData? _language;
+  LocalizationData? _localization;
   bool? _lrcFromDirectory;
   bool? _mediaLibraryAddTracksToPlaylist;
   Set<AlbumGroupingParameter>? _mediaLibraryAlbumGroupingParameters;
@@ -337,7 +336,7 @@ const kKeyDesktopNowPlayingHighlightedLyricsSize = 'DESKTOP_NOW_PLAYING_HIGHLIGH
 const kKeyDesktopNowPlayingLyrics = 'DESKTOP_NOW_PLAYING_LYRICS';
 const kKeyDesktopNowPlayingUnhighlightedLyricsSize = 'DESKTOP_NOW_PLAYING_UNHIGHLIGHTED_LYRICS_SIZE';
 const kKeyDiscordRpc = 'DISCORD_RPC';
-const kKeyLanguage = 'LANGUAGE';
+const kKeyLocalization = 'LOCALIZATION';
 const kKeyLrcFromDirectory = 'LRC_FROM_DIRECTORY';
 const kKeyMediaLibraryAddTracksToPlaylist = 'MEDIA_LIBRARY_ADD_TRACKS_TO_PLAYLIST';
 const kKeyMediaLibraryAlbumGroupingParameters = 'MEDIA_LIBRARY_ALBUM_GROUPING_PARAMETERS';

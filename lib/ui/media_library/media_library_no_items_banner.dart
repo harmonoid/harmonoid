@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/color.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -72,13 +72,13 @@ class MediaLibraryNoItemsBannerState extends State<MediaLibraryNoItemsBanner> {
               _imagePicture ?? const SizedBox(height: _kImageHeight, width: _kImageWidth),
               const SizedBox(height: 16.0),
               Text(
-                Language.instance.MEDIA_LIBRARY_NO_ITEMS_TITLE,
+                Localization.instance.MEDIA_LIBRARY_NO_ITEMS_TITLE,
                 style: Theme.of(context).textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8.0),
               Text(
-                Language.instance.MEDIA_LIBRARY_NO_ITEMS_SUBTITLE,
+                Localization.instance.MEDIA_LIBRARY_NO_ITEMS_SUBTITLE,
                 style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
@@ -87,7 +87,7 @@ class MediaLibraryNoItemsBannerState extends State<MediaLibraryNoItemsBanner> {
                 onPressed: () {
                   context.push('/$kSettingsPath');
                 },
-                child: Text(label(Language.instance.GO_TO_SETTINGS)),
+                child: Text(label(Localization.instance.GO_TO_SETTINGS)),
               ),
             ],
           ),

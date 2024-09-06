@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/media_library/search/search_screen.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -27,7 +27,7 @@ class MediaLibrarySearchBar extends StatelessWidget {
       child: SearchAnchor(
         isFullScreen: true,
         searchController: mediaLibrarySearchBarController,
-        viewHintText: Language.instance.SEARCH_HINT,
+        viewHintText: Localization.instance.SEARCH_HINT,
         builder: (context, controller) {
           return Consumer<MediaLibrary>(
             builder: (context, mediaLibrary, _) {
@@ -52,10 +52,10 @@ class MediaLibrarySearchBar extends StatelessWidget {
                       MobileAppBarOverflowButton(),
                     ],
                     hintText: !mediaLibrary.refreshing
-                        ? Language.instance.SEARCH_HINT
+                        ? Localization.instance.SEARCH_HINT
                         : mediaLibrary.current == null
-                            ? Language.instance.DISCOVERING_FILES
-                            : Language.instance.ADDED_M_OF_N_FILES
+                            ? Localization.instance.DISCOVERING_FILES
+                            : Localization.instance.ADDED_M_OF_N_FILES
                                 .replaceAll('"M"', (mediaLibrary.current ?? 0).toString())
                                 .replaceAll('"N"', (mediaLibrary.total == 0 ? 1 : mediaLibrary.total).toString()),
                   ),

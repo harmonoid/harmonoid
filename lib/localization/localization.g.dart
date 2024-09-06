@@ -1,95 +1,12 @@
-// ignore_for_file: non_constant_identifier_names
 // AUTO GENERATED FILE, DO NOT EDIT.
 
-import 'dart:convert';
-import 'package:flutter/widgets.dart';
-import 'package:flutter/services.dart';
+part of 'localization.dart';
 
-import 'package:harmonoid/constants/strings.dart';
+class LocalizationBase extends Values {
 
-/// {@template language_data}
-///
-/// LanguageData
-/// ------------
-///
-/// {@endtemplate}
-class LanguageData {
-  /// Code.
-  /// e.g. `en_US`.
-  final String code;
+  late LocalizationData current;
 
-  /// Name.
-  /// e.g. `English (United States)`.
-  final String name;
-
-  /// Country.
-  /// e.g. `United States`.
-  final String country;
-
-  /// {@macro language_data}
-  const LanguageData({
-    required this.code,
-    required this.name,
-    required this.country,
-  });
-
-  @override
-  int get hashCode => code.hashCode;
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is LanguageData && other.code == code && other.name == name && other.country == country;
-  }
-
-  factory LanguageData.fromJson(dynamic json) => LanguageData(
-        code: json['code'],
-        name: json['name'],
-        country: json['country'],
-      );
-
-  Map<String, String> toJson() => {
-        'code': code,
-        'name': name,
-        'country': country,
-      };
-}
-
-/// {@template language}
-///
-/// Language
-/// --------
-/// Implementation to set the current language & retrieve localized strings from the assets.
-///
-/// {@endtemplate}
-class Language extends Strings with ChangeNotifier {
-  /// Singleton instance.
-  static final Language instance = Language._();
-
-  /// Whether the [instance] is initialized.
-  static bool initialized = false;
-
-  /// Initializes the [instance].
-  static Future<void> ensureInitialized({required LanguageData language}) async {
-    if (initialized) return;
-    initialized = true;
-    await instance.set(value: language);
-  }
-
-  /// {@macro language}
-  Language._();
-
-  /// Current language.
-  late LanguageData current;
-
-  /// Returns all the available languages after reading the assets.
-  Future<Set<LanguageData>> get all async {
-    final data = await rootBundle.loadString('assets/translations/index.json');
-    return Set.from(json.decode(data).map((e) => LanguageData.fromJson(e)));
-  }
-
-  /// Sets the current language.
-  Future<void> set({required LanguageData value}) async {
+  Future<void> set({required LocalizationData value}) async {
     final data = await rootBundle.loadString('assets/translations/translations/${value.code}.json');
     final map = json.decode(data);
     ABOUT = map['ABOUT']!;
@@ -112,7 +29,6 @@ class Language extends Strings with ChangeNotifier {
     ARTISTS = map['ARTISTS']!;
     ASCENDING = map['ASCENDING']!;
     AVAILABLE_STORAGES = map['AVAILABLE_STORAGES']!;
-    AWESOME = map['AWESOME']!;
     A_TO_Z = map['A_TO_Z']!;
     BETA = map['BETA']!;
     BUFFERING = map['BUFFERING']!;
@@ -131,6 +47,7 @@ class Language extends Strings with ChangeNotifier {
     DELETE = map['DELETE']!;
     DESCENDING = map['DESCENDING']!;
     DISCOVERING_FILES = map['DISCOVERING_FILES']!;
+    DISPLAY_VOLUME_SLIDER = map['DISPLAY_VOLUME_SLIDER']!;
     DONATE = map['DONATE']!;
     DONE = map['DONE']!;
     EDIT = map['EDIT']!;
@@ -140,6 +57,7 @@ class Language extends Strings with ChangeNotifier {
     EDIT_MINIMUM_FILE_SIZE = map['EDIT_MINIMUM_FILE_SIZE']!;
     ENABLE_ANIMATION_EFFECTS = map['ENABLE_ANIMATION_EFFECTS']!;
     ENABLE_DISCORD_RPC = map['ENABLE_DISCORD_RPC']!;
+    ENABLE_NOW_PLAYING_RIPPLE_EFFECT = map['ENABLE_NOW_PLAYING_RIPPLE_EFFECT']!;
     ENABLE_VOLUME_BOOST_FILTER = map['ENABLE_VOLUME_BOOST_FILTER']!;
     ENABLE_VOLUME_BOOST_FILTER_WARNING = map['ENABLE_VOLUME_BOOST_FILTER_WARNING']!;
     ENTRIES = map['ENTRIES']!;
@@ -149,9 +67,6 @@ class Language extends Strings with ChangeNotifier {
     EXIT_NOW_PLAYING = map['EXIT_NOW_PLAYING']!;
     EXIT_SUBTITLE = map['EXIT_SUBTITLE']!;
     EXIT_TITLE = map['EXIT_TITLE']!;
-    EXPERIMENTAL = map['EXPERIMENTAL']!;
-    EXPERIMENTAL_SUBTITLE = map['EXPERIMENTAL_SUBTITLE']!;
-    FALLBACK_ALBUM_ARTS = map['FALLBACK_ALBUM_ARTS']!;
     FILE = map['FILE']!;
     FILE_INFORMATION = map['FILE_INFORMATION']!;
     FILE_PATH_OR_URL = map['FILE_PATH_OR_URL']!;
@@ -171,6 +86,7 @@ class Language extends Strings with ChangeNotifier {
     LAST_DIRECTORY_REMOVED = map['LAST_DIRECTORY_REMOVED']!;
     LESS = map['LESS']!;
     LIKED_SONGS = map['LIKED_SONGS']!;
+    LOOKUP_FOR_FALLBACK_ALBUM_ARTS = map['LOOKUP_FOR_FALLBACK_ALBUM_ARTS']!;
     LYRICS = map['LYRICS']!;
     LYRICS_NOT_FOUND = map['LYRICS_NOT_FOUND']!;
     LYRICS_RETRIEVING = map['LYRICS_RETRIEVING']!;
@@ -185,8 +101,6 @@ class Language extends Strings with ChangeNotifier {
     MINIMUM_FILE_SIZE_WARNING = map['MINIMUM_FILE_SIZE_WARNING']!;
     MOBILE_ALBUM_GRID_SIZE = map['MOBILE_ALBUM_GRID_SIZE']!;
     MOBILE_ARTIST_GRID_SIZE = map['MOBILE_ARTIST_GRID_SIZE']!;
-    MOBILE_ENABLE_NOW_PLAYING_RIPPLE_EFFECT = map['MOBILE_ENABLE_NOW_PLAYING_RIPPLE_EFFECT']!;
-    MOBILE_ENABLE_VOLUME_SLIDER = map['MOBILE_ENABLE_VOLUME_SLIDER']!;
     MOBILE_GENRE_GRID_SIZE = map['MOBILE_GENRE_GRID_SIZE']!;
     MORE = map['MORE']!;
     MUTE = map['MUTE']!;
@@ -197,10 +111,7 @@ class Language extends Strings with ChangeNotifier {
     NOTIFICATION_LYRICS_SUBTITLE = map['NOTIFICATION_LYRICS_SUBTITLE']!;
     NOTIFICATION_LYRICS_TITLE = map['NOTIFICATION_LYRICS_TITLE']!;
     NOW_PLAYING = map['NOW_PLAYING']!;
-    NOW_PLAYING_SCREEN = map['NOW_PLAYING_SCREEN']!;
-    NOW_PLAYING_SCREEN_SETTING_SUBTITLE = map['NOW_PLAYING_SCREEN_SETTING_SUBTITLE']!;
     NOW_YOU_ARE_GOOD_TO_GO_BACK = map['NOW_YOU_ARE_GOOD_TO_GO_BACK']!;
-    NO_DOWNLOAD_UPDATE = map['NO_DOWNLOAD_UPDATE']!;
     NO_FOLDERS_ADDED = map['NO_FOLDERS_ADDED']!;
     NO_INTERNET_SUBTITLE = map['NO_INTERNET_SUBTITLE']!;
     NO_INTERNET_TITLE = map['NO_INTERNET_TITLE']!;
@@ -216,8 +127,6 @@ class Language extends Strings with ChangeNotifier {
     OPTIONS = map['OPTIONS']!;
     ORDER = map['ORDER']!;
     PAUSE = map['PAUSE']!;
-    PERMISSIONS = map['PERMISSIONS']!;
-    PERMISSIONS_SUBTITLE = map['PERMISSIONS_SUBTITLE']!;
     PERMISSION_IMAGES_AND_PHOTOS = map['PERMISSION_IMAGES_AND_PHOTOS']!;
     PERMISSION_IMAGES_AND_PHOTOS_SUBTITLE = map['PERMISSION_IMAGES_AND_PHOTOS_SUBTITLE']!;
     PERMISSION_MUSIC_AND_AUDIO = map['PERMISSION_MUSIC_AND_AUDIO']!;
@@ -249,7 +158,6 @@ class Language extends Strings with ChangeNotifier {
     REFRESH_SUBTITLE = map['REFRESH_SUBTITLE']!;
     REINDEX = map['REINDEX']!;
     REINDEX_SUBTITLE = map['REINDEX_SUBTITLE']!;
-    REMIND_ME_NEXT_TIME = map['REMIND_ME_NEXT_TIME']!;
     REMOVE = map['REMOVE']!;
     REMOVE_FROM_PLAYLIST = map['REMOVE_FROM_PLAYLIST']!;
     RENAME = map['RENAME']!;
@@ -270,36 +178,15 @@ class Language extends Strings with ChangeNotifier {
     SEARCH_HINT = map['SEARCH_HINT']!;
     SEE_ALL = map['SEE_ALL']!;
     SETTINGS = map['SETTINGS']!;
-    SETTINGS_DISPLAY_AUDIO_FORMAT = map['SETTINGS_DISPLAY_AUDIO_FORMAT']!;
-    SETTINGS_HIGHLIGHTED_LYRICS_SIZE = map['SETTINGS_HIGHLIGHTED_LYRICS_SIZE']!;
-    SETTINGS_LAUNCH_NOW_PLAYING_ON_FILE_OPEN = map['SETTINGS_LAUNCH_NOW_PLAYING_ON_FILE_OPEN']!;
-    SETTINGS_LRC_FROM_DIRECTORY = map['SETTINGS_LRC_FROM_DIRECTORY']!;
-    SETTINGS_MEDIA_LIBRARY_REFRESH_ON_LAUNCH = map['SETTINGS_MEDIA_LIBRARY_REFRESH_ON_LAUNCH']!;
     SETTINGS_SECTION_DISPLAY_SUBTITLE = map['SETTINGS_SECTION_DISPLAY_SUBTITLE']!;
     SETTINGS_SECTION_DISPLAY_TITLE = map['SETTINGS_SECTION_DISPLAY_TITLE']!;
+    SETTINGS_SECTION_LANGUAGE_SUBTITLE = map['SETTINGS_SECTION_LANGUAGE_SUBTITLE']!;
+    SETTINGS_SECTION_LANGUAGE_TITLE = map['SETTINGS_SECTION_LANGUAGE_TITLE']!;
     SETTINGS_SECTION_MEDIA_LIBRARY_SUBTITLE = map['SETTINGS_SECTION_MEDIA_LIBRARY_SUBTITLE']!;
     SETTINGS_SECTION_MEDIA_LIBRARY_TITLE = map['SETTINGS_SECTION_MEDIA_LIBRARY_TITLE']!;
+    SETTINGS_SECTION_NOW_PLAYING_TITLE = map['SETTINGS_SECTION_NOW_PLAYING_TITLE']!;
     SETTINGS_SECTION_STATS_SUBTITLE = map['SETTINGS_SECTION_STATS_SUBTITLE']!;
     SETTINGS_SECTION_STATS_TITLE = map['SETTINGS_SECTION_STATS_TITLE']!;
-    SETTINGS_SECTION_VISUALS_SUBTITLE = map['SETTINGS_SECTION_VISUALS_SUBTITLE']!;
-    SETTINGS_SECTION_VISUALS_TITLE = map['SETTINGS_SECTION_VISUALS_TITLE']!;
-    SETTINGS_SHOW_TRACK_PROGRESS_ON_TASKBAR = map['SETTINGS_SHOW_TRACK_PROGRESS_ON_TASKBAR']!;
-    SETTINGS_SHOW_TRACK_PROGRESS_ON_TASKBAR_SUBTITLE = map['SETTINGS_SHOW_TRACK_PROGRESS_ON_TASKBAR_SUBTITLE']!;
-    SETTINGS_SPEED_ANIMATION_EFFECTS = map['SETTINGS_SPEED_ANIMATION_EFFECTS']!;
-    SETTINGS_UNHIGHLIGHTED_LYRICS_SIZE = map['SETTINGS_UNHIGHLIGHTED_LYRICS_SIZE']!;
-    SETTING_ACCENT_COLOR_AUTOMATIC = map['SETTING_ACCENT_COLOR_AUTOMATIC']!;
-    SETTING_ACCENT_COLOR_SUBTITLE = map['SETTING_ACCENT_COLOR_SUBTITLE']!;
-    SETTING_ACCENT_COLOR_TITLE = map['SETTING_ACCENT_COLOR_TITLE']!;
-    SETTING_APP_VERSION_INSTALLED = map['SETTING_APP_VERSION_INSTALLED']!;
-    SETTING_APP_VERSION_LATEST = map['SETTING_APP_VERSION_LATEST']!;
-    SETTING_APP_VERSION_SUBTITLE = map['SETTING_APP_VERSION_SUBTITLE']!;
-    SETTING_APP_VERSION_TITLE = map['SETTING_APP_VERSION_TITLE']!;
-    SETTING_INDEXING_SUBTITLE = map['SETTING_INDEXING_SUBTITLE']!;
-    SETTING_INDEXING_TITLE = map['SETTING_INDEXING_TITLE']!;
-    SETTING_LANGUAGE_SUBTITLE = map['SETTING_LANGUAGE_SUBTITLE']!;
-    SETTING_LANGUAGE_TITLE = map['SETTING_LANGUAGE_TITLE']!;
-    SETTING_MISCELLANEOUS_SUBTITLE = map['SETTING_MISCELLANEOUS_SUBTITLE']!;
-    SETTING_MISCELLANEOUS_TITLE = map['SETTING_MISCELLANEOUS_TITLE']!;
     SET_LRC_FILE = map['SET_LRC_FILE']!;
     SHARE = map['SHARE']!;
     SHOW_ALBUM = map['SHOW_ALBUM']!;
@@ -328,7 +215,5 @@ class Language extends Strings with ChangeNotifier {
     WARNING = map['WARNING']!;
     YEAR = map['YEAR']!;
     YES = map['YES']!;
-    current = value;
-    notifyListeners();
   }
 }

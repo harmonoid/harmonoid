@@ -7,7 +7,7 @@ import 'package:media_library/media_library.dart';
 import 'package:path/path.dart' as path;
 import 'package:win32/win32.dart';
 
-import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/localization/localization_data.dart';
 import 'package:harmonoid/core/configuration/database/constants.dart';
 import 'package:harmonoid/core/configuration/database/database.dart';
 import 'package:harmonoid/models/playback_state.dart';
@@ -75,7 +75,7 @@ class Configuration extends ConfigurationBase {
     _desktopNowPlayingLyrics = await db.getBoolean(kKeyDesktopNowPlayingLyrics);
     _desktopNowPlayingUnhighlightedLyricsSize = await db.getInteger(kKeyDesktopNowPlayingUnhighlightedLyricsSize);
     _discordRpc = await db.getBoolean(kKeyDiscordRpc);
-    _language = LanguageData.fromJson(await db.getJson(kKeyLanguage));
+    _localization = LocalizationData.fromJson(await db.getJson(kKeyLocalization));
     _lrcFromDirectory = await db.getBoolean(kKeyLrcFromDirectory);
     _mediaLibraryAddTracksToPlaylist = await db.getBoolean(kKeyMediaLibraryAddTracksToPlaylist);
     _mediaLibraryAlbumGroupingParameters = (await db.getJson(kKeyMediaLibraryAlbumGroupingParameters)).map<AlbumGroupingParameter>((e) => AlbumGroupingParameter.values[e]).toSet();

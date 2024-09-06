@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
@@ -36,7 +36,7 @@ class Harmonoid extends StatelessWidget {
           create: (_) => NowPlayingColorPaletteNotifier.instance,
         ),
         ChangeNotifierProvider(
-          create: (context) => Language.instance,
+          create: (context) => Localization.instance,
         ),
       ],
       builder: (context, _) => Consumer<ThemeNotifier>(

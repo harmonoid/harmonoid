@@ -9,20 +9,20 @@ import 'package:flutter/material.dart' hide ReorderableDragStartListener, Intent
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:harmonoid/ui/router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:provider/provider.dart';
 import 'package:uri_parser/uri_parser.dart';
 
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/extensions/global_key.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/state/mobile_now_playing_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
+import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/keyboard_shortcuts.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -77,7 +77,7 @@ class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
                     width: 4.0,
                   ),
                   Text(
-                    Language.instance.PLAY_ALL,
+                    Localization.instance.PLAY_ALL,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           decoration: hover0 ? TextDecoration.underline : TextDecoration.none,
@@ -114,7 +114,7 @@ class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
                     width: 4.0,
                   ),
                   Text(
-                    Language.instance.SHUFFLE,
+                    Localization.instance.SHUFFLE,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           decoration: hover1 ? TextDecoration.underline : TextDecoration.none,
@@ -225,10 +225,10 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
                           checked: e == mediaLibrary.albumSortType,
                           child: Text(
                             {
-                              AlbumSortType.album: Language.instance.A_TO_Z,
-                              AlbumSortType.timestamp: Language.instance.DATE_ADDED,
-                              AlbumSortType.year: Language.instance.YEAR,
-                              AlbumSortType.albumArtist: Language.instance.ALBUM_ARTIST,
+                              AlbumSortType.album: Localization.instance.A_TO_Z,
+                              AlbumSortType.timestamp: Localization.instance.DATE_ADDED,
+                              AlbumSortType.year: Localization.instance.YEAR,
+                              AlbumSortType.albumArtist: Localization.instance.ALBUM_ARTIST,
                             }[e]!,
                             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                           ),
@@ -242,9 +242,9 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
                           checked: e == mediaLibrary.trackSortType,
                           child: Text(
                             {
-                              TrackSortType.title: Language.instance.A_TO_Z,
-                              TrackSortType.timestamp: Language.instance.DATE_ADDED,
-                              TrackSortType.year: Language.instance.YEAR,
+                              TrackSortType.title: Localization.instance.A_TO_Z,
+                              TrackSortType.timestamp: Localization.instance.DATE_ADDED,
+                              TrackSortType.year: Localization.instance.YEAR,
                             }[e]!,
                             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                           ),
@@ -258,8 +258,8 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
                           checked: e == mediaLibrary.artistSortType,
                           child: Text(
                             {
-                              ArtistSortType.artist: Language.instance.A_TO_Z,
-                              ArtistSortType.timestamp: Language.instance.DATE_ADDED,
+                              ArtistSortType.artist: Localization.instance.A_TO_Z,
+                              ArtistSortType.timestamp: Localization.instance.DATE_ADDED,
                             }[e]!,
                             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                           ),
@@ -273,8 +273,8 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
                           checked: e == mediaLibrary.genreSortType,
                           child: Text(
                             {
-                              GenreSortType.genre: Language.instance.A_TO_Z,
-                              GenreSortType.timestamp: Language.instance.DATE_ADDED,
+                              GenreSortType.genre: Localization.instance.A_TO_Z,
+                              GenreSortType.timestamp: Localization.instance.DATE_ADDED,
                             }[e]!,
                             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                           ),
@@ -315,29 +315,29 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: '${Language.instance.SORT_BY}: ',
+                            text: '${Localization.instance.SORT_BY}: ',
                             style: Theme.of(context).textTheme.bodyLarge,
                           ),
                           TextSpan(
                             text: {
                               kAlbumsPath: {
-                                AlbumSortType.album: Language.instance.A_TO_Z,
-                                AlbumSortType.timestamp: Language.instance.DATE_ADDED,
-                                AlbumSortType.year: Language.instance.YEAR,
-                                AlbumSortType.albumArtist: Language.instance.ALBUM_ARTIST,
+                                AlbumSortType.album: Localization.instance.A_TO_Z,
+                                AlbumSortType.timestamp: Localization.instance.DATE_ADDED,
+                                AlbumSortType.year: Localization.instance.YEAR,
+                                AlbumSortType.albumArtist: Localization.instance.ALBUM_ARTIST,
                               }[mediaLibrary.albumSortType]!,
                               kTracksPath: {
-                                TrackSortType.title: Language.instance.A_TO_Z,
-                                TrackSortType.timestamp: Language.instance.DATE_ADDED,
-                                TrackSortType.year: Language.instance.YEAR,
+                                TrackSortType.title: Localization.instance.A_TO_Z,
+                                TrackSortType.timestamp: Localization.instance.DATE_ADDED,
+                                TrackSortType.year: Localization.instance.YEAR,
                               }[mediaLibrary.trackSortType]!,
                               kArtistsPath: {
-                                ArtistSortType.artist: Language.instance.A_TO_Z,
-                                ArtistSortType.timestamp: Language.instance.DATE_ADDED,
+                                ArtistSortType.artist: Localization.instance.A_TO_Z,
+                                ArtistSortType.timestamp: Localization.instance.DATE_ADDED,
                               }[mediaLibrary.artistSortType]!,
                               kGenresPath: {
-                                GenreSortType.genre: Language.instance.A_TO_Z,
-                                GenreSortType.timestamp: Language.instance.DATE_ADDED,
+                                GenreSortType.genre: Localization.instance.A_TO_Z,
+                                GenreSortType.timestamp: Localization.instance.DATE_ADDED,
                               }[mediaLibrary.genreSortType]!,
                             }[path]!,
                             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -383,7 +383,7 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
                     }[path]!,
                     value: true,
                     child: Text(
-                      Language.instance.ASCENDING,
+                      Localization.instance.ASCENDING,
                       style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                     ),
                   ),
@@ -396,7 +396,7 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
                     }[path]!,
                     value: false,
                     child: Text(
-                      Language.instance.DESCENDING,
+                      Localization.instance.DESCENDING,
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   ),
@@ -441,13 +441,13 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: '${Language.instance.ORDER}: ',
+                            text: '${Localization.instance.ORDER}: ',
                             style: Theme.of(context).textTheme.bodyLarge,
                           ),
                           TextSpan(
                             text: {
-                              true: Language.instance.ASCENDING,
-                              false: Language.instance.DESCENDING,
+                              true: Localization.instance.ASCENDING,
+                              false: Localization.instance.DESCENDING,
                             }[{
                               kAlbumsPath: mediaLibrary.albumSortAscending,
                               kTracksPath: mediaLibrary.trackSortAscending,
@@ -520,8 +520,8 @@ class DesktopMediaLibraryRefreshIndicator extends StatelessWidget {
                         const SizedBox(width: 16.0),
                         Text(
                           mediaLibrary.current == null
-                              ? Language.instance.DISCOVERING_FILES
-                              : Language.instance.ADDED_M_OF_N_FILES
+                              ? Localization.instance.DISCOVERING_FILES
+                              : Localization.instance.ADDED_M_OF_N_FILES
                                   .replaceAll('"M"', (mediaLibrary.current ?? 0).toString())
                                   .replaceAll('"N"', (mediaLibrary.total == 0 ? 1 : mediaLibrary.total).toString()),
                           overflow: TextOverflow.ellipsis,
@@ -558,13 +558,13 @@ class MobileMediaLibraryHeader extends StatelessWidget {
         children: [
           const SizedBox(width: 8.0),
           if (path == kAlbumsPath)
-            Text(Language.instance.N_ALBUMS.replaceAll('"N"', MediaLibrary.instance.albums.length.toString()))
+            Text(Localization.instance.N_ALBUMS.replaceAll('"N"', MediaLibrary.instance.albums.length.toString()))
           else if (path == kTracksPath)
-            Text(Language.instance.N_TRACKS.replaceAll('"N"', MediaLibrary.instance.tracks.length.toString()))
+            Text(Localization.instance.N_TRACKS.replaceAll('"N"', MediaLibrary.instance.tracks.length.toString()))
           else if (path == kArtistsPath)
-            Text(Language.instance.N_ARTISTS.replaceAll('"N"', MediaLibrary.instance.artists.length.toString()))
+            Text(Localization.instance.N_ARTISTS.replaceAll('"N"', MediaLibrary.instance.artists.length.toString()))
           else if (path == kGenresPath)
-            Text(Language.instance.N_GENRES.replaceAll('"N"', MediaLibrary.instance.genres.length.toString())),
+            Text(Localization.instance.N_GENRES.replaceAll('"N"', MediaLibrary.instance.genres.length.toString())),
           const Spacer(),
           MobileMediaLibrarySortButton(path: path),
         ],
@@ -652,10 +652,10 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
                 padding: EdgeInsets.zero,
                 child: Text(
                   {
-                    AlbumSortType.album: Language.instance.A_TO_Z,
-                    AlbumSortType.timestamp: Language.instance.DATE_ADDED,
-                    AlbumSortType.year: Language.instance.YEAR,
-                    AlbumSortType.albumArtist: Language.instance.ALBUM_ARTIST,
+                    AlbumSortType.album: Localization.instance.A_TO_Z,
+                    AlbumSortType.timestamp: Localization.instance.DATE_ADDED,
+                    AlbumSortType.year: Localization.instance.YEAR,
+                    AlbumSortType.albumArtist: Localization.instance.ALBUM_ARTIST,
                   }[e]!,
                   style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
@@ -671,9 +671,9 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
                 padding: EdgeInsets.zero,
                 child: Text(
                   {
-                    TrackSortType.title: Language.instance.A_TO_Z,
-                    TrackSortType.timestamp: Language.instance.DATE_ADDED,
-                    TrackSortType.year: Language.instance.YEAR,
+                    TrackSortType.title: Localization.instance.A_TO_Z,
+                    TrackSortType.timestamp: Localization.instance.DATE_ADDED,
+                    TrackSortType.year: Localization.instance.YEAR,
                   }[e]!,
                   style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
@@ -689,8 +689,8 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
                 padding: EdgeInsets.zero,
                 child: Text(
                   {
-                    ArtistSortType.artist: Language.instance.A_TO_Z,
-                    ArtistSortType.timestamp: Language.instance.DATE_ADDED,
+                    ArtistSortType.artist: Localization.instance.A_TO_Z,
+                    ArtistSortType.timestamp: Localization.instance.DATE_ADDED,
                   }[e]!,
                   style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
@@ -706,8 +706,8 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
                 padding: EdgeInsets.zero,
                 child: Text(
                   {
-                    GenreSortType.genre: Language.instance.A_TO_Z,
-                    GenreSortType.timestamp: Language.instance.DATE_ADDED,
+                    GenreSortType.genre: Localization.instance.A_TO_Z,
+                    GenreSortType.timestamp: Localization.instance.DATE_ADDED,
                   }[e]!,
                   style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
@@ -728,7 +728,7 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
           value: true,
           padding: EdgeInsets.zero,
           child: Text(
-            Language.instance.ASCENDING,
+            Localization.instance.ASCENDING,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
@@ -743,7 +743,7 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
           value: false,
           padding: EdgeInsets.zero,
           child: Text(
-            Language.instance.DESCENDING,
+            Localization.instance.DESCENDING,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
@@ -981,9 +981,9 @@ class MediaLibraryCreatePlaylistButton extends StatelessWidget {
         onPressed: () async {
           final result = await showInput(
             context,
-            Language.instance.CREATE_NEW_PLAYLIST,
-            Language.instance.PLAYLIST_CREATE_DIALOG_SUBTITLE,
-            Language.instance.CREATE,
+            Localization.instance.CREATE_NEW_PLAYLIST,
+            Localization.instance.PLAYLIST_CREATE_DIALOG_SUBTITLE,
+            Localization.instance.CREATE,
             (value) {
               if (value?.isEmpty ?? true) {
                 return '';
@@ -1077,11 +1077,11 @@ class MobileNavigationBar extends StatelessWidget {
     ];
     final index = paths.indexOf(path);
     final displayLabels = {
-          Language.instance.ALBUMS,
-          Language.instance.TRACKS,
-          Language.instance.ARTISTS,
-          Language.instance.GENRES,
-          Language.instance.PLAYLISTS,
+          Localization.instance.ALBUMS,
+          Localization.instance.TRACKS,
+          Localization.instance.ARTISTS,
+          Localization.instance.GENRES,
+          Localization.instance.PLAYLISTS,
         }.map((e) => e.length).max <=
         10;
     return isMaterial3
@@ -1097,23 +1097,23 @@ class MobileNavigationBar extends StatelessWidget {
             destinations: [
               NavigationDestination(
                 icon: const Icon(Icons.album),
-                label: Language.instance.ALBUMS,
+                label: Localization.instance.ALBUMS,
               ),
               NavigationDestination(
                 icon: const Icon(Icons.music_note),
-                label: Language.instance.TRACKS,
+                label: Localization.instance.TRACKS,
               ),
               NavigationDestination(
                 icon: const Icon(Icons.person),
-                label: Language.instance.ARTISTS,
+                label: Localization.instance.ARTISTS,
               ),
               NavigationDestination(
                 icon: const Icon(Icons.piano),
-                label: Language.instance.GENRES,
+                label: Localization.instance.GENRES,
               ),
               NavigationDestination(
                 icon: const Icon(Icons.playlist_play),
-                label: Language.instance.PLAYLISTS,
+                label: Localization.instance.PLAYLISTS,
               ),
             ],
           )
@@ -1145,27 +1145,27 @@ class MobileNavigationBar extends StatelessWidget {
                   items: [
                     BottomNavigationBarItem(
                       icon: const Icon(Icons.album),
-                      label: displayLabels ? Language.instance.ALBUMS : null,
+                      label: displayLabels ? Localization.instance.ALBUMS : null,
                       backgroundColor: color ?? Theme.of(context).colorScheme.primary,
                     ),
                     BottomNavigationBarItem(
                       icon: const Icon(Icons.music_note),
-                      label: displayLabels ? Language.instance.TRACKS : null,
+                      label: displayLabels ? Localization.instance.TRACKS : null,
                       backgroundColor: color ?? Theme.of(context).colorScheme.primary,
                     ),
                     BottomNavigationBarItem(
                       icon: const Icon(Icons.person),
-                      label: displayLabels ? Language.instance.ARTISTS : null,
+                      label: displayLabels ? Localization.instance.ARTISTS : null,
                       backgroundColor: color ?? Theme.of(context).colorScheme.primary,
                     ),
                     BottomNavigationBarItem(
                       icon: const Icon(Icons.piano),
-                      label: displayLabels ? Language.instance.GENRES : null,
+                      label: displayLabels ? Localization.instance.GENRES : null,
                       backgroundColor: color ?? Theme.of(context).colorScheme.primary,
                     ),
                     BottomNavigationBarItem(
                       icon: const Icon(Icons.playlist_play),
-                      label: displayLabels ? Language.instance.PLAYLISTS : null,
+                      label: displayLabels ? Localization.instance.PLAYLISTS : null,
                       backgroundColor: color ?? Theme.of(context).colorScheme.primary,
                     ),
                   ],
@@ -1202,7 +1202,7 @@ class ShowAllButton extends StatelessWidget {
               width: 4.0,
             ),
             Text(
-              Language.instance.SEE_ALL,
+              Localization.instance.SEE_ALL,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     color: Theme.of(context).colorScheme.primary,
                   ),
@@ -1492,7 +1492,7 @@ class PlayFileOrURLButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      tooltip: Language.instance.OPEN_FILE_OR_URL,
+      tooltip: Localization.instance.OPEN_FILE_OR_URL,
       icon: const Icon(Icons.file_open),
       iconSize: 20.0,
       splashRadius: 18.0,
@@ -1502,13 +1502,13 @@ class PlayFileOrURLButton extends StatelessWidget {
           context: context,
           builder: (ctx) => SimpleDialog(
             title: Text(
-              Language.instance.OPEN_FILE_OR_URL,
+              Localization.instance.OPEN_FILE_OR_URL,
             ),
             children: [
               ListTile(
                 onTap: () async {
                   final file = await pickFile(
-                    label: Language.instance.MEDIA_FILES,
+                    label: Localization.instance.MEDIA_FILES,
                     extensions: MediaLibrary.instance.supportedFileTypes,
                   );
                   if (file != null) {
@@ -1522,7 +1522,7 @@ class PlayFileOrURLButton extends StatelessWidget {
                   child: const Icon(Icons.folder),
                 ),
                 title: Text(
-                  Language.instance.FILE,
+                  Localization.instance.FILE,
                   style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
                 ),
               ),
@@ -1531,9 +1531,9 @@ class PlayFileOrURLButton extends StatelessWidget {
                   await Navigator.of(ctx).maybePop();
                   final result = await showInput(
                     context,
-                    Language.instance.PLAY_URL,
-                    Language.instance.PLAY_URL_SUBTITLE,
-                    Language.instance.PLAY,
+                    Localization.instance.PLAY_URL,
+                    Localization.instance.PLAY_URL_SUBTITLE,
+                    Localization.instance.PLAY,
                     (value) {
                       final parser = URIParser(value);
                       if (!parser.validate()) {
@@ -1555,7 +1555,7 @@ class PlayFileOrURLButton extends StatelessWidget {
                   child: const Icon(Icons.link),
                 ),
                 title: Text(
-                  Language.instance.URL,
+                  Localization.instance.URL,
                   style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
                 ),
               ),
@@ -1575,7 +1575,7 @@ class ReadFileOrURLMetadataButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      tooltip: Language.instance.READ_METADATA,
+      tooltip: Localization.instance.READ_METADATA,
       icon: const Icon(Icons.code),
       iconSize: 20.0,
       splashRadius: 18.0,
@@ -1606,17 +1606,17 @@ class MobileGridSpanButton extends StatelessWidget {
         Future<void> Function(int?) onChanged;
         switch (path) {
           case kAlbumsPath:
-            title = Language.instance.MOBILE_ALBUM_GRID_SIZE;
+            title = Localization.instance.MOBILE_ALBUM_GRID_SIZE;
             groupValue = Configuration.instance.mobileAlbumGridSpan;
             onChanged = (value) => Configuration.instance.set(mobileAlbumGridSpan: value);
             break;
           case kArtistsPath:
-            title = Language.instance.MOBILE_ARTIST_GRID_SIZE;
+            title = Localization.instance.MOBILE_ARTIST_GRID_SIZE;
             groupValue = Configuration.instance.mobileArtistGridSpan;
             onChanged = (value) => Configuration.instance.set(mobileArtistGridSpan: value);
             break;
           case kGenresPath:
-            title = Language.instance.MOBILE_GENRE_GRID_SIZE;
+            title = Localization.instance.MOBILE_GENRE_GRID_SIZE;
             groupValue = Configuration.instance.mobileGenreGridSpan;
             onChanged = (value) => Configuration.instance.set(mobileGenreGridSpan: value);
             break;
@@ -1680,7 +1680,7 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                 },
                 leading: const Icon(Icons.play_arrow),
                 title: Text(
-                  Language.instance.PLAY_ALL,
+                  Localization.instance.PLAY_ALL,
                   style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
               ),
@@ -1691,7 +1691,7 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                 },
                 leading: const Icon(Icons.shuffle),
                 title: Text(
-                  Language.instance.SHUFFLE,
+                  Localization.instance.SHUFFLE,
                   style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
               ),
@@ -1702,7 +1702,7 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                 },
                 leading: const Icon(Icons.file_open),
                 title: Text(
-                  Language.instance.OPEN_FILE_OR_URL,
+                  Localization.instance.OPEN_FILE_OR_URL,
                   style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
               ),
@@ -1713,7 +1713,7 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                 },
                 leading: const Icon(Icons.code),
                 title: Text(
-                  Language.instance.READ_METADATA,
+                  Localization.instance.READ_METADATA,
                   style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
               ),
@@ -1724,7 +1724,7 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                 },
                 leading: const Icon(Icons.settings),
                 title: Text(
-                  Language.instance.SETTINGS,
+                  Localization.instance.SETTINGS,
                   style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
               ),
@@ -1735,7 +1735,7 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                 },
                 leading: const Icon(Icons.info),
                 title: Text(
-                  Language.instance.ABOUT,
+                  Localization.instance.ABOUT,
                   style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
               ),
@@ -1762,13 +1762,13 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                   context: context,
                   builder: (ctx) => SimpleDialog(
                     title: Text(
-                      Language.instance.OPEN_FILE_OR_URL,
+                      Localization.instance.OPEN_FILE_OR_URL,
                     ),
                     children: [
                       ListTile(
                         onTap: () async {
                           final file = await pickFile(
-                            label: Language.instance.MEDIA_FILES,
+                            label: Localization.instance.MEDIA_FILES,
                             extensions: MediaLibrary.instance.supportedFileTypes,
                           );
                           if (file != null) {
@@ -1782,7 +1782,7 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                           child: const Icon(Icons.folder),
                         ),
                         title: Text(
-                          Language.instance.FILE,
+                          Localization.instance.FILE,
                           style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
                         ),
                       ),
@@ -1791,9 +1791,9 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                           await Navigator.of(ctx).maybePop();
                           final result = await showInput(
                             context,
-                            Language.instance.PLAY_URL,
-                            Language.instance.PLAY_URL_SUBTITLE,
-                            Language.instance.PLAY,
+                            Localization.instance.PLAY_URL,
+                            Localization.instance.PLAY_URL_SUBTITLE,
+                            Localization.instance.PLAY,
                             (value) {
                               final parser = URIParser(value);
                               if (!parser.validate()) {
@@ -1815,7 +1815,7 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                           child: const Icon(Icons.link),
                         ),
                         title: Text(
-                          Language.instance.URL,
+                          Localization.instance.URL,
                           style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
                         ),
                       ),

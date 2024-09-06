@@ -11,7 +11,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:synchronized/synchronized.dart';
 
 import 'package:harmonoid/api/lyrics_api.dart';
-import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/extensions/media_player_state.dart';
@@ -256,7 +256,7 @@ class LyricsNotifier extends ChangeNotifier {
         actionButtons: [
           NotificationActionButton(
             key: _kNotificationHideButtonKey,
-            label: Language.instance.HIDE,
+            label: Localization.instance.HIDE,
           ),
         ],
       );

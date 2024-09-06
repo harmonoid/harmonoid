@@ -5,16 +5,16 @@ import 'package:flutter/services.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/now_playing_visuals_notifier.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
-import 'package:harmonoid/ui/harmonoid.dart';
 import 'package:harmonoid/ui/exception.dart';
+import 'package:harmonoid/ui/harmonoid.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/window_lifecycle.dart';
@@ -94,8 +94,8 @@ Future<void> main(List<String> args) async {
     );
     await LyricsNotifier.ensureInitialized();
     await NowPlayingVisualsNotifier.ensureInitialized();
-    await Language.ensureInitialized(
-      language: Configuration.instance.language,
+    await Localization.ensureInitialized(
+      localization: Configuration.instance.localization,
     );
     runApp(const Harmonoid());
   } catch (exception, stacktrace) {

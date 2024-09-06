@@ -2,18 +2,18 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/extensions/track.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
+import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/ui/media_library/tracks/track_item.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/debouncer.dart';
@@ -216,7 +216,7 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 8.0),
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              Language.instance.TRACK,
+                              Localization.instance.TRACK,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.titleSmall,
@@ -232,7 +232,7 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 8.0),
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              Language.instance.ARTISTS,
+                              Localization.instance.ARTISTS,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.titleSmall,
@@ -248,7 +248,7 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 8.0),
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              Language.instance.ALBUM,
+                              Localization.instance.ALBUM,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.titleSmall,
@@ -264,7 +264,7 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 8.0),
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              Language.instance.GENRES,
+                              Localization.instance.GENRES,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.titleSmall,
@@ -280,7 +280,7 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 8.0),
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              Language.instance.YEAR,
+                              Localization.instance.YEAR,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.titleSmall,

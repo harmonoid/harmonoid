@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/settings/settings_section.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
@@ -12,8 +12,8 @@ class StatsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SettingsSection(
-      title: Language.instance.SETTINGS_SECTION_STATS_TITLE,
-      subtitle: Language.instance.SETTINGS_SECTION_STATS_SUBTITLE,
+      title: Localization.instance.SETTINGS_SECTION_STATS_TITLE,
+      subtitle: Localization.instance.SETTINGS_SECTION_STATS_SUBTITLE,
       children: [
         Container(
           width: double.infinity,
@@ -34,8 +34,8 @@ class StatsSection extends StatelessWidget {
                 dividerThickness: 1.0,
                 columns: [
                   const DataColumn(label: SizedBox(width: 32.0)),
-                  DataColumn(label: Text(Language.instance.TYPE)),
-                  DataColumn(label: Text(Language.instance.COUNT)),
+                  DataColumn(label: Text(Localization.instance.TYPE)),
+                  DataColumn(label: Text(Localization.instance.COUNT)),
                 ],
                 rows: [
                   DataRow(
@@ -48,7 +48,7 @@ class StatsSection extends StatelessWidget {
                           child: const Icon(Icons.music_note),
                         ),
                       ),
-                      DataCell(Text(Language.instance.TRACKS)),
+                      DataCell(Text(Localization.instance.TRACKS)),
                       DataCell(Text(mediaLibrary.tracks.length.toString())),
                     ],
                   ),
@@ -62,7 +62,7 @@ class StatsSection extends StatelessWidget {
                           child: const Icon(Icons.album),
                         ),
                       ),
-                      DataCell(Text(Language.instance.ALBUMS)),
+                      DataCell(Text(Localization.instance.ALBUMS)),
                       DataCell(Text(mediaLibrary.albums.length.toString())),
                     ],
                   ),
@@ -76,7 +76,7 @@ class StatsSection extends StatelessWidget {
                           child: const Icon(Icons.person),
                         ),
                       ),
-                      DataCell(Text(Language.instance.ARTISTS)),
+                      DataCell(Text(Localization.instance.ARTISTS)),
                       DataCell(Text(mediaLibrary.artists.length.toString())),
                     ],
                   ),
@@ -90,7 +90,7 @@ class StatsSection extends StatelessWidget {
                           child: const Icon(Icons.piano),
                         ),
                       ),
-                      DataCell(Text(Language.instance.GENRES)),
+                      DataCell(Text(Localization.instance.GENRES)),
                       DataCell(Text(mediaLibrary.genres.length.toString())),
                     ],
                   ),

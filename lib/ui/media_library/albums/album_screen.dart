@@ -3,9 +3,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/utils/constants.dart';
@@ -27,9 +27,9 @@ class _AlbumScreenState extends State<AlbumScreen> {
   String get _title => widget.album.album.isEmpty ? kDefaultAlbum : widget.album.album;
   String get _subtitle => isDesktop
       ? [
-          '${Language.instance.ARTIST}: ${widget.album.albumArtist.isEmpty ? kDefaultArtist : widget.album.albumArtist}',
-          '${Language.instance.YEAR}: ${widget.album.year == 0 ? kDefaultYear : widget.album.year}',
-          '${Language.instance.TRACKS}: ${_tracks.length}'
+          '${Localization.instance.ARTIST}: ${widget.album.albumArtist.isEmpty ? kDefaultArtist : widget.album.albumArtist}',
+          '${Localization.instance.YEAR}: ${widget.album.year == 0 ? kDefaultYear : widget.album.year}',
+          '${Localization.instance.TRACKS}: ${_tracks.length}'
         ].join('\n')
       : [
           widget.album.albumArtist.isEmpty ? kDefaultArtist : widget.album.albumArtist,
@@ -87,8 +87,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
       listItemCount: _tracks.length,
       listItemDisplayIndex: true,
       listItemHeaders: [
-        Text(Language.instance.TRACK),
-        Text(Language.instance.ARTISTS),
+        Text(Localization.instance.TRACK),
+        Text(Localization.instance.ARTISTS),
       ],
       listItemIndexBuilder: (context, i) => _tracks[i].trackNumber == 0 ? kDefaultTrackNumber : _tracks[i].trackNumber,
       listItemBuilder: (context, i) {
@@ -165,10 +165,10 @@ class _AlbumScreenState extends State<AlbumScreen> {
         },
       },
       labels: {
-        Icons.play_arrow: Language.instance.PLAY_NOW,
-        Icons.shuffle: Language.instance.SHUFFLE,
-        Icons.playlist_add: Language.instance.ADD_TO_NOW_PLAYING,
-        Icons.delete: Language.instance.DELETE,
+        Icons.play_arrow: Localization.instance.PLAY_NOW,
+        Icons.shuffle: Localization.instance.SHUFFLE,
+        Icons.playlist_add: Localization.instance.ADD_TO_NOW_PLAYING,
+        Icons.delete: Localization.instance.DELETE,
       },
     );
   }

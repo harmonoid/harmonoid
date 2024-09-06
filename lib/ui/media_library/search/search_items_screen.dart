@@ -2,12 +2,12 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:media_library/media_library.dart';
 
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/extensions/album.dart';
 import 'package:harmonoid/extensions/artist.dart';
 import 'package:harmonoid/extensions/genre.dart';
 import 'package:harmonoid/extensions/track.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/ui/media_library/albums/album_item.dart';
 import 'package:harmonoid/ui/media_library/artists/artist_item.dart';
@@ -140,7 +140,7 @@ class SearchItemsScreenState extends State<SearchItemsScreen> {
 
     return ContentScreen(
       caption: kCaption,
-      title: Language.instance.RESULTS_FOR_QUERY.replaceAll('"QUERY"', widget.query),
+      title: Localization.instance.RESULTS_FOR_QUERY.replaceAll('"QUERY"', widget.query),
       content: scrollViewBuilder,
     );
   }

@@ -3,9 +3,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/ui/media_library/genres/constants.dart';
 import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
@@ -28,7 +28,7 @@ class GenreScreen extends StatefulWidget {
 class _GenreScreenState extends State<GenreScreen> {
   late final _tracks = widget.tracks;
   String get _title => widget.genre.genre.isNotEmpty ? widget.genre.genre : kDefaultGenre;
-  String get _subtitle => isDesktop ? '${Language.instance.TRACKS}: ${_tracks.length}' : Language.instance.N_TRACKS.replaceAll('"N"', _tracks.length.toString());
+  String get _subtitle => isDesktop ? '${Localization.instance.TRACKS}: ${_tracks.length}' : Localization.instance.N_TRACKS.replaceAll('"N"', _tracks.length.toString());
 
   @override
   Widget build(BuildContext context) {
@@ -100,8 +100,8 @@ class _GenreScreenState extends State<GenreScreen> {
       listItemCount: _tracks.length,
       listItemDisplayIndex: true,
       listItemHeaders: [
-        Text(Language.instance.TRACK),
-        Text(Language.instance.ALBUM),
+        Text(Localization.instance.TRACK),
+        Text(Localization.instance.ALBUM),
       ],
       listItemIndexBuilder: (context, i) => _tracks[i].trackNumber == 0 ? kDefaultTrackNumber : _tracks[i].trackNumber,
       listItemBuilder: (context, i) {
@@ -177,9 +177,9 @@ class _GenreScreenState extends State<GenreScreen> {
         Icons.playlist_add: (_) => MediaPlayer.instance.add(_tracks.map((e) => e.toPlayable()).toList()),
       },
       labels: {
-        Icons.play_arrow: Language.instance.PLAY_NOW,
-        Icons.shuffle: Language.instance.SHUFFLE,
-        Icons.playlist_add: Language.instance.ADD_TO_NOW_PLAYING,
+        Icons.play_arrow: Localization.instance.PLAY_NOW,
+        Icons.shuffle: Localization.instance.SHUFFLE,
+        Icons.playlist_add: Localization.instance.ADD_TO_NOW_PLAYING,
       },
     );
   }
