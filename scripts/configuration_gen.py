@@ -10,7 +10,7 @@ def to_upper_camel_case(snake_str):
     return "".join(x.title() for x in snake_str.split("_"))
 
 
-def generate_configuration(json_data):
+def configuration_gen(json_data):
     class_content = []
     getter_methods = []
     set_method_content = []
@@ -52,7 +52,8 @@ def generate_configuration(json_data):
         "  ConfigurationBase({required this.directory, required this.db});",
         "",
         "\n".join(getter_methods),
-        "\n  Future<void> set({",
+        "",
+        "  Future<void> set({",
         ",\n".join(
             f"    {item['dartType']}? {to_camel_case(item['key'].lower())}"
             for item in json_data
@@ -62,7 +63,7 @@ def generate_configuration(json_data):
         "\n".join(set_method_content),
         "  }",
         "",
-        "\n  Future<Map<String, dynamic>> getDefaults() async {",
+        "  Future<Map<String, dynamic>> getDefaults() async {",
         "    return {",
         "\n".join(get_defaults_method_content),
         "    };",
@@ -85,4 +86,4 @@ if __name__ == "__main__":
     output_file = "../lib/core/configuration/configuration.g.dart"
     input = open(input_file, "r")
     output = open(output_file, "w")
-    output.write(generate_configuration(json.loads(input.read())))
+    output.write(configuration_gen(json.loads(input.read())))
