@@ -76,7 +76,7 @@ flutter:
     - assets/fonts/
     - assets/icons/
     - assets/images/
-    - assets/translations/
-    - assets/translations/translations/
+    - assets/localizations/
+    - assets/localizations/localizations/
     - assets/vectors/
     - assets/visuals/

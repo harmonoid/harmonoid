@@ -7,8 +7,9 @@ class LocalizationBase extends Values {
   late LocalizationData current;
 
   Future<void> set({required LocalizationData value}) async {
-    final data = await rootBundle.loadString('assets/translations/translations/${value.code}.json');
+    final data = await rootBundle.loadString('assets/localizations/localizations/${value.code}.json');
     final map = json.decode(data);
+    current = value;
     ABOUT = map['ABOUT']!;
     ADD = map['ADD']!;
     ADDED_M_OF_N_FILES = map['ADDED_M_OF_N_FILES']!;
