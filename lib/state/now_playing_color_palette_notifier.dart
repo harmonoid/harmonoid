@@ -30,7 +30,7 @@ class NowPlayingColorPaletteNotifier extends ChangeNotifier {
     bool force = false,
   }) {
     return _lock.synchronized(() async {
-      if (Configuration.instance.nowPlayingBarColorPalette) {
+      if (Configuration.instance.desktopNowPlayingBarColorPalette) {
         if (_current != playable || force) {
           _current = playable;
           try {

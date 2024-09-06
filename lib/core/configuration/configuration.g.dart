@@ -13,6 +13,7 @@ class ConfigurationBase {
   ConfigurationBase({required this.directory, required this.db});
 
   bool get audioFormatDisplay => _audioFormatDisplay!;
+  bool get desktopNowPlayingBarColorPalette => _desktopNowPlayingBarColorPalette!;
   int get desktopNowPlayingCarousel => _desktopNowPlayingCarousel!;
   int get desktopNowPlayingHighlightedLyricsSize => _desktopNowPlayingHighlightedLyricsSize!;
   bool get desktopNowPlayingLyrics => _desktopNowPlayingLyrics!;
@@ -53,6 +54,7 @@ class ConfigurationBase {
 
   Future<void> set({
     bool? audioFormatDisplay,
+    bool? desktopNowPlayingBarColorPalette,
     int? desktopNowPlayingCarousel,
     int? desktopNowPlayingHighlightedLyricsSize,
     bool? desktopNowPlayingLyrics,
@@ -94,6 +96,10 @@ class ConfigurationBase {
     if (audioFormatDisplay != null) {
       _audioFormatDisplay = audioFormatDisplay;
       await db.setValue(kKeyAudioFormatDisplay, kTypeBoolean, booleanValue: audioFormatDisplay);
+    }
+    if (desktopNowPlayingBarColorPalette != null) {
+      _desktopNowPlayingBarColorPalette = desktopNowPlayingBarColorPalette;
+      await db.setValue(kKeyDesktopNowPlayingBarColorPalette, kTypeBoolean, booleanValue: desktopNowPlayingBarColorPalette);
     }
     if (desktopNowPlayingCarousel != null) {
       _desktopNowPlayingCarousel = desktopNowPlayingCarousel;
@@ -248,6 +254,7 @@ class ConfigurationBase {
   Future<Map<String, dynamic>> getDefaults() async {
     return {
       /* Boolean */ kKeyAudioFormatDisplay: true,
+      /* Boolean */ kKeyDesktopNowPlayingBarColorPalette: true,
       /* Integer */ kKeyDesktopNowPlayingCarousel: 0,
       /* Integer */ kKeyDesktopNowPlayingHighlightedLyricsSize: 32,
       /* Boolean */ kKeyDesktopNowPlayingLyrics: true,
@@ -289,6 +296,7 @@ class ConfigurationBase {
   }
 
   bool? _audioFormatDisplay;
+  bool? _desktopNowPlayingBarColorPalette;
   int? _desktopNowPlayingCarousel;
   int? _desktopNowPlayingHighlightedLyricsSize;
   bool? _desktopNowPlayingLyrics;
@@ -331,6 +339,7 @@ class ConfigurationBase {
 // ----- Keys -----
 
 const kKeyAudioFormatDisplay = 'AUDIO_FORMAT_DISPLAY';
+const kKeyDesktopNowPlayingBarColorPalette = 'DESKTOP_NOW_PLAYING_BAR_COLOR_PALETTE';
 const kKeyDesktopNowPlayingCarousel = 'DESKTOP_NOW_PLAYING_CAROUSEL';
 const kKeyDesktopNowPlayingHighlightedLyricsSize = 'DESKTOP_NOW_PLAYING_HIGHLIGHTED_LYRICS_SIZE';
 const kKeyDesktopNowPlayingLyrics = 'DESKTOP_NOW_PLAYING_LYRICS';

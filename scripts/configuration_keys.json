@@ -1,5 +1,6 @@
 [
   {"key": "AUDIO_FORMAT_DISPLAY", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
+  {"key": "DESKTOP_NOW_PLAYING_BAR_COLOR_PALETTE", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
   {"key": "DESKTOP_NOW_PLAYING_CAROUSEL", "serializedType": "Integer", "dartType": "int", "default": "0"},
   {"key": "DESKTOP_NOW_PLAYING_HIGHLIGHTED_LYRICS_SIZE", "serializedType": "Integer", "dartType": "int", "default": "32"},
   {"key": "DESKTOP_NOW_PLAYING_LYRICS", "serializedType": "Boolean", "dartType": "bool", "default": "true"},

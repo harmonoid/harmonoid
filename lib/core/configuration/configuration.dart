@@ -70,6 +70,7 @@ class Configuration extends ConfigurationBase {
     }
 
     _audioFormatDisplay = await db.getBoolean(kKeyAudioFormatDisplay);
+    _desktopNowPlayingBarColorPalette = await db.getBoolean(kKeyDesktopNowPlayingBarColorPalette);
     _desktopNowPlayingCarousel = await db.getInteger(kKeyDesktopNowPlayingCarousel);
     _desktopNowPlayingHighlightedLyricsSize = await db.getInteger(kKeyDesktopNowPlayingHighlightedLyricsSize);
     _desktopNowPlayingLyrics = await db.getBoolean(kKeyDesktopNowPlayingLyrics);
