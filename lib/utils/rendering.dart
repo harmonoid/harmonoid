@@ -377,14 +377,14 @@ Future<T?> showSelection<T>(BuildContext context, String title, List<T> values, 
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: values
                           .map(
-                            (size) => ListItem(
+                            (value) => ListItem(
                               leading: Radio(
-                                value: size,
+                                value: value,
                                 groupValue: result ?? selected,
                                 onChanged: set,
                               ),
-                              onTap: () => set(size),
-                              title: text(size),
+                              onTap: () => set(value),
+                              title: text(value),
                             ),
                           )
                           .toList(),

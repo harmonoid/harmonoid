@@ -30,7 +30,7 @@ class LocalizationData {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is LocalizationData && other.code == code && other.name == name && other.country == country;
+    return other is LocalizationData && other.code == code;
   }
 
   factory LocalizationData.fromJson(dynamic json) => LocalizationData(
