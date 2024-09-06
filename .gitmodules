@@ -2,7 +2,7 @@
 	path = external/smtc-win32
 	url = https://github.com/harmonoid/smtc-win32.git
 [submodule "assets/translations"]
-	path = assets/translations
+	path = assets/localizations
 	url = https://github.com/harmonoid/translations.git
 [submodule "external/tag_reader"]
 	path = external/tag_reader
