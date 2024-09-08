@@ -26,7 +26,7 @@ class PlaylistImage extends StatelessWidget {
           Expanded(
             child: Image(
               image: cover(
-                uri: entries[0].uri,
+                playlistEntry: entries[0],
                 cacheWidth: small ? 64 : null,
               ),
               fit: BoxFit.cover,
@@ -42,7 +42,7 @@ class PlaylistImage extends StatelessWidget {
                 Expanded(
                   child: Image(
                     image: cover(
-                      uri: entries[1].uri,
+                      playlistEntry: entries[1],
                       cacheWidth: small ? 64 : null,
                     ),
                     fit: BoxFit.cover,
@@ -52,7 +52,7 @@ class PlaylistImage extends StatelessWidget {
                 Expanded(
                   child: Image(
                     image: cover(
-                      uri: entries[2].uri,
+                      playlistEntry: entries[2],
                       cacheWidth: small ? 64 : null,
                     ),
                     fit: BoxFit.cover,
@@ -72,7 +72,7 @@ class PlaylistImage extends StatelessWidget {
           Expanded(
             child: Image(
               image: cover(
-                uri: entries[0].uri,
+                playlistEntry: entries[0],
                 cacheWidth: small ? 64 : null,
               ),
               fit: BoxFit.cover,
@@ -82,7 +82,7 @@ class PlaylistImage extends StatelessWidget {
           Expanded(
             child: Image(
               image: cover(
-                uri: entries[1].uri,
+                playlistEntry: entries[1],
                 cacheWidth: small ? 64 : null,
               ),
               fit: BoxFit.cover,
@@ -93,7 +93,7 @@ class PlaylistImage extends StatelessWidget {
     } else if (entries.length == 1) {
       return Image(
         image: cover(
-          uri: entries[0].uri,
+          playlistEntry: entries[0],
           cacheWidth: small ? 64 : null,
         ),
         fit: BoxFit.cover,

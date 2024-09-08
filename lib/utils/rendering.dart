@@ -108,20 +108,47 @@ double get navigationBarHeight => isMaterial3 ? 80.0 : kBottomNavigationBarHeigh
 
 String label(String value) => isMaterial3OrGreater ? value : value.toUpperCase();
 
-ImageProvider cover({MediaLibraryItem? item, String? uri, int? cacheWidth, int? cacheHeight}) {
+ImageProvider cover({
+  MediaLibraryItem? item,
+  PlaylistEntry? playlistEntry,
+  String? uri,
+  int? cacheWidth,
+  int? cacheHeight,
+}) {
   if (cacheWidth != null) cacheWidth *= 2;
   if (cacheHeight != null) cacheHeight *= 2;
 
   final Future<File?> file;
   if (item != null) {
     file = MediaLibrary.instance.coverFileForMediaLibraryItem(item, fallback: Configuration.instance.mediaLibraryCoverFallback);
+  } else if (playlistEntry != null) {
+    if (playlistEntry.uri != null) {
+      file = MediaLibrary.instance.coverFileForUri(playlistEntry.uri!, fallback: Configuration.instance.mediaLibraryCoverFallback);
+    } else {
+      file = () async {
+        return MediaLibrary.instance.coverFileForMediaLibraryItem((await MediaLibrary.instance.db.selectTrackByHash(playlistEntry.hash!))!, fallback: Configuration.instance.mediaLibraryCoverFallback);
+      }();
+    }
   } else if (uri != null) {
     file = MediaLibrary.instance.coverFileForUri(uri, fallback: Configuration.instance.mediaLibraryCoverFallback);
   } else {
-    throw ArgumentError('Both item & uri are null.');
+    throw ArgumentError('None of [item], [playlistEntry] or [uri] is provided.');
   }
 
-  final key = item != null ? '${item.runtimeType}-${item.hashCode}' : '$uri';
+  final String key;
+  if (item != null) {
+    key = '${item.runtimeType}-${item.hashCode}';
+  } else if (playlistEntry != null) {
+    if (playlistEntry.uri != null) {
+      key = '${playlistEntry.runtimeType}-${playlistEntry.uri}';
+    } else {
+      key = '${playlistEntry.runtimeType}-${playlistEntry.hash}';
+    }
+  } else if (uri != null) {
+    key = uri;
+  } else {
+    throw ArgumentError('None of [item], [playlistEntry] or [uri] is provided.');
+  }
 
   final result = AsyncFileImage.cache[key];
 
@@ -476,7 +503,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
           ),
         ),
       ),
-      if (Theme.of(context).platform == TargetPlatform.windows || Platform.isLinux || Platform.isMacOS)
+      if (Platform.isLinux || Platform.isMacOS || Platform.isWindows)
         PopupMenuItem<int>(
           value: 5,
           child: ListTile(
@@ -487,16 +514,17 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
             ),
           ),
         ),
-      PopupMenuItem<int>(
-        value: 6,
-        child: ListTile(
-          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.edit_24_regular : Icons.edit),
-          title: Text(
-            Localization.instance.EDIT_DETAILS,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
-      ),
+      // TODO: Missing implementation.
+      // PopupMenuItem<int>(
+      //   value: 6,
+      //   child: ListTile(
+      //     leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.edit_24_regular : Icons.edit),
+      //     title: Text(
+      //       Localization.instance.EDIT_DETAILS,
+      //       style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+      //     ),
+      //   ),
+      // ),
       PopupMenuItem<int>(
         value: 4,
         child: ListTile(
@@ -741,6 +769,7 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
     case 5:
       File(track.uri).explore_();
       break;
+    // TODO: Missing implementation.
     // case 6:
     //   await Navigator.of(context).push(MaterialRoute(builder: (context) => EditDetailsScreen(track: track)));
     //   break;
