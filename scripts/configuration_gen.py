@@ -25,10 +25,17 @@ def configuration_gen(json_data):
         getter_methods.append(
             f"  {dart_type} get {camel_case_key} => _{camel_case_key}!;"
         )
+
+        value = camel_case_key
+        if item['serializedType'] == 'Integer' and item['dartType'] != 'int':
+            value = f'{camel_case_key}.index'
+        if item['serializedType'] == 'Json' and item['dartType'].startswith('Set<') and item['dartType'].endswith('>'):
+            value = f'{camel_case_key}.toJson()'
+
         set_method_content.append(
             f"""    if ({camel_case_key} != null) {{
       _{camel_case_key} = {camel_case_key};
-      await db.setValue(kKey{to_upper_camel_case(key)}, kType{item['serializedType']}, {item['serializedType'].lower()}Value: {f'{camel_case_key}.index' if item['serializedType'] == 'Integer' and item['dartType'] != 'int' else camel_case_key});
+      await db.setValue(kKey{to_upper_camel_case(key)}, kType{item['serializedType']}, {item['serializedType'].lower()}Value: {value});
     }}"""
         )
         get_defaults_method_content.append(
