@@ -825,6 +825,7 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
         Localization.instance.ALBUM_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', album.album),
       );
       if (result) {
+        await MediaLibrary.instance.remove(tracks);
         if (isDesktop) {
           bool result;
           try {
