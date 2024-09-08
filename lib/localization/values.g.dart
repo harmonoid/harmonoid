@@ -66,8 +66,7 @@ class Values {
   late String FILE;
   late String FILE_INFORMATION;
   late String FILE_PATH_OR_URL;
-  late String FOLDERS_NOT_FOUND;
-  late String FOLDERS_NOT_FOUND_SUBTITLE;
+  late String FOLDER;
   late String FOLDER_NOT_FOUND;
   late String FULLSCREEN;
   late String GENRE;
@@ -89,6 +88,8 @@ class Values {
   late String MATERIAL_DESIGN;
   late String MEDIA_FILES;
   late String MEDIA_LIBRARY;
+  late String MEDIA_LIBRARY_MISSING_FOLDERS_SUBTITLE;
+  late String MEDIA_LIBRARY_MISSING_FOLDERS_TITLE;
   late String MEDIA_LIBRARY_NO_ITEMS_SUBTITLE;
   late String MEDIA_LIBRARY_NO_ITEMS_TITLE;
   late String MEDIA_LIBRARY_REFRESHING_DIALOG_SUBTITLE;
