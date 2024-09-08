@@ -3,6 +3,7 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
+import 'package:harmonoid/ui/media_library/media_library_missing_directories_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
@@ -36,6 +37,12 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
   String? _current;
 
   String get _path => GoRouterState.of(context).uri.pathSegments.last;
+
+  @override
+  void initState() {
+    super.initState();
+    MediaLibraryMissingDirectoriesScreen.showIfRequired(context);
+  }
 
   @override
   void didChangeDependencies() {

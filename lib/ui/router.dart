@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,7 @@ import 'package:harmonoid/ui/media_library/artists/artist_screen.dart';
 import 'package:harmonoid/ui/media_library/artists/artists_screen.dart';
 import 'package:harmonoid/ui/media_library/genres/genre_screen.dart';
 import 'package:harmonoid/ui/media_library/genres/genres_screen.dart';
+import 'package:harmonoid/ui/media_library/media_library_missing_directories_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_screen.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_screen.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlists_screen.dart';
@@ -96,6 +99,15 @@ class PlaylistPathExtra {
     required this.playlist,
     required this.entries,
     required this.palette,
+  });
+}
+
+const String kMissingDirectoriesPath = 'missing-directories';
+
+class MissingDirectoriesPathExtra {
+  final List<Directory> directories;
+  const MissingDirectoriesPathExtra({
+    required this.directories,
   });
 }
 
@@ -262,6 +274,19 @@ final router = GoRouter(
                     playlist: extra.playlist,
                     entries: extra.entries,
                     palette: extra.palette,
+                  ),
+                );
+              },
+            ),
+            GoRoute(
+              path: kMissingDirectoriesPath,
+              pageBuilder: (context, state) {
+                final extra = state.extra as MissingDirectoriesPathExtra;
+                return buildPageWithDefaultTransition(
+                  context: context,
+                  state: state,
+                  child: MediaLibraryMissingDirectoriesScreen(
+                    directories: extra.directories,
                   ),
                 );
               },
