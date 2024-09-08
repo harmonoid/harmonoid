@@ -29,8 +29,10 @@ def localization():
 
             if value is not None:
                 localization[key] = value
+                keys.append(key)
             else:
                 localization.pop(key, None)
+                keys.remove(key)
 
             with open(file_path, "w", encoding="utf_8", errors="ignore") as file:
                 file.write(json.dumps(dict(sorted(localization.items())), indent=2, ensure_ascii=False) + "\n")
@@ -44,7 +46,7 @@ def localization():
                     "part of 'localization.dart';",
                     "",
                     "class Values {",
-                    "\n".join(f"  late String {key};" for key in keys),
+                    "\n".join(f"  late String {key};" for key in sorted(keys)),
                     "}",
                     "",
                 ]
@@ -64,7 +66,7 @@ def localization():
                     "    final data = await rootBundle.loadString('assets/localizations/localizations/${value.code}.json');",
                     "    final map = json.decode(data);",
                     "    current = value;",
-                    "\n".join(f"    {key} = map['{key}']!;" for key in keys),
+                    "\n".join(f"    {key} = map['{key}']!;" for key in sorted(keys)),
                     "  }",
                     "}",
                     "",
