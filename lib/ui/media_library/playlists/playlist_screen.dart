@@ -85,10 +85,12 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
       listItemBuilder: (context, i) {
         if (isDesktop) {
           return [
-            Text(
-              _entries[i].title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            IgnorePointer(
+              child: Text(
+                _entries[i].title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ];
         }

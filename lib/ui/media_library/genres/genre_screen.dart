@@ -107,10 +107,12 @@ class _GenreScreenState extends State<GenreScreen> {
       listItemBuilder: (context, i) {
         if (isDesktop) {
           return [
-            Text(
-              _tracks[i].title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            IgnorePointer(
+              child: Text(
+                _tracks[i].title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             HyperLink(
               text: TextSpan(

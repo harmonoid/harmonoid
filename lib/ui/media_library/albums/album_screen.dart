@@ -94,10 +94,12 @@ class _AlbumScreenState extends State<AlbumScreen> {
       listItemBuilder: (context, i) {
         if (isDesktop) {
           return [
-            Text(
-              _tracks[i].title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            IgnorePointer(
+              child: Text(
+                _tracks[i].title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             HyperLink(
               text: TextSpan(

@@ -1,13 +1,13 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:harmonoid/ui/media_library/albums/album_screen.dart';
-import 'package:harmonoid/utils/open_container.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/ui/media_library/albums/album_screen.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
+import 'package:harmonoid/utils/open_container.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
