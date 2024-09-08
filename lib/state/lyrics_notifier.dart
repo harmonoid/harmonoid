@@ -5,17 +5,18 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:lrc/lrc.dart';
-import 'package:media_library/media_library.dart';
+import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:synchronized/synchronized.dart';
 
 import 'package:harmonoid/api/lyrics_api.dart';
-import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
+import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/extensions/playable.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/models/lyric.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
@@ -109,7 +110,25 @@ class LyricsNotifier extends ChangeNotifier {
     lyrics.clear();
     notifyListeners();
 
-    // 1. LRC.
+    // 1. Tags.
+
+    debugPrint('LyricsNotifier: retrieve: Tags: ${playable.uri}');
+    try {
+      final track = await MediaLibrary.instance.db.selectTrackByUri(playable.uri);
+      if (track != null && Lrc.isValid(track.lyrics)) {
+        final result = Lrc.parse(track.lyrics).lyrics;
+        lyrics.addAll(result.map((e) => Lyric(time: e.timestamp.inMilliseconds, words: e.lyrics)).toList());
+        notifyListeners();
+        return;
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+      lyrics.clear();
+      notifyListeners();
+    }
+
+    // 2. LRC.
     debugPrint('LyricsNotifier: retrieve: LRC: ${playable.uri}');
     try {
       final lrc = lrcFromUri(playable.uri);
@@ -129,7 +148,7 @@ class LyricsNotifier extends ChangeNotifier {
       notifyListeners();
     }
 
-    // 2. Directory.
+    // 3. Directory.
     debugPrint('LyricsNotifier: retrieve: Directory: ${playable.uri}');
     try {
       if (Configuration.instance.lrcFromDirectory) {
@@ -156,7 +175,7 @@ class LyricsNotifier extends ChangeNotifier {
       notifyListeners();
     }
 
-    // 3. API.
+    // 4. API.
     debugPrint('LyricsNotifier: retrieve: API: ${playable.uri}');
     try {
       final result = await LyricsApi.instance.lyrics(playable.lyricsApiName);
@@ -201,7 +220,7 @@ class LyricsNotifier extends ChangeNotifier {
   }
 
   /// Returns target `.LRC` [File].
-  File lrcFromUri(String uri) => File(join(directory.path, '${sha256.convert(utf8.encode(uri)).toString()}.PNG'));
+  File lrcFromUri(String uri) => File(join(directory.path, '${sha256.convert(utf8.encode(uri)).toString()}.LRC'));
 
   /// Initializes the notification.
   Future<void> initializeNotification() async {
