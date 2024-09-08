@@ -45,7 +45,7 @@
 ## Features
 
 - Efficient music library.
-- Fast tag parser.
+- Fast tag reader.
 - Material Design 3 & Material Design 2.
 - Light & dark themes.
 - Gapless playback.
