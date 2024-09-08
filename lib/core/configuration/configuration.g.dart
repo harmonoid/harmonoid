@@ -135,7 +135,7 @@ class ConfigurationBase {
     }
     if (mediaLibraryAlbumGroupingParameters != null) {
       _mediaLibraryAlbumGroupingParameters = mediaLibraryAlbumGroupingParameters;
-      await db.setValue(kKeyMediaLibraryAlbumGroupingParameters, kTypeJson, jsonValue: mediaLibraryAlbumGroupingParameters);
+      await db.setValue(kKeyMediaLibraryAlbumGroupingParameters, kTypeJson, jsonValue: mediaLibraryAlbumGroupingParameters.toJson());
     }
     if (mediaLibraryAlbumSortAscending != null) {
       _mediaLibraryAlbumSortAscending = mediaLibraryAlbumSortAscending;
@@ -163,7 +163,7 @@ class ConfigurationBase {
     }
     if (mediaLibraryDirectories != null) {
       _mediaLibraryDirectories = mediaLibraryDirectories;
-      await db.setValue(kKeyMediaLibraryDirectories, kTypeJson, jsonValue: mediaLibraryDirectories);
+      await db.setValue(kKeyMediaLibraryDirectories, kTypeJson, jsonValue: mediaLibraryDirectories.toJson());
     }
     if (mediaLibraryGenreSortAscending != null) {
       _mediaLibraryGenreSortAscending = mediaLibraryGenreSortAscending;

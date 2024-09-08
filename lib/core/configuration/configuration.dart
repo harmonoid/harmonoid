@@ -196,3 +196,11 @@ Future<String> getDefaultMediaLibraryDirectory() async {
   }
   throw UnsupportedError('Unsupported platform: ${Platform.operatingSystem}');
 }
+
+extension on Set<Directory> {
+  List<String> toJson() => map((e) => e.path).toList();
+}
+
+extension on Set<AlbumGroupingParameter> {
+  List<int> toJson() => map((e) => e.index).toList();
+}
