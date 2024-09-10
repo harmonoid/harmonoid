@@ -2,7 +2,6 @@
 
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class ExceptionApp extends StatelessWidget {
   final Object exception;
@@ -13,12 +12,9 @@ class ExceptionApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: createM2Theme(
-        context: context,
-        color: Colors.red.shade800,
-        mode: ThemeMode.light,
-      ),
-      themeMode: ThemeMode.light,
+      theme: createM2Theme(context: context, color: Colors.white, mode: ThemeMode.light),
+      darkTheme: createM2Theme(context: context, color: Colors.white, mode: ThemeMode.dark),
+      themeMode: ThemeMode.dark,
       home: ExceptionScreen(
         exception: exception,
         stacktrace: stacktrace,
@@ -27,166 +23,91 @@ class ExceptionApp extends StatelessWidget {
   }
 }
 
-class ExceptionScreen extends StatefulWidget {
+class ExceptionScreen extends StatelessWidget {
   final Object exception;
   final StackTrace stacktrace;
   const ExceptionScreen({super.key, required this.exception, required this.stacktrace});
 
-  @override
-  ExceptionScreenState createState() => ExceptionScreenState();
-}
-
-class ExceptionScreenState extends State<ExceptionScreen> {
-  final ScrollController _controller = ScrollController();
-  final ValueNotifier<EdgeInsetsDirectional> _padding = ValueNotifier(const EdgeInsetsDirectional.only(
-    start: 16.0,
-    bottom: 48.0,
-  ));
-
-  void listener() {
-    setState(() {
-      _padding.value = EdgeInsetsDirectional.only(
-        start: 16.0,
-        bottom: (48.0 * (1 - _controller.offset / (expandedHeight - kToolbarHeight - MediaQuery.of(context).padding.top))).clamp(
-          16.0,
-          48.0,
-        ),
-      );
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _controller.addListener(listener);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.removeListener(listener);
-    _controller.dispose();
-  }
-
-  double get toolbarHeight {
-    double captionHeight;
-    try {
-      captionHeight = WindowPlus.instance.captionHeight;
-    } catch (_) {
-      captionHeight = 0.0;
+  Widget spacer(BuildContext context) {
+    final variant = Theme.of(context).extension<LayoutVariantThemeExtension>()?.value;
+    if (variant == LayoutVariant.desktop) {
+      return const SizedBox(height: 32.0);
     }
-    return kToolbarHeight + captionHeight;
-  }
-
-  double get collapsedHeight {
-    double captionHeight;
-    try {
-      captionHeight = WindowPlus.instance.captionHeight;
-    } catch (_) {
-      captionHeight = 0.0;
+    if (variant == LayoutVariant.tablet) {
+      throw UnimplementedError();
     }
-    return kToolbarHeight + captionHeight;
+    if (variant == LayoutVariant.mobile) {
+      return const SizedBox(height: 16.0);
+    }
+    throw UnimplementedError();
   }
 
-  double get expandedHeight => 192.0;
+  EdgeInsets padding(BuildContext context) {
+    final variant = Theme.of(context).extension<LayoutVariantThemeExtension>()?.value;
+    if (variant == LayoutVariant.desktop) {
+      return const EdgeInsets.symmetric(horizontal: 64.0);
+    }
+    if (variant == LayoutVariant.tablet) {
+      throw UnimplementedError();
+    }
+    if (variant == LayoutVariant.mobile) {
+      return const EdgeInsets.symmetric(horizontal: 16.0);
+    }
+    throw UnimplementedError();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          CustomScrollView(
-            controller: _controller,
-            slivers: [
-              SliverAppBar(
-                systemOverlayStyle: const SystemUiOverlayStyle(
-                  statusBarBrightness: Brightness.light,
-                  statusBarIconBrightness: Brightness.light,
-                ),
-                toolbarHeight: toolbarHeight,
-                collapsedHeight: collapsedHeight,
-                expandedHeight: expandedHeight,
-                pinned: true,
-                snap: false,
-                forceElevated: true,
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                flexibleSpace: ValueListenableBuilder<EdgeInsetsDirectional>(
-                  valueListenable: _padding,
-                  builder: (context, padding, _) => FlexibleSpaceBar(
-                    title: Text(
-                      _kError,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            color: Theme.of(context).extension<TextColors>()?.darkPrimary,
-                          ),
+    return SliverContentScreen(
+      caption: kCaption,
+      title: kError,
+      slivers: [
+        SliverList.list(
+          children: [
+            // Ref: lib/ui/settings/settings_section.dart
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Container(
+                width: 832.0,
+                padding: padding(context),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    spacer(context),
+                    Text(
+                      kException,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    titlePadding: padding,
-                    background: Stack(
-                      children: [
-                        Positioned(
-                          bottom: 32.0,
-                          right: 32.0,
-                          child: Icon(
-                            Icons.warning,
-                            color: Theme.of(context).extension<IconColors>()?.lightDisabled,
-                            size: 128.0,
-                          ),
-                        ),
-                        Positioned(
-                          left: 16.0,
-                          right: 16.0,
-                          bottom: 16.0,
-                          child: Text(
-                            widget.exception.toString(),
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: Theme.of(context).extension<TextColors>()?.darkSecondary,
-                                ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
+                    const SizedBox(height: 16.0),
+                    Text(
+                      exception.toString(),
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                  ),
-                ),
-              ),
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              _kCallStack,
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                            const SizedBox(height: 8.0),
-                            SelectableText(
-                              widget.stacktrace.toString(),
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                          ],
-                        ),
-                      ),
+                    spacer(context),
+                    Text(
+                      kStackTrace,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
+                    const SizedBox(height: 16.0),
+                    Text(
+                      stacktrace.toString(),
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    spacer(context),
                   ],
                 ),
               ),
-            ],
-          ),
-          DesktopCaptionBar(
-            color: Theme.of(context).colorScheme.primary,
-            caption: _kCaption,
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ],
     );
   }
-
-  static const String _kCaption = 'Harmonoid Music';
-  static const String _kCallStack = 'Call Stack';
-  static const String _kError = 'Error';
 }
+
+const String kCaption = 'Harmonoid Music';
+const String kError = 'Error';
+const String kException = 'Exception';
+const String kStackTrace = 'Stack trace';
