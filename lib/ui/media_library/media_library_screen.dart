@@ -80,7 +80,8 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                     ? const Center(
                         child: MediaLibraryNoItemsBanner(),
                       )
-                    : NotificationListener<ScrollNotification>(
+                    : NotificationListener<ScrollMetricsNotification>(
+                        // https://github.com/flutter/flutter/issues/70504#issuecomment-1170609808
                         onNotification: (notification) {
                           if (notification.metrics.axis == Axis.vertical) {
                             _floatingNotifier.value = notification.metrics.pixels > 0.0;

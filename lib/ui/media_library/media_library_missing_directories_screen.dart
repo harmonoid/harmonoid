@@ -119,9 +119,6 @@ class _MediaLibraryMissingDirectoriesScreenState extends State<MediaLibraryMissi
           ),
         ),
       ],
-      listItemPopupMenuBuilder: null,
-      onListItemPressed: null,
-      onListItemPopupMenuItemSelected: (context, i, j) {},
       actions: {
         Icons.refresh: (context) => refresh(),
         Icons.settings: (context) => context.push('/$kSettingsPath'),
