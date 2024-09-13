@@ -92,7 +92,7 @@ class MediaPlayer extends ChangeNotifier {
 
   Future<void> shuffleOrUnshuffle() => _player.setShuffle(!state.shuffle).then((_) {
         // NOTE: Handled separately.
-        state = state.copyWith(shuffle: state.shuffle);
+        state = state.copyWith(shuffle: !state.shuffle);
         notifyListeners();
       });
 
@@ -134,21 +134,21 @@ class MediaPlayer extends ChangeNotifier {
   }
 
   Future<void> mapPlayerToState() async {
-    _player.stream.playlist.map((event) => state = state.copyWith(index: event.index, playables: event.medias.map((event) => event.toPlayable()).toList()));
-    _player.stream.rate.map((event) => state = state.copyWith(rate: event));
-    _player.stream.pitch.map((event) => state = state.copyWith(pitch: event));
-    _player.stream.volume.map((event) => state = state.copyWith(volume: event));
+    _player.stream.playlist.listen((event) => state = state.copyWith(index: event.index, playables: event.medias.map((event) => event.toPlayable()).toList()));
+    _player.stream.rate.listen((event) => state = state.copyWith(rate: event));
+    _player.stream.pitch.listen((event) => state = state.copyWith(pitch: event));
+    _player.stream.volume.listen((event) => state = state.copyWith(volume: event));
     // NOTE: Handled separately.
-    // _player.stream.shuffle.map((event) => state = state.copyWith(shuffle: event));
-    _player.stream.playlistMode.map((event) => state = state.copyWith(loop: event.toLoop()));
+    // _player.stream.shuffle.listen((event) => state = state.copyWith(shuffle: event));
+    _player.stream.playlistMode.listen((event) => state = state.copyWith(loop: event.toLoop()));
     // NOTE: Debounce for 200ms.
-    _player.stream.position.distinct((previous, next) => (next - previous).abs() > const Duration(milliseconds: 200)).map((event) => state = state.copyWith(position: event));
-    _player.stream.duration.map((event) => state = state.copyWith(duration: event));
-    _player.stream.playing.map((event) => state = state.copyWith(playing: event));
-    _player.stream.buffering.map((event) => state = state.copyWith(buffering: event));
-    _player.stream.completed.map((event) => state = state.copyWith(completed: event));
-    _player.stream.audioBitrate.map((event) => state = state.copyWith(audioBitrate: event));
-    _player.stream.audioParams.map((event) => state = state.copyWith(audioParams: event));
+    _player.stream.position.distinct((previous, next) => (next - previous).abs() < const Duration(milliseconds: 200)).listen((event) => state = state.copyWith(position: event));
+    _player.stream.duration.listen((event) => state = state.copyWith(duration: event));
+    _player.stream.playing.listen((event) => state = state.copyWith(playing: event));
+    _player.stream.buffering.listen((event) => state = state.copyWith(buffering: event));
+    _player.stream.completed.listen((event) => state = state.copyWith(completed: event));
+    _player.stream.audioBitrate.listen((event) => state = state.copyWith(audioBitrate: event));
+    _player.stream.audioParams.listen((event) => state = state.copyWith(audioParams: event));
   }
 
   Future<void> notifyStateToAudioService() async {
