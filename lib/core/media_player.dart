@@ -55,6 +55,8 @@ class MediaPlayer extends ChangeNotifier {
   Playable? _current;
   Playable get current => _current ?? state.playables[state.index];
 
+  double _volumeBeforeMute = 100.0;
+
   MediaPlayerState _state = MediaPlayerState.defaults();
   MediaPlayerState get state => _state;
   set state(MediaPlayerState state) {
@@ -94,7 +96,14 @@ class MediaPlayer extends ChangeNotifier {
 
   Future<void> setVolume(double volume) => _player.setVolume(volume);
 
-  Future<void> setMute(bool mute) => _player.setAudioTrack(mute ? AudioTrack.no() : AudioTrack.auto());
+  Future<void> setMute(bool mute) {
+    if (mute) {
+      _volumeBeforeMute = state.volume;
+      return setVolume(0.0);
+    } else {
+      return setVolume(_volumeBeforeMute == 0.0 ? 100.0 : _volumeBeforeMute);
+    }
+  }
 
   Future<void> setShuffle(bool shuffle) => _player.setShuffle(shuffle).then((_) {
         // NOTE: Handled separately.
@@ -102,7 +111,7 @@ class MediaPlayer extends ChangeNotifier {
         notifyListeners();
       });
 
-  Future<void> muteOrUnmute() => _player.setAudioTrack(_player.state.track.audio != AudioTrack.no() ? AudioTrack.no() : AudioTrack.auto());
+  Future<void> muteOrUnmute() => setMute(state.volume != 0.0);
 
   Future<void> shuffleOrUnshuffle() => _player.setShuffle(!state.shuffle).then((_) {
         // NOTE: Handled separately.
