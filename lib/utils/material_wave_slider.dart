@@ -217,82 +217,85 @@ class MaterialWaveSliderState extends State<MaterialWaveSlider> with SingleTicke
       size: Size(widget.height, widget.height),
     );
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Listener(
-          onPointerDown: (e) => _onPointerDown(e, constraints),
-          onPointerMove: (e) => _onPointerMove(e, constraints),
-          onPointerUp: (e) => _onPointerUp(e, constraints),
-          child: Container(
-            color: Colors.transparent,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                ClipRect(
-                  clipper: RectClipper(_percent),
-                  child: SizedBox(
-                    width: constraints.maxWidth,
-                    height: widget.height,
-                    child: ListView.builder(
-                      controller: _controller,
-                      itemExtent: widget.height,
-                      padding: EdgeInsets.zero,
-                      scrollDirection: Axis.horizontal,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, _) => TweenAnimationBuilder<double>(
-                        tween: Tween<double>(
-                          begin: _running ? _amplitude : 0.0,
-                          end: _running ? _amplitude : 0.0,
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Listener(
+            onPointerDown: (e) => _onPointerDown(e, constraints),
+            onPointerMove: (e) => _onPointerMove(e, constraints),
+            onPointerUp: (e) => _onPointerUp(e, constraints),
+            child: Container(
+              color: Colors.transparent,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  ClipRect(
+                    clipper: RectClipper(_percent),
+                    child: SizedBox(
+                      width: constraints.maxWidth,
+                      height: widget.height,
+                      child: ListView.builder(
+                        controller: _controller,
+                        itemExtent: widget.height,
+                        padding: EdgeInsets.zero,
+                        scrollDirection: Axis.horizontal,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, _) => TweenAnimationBuilder<double>(
+                          tween: Tween<double>(
+                            begin: _running ? _amplitude : 0.0,
+                            end: _running ? _amplitude : 0.0,
+                          ),
+                          curve: widget.transitionCurve,
+                          duration: widget.transitionDuration,
+                          builder: (context, value, _) {
+                            if (value == _amplitude) {
+                              return defaultPaint!;
+                            }
+                            return CustomPaint(
+                              key: ValueKey(value),
+                              painter: SinePainter(
+                                color: sliderTheme.activeTrackColor!,
+                                delta: widget.height / 25.0,
+                                phase: 0.0,
+                                amplitude: value,
+                                strokeWidth: sliderTheme.trackHeight!,
+                              ),
+                              size: Size(widget.height, widget.height),
+                            );
+                          },
                         ),
-                        curve: widget.transitionCurve,
-                        duration: widget.transitionDuration,
-                        builder: (context, value, _) {
-                          if (value == _amplitude) {
-                            return defaultPaint!;
-                          }
-                          return CustomPaint(
-                            key: ValueKey(value),
-                            painter: SinePainter(
-                              color: sliderTheme.activeTrackColor!,
-                              delta: widget.height / 25.0,
-                              phase: 0.0,
-                              amplitude: value,
-                              strokeWidth: sliderTheme.trackHeight!,
-                            ),
-                            size: Size(widget.height, widget.height),
-                          );
-                        },
                       ),
                     ),
                   ),
-                ),
-                Positioned(
-                  left: constraints.maxWidth * _percent - widget.thumbWidth / 2.0,
-                  right: 0.0,
-                  child: Container(
-                    color: sliderTheme.inactiveTrackColor!,
-                    height: sliderTheme.trackHeight!,
+                  Positioned(
+                    left: constraints.maxWidth * _percent - widget.thumbWidth / 2.0,
+                    right: 0.0,
+                    child: Container(
+                      color: sliderTheme.inactiveTrackColor!,
+                      height: sliderTheme.trackHeight!,
+                    ),
                   ),
-                ),
-                Positioned(
-                  left: (constraints.maxWidth * _percent - widget.thumbWidth / 3.0).limit(constraints.maxWidth * _percent - widget.thumbWidth),
-                  child: widget.thumbBuilder?.call(context) ??
-                      Container(
-                        width: widget.thumbWidth,
-                        height: widget.height * 0.6,
-                        decoration: BoxDecoration(
-                          color: sliderTheme.thumbColor!,
-                          borderRadius: BorderRadius.circular(
-                            widget.thumbWidth / 2.0,
+                  Positioned(
+                    left: (constraints.maxWidth * _percent - widget.thumbWidth / 3.0).limit(constraints.maxWidth * _percent - widget.thumbWidth),
+                    child: widget.thumbBuilder?.call(context) ??
+                        Container(
+                          width: widget.thumbWidth,
+                          height: widget.height * 0.6,
+                          decoration: BoxDecoration(
+                            color: sliderTheme.thumbColor!,
+                            borderRadius: BorderRadius.circular(
+                              widget.thumbWidth / 2.0,
+                            ),
                           ),
                         ),
-                      ),
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
