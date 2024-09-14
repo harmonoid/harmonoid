@@ -5,6 +5,7 @@ import 'package:media_kit/media_kit.dart' hide Playable;
 import 'package:tag_reader/tag_reader.dart';
 
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/extensions/playable.dart';
 import 'package:harmonoid/mappers/loop.dart';
 import 'package:harmonoid/mappers/media.dart';
 import 'package:harmonoid/mappers/playable.dart';
@@ -49,9 +50,11 @@ class MediaPlayer extends ChangeNotifier {
     await instance.setPlaybackState(playbackState);
   }
 
+  String? _notifyCurrentFlagUri;
+  String? _notifyHistoryPlaylistFlagUri;
+
   // NOTE: A separate [TagReader] overrides the existing values etc. in the [Playable]s.
 
-  String? _uri;
   Playable? _current;
   Playable get current => _current ?? state.playables[state.index];
 
@@ -64,12 +67,12 @@ class MediaPlayer extends ChangeNotifier {
       _state = state;
 
       notifyCurrent();
-      notifyStateToAudioService();
-      notifyStateToMPRIS();
-      notifyStateToSystemMediaTransportControls();
-      notifyStateToWindowsTaskbar();
-      notifyStateToDiscordRPC();
-
+      notifyHistoryPlaylist();
+      notifyAudioService();
+      notifyMPRIS();
+      notifySystemMediaTransportControls();
+      notifyWindowsTaskbar();
+      notifyDiscordRPC();
       notifyListeners();
     }
   }
@@ -177,29 +180,40 @@ class MediaPlayer extends ChangeNotifier {
   }
 
   Future<void> notifyCurrent() async {
-    try {
-      if (state.playables.isEmpty) return;
-      if (_uri == state.playables[state.index].uri) return;
+    if (state.playables.isEmpty) return;
+    if (_notifyCurrentFlagUri == state.playables[state.index].uri) return;
+    final uri = state.playables[state.index].uri;
+    _notifyCurrentFlagUri = uri;
 
-      _uri = null;
-      final uri = state.playables[state.index].uri;
-      _uri = uri;
+    _current = null;
+    final tags = await _tagReader.parse(
+      uri,
+      cover: MediaLibrary.instance.uriToCoverFile(uri),
+      timeout: const Duration(minutes: 1),
+    );
+    _current = tags.toTrack().toPlayable();
 
-      _current = null;
-      final tags = await _tagReader.parse(
-        uri,
-        cover: MediaLibrary.instance.uriToCoverFile(uri),
-        timeout: const Duration(minutes: 1),
-      );
-      final current = tags.toTrack().toPlayable();
-      debugPrint('MediaPlayer: notifyCurrent: URI: $uri');
-      debugPrint('MediaPlayer: notifyCurrent: Tags: $tags');
-      debugPrint('MediaPlayer: notifyCurrent: Current: $current');
-      _current = current;
-    } catch (_) {}
+    debugPrint('MediaPlayer: notifyCurrent: URI: $uri');
+    debugPrint('MediaPlayer: notifyCurrent: Tags: $tags');
+    debugPrint('MediaPlayer: notifyCurrent: Current: $current');
   }
 
-  Future<void> notifyStateToAudioService() async {
+  Future<void> notifyHistoryPlaylist() async {
+    if (state.playables.isEmpty) return;
+    if (_notifyHistoryPlaylistFlagUri == state.playables[state.index].uri) return;
+    final uri = state.playables[state.index].uri;
+    _notifyHistoryPlaylistFlagUri = uri;
+
+    if (await MediaLibrary.instance.db.contains(current.uri)) {
+      // It is available in the media library. Save as hash + title.
+      await MediaLibrary.instance.playlists.addToHistory(track: await MediaLibrary.instance.db.selectTrackByUri(uri));
+    } else {
+      // It is not available in the media library. Save as uri + title.
+      await MediaLibrary.instance.playlists.addToHistory(uri: uri, title: current.playlistEntryTitle);
+    }
+  }
+
+  Future<void> notifyAudioService() async {
     if (!(Platform.isAndroid || Platform.isMacOS)) return;
     _audioServiceInstance ??= await AudioService.init(
       builder: () => _AudioService(),
@@ -214,22 +228,22 @@ class MediaPlayer extends ChangeNotifier {
     // TODO:
   }
 
-  Future<void> notifyStateToMPRIS() async {
+  Future<void> notifyMPRIS() async {
     if (!Platform.isLinux) return;
     // TODO:
   }
 
-  Future<void> notifyStateToSystemMediaTransportControls() async {
+  Future<void> notifySystemMediaTransportControls() async {
     if (!Platform.isWindows) return;
     // TODO:
   }
 
-  Future<void> notifyStateToWindowsTaskbar() async {
+  Future<void> notifyWindowsTaskbar() async {
     if (!Platform.isWindows) return;
     // TODO:
   }
 
-  Future<void> notifyStateToDiscordRPC() async {
+  Future<void> notifyDiscordRPC() async {
     if (!(Platform.isLinux || Platform.isMacOS || Platform.isWindows)) return;
     // TODO:
   }
