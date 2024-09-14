@@ -14,7 +14,6 @@ import 'package:harmonoid/api/lyrics_api.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
-import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/extensions/playable.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/models/lyric.dart';
@@ -40,8 +39,9 @@ class LyricsNotifier extends ChangeNotifier {
     MediaPlayer.instance.addListener(
       () => _lock.synchronized(() async {
         final state = MediaPlayer.instance.state;
+        final current = MediaPlayer.instance.current;
 
-        if (state.current != _current) {
+        if (current != _current) {
           // --------------------------------------------------
           _notificationHidden = false;
           _notificationLyricsTimestamp = 0;
@@ -50,8 +50,8 @@ class LyricsNotifier extends ChangeNotifier {
           await dismissNotification();
           // --------------------------------------------------
 
-          // Retrieve lyrics for updated [Playable].
-          _current = state.current;
+          // Retrieve lyrics for the [Playable].
+          _current = current;
           await retrieve();
 
           // --------------------------------------------------

@@ -21,6 +21,7 @@ import 'package:harmonoid/ui/media_library/playlists/playlists_screen.dart';
 import 'package:harmonoid/ui/media_library/search/search_items_screen.dart';
 import 'package:harmonoid/ui/media_library/search/search_screen.dart';
 import 'package:harmonoid/ui/media_library/tracks/tracks_screen.dart';
+import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
 import 'package:harmonoid/ui/settings/settings_screen.dart';
 import 'package:harmonoid/utils/material_transition_page.dart';
 
@@ -124,7 +125,16 @@ final router = GoRouter(
     ShellRoute(
       navigatorKey: homeNavigatorKey,
       builder: (context, state, child) {
-        return HomeScreen(child: child);
+        return Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            Positioned.fill(
+              bottom: NowPlayingBar.height,
+              child: HomeScreen(child: child),
+            ),
+            const NowPlayingBar(),
+          ],
+        );
       },
       routes: [
         GoRoute(
@@ -278,42 +288,42 @@ final router = GoRouter(
                 );
               },
             ),
-            GoRoute(
-              path: kMissingDirectoriesPath,
-              pageBuilder: (context, state) {
-                final extra = state.extra as MissingDirectoriesPathExtra;
-                return buildPageWithDefaultTransition(
-                  context: context,
-                  state: state,
-                  child: MediaLibraryMissingDirectoriesScreen(
-                    directories: extra.directories,
-                  ),
-                );
-              },
-            ),
           ],
         ),
-        GoRoute(
-          path: '/$kSettingsPath',
-          pageBuilder: (context, state) {
-            return buildPageWithDefaultTransition(
-              context: context,
-              state: state,
-              child: const SettingsScreen(),
-            );
-          },
-        ),
-        GoRoute(
-          path: '/$kNowPlayingPath',
-          pageBuilder: (context, state) {
-            return buildPageWithDefaultTransition(
-              context: context,
-              state: state,
-              child: const SizedBox(),
-            );
-          },
-        ),
       ],
+    ),
+    GoRoute(
+      path: '/$kMissingDirectoriesPath',
+      pageBuilder: (context, state) {
+        final extra = state.extra as MissingDirectoriesPathExtra;
+        return buildPageWithDefaultTransition(
+          context: context,
+          state: state,
+          child: MediaLibraryMissingDirectoriesScreen(
+            directories: extra.directories,
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/$kSettingsPath',
+      pageBuilder: (context, state) {
+        return buildPageWithDefaultTransition(
+          context: context,
+          state: state,
+          child: const SettingsScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/$kNowPlayingPath',
+      pageBuilder: (context, state) {
+        return buildPageWithDefaultTransition(
+          context: context,
+          state: state,
+          child: const SizedBox(),
+        );
+      },
     ),
   ],
 );

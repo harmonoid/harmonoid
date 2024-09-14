@@ -61,11 +61,13 @@ class TrackItem extends StatelessWidget {
                         alignment: Alignment.center,
                         width: height + 8.0,
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text(
-                          track.trackNumber == 0 ? '1' : track.trackNumber.toString(),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.bodyLarge,
+                        child: IgnorePointer(
+                          child: Text(
+                            track.trackNumber == 0 ? '1' : track.trackNumber.toString(),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
                         ),
                       ),
                       const VerticalDivider(width: 1.0),
@@ -75,11 +77,13 @@ class TrackItem extends StatelessWidget {
                           alignment: Alignment.centerLeft,
                           width: height,
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text(
-                            track.title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodyLarge,
+                          child: IgnorePointer(
+                            child: Text(
+                              track.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
                           ),
                         ),
                       ),
@@ -169,11 +173,13 @@ class TrackItem extends StatelessWidget {
                           alignment: Alignment.centerLeft,
                           width: height,
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text(
-                            track.year == 0 ? kDefaultYear : track.year.toString(),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodyLarge,
+                          child: IgnorePointer(
+                            child: Text(
+                              track.year == 0 ? kDefaultYear : track.year.toString(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
                           ),
                         ),
                       ),

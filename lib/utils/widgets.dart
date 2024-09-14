@@ -1231,8 +1231,8 @@ class ScrollableSlider extends StatelessWidget {
 
   const ScrollableSlider({
     super.key,
-    required this.min,
-    required this.max,
+    this.min = 0.0,
+    this.max = 1.0,
     this.enabled = true,
     required this.value,
     this.color,
@@ -2058,6 +2058,61 @@ class ListItemState extends State<ListItem> {
           onTap: widget.onTap,
         );
       },
+    );
+  }
+}
+
+// --------------------------------------------------
+
+class StatefulAnimatedIcon extends StatefulWidget {
+  final bool dismissed;
+  final AnimatedIconData icon;
+  final double size;
+
+  const StatefulAnimatedIcon({
+    super.key,
+    required this.dismissed,
+    required this.icon,
+    this.size = 24.0,
+  });
+
+  @override
+  State<StatefulAnimatedIcon> createState() => StatefulAnimatedIconState();
+}
+
+class StatefulAnimatedIconState extends State<StatefulAnimatedIcon> with SingleTickerProviderStateMixin {
+  late final AnimationController progress = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 200),
+    reverseDuration: const Duration(milliseconds: 200),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.dismissed) {
+      progress.value = 1.0;
+    }
+  }
+
+  @override
+  void didUpdateWidget(StatefulAnimatedIcon oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.dismissed != widget.dismissed) {
+      if (widget.dismissed) {
+        progress.forward();
+      } else {
+        progress.reverse();
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedIcon(
+      progress: progress,
+      icon: widget.icon,
+      size: widget.size,
     );
   }
 }

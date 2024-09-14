@@ -29,7 +29,7 @@ class MediaLibraryMissingDirectoriesScreen extends StatefulWidget {
     if (directories.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         context.push(
-          '/$kMediaLibraryPath/$kMissingDirectoriesPath',
+          '/$kMissingDirectoriesPath',
           extra: MissingDirectoriesPathExtra(directories: directories),
         );
       });
@@ -93,30 +93,27 @@ class _MediaLibraryMissingDirectoriesScreenState extends State<MediaLibraryMissi
       listItemDisplayIndex: false,
       listItemHeaders: [Text(Localization.instance.FOLDER)],
       listItemBuilder: (context, i) => [
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Icon(FluentIcons.folder_32_regular, size: 32.0),
-              const SizedBox(width: 8.0),
-              Expanded(
-                child: Text(
-                  directories[i].path,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(FluentIcons.folder_32_regular, size: 32.0),
+            const SizedBox(width: 8.0),
+            Expanded(
+              child: Text(
+                directories[i].path,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
-              const SizedBox(width: 8.0),
-              TextButton(
-                onPressed: () => remove(directories[i]),
-                child: Text(label(Localization.instance.REMOVE)),
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(width: 8.0),
+            TextButton(
+              onPressed: () => remove(directories[i]),
+              child: Text(label(Localization.instance.REMOVE)),
+            ),
+          ],
         ),
       ],
       actions: {
