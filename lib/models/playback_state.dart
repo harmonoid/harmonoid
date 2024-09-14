@@ -122,7 +122,7 @@ class PlaybackState {
   static const _kDefaultPlayables = <Playable>[];
   static const _kDefaultRate = 1.0;
   static const _kDefaultPitch = 1.0;
-  static const _kDefaultVolume = 1.0;
+  static const _kDefaultVolume = 50.0;
   static const _kDefaultShuffle = false;
   static const _kDefaultLoop = Loop.off;
 }
