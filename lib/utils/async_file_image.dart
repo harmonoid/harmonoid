@@ -66,13 +66,12 @@ class AsyncFileImage extends ImageProvider<AsyncFileImage> {
     File? result = await _resolve(_file);
     if (result != null) {
       instance = result;
+      // --------------------------------------------------
+      cache[_key] ??= FileImage(instance, scale: scale);
+      // --------------------------------------------------
     } else {
       instance = await _default();
     }
-
-    // --------------------------------------------------
-    cache[_key] ??= FileImage(instance, scale: scale);
-    // --------------------------------------------------
 
     final lengthInBytes = await instance.length_();
     if (lengthInBytes == 0) {
