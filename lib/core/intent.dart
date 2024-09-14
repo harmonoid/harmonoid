@@ -2,14 +2,12 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:media_library/media_library.dart' as _;
+import 'package:path/path.dart';
 import 'package:synchronized/synchronized.dart';
-import 'package:tag_reader/tag_reader.dart';
 import 'package:uri_parser/uri_parser.dart';
 
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
-import 'package:harmonoid/mappers/tags.dart';
-import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/models/playback_state.dart';
 import 'package:harmonoid/utils/methods.dart';
@@ -120,15 +118,20 @@ class Intent {
     String uri, {
     void Function() onMediaPlayerOpen = intentPlayOnMediaPlayerOpen,
   }) async {
+    _playInvoked = true;
     return _playLock.synchronized(
       () async {
-        _playInvoked = true;
-
+        _playInvoked = false;
         final parser = URIParser(uri);
         switch (parser.type) {
           case URIType.file:
             {
-              final playable = await parse(parser.file!.path);
+              final playable = Playable(
+                uri: uri,
+                title: basename(uri),
+                subtitle: [],
+                description: [],
+              );
               try {
                 await MediaPlayer.instance.open(
                   [
@@ -146,11 +149,16 @@ class Intent {
             {
               final contents = await parser.directory!.list_(predicate: (e) => MediaLibrary.instance.supportedFileTypes.contains(e.extension));
               for (int i = 0; i < contents.length; i++) {
-                if (!_playInvoked) {
+                if (_playInvoked) {
                   return;
                 }
                 final file = contents[i];
-                final playable = await parse(file.path);
+                final playable = Playable(
+                  uri: file.path,
+                  title: basename(file.path),
+                  subtitle: [],
+                  description: [],
+                );
                 try {
                   if (i == 0) {
                     await MediaPlayer.instance.open(
@@ -192,28 +200,8 @@ class Intent {
           default:
             break;
         }
-        _playInvoked = false;
       },
     );
-  }
-
-  /// Invoked for performing the parsing operation on the given [uri].
-  Future<Playable> parse(String uri) async {
-    final tags = await _tagReader.parse(
-      uri,
-      cover: MediaLibrary.instance.uriToCoverFile(uri),
-      timeout: MediaLibrary.instance.timeout,
-    );
-    final result = tags.toTrack().toPlayable();
-    debugPrint('Intent: parse: URI: $uri');
-    debugPrint('Intent: parse: Tags: $tags');
-    debugPrint('Intent: parse: Result: $result');
-    return result;
-  }
-
-  /// Disposes the [instance]. Releases allocated resources back to the system.
-  void dispose() {
-    _tagReader.dispose();
   }
 
   /// Resource.
@@ -236,9 +224,6 @@ class Intent {
 
   /// Mutual exclusion in [play] invocations.
   final Lock _playLock = Lock();
-
-  /// Tag reader.
-  final TagReader _tagReader = TagReader();
 
   /// [MethodChannel] used to communicate with the native platform.
   final MethodChannel _channel = const MethodChannel('com.alexmercerind.harmonoid.IntentController');

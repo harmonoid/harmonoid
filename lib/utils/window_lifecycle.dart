@@ -44,7 +44,6 @@ class WindowLifecycle {
   /// Invoked when window is about to close.
   static Future<bool> windowCloseHandler({bool force = false}) async {
     if (!MediaLibrary.instance.refreshing || force) {
-      Intent.instance.dispose();
       MediaLibrary.instance.dispose();
       MediaPlayer.instance.dispose();
       await Future.delayed(const Duration(milliseconds: 500));
