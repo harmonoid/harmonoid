@@ -84,7 +84,7 @@ Future<void> main(List<String> args) async {
       minimumFileSize: Configuration.instance.mediaLibraryMinimumFileSize,
       albumGroupingParameters: Configuration.instance.mediaLibraryAlbumGroupingParameters,
     );
-    await MediaPlayer.ensureInitialized();
+    await MediaPlayer.ensureInitialized(playbackState: Configuration.instance.playbackState);
     await Intent.ensureInitialized(args: args);
     await ThemeNotifier.ensureInitialized(
       themeMode: Configuration.instance.themeMode,
@@ -94,9 +94,7 @@ Future<void> main(List<String> args) async {
     );
     await LyricsNotifier.ensureInitialized();
     await NowPlayingVisualsNotifier.ensureInitialized();
-    await Localization.ensureInitialized(
-      localization: Configuration.instance.localization,
-    );
+    await Localization.ensureInitialized(localization: Configuration.instance.localization);
     runApp(const Harmonoid());
   } catch (exception, stacktrace) {
     debugPrint(exception.toString());

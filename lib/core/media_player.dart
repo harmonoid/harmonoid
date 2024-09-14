@@ -2,16 +2,21 @@ import 'dart:io';
 import 'package:audio_service/audio_service.dart' hide PlaybackState;
 import 'package:flutter/foundation.dart';
 import 'package:media_kit/media_kit.dart' hide Playable;
+import 'package:tag_reader/tag_reader.dart';
 
+import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/mappers/loop.dart';
 import 'package:harmonoid/mappers/media.dart';
 import 'package:harmonoid/mappers/playable.dart';
 import 'package:harmonoid/mappers/playback_state.dart';
 import 'package:harmonoid/mappers/playlist_mode.dart';
+import 'package:harmonoid/mappers/tags.dart';
+import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/models/loop.dart';
 import 'package:harmonoid/models/media_player_state.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/models/playback_state.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/methods.dart';
 
 /// {@template media_player}
@@ -38,23 +43,32 @@ class MediaPlayer extends ChangeNotifier {
   }
 
   /// Initializes the [instance].
-  static Future<void> ensureInitialized() async {
+  static Future<void> ensureInitialized({required PlaybackState playbackState}) async {
     if (initialized) return;
     initialized = true;
+    await instance.setPlaybackState(playbackState);
   }
+
+  // NOTE: A separate [TagReader] overrides the existing values etc. in the [Playable]s.
+
+  String? _uri;
+  Playable? _current;
+  Playable get current => _current ?? state.playables[state.index];
 
   MediaPlayerState _state = MediaPlayerState.defaults();
   MediaPlayerState get state => _state;
   set state(MediaPlayerState state) {
     if (_state != state) {
       _state = state;
-      notifyListeners();
 
+      notifyCurrent();
       notifyStateToAudioService();
       notifyStateToMPRIS();
       notifyStateToSystemMediaTransportControls();
       notifyStateToWindowsTaskbar();
       notifyStateToDiscordRPC();
+
+      notifyListeners();
     }
   }
 
@@ -149,6 +163,31 @@ class MediaPlayer extends ChangeNotifier {
     _player.stream.completed.listen((event) => state = state.copyWith(completed: event));
     _player.stream.audioBitrate.listen((event) => state = state.copyWith(audioBitrate: event));
     _player.stream.audioParams.listen((event) => state = state.copyWith(audioParams: event));
+    _player.stream.log.listen((event) => debugPrint(event.toString()));
+    _player.stream.error.listen((event) => debugPrint(event.toString()));
+  }
+
+  Future<void> notifyCurrent() async {
+    try {
+      if (state.playables.isEmpty) return;
+      if (_uri == state.playables[state.index].uri) return;
+
+      _uri = null;
+      final uri = state.playables[state.index].uri;
+      _uri = uri;
+
+      _current = null;
+      final tags = await _tagReader.parse(
+        uri,
+        cover: MediaLibrary.instance.uriToCoverFile(uri),
+        timeout: const Duration(minutes: 1),
+      );
+      final current = tags.toTrack().toPlayable();
+      debugPrint('MediaPlayer: notifyCurrent: URI: $uri');
+      debugPrint('MediaPlayer: notifyCurrent: Tags: $tags');
+      debugPrint('MediaPlayer: notifyCurrent: Current: $current');
+      _current = current;
+    } catch (_) {}
   }
 
   Future<void> notifyStateToAudioService() async {
@@ -190,11 +229,13 @@ class MediaPlayer extends ChangeNotifier {
   void dispose() {
     super.dispose();
     _player.dispose();
+    _tagReader.dispose();
     _audioServiceInstance?.stop();
     // TODO:
   }
 
-  late final Player _player = Player(configuration: const PlayerConfiguration(title: 'Harmonoid', pitch: true));
+  final Player _player = Player(configuration: const PlayerConfiguration(title: kTitle, pitch: true, logLevel: MPVLogLevel.v));
+  final TagReader _tagReader = TagReader();
 
   _AudioService? _audioServiceInstance;
   _AudioService? get _audioService => _audioServiceInstance;
