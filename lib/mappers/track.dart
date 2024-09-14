@@ -10,7 +10,7 @@ extension TrackMappers on Track {
   Playable toPlayable() => Playable(
         uri: uri,
         title: title,
-        subtitle: [...artists.take(2)],
+        subtitle: [...artists],
         description: [if (album.isNotEmpty) album.toString(), if (year != 0) year.toString()],
       );
 

@@ -38,6 +38,8 @@ class LyricsNotifier extends ChangeNotifier {
   LyricsNotifier._(this.directory) {
     MediaPlayer.instance.addListener(
       () => _lock.synchronized(() async {
+        if (MediaPlayer.instance.state.playables.isEmpty) return;
+
         final state = MediaPlayer.instance.state;
         final current = MediaPlayer.instance.current;
 

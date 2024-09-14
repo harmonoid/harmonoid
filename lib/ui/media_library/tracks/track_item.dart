@@ -246,7 +246,7 @@ class TrackItem extends StatelessWidget {
                       ),
                       Text(
                         [
-                          ...track.artists.take(2),
+                          ...track.artists,
                           if (track.album.isNotEmpty) track.album.toString(),
                           if (track.year != 0) track.year.toString(),
                         ].join(' • '),

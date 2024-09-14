@@ -10,7 +10,7 @@ extension TrackExtensions on Track {
   /// Share subject.
   String get shareSubject => [
         title,
-        artists.take(2).join(', '),
+        artists.join(', '),
         if (album.isNotEmpty) album,
         if (year != 0) year.toString(),
       ].where((e) => e.isNotEmpty).join(' • ');

@@ -149,9 +149,8 @@ class Intent {
             {
               final contents = await parser.directory!.list_(predicate: (e) => MediaLibrary.instance.supportedFileTypes.contains(e.extension));
               for (int i = 0; i < contents.length; i++) {
-                if (_playInvoked) {
-                  return;
-                }
+                // Return prematurely if the method has been invoked again.
+                if (_playInvoked) return;
                 final file = contents[i];
                 final playable = Playable(
                   uri: file.path,
