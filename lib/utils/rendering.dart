@@ -883,10 +883,7 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
 
 Future<void> playlistPopupMenuHandle(BuildContext context, Playlist playlist, int? result) async {
   if (result == null) return;
-  if ({
-    MediaLibrary.instance.playlists.playlists[MediaLibrary.instance.playlists.playlists.length - 1],
-    MediaLibrary.instance.playlists.playlists[MediaLibrary.instance.playlists.playlists.length - 2],
-  }.contains(playlist)) return;
+  if (playlist == MediaLibrary.instance.playlists.likedPlaylist || playlist == MediaLibrary.instance.playlists.historyPlaylist) return;
   switch (result) {
     case 0:
       final result = await showConfirmation(

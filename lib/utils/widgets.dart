@@ -1221,12 +1221,9 @@ class ScrollableSlider extends StatelessWidget {
   final double max;
   final bool enabled;
   final double value;
-  final Color? color;
-  final Color? secondaryColor;
   final void Function(double) onChanged;
   final VoidCallback? onScrolledUp;
   final VoidCallback? onScrolledDown;
-  final bool inferSliderInactiveTrackColor;
   final bool mobile;
 
   const ScrollableSlider({
@@ -1235,12 +1232,9 @@ class ScrollableSlider extends StatelessWidget {
     this.max = 1.0,
     this.enabled = true,
     required this.value,
-    this.color,
-    this.secondaryColor,
     required this.onChanged,
     this.onScrolledUp,
     this.onScrolledDown,
-    this.inferSliderInactiveTrackColor = true,
     this.mobile = false,
   });
 
@@ -1258,23 +1252,11 @@ class ScrollableSlider extends StatelessWidget {
         }
       },
       child: SliderTheme(
-        data: SliderThemeData(
+        data: SliderTheme.of(context).copyWith(
           trackHeight: (mobile && isMobile) ? null : 2.0,
           trackShape: CustomTrackShape(),
           thumbShape: (mobile && isMobile) ? null : const RoundSliderThumbShape(enabledThumbRadius: 6.0, pressedElevation: 4.0, elevation: 2.0),
           overlayShape: (mobile && isMobile) ? null : const RoundSliderOverlayShape(overlayRadius: 12.0),
-          overlayColor: (color ?? Theme.of(context).colorScheme.primary).withOpacity(0.4),
-          thumbColor: enabled ? (color ?? Theme.of(context).colorScheme.primary) : Theme.of(context).disabledColor,
-          activeTrackColor: enabled ? (color ?? Theme.of(context).colorScheme.primary) : Theme.of(context).disabledColor,
-          inactiveTrackColor: enabled
-              ? ((mobile && isMobile)
-                  ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
-                  : inferSliderInactiveTrackColor
-                      ? ((secondaryColor != null ? (secondaryColor?.computeLuminance() ?? 0.0) < 0.5 : Theme.of(context).brightness == Brightness.dark)
-                          ? Colors.white.withOpacity(0.4)
-                          : Colors.black.withOpacity(0.2))
-                      : Colors.white.withOpacity(0.4))
-              : Theme.of(context).disabledColor.withOpacity(0.2),
         ),
         child: Slider(
           value: value,
