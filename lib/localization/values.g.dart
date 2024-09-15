@@ -210,6 +210,7 @@ class Values {
   late String USE_SYSTEM_COLOR_SCHEME;
   late String USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS;
   late String VALUE;
+  late String VOLUME_BOOST;
   late String WARNING;
   late String YEAR;
   late String YES;

@@ -215,6 +215,7 @@ class LocalizationBase extends Values {
     USE_SYSTEM_COLOR_SCHEME = map['USE_SYSTEM_COLOR_SCHEME']!;
     USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS = map['USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS']!;
     VALUE = map['VALUE']!;
+    VOLUME_BOOST = map['VOLUME_BOOST']!;
     WARNING = map['WARNING']!;
     YEAR = map['YEAR']!;
     YES = map['YES']!;
