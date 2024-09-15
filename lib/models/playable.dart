@@ -67,7 +67,7 @@ class Playable {
   factory Playable.fromJson(dynamic json) => Playable(
         uri: json['uri'],
         title: json['title'],
-        subtitle: json['subtitle'],
-        description: json['description'],
+        subtitle: List<String>.from(json['subtitle']),
+        description: List<String>.from(json['description']),
       );
 }
