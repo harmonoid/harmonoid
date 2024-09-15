@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 
 /// {@template ripple_surface}
@@ -11,15 +12,15 @@ import 'package:flutter/material.dart';
 /// {@endtemplate}
 class RippleSurface extends StatefulWidget {
   final Color? color;
-  final Duration duration;
-  final Curve curve;
+  final Duration? duration;
+  final Curve? curve;
 
   /// {@macro ripple_surface}
   const RippleSurface({
     super.key,
     this.color,
-    required this.duration,
-    required this.curve,
+    this.duration,
+    this.curve,
   });
 
   @override
@@ -53,8 +54,8 @@ class RippleSurfaceState extends State<RippleSurface> {
             begin: 1.0,
             end: max(width / kRippleDimension, height / kRippleDimension) * 2.0,
           ),
-          duration: widget.duration,
-          curve: widget.curve,
+          duration: widget.duration ?? Theme.of(context).extension<AnimationDuration>()?.slow ?? Duration.zero,
+          curve: widget.curve ?? Curves.easeInOut,
           onEnd: () {
             setState(() {
               background = Positioned.fill(child: Container(color: widget.color));

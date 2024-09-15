@@ -175,8 +175,6 @@ class MediaPlayer extends ChangeNotifier {
     _player.stream.completed.listen((event) => state = state.copyWith(completed: event));
     _player.stream.audioBitrate.listen((event) => state = state.copyWith(audioBitrate: event));
     _player.stream.audioParams.listen((event) => state = state.copyWith(audioParams: event));
-    _player.stream.log.listen((event) => debugPrint(event.toString()));
-    _player.stream.error.listen((event) => debugPrint(event.toString()));
   }
 
   Future<void> notifyCurrent() async {
@@ -257,7 +255,7 @@ class MediaPlayer extends ChangeNotifier {
     // TODO:
   }
 
-  final Player _player = Player(configuration: const PlayerConfiguration(title: kTitle, pitch: true, logLevel: MPVLogLevel.v));
+  final Player _player = Player(configuration: const PlayerConfiguration(title: kTitle, pitch: true));
   final TagReader _tagReader = TagReader();
 
   _AudioService? _audioServiceInstance;

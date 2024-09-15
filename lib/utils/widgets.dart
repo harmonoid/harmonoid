@@ -1224,7 +1224,6 @@ class ScrollableSlider extends StatelessWidget {
   final void Function(double) onChanged;
   final VoidCallback? onScrolledUp;
   final VoidCallback? onScrolledDown;
-  final bool mobile;
 
   const ScrollableSlider({
     super.key,
@@ -1235,7 +1234,6 @@ class ScrollableSlider extends StatelessWidget {
     required this.onChanged,
     this.onScrolledUp,
     this.onScrolledDown,
-    this.mobile = false,
   });
 
   @override
@@ -1253,10 +1251,10 @@ class ScrollableSlider extends StatelessWidget {
       },
       child: SliderTheme(
         data: SliderTheme.of(context).copyWith(
-          trackHeight: (mobile && isMobile) ? null : 2.0,
+          trackHeight: isMobile ? null : 2.0,
           trackShape: CustomTrackShape(),
-          thumbShape: (mobile && isMobile) ? null : const RoundSliderThumbShape(enabledThumbRadius: 6.0, pressedElevation: 4.0, elevation: 2.0),
-          overlayShape: (mobile && isMobile) ? null : const RoundSliderOverlayShape(overlayRadius: 12.0),
+          thumbShape: isMobile ? null : const RoundSliderThumbShape(enabledThumbRadius: 6.0, pressedElevation: 4.0, elevation: 2.0),
+          overlayShape: isMobile ? null : const RoundSliderOverlayShape(overlayRadius: 12.0),
         ),
         child: Slider(
           value: value,

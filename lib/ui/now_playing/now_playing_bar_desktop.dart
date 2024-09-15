@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +14,7 @@ import 'package:harmonoid/models/loop.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
+import 'package:harmonoid/ui/now_playing/now_playing_control_panel.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/material_wave_slider.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
@@ -119,16 +118,13 @@ class _NowPlayingBarDesktopState extends State<NowPlayingBarDesktop> {
       isMaterial3 ? null : palette,
     );
     return Material(
+      color: nowPlayingColors.background,
       elevation: Theme.of(context).bottomAppBarTheme.elevation ?? kDefaultHeavyElevation,
       child: Consumer<MediaPlayer>(builder: (context, mediaPlayer, _) {
         return Stack(
           children: [
             Positioned.fill(
-              child: RippleSurface(
-                color: nowPlayingColors.background,
-                duration: Theme.of(context).extension<AnimationDuration>()?.slow ?? Duration.zero,
-                curve: Curves.easeInOut,
-              ),
+              child: RippleSurface(color: nowPlayingColors.background),
             ),
             SliderTheme(
               data: SliderThemeData(
@@ -237,7 +233,7 @@ class _NowPlayingBarDesktopState extends State<NowPlayingBarDesktop> {
                             child: ScrollableSlider(
                               min: 0.0,
                               max: 100.0,
-                              value: max(min(mediaPlayer.state.volume, 100.0), 0.0),
+                              value: mediaPlayer.state.volume.clamp(0.0, 100.0),
                               onChanged: (value) => mediaPlayer.setVolume(value),
                               onScrolledDown: () => mediaPlayer.setVolume((mediaPlayer.state.volume - 5.0).clamp(0.0, 100.0)),
                               onScrolledUp: () => mediaPlayer.setVolume((mediaPlayer.state.volume + 5.0).clamp(0.0, 100.0)),
@@ -245,9 +241,7 @@ class _NowPlayingBarDesktopState extends State<NowPlayingBarDesktop> {
                           ),
                           const SizedBox(width: 12.0),
                           IconButton(
-                            onPressed: () {
-                              // TODO:
-                            },
+                            onPressed: () => NowPlayingControlPanel.show(context),
                             color: nowPlayingColors.backgroundEnabledIcon,
                             icon: const Icon(Icons.more_horiz),
                             splashRadius: 20.0,
@@ -281,7 +275,7 @@ class Controls extends StatelessWidget {
       builder: (context, mediaPlayer, _) {
         const sliderMin = 0.0;
         final sliderMax = mediaPlayer.state.duration.inMilliseconds.toDouble();
-        final sliderValue = max(min(mediaPlayer.state.position.inMilliseconds.toDouble(), sliderMax), sliderMin);
+        final sliderValue = mediaPlayer.state.position.inMilliseconds.clamp(sliderMin, sliderMax).toDouble();
         return Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,

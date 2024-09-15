@@ -1051,7 +1051,7 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
   }
 }
 
-InputDecoration inputDecoration(BuildContext context, String hintText, {Widget? suffixIcon, VoidCallback? onSuffixIconPressed, Color? fillColor}) {
+InputDecoration inputDecoration(BuildContext context, String hintText, {Widget? suffixIcon, VoidCallback? onSuffixIconPressed, Color? fillColor, EdgeInsetsGeometry? contentPadding}) {
   return InputDecoration(
     // A [suffixIcon] keeps the [TextField]'s content (label / text) centered for some reason at all heights.
     suffixIcon: suffixIcon == null
@@ -1078,7 +1078,7 @@ InputDecoration inputDecoration(BuildContext context, String hintText, {Widget? 
             minWidth: 0.0,
           )
         : null,
-    contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
+    contentPadding: contentPadding ?? const EdgeInsets.symmetric(horizontal: 12.0),
     hintText: hintText,
     filled: true,
     isCollapsed: true,
