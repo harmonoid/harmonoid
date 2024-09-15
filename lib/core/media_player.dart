@@ -50,17 +50,7 @@ class MediaPlayer extends ChangeNotifier {
     await instance.setPlaybackState(playbackState);
   }
 
-  String? _notifyCurrentFlagUri;
-  String? _notifyHistoryPlaylistFlagUri;
-
-  // NOTE: A separate [TagReader] overrides the existing values etc. in the [Playable]s.
-
-  Playable? _current;
   Playable get current => _current ?? state.playables[state.index];
-
-  double _volumeBeforeMute = 100.0;
-
-  MediaPlayerState _state = MediaPlayerState.defaults();
   MediaPlayerState get state => _state;
   set state(MediaPlayerState state) {
     if (_state != state) {
@@ -213,7 +203,7 @@ class MediaPlayer extends ChangeNotifier {
 
   Future<void> notifyAudioService() async {
     if (!(Platform.isAndroid || Platform.isMacOS)) return;
-    _audioServiceInstance ??= await AudioService.init(
+    _audioService ??= await AudioService.init(
       builder: () => _AudioService(),
       config: const AudioServiceConfig(
         androidNotificationChannelId: 'com.alexmercerind.harmonoid',
@@ -251,15 +241,35 @@ class MediaPlayer extends ChangeNotifier {
     super.dispose();
     _player.dispose();
     _tagReader.dispose();
-    _audioServiceInstance?.stop();
+    _audioService?.stop();
     // TODO:
   }
 
+  /// [Player] from package:media_kit.
   final Player _player = Player(configuration: const PlayerConfiguration(title: kTitle, pitch: true));
+
+  /// [TagReader] from package:tag_reader.
   final TagReader _tagReader = TagReader();
 
-  _AudioService? _audioServiceInstance;
-  _AudioService? get _audioService => _audioServiceInstance;
+  /// [AudioService] from package:audio_service.
+  _AudioService? _audioService;
+
+  /// Flag to prevent duplicate [notifyCurrent] calls.
+  String? _notifyCurrentFlagUri;
+
+  /// Flag to prevent duplicate [notifyHistoryPlaylist] calls.
+  String? _notifyHistoryPlaylistFlagUri;
+
+  // NOTE: A separate [TagReader] overrides the existing values etc. in the [Playable]s.
+
+  /// Current [Playable] containing overridden values with freshly fetched tags.
+  Playable? _current;
+
+  /// Current [MediaPlayerState].
+  MediaPlayerState _state = MediaPlayerState.defaults();
+
+  /// Volume before mute.
+  double _volumeBeforeMute = 100.0;
 }
 
 class _AudioService extends BaseAudioHandler {}
