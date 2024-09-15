@@ -66,12 +66,14 @@ class AsyncFileImage extends ImageProvider<AsyncFileImage> {
     File? result = await _resolve(_file);
     if (result != null) {
       instance = result;
-      // --------------------------------------------------
-      cache[_key] ??= FileImage(instance, scale: scale);
-      // --------------------------------------------------
     } else {
       instance = await _default();
     }
+
+    // --------------------------------------------------
+    cache[_key] ??= FileImage(instance, scale: scale);
+    default_[_key] ??= result == null;
+    // --------------------------------------------------
 
     final lengthInBytes = await instance.length_();
     if (lengthInBytes == 0) {
@@ -94,6 +96,9 @@ class AsyncFileImage extends ImageProvider<AsyncFileImage> {
 
   /// [FileImage] cache.
   static final HashMap<String, FileImage> cache = HashMap<String, FileImage>();
+
+  /// Whether the default image is loaded or not.
+  static final HashMap<String, bool> default_ = HashMap<String, bool>();
 }
 
 typedef _SimpleDecoderCallback = Future<ui.Codec> Function(ui.ImmutableBuffer buffer);

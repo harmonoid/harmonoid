@@ -152,6 +152,18 @@ ImageProvider cover({
 
   final result = AsyncFileImage.cache[key];
 
+  // Try to resolve the actual cover file in background, if the current one is default.
+  // There is a possibility that actual cover file was loaded sometime in the future.
+  if (AsyncFileImage.default_[key] == true) {
+    file.then((value) {
+      // A file could be resolved, evict the incorrect cache.
+      if (value != null) {
+        AsyncFileImage.cache.remove(key);
+        AsyncFileImage.default_.remove(key);
+      }
+    });
+  }
+
   final ImageProvider image;
   if (result == null) {
     image = AsyncFileImage(
