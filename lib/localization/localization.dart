@@ -11,7 +11,7 @@ part 'values.g.dart';
 ///
 /// Localization
 /// ------------
-/// Implementation to get & set the current lozalization.
+/// Implementation to get & set the current localization.
 ///
 /// {@endtemplate}
 class Localization extends LocalizationBase with ChangeNotifier {
