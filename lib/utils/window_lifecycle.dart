@@ -1,10 +1,12 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart' hide Intent;
 
+import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/mappers/media_player_state.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
@@ -46,7 +48,8 @@ class WindowLifecycle {
     if (!MediaLibrary.instance.refreshing || force) {
       MediaLibrary.instance.dispose();
       MediaPlayer.instance.dispose();
-      await Future.delayed(const Duration(milliseconds: 500));
+      Configuration.instance.set(playbackState: MediaPlayer.instance.state.toPlaybackState());
+      await Future.delayed(const Duration(seconds: 1));
       return true;
     } else {
       await showDialog(
