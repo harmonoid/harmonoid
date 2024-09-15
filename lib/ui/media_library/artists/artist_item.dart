@@ -197,12 +197,7 @@ class ArtistItem extends StatelessWidget {
                           tracks = await MediaLibrary.instance.tracksFromArtist(artist);
 
                           if (isMaterial2) {
-                            final result = await PaletteGenerator.fromImageProvider(
-                              cover(
-                                item: artist,
-                                cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
-                              ),
-                            );
+                            final result = await PaletteGenerator.fromImageProvider(cover(item: artist, cacheWidth: 20));
                             palette = result.colors?.toList();
                           }
 

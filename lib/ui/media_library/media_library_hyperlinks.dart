@@ -14,7 +14,7 @@ Future<void> navigateToAlbum(BuildContext context, AlbumLookupKey key) async {
 
     List<Color>? palette;
     if (isMaterial2) {
-      final result = await PaletteGenerator.fromImageProvider(cover(item: album, cacheWidth: 200));
+      final result = await PaletteGenerator.fromImageProvider(cover(item: album, cacheWidth: 20));
       palette = result.colors?.toList();
     }
 
@@ -38,7 +38,7 @@ Future<void> navigateToArtist(BuildContext context, ArtistLookupKey key) async {
 
     List<Color>? palette;
     if (isMaterial2) {
-      final result = await PaletteGenerator.fromImageProvider(cover(item: artist, cacheWidth: 200));
+      final result = await PaletteGenerator.fromImageProvider(cover(item: artist, cacheWidth: 20));
       palette = result.colors?.toList();
     }
 
@@ -63,7 +63,7 @@ Future<void> navigateToGenre(BuildContext context, GenreLookupKey key) async {
     // NOTE: Palette is not used for genres.
     // List<Color>? palette;
     // if (isMaterial2) {
-    //   final result = await PaletteGenerator.fromImageProvider(cover(item: genre, cacheWidth: 200));
+    //   final result = await PaletteGenerator.fromImageProvider(cover(item: genre, cacheWidth: 20));
     //   palette = result.colors?.toList();
     // }
 

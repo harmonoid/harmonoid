@@ -41,7 +41,7 @@ class PlaylistItem extends StatelessWidget {
                             List<Color>? palette;
                             if (isMaterial2) {
                               try {
-                                final result = await PaletteGenerator.fromImageProvider(cover(playlistEntry: entries[0]));
+                                final result = await PaletteGenerator.fromImageProvider(cover(playlistEntry: entries[0], cacheWidth: 20));
                                 palette = result.colors?.toList();
                               } catch (exception, stacktrace) {
                                 debugPrint(exception.toString());

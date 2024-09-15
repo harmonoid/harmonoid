@@ -20,7 +20,7 @@ import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/extensions/global_key.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
-import 'package:harmonoid/state/mobile_now_playing_notifier.dart';
+import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
@@ -770,7 +770,7 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
                   ...sort,
                   const PopupMenuDivider(),
                   ...order,
-                  if (!isDesktop && MobileNowPlayingNotifier.instance.restored) const SizedBox(height: kMobileNowPlayingBarHeight),
+                  if (!isDesktop && NowPlayingMobileNotifier.instance.restored) const SizedBox(height: kMobileNowPlayingBarHeight),
                 ],
               );
             },
@@ -1091,7 +1091,7 @@ class MobileNavigationBar extends StatelessWidget {
               if (index == i) return;
               context.push('/$kMediaLibraryPath/${paths[i]}');
               Configuration.instance.set(mediaLibraryPath: paths[i]);
-              MobileNowPlayingNotifier.instance.restore();
+              NowPlayingMobileNotifier.instance.restore();
             },
             labelBehavior: displayLabels ? NavigationDestinationLabelBehavior.alwaysShow : NavigationDestinationLabelBehavior.alwaysHide,
             destinations: [
@@ -1117,13 +1117,12 @@ class MobileNavigationBar extends StatelessWidget {
               ),
             ],
           )
-        : ValueListenableBuilder<Iterable<Color>?>(
-            valueListenable: NowPlayingColorPaletteNotifier.instance.palette,
-            builder: (context, value, _) => TweenAnimationBuilder<Color?>(
+        : Consumer<NowPlayingColorPaletteNotifier>(
+            builder: (context, nowPlayingColorPaletteNotifier, _) => TweenAnimationBuilder<Color?>(
               duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
               tween: ColorTween(
                 begin: Theme.of(context).colorScheme.primary,
-                end: value?.first ?? Theme.of(context).colorScheme.primary,
+                end: nowPlayingColorPaletteNotifier.palette?.first ?? Theme.of(context).colorScheme.primary,
               ),
               builder: (context, color, _) => Container(
                 decoration: const BoxDecoration(
@@ -1140,7 +1139,7 @@ class MobileNavigationBar extends StatelessWidget {
                     if (index == i) return;
                     context.push('/$kMediaLibraryPath/${paths[i]}');
                     Configuration.instance.set(mediaLibraryPath: paths[i]);
-                    MobileNowPlayingNotifier.instance.restore();
+                    NowPlayingMobileNotifier.instance.restore();
                   },
                   items: [
                     BottomNavigationBarItem(
@@ -1451,9 +1450,9 @@ class NowPlayingBarScrollHideNotifier extends StatelessWidget {
                 AxisDirection.down,
               ].contains(notification.metrics.axisDirection)) {
             if (notification.direction == ScrollDirection.forward) {
-              MobileNowPlayingNotifier.instance.show();
+              NowPlayingMobileNotifier.instance.show();
             } else if (notification.direction == ScrollDirection.reverse) {
-              MobileNowPlayingNotifier.instance.hide();
+              NowPlayingMobileNotifier.instance.hide();
             }
           }
           return true;
@@ -1719,7 +1718,7 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                   style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
               ),
-              if (!isDesktop && MobileNowPlayingNotifier.instance.restored) const SizedBox(height: kMobileNowPlayingBarHeight),
+              if (!isDesktop && NowPlayingMobileNotifier.instance.restored) const SizedBox(height: kMobileNowPlayingBarHeight),
             ],
           ),
         );

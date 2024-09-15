@@ -27,10 +27,10 @@ class NowPlayingBar extends StatefulWidget {
   }
 
   @override
-  State<NowPlayingBar> createState() => _NowPlayingBarState();
+  State<NowPlayingBar> createState() => NowPlayingBarState();
 }
 
-class _NowPlayingBarState extends State<NowPlayingBar> {
+class NowPlayingBarState extends State<NowPlayingBar> {
   Widget _buildDesktopLayout(BuildContext context) {
     return const NowPlayingBarDesktop();
   }

@@ -22,6 +22,7 @@ import 'package:harmonoid/ui/media_library/search/search_items_screen.dart';
 import 'package:harmonoid/ui/media_library/search/search_screen.dart';
 import 'package:harmonoid/ui/media_library/tracks/tracks_screen.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
+import 'package:harmonoid/ui/now_playing/now_playing_screen.dart';
 import 'package:harmonoid/ui/settings/settings_screen.dart';
 import 'package:harmonoid/utils/material_transition_page.dart';
 
@@ -321,7 +322,7 @@ final router = GoRouter(
         return buildPageWithDefaultTransition(
           context: context,
           state: state,
-          child: const SizedBox(),
+          child: const NowPlayingScreen(),
         );
       },
     ),

@@ -1,264 +1,237 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
-import 'package:synchronized/synchronized.dart';
 
-import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/extensions/duration.dart';
 import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/models/loop.dart';
-import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
+import 'package:harmonoid/ui/now_playing/now_playing_colors.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_control_panel.dart';
+import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/material_wave_slider.dart';
-import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/ripple_surface.dart';
 import 'package:harmonoid/utils/widgets.dart';
-
-class NowPlayingColors {
-  final Color? background;
-  final Color? foreground;
-  final Color? foregroundIcon;
-  final Color? backgroundEnabledIcon;
-  final Color? backgroundDisabledIcon;
-  final Color? backgroundText;
-  final Color? sliderForeground;
-  final Color? sliderBackground;
-
-  const NowPlayingColors({
-    required this.background,
-    required this.foreground,
-    required this.foregroundIcon,
-    required this.backgroundEnabledIcon,
-    required this.backgroundDisabledIcon,
-    required this.backgroundText,
-    required this.sliderForeground,
-    required this.sliderBackground,
-  });
-
-  factory NowPlayingColors.fromPalette(BuildContext context, List<Color>? palette) {
-    final foreground = palette?.last ?? Theme.of(context).floatingActionButtonTheme.backgroundColor!;
-    final background = palette?.first ?? Theme.of(context).bottomAppBarTheme.color ?? Theme.of(context).colorScheme.surface;
-    final foregroundIcon = palette == null ? Theme.of(context).floatingActionButtonTheme.foregroundColor : (foreground.computeLuminance() > 0.5 ? Colors.black : Colors.white);
-    final backgroundEnabledIcon = palette == null ? Theme.of(context).colorScheme.onSurface : (background.computeLuminance() > 0.5 ? Colors.black : Colors.white);
-    final backgroundDisabledIcon = palette == null ? Theme.of(context).disabledColor : (background.computeLuminance() > 0.5 ? Colors.black.withOpacity(0.3) : Colors.white.withOpacity(0.3));
-    final backgroundText = palette == null ? null : (background.computeLuminance() > 0.5 ? Colors.black : Colors.white);
-    final sliderForeground = palette == null ? null : foreground;
-    final sliderBackground = palette == null ? null : backgroundDisabledIcon;
-    return NowPlayingColors(
-      background: background,
-      foreground: foreground,
-      foregroundIcon: foregroundIcon,
-      backgroundEnabledIcon: backgroundEnabledIcon,
-      backgroundDisabledIcon: backgroundDisabledIcon,
-      backgroundText: backgroundText,
-      sliderForeground: sliderForeground,
-      sliderBackground: sliderBackground,
-    );
-  }
-}
 
 class NowPlayingBarDesktop extends StatefulWidget {
   const NowPlayingBarDesktop({super.key});
 
   @override
-  State<NowPlayingBarDesktop> createState() => _NowPlayingBarDesktopState();
+  State<NowPlayingBarDesktop> createState() => NowPlayingBarDesktopState();
 }
 
-class _NowPlayingBarDesktopState extends State<NowPlayingBarDesktop> {
-  final Lock lock = Lock();
-
-  Playable? current;
-  List<Color>? palette;
-
-  bool listenerInvoked = false;
-
-  Future<void> listener() async {
-    // DO NOT USE PALETTE IN MATERIAL DESIGN 3
-    if (isMaterial3) return;
-    if (current == MediaPlayer.instance.current) return;
-    if (!Configuration.instance.desktopNowPlayingBarColorPalette) return;
-    current = MediaPlayer.instance.current;
-
-    listenerInvoked = true;
-    await lock.synchronized(() async {
-      listenerInvoked = false;
-      final result = await PaletteGenerator.fromImageProvider(cover(uri: current!.uri, cacheWidth: 200));
-      // Return prematurely if the method has been invoked again.
-      if (listenerInvoked) return;
-      palette = result.colors?.toList();
-      setState(() {});
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    MediaPlayer.instance.addListener(listener);
-  }
+class NowPlayingBarDesktopState extends State<NowPlayingBarDesktop> {
+  final ValueNotifier<bool> coverHoverNotifier = ValueNotifier<bool>(false);
 
   @override
   void dispose() {
     super.dispose();
-    MediaPlayer.instance.removeListener(listener);
+    coverHoverNotifier.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final nowPlayingColors = NowPlayingColors.fromPalette(
-      context,
-      // DO NOT USE PALETTE IN MATERIAL DESIGN 3
-      isMaterial3 ? null : palette,
-    );
-    return Material(
-      color: nowPlayingColors.background,
-      elevation: Theme.of(context).bottomAppBarTheme.elevation ?? kDefaultHeavyElevation,
-      child: Consumer<MediaPlayer>(builder: (context, mediaPlayer, _) {
-        return Stack(
-          children: [
-            Positioned.fill(
-              child: RippleSurface(color: nowPlayingColors.background),
-            ),
-            SliderTheme(
-              data: SliderThemeData(
-                thumbColor: nowPlayingColors.sliderForeground,
-                activeTrackColor: nowPlayingColors.sliderForeground,
-                inactiveTrackColor: nowPlayingColors.sliderBackground,
-                disabledThumbColor: nowPlayingColors.sliderForeground,
-                disabledActiveTrackColor: nowPlayingColors.sliderForeground,
-                disabledInactiveTrackColor: nowPlayingColors.sliderBackground,
-              ),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: NowPlayingBar.height,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    () {
-                      try {
-                        return Expanded(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image(
-                                width: NowPlayingBar.height,
-                                height: NowPlayingBar.height,
-                                image: cover(
-                                  uri: mediaPlayer.current.uri,
-                                  cacheWidth: NowPlayingBar.height.toInt(),
-                                ),
-                                fit: BoxFit.cover,
-                              ),
-                              const SizedBox(width: 12.0),
-                              Expanded(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      mediaPlayer.current.title,
-                                      style: Theme.of(context).textTheme.titleMedium?.copyWith(color: nowPlayingColors.backgroundText),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    if (mediaPlayer.current.subtitle.isNotEmpty)
-                                      HyperLink(
-                                        text: TextSpan(
-                                          children: [
-                                            for (final artist in mediaPlayer.current.subtitle) ...[
-                                              TextSpan(
-                                                text: artist.isEmpty ? kDefaultArtist : artist,
-                                                recognizer: TapGestureRecognizer()
-                                                  ..onTap = () {
-                                                    navigateToArtist(context, ArtistLookupKey(artist: artist));
-                                                  },
-                                              ),
-                                              const TextSpan(
-                                                text: ', ',
-                                              ),
-                                            ]
-                                          ]..removeLast(),
-                                        ),
-                                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: nowPlayingColors.backgroundText),
-                                      ),
-                                    Text(
-                                      mediaPlayer.state.getAudioFormatLabel(),
-                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: nowPlayingColors.backgroundText),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(width: 12.0),
-                            ],
-                          ),
-                        );
-                      } catch (_) {
-                        return const Spacer();
-                      }
-                    }(),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width / 2.5,
-                      child: Controls(
-                        key: ValueKey(Theme.of(context).extension<MaterialStandard>()?.value ?? 0),
-                        nowPlayingColors: nowPlayingColors,
-                      ),
+    return Consumer<NowPlayingColorPaletteNotifier>(
+      builder: (context, nowPlayingColorPaletteNotifier, _) {
+        final nowPlayingColors = NowPlayingColors.fromPalette(
+          context,
+          // DO NOT USE PALETTE IN MATERIAL DESIGN 3
+          isMaterial3 ? null : nowPlayingColorPaletteNotifier.palette,
+        );
+        return Material(
+          color: nowPlayingColors.background,
+          elevation: Theme.of(context).bottomAppBarTheme.elevation ?? kDefaultHeavyElevation,
+          child: Consumer<MediaPlayer>(
+            builder: (context, mediaPlayer, _) {
+              return Stack(
+                children: [
+                  Positioned.fill(
+                    child: RippleSurface(color: nowPlayingColors.background),
+                  ),
+                  SliderTheme(
+                    data: SliderThemeData(
+                      thumbColor: nowPlayingColors.sliderForeground,
+                      activeTrackColor: nowPlayingColors.sliderForeground,
+                      inactiveTrackColor: nowPlayingColors.sliderBackground,
+                      disabledThumbColor: nowPlayingColors.sliderForeground,
+                      disabledActiveTrackColor: nowPlayingColors.sliderForeground,
+                      disabledInactiveTrackColor: nowPlayingColors.sliderBackground,
                     ),
-                    Expanded(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: NowPlayingBar.height,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const Spacer(),
-                          const SizedBox(width: 12.0),
-                          IconButton(
-                            onPressed: mediaPlayer.muteOrUnmute,
-                            color: nowPlayingColors.backgroundEnabledIcon,
-                            icon: Icon(mediaPlayer.state.volume == 0.0 ? Icons.volume_off : (mediaPlayer.state.volume < 50.0 ? Icons.volume_down : Icons.volume_up)),
-                            splashRadius: 20.0,
-                            iconSize: 20.0,
-                            tooltip: mediaPlayer.state.volume == 0.0 ? Localization.instance.UNMUTE : Localization.instance.MUTE,
-                          ),
-                          const SizedBox(width: 8.0),
+                          () {
+                            try {
+                              return Expanded(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    MouseRegion(
+                                      onEnter: (_) => coverHoverNotifier.value = true,
+                                      onExit: (_) => coverHoverNotifier.value = false,
+                                      child: Stack(
+                                        children: [
+                                          ClipRect(
+                                            child: ScaleOnHover(
+                                              child: Image(
+                                                width: NowPlayingBar.height,
+                                                height: NowPlayingBar.height,
+                                                image: cover(
+                                                  uri: mediaPlayer.current.uri,
+                                                  cacheWidth: NowPlayingBar.height.toInt(),
+                                                ),
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                          ValueListenableBuilder<bool>(
+                                            valueListenable: coverHoverNotifier,
+                                            builder: (context, value, _) {
+                                              return Positioned.fill(
+                                                child: AnimatedOpacity(
+                                                  opacity: value ? 1.0 : 0.0,
+                                                  duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
+                                                  curve: Curves.easeInOut,
+                                                  child: Material(
+                                                    color: Colors.black.withOpacity(0.5),
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        context.push('/$kNowPlayingPath');
+                                                      },
+                                                      child: const Center(
+                                                        child: Icon(
+                                                          Icons.music_note,
+                                                          size: 32.0,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12.0),
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            mediaPlayer.current.title,
+                                            style: Theme.of(context).textTheme.titleMedium?.copyWith(color: nowPlayingColors.backgroundText),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          if (mediaPlayer.current.subtitle.isNotEmpty)
+                                            HyperLink(
+                                              text: TextSpan(
+                                                children: [
+                                                  for (final artist in mediaPlayer.current.subtitle) ...[
+                                                    TextSpan(
+                                                      text: artist.isEmpty ? kDefaultArtist : artist,
+                                                      recognizer: TapGestureRecognizer()
+                                                        ..onTap = () {
+                                                          navigateToArtist(context, ArtistLookupKey(artist: artist));
+                                                        },
+                                                    ),
+                                                    const TextSpan(
+                                                      text: ', ',
+                                                    ),
+                                                  ]
+                                                ]..removeLast(),
+                                              ),
+                                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: nowPlayingColors.backgroundText),
+                                            ),
+                                          Text(
+                                            mediaPlayer.state.getAudioFormatLabel(),
+                                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: nowPlayingColors.backgroundText),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12.0),
+                                  ],
+                                ),
+                              );
+                            } catch (_) {
+                              return const Spacer();
+                            }
+                          }(),
                           SizedBox(
-                            width: 96.0,
-                            child: ScrollableSlider(
-                              min: 0.0,
-                              max: 100.0,
-                              value: mediaPlayer.state.volume.clamp(0.0, 100.0),
-                              onChanged: (value) => mediaPlayer.setVolume(value),
-                              onScrolledDown: () => mediaPlayer.setVolume((mediaPlayer.state.volume - 5.0).clamp(0.0, 100.0)),
-                              onScrolledUp: () => mediaPlayer.setVolume((mediaPlayer.state.volume + 5.0).clamp(0.0, 100.0)),
+                            width: MediaQuery.of(context).size.width / 2.5,
+                            child: Controls(
+                              key: ValueKey(Theme.of(context).extension<MaterialStandard>()?.value ?? 0),
+                              nowPlayingColors: nowPlayingColors,
                             ),
                           ),
-                          const SizedBox(width: 12.0),
-                          IconButton(
-                            onPressed: () => NowPlayingControlPanel.show(context),
-                            color: nowPlayingColors.backgroundEnabledIcon,
-                            icon: const Icon(Icons.more_horiz),
-                            splashRadius: 20.0,
-                            iconSize: 20.0,
-                            tooltip: Localization.instance.CONTROL_PANEL,
+                          Expanded(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Spacer(),
+                                const SizedBox(width: 12.0),
+                                IconButton(
+                                  onPressed: mediaPlayer.muteOrUnmute,
+                                  color: nowPlayingColors.backgroundEnabledIcon,
+                                  icon: Icon(mediaPlayer.state.volume == 0.0 ? Icons.volume_off : (mediaPlayer.state.volume < 50.0 ? Icons.volume_down : Icons.volume_up)),
+                                  splashRadius: 20.0,
+                                  iconSize: 20.0,
+                                  tooltip: mediaPlayer.state.volume == 0.0 ? Localization.instance.UNMUTE : Localization.instance.MUTE,
+                                ),
+                                const SizedBox(width: 8.0),
+                                SizedBox(
+                                  width: 96.0,
+                                  child: ScrollableSlider(
+                                    min: 0.0,
+                                    max: 100.0,
+                                    value: mediaPlayer.state.volume.clamp(0.0, 100.0),
+                                    onChanged: (value) => mediaPlayer.setVolume(value),
+                                    onScrolledDown: () => mediaPlayer.setVolume((mediaPlayer.state.volume - 5.0).clamp(0.0, 100.0)),
+                                    onScrolledUp: () => mediaPlayer.setVolume((mediaPlayer.state.volume + 5.0).clamp(0.0, 100.0)),
+                                  ),
+                                ),
+                                const SizedBox(width: 12.0),
+                                IconButton(
+                                  onPressed: () => NowPlayingControlPanel.show(context),
+                                  color: nowPlayingColors.backgroundEnabledIcon,
+                                  icon: const Icon(Icons.more_horiz),
+                                  splashRadius: 20.0,
+                                  iconSize: 20.0,
+                                  tooltip: Localization.instance.CONTROL_PANEL,
+                                ),
+                                const SizedBox(width: 12.0),
+                              ],
+                            ),
                           ),
-                          const SizedBox(width: 12.0),
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+                  ),
+                ],
+              );
+            },
+          ),
         );
-      }),
+      },
     );
   }
 }

@@ -17,7 +17,7 @@ import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/extensions/track.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
-import 'package:harmonoid/state/mobile_now_playing_notifier.dart';
+import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_item.dart';
@@ -583,7 +583,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
             ),
           ),
         ),
-      if (!isDesktop && MobileNowPlayingNotifier.instance.restored)
+      if (!isDesktop && NowPlayingMobileNotifier.instance.restored)
         const PopupMenuItem<int>(
           padding: EdgeInsets.zero,
           child: SizedBox(height: kMobileNowPlayingBarHeight),
@@ -639,7 +639,7 @@ List<PopupMenuItem<int>> albumPopupMenuItems(BuildContext context, Album album) 
           ),
         ),
       ),
-      if (!isDesktop && MobileNowPlayingNotifier.instance.restored)
+      if (!isDesktop && NowPlayingMobileNotifier.instance.restored)
         const PopupMenuItem<int>(
           padding: EdgeInsets.zero,
           child: SizedBox(height: kMobileNowPlayingBarHeight),

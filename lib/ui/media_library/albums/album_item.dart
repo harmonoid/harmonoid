@@ -34,12 +34,7 @@ class AlbumItem extends StatelessWidget {
 
     List<Color>? palette;
     if (isMaterial2) {
-      final result = await PaletteGenerator.fromImageProvider(
-        cover(
-          item: album,
-          cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
-        ),
-      );
+      final result = await PaletteGenerator.fromImageProvider(cover(item: album, cacheWidth: 20));
       palette = result.colors?.toList();
     }
 
@@ -220,12 +215,7 @@ class AlbumItem extends StatelessWidget {
             tracks = await MediaLibrary.instance.tracksFromAlbum(album);
 
             if (isMaterial2) {
-              final result = await PaletteGenerator.fromImageProvider(
-                cover(
-                  item: album,
-                  cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
-                ),
-              );
+              final result = await PaletteGenerator.fromImageProvider(cover(item: album, cacheWidth: 20));
               palette = result.colors?.toList();
             }
 

@@ -2,9 +2,9 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/localization/localization.dart';
-
 import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/slide_on_enter.dart';
