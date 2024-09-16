@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -44,44 +45,45 @@ class LyricsNotifier extends ChangeNotifier {
         final current = MediaPlayer.instance.current;
 
         if (current != _current) {
+          index = 0;
+          lyrics.clear();
+          _secondsAndWords.clear();
+          _secondsAndIndexes.clear();
+          notifyListeners();
+
           // --------------------------------------------------
-          _notificationHidden = false;
-          _notificationLyricsTimestamp = 0;
-          _notificationLyrics.clear();
-          _notificationLyricsIndices.clear();
+          _notificationVisible = true;
           await dismissNotification();
           // --------------------------------------------------
 
-          // Retrieve lyrics for the [Playable].
           _current = current;
           await retrieve();
 
-          // --------------------------------------------------
           for (int i = 0; i < lyrics.length; i++) {
             final lyric = lyrics[i];
-            _notificationLyrics[lyric.time ~/ 1000] = lyric.words;
-            _notificationLyricsIndices[lyric.time ~/ 1000] = i;
+            final seconds = lyric.time ~/ 1000;
+            final words = lyric.words;
+            _secondsAndWords[seconds] = words;
+            _secondsAndIndexes[seconds] = i;
           }
-          // --------------------------------------------------
         }
 
         // --------------------------------------------------
-
-        // Dismiss existing notification if seek is performed or playback is completed.
-        final currentIndex = _notificationLyricsIndices[_notificationLyricsTimestamp] ?? 0;
-        final nextIndex = _notificationLyricsIndices[state.position.inSeconds] ?? 0;
-        if (nextIndex != currentIndex + 1 || state.completed) {
+        final next = _secondsAndIndexes[state.position.inSeconds] ?? 0;
+        if (next != index + 1 || state.completed) {
           await dismissNotification();
         }
-
-        // Display notification for current position.
-        final body = _notificationLyrics[_notificationLyricsTimestamp];
-        if (body != null && _notificationLyricsTimestamp < state.position.inSeconds) {
-          _notificationLyricsTimestamp = state.position.inSeconds;
-          await displayNotification(body);
-        }
-
         // --------------------------------------------------
+
+        final words = _secondsAndWords[state.position.inSeconds];
+        if (words != null && _seconds != state.position.inSeconds) {
+          _seconds = state.position.inSeconds;
+          index = _secondsAndIndexes[_seconds] ?? 0;
+          notifyListeners();
+          // --------------------------------------------------
+          await displayNotification(words);
+          // --------------------------------------------------
+        }
       }),
     );
   }
@@ -98,19 +100,19 @@ class LyricsNotifier extends ChangeNotifier {
     await instance.initializeNotification();
   }
 
-  /// Directory used to store lyrics.
-  final Directory directory;
+  /// Index.
+  int index = 0;
 
   /// Lyrics.
   final List<Lyric> lyrics = <Lyric>[];
+
+  /// Directory used to store lyrics.
+  final Directory directory;
 
   /// Retrieves lyrics for currently playing [Playable].
   Future<void> retrieve() async {
     final playable = _current;
     if (playable == null) return;
-
-    lyrics.clear();
-    notifyListeners();
 
     // 1. Tags.
 
@@ -131,9 +133,10 @@ class LyricsNotifier extends ChangeNotifier {
     }
 
     // 2. LRC.
+
     debugPrint('LyricsNotifier: retrieve: LRC: ${playable.uri}');
     try {
-      final lrc = lrcFromUri(playable.uri);
+      final lrc = uriToLRCFile(playable.uri);
       if (await lrc.exists_()) {
         final contents = await lrc.read_();
         if (contents != null && Lrc.isValid(contents)) {
@@ -151,6 +154,7 @@ class LyricsNotifier extends ChangeNotifier {
     }
 
     // 3. Directory.
+
     debugPrint('LyricsNotifier: retrieve: Directory: ${playable.uri}');
     try {
       if (Configuration.instance.lrcFromDirectory) {
@@ -178,6 +182,7 @@ class LyricsNotifier extends ChangeNotifier {
     }
 
     // 4. API.
+
     debugPrint('LyricsNotifier: retrieve: API: ${playable.uri}');
     try {
       final result = await LyricsApi.instance.lyrics(playable.lyricsApiName);
@@ -194,15 +199,15 @@ class LyricsNotifier extends ChangeNotifier {
     }
   }
 
-  /// Whether `.LRC` is present in cache for specified [playable].
-  bool contains(Playable playable) => lrcFromUri(playable.uri).existsSync_();
+  /// Whether .LRC is present in cache for specified [playable].
+  bool contains(Playable playable) => uriToLRCFile(playable.uri).existsSync_();
 
-  /// Adds `.LRC` to cache for specified [playable].
+  /// Adds .LRC to cache for specified [playable].
   Future<bool> add(Playable playable, File file) async {
     try {
       final contents = await file.read_();
       if (contents != null && Lrc.isValid(contents)) {
-        final lrc = lrcFromUri(playable.uri);
+        final lrc = uriToLRCFile(playable.uri);
         await file.copy_(lrc.path);
         return true;
       }
@@ -213,52 +218,51 @@ class LyricsNotifier extends ChangeNotifier {
     return false;
   }
 
-  /// Removes `.LRC` from cache for specified [playable].
+  /// Removes .LRC from cache for specified [playable].
   Future<void> remove(Playable playable) async {
-    final lrc = lrcFromUri(playable.uri);
+    final lrc = uriToLRCFile(playable.uri);
     if (await lrc.exists_()) {
       await lrc.delete_();
     }
   }
 
-  /// Returns target `.LRC` [File].
-  File lrcFromUri(String uri) => File(join(directory.path, '${sha256.convert(utf8.encode(uri)).toString()}.LRC'));
+  /// Returns target .LRC [File].
+  File uriToLRCFile(String uri) => File(join(directory.path, '${sha256.convert(utf8.encode(uri)).toString()}.LRC'));
+
+  // --------------------------------------------------
 
   /// Initializes the notification.
   Future<void> initializeNotification() async {
-    if (!_initializeNotificationInvoked && Platform.isAndroid && (AndroidStorageController.instance.version < 33 || await Permission.notification.isGranted)) {
-      _initializeNotificationInvoked = true;
-      await AwesomeNotifications().initialize(
-        'resource://drawable/ic_stat_format_color_text',
-        [
-          NotificationChannel(
-            channelKey: _kNotificationChannelKey,
-            channelGroupKey: _kNotificationChannelKey,
-            channelName: _kNotificationChannelName,
-            channelDescription: _kNotificationChannelDescription,
-            playSound: false,
-            enableVibration: false,
-            enableLights: false,
-            locked: false,
-            criticalAlerts: false,
-            onlyAlertOnce: true,
-            importance: NotificationImportance.Low,
-            defaultPrivacy: NotificationPrivacy.Public,
-          ),
-        ],
-        debug: kDebugMode,
-      );
-      AwesomeNotifications().setListeners(onActionReceivedMethod: _onNotificationActionReceived);
-    }
+    if (!Platform.isAndroid) return;
+    if (!(AndroidStorageController.instance.version < 33 || await Permission.notification.isGranted)) return;
+    if (_initializeNotificationInvoked) return;
+    _initializeNotificationInvoked = true;
+    await AwesomeNotifications().initialize(
+      'resource://drawable/ic_stat_format_color_text',
+      [
+        NotificationChannel(
+          channelKey: _kNotificationChannelKey,
+          channelGroupKey: _kNotificationChannelKey,
+          channelName: _kNotificationChannelName,
+          channelDescription: _kNotificationChannelDescription,
+          playSound: false,
+          enableVibration: false,
+          enableLights: false,
+          locked: false,
+          criticalAlerts: false,
+          onlyAlertOnce: true,
+          importance: NotificationImportance.Low,
+          defaultPrivacy: NotificationPrivacy.Public,
+        ),
+      ],
+      debug: kDebugMode,
+    );
+    AwesomeNotifications().setListeners(onActionReceivedMethod: _onNotificationActionReceived);
   }
 
   /// Displayes the notification.
   Future<void> displayNotification(String body) async {
-    if (_initializeNotificationInvoked &&
-        !_notificationHidden &&
-        Configuration.instance.notificationLyrics &&
-        Platform.isAndroid &&
-        (AndroidStorageController.instance.version < 33 || await Permission.notification.isGranted)) {
+    return ensureNotification(() async {
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
           id: _kNotificationID,
@@ -281,45 +285,44 @@ class LyricsNotifier extends ChangeNotifier {
           ),
         ],
       );
-    }
+    });
   }
 
   /// Dismisses the notification.
-  FutureOr<void> dismissNotification() async {
-    if (_initializeNotificationInvoked && Platform.isAndroid && (AndroidStorageController.instance.version < 33 || await Permission.notification.isGranted)) {
+  FutureOr<void> dismissNotification() {
+    return ensureNotification(() async {
       await AwesomeNotifications().dismiss(_kNotificationID);
-    }
+    });
   }
 
-  /// Currently playing [Playable].
-  Playable? _current;
+  /// Invokes the [callback] if the notification can be handled.
+  Future<void> ensureNotification(Future<void> Function() callback) async {
+    if (!Platform.isAndroid) return;
+    if (!(AndroidStorageController.instance.version < 33 || await Permission.notification.isGranted)) return;
+    if (!Configuration.instance.notificationLyrics) return;
+    if (!_initializeNotificationInvoked) return;
+    if (!_notificationVisible) return;
+    await callback.call();
+  }
 
-  // --------------------------------------------------
-
-  /// Whether lyrics are hidden for currently playing [Playable].
-  bool _notificationHidden = false;
-
-  /// Current lyrics timestamp.
-  int _notificationLyricsTimestamp = 0;
-
-  /// Current lyrics.
-  final Map<int, String> _notificationLyrics = {};
-
-  /// Current lyrics indexes.
-  final Map<int, int> _notificationLyricsIndices = {};
+  /// Whether lyrics are visible for currently playing [Playable].
+  bool _notificationVisible = true;
 
   /// Whether notification is initialized.
   bool _initializeNotificationInvoked = false;
 
   // --------------------------------------------------
 
-  /// Lock.
+  Playable? _current;
+  int _seconds = 0;
+  final HashMap<int, String> _secondsAndWords = HashMap<int, String>();
+  final HashMap<int, int> _secondsAndIndexes = HashMap<int, int>();
   final Lock _lock = Lock();
 
-  @pragma("vm:entry-point")
+  @pragma('vm:entry-point')
   static Future<void> _onNotificationActionReceived(ReceivedAction action) async {
     if (action.buttonKeyPressed == _kNotificationHideButtonKey) {
-      instance._notificationHidden = true;
+      instance._notificationVisible = false;
       AwesomeNotifications().dismiss(_kNotificationID);
     }
   }

@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 ///
 /// MaterialTransitionPage
 /// ----------------------
-/// Implementation to allow usage of [MaterialRoute] in `package:go_router`.
+/// Implementation to allow usage of [MaterialRoute] in package:go_router.
 ///
 /// {@endtemplate}
 class MaterialTransitionPage<T> extends Page<T> {
