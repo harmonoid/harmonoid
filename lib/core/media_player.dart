@@ -180,6 +180,7 @@ class MediaPlayer extends ChangeNotifier {
       timeout: const Duration(minutes: 1),
     );
     _current = tags.toTrack().toPlayable();
+    notifyListeners();
 
     debugPrint('MediaPlayer: notifyCurrent: URI: $uri');
     debugPrint('MediaPlayer: notifyCurrent: Tags: $tags');
