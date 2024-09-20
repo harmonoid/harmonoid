@@ -17,7 +17,9 @@ import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/extensions/playable.dart';
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/mappers/lyrics.dart';
 import 'package:harmonoid/models/lyric.dart';
+import 'package:harmonoid/models/lyrics.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 
@@ -25,7 +27,7 @@ import 'package:harmonoid/utils/android_storage_controller.dart';
 ///
 /// LyricsNotifier
 /// --------------
-/// Implementation to retrieve lyrics for currently playing [Playable].
+/// Implementation to retrieve & display lyrics for currently playing [Playable].
 ///
 /// {@endtemplate}
 class LyricsNotifier extends ChangeNotifier {
@@ -47,8 +49,7 @@ class LyricsNotifier extends ChangeNotifier {
         if (current != _current) {
           index = 0;
           lyrics.clear();
-          _secondsAndWords.clear();
-          _secondsAndIndexes.clear();
+          _timesAndIndexes.clear();
           notifyListeners();
 
           // --------------------------------------------------
@@ -60,29 +61,29 @@ class LyricsNotifier extends ChangeNotifier {
           await retrieve();
 
           for (int i = 0; i < lyrics.length; i++) {
-            final lyric = lyrics[i];
-            final seconds = lyric.time ~/ 1000;
-            final words = lyric.words;
-            _secondsAndWords[seconds] = words;
-            _secondsAndIndexes[seconds] = i;
+            _timesAndIndexes[lyrics[i].time] = i;
           }
         }
 
-        // --------------------------------------------------
-        final next = _secondsAndIndexes[state.position.inSeconds] ?? 0;
-        if (next != index + 1 || state.completed) {
-          await dismissNotification();
-        }
-        // --------------------------------------------------
+        int? nextTime = _timesAndIndexes.firstKeyAfter(state.position.inMilliseconds);
+        int? nextIndex = _timesAndIndexes[nextTime];
 
-        final words = _secondsAndWords[state.position.inSeconds];
-        if (words != null && _seconds != state.position.inSeconds) {
-          _seconds = state.position.inSeconds;
-          index = _secondsAndIndexes[_seconds] ?? 0;
-          notifyListeners();
+        if (nextTime != null && nextIndex != null) {
+          if (nextIndex > 0) nextIndex--;
+
           // --------------------------------------------------
-          await displayNotification(words);
+          if (nextIndex != index + 1 || state.completed) {
+            await dismissNotification();
+          }
           // --------------------------------------------------
+
+          if (nextIndex != index) {
+            index = nextIndex;
+            notifyListeners();
+            // --------------------------------------------------
+            await displayNotification(lyrics[index].words);
+            // --------------------------------------------------
+          }
         }
       }),
     );
@@ -104,7 +105,7 @@ class LyricsNotifier extends ChangeNotifier {
   int index = 0;
 
   /// Lyrics.
-  final List<Lyric> lyrics = <Lyric>[];
+  final Lyrics lyrics = <Lyric>[];
 
   /// Directory used to store lyrics.
   final Directory directory;
@@ -114,7 +115,28 @@ class LyricsNotifier extends ChangeNotifier {
     final playable = _current;
     if (playable == null) return;
 
-    // 1. Tags.
+    // 1. LRC.
+
+    debugPrint('LyricsNotifier: retrieve: LRC: ${playable.uri}');
+    try {
+      final file = uriToLRCFile(playable.uri);
+      if (await file.exists_()) {
+        final contents = await file.read_();
+        if (contents != null && Lrc.isValid(contents)) {
+          final result = Lrc.parse(contents).lyrics;
+          lyrics.addAll(result.map((e) => Lyric(time: e.timestamp.inMilliseconds, words: e.lyrics)).toList());
+          notifyListeners();
+          return;
+        }
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+      lyrics.clear();
+      notifyListeners();
+    }
+
+    // 2. Tags.
 
     debugPrint('LyricsNotifier: retrieve: Tags: ${playable.uri}');
     try {
@@ -124,27 +146,6 @@ class LyricsNotifier extends ChangeNotifier {
         lyrics.addAll(result.map((e) => Lyric(time: e.timestamp.inMilliseconds, words: e.lyrics)).toList());
         notifyListeners();
         return;
-      }
-    } catch (exception, stacktrace) {
-      debugPrint(exception.toString());
-      debugPrint(stacktrace.toString());
-      lyrics.clear();
-      notifyListeners();
-    }
-
-    // 2. LRC.
-
-    debugPrint('LyricsNotifier: retrieve: LRC: ${playable.uri}');
-    try {
-      final lrc = uriToLRCFile(playable.uri);
-      if (await lrc.exists_()) {
-        final contents = await lrc.read_();
-        if (contents != null && Lrc.isValid(contents)) {
-          final result = Lrc.parse(contents).lyrics;
-          lyrics.addAll(result.map((e) => Lyric(time: e.timestamp.inMilliseconds, words: e.lyrics)).toList());
-          notifyListeners();
-          return;
-        }
       }
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
@@ -189,6 +190,12 @@ class LyricsNotifier extends ChangeNotifier {
       if (result != null) {
         lyrics.addAll(result);
         notifyListeners();
+
+        if (!contains(playable)) {
+          final file = uriToLRCFile(playable.uri);
+          await file.write_(result.toLrc());
+        }
+
         return;
       }
     } catch (exception, stacktrace) {
@@ -207,8 +214,8 @@ class LyricsNotifier extends ChangeNotifier {
     try {
       final contents = await file.read_();
       if (contents != null && Lrc.isValid(contents)) {
-        final lrc = uriToLRCFile(playable.uri);
-        await file.copy_(lrc.path);
+        final destination = uriToLRCFile(playable.uri);
+        await file.copy_(destination.path);
         return true;
       }
     } catch (exception, stacktrace) {
@@ -220,9 +227,9 @@ class LyricsNotifier extends ChangeNotifier {
 
   /// Removes .LRC from cache for specified [playable].
   Future<void> remove(Playable playable) async {
-    final lrc = uriToLRCFile(playable.uri);
-    if (await lrc.exists_()) {
-      await lrc.delete_();
+    final file = uriToLRCFile(playable.uri);
+    if (await file.exists_()) {
+      await file.delete_();
     }
   }
 
@@ -314,9 +321,7 @@ class LyricsNotifier extends ChangeNotifier {
   // --------------------------------------------------
 
   Playable? _current;
-  int _seconds = 0;
-  final HashMap<int, String> _secondsAndWords = HashMap<int, String>();
-  final HashMap<int, int> _secondsAndIndexes = HashMap<int, int>();
+  final SplayTreeMap<int, int> _timesAndIndexes = SplayTreeMap<int, int>();
   final Lock _lock = Lock();
 
   @pragma('vm:entry-point')
