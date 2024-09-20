@@ -28,12 +28,7 @@ class NowPlayingColorPaletteNotifier extends ChangeNotifier {
   static Future<void> ensureInitialized() async {
     if (initialized) return;
     initialized = true;
-    try {
-      instance.update(MediaPlayer.instance.current);
-    } catch (exception, stacktrace) {
-      debugPrint(exception.toString());
-      debugPrint(stacktrace.toString());
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) => instance.update(MediaPlayer.instance.current));
     MediaPlayer.instance.addListener(instance.listener);
   }
 
