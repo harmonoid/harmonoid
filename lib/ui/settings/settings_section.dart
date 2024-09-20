@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:harmonoid/ui/settings/settings_spacer.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
@@ -22,7 +23,7 @@ class SettingsSection extends StatelessWidget {
   Widget _buildDesktopLayout(BuildContext context) {
     return Center(
       child: SizedBox(
-        width: 832.0,
+        width: kDesktopCenteredLayoutWidth,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
