@@ -2095,3 +2095,62 @@ class StatefulAnimatedIconState extends State<StatefulAnimatedIcon> with SingleT
     );
   }
 }
+
+//  --------------------------------------------------
+
+class StatefulPageViewBuilder extends StatefulWidget {
+  final int index;
+  final int itemCount;
+  final Widget Function(BuildContext, int) itemBuilder;
+  final ScrollPhysics? physics;
+  const StatefulPageViewBuilder({
+    super.key,
+    required this.index,
+    required this.itemCount,
+    required this.itemBuilder,
+    this.physics,
+  });
+
+  @override
+  State<StatefulPageViewBuilder> createState() => StatefulPageViewBuilderState();
+}
+
+class StatefulPageViewBuilderState extends State<StatefulPageViewBuilder> {
+  late final PageController controller = PageController(
+    initialPage: widget.index,
+    // https://github.com/flutter/flutter/issues/31191
+    viewportFraction: 0.9999999999,
+  );
+
+  @override
+  void didUpdateWidget(covariant StatefulPageViewBuilder oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.index != widget.index) {
+      if ((oldWidget.index - widget.index).abs() > 5) {
+        controller.jumpToPage(widget.index);
+      } else {
+        controller.animateToPage(
+          widget.index,
+          duration: Theme.of(context).extension<AnimationDuration>()?.slow ?? Duration.zero,
+          curve: Curves.easeInOut,
+        );
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PageView.builder(
+      controller: controller,
+      physics: widget.physics,
+      itemCount: widget.itemCount,
+      itemBuilder: (context, index) => widget.itemBuilder(context, index),
+    );
+  }
+}
