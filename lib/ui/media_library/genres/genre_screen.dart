@@ -58,11 +58,12 @@ class _GenreScreenState extends State<GenreScreen> {
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
                             _title,
+                            maxLines: 3,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                                   color: widget.color.computeLuminance() > 0.5 ? Colors.black : Colors.white,
                                 ),
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ),

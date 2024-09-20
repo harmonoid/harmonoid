@@ -1,4 +1,5 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
@@ -56,12 +57,13 @@ class GenreItem extends StatelessWidget {
             height: height,
             alignment: Alignment.center,
             padding: const EdgeInsets.all(8.0),
-            child: Text(
+            child: AutoSizeText(
               title,
               maxLines: 3,
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(color: color.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+              wrapWords: false,
             ),
           ),
         ),
@@ -143,11 +145,12 @@ class GenreItem extends StatelessWidget {
             height: height,
             alignment: Alignment.center,
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Text(
+            child: AutoSizeText(
               title,
               maxLines: 3,
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
+              wrapWords: false,
               style: (() {
                 if (width > 128.0) {
                   return Theme.of(context).textTheme.titleLarge;
