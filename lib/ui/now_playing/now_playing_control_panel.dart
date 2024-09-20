@@ -2,10 +2,12 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
+import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/slide_on_enter.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -15,6 +17,7 @@ class NowPlayingControlPanel extends StatefulWidget {
   const NowPlayingControlPanel({super.key});
 
   static Future<void> show(BuildContext context) async {
+    final path = GoRouterState.of(context).uri.pathSegments.last;
     if (isDesktop) {
       await showDialog(
         context: context,
@@ -28,7 +31,7 @@ class NowPlayingControlPanel extends StatefulWidget {
                 16.0,
                 16.0,
                 16.0,
-                16.0 + NowPlayingBar.height,
+                16.0 + (path == kNowPlayingPath ? 0.0 : NowPlayingBar.height),
               ),
               child: const NowPlayingControlPanel(),
             ),
@@ -161,6 +164,8 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                       max: 1.5,
                       value: mediaPlayer.state.rate.clamp(0.5, 1.5),
                       onChanged: (value) => mediaPlayer.setRate(value),
+                      onScrolledUp: () => mediaPlayer.setRate(mediaPlayer.state.rate + 0.05),
+                      onScrolledDown: () => mediaPlayer.setRate(mediaPlayer.state.rate - 0.05),
                     ),
                   ),
                   const SizedBox(width: 12.0),
@@ -209,6 +214,8 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                       max: 1.5,
                       value: mediaPlayer.state.pitch.clamp(0.5, 1.5),
                       onChanged: (value) => mediaPlayer.setPitch(value),
+                      onScrolledUp: () => mediaPlayer.setPitch(mediaPlayer.state.pitch + 0.05),
+                      onScrolledDown: () => mediaPlayer.setPitch(mediaPlayer.state.pitch - 0.05),
                     ),
                   ),
                   const SizedBox(width: 12.0),
@@ -257,6 +264,8 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                       max: 200.0,
                       value: mediaPlayer.state.volume.clamp(100.0, 200.0),
                       onChanged: (value) => mediaPlayer.setVolume(value),
+                      onScrolledUp: () => mediaPlayer.setVolume(mediaPlayer.state.volume + 5.0),
+                      onScrolledDown: () => mediaPlayer.setVolume(mediaPlayer.state.volume - 5.0),
                     ),
                   ),
                   const SizedBox(width: 12.0),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:harmonoid/ui/now_playing/now_playing_screen_desktop.dart';
+import 'package:harmonoid/ui/now_playing/desktop/desktop_now_playing_screen.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 class NowPlayingScreen extends StatefulWidget {
@@ -12,7 +12,7 @@ class NowPlayingScreen extends StatefulWidget {
 
 class NowPlayingScreenState extends State<NowPlayingScreen> {
   Widget _buildDesktopLayout(BuildContext context) {
-    return const NowPlayingScreenDesktop();
+    return const DesktopNowPlayingScreen();
   }
 
   Widget _buildTabletLayout(BuildContext context) {

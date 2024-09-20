@@ -2,7 +2,6 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 
@@ -11,6 +10,7 @@ import 'package:harmonoid/extensions/duration.dart';
 import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/models/loop.dart';
+import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_colors.dart';
@@ -22,14 +22,14 @@ import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/ripple_surface.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
-class NowPlayingBarDesktop extends StatefulWidget {
-  const NowPlayingBarDesktop({super.key});
+class DesktopNowPlayingBar extends StatefulWidget {
+  const DesktopNowPlayingBar({super.key});
 
   @override
-  State<NowPlayingBarDesktop> createState() => NowPlayingBarDesktopState();
+  State<DesktopNowPlayingBar> createState() => DesktopNowPlayingBarState();
 }
 
-class NowPlayingBarDesktopState extends State<NowPlayingBarDesktop> {
+class DesktopNowPlayingBarState extends State<DesktopNowPlayingBar> {
   final ValueNotifier<bool> coverHoverNotifier = ValueNotifier<bool>(false);
 
   @override

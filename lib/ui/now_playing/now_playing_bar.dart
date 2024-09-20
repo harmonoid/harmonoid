@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:harmonoid/ui/now_playing/now_playing_bar_desktop.dart';
+import 'package:harmonoid/ui/now_playing/desktop/desktop_now_playing_bar.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
@@ -32,7 +32,7 @@ class NowPlayingBar extends StatefulWidget {
 
 class NowPlayingBarState extends State<NowPlayingBar> {
   Widget _buildDesktopLayout(BuildContext context) {
-    return const NowPlayingBarDesktop();
+    return const DesktopNowPlayingBar();
   }
 
   Widget _buildTabletLayout(BuildContext context) {

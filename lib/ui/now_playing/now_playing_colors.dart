@@ -11,14 +11,14 @@ class NowPlayingColors {
   final Color? sliderBackground;
 
   const NowPlayingColors({
-    required this.background,
-    required this.foreground,
-    required this.foregroundIcon,
-    required this.backgroundEnabledIcon,
-    required this.backgroundDisabledIcon,
-    required this.backgroundText,
-    required this.sliderForeground,
-    required this.sliderBackground,
+    this.background,
+    this.foreground,
+    this.foregroundIcon,
+    this.backgroundEnabledIcon,
+    this.backgroundDisabledIcon,
+    this.backgroundText,
+    this.sliderForeground,
+    this.sliderBackground,
   });
 
   factory NowPlayingColors.fromPalette(BuildContext context, List<Color>? palette) {
@@ -30,6 +30,27 @@ class NowPlayingColors {
     final backgroundText = palette == null ? null : (background.computeLuminance() > 0.5 ? Colors.black : Colors.white);
     final sliderForeground = palette == null ? null : foreground;
     final sliderBackground = palette == null ? null : backgroundDisabledIcon;
+    return NowPlayingColors(
+      background: background,
+      foreground: foreground,
+      foregroundIcon: foregroundIcon,
+      backgroundEnabledIcon: backgroundEnabledIcon,
+      backgroundDisabledIcon: backgroundDisabledIcon,
+      backgroundText: backgroundText,
+      sliderForeground: sliderForeground,
+      sliderBackground: sliderBackground,
+    );
+  }
+
+  factory NowPlayingColors.of(BuildContext context) {
+    const foreground = Colors.transparent;
+    const background = Colors.transparent;
+    const foregroundIcon = Colors.transparent;
+    final backgroundEnabledIcon = Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white;
+    final backgroundDisabledIcon = Theme.of(context).brightness == Brightness.light ? Colors.black.withOpacity(0.3) : Colors.white.withOpacity(0.3);
+    final backgroundText = Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white;
+    final sliderForeground = Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white;
+    final sliderBackground = Theme.of(context).brightness == Brightness.light ? Colors.black.withOpacity(0.3) : Colors.white.withOpacity(0.3);
     return NowPlayingColors(
       background: background,
       foreground: foreground,
