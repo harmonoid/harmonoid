@@ -82,9 +82,10 @@ class MaterialWaveSliderState extends State<MaterialWaveSlider> with SingleTicke
   double get _amplitude => widget.amplitude ?? (widget.height / 12.0);
   double get _percent => widget.value == 0.0 ? 0.0 : ((_current ?? widget.value) / (widget.max - widget.min)).clamp(0.0, 1.0);
 
+  late bool _paused = widget.paused;
+  late bool _running = !widget.paused;
+
   double? _current;
-  bool _paused = false;
-  bool _running = true;
 
   late final ScrollController _controller = ScrollController();
 
@@ -103,19 +104,15 @@ class MaterialWaveSliderState extends State<MaterialWaveSlider> with SingleTicke
   }
 
   void pause() {
-    if (_paused) return;
     _paused = true;
-    setState(() {
-      _running = false;
-    });
+    _running = false;
+    setState(() {});
   }
 
   void resume() {
-    if (!_paused) return;
     _paused = false;
-    setState(() {
-      _running = true;
-    });
+    _running = true;
+    setState(() {});
   }
 
   void _onPointerDown(PointerDownEvent e, BoxConstraints constraints) {
