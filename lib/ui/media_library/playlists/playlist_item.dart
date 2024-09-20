@@ -71,10 +71,14 @@ class PlaylistItem extends StatelessWidget {
                 title: Text(
                   playlist.name,
                   style: Theme.of(context).textTheme.titleMedium,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
                 subtitle: Text(
                   entries == null ? '' : Localization.instance.N_TRACKS.replaceAll('"N"', entries.length.toString()),
                   style: Theme.of(context).textTheme.bodyMedium,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ),
             );
