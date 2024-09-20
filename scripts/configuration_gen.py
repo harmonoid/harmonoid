@@ -29,7 +29,7 @@ def configuration_gen(json_data):
         value = camel_case_key
         if item['serializedType'] == 'Integer' and item['dartType'] != 'int':
             value = f'{camel_case_key}.index'
-        if item['serializedType'] == 'Json' and item['dartType'].startswith('Set<') and item['dartType'].endswith('>'):
+        if item['serializedType'] == 'Json' and not item['dartType'].startswith('Map<'):
             value = f'{camel_case_key}.toJson()'
 
         set_method_content.append(
