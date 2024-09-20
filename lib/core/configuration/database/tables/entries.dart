@@ -22,6 +22,9 @@ class Entries extends Table {
   /// Integer value.
   IntColumn get integerValue => integer().named('integer').nullable()();
 
+  /// Double value.
+  RealColumn get doubleValue => real().named('double').nullable()();
+
   /// String value.
   TextColumn get stringValue => text().named('string').nullable()();
 

@@ -14,13 +14,16 @@ class ConfigurationBase {
 
   bool get audioFormatDisplay => _audioFormatDisplay!;
   bool get desktopNowPlayingBarColorPalette => _desktopNowPlayingBarColorPalette!;
-  int get desktopNowPlayingCarousel => _desktopNowPlayingCarousel!;
-  int get desktopNowPlayingHighlightedLyricsSize => _desktopNowPlayingHighlightedLyricsSize!;
-  bool get desktopNowPlayingLyrics => _desktopNowPlayingLyrics!;
-  int get desktopNowPlayingUnhighlightedLyricsSize => _desktopNowPlayingUnhighlightedLyricsSize!;
+  int get desktopNowPlayingScreenCarousel => _desktopNowPlayingScreenCarousel!;
+  bool get desktopNowPlayingScreenLyrics => _desktopNowPlayingScreenLyrics!;
   bool get discordRpc => _discordRpc!;
   LocalizationData get localization => _localization!;
   bool get lrcFromDirectory => _lrcFromDirectory!;
+  double get lyricsViewFocusedFontSize => _lyricsViewFocusedFontSize!;
+  double get lyricsViewFocusedLineHeight => _lyricsViewFocusedLineHeight!;
+  TextAlign get lyricsViewTextAlign => _lyricsViewTextAlign!;
+  double get lyricsViewUnfocusedFontSize => _lyricsViewUnfocusedFontSize!;
+  double get lyricsViewUnfocusedLineHeight => _lyricsViewUnfocusedLineHeight!;
   bool get mediaLibraryAddTracksToPlaylist => _mediaLibraryAddTracksToPlaylist!;
   Set<AlbumGroupingParameter> get mediaLibraryAlbumGroupingParameters => _mediaLibraryAlbumGroupingParameters!;
   bool get mediaLibraryAlbumSortAscending => _mediaLibraryAlbumSortAscending!;
@@ -55,13 +58,16 @@ class ConfigurationBase {
   Future<void> set({
     bool? audioFormatDisplay,
     bool? desktopNowPlayingBarColorPalette,
-    int? desktopNowPlayingCarousel,
-    int? desktopNowPlayingHighlightedLyricsSize,
-    bool? desktopNowPlayingLyrics,
-    int? desktopNowPlayingUnhighlightedLyricsSize,
+    int? desktopNowPlayingScreenCarousel,
+    bool? desktopNowPlayingScreenLyrics,
     bool? discordRpc,
     LocalizationData? localization,
     bool? lrcFromDirectory,
+    double? lyricsViewFocusedFontSize,
+    double? lyricsViewFocusedLineHeight,
+    TextAlign? lyricsViewTextAlign,
+    double? lyricsViewUnfocusedFontSize,
+    double? lyricsViewUnfocusedLineHeight,
     bool? mediaLibraryAddTracksToPlaylist,
     Set<AlbumGroupingParameter>? mediaLibraryAlbumGroupingParameters,
     bool? mediaLibraryAlbumSortAscending,
@@ -101,21 +107,13 @@ class ConfigurationBase {
       _desktopNowPlayingBarColorPalette = desktopNowPlayingBarColorPalette;
       await db.setValue(kKeyDesktopNowPlayingBarColorPalette, kTypeBoolean, booleanValue: desktopNowPlayingBarColorPalette);
     }
-    if (desktopNowPlayingCarousel != null) {
-      _desktopNowPlayingCarousel = desktopNowPlayingCarousel;
-      await db.setValue(kKeyDesktopNowPlayingCarousel, kTypeInteger, integerValue: desktopNowPlayingCarousel);
+    if (desktopNowPlayingScreenCarousel != null) {
+      _desktopNowPlayingScreenCarousel = desktopNowPlayingScreenCarousel;
+      await db.setValue(kKeyDesktopNowPlayingScreenCarousel, kTypeInteger, integerValue: desktopNowPlayingScreenCarousel);
     }
-    if (desktopNowPlayingHighlightedLyricsSize != null) {
-      _desktopNowPlayingHighlightedLyricsSize = desktopNowPlayingHighlightedLyricsSize;
-      await db.setValue(kKeyDesktopNowPlayingHighlightedLyricsSize, kTypeInteger, integerValue: desktopNowPlayingHighlightedLyricsSize);
-    }
-    if (desktopNowPlayingLyrics != null) {
-      _desktopNowPlayingLyrics = desktopNowPlayingLyrics;
-      await db.setValue(kKeyDesktopNowPlayingLyrics, kTypeBoolean, booleanValue: desktopNowPlayingLyrics);
-    }
-    if (desktopNowPlayingUnhighlightedLyricsSize != null) {
-      _desktopNowPlayingUnhighlightedLyricsSize = desktopNowPlayingUnhighlightedLyricsSize;
-      await db.setValue(kKeyDesktopNowPlayingUnhighlightedLyricsSize, kTypeInteger, integerValue: desktopNowPlayingUnhighlightedLyricsSize);
+    if (desktopNowPlayingScreenLyrics != null) {
+      _desktopNowPlayingScreenLyrics = desktopNowPlayingScreenLyrics;
+      await db.setValue(kKeyDesktopNowPlayingScreenLyrics, kTypeBoolean, booleanValue: desktopNowPlayingScreenLyrics);
     }
     if (discordRpc != null) {
       _discordRpc = discordRpc;
@@ -123,11 +121,31 @@ class ConfigurationBase {
     }
     if (localization != null) {
       _localization = localization;
-      await db.setValue(kKeyLocalization, kTypeJson, jsonValue: localization);
+      await db.setValue(kKeyLocalization, kTypeJson, jsonValue: localization.toJson());
     }
     if (lrcFromDirectory != null) {
       _lrcFromDirectory = lrcFromDirectory;
       await db.setValue(kKeyLrcFromDirectory, kTypeBoolean, booleanValue: lrcFromDirectory);
+    }
+    if (lyricsViewFocusedFontSize != null) {
+      _lyricsViewFocusedFontSize = lyricsViewFocusedFontSize;
+      await db.setValue(kKeyLyricsViewFocusedFontSize, kTypeDouble, doubleValue: lyricsViewFocusedFontSize);
+    }
+    if (lyricsViewFocusedLineHeight != null) {
+      _lyricsViewFocusedLineHeight = lyricsViewFocusedLineHeight;
+      await db.setValue(kKeyLyricsViewFocusedLineHeight, kTypeDouble, doubleValue: lyricsViewFocusedLineHeight);
+    }
+    if (lyricsViewTextAlign != null) {
+      _lyricsViewTextAlign = lyricsViewTextAlign;
+      await db.setValue(kKeyLyricsViewTextAlign, kTypeInteger, integerValue: lyricsViewTextAlign.index);
+    }
+    if (lyricsViewUnfocusedFontSize != null) {
+      _lyricsViewUnfocusedFontSize = lyricsViewUnfocusedFontSize;
+      await db.setValue(kKeyLyricsViewUnfocusedFontSize, kTypeDouble, doubleValue: lyricsViewUnfocusedFontSize);
+    }
+    if (lyricsViewUnfocusedLineHeight != null) {
+      _lyricsViewUnfocusedLineHeight = lyricsViewUnfocusedLineHeight;
+      await db.setValue(kKeyLyricsViewUnfocusedLineHeight, kTypeDouble, doubleValue: lyricsViewUnfocusedLineHeight);
     }
     if (mediaLibraryAddTracksToPlaylist != null) {
       _mediaLibraryAddTracksToPlaylist = mediaLibraryAddTracksToPlaylist;
@@ -227,11 +245,11 @@ class ConfigurationBase {
     }
     if (playbackState != null) {
       _playbackState = playbackState;
-      await db.setValue(kKeyPlaybackState, kTypeJson, jsonValue: playbackState);
+      await db.setValue(kKeyPlaybackState, kTypeJson, jsonValue: playbackState.toJson());
     }
     if (themeAnimationDuration != null) {
       _themeAnimationDuration = themeAnimationDuration;
-      await db.setValue(kKeyThemeAnimationDuration, kTypeJson, jsonValue: themeAnimationDuration);
+      await db.setValue(kKeyThemeAnimationDuration, kTypeJson, jsonValue: themeAnimationDuration.toJson());
     }
     if (themeMaterialStandard != null) {
       _themeMaterialStandard = themeMaterialStandard;
@@ -255,13 +273,16 @@ class ConfigurationBase {
     return {
       /* Boolean */ kKeyAudioFormatDisplay: true,
       /* Boolean */ kKeyDesktopNowPlayingBarColorPalette: true,
-      /* Integer */ kKeyDesktopNowPlayingCarousel: 0,
-      /* Integer */ kKeyDesktopNowPlayingHighlightedLyricsSize: 32,
-      /* Boolean */ kKeyDesktopNowPlayingLyrics: true,
-      /* Integer */ kKeyDesktopNowPlayingUnhighlightedLyricsSize: 14,
+      /* Integer */ kKeyDesktopNowPlayingScreenCarousel: 0,
+      /* Boolean */ kKeyDesktopNowPlayingScreenLyrics: true,
       /* Boolean */ kKeyDiscordRpc: true,
       /* Json    */ kKeyLocalization: const LocalizationData(code: 'en_US', name: 'English (United States)', country: 'United States'),
       /* Boolean */ kKeyLrcFromDirectory: false,
+      /* Double  */ kKeyLyricsViewFocusedFontSize: 64.0,
+      /* Double  */ kKeyLyricsViewFocusedLineHeight: 1.2,
+      /* Integer */ kKeyLyricsViewTextAlign: TextAlign.start.index,
+      /* Double  */ kKeyLyricsViewUnfocusedFontSize: 28.0,
+      /* Double  */ kKeyLyricsViewUnfocusedLineHeight: 1.2,
       /* Boolean */ kKeyMediaLibraryAddTracksToPlaylist: true,
       /* Json    */ kKeyMediaLibraryAlbumGroupingParameters: [AlbumGroupingParameter.album.index],
       /* Boolean */ kKeyMediaLibraryAlbumSortAscending: true,
@@ -297,13 +318,16 @@ class ConfigurationBase {
 
   bool? _audioFormatDisplay;
   bool? _desktopNowPlayingBarColorPalette;
-  int? _desktopNowPlayingCarousel;
-  int? _desktopNowPlayingHighlightedLyricsSize;
-  bool? _desktopNowPlayingLyrics;
-  int? _desktopNowPlayingUnhighlightedLyricsSize;
+  int? _desktopNowPlayingScreenCarousel;
+  bool? _desktopNowPlayingScreenLyrics;
   bool? _discordRpc;
   LocalizationData? _localization;
   bool? _lrcFromDirectory;
+  double? _lyricsViewFocusedFontSize;
+  double? _lyricsViewFocusedLineHeight;
+  TextAlign? _lyricsViewTextAlign;
+  double? _lyricsViewUnfocusedFontSize;
+  double? _lyricsViewUnfocusedLineHeight;
   bool? _mediaLibraryAddTracksToPlaylist;
   Set<AlbumGroupingParameter>? _mediaLibraryAlbumGroupingParameters;
   bool? _mediaLibraryAlbumSortAscending;
@@ -340,13 +364,16 @@ class ConfigurationBase {
 
 const kKeyAudioFormatDisplay = 'AUDIO_FORMAT_DISPLAY';
 const kKeyDesktopNowPlayingBarColorPalette = 'DESKTOP_NOW_PLAYING_BAR_COLOR_PALETTE';
-const kKeyDesktopNowPlayingCarousel = 'DESKTOP_NOW_PLAYING_CAROUSEL';
-const kKeyDesktopNowPlayingHighlightedLyricsSize = 'DESKTOP_NOW_PLAYING_HIGHLIGHTED_LYRICS_SIZE';
-const kKeyDesktopNowPlayingLyrics = 'DESKTOP_NOW_PLAYING_LYRICS';
-const kKeyDesktopNowPlayingUnhighlightedLyricsSize = 'DESKTOP_NOW_PLAYING_UNHIGHLIGHTED_LYRICS_SIZE';
+const kKeyDesktopNowPlayingScreenCarousel = 'DESKTOP_NOW_PLAYING_SCREEN_CAROUSEL';
+const kKeyDesktopNowPlayingScreenLyrics = 'DESKTOP_NOW_PLAYING_SCREEN_LYRICS';
 const kKeyDiscordRpc = 'DISCORD_RPC';
 const kKeyLocalization = 'LOCALIZATION';
 const kKeyLrcFromDirectory = 'LRC_FROM_DIRECTORY';
+const kKeyLyricsViewFocusedFontSize = 'LYRICS_VIEW_FOCUSED_FONT_SIZE';
+const kKeyLyricsViewFocusedLineHeight = 'LYRICS_VIEW_FOCUSED_LINE_HEIGHT';
+const kKeyLyricsViewTextAlign = 'LYRICS_VIEW_TEXT_ALIGN';
+const kKeyLyricsViewUnfocusedFontSize = 'LYRICS_VIEW_UNFOCUSED_FONT_SIZE';
+const kKeyLyricsViewUnfocusedLineHeight = 'LYRICS_VIEW_UNFOCUSED_LINE_HEIGHT';
 const kKeyMediaLibraryAddTracksToPlaylist = 'MEDIA_LIBRARY_ADD_TRACKS_TO_PLAYLIST';
 const kKeyMediaLibraryAlbumGroupingParameters = 'MEDIA_LIBRARY_ALBUM_GROUPING_PARAMETERS';
 const kKeyMediaLibraryAlbumSortAscending = 'MEDIA_LIBRARY_ALBUM_SORT_ASCENDING';

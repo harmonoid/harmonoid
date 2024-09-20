@@ -33,6 +33,7 @@ class Database extends _$Database {
     int type, {
     bool? booleanValue,
     int? integerValue,
+    double? doubleValue,
     String? stringValue,
     dynamic jsonValue,
   }) async {
@@ -41,6 +42,9 @@ class Database extends _$Database {
     }
     if (type == kTypeInteger && !(booleanValue == null && integerValue != null && stringValue == null && jsonValue == null)) {
       throw ArgumentError('Invalid type: integer', 'type');
+    }
+    if (type == kTypeDouble && !(booleanValue == null && integerValue == null && stringValue == null && jsonValue == null)) {
+      throw ArgumentError('Invalid type: double', 'type');
     }
     if (type == kTypeString && !(booleanValue == null && integerValue == null && stringValue != null && jsonValue == null)) {
       throw ArgumentError('Invalid type: string', 'type');
@@ -55,6 +59,7 @@ class Database extends _$Database {
         type: type,
         booleanValue: booleanValue,
         integerValue: integerValue,
+        doubleValue: doubleValue,
         stringValue: stringValue,
         jsonValue: jsonValue == null ? null : json.encode(jsonValue),
       ),
@@ -68,6 +73,7 @@ class Database extends _$Database {
     int type, {
     bool? booleanValue,
     int? integerValue,
+    double? doubleValue,
     String? stringValue,
     dynamic jsonValue,
   }) async {
@@ -76,6 +82,9 @@ class Database extends _$Database {
     }
     if (type == kTypeInteger && !(booleanValue == null && integerValue != null && stringValue == null && jsonValue == null)) {
       throw ArgumentError('Invalid type: integer', 'type');
+    }
+    if (type == kTypeDouble && !(booleanValue == null && integerValue == null && stringValue == null && jsonValue == null)) {
+      throw ArgumentError('Invalid type: double', 'type');
     }
     if (type == kTypeString && !(booleanValue == null && integerValue == null && stringValue != null && jsonValue == null)) {
       throw ArgumentError('Invalid type: string', 'type');
@@ -90,6 +99,7 @@ class Database extends _$Database {
         type: type,
         booleanValue: booleanValue,
         integerValue: integerValue,
+        doubleValue: doubleValue,
         stringValue: stringValue,
         jsonValue: jsonValue == null ? null : json.encode(jsonValue),
       ),
@@ -107,6 +117,12 @@ class Database extends _$Database {
   Future<int?> getInteger(String key) async {
     final entry = await (select(entries)..where((e) => e.key.equals(key))).getSingleOrNull();
     return entry?.integerValue;
+  }
+
+  /// Gets the double value of the entry with the given [key].
+  Future<double?> getDouble(String key) async {
+    final entry = await (select(entries)..where((e) => e.key.equals(key))).getSingleOrNull();
+    return entry?.doubleValue;
   }
 
   /// Gets the string value of the entry with the given [key].

@@ -62,6 +62,8 @@ class Configuration extends ConfigurationBase {
         await db.setValueIfAbsent(key, kTypeBoolean, booleanValue: value);
       } else if (value is int) {
         await db.setValueIfAbsent(key, kTypeInteger, integerValue: value);
+      } else if (value is double) {
+        await db.setValueIfAbsent(key, kTypeDouble, doubleValue: value);
       } else if (value is String) {
         await db.setValueIfAbsent(key, kTypeString, stringValue: value);
       } else {
@@ -71,13 +73,16 @@ class Configuration extends ConfigurationBase {
 
     _audioFormatDisplay = await db.getBoolean(kKeyAudioFormatDisplay);
     _desktopNowPlayingBarColorPalette = await db.getBoolean(kKeyDesktopNowPlayingBarColorPalette);
-    _desktopNowPlayingCarousel = await db.getInteger(kKeyDesktopNowPlayingCarousel);
-    _desktopNowPlayingHighlightedLyricsSize = await db.getInteger(kKeyDesktopNowPlayingHighlightedLyricsSize);
-    _desktopNowPlayingLyrics = await db.getBoolean(kKeyDesktopNowPlayingLyrics);
-    _desktopNowPlayingUnhighlightedLyricsSize = await db.getInteger(kKeyDesktopNowPlayingUnhighlightedLyricsSize);
+    _desktopNowPlayingScreenCarousel = await db.getInteger(kKeyDesktopNowPlayingScreenCarousel);
+    _desktopNowPlayingScreenLyrics = await db.getBoolean(kKeyDesktopNowPlayingScreenLyrics);
     _discordRpc = await db.getBoolean(kKeyDiscordRpc);
     _localization = LocalizationData.fromJson(await db.getJson(kKeyLocalization));
     _lrcFromDirectory = await db.getBoolean(kKeyLrcFromDirectory);
+    _lyricsViewFocusedFontSize = await db.getDouble(kKeyLyricsViewFocusedFontSize);
+    _lyricsViewFocusedLineHeight = await db.getDouble(kKeyLyricsViewFocusedLineHeight);
+    _lyricsViewTextAlign = TextAlign.values[(await db.getInteger(kKeyLyricsViewTextAlign))!];
+    _lyricsViewUnfocusedFontSize = await db.getDouble(kKeyLyricsViewUnfocusedFontSize);
+    _lyricsViewUnfocusedLineHeight = await db.getDouble(kKeyLyricsViewUnfocusedLineHeight);
     _mediaLibraryAddTracksToPlaylist = await db.getBoolean(kKeyMediaLibraryAddTracksToPlaylist);
     _mediaLibraryAlbumGroupingParameters = (await db.getJson(kKeyMediaLibraryAlbumGroupingParameters)).map<AlbumGroupingParameter>((e) => AlbumGroupingParameter.values[e]).toSet();
     _mediaLibraryAlbumSortAscending = await db.getBoolean(kKeyMediaLibraryAlbumSortAscending);
@@ -197,10 +202,10 @@ Future<String> getDefaultMediaLibraryDirectory() async {
   throw UnsupportedError('Unsupported platform: ${Platform.operatingSystem}');
 }
 
-extension on Set<Directory> {
-  List<String> toJson() => map((e) => e.path).toList();
-}
-
 extension on Set<AlbumGroupingParameter> {
   List<int> toJson() => map((e) => e.index).toList();
+}
+
+extension on Set<Directory> {
+  List<String> toJson() => map((e) => e.path).toList();
 }
