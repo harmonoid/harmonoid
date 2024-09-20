@@ -190,10 +190,17 @@ Future<String> getDefaultMediaLibraryDirectory() async {
       }
       return path.normalize(result.stdout.toString().trim());
     } catch (exception, stacktrace) {
-      // Fallback.
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
-      return path.join(path.normalize(Platform.environment['HOME']!), 'Music');
+      try {
+        // Fallback 1.
+        return path.normalize(Platform.environment['XDG_MUSIC_DIR']!);
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+        // Fallback 2.
+        return path.join(path.normalize(Platform.environment['HOME']!), 'Music');
+      }
     }
   } else if (Platform.isAndroid) {
     final result = await AndroidStorageController.instance.external;
