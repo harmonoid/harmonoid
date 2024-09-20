@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 
 import 'package:harmonoid/models/lyric.dart';
+import 'package:harmonoid/models/lyrics.dart';
 
 /// {@template lyrics_api}
 ///
@@ -18,7 +19,7 @@ class LyricsApi {
   /// {@macro lyrics_api}
   const LyricsApi._();
 
-  Future<List<Lyric>?> lyrics(String name) async {
+  Future<Lyrics?> lyrics(String name) async {
     try {
       final response = await http.get(
         Uri.https(
