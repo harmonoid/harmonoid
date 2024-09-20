@@ -10,12 +10,14 @@ import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:path/path.dart';
 import 'package:share_plus/share_plus.dart';
 
-import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/extensions/playable.dart';
 import 'package:harmonoid/extensions/track.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
+import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
@@ -761,7 +763,7 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
       );
       break;
     case 2:
-      await showAddToPlaylistDialog(context, track);
+      await showAddToPlaylistDialog(context, track: track);
       break;
     case 3:
       await MediaPlayer.instance.add([track.toPlayable()]);
@@ -979,7 +981,12 @@ Future<Directory?> pickDirectory({bool native = false}) async {
   }
 }
 
-Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
+Future<void> showAddToPlaylistDialog(
+  BuildContext context, {
+  Track? track,
+  Playable? playable,
+}) {
+  assert(track != null || playable != null);
   final playlists = MediaLibrary.instance.playlists.playlists;
   if (isDesktop) {
     return showDialog(
@@ -988,30 +995,48 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
         contentPadding: const EdgeInsets.only(top: 20.0),
         title: Text(Localization.instance.PLAYLIST_ADD_DIALOG_TITLE),
         content: SizedBox(
-          height: 480.0,
-          width: 512.0,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Divider(height: 1.0),
-              Expanded(
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: playlists.length,
-                  itemBuilder: (context, i) => PlaylistItem(
-                    playlist: playlists[i],
-                    onTap: () async {
-                      await MediaLibrary.instance.playlists.createEntry(playlists[i], track: track);
-                      await Navigator.of(ctx).maybePop();
-                    },
+          width: 640.0,
+          child: Material(
+            color: Colors.transparent,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Divider(height: 1.0, thickness: 1.0),
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (int i = 0; i < playlists.length; i++) ...[
+                          PlaylistItem(
+                            playlist: playlists[i],
+                            onTap: () async {
+                              if (track != null) {
+                                await MediaLibrary.instance.playlists.createEntry(playlists[i], track: track);
+                              }
+                              if (playable != null) {
+                                await MediaLibrary.instance.playlists.createEntry(
+                                  playlists[i],
+                                  uri: playable.uri,
+                                  title: playable.playlistEntryTitle,
+                                );
+                              }
+                              await Navigator.of(ctx).maybePop();
+                            },
+                          ),
+                          if (i < playlists.length - 1) const Divider(height: 1.0, thickness: 1.0),
+                        ],
+                      ],
+                    ),
                   ),
-                  separatorBuilder: (context, i) => const Divider(height: 1.0),
                 ),
-              ),
-              const Divider(height: 1.0),
-            ],
+                const Divider(height: 1.0, thickness: 1.0),
+              ],
+            ),
           ),
         ),
         actions: [
