@@ -161,36 +161,38 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                               kPlaylistsPath: Localization.instance.PLAYLISTS,
                             }.entries.map<Widget>(
                               (e) {
-                                return InkWell(
-                                  borderRadius: BorderRadius.circular(4.0),
-                                  onTap: () {
-                                    context.go('/$kMediaLibraryPath/${e.key}');
-                                    Configuration.instance.set(mediaLibraryPath: e.key);
-                                  },
-                                  child: Container(
-                                    height: kDesktopAppBarHeight - 20.0,
-                                    alignment: Alignment.center,
-                                    padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                                    child: Stack(
+                                return MouseRegion(
+                                  cursor: SystemMouseCursors.click,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      context.go('/$kMediaLibraryPath/${e.key}');
+                                      Configuration.instance.set(mediaLibraryPath: e.key);
+                                    },
+                                    child: Container(
+                                      height: kDesktopAppBarHeight - 20.0,
                                       alignment: Alignment.center,
-                                      children: [
-                                        Text(
-                                          e.value.toUpperCase(),
-                                          style: TextStyle(
-                                            fontSize: 20.0,
-                                            fontWeight: FontWeight.w600,
-                                            color: e.key == _path ? Theme.of(context).textTheme.bodyLarge?.color : Colors.transparent,
+                                      padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                                      child: Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          Text(
+                                            e.value.toUpperCase(),
+                                            style: TextStyle(
+                                              fontSize: 20.0,
+                                              fontWeight: FontWeight.w600,
+                                              color: e.key == _path ? Theme.of(context).textTheme.bodyLarge?.color : Colors.transparent,
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          e.value.toUpperCase(),
-                                          style: TextStyle(
-                                            fontSize: 20.0,
-                                            fontWeight: FontWeight.w300,
-                                            color: e.key != _path ? Theme.of(context).textTheme.bodyMedium?.color : Colors.transparent,
+                                          Text(
+                                            e.value.toUpperCase(),
+                                            style: TextStyle(
+                                              fontSize: 20.0,
+                                              fontWeight: FontWeight.w300,
+                                              color: e.key != _path ? Theme.of(context).textTheme.bodyMedium?.color : Colors.transparent,
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );
