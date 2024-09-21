@@ -345,7 +345,7 @@ class DesktopMediaLibrarySection extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8.0),
-            Text(Localization.instance.CURRENTLY_ADDED_FOLDERS),
+            Text(Localization.instance.ADDED_FOLDERS),
             MediaLibrarySection.buildAddedFolders(context, mediaLibrary),
             MediaLibrarySection.buildRefreshIndicator(context, mediaLibrary),
             Transform.translate(
@@ -426,7 +426,7 @@ class MobileMediaLibrarySection extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
-                Localization.instance.CURRENTLY_ADDED_FOLDERS,
+                Localization.instance.ADDED_FOLDERS,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyLarge,

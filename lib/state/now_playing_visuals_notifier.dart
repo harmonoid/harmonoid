@@ -56,7 +56,7 @@ class NowPlayingVisualsNotifier {
   }
 
   /// Count of bundled now playing visuals.
-  static const kBundledVisualsCount = 9;
+  static const kBundledVisualsCount = 2;
 
   /// Supported image formats.
   static const kSupportedImageFormats = [

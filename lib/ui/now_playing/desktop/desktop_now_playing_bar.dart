@@ -42,194 +42,198 @@ class DesktopNowPlayingBarState extends State<DesktopNowPlayingBar> {
   Widget build(BuildContext context) {
     return Consumer<NowPlayingColorPaletteNotifier>(
       builder: (context, nowPlayingColorPaletteNotifier, _) {
-        final nowPlayingColors = NowPlayingColors.fromPalette(
-          context,
-          // DO NOT USE PALETTE IN MATERIAL DESIGN 3
-          isMaterial3 ? null : nowPlayingColorPaletteNotifier.palette,
-        );
-        return Material(
-          color: nowPlayingColors.background,
-          elevation: Theme.of(context).bottomAppBarTheme.elevation ?? kDefaultHeavyElevation,
-          child: Consumer<MediaPlayer>(
-            builder: (context, mediaPlayer, _) {
-              return Stack(
-                children: [
-                  Positioned.fill(
-                    child: RippleSurface(color: nowPlayingColors.background),
-                  ),
-                  SliderTheme(
-                    data: SliderThemeData(
-                      thumbColor: nowPlayingColors.sliderForeground,
-                      activeTrackColor: nowPlayingColors.sliderForeground,
-                      inactiveTrackColor: nowPlayingColors.sliderBackground,
-                      disabledThumbColor: nowPlayingColors.sliderForeground,
-                      disabledActiveTrackColor: nowPlayingColors.sliderForeground,
-                      disabledInactiveTrackColor: nowPlayingColors.sliderBackground,
-                    ),
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: NowPlayingBar.height,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          () {
-                            try {
-                              return Expanded(
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    MouseRegion(
-                                      onEnter: (_) => coverHoverNotifier.value = true,
-                                      onExit: (_) => coverHoverNotifier.value = false,
-                                      child: Stack(
-                                        children: [
-                                          ClipRect(
-                                            child: ScaleOnHover(
-                                              child: Image(
-                                                width: NowPlayingBar.height,
-                                                height: NowPlayingBar.height,
-                                                image: cover(
-                                                  uri: mediaPlayer.current.uri,
-                                                  cacheWidth: NowPlayingBar.height.toInt(),
+        return Provider<NowPlayingColors>.value(
+          value: NowPlayingColors.fromPalette(
+            context,
+            // DO NOT USE PALETTE IN MATERIAL DESIGN 3
+            isMaterial3 ? null : nowPlayingColorPaletteNotifier.palette,
+          ),
+          builder: (context, _) {
+            final nowPlayingColors = context.read<NowPlayingColors>();
+            return Material(
+              color: nowPlayingColors.background,
+              elevation: Theme.of(context).bottomAppBarTheme.elevation ?? kDefaultHeavyElevation,
+              child: Consumer<MediaPlayer>(
+                builder: (context, mediaPlayer, _) {
+                  return Stack(
+                    children: [
+                      Positioned.fill(
+                        child: RippleSurface(color: nowPlayingColors.background),
+                      ),
+                      SliderTheme(
+                        data: SliderThemeData(
+                          thumbColor: nowPlayingColors.sliderForeground,
+                          activeTrackColor: nowPlayingColors.sliderForeground,
+                          inactiveTrackColor: nowPlayingColors.sliderBackground,
+                          disabledThumbColor: nowPlayingColors.sliderForeground,
+                          disabledActiveTrackColor: nowPlayingColors.sliderForeground,
+                          disabledInactiveTrackColor: nowPlayingColors.sliderBackground,
+                        ),
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: NowPlayingBar.height,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              () {
+                                try {
+                                  return Expanded(
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        MouseRegion(
+                                          onEnter: (_) => coverHoverNotifier.value = true,
+                                          onExit: (_) => coverHoverNotifier.value = false,
+                                          child: Stack(
+                                            children: [
+                                              ClipRect(
+                                                child: ScaleOnHover(
+                                                  child: Image(
+                                                    width: NowPlayingBar.height,
+                                                    height: NowPlayingBar.height,
+                                                    image: cover(
+                                                      uri: mediaPlayer.current.uri,
+                                                      cacheWidth: NowPlayingBar.height.toInt(),
+                                                    ),
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                 ),
-                                                fit: BoxFit.cover,
                                               ),
-                                            ),
-                                          ),
-                                          ValueListenableBuilder<bool>(
-                                            valueListenable: coverHoverNotifier,
-                                            builder: (context, value, _) {
-                                              return Positioned.fill(
-                                                child: AnimatedOpacity(
-                                                  opacity: value ? 1.0 : 0.0,
-                                                  duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
-                                                  curve: Curves.easeInOut,
-                                                  child: Material(
-                                                    color: Colors.black.withOpacity(0.5),
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        context.push('/$kNowPlayingPath');
-                                                      },
-                                                      child: const Center(
-                                                        child: Icon(
-                                                          Icons.music_note,
-                                                          size: 32.0,
-                                                          color: Colors.white,
+                                              ValueListenableBuilder<bool>(
+                                                valueListenable: coverHoverNotifier,
+                                                builder: (context, value, _) {
+                                                  return Positioned.fill(
+                                                    child: AnimatedOpacity(
+                                                      opacity: value ? 1.0 : 0.0,
+                                                      duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
+                                                      curve: Curves.easeInOut,
+                                                      child: Material(
+                                                        color: Colors.black.withOpacity(0.5),
+                                                        child: InkWell(
+                                                          onTap: () {
+                                                            context.push('/$kNowPlayingPath');
+                                                          },
+                                                          child: const Center(
+                                                            child: Icon(
+                                                              Icons.music_note,
+                                                              size: 32.0,
+                                                              color: Colors.white,
+                                                            ),
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
-                                                  ),
-                                                ),
-                                              );
-                                            },
+                                                  );
+                                                },
+                                              ),
+                                            ],
                                           ),
-                                        ],
+                                        ),
+                                        const SizedBox(width: 12.0),
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                mediaPlayer.current.title,
+                                                style: Theme.of(context).textTheme.titleMedium?.copyWith(color: nowPlayingColors.backgroundText),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              if (mediaPlayer.current.subtitle.isNotEmpty)
+                                                HyperLink(
+                                                  text: TextSpan(
+                                                    children: [
+                                                      for (final artist in mediaPlayer.current.subtitle) ...[
+                                                        TextSpan(
+                                                          text: artist.isEmpty ? kDefaultArtist : artist,
+                                                          recognizer: TapGestureRecognizer()
+                                                            ..onTap = () {
+                                                              navigateToArtist(context, ArtistLookupKey(artist: artist));
+                                                            },
+                                                        ),
+                                                        const TextSpan(
+                                                          text: ', ',
+                                                        ),
+                                                      ]
+                                                    ]..removeLast(),
+                                                  ),
+                                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: nowPlayingColors.backgroundText),
+                                                ),
+                                              Text(
+                                                mediaPlayer.state.getAudioFormatLabel(),
+                                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: nowPlayingColors.backgroundText),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12.0),
+                                      ],
+                                    ),
+                                  );
+                                } catch (_) {
+                                  return const Spacer();
+                                }
+                              }(),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width / 2.5,
+                                child: Controls(
+                                  key: ValueKey(Theme.of(context).extension<MaterialStandard>()?.value ?? 0),
+                                ),
+                              ),
+                              Expanded(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const Spacer(),
+                                    const SizedBox(width: 12.0),
+                                    IconButton(
+                                      onPressed: mediaPlayer.muteOrUnmute,
+                                      color: nowPlayingColors.backgroundEnabledIcon,
+                                      icon: Icon(mediaPlayer.state.volume == 0.0 ? Icons.volume_off : (mediaPlayer.state.volume < 50.0 ? Icons.volume_down : Icons.volume_up)),
+                                      splashRadius: 20.0,
+                                      iconSize: 20.0,
+                                      tooltip: mediaPlayer.state.volume == 0.0 ? Localization.instance.UNMUTE : Localization.instance.MUTE,
+                                    ),
+                                    const SizedBox(width: 8.0),
+                                    SizedBox(
+                                      width: 96.0,
+                                      child: ScrollableSlider(
+                                        min: 0.0,
+                                        max: 100.0,
+                                        value: mediaPlayer.state.volume.clamp(0.0, 100.0),
+                                        onChanged: (value) => mediaPlayer.setVolume(value),
+                                        onScrolledDown: () => mediaPlayer.setVolume((mediaPlayer.state.volume - 5.0).clamp(0.0, 100.0)),
+                                        onScrolledUp: () => mediaPlayer.setVolume((mediaPlayer.state.volume + 5.0).clamp(0.0, 100.0)),
                                       ),
                                     ),
                                     const SizedBox(width: 12.0),
-                                    Expanded(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            mediaPlayer.current.title,
-                                            style: Theme.of(context).textTheme.titleMedium?.copyWith(color: nowPlayingColors.backgroundText),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          if (mediaPlayer.current.subtitle.isNotEmpty)
-                                            HyperLink(
-                                              text: TextSpan(
-                                                children: [
-                                                  for (final artist in mediaPlayer.current.subtitle) ...[
-                                                    TextSpan(
-                                                      text: artist.isEmpty ? kDefaultArtist : artist,
-                                                      recognizer: TapGestureRecognizer()
-                                                        ..onTap = () {
-                                                          navigateToArtist(context, ArtistLookupKey(artist: artist));
-                                                        },
-                                                    ),
-                                                    const TextSpan(
-                                                      text: ', ',
-                                                    ),
-                                                  ]
-                                                ]..removeLast(),
-                                              ),
-                                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: nowPlayingColors.backgroundText),
-                                            ),
-                                          Text(
-                                            mediaPlayer.state.getAudioFormatLabel(),
-                                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: nowPlayingColors.backgroundText),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ],
-                                      ),
+                                    IconButton(
+                                      onPressed: () => NowPlayingControlPanel.show(context),
+                                      color: nowPlayingColors.backgroundEnabledIcon,
+                                      icon: const Icon(Icons.more_horiz),
+                                      splashRadius: 20.0,
+                                      iconSize: 20.0,
+                                      tooltip: Localization.instance.CONTROL_PANEL,
                                     ),
                                     const SizedBox(width: 12.0),
                                   ],
                                 ),
-                              );
-                            } catch (_) {
-                              return const Spacer();
-                            }
-                          }(),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width / 2.5,
-                            child: Controls(
-                              key: ValueKey(Theme.of(context).extension<MaterialStandard>()?.value ?? 0),
-                              nowPlayingColors: nowPlayingColors,
-                            ),
+                              ),
+                            ],
                           ),
-                          Expanded(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const Spacer(),
-                                const SizedBox(width: 12.0),
-                                IconButton(
-                                  onPressed: mediaPlayer.muteOrUnmute,
-                                  color: nowPlayingColors.backgroundEnabledIcon,
-                                  icon: Icon(mediaPlayer.state.volume == 0.0 ? Icons.volume_off : (mediaPlayer.state.volume < 50.0 ? Icons.volume_down : Icons.volume_up)),
-                                  splashRadius: 20.0,
-                                  iconSize: 20.0,
-                                  tooltip: mediaPlayer.state.volume == 0.0 ? Localization.instance.UNMUTE : Localization.instance.MUTE,
-                                ),
-                                const SizedBox(width: 8.0),
-                                SizedBox(
-                                  width: 96.0,
-                                  child: ScrollableSlider(
-                                    min: 0.0,
-                                    max: 100.0,
-                                    value: mediaPlayer.state.volume.clamp(0.0, 100.0),
-                                    onChanged: (value) => mediaPlayer.setVolume(value),
-                                    onScrolledDown: () => mediaPlayer.setVolume((mediaPlayer.state.volume - 5.0).clamp(0.0, 100.0)),
-                                    onScrolledUp: () => mediaPlayer.setVolume((mediaPlayer.state.volume + 5.0).clamp(0.0, 100.0)),
-                                  ),
-                                ),
-                                const SizedBox(width: 12.0),
-                                IconButton(
-                                  onPressed: () => NowPlayingControlPanel.show(context),
-                                  color: nowPlayingColors.backgroundEnabledIcon,
-                                  icon: const Icon(Icons.more_horiz),
-                                  splashRadius: 20.0,
-                                  iconSize: 20.0,
-                                  tooltip: Localization.instance.CONTROL_PANEL,
-                                ),
-                                const SizedBox(width: 12.0),
-                              ],
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
+                    ],
+                  );
+                },
+              ),
+            );
+          },
         );
       },
     );
@@ -237,13 +241,13 @@ class DesktopNowPlayingBarState extends State<DesktopNowPlayingBar> {
 }
 
 class Controls extends StatelessWidget {
-  final NowPlayingColors nowPlayingColors;
-  const Controls({super.key, required this.nowPlayingColors});
+  const Controls({super.key});
 
   static double? get floatingActionButtonElevation => isMaterial3 ? 0.0 : null;
 
   @override
   Widget build(BuildContext context) {
+    final nowPlayingColors = context.read<NowPlayingColors>();
     return Consumer<MediaPlayer>(
       builder: (context, mediaPlayer, _) {
         const sliderMin = 0.0;

@@ -21,6 +21,8 @@ class NowPlayingColors {
     this.sliderBackground,
   });
 
+  // NOW PLAYING BAR
+
   factory NowPlayingColors.fromPalette(BuildContext context, List<Color>? palette) {
     final foreground = palette?.last ?? Theme.of(context).floatingActionButtonTheme.backgroundColor!;
     final background = palette?.first ?? Theme.of(context).bottomAppBarTheme.color ?? Theme.of(context).colorScheme.surface;
@@ -41,6 +43,8 @@ class NowPlayingColors {
       sliderBackground: sliderBackground,
     );
   }
+
+  // NOW PLAYING SCREEN
 
   factory NowPlayingColors.of(BuildContext context) {
     const foreground = Colors.transparent;

@@ -9,8 +9,8 @@ import 'package:harmonoid/models/android_media_format.dart';
 
 /// {@template android_tag_reader}
 ///
-/// MediaKitTagReader
-/// -----------------
+/// AndroidTagReader
+/// ----------------
 /// [`MediaMetadataRetriever`](https://developer.android.com/reference/android/media/MediaMetadataRetriever) implementation of [PlatformTagReader].
 ///
 /// {@endtemplate}
