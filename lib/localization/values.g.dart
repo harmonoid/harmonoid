@@ -7,6 +7,7 @@ part of 'localization.dart';
 class Values {
   late String ABOUT;
   late String ADD;
+  late String ADDED_FOLDERS;
   late String ADDED_M_OF_N_FILES;
   late String ADDING_YOUR_MUSIC;
   late String ADD_NEW_FOLDER;
@@ -38,7 +39,6 @@ class Values {
   late String COUNT;
   late String CREATE;
   late String CREATE_NEW_PLAYLIST;
-  late String CURRENTLY_ADDED_FOLDERS;
   late String DATE_ADDED;
   late String DELETE;
   late String DESCENDING;

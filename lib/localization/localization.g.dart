@@ -12,6 +12,7 @@ class LocalizationBase extends Values {
     current = value;
     ABOUT = map['ABOUT']!;
     ADD = map['ADD']!;
+    ADDED_FOLDERS = map['ADDED_FOLDERS']!;
     ADDED_M_OF_N_FILES = map['ADDED_M_OF_N_FILES']!;
     ADDING_YOUR_MUSIC = map['ADDING_YOUR_MUSIC']!;
     ADD_NEW_FOLDER = map['ADD_NEW_FOLDER']!;
@@ -43,7 +44,6 @@ class LocalizationBase extends Values {
     COUNT = map['COUNT']!;
     CREATE = map['CREATE']!;
     CREATE_NEW_PLAYLIST = map['CREATE_NEW_PLAYLIST']!;
-    CURRENTLY_ADDED_FOLDERS = map['CURRENTLY_ADDED_FOLDERS']!;
     DATE_ADDED = map['DATE_ADDED']!;
     DELETE = map['DELETE']!;
     DESCENDING = map['DESCENDING']!;
