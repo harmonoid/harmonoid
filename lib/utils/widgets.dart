@@ -2100,14 +2100,14 @@ class StatefulAnimatedIconState extends State<StatefulAnimatedIcon> with SingleT
 
 class StatefulPageViewBuilder extends StatefulWidget {
   final int index;
-  final int itemCount;
   final Widget Function(BuildContext, int) itemBuilder;
+  final int? itemCount;
   final ScrollPhysics? physics;
   const StatefulPageViewBuilder({
     super.key,
     required this.index,
-    required this.itemCount,
     required this.itemBuilder,
+    this.itemCount,
     this.physics,
   });
 
