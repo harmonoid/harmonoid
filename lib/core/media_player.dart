@@ -1,15 +1,17 @@
 import 'dart:io';
 import 'package:audio_service/audio_service.dart' hide PlaybackState;
 import 'package:flutter/foundation.dart';
-import 'package:harmonoid/core/configuration/configuration.dart';
-import 'package:harmonoid/extensions/media_player_state.dart';
-import 'package:harmonoid/localization/localization.dart';
+import 'package:flutter/rendering.dart';
 import 'package:media_kit/media_kit.dart' hide Playable;
+import 'package:system_media_transport_controls/system_media_transport_controls.dart';
 import 'package:tag_reader/tag_reader.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
 
+import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/extensions/playable.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/loop.dart';
 import 'package:harmonoid/mappers/media.dart';
 import 'package:harmonoid/mappers/playable.dart';
@@ -21,8 +23,10 @@ import 'package:harmonoid/models/loop.dart';
 import 'package:harmonoid/models/media_player_state.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/models/playback_state.dart';
+import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/methods.dart';
+import 'package:harmonoid/utils/rendering.dart';
 
 /// {@template media_player}
 ///
@@ -66,7 +70,6 @@ class MediaPlayer extends ChangeNotifier {
       notifyMPRIS();
       notifySystemMediaTransportControls();
       notifyWindowsTaskbar();
-      notifyDiscordRPC();
       notifyListeners();
     }
   }
@@ -193,8 +196,8 @@ class MediaPlayer extends ChangeNotifier {
 
   Future<void> notifyHistoryPlaylist() async {
     if (state.playables.isEmpty) return;
-    if (_notifyHistoryPlaylistFlagUri == state.playables[state.index].uri) return;
-    final uri = state.playables[state.index].uri;
+    if (_notifyHistoryPlaylistFlagUri == current.uri) return;
+    final uri = current.uri;
     _notifyHistoryPlaylistFlagUri = uri;
 
     if (await MediaLibrary.instance.db.contains(current.uri)) {
@@ -228,49 +231,86 @@ class MediaPlayer extends ChangeNotifier {
 
   Future<void> notifySystemMediaTransportControls() async {
     if (!Platform.isWindows) return;
-    // TODO:
+    try {
+      if (_systemMediaTransportControls == null) {
+        SystemMediaTransportControls.ensureInitialized();
+        _systemMediaTransportControls = SystemMediaTransportControls.instance
+          ..create((event) {
+            final fn = switch (event) {
+              SMTCEvent.play => play,
+              SMTCEvent.pause => pause,
+              SMTCEvent.next => next,
+              SMTCEvent.previous => previous,
+              _ => null,
+            };
+            fn?.call();
+          });
+      }
+
+      _systemMediaTransportControls
+        ?..setStatus(state.playing ? SMTCStatus.playing : SMTCStatus.paused)
+        ..setMusicData(
+          albumTitle: current.description.firstOrNull,
+          albumArtist: current.subtitle.firstOrNull,
+          artist: current.subtitle.join(', '),
+          title: current.title,
+        )
+        ..setTimelineData(
+          endTime: state.duration.inMilliseconds,
+          position: state.position.inMilliseconds,
+        );
+
+      if (_notifySystemMediaTransportControlsFlagUri == current.uri) return;
+      final uri = current.uri;
+      _notifySystemMediaTransportControlsFlagUri = uri;
+      final result = cover(uri: current.uri);
+      final artwork = switch (result) {
+        AsyncFileImage() => await result.file,
+        FileImage() => result.file,
+        NetworkImage() => result.url,
+        _ => null,
+      };
+      await _systemMediaTransportControls?.setArtwork(artwork);
+    } catch (_) {}
   }
 
   Future<void> notifyWindowsTaskbar() async {
     if (!Platform.isWindows) return;
-    await WindowsTaskbar.setThumbnailToolbar(
-      [
-        ThumbnailToolbarButton(
-          ThumbnailToolbarAssetIcon('assets/icons/previous.ico'),
-          Localization.instance.PREVIOUS,
-          previous,
-          mode: state.isFirst ? ThumbnailToolbarButtonMode.disabled : 0,
-        ),
-        if (state.playing)
+    try {
+      await WindowsTaskbar.setThumbnailToolbar(
+        [
           ThumbnailToolbarButton(
-            ThumbnailToolbarAssetIcon('assets/icons/pause.ico'),
-            Localization.instance.PAUSE,
-            pause,
-          )
-        else
-          ThumbnailToolbarButton(
-            ThumbnailToolbarAssetIcon('assets/icons/play.ico'),
-            Localization.instance.PLAY,
-            play,
+            ThumbnailToolbarAssetIcon('assets/icons/previous.ico'),
+            Localization.instance.PREVIOUS,
+            previous,
+            mode: state.isFirst ? ThumbnailToolbarButtonMode.disabled : 0,
           ),
-        ThumbnailToolbarButton(
-          ThumbnailToolbarAssetIcon('assets/icons/next.ico'),
-          Localization.instance.NEXT,
-          next,
-          mode: state.isLast ? ThumbnailToolbarButtonMode.disabled : 0,
-        ),
-      ],
-    );
-    if (Configuration.instance.windowsTaskbarProgress) {
-      const total = 1 << 16;
-      final completed = (state.position.inSeconds / state.duration.inSeconds * total).round();
-      await WindowsTaskbar.setProgress(total, completed);
-    }
-  }
-
-  Future<void> notifyDiscordRPC() async {
-    if (!(Platform.isLinux || Platform.isMacOS || Platform.isWindows)) return;
-    // TODO:
+          if (state.playing)
+            ThumbnailToolbarButton(
+              ThumbnailToolbarAssetIcon('assets/icons/pause.ico'),
+              Localization.instance.PAUSE,
+              pause,
+            )
+          else
+            ThumbnailToolbarButton(
+              ThumbnailToolbarAssetIcon('assets/icons/play.ico'),
+              Localization.instance.PLAY,
+              play,
+            ),
+          ThumbnailToolbarButton(
+            ThumbnailToolbarAssetIcon('assets/icons/next.ico'),
+            Localization.instance.NEXT,
+            next,
+            mode: state.isLast ? ThumbnailToolbarButtonMode.disabled : 0,
+          ),
+        ],
+      );
+      if (Configuration.instance.windowsTaskbarProgress) {
+        const total = 1 << 16;
+        final completed = (state.position.inSeconds / state.duration.inSeconds * total).round();
+        await WindowsTaskbar.setProgress(total, completed);
+      }
+    } catch (_) {}
   }
 
   @override
@@ -279,7 +319,7 @@ class MediaPlayer extends ChangeNotifier {
     _player.dispose();
     _tagReader.dispose();
     _audioService?.stop();
-    // TODO:
+    _systemMediaTransportControls?.dispose();
   }
 
   /// [Player] from package:media_kit.
@@ -291,11 +331,17 @@ class MediaPlayer extends ChangeNotifier {
   /// [AudioService] from package:audio_service.
   _AudioService? _audioService;
 
+  /// [SystemMediaTransportControls] from package:system_media_transport_controls.
+  SystemMediaTransportControls? _systemMediaTransportControls;
+
   /// Flag to prevent duplicate [notifyCurrent] calls.
   String? _notifyCurrentFlagUri;
 
   /// Flag to prevent duplicate [notifyHistoryPlaylist] calls.
   String? _notifyHistoryPlaylistFlagUri;
+
+  /// Flag to prevent duplicate [notifySystemMediaTransportControls] calls.
+  String? _notifySystemMediaTransportControlsFlagUri;
 
   // NOTE: A separate [TagReader] overrides the existing values etc. in the [Playable]s.
 

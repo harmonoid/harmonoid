@@ -32,6 +32,8 @@ class AsyncFileImage extends ImageProvider<AsyncFileImage> {
 
   final double scale = 1.0;
 
+  FutureOr<File?> get file => _file;
+
   @override
   Future<AsyncFileImage> obtainKey(ImageConfiguration configuration) {
     return SynchronousFuture<AsyncFileImage>(this);
