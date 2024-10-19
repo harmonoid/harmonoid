@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:media_library/media_library.dart';
 import 'package:path/path.dart';
+import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';

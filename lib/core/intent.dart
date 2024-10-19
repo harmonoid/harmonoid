@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:media_library/media_library.dart' as _;
 import 'package:path/path.dart';
+import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:uri_parser/uri_parser.dart';
 

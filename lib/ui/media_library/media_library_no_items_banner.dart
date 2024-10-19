@@ -19,9 +19,9 @@ class MediaLibraryNoItemsBanner extends StatefulWidget {
 class MediaLibraryNoItemsBannerState extends State<MediaLibraryNoItemsBanner> {
   static const _kImageWidth = 164.0;
   static const _kImageHeight = 164.0;
-  static const _kImageAssetM3 = 'assets/vectors/0.svg';
-  static const _kImageAssetM2Light = 'assets/vectors/0.svg';
-  static const _kImageAssetM2Dark = 'assets/vectors/2.svg';
+  static const _kImageAssetM3 = 'assets/vectors/media_library.svg';
+  static const _kImageAssetM2Light = 'assets/vectors/media_library.svg';
+  static const _kImageAssetM2Dark = 'assets/vectors/media_library_dark.svg';
 
   SvgPicture? _imagePicture;
 

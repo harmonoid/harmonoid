@@ -1,8 +1,12 @@
 import 'dart:io';
 import 'package:audio_service/audio_service.dart' hide PlaybackState;
 import 'package:flutter/foundation.dart';
+import 'package:harmonoid/core/configuration/configuration.dart';
+import 'package:harmonoid/extensions/media_player_state.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:media_kit/media_kit.dart' hide Playable;
 import 'package:tag_reader/tag_reader.dart';
+import 'package:windows_taskbar/windows_taskbar.dart';
 
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/extensions/playable.dart';
@@ -229,7 +233,39 @@ class MediaPlayer extends ChangeNotifier {
 
   Future<void> notifyWindowsTaskbar() async {
     if (!Platform.isWindows) return;
-    // TODO:
+    await WindowsTaskbar.setThumbnailToolbar(
+      [
+        ThumbnailToolbarButton(
+          ThumbnailToolbarAssetIcon('assets/icons/previous.ico'),
+          Localization.instance.PREVIOUS,
+          previous,
+          mode: state.isFirst ? ThumbnailToolbarButtonMode.disabled : 0,
+        ),
+        if (state.playing)
+          ThumbnailToolbarButton(
+            ThumbnailToolbarAssetIcon('assets/icons/pause.ico'),
+            Localization.instance.PAUSE,
+            pause,
+          )
+        else
+          ThumbnailToolbarButton(
+            ThumbnailToolbarAssetIcon('assets/icons/play.ico'),
+            Localization.instance.PLAY,
+            play,
+          ),
+        ThumbnailToolbarButton(
+          ThumbnailToolbarAssetIcon('assets/icons/next.ico'),
+          Localization.instance.NEXT,
+          next,
+          mode: state.isLast ? ThumbnailToolbarButtonMode.disabled : 0,
+        ),
+      ],
+    );
+    if (Configuration.instance.windowsTaskbarProgress) {
+      const total = 1 << 16;
+      final completed = (state.position.inSeconds / state.duration.inSeconds * total).round();
+      await WindowsTaskbar.setProgress(total, completed);
+    }
   }
 
   Future<void> notifyDiscordRPC() async {

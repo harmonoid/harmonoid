@@ -1,12 +1,11 @@
 import 'dart:io';
-
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/extensions/configuration.dart';
-import 'package:media_library/media_library.dart' hide MediaLibrary;
+import 'package:safe_local_storage/safe_local_storage.dart';
 
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/localization/localization.dart';

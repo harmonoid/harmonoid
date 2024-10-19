@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:media_library/media_library.dart';
 import 'package:path/path.dart';
+import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:tag_reader/tag_reader.dart';
 
 import 'package:harmonoid/models/android_media_format.dart';

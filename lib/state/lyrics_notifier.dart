@@ -6,9 +6,9 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:lrc/lrc.dart';
-import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:synchronized/synchronized.dart';
 
 import 'package:harmonoid/api/lyrics_api.dart';
@@ -121,7 +121,7 @@ class LyricsNotifier extends ChangeNotifier {
     try {
       final file = uriToLRCFile(playable.uri);
       if (await file.exists_()) {
-        final contents = await file.read_();
+        final contents = await file.readAsString_();
         if (contents != null && Lrc.isValid(contents)) {
           final result = Lrc.parse(contents).lyrics;
           lyrics.addAll(result.map((e) => Lyric(time: e.timestamp.inMilliseconds, words: e.lyrics)).toList());
@@ -166,7 +166,7 @@ class LyricsNotifier extends ChangeNotifier {
           File(join(dir, '$name.LRC')),
         ];
         for (final file in files) {
-          final contents = await file.read_();
+          final contents = await file.readAsString_();
           if (contents != null && Lrc.isValid(contents)) {
             final result = Lrc.parse(contents).lyrics;
             lyrics.addAll(result.map((e) => Lyric(time: e.timestamp.inMilliseconds, words: e.lyrics)).toList());
@@ -212,7 +212,7 @@ class LyricsNotifier extends ChangeNotifier {
   /// Adds .LRC to cache for specified [playable].
   Future<bool> add(Playable playable, File file) async {
     try {
-      final contents = await file.read_();
+      final contents = await file.readAsString_();
       if (contents != null && Lrc.isValid(contents)) {
         final destination = uriToLRCFile(playable.uri);
         await file.copy_(destination.path);

@@ -17,9 +17,9 @@ class SearchNoItemsBanner extends StatefulWidget {
 class SearchNoItemsBannerState extends State<SearchNoItemsBanner> {
   static const _kImageWidth = 164.0;
   static const _kImageHeight = 164.0;
-  static const _kImageAssetM3 = 'assets/vectors/1.svg';
-  static const _kImageAssetM2Light = 'assets/vectors/1.svg';
-  static const _kImageAssetM2Dark = 'assets/vectors/3.svg';
+  static const _kImageAssetM3 = 'assets/vectors/search.svg';
+  static const _kImageAssetM2Light = 'assets/vectors/search.svg';
+  static const _kImageAssetM2Dark = 'assets/vectors/search_dark.svg';
 
   SvgPicture? _imagePicture;
 

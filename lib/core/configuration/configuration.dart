@@ -5,6 +5,7 @@ import 'package:ffi/ffi.dart';
 import 'package:flutter/material.dart';
 import 'package:media_library/media_library.dart';
 import 'package:path/path.dart' as path;
+import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:win32/win32.dart';
 
 import 'package:harmonoid/localization/localization_data.dart';

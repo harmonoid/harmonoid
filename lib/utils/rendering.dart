@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:path/path.dart';
+import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';

@@ -6,7 +6,7 @@ import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
-import 'package:media_library/media_library.dart';
+import 'package:safe_local_storage/safe_local_storage.dart';
 
 /// {@template async_file_image}
 ///

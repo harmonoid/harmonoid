@@ -71,6 +71,7 @@ Future<void> main(List<String> args) async {
     }
     MediaKit.ensureInitialized();
     await Configuration.ensureInitialized();
+    await Localization.ensureInitialized(localization: Configuration.instance.localization);
     await MediaLibrary.ensureInitialized(
       cache: Configuration.instance.directory,
       directories: Configuration.instance.mediaLibraryDirectories,
@@ -96,7 +97,6 @@ Future<void> main(List<String> args) async {
     await LyricsNotifier.ensureInitialized();
     await NowPlayingVisualsNotifier.ensureInitialized();
     await NowPlayingColorPaletteNotifier.ensureInitialized();
-    await Localization.ensureInitialized(localization: Configuration.instance.localization);
     runApp(const Harmonoid());
   } catch (exception, stacktrace) {
     debugPrint(exception.toString());
