@@ -23,6 +23,7 @@ dependencies:
   ffi: ^2.1.2
   file_picker: ^6.1.1
   fluentui_system_icons: ^1.1.136
+  flutter_discord_rpc: 1.0.0
   flutter_svg: ^1.1.4
   go_router: ^14.2.7
   http: ^1.2.1
