@@ -11,13 +11,13 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:synchronized/synchronized.dart';
 
-import 'package:harmonoid/api/lyrics_api.dart';
+import 'package:harmonoid/api/lyrics_get.dart';
+import 'package:harmonoid/mappers/lyrics.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/extensions/playable.dart';
 import 'package:harmonoid/localization/localization.dart';
-import 'package:harmonoid/mappers/lyrics.dart';
 import 'package:harmonoid/models/lyric.dart';
 import 'package:harmonoid/models/lyrics.dart';
 import 'package:harmonoid/models/playable.dart';
@@ -49,7 +49,7 @@ class LyricsNotifier extends ChangeNotifier {
         if (current != _current) {
           index = 0;
           lyrics.clear();
-          _timesAndIndexes.clear();
+          _timestampsAndIndexes.clear();
           notifyListeners();
 
           // --------------------------------------------------
@@ -61,12 +61,12 @@ class LyricsNotifier extends ChangeNotifier {
           await retrieve();
 
           for (int i = 0; i < lyrics.length; i++) {
-            _timesAndIndexes[lyrics[i].time] = i;
+            _timestampsAndIndexes[lyrics[i].timestamp] = i;
           }
         }
 
-        int? nextTime = _timesAndIndexes.firstKeyAfter(state.position.inMilliseconds);
-        int? nextIndex = _timesAndIndexes[nextTime];
+        int? nextTime = _timestampsAndIndexes.firstKeyAfter(state.position.inMilliseconds);
+        int? nextIndex = _timestampsAndIndexes[nextTime];
 
         if (nextTime != null && nextIndex != null) {
           if (nextIndex > 0) nextIndex--;
@@ -81,7 +81,7 @@ class LyricsNotifier extends ChangeNotifier {
             index = nextIndex;
             notifyListeners();
             // --------------------------------------------------
-            await displayNotification(lyrics[index].words);
+            await displayNotification(lyrics[index].text);
             // --------------------------------------------------
           }
         }
@@ -124,7 +124,7 @@ class LyricsNotifier extends ChangeNotifier {
         final contents = await file.readAsString_();
         if (contents != null && Lrc.isValid(contents)) {
           final result = Lrc.parse(contents).lyrics;
-          lyrics.addAll(result.map((e) => Lyric(time: e.timestamp.inMilliseconds, words: e.lyrics)).toList());
+          lyrics.addAll(result.map((e) => Lyric(timestamp: e.timestamp.inMilliseconds, text: e.lyrics)).toList());
           notifyListeners();
           return;
         }
@@ -143,7 +143,7 @@ class LyricsNotifier extends ChangeNotifier {
       final track = await MediaLibrary.instance.db.selectTrackByUri(playable.uri);
       if (track != null && Lrc.isValid(track.lyrics)) {
         final result = Lrc.parse(track.lyrics).lyrics;
-        lyrics.addAll(result.map((e) => Lyric(time: e.timestamp.inMilliseconds, words: e.lyrics)).toList());
+        lyrics.addAll(result.map((e) => Lyric(timestamp: e.timestamp.inMilliseconds, text: e.lyrics)).toList());
         notifyListeners();
         return;
       }
@@ -169,7 +169,7 @@ class LyricsNotifier extends ChangeNotifier {
           final contents = await file.readAsString_();
           if (contents != null && Lrc.isValid(contents)) {
             final result = Lrc.parse(contents).lyrics;
-            lyrics.addAll(result.map((e) => Lyric(time: e.timestamp.inMilliseconds, words: e.lyrics)).toList());
+            lyrics.addAll(result.map((e) => Lyric(timestamp: e.timestamp.inMilliseconds, text: e.lyrics)).toList());
             notifyListeners();
             return;
           }
@@ -186,7 +186,7 @@ class LyricsNotifier extends ChangeNotifier {
 
     debugPrint('LyricsNotifier: retrieve: API: ${playable.uri}');
     try {
-      final result = await LyricsApi.instance.lyrics(playable.lyricsApiName);
+      final result = await LyricsGet.instance.call(playable.lyricsApiName);
       if (result != null) {
         lyrics.addAll(result);
         notifyListeners();
@@ -321,7 +321,7 @@ class LyricsNotifier extends ChangeNotifier {
   // --------------------------------------------------
 
   Playable? _current;
-  final SplayTreeMap<int, int> _timesAndIndexes = SplayTreeMap<int, int>();
+  final SplayTreeMap<int, int> _timestampsAndIndexes = SplayTreeMap<int, int>();
   final Lock _lock = Lock();
 
   @pragma('vm:entry-point')

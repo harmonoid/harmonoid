@@ -6,6 +6,6 @@ import 'package:harmonoid/models/lyrics.dart';
 extension LyricsMappers on Lyrics {
   /// Converts to formatted LRC.
   String toLrc() {
-    return Lrc(lyrics: map((lyric) => LrcLine(timestamp: Duration(milliseconds: lyric.time), lyrics: lyric.words, type: LrcTypes.simple)).toList()).format();
+    return Lrc(lyrics: map((lyric) => LrcLine(timestamp: Duration(milliseconds: lyric.timestamp), lyrics: lyric.text, type: LrcTypes.simple)).toList()).format();
   }
 }

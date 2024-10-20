@@ -5,47 +5,47 @@
 ///
 /// {@endtemplate}
 class Lyric {
-  /// Time.
-  final int time;
+  /// Timestamp.
+  final int timestamp;
 
-  /// Words.
-  final String words;
+  /// Text.
+  final String text;
 
   /// {@macro lyric}
   const Lyric({
-    required this.time,
-    required this.words,
+    required this.timestamp,
+    required this.text,
   });
 
   Lyric copyWith({
-    int? time,
-    String? words,
+    int? timestamp,
+    String? text,
   }) {
     return Lyric(
-      time: time ?? this.time,
-      words: words ?? this.words,
+      timestamp: timestamp ?? this.timestamp,
+      text: text ?? this.text,
     );
   }
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is Lyric && time == other.time && words == other.words;
+  bool operator ==(Object other) => identical(this, other) || other is Lyric && timestamp == other.timestamp && text == other.text;
 
   @override
   int get hashCode => Object.hash(
-        time,
-        words,
+        timestamp,
+        text,
       );
 
   @override
-  String toString() => 'Lyric(time: $time, words: $words)';
+  String toString() => 'Lyric(timestamp: $timestamp, text: $text)';
 
   Map<String, dynamic> toJson() => {
-        'time': time,
-        'words': words,
+        'timestamp': timestamp,
+        'text': text,
       };
 
   factory Lyric.fromJson(dynamic json) => Lyric(
-        time: json['time'],
-        words: json['words'],
+        timestamp: json['timestamp'],
+        text: json['text'],
       );
 }

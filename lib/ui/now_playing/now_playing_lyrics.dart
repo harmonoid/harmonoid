@@ -19,7 +19,7 @@ class NowPlayingLyricsState extends State<NowPlayingLyrics> {
       builder: (context, lyricsNotifier, _) {
         return LyricsView(
           index: lyricsNotifier.index,
-          lyrics: lyricsNotifier.lyrics.map((e) => e.words).toList(),
+          lyrics: lyricsNotifier.lyrics.map((e) => e.text).toList(),
           padding: EdgeInsets.only(
             left: 32.0,
             right: 32.0,

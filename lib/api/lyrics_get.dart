@@ -1,47 +1,46 @@
 import 'dart:convert';
+import 'package:harmonoid/api/utils/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 
 import 'package:harmonoid/models/lyric.dart';
 import 'package:harmonoid/models/lyrics.dart';
 
-/// {@template lyrics_api}
+/// {@template lyrics_get}
 ///
-/// LyricsApi
+/// LyricsGet
 /// ---------
-/// API to fetch lyrics.
 ///
 /// {@endtemplate}
-class LyricsApi {
+class LyricsGet {
   /// Singleton instance.
-  static const LyricsApi instance = LyricsApi._();
+  static const LyricsGet instance = LyricsGet._();
 
-  /// {@macro lyrics_api}
-  const LyricsApi._();
+  /// {@macro lyrics_get}
+  const LyricsGet._();
 
-  Future<Lyrics?> lyrics(String name) async {
+  Future<Lyrics?> call(String query, {int? duration}) async {
     try {
       final response = await http.get(
         Uri.https(
-          _base,
-          _lyrics,
+          baseUrl,
+          '/functions/v1/lyrics-get',
           {
-            'name': name,
+            'query': query,
+            if (duration != null) 'duration': duration,
           },
         ),
+        headers: {
+          'X-API-Key': apiKey,
+        },
       );
       final body = json.decode(response.body);
+      debugPrint(body.toString());
       return body.map<Lyric>((e) => Lyric.fromJson(e)).toList();
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
-      return null;
     }
+    return null;
   }
-
-  /// Base URL.
-  static const String _base = 'harmonoid-lyrics.vercel.app';
-
-  /// Endpoint: [lyrics].
-  static const String _lyrics = '/api/lyrics';
 }
