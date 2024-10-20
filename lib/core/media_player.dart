@@ -1,12 +1,15 @@
+import 'dart:collection';
 import 'dart:io';
 import 'package:audio_service/audio_service.dart' hide PlaybackState;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
 import 'package:media_kit/media_kit.dart' hide Playable;
 import 'package:system_media_transport_controls/system_media_transport_controls.dart';
 import 'package:tag_reader/tag_reader.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
 
+import 'package:harmonoid/api/activity_set.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/extensions/media_player_state.dart';
@@ -70,6 +73,7 @@ class MediaPlayer extends ChangeNotifier {
       notifyMPRIS();
       notifySystemMediaTransportControls();
       notifyWindowsTaskbar();
+      notifyDiscordRPC();
       notifyListeners();
     }
   }
@@ -197,15 +201,14 @@ class MediaPlayer extends ChangeNotifier {
   Future<void> notifyHistoryPlaylist() async {
     if (state.playables.isEmpty) return;
     if (_notifyHistoryPlaylistFlagUri == current.uri) return;
-    final uri = current.uri;
-    _notifyHistoryPlaylistFlagUri = uri;
+    _notifyHistoryPlaylistFlagUri = current.uri;
 
     if (await MediaLibrary.instance.db.contains(current.uri)) {
       // It is available in the media library. Save as hash + title.
-      await MediaLibrary.instance.playlists.addToHistory(track: await MediaLibrary.instance.db.selectTrackByUri(uri));
+      await MediaLibrary.instance.playlists.addToHistory(track: await MediaLibrary.instance.db.selectTrackByUri(current.uri));
     } else {
       // It is not available in the media library. Save as uri + title.
-      await MediaLibrary.instance.playlists.addToHistory(uri: uri, title: current.playlistEntryTitle);
+      await MediaLibrary.instance.playlists.addToHistory(uri: current.uri, title: current.playlistEntryTitle);
     }
   }
 
@@ -261,13 +264,12 @@ class MediaPlayer extends ChangeNotifier {
         );
 
       if (_notifySystemMediaTransportControlsFlagUri == current.uri) return;
-      final uri = current.uri;
-      _notifySystemMediaTransportControlsFlagUri = uri;
-      final result = cover(uri: current.uri);
-      final artwork = switch (result) {
-        AsyncFileImage() => await result.file,
-        FileImage() => result.file,
-        NetworkImage() => result.url,
+      _notifySystemMediaTransportControlsFlagUri = current.uri;
+      final image = cover(uri: current.uri);
+      final artwork = switch (image) {
+        AsyncFileImage() => await image.file,
+        FileImage() => image.file,
+        NetworkImage() => image.url,
         _ => null,
       };
       await _systemMediaTransportControls?.setArtwork(artwork);
@@ -313,6 +315,72 @@ class MediaPlayer extends ChangeNotifier {
     } catch (_) {}
   }
 
+  Future<void> notifyDiscordRPC() async {
+    if (Platform.isAndroid || Platform.isIOS) return;
+    if (!Configuration.instance.discordRpc) return;
+    try {
+      if (_flutterDiscordRPC == null) {
+        await FlutterDiscordRPC.initialize('881480706545573918');
+        _flutterDiscordRPC = FlutterDiscordRPC.instance..connect();
+      }
+
+      final deviceId = '${Platform.operatingSystem}-${Platform.localHostname}';
+
+      final notify = _notifyDiscordRPCFlagPlaying != state.playing ||
+          _notifyDiscordRPCFlagUri != current.uri ||
+          ((_notifyDiscordRPCFlagPosition ?? Duration.zero) - state.position).abs() > const Duration(seconds: 5);
+
+      if (_notifyDiscordRPCFlagUri != current.uri) {
+        _notifyDiscordRPCFlagUri = current.uri;
+        try {
+          final image = cover(uri: current.uri);
+          _currentDiscordRPCLargeImage = switch (image) {
+            AsyncFileImage() => await ActivitySet.instance.call(deviceId, current, await image.file),
+            FileImage() => await ActivitySet.instance.call(deviceId, current, image.file),
+            NetworkImage() => image.url,
+            _ => null,
+          }!;
+        } catch (_) {
+          _currentDiscordRPCLargeImage = 'cover_default';
+        }
+      }
+      if (_notifyDiscordRPCFlagPlaying != state.playing) {
+        _notifyDiscordRPCFlagPlaying = state.playing;
+      }
+      if (((_notifyDiscordRPCFlagPosition ?? Duration.zero) - state.position).abs() > const Duration(seconds: 5)) {
+        _notifyDiscordRPCFlagPosition = state.position;
+      }
+
+      if (notify) {
+        await _flutterDiscordRPC?.setActivity(
+          activity: RPCActivity(
+            state: current.subtitle.take(2).join(', '),
+            details: current.title,
+            timestamps: state.playing
+                ? RPCTimestamps(
+                    start: DateTime.now().subtract(state.position).millisecondsSinceEpoch,
+                    end: DateTime.now().subtract(state.position).add(state.duration).millisecondsSinceEpoch,
+                  )
+                : null,
+            assets: RPCAssets(
+              largeImage: _currentDiscordRPCLargeImage,
+              smallImage: state.playing ? 'play' : 'pause',
+              largeText: state.getAudioFormatLabel(),
+              smallText: state.playing ? 'Playing' : 'Paused',
+            ),
+            buttons: [
+              RPCButton(
+                label: 'Find',
+                url: 'https://www.google.com/search?q=${Uri.encodeComponent([current.title, ...current.subtitle.take(2)].where((e) => e.isNotEmpty).join(' '))}',
+              ),
+            ],
+            activityType: ActivityType.listening,
+          ),
+        );
+      }
+    } catch (_) {}
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -320,6 +388,7 @@ class MediaPlayer extends ChangeNotifier {
     _tagReader.dispose();
     _audioService?.stop();
     _systemMediaTransportControls?.dispose();
+    _flutterDiscordRPC?.dispose();
   }
 
   /// [Player] from package:media_kit.
@@ -334,6 +403,9 @@ class MediaPlayer extends ChangeNotifier {
   /// [SystemMediaTransportControls] from package:system_media_transport_controls.
   SystemMediaTransportControls? _systemMediaTransportControls;
 
+  /// [FlutterDiscordRPC] from package:flutter_discord_rpc.
+  FlutterDiscordRPC? _flutterDiscordRPC;
+
   /// Flag to prevent duplicate [notifyCurrent] calls.
   String? _notifyCurrentFlagUri;
 
@@ -342,6 +414,14 @@ class MediaPlayer extends ChangeNotifier {
 
   /// Flag to prevent duplicate [notifySystemMediaTransportControls] calls.
   String? _notifySystemMediaTransportControlsFlagUri;
+
+  /// Flags to prevent duplicate [notifyDiscordRPC] calls.
+  String? _notifyDiscordRPCFlagUri;
+  bool? _notifyDiscordRPCFlagPlaying;
+  Duration? _notifyDiscordRPCFlagPosition;
+
+  /// Current large image for Discord RPC.
+  String? _currentDiscordRPCLargeImage;
 
   // NOTE: A separate [TagReader] overrides the existing values etc. in the [Playable]s.
 
