@@ -73,8 +73,8 @@ class AsyncFileImage extends ImageProvider<AsyncFileImage> {
     }
 
     // --------------------------------------------------
-    cache[_key] ??= FileImage(instance, scale: scale);
-    default_[_key] ??= result == null;
+    fileImages[_key] ??= FileImage(instance, scale: scale);
+    defaults[_key] ??= result == null;
     // --------------------------------------------------
 
     final lengthInBytes = await instance.length_();
@@ -97,10 +97,37 @@ class AsyncFileImage extends ImageProvider<AsyncFileImage> {
   }
 
   /// [FileImage] cache.
-  static final HashMap<String, FileImage> cache = HashMap<String, FileImage>();
+  static final HashMap<String, FileImage> fileImages = HashMap<String, FileImage>();
 
   /// Whether the default image is loaded or not.
-  static final HashMap<String, bool> default_ = HashMap<String, bool>();
+  static final HashMap<String, bool> defaults = HashMap<String, bool>();
+
+  /// Timestamps for [attemptToResolveIfDefault], to reduce the number of invocations.
+  static final HashMap<String, DateTime> attemptToResolveIfDefaultTimestamps = HashMap<String, DateTime>();
+
+  static FileImage? getFileImage(String key) => fileImages[key];
+
+  static void attemptToResolveIfDefault(Future<File?> file, String key, {VoidCallback? onResolve}) async {
+    // Try to resolve the actual cover file in background, if the current one is default.
+    // There is a possibility that actual cover file was loaded sometime in the future.
+    if (defaults[key] ?? false) {
+      // Return if an attempt was recently made.
+      attemptToResolveIfDefaultTimestamps[key] ??= DateTime.now();
+      if (DateTime.now().difference(attemptToResolveIfDefaultTimestamps[key]!) < const Duration(milliseconds: 500)) {
+        return;
+      }
+      attemptToResolveIfDefaultTimestamps[key] = DateTime.now();
+
+      debugPrint('AsyncFileImage: attemptToResolveIfDefault($file, $key)');
+
+      if (await file != null) {
+        // A file could be resolved, evict the incorrect cache.
+        fileImages.remove(key);
+        defaults.remove(key);
+        onResolve?.call();
+      }
+    }
+  }
 }
 
 typedef _SimpleDecoderCallback = Future<ui.Codec> Function(ui.ImmutableBuffer buffer);

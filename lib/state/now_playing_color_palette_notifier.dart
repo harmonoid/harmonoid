@@ -35,6 +35,9 @@ class NowPlayingColorPaletteNotifier extends ChangeNotifier {
   /// Current color palette.
   List<Color>? palette;
 
+  /// Current [Playable].
+  Playable? current;
+
   /// Listener to extract the color palette from current [Playable] in [MediaPlayer].
   void listener() {
     update(MediaPlayer.instance.current);
@@ -42,8 +45,8 @@ class NowPlayingColorPaletteNotifier extends ChangeNotifier {
 
   /// Updates the [palette] based on the specified [playable].
   Future<void> update(Playable playable) async {
-    if (_current == playable) return;
-    _current = playable;
+    if (current == playable) return;
+    current = playable;
     _updateInvoked = true;
     return _updateLock.synchronized(() async {
       _updateInvoked = false;
@@ -66,7 +69,7 @@ class NowPlayingColorPaletteNotifier extends ChangeNotifier {
   /// Clears the currently extracted [palette] & notifies the listeners.
   void clear() {
     palette = null;
-    _current = null;
+    current = null;
     notifyListeners();
   }
 
@@ -76,9 +79,6 @@ class NowPlayingColorPaletteNotifier extends ChangeNotifier {
     super.dispose();
     MediaPlayer.instance.removeListener(listener);
   }
-
-  /// Current [Playable].
-  Playable? _current;
 
   /// Whether [update] has been invoked.
   bool _updateInvoked = false;

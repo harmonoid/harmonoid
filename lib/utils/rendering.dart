@@ -20,6 +20,7 @@ import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
+import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
@@ -153,19 +154,23 @@ ImageProvider cover({
     throw ArgumentError('None of [item], [playlistEntry] or [uri] is provided.');
   }
 
-  final result = AsyncFileImage.cache[key];
+  final result = AsyncFileImage.getFileImage(key);
 
-  // Try to resolve the actual cover file in background, if the current one is default.
-  // There is a possibility that actual cover file was loaded sometime in the future.
-  if (AsyncFileImage.default_[key] == true) {
-    file.then((value) {
-      // A file could be resolved, evict the incorrect cache.
-      if (value != null) {
-        AsyncFileImage.cache.remove(key);
-        AsyncFileImage.default_.remove(key);
+  AsyncFileImage.attemptToResolveIfDefault(
+    file,
+    key,
+    onResolve: () async {
+      // Allow [NowPlayingColorPaletteNotifier] to fetch the new color palette.
+      // This does not cover all the cases, but it is better than nothing.
+      String? result;
+      if (item is Track) result ??= item.uri;
+      result ??= playlistEntry?.uri;
+      result ??= uri;
+      if (NowPlayingColorPaletteNotifier.instance.current?.uri == result) {
+        NowPlayingColorPaletteNotifier.instance.current = null;
       }
-    });
-  }
+    },
+  );
 
   final ImageProvider image;
   if (result == null) {
