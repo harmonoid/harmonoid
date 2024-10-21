@@ -14,6 +14,7 @@ import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/extensions/playable.dart';
+import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/loop.dart';
 import 'package:harmonoid/mappers/media.dart';
@@ -316,7 +317,7 @@ class MediaPlayer extends ChangeNotifier {
   }
 
   Future<void> notifyDiscordRPC() async {
-    if (Platform.isAndroid || Platform.isIOS) return;
+    if (!(Platform.isLinux || Platform.isMacOS || Platform.isWindows)) return;
     if (!Configuration.instance.discordRpc) return;
     try {
       if (_flutterDiscordRPC == null) {
@@ -354,8 +355,8 @@ class MediaPlayer extends ChangeNotifier {
       if (notify) {
         await _flutterDiscordRPC?.setActivity(
           activity: RPCActivity(
-            state: current.subtitle.take(2).join(', '),
-            details: current.title,
+            state: current.subtitle.take(2).join(', ').ellipsis(128).nullIfBlank(),
+            details: current.title.ellipsis(128).nullIfBlank(),
             timestamps: state.playing
                 ? RPCTimestamps(
                     start: DateTime.now().subtract(state.position).millisecondsSinceEpoch,
@@ -365,7 +366,7 @@ class MediaPlayer extends ChangeNotifier {
             assets: RPCAssets(
               largeImage: _currentDiscordRPCLargeImage,
               smallImage: state.playing ? 'play' : 'pause',
-              largeText: state.getAudioFormatLabel(),
+              largeText: state.getAudioFormatLabel().ellipsis(128).nullIfBlank(),
               smallText: state.playing ? 'Playing' : 'Paused',
             ),
             buttons: [
