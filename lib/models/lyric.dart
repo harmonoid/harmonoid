@@ -1,27 +1,51 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
+/// {@template lyric}
 ///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
+/// Lyric
+/// -----
 ///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
+/// {@endtemplate}
 class Lyric {
-  final int time;
-  final String words;
+  /// Timestamp.
+  final int timestamp;
 
-  Lyric({
-    required this.time,
-    required this.words,
+  /// Text.
+  final String text;
+
+  /// {@macro lyric}
+  const Lyric({
+    required this.timestamp,
+    required this.text,
   });
 
+  Lyric copyWith({
+    int? timestamp,
+    String? text,
+  }) {
+    return Lyric(
+      timestamp: timestamp ?? this.timestamp,
+      text: text ?? this.text,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is Lyric && timestamp == other.timestamp && text == other.text;
+
+  @override
+  int get hashCode => Object.hash(
+        timestamp,
+        text,
+      );
+
+  @override
+  String toString() => 'Lyric(timestamp: $timestamp, text: $text)';
+
   Map<String, dynamic> toJson() => {
-        'time': this.time,
-        'words': this.words,
+        'timestamp': timestamp,
+        'text': text,
       };
 
-  static Lyric fromJson(dynamic map) => Lyric(
-        time: map['time'],
-        words: map['words']?.replaceAll('\n', ' ')?.replaceAll('  ', ' '),
+  factory Lyric.fromJson(dynamic json) => Lyric(
+        timestamp: json['timestamp'],
+        text: json['text'],
       );
 }
