@@ -10,6 +10,7 @@ import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:path/path.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:uri_parser/uri_parser.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
@@ -535,17 +536,6 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
             ),
           ),
         ),
-      // TODO: Missing implementation.
-      // PopupMenuItem<int>(
-      //   value: 6,
-      //   child: ListTile(
-      //     leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.edit_24_regular : Icons.edit),
-      //     title: Text(
-      //       Localization.instance.EDIT_DETAILS,
-      //       style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-      //     ),
-      //   ),
-      // ),
       PopupMenuItem<int>(
         value: 4,
         child: ListTile(
@@ -790,13 +780,9 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
     case 5:
       File(track.uri).explore_();
       break;
-    // TODO: Missing implementation.
-    // case 6:
-    //   await Navigator.of(context).push(MaterialRoute(builder: (context) => EditDetailsScreen(track: track)));
-    //   break;
-    // case 7:
-    //   await FileInfoScreen.show(context, uri: Uri.file(track.uri));
-    //   break;
+    case 7:
+      context.push(Uri(path: '/$kFileInfoPath', queryParameters: {kFileInfoArgResource: track.uri.toString()}).toString());
+      break;
     case 8:
       final file = await pickFile(
         label: 'LRC',
@@ -986,6 +972,75 @@ Future<Directory?> pickDirectory({bool native = false}) async {
     //   pageBuilder: (context, animation, secondaryAnimation) => DirectoryPickerScreen(),
     // );
   }
+}
+
+Future<String?> pickResource(BuildContext context, String title) async {
+  String? result;
+
+  await showDialog(
+    context: context,
+    builder: (ctx) => SimpleDialog(
+      title: Text(title),
+      children: [
+        ListTile(
+          onTap: () async {
+            final file = await pickFile(
+              label: Localization.instance.MEDIA_FILES,
+              extensions: MediaLibrary.instance.supportedFileTypes,
+            );
+            if (file != null) {
+              result = file.path;
+              await Navigator.of(ctx).maybePop();
+            }
+          },
+          leading: CircleAvatar(
+            backgroundColor: Colors.transparent,
+            foregroundColor: Theme.of(ctx).iconTheme.color,
+            child: const Icon(Icons.folder),
+          ),
+          title: Text(
+            Localization.instance.FILE,
+            style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
+          ),
+        ),
+        ListTile(
+          onTap: () async {
+            await Navigator.of(ctx).maybePop();
+            final resultValue = await showInput(
+              context,
+              title,
+              Localization.instance.URL,
+              Localization.instance.OK,
+              (value) {
+                final parser = URIParser(value);
+                if (!parser.validate()) {
+                  return '';
+                }
+                return null;
+              },
+              keyboardType: TextInputType.url,
+              textCapitalization: TextCapitalization.none,
+            );
+
+            if (resultValue.isNotEmpty) {
+              result = resultValue;
+            }
+          },
+          leading: CircleAvatar(
+            backgroundColor: Colors.transparent,
+            foregroundColor: Theme.of(ctx).iconTheme.color,
+            child: const Icon(Icons.link),
+          ),
+          title: Text(
+            Localization.instance.URL,
+            style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
+          ),
+        ),
+      ],
+    ),
+  );
+
+  return result;
 }
 
 Future<void> showAddToPlaylistDialog(

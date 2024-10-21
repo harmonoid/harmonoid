@@ -203,6 +203,9 @@ class TrackItem extends StatelessWidget {
       onSecondaryPress(context);
     }
 
+    final title = track.title;
+    final subtitle = [...track.artists, if (track.album.isNotEmpty) track.album.toString(), if (track.year != 0) track.year.toString()].where((e) => e.isNotEmpty).join(' • ');
+
     return SizedBox(
       height: height,
       child: InkWell(
@@ -239,21 +242,18 @@ class TrackItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        track.title,
+                        title,
                         style: Theme.of(context).textTheme.titleMedium,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      Text(
-                        [
-                          ...track.artists,
-                          if (track.album.isNotEmpty) track.album.toString(),
-                          if (track.year != 0) track.year.toString(),
-                        ].join(' • '),
-                        style: Theme.of(context).textTheme.bodyMedium,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      if (subtitle.isNotEmpty)
+                        Text(
+                          subtitle,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                     ],
                   ),
                 ),

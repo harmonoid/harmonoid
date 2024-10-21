@@ -160,12 +160,14 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
                         return true;
                       },
                       onCellTap: (e) async {
+                        if (e.rowColumnIndex.rowIndex == 0) return;
                         await MediaPlayer.instance.open(
                           mediaLibrary.tracks.map((e) => e.toPlayable()).toList(),
                           index: e.rowColumnIndex.rowIndex - 1,
                         );
                       },
                       onCellSecondaryTap: (e) async {
+                        if (e.rowColumnIndex.rowIndex == 0) return;
                         final result = await showMaterialMenu(
                           context: context,
                           constraints: const BoxConstraints(

@@ -11,7 +11,6 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:provider/provider.dart';
-import 'package:uri_parser/uri_parser.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
@@ -20,8 +19,8 @@ import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/extensions/global_key.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
-import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
+import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/keyboard_shortcuts.dart';
@@ -1477,70 +1476,10 @@ class PlayFileOrURLButton extends StatelessWidget {
       splashRadius: 18.0,
       color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
       onPressed: () async {
-        await showDialog(
-          context: context,
-          builder: (ctx) => SimpleDialog(
-            title: Text(
-              Localization.instance.OPEN_FILE_OR_URL,
-            ),
-            children: [
-              ListTile(
-                onTap: () async {
-                  final file = await pickFile(
-                    label: Localization.instance.MEDIA_FILES,
-                    extensions: MediaLibrary.instance.supportedFileTypes,
-                  );
-                  if (file != null) {
-                    await Navigator.of(ctx).maybePop();
-                    await Intent.instance.play(file.uri.toString());
-                  }
-                },
-                leading: CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  foregroundColor: Theme.of(ctx).iconTheme.color,
-                  child: const Icon(Icons.folder),
-                ),
-                title: Text(
-                  Localization.instance.FILE,
-                  style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
-                ),
-              ),
-              ListTile(
-                onTap: () async {
-                  await Navigator.of(ctx).maybePop();
-                  final result = await showInput(
-                    context,
-                    Localization.instance.PLAY_URL,
-                    Localization.instance.PLAY_URL_SUBTITLE,
-                    Localization.instance.PLAY,
-                    (value) {
-                      final parser = URIParser(value);
-                      if (!parser.validate()) {
-                        return '';
-                      }
-                      return null;
-                    },
-                    keyboardType: TextInputType.url,
-                    textCapitalization: TextCapitalization.none,
-                  );
-
-                  if (result.isNotEmpty) {
-                    await Intent.instance.play(result);
-                  }
-                },
-                leading: CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  foregroundColor: Theme.of(ctx).iconTheme.color,
-                  child: const Icon(Icons.link),
-                ),
-                title: Text(
-                  Localization.instance.URL,
-                  style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
-                ),
-              ),
-            ],
-          ),
-        );
+        final result = await pickResource(context, Localization.instance.OPEN_FILE_OR_URL);
+        if (result != null) {
+          await Intent.instance.play(result);
+        }
       },
     );
   }
@@ -1560,7 +1499,10 @@ class ReadFileOrURLMetadataButton extends StatelessWidget {
       splashRadius: 18.0,
       color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
       onPressed: () async {
-        // FileInfoScreen.show(context);
+        final result = await pickResource(context, Localization.instance.READ_METADATA);
+        if (result != null) {
+          context.push(Uri(path: '/$kFileInfoPath', queryParameters: {kFileInfoArgResource: result}).toString());
+        }
       },
     );
   }
@@ -1737,77 +1679,20 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
               }
             case 2:
               {
-                await showDialog(
-                  context: context,
-                  builder: (ctx) => SimpleDialog(
-                    title: Text(
-                      Localization.instance.OPEN_FILE_OR_URL,
-                    ),
-                    children: [
-                      ListTile(
-                        onTap: () async {
-                          final file = await pickFile(
-                            label: Localization.instance.MEDIA_FILES,
-                            extensions: MediaLibrary.instance.supportedFileTypes,
-                          );
-                          if (file != null) {
-                            await Navigator.of(ctx).maybePop();
-                            await Intent.instance.play(file.uri.toString());
-                          }
-                        },
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          foregroundColor: Theme.of(ctx).iconTheme.color,
-                          child: const Icon(Icons.folder),
-                        ),
-                        title: Text(
-                          Localization.instance.FILE,
-                          style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
-                        ),
-                      ),
-                      ListTile(
-                        onTap: () async {
-                          await Navigator.of(ctx).maybePop();
-                          final result = await showInput(
-                            context,
-                            Localization.instance.PLAY_URL,
-                            Localization.instance.PLAY_URL_SUBTITLE,
-                            Localization.instance.PLAY,
-                            (value) {
-                              final parser = URIParser(value);
-                              if (!parser.validate()) {
-                                return '';
-                              }
-                              return null;
-                            },
-                            keyboardType: TextInputType.url,
-                            textCapitalization: TextCapitalization.none,
-                          );
-
-                          if (result.isNotEmpty) {
-                            await Intent.instance.play(result);
-                          }
-                        },
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          foregroundColor: Theme.of(ctx).iconTheme.color,
-                          child: const Icon(Icons.link),
-                        ),
-                        title: Text(
-                          Localization.instance.URL,
-                          style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+                final result = await pickResource(context, Localization.instance.OPEN_FILE_OR_URL);
+                if (result != null) {
+                  await Intent.instance.play(result);
+                }
                 break;
               }
-            // case 3:
-            //   {
-            //     await FileInfoScreen.show(context);
-            //     break;
-            //   }
+            case 3:
+              {
+                final result = await pickResource(context, Localization.instance.READ_METADATA);
+                if (result != null) {
+                  context.push(Uri(path: '/$kFileInfoPath', queryParameters: {kFileInfoArgResource: result}).toString());
+                }
+                break;
+              }
             case 4:
               {
                 await context.push('/$kSettingsPath');

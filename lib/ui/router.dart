@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
+import 'package:harmonoid/ui/file_info_screen.dart';
 import 'package:harmonoid/ui/home_screen.dart';
 import 'package:harmonoid/ui/media_library/albums/album_screen.dart';
 import 'package:harmonoid/ui/media_library/albums/albums_screen.dart';
@@ -116,6 +117,10 @@ class MissingDirectoriesPathExtra {
 const String kSettingsPath = 'settings';
 
 const String kNowPlayingPath = 'now-playing';
+
+const String kFileInfoPath = 'file-info';
+
+const String kFileInfoArgResource = 'resource';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> homeNavigatorKey = GlobalKey<NavigatorState>();
@@ -323,6 +328,17 @@ final router = GoRouter(
           context: context,
           state: state,
           child: const NowPlayingScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/$kFileInfoPath',
+      pageBuilder: (context, state) {
+        final resource = state.uri.queryParameters[kFileInfoArgResource]!;
+        return buildPageWithDefaultTransition(
+          context: context,
+          state: state,
+          child: FileInfoScreen(resource: resource),
         );
       },
     ),
