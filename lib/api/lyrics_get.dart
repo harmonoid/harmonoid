@@ -26,16 +26,16 @@ class LyricsGet {
           baseUrl,
           '/functions/v1/lyrics-get',
           {
-            'query': query,
-            if (duration != null) 'duration': duration,
+            'query': query.toString(),
+            if (duration != null) 'duration': duration.toString(),
           },
         ),
         headers: {
+          'Content-Type': 'application/json',
           'X-API-Key': apiKey,
         },
       );
-      final body = json.decode(response.body);
-      debugPrint(body.toString());
+      final body = json.decode(utf8.decode(response.bodyBytes));
       return body.map<Lyric>((e) => Lyric.fromJson(e)).toList();
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());

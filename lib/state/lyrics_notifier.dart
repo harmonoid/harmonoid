@@ -45,6 +45,7 @@ class LyricsNotifier extends ChangeNotifier {
 
         final state = MediaPlayer.instance.state;
         final current = MediaPlayer.instance.current;
+        final currentDuration = MediaPlayer.instance.state.duration;
 
         if (current != _current) {
           index = 0;
@@ -58,6 +59,7 @@ class LyricsNotifier extends ChangeNotifier {
           // --------------------------------------------------
 
           _current = current;
+          _currentDuration = currentDuration;
           await retrieve();
 
           for (int i = 0; i < lyrics.length; i++) {
@@ -186,7 +188,10 @@ class LyricsNotifier extends ChangeNotifier {
 
     debugPrint('LyricsNotifier: retrieve: API: ${playable.uri}');
     try {
-      final result = await LyricsGet.instance.call(playable.lyricsApiName);
+      final result = await LyricsGet.instance.call(
+        playable.lyricsGetQuery,
+        duration: _currentDuration?.inMilliseconds,
+      );
       if (result != null) {
         lyrics.addAll(result);
         notifyListeners();
@@ -321,6 +326,7 @@ class LyricsNotifier extends ChangeNotifier {
   // --------------------------------------------------
 
   Playable? _current;
+  Duration? _currentDuration;
   final SplayTreeMap<int, int> _timestampsAndIndexes = SplayTreeMap<int, int>();
   final Lock _lock = Lock();
 

@@ -36,11 +36,11 @@ class ActivitySet {
             contentType: MediaType('image', 'png'),
           ),
         )
+        ..headers['Content-Type'] = 'application/json'
         ..headers['X-API-Key'] = apiKey;
       final response = await request.send();
       if (response.statusCode == 200) {
-        final body = await response.stream.bytesToString();
-        debugPrint(body.toString());
+        final body = utf8.decode(await response.stream.toBytes());
         return json.decode(body)['cover'];
       }
     } catch (exception, stacktrace) {
