@@ -201,8 +201,8 @@ class MediaPlayer extends ChangeNotifier {
 
   Future<void> notifyHistoryPlaylist() async {
     if (state.playables.isEmpty) return;
-    if (_notifyHistoryPlaylistFlagUri == current.uri) return;
-    _notifyHistoryPlaylistFlagUri = current.uri;
+    if (_notifyHistoryPlaylistFlagPlayable == current) return;
+    _notifyHistoryPlaylistFlagPlayable = current;
 
     if (await MediaLibrary.instance.db.contains(current.uri)) {
       // It is available in the media library. Save as hash + title.
@@ -264,8 +264,8 @@ class MediaPlayer extends ChangeNotifier {
           position: state.position.inMilliseconds,
         );
 
-      if (_notifySystemMediaTransportControlsFlagUri == current.uri) return;
-      _notifySystemMediaTransportControlsFlagUri = current.uri;
+      if (_notifySystemMediaTransportControlsFlagPlayable == current) return;
+      _notifySystemMediaTransportControlsFlagPlayable = current;
       final image = cover(uri: current.uri);
       final artwork = switch (image) {
         AsyncFileImage() => await image.file,
@@ -327,12 +327,12 @@ class MediaPlayer extends ChangeNotifier {
 
       final deviceId = '${Platform.operatingSystem}-${Platform.localHostname}';
 
-      final notify = _notifyDiscordRPCFlagPlaying != state.playing ||
-          _notifyDiscordRPCFlagUri != current.uri ||
+      final notify = _notifyDiscordRPCFlagPlayable != current ||
+          _notifyDiscordRPCFlagPlaying != state.playing ||
           ((_notifyDiscordRPCFlagPosition ?? Duration.zero) - state.position).abs() > const Duration(seconds: 5);
 
-      if (_notifyDiscordRPCFlagUri != current.uri) {
-        _notifyDiscordRPCFlagUri = current.uri;
+      if (_notifyDiscordRPCFlagPlayable != current) {
+        _notifyDiscordRPCFlagPlayable = current;
         try {
           final image = cover(uri: current.uri);
           _currentDiscordRPCLargeImage = switch (image) {
@@ -382,6 +382,14 @@ class MediaPlayer extends ChangeNotifier {
     } catch (_) {}
   }
 
+  void resetNotifySystemMediaTransportControlsFlagPlayable() {
+    _notifySystemMediaTransportControlsFlagPlayable = null;
+  }
+
+  void resetNotifyDiscordRPCFlagPlayable() {
+    _notifyDiscordRPCFlagPlayable = null;
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -411,13 +419,13 @@ class MediaPlayer extends ChangeNotifier {
   String? _notifyCurrentFlagUri;
 
   /// Flag to prevent duplicate [notifyHistoryPlaylist] calls.
-  String? _notifyHistoryPlaylistFlagUri;
+  Playable? _notifyHistoryPlaylistFlagPlayable;
 
   /// Flag to prevent duplicate [notifySystemMediaTransportControls] calls.
-  String? _notifySystemMediaTransportControlsFlagUri;
+  Playable? _notifySystemMediaTransportControlsFlagPlayable;
 
   /// Flags to prevent duplicate [notifyDiscordRPC] calls.
-  String? _notifyDiscordRPCFlagUri;
+  Playable? _notifyDiscordRPCFlagPlayable;
   bool? _notifyDiscordRPCFlagPlaying;
   Duration? _notifyDiscordRPCFlagPosition;
 

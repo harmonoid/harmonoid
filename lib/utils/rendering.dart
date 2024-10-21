@@ -160,14 +160,15 @@ ImageProvider cover({
     file,
     key,
     onResolve: () async {
-      // Allow [NowPlayingColorPaletteNotifier] to fetch the new color palette.
-      // This does not cover all the cases, but it is better than nothing.
+      // Allow few things to update to the just resolved cover.
       String? result;
       if (item is Track) result ??= item.uri;
       result ??= playlistEntry?.uri;
       result ??= uri;
-      if (NowPlayingColorPaletteNotifier.instance.current?.uri == result) {
-        NowPlayingColorPaletteNotifier.instance.current = null;
+      if (MediaPlayer.instance.current.uri == result) {
+        MediaPlayer.instance.resetNotifySystemMediaTransportControlsFlagPlayable();
+        MediaPlayer.instance.resetNotifyDiscordRPCFlagPlayable();
+        NowPlayingColorPaletteNotifier.instance.resetCurrent();
       }
     },
   );
