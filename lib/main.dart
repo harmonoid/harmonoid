@@ -58,7 +58,7 @@ Future<void> main(List<String> args) async {
         application: kApplication,
         enableEventStreams: false,
       );
-      await WindowPlus.instance.setMinimumSize(const Size(960.0, 640.0));
+      await WindowPlus.instance.setMinimumSize(const Size(960.0, 360.0));
       WindowLifecycle.ensureInitialized();
     }
     if (Platform.isWindows) {
@@ -66,7 +66,7 @@ Future<void> main(List<String> args) async {
         application: kApplication,
         enableEventStreams: false,
       );
-      await WindowPlus.instance.setMinimumSize(const Size(960.0, 640.0));
+      await WindowPlus.instance.setMinimumSize(const Size(960.0, 360.0));
       WindowLifecycle.ensureInitialized();
     }
     MediaKit.ensureInitialized();
@@ -106,7 +106,7 @@ Future<void> main(List<String> args) async {
         application: kApplication,
         enableEventStreams: false,
       );
-      await WindowPlus.instance.setMinimumSize(const Size(960.0, 640.0));
+      await WindowPlus.instance.setMinimumSize(const Size(960.0, 360.0));
       WindowLifecycle.ensureInitialized();
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
