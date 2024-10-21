@@ -118,8 +118,6 @@ class AsyncFileImage extends ImageProvider<AsyncFileImage> {
       }
       attemptToResolveIfDefaultTimestamps[key] = DateTime.now();
 
-      debugPrint('AsyncFileImage: attemptToResolveIfDefault($file, $key)');
-
       if (await file != null) {
         // A file could be resolved, evict the incorrect cache.
         fileImages.remove(key);
