@@ -5,13 +5,13 @@ import 'dart:io';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/utils/constants.dart';
-import 'package:harmonoid/utils/rendering.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:tag_reader/tag_reader.dart';
 import 'package:media_kit/src/player/native/utils/temp_file.dart';
 
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/utils/constants.dart';
+import 'package:harmonoid/utils/rendering.dart';
 
 class FileInfoScreen extends StatefulWidget {
   final String resource;
