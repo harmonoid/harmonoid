@@ -29,7 +29,7 @@ import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/models/playback_state.dart';
 import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/constants.dart';
-import 'package:harmonoid/utils/methods.dart';
+import 'package:harmonoid/utils/actions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 /// {@template media_player}

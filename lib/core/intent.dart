@@ -10,7 +10,7 @@ import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/models/playback_state.dart';
-import 'package:harmonoid/utils/methods.dart';
+import 'package:harmonoid/utils/actions.dart';
 
 /// {@template intent}
 ///

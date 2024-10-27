@@ -24,7 +24,6 @@ import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
-import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_item.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
@@ -506,6 +505,16 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
           ),
         ),
       PopupMenuItem<int>(
+        value: 2,
+        child: ListTile(
+          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.list_16_regular : Icons.queue_music),
+          title: Text(
+            Localization.instance.ADD_TO_PLAYLIST,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+      ),
+      PopupMenuItem<int>(
         value: 3,
         child: ListTile(
           leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.music_note_2_16_regular : Icons.music_note),
@@ -516,11 +525,11 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
         ),
       ),
       PopupMenuItem<int>(
-        value: 2,
+        value: 4,
         child: ListTile(
-          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.list_16_regular : Icons.queue_music),
+          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.album_24_regular : Icons.album),
           title: Text(
-            Localization.instance.ADD_TO_PLAYLIST,
+            Localization.instance.SHOW_ALBUM,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
@@ -537,11 +546,11 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
           ),
         ),
       PopupMenuItem<int>(
-        value: 4,
+        value: 6,
         child: ListTile(
-          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.album_24_regular : Icons.album),
+          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.arrow_sync_24_regular : Icons.refresh),
           title: Text(
-            Localization.instance.SHOW_ALBUM,
+            Localization.instance.REFRESH,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
           ),
         ),
@@ -556,20 +565,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
           ),
         ),
       ),
-      if (LyricsNotifier.instance.contains(track.toPlayable()))
-        PopupMenuItem<int>(
-          value: 9,
-          child: ListTile(
-            leading: Icon(
-              Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.clear_formatting_24_regular : Icons.clear,
-            ),
-            title: Text(
-              Localization.instance.CLEAR_LRC_FILE,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-        )
-      else
+      if (!LyricsNotifier.instance.contains(track.toPlayable()))
         PopupMenuItem<int>(
           value: 8,
           child: ListTile(
@@ -578,6 +574,19 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
             ),
             title: Text(
               Localization.instance.SET_LRC_FILE,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+        )
+      else
+        PopupMenuItem<int>(
+          value: 9,
+          child: ListTile(
+            leading: Icon(
+              Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.clear_formatting_24_regular : Icons.clear,
+            ),
+            title: Text(
+              Localization.instance.CLEAR_LRC_FILE,
               style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
             ),
           ),
@@ -689,6 +698,15 @@ List<PopupMenuItem<int>> playlistEntryPopupMenuItems(BuildContext context, Playl
 
 Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result, {Future<bool> Function()? recursivelyPopNavigatorOnDeleteIf}) async {
   if (result == null) return;
+
+  Future<void> recursivelyPopNavigatorIfRequired() async {
+    if (recursivelyPopNavigatorOnDeleteIf != null) {
+      if (await recursivelyPopNavigatorOnDeleteIf()) {
+        await recursivelyPopNavigator(context);
+      }
+    }
+  }
+
   switch (result) {
     case 0:
       if (Platform.isAndroid) {
@@ -697,28 +715,7 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
           // No [AlertDialog] required for confirmation.
           // Android 11 or higher (API level 30) will ask for permissions from the user before deletion.
           await MediaLibrary.instance.remove([track]);
-          if (recursivelyPopNavigatorOnDeleteIf != null) {
-            if (await recursivelyPopNavigatorOnDeleteIf()) {
-              if (isDesktop) {
-                bool result;
-                try {
-                  result = ![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath, kSearchPath].contains(GoRouterState.of(context).uri.pathSegments.last);
-                } catch (_) {
-                  result = true;
-                }
-                if (result) rootNavigatorKey.currentContext!.go('/');
-                /* HACK: */ if (mediaLibrarySearchBarController.isAttached && mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
-              }
-              if (isMobile) {
-                while (Navigator.of(context).canPop()) {
-                  await Navigator.of(context).maybePop();
-                  if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(router.routerDelegate.currentConfiguration.uri.pathSegments.last)) {
-                    break;
-                  }
-                }
-              }
-            }
-          }
+          await recursivelyPopNavigatorIfRequired();
           return;
         }
       }
@@ -729,28 +726,7 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
       );
       if (result) {
         await MediaLibrary.instance.remove([track]);
-        if (recursivelyPopNavigatorOnDeleteIf != null) {
-          if (await recursivelyPopNavigatorOnDeleteIf()) {
-            if (isDesktop) {
-              bool result;
-              try {
-                result = ![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath, kSearchPath].contains(GoRouterState.of(context).uri.pathSegments.last);
-              } catch (_) {
-                result = true;
-              }
-              if (result) rootNavigatorKey.currentContext!.go('/');
-              /* HACK: */ if (mediaLibrarySearchBarController.isAttached && mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
-            }
-            if (isMobile) {
-              while (Navigator.of(context).canPop()) {
-                Navigator.of(context).pop();
-                if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(router.routerDelegate.currentConfiguration.uri.pathSegments.last)) {
-                  break;
-                }
-              }
-            }
-          }
-        }
+        await recursivelyPopNavigatorIfRequired();
       }
       break;
     case 1:
@@ -779,6 +755,13 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
       }
     case 5:
       File(track.uri).explore_();
+      break;
+    case 6:
+      await MediaLibrary.instance.remove([track], delete: false);
+      await recursivelyPopNavigatorIfRequired();
+
+      await MediaLibrary.instance.add([File(track.uri)]);
+      await MediaLibrary.instance.populate();
       break;
     case 7:
       context.push(Uri(path: '/$kFileInfoPath', queryParameters: {kFileInfoArgResource: track.uri.toString()}).toString());
@@ -833,25 +816,7 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
           // No [AlertDialog] required for confirmation.
           // Android 11 or higher (API level 30) will ask for permissions from the user before deletion.
           await MediaLibrary.instance.remove(tracks);
-
-          if (isDesktop) {
-            bool result;
-            try {
-              result = ![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath, kSearchPath].contains(GoRouterState.of(context).uri.pathSegments.last);
-            } catch (_) {
-              result = true;
-            }
-            if (result) rootNavigatorKey.currentContext!.go('/');
-            /* HACK: */ if (mediaLibrarySearchBarController.isAttached && mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
-          }
-          if (isMobile) {
-            while (Navigator.of(context).canPop()) {
-              await Navigator.of(context).maybePop();
-              if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(router.routerDelegate.currentConfiguration.uri.pathSegments.last)) {
-                break;
-              }
-            }
-          }
+          await recursivelyPopNavigator(context);
           return;
         }
       }
@@ -862,24 +827,7 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
       );
       if (result) {
         await MediaLibrary.instance.remove(tracks);
-        if (isDesktop) {
-          bool result;
-          try {
-            result = ![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath, kSearchPath].contains(GoRouterState.of(context).uri.pathSegments.last);
-          } catch (_) {
-            result = true;
-          }
-          if (result) rootNavigatorKey.currentContext!.go('/');
-          /* HACK: */ if (mediaLibrarySearchBarController.isAttached && mediaLibrarySearchBarController.isOpen) mediaLibrarySearchBarController.closeView(null);
-        }
-        if (isMobile) {
-          while (Navigator.of(context).canPop()) {
-            await Navigator.of(context).maybePop();
-            if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(router.routerDelegate.currentConfiguration.uri.pathSegments.last)) {
-              break;
-            }
-          }
-        }
+        await recursivelyPopNavigator(context);
       }
       break;
     case 3:
@@ -1221,4 +1169,24 @@ InputDecoration inputDecorationMobile(BuildContext context, String hintText) {
     helperMaxLines: 1,
     errorStyle: const TextStyle(height: 0.0),
   );
+}
+
+Future<void> recursivelyPopNavigator(BuildContext context) async {
+  if (isDesktop) {
+    bool result;
+    try {
+      result = ![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath, kSearchPath].contains(GoRouterState.of(context).uri.pathSegments.last);
+    } catch (_) {
+      result = true;
+    }
+    if (result) rootNavigatorKey.currentContext!.go('/');
+  }
+  if (isMobile) {
+    while (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+      if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(router.routerDelegate.currentConfiguration.uri.pathSegments.last)) {
+        break;
+      }
+    }
+  }
 }
