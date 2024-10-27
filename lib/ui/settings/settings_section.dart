@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:harmonoid/ui/settings/settings_spacer.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -56,7 +55,7 @@ class SettingsSection extends StatelessWidget {
                 children: children,
               ),
             ),
-            const SettingsSpacer(),
+            const SliverSpacer(),
           ],
         ),
       ),
@@ -77,7 +76,6 @@ class SettingsSection extends StatelessWidget {
         const SizedBox(height: 2.0),
         ...children,
         const Divider(height: 1.0),
-        const SettingsSpacer(),
       ],
     );
   }

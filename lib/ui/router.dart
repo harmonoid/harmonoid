@@ -4,6 +4,7 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:harmonoid/ui/about_screen.dart';
 import 'package:media_library/media_library.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
@@ -115,6 +116,8 @@ class MissingDirectoriesPathExtra {
 }
 
 const String kSettingsPath = 'settings';
+
+const String kAboutPath = 'about';
 
 const String kNowPlayingPath = 'now-playing';
 
@@ -318,6 +321,16 @@ final router = GoRouter(
           context: context,
           state: state,
           child: const SettingsScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/$kAboutPath',
+      pageBuilder: (context, state) {
+        return buildPageWithDefaultTransition(
+          context: context,
+          state: state,
+          child: const AboutScreen(),
         );
       },
     ),

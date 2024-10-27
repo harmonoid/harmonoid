@@ -42,6 +42,7 @@ class Values {
   late String DATE_ADDED;
   late String DELETE;
   late String DESCENDING;
+  late String DEVELOPER;
   late String DISCOVERING_FILES;
   late String DISPLAY_VOLUME_SLIDER;
   late String DONATE;
@@ -68,9 +69,11 @@ class Values {
   late String FILE_PATH_OR_URL;
   late String FOLDER;
   late String FOLDER_NOT_FOUND;
+  late String FOLLOW_ON_X;
   late String FULLSCREEN;
   late String GENRE;
   late String GENRES;
+  late String GITHUB;
   late String GO_TO_SETTINGS;
   late String HIDE;
   late String HIDE_LYRICS;
@@ -80,6 +83,7 @@ class Values {
   late String INTERNET_ERROR;
   late String LAST_DIRECTORY_REMOVED;
   late String LESS;
+  late String LICENSE;
   late String LIKED_SONGS;
   late String LOOKUP_FOR_FALLBACK_ALBUM_ARTS;
   late String LYRICS;
@@ -146,6 +150,7 @@ class Values {
   late String PLAY_URL;
   late String PLAY_URL_SUBTITLE;
   late String PREVIOUS;
+  late String PRIVACY;
   late String PROPERTY;
   late String READ;
   late String READ_METADATA;
@@ -212,6 +217,7 @@ class Values {
   late String VALUE;
   late String VOLUME_BOOST;
   late String WARNING;
+  late String X;
   late String YEAR;
   late String YES;
 }

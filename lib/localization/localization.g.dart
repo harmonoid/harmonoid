@@ -47,6 +47,7 @@ class LocalizationBase extends Values {
     DATE_ADDED = map['DATE_ADDED']!;
     DELETE = map['DELETE']!;
     DESCENDING = map['DESCENDING']!;
+    DEVELOPER = map['DEVELOPER']!;
     DISCOVERING_FILES = map['DISCOVERING_FILES']!;
     DISPLAY_VOLUME_SLIDER = map['DISPLAY_VOLUME_SLIDER']!;
     DONATE = map['DONATE']!;
@@ -73,9 +74,11 @@ class LocalizationBase extends Values {
     FILE_PATH_OR_URL = map['FILE_PATH_OR_URL']!;
     FOLDER = map['FOLDER']!;
     FOLDER_NOT_FOUND = map['FOLDER_NOT_FOUND']!;
+    FOLLOW_ON_X = map['FOLLOW_ON_X']!;
     FULLSCREEN = map['FULLSCREEN']!;
     GENRE = map['GENRE']!;
     GENRES = map['GENRES']!;
+    GITHUB = map['GITHUB']!;
     GO_TO_SETTINGS = map['GO_TO_SETTINGS']!;
     HIDE = map['HIDE']!;
     HIDE_LYRICS = map['HIDE_LYRICS']!;
@@ -85,6 +88,7 @@ class LocalizationBase extends Values {
     INTERNET_ERROR = map['INTERNET_ERROR']!;
     LAST_DIRECTORY_REMOVED = map['LAST_DIRECTORY_REMOVED']!;
     LESS = map['LESS']!;
+    LICENSE = map['LICENSE']!;
     LIKED_SONGS = map['LIKED_SONGS']!;
     LOOKUP_FOR_FALLBACK_ALBUM_ARTS = map['LOOKUP_FOR_FALLBACK_ALBUM_ARTS']!;
     LYRICS = map['LYRICS']!;
@@ -151,6 +155,7 @@ class LocalizationBase extends Values {
     PLAY_URL = map['PLAY_URL']!;
     PLAY_URL_SUBTITLE = map['PLAY_URL_SUBTITLE']!;
     PREVIOUS = map['PREVIOUS']!;
+    PRIVACY = map['PRIVACY']!;
     PROPERTY = map['PROPERTY']!;
     READ = map['READ']!;
     READ_METADATA = map['READ_METADATA']!;
@@ -217,6 +222,7 @@ class LocalizationBase extends Values {
     VALUE = map['VALUE']!;
     VOLUME_BOOST = map['VOLUME_BOOST']!;
     WARNING = map['WARNING']!;
+    X = map['X']!;
     YEAR = map['YEAR']!;
     YES = map['YES']!;
   }

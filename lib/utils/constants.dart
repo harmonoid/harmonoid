@@ -24,8 +24,8 @@ const double kMobileLinearTileHeight = 72.0;
 
 const double kMobileSearchBarHeight = 56.0;
 
-const double kDesktopSettingsTileSpacerHeight = 32.0;
-const double kMobileSettingsTileSpacerHeight = 8.0;
+const double kDesktopSliverTileSpacerHeight = 32.0;
+const double kMobileSliverTileSpacerHeight = 16.0;
 
 const double kDesktopCenteredLayoutWidth = 832.0;
 

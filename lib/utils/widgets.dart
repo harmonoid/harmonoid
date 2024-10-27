@@ -1649,17 +1649,6 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                   style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
               ),
-              ListTile(
-                onTap: () {
-                  completer.complete(5);
-                  Navigator.of(context).maybePop();
-                },
-                leading: const Icon(Icons.info),
-                title: Text(
-                  Localization.instance.ABOUT,
-                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                ),
-              ),
               if (!isDesktop && NowPlayingMobileNotifier.instance.restored) const SizedBox(height: kMobileNowPlayingBarHeight),
             ],
           ),
@@ -1698,16 +1687,6 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                 await context.push('/$kSettingsPath');
                 break;
               }
-            // case 5:
-            //   {
-            //     await Navigator.push(
-            //       context,
-            //       MaterialRoute(
-            //         builder: (context) => AboutPage(),
-            //       ),
-            //     );
-            //     break;
-            //   }
           }
         });
       },
@@ -1981,7 +1960,7 @@ class StatefulAnimatedIconState extends State<StatefulAnimatedIcon> with SingleT
   }
 }
 
-//  --------------------------------------------------
+// --------------------------------------------------
 
 class StatefulPageViewBuilder extends StatefulWidget {
   final int index;
@@ -2037,5 +2016,31 @@ class StatefulPageViewBuilderState extends State<StatefulPageViewBuilder> {
       itemCount: widget.itemCount,
       itemBuilder: (context, index) => widget.itemBuilder(context, index),
     );
+  }
+}
+
+// --------------------------------------------------
+
+class SliverSpacer extends StatelessWidget {
+  const SliverSpacer({super.key});
+
+  Widget _buildDesktopLayout(BuildContext context) => const SizedBox(height: kDesktopSliverTileSpacerHeight);
+
+  Widget _buildTabletLayout(BuildContext context) => throw UnimplementedError();
+
+  Widget _buildMobileLayout(BuildContext context) => const SizedBox(height: kMobileSliverTileSpacerHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    if (isDesktop) {
+      return _buildDesktopLayout(context);
+    }
+    if (isTablet) {
+      return _buildTabletLayout(context);
+    }
+    if (isMobile) {
+      return _buildMobileLayout(context);
+    }
+    throw UnimplementedError();
   }
 }
