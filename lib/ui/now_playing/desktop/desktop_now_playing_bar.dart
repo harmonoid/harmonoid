@@ -281,6 +281,7 @@ class Controls extends StatelessWidget {
                 ),
                 const SizedBox(width: 8.0),
                 FloatingActionButton(
+                  heroTag: 'desktop_now_playing_bar_play_pause',
                   elevation: floatingActionButtonElevation,
                   focusElevation: floatingActionButtonElevation,
                   hoverElevation: floatingActionButtonElevation,

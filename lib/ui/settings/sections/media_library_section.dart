@@ -212,7 +212,7 @@ class MediaLibrarySection extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Divider(height: 1.0, thickness: 1.0),
+                      const Divider(height: 1.0),
                       Flexible(
                         child: SingleChildScrollView(
                           child: Column(
@@ -247,7 +247,7 @@ class MediaLibrarySection extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const Divider(height: 1.0, thickness: 1.0),
+                      const Divider(height: 1.0),
                     ],
                   ),
                 ),

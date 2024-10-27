@@ -47,9 +47,9 @@ class NowPlayingColors {
   // NOW PLAYING SCREEN
 
   factory NowPlayingColors.of(BuildContext context) {
-    const foreground = Colors.transparent;
+    const foreground = Colors.black;
     const background = Colors.transparent;
-    const foregroundIcon = Colors.transparent;
+    const foregroundIcon = Colors.white;
     final backgroundEnabledIcon = Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white;
     final backgroundDisabledIcon = Theme.of(context).brightness == Brightness.light ? Colors.black.withOpacity(0.3) : Colors.white.withOpacity(0.3);
     final backgroundText = Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white;

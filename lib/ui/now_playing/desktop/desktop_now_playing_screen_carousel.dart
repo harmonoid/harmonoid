@@ -13,7 +13,8 @@ class DesktopNowPlayingScreenCarousel extends StatelessWidget {
   final int value;
   const DesktopNowPlayingScreenCarousel({super.key, required this.value});
 
-  static int get itemCount => 1 + 1 + NowPlayingVisualsNotifier.instance.bundled.length + NowPlayingVisualsNotifier.instance.external.length;
+  static const int kBuiltInCount = 2;
+  static int get itemCount => kBuiltInCount + NowPlayingVisualsNotifier.instance.bundled.length + NowPlayingVisualsNotifier.instance.external.length;
 
   @override
   Widget build(BuildContext context) {
@@ -89,8 +90,8 @@ class DesktopNowPlayingScreenCarousel extends StatelessWidget {
             },
           );
         }
-        if (i >= 2 && i < 2 + NowPlayingVisualsNotifier.instance.bundled.length) {
-          i -= 2;
+        if (i >= kBuiltInCount && i < kBuiltInCount + NowPlayingVisualsNotifier.instance.bundled.length) {
+          i -= kBuiltInCount;
           return Image.asset(
             NowPlayingVisualsNotifier.instance.bundled[i],
             fit: BoxFit.cover,
@@ -99,8 +100,8 @@ class DesktopNowPlayingScreenCarousel extends StatelessWidget {
             filterQuality: FilterQuality.none,
           );
         }
-        if (i >= 2 + NowPlayingVisualsNotifier.instance.bundled.length && i < itemCount) {
-          i -= 2 + NowPlayingVisualsNotifier.instance.bundled.length;
+        if (i >= kBuiltInCount + NowPlayingVisualsNotifier.instance.bundled.length && i < itemCount) {
+          i -= kBuiltInCount + NowPlayingVisualsNotifier.instance.bundled.length;
           return Image.file(
             File(NowPlayingVisualsNotifier.instance.external[i]),
             fit: BoxFit.cover,

@@ -9,6 +9,7 @@ import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
@@ -69,8 +70,8 @@ Future<void> main(List<String> args) async {
       await WindowPlus.instance.setMinimumSize(const Size(960.0, 360.0));
       WindowLifecycle.ensureInitialized();
     }
-    MediaKit.ensureInitialized();
     await Configuration.ensureInitialized();
+    MediaKit.ensureInitialized(libmpv: Configuration.instance.mpvPath.nullIfBlank());
     await Localization.ensureInitialized(localization: Configuration.instance.localization);
     await MediaLibrary.ensureInitialized(
       cache: Configuration.instance.directory,

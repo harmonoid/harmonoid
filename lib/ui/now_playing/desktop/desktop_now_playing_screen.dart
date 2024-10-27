@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:adaptive_layouts/adaptive_layouts.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
+import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
@@ -11,6 +14,7 @@ import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/models/loop.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
+import 'package:harmonoid/ui/now_playing/desktop/desktop_now_playing_playlist.dart';
 import 'package:harmonoid/ui/now_playing/desktop/desktop_now_playing_screen_carousel.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_colors.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_control_panel.dart';
@@ -192,7 +196,7 @@ class Controls extends StatelessWidget {
                       final playable = i == mediaPlayer.state.index ? mediaPlayer.current : mediaPlayer.state.playables[i];
                       final title = playable.title;
                       final subtitle = [playable.subtitle.join(', '), ...playable.description].where((e) => e.isNotEmpty).join(' • ');
-                      final description = mediaPlayer.state.getAudioFormatLabel();
+                      final audioFormatLabel = mediaPlayer.state.getAudioFormatLabel();
                       return Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -234,23 +238,66 @@ class Controls extends StatelessWidget {
                                 ),
                                 if (subtitle.isNotEmpty) ...[
                                   const SizedBox(height: 4.0),
-                                  Text(
-                                    subtitle,
-                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: nowPlayingColors.backgroundText),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                                  Row(
+                                    children: [
+                                      HyperLink(
+                                        text: TextSpan(
+                                          children: [
+                                            for (final artist in mediaPlayer.current.subtitle) ...[
+                                              TextSpan(
+                                                text: artist.isEmpty ? kDefaultArtist : artist,
+                                                recognizer: TapGestureRecognizer()
+                                                  ..onTap = () {
+                                                    navigateToArtist(context, ArtistLookupKey(artist: artist));
+                                                  },
+                                              ),
+                                              const TextSpan(
+                                                text: ', ',
+                                              ),
+                                            ]
+                                          ]..removeLast(),
+                                        ),
+                                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: nowPlayingColors.backgroundText),
+                                      ),
+                                      if (mediaPlayer.current.description.isNotEmpty) ...[
+                                        Text(
+                                          ' • ',
+                                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: nowPlayingColors.backgroundText),
+                                        ),
+                                        Text(
+                                          mediaPlayer.current.description.join(' • '),
+                                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: nowPlayingColors.backgroundText),
+                                        ),
+                                      ],
+                                    ],
                                   ),
                                 ],
-                                if (description.isNotEmpty) ...[
+                                if (audioFormatLabel.isNotEmpty) ...[
                                   const SizedBox(height: 4.0),
                                   Text(
-                                    description,
+                                    audioFormatLabel,
                                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: nowPlayingColors.backgroundText),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ],
                               ],
+                            ),
+                          ),
+                          const SizedBox(width: 32.0),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 16.0),
+                              child: FloatingActionButton(
+                                heroTag: 'desktop_now_playing_screen_playlist_$i',
+                                mini: true,
+                                backgroundColor: nowPlayingColors.foreground,
+                                foregroundColor: nowPlayingColors.foregroundIcon,
+                                onPressed: () => DesktopNowPlayingPlaylist.show(context),
+                                tooltip: Localization.instance.PLAYLIST,
+                                child: const Icon(Icons.queue_music),
+                              ),
                             ),
                           ),
                           const SizedBox(width: 32.0),

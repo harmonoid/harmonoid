@@ -20,7 +20,7 @@ Future<void> navigateToAlbum(BuildContext context, AlbumLookupKey key) async {
 
     await precacheImage(cover(item: album), context);
 
-    context.push(
+    _handle(context).push(
       '/$kMediaLibraryPath/$kAlbumPath',
       extra: AlbumPathExtra(
         album: album,
@@ -44,7 +44,7 @@ Future<void> navigateToArtist(BuildContext context, ArtistLookupKey key) async {
 
     await precacheImage(cover(item: artist), context);
 
-    context.push(
+    _handle(context).push(
       '/$kMediaLibraryPath/$kArtistPath',
       extra: ArtistPathExtra(
         artist: artist,
@@ -69,7 +69,7 @@ Future<void> navigateToGenre(BuildContext context, GenreLookupKey key) async {
 
     await precacheImage(cover(item: genre), context);
 
-    context.push(
+    _handle(context).push(
       '/$kMediaLibraryPath/$kGenrePath',
       extra: GenrePathExtra(
         genre: genre,
@@ -78,4 +78,25 @@ Future<void> navigateToGenre(BuildContext context, GenreLookupKey key) async {
       ),
     );
   }
+}
+
+BuildContext _handle(BuildContext context) {
+  bool shouldPop() {
+    try {
+      final path = GoRouterState.of(context).uri.toString();
+      return !path.startsWith('/$kMediaLibraryPath');
+    } catch (_) {
+      return true;
+    }
+  }
+
+  final ctx = router.routerDelegate.navigatorKey.currentContext!;
+
+  if (shouldPop()) {
+    while (ctx.canPop()) {
+      ctx.pop();
+    }
+  }
+
+  return ctx;
 }

@@ -76,7 +76,7 @@ class SettingsSection extends StatelessWidget {
         SubHeader(title),
         const SizedBox(height: 2.0),
         ...children,
-        const Divider(height: 1.0, thickness: 1.0),
+        const Divider(height: 1.0),
         const SettingsSpacer(),
       ],
     );

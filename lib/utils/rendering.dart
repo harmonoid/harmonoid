@@ -418,7 +418,7 @@ Future<T?> showSelection<T>(BuildContext context, String title, List<T> values, 
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (actions) const Divider(height: 1.0, thickness: 1.0),
+                if (actions) const Divider(height: 1.0),
                 Flexible(
                   child: SingleChildScrollView(
                     child: Column(
@@ -440,7 +440,7 @@ Future<T?> showSelection<T>(BuildContext context, String title, List<T> values, 
                     ),
                   ),
                 ),
-                if (actions) const Divider(height: 1.0, thickness: 1.0),
+                if (actions) const Divider(height: 1.0),
                 if (!actions) const SizedBox(height: 8.0),
               ],
             ),
@@ -1065,7 +1065,7 @@ Future<void> showAddToPlaylistDialog(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Divider(height: 1.0, thickness: 1.0),
+                const Divider(height: 1.0),
                 Flexible(
                   child: SingleChildScrollView(
                     child: Column(
@@ -1090,13 +1090,13 @@ Future<void> showAddToPlaylistDialog(
                               await Navigator.of(ctx).maybePop();
                             },
                           ),
-                          if (i < playlists.length - 1) const Divider(height: 1.0, thickness: 1.0),
+                          if (i < playlists.length - 1) const Divider(height: 1.0),
                         ],
                       ],
                     ),
                   ),
                 ),
-                const Divider(height: 1.0, thickness: 1.0),
+                const Divider(height: 1.0),
               ],
             ),
           ),
