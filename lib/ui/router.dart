@@ -162,7 +162,7 @@ final router = GoRouter(
                 GoRoute(
                   path: kAlbumsPath,
                   pageBuilder: (context, state) {
-                    return buildPageWithMediaLibraryTransition(
+                    return buildPageWithSharedAxisTransition(
                       context: context,
                       state: state,
                       child: const AlbumsScreen(),
@@ -172,7 +172,7 @@ final router = GoRouter(
                 GoRoute(
                   path: kTracksPath,
                   pageBuilder: (context, state) {
-                    return buildPageWithMediaLibraryTransition(
+                    return buildPageWithSharedAxisTransition(
                       context: context,
                       state: state,
                       child: const TracksScreen(),
@@ -182,7 +182,7 @@ final router = GoRouter(
                 GoRoute(
                   path: kArtistsPath,
                   pageBuilder: (context, state) {
-                    return buildPageWithMediaLibraryTransition(
+                    return buildPageWithSharedAxisTransition(
                       context: context,
                       state: state,
                       child: const ArtistsScreen(),
@@ -192,7 +192,7 @@ final router = GoRouter(
                 GoRoute(
                   path: kGenresPath,
                   pageBuilder: (context, state) {
-                    return buildPageWithMediaLibraryTransition(
+                    return buildPageWithSharedAxisTransition(
                       context: context,
                       state: state,
                       child: const GenresScreen(),
@@ -202,7 +202,7 @@ final router = GoRouter(
                 GoRoute(
                   path: kPlaylistsPath,
                   pageBuilder: (context, state) {
-                    return buildPageWithMediaLibraryTransition(
+                    return buildPageWithSharedAxisTransition(
                       context: context,
                       state: state,
                       child: const PlaylistsScreen(),
@@ -213,7 +213,7 @@ final router = GoRouter(
                   path: kSearchPath,
                   pageBuilder: (context, state) {
                     final query = state.uri.queryParameters[kSearchArgQuery] ?? '';
-                    return buildPageWithMediaLibraryTransition(
+                    return buildPageWithSharedAxisTransition(
                       context: context,
                       state: state,
                       child: SearchScreen(query: query),
@@ -337,7 +337,7 @@ final router = GoRouter(
     GoRoute(
       path: '/$kNowPlayingPath',
       pageBuilder: (context, state) {
-        return buildPageWithDefaultTransition(
+        return buildPageWithSharedAxisTransition(
           context: context,
           state: state,
           child: const NowPlayingScreen(),
@@ -358,7 +358,19 @@ final router = GoRouter(
   ],
 );
 
-CustomTransitionPage<T> buildPageWithMediaLibraryTransition<T>({
+MaterialTransitionPage<T> buildPageWithDefaultTransition<T>({
+  required BuildContext context,
+  required GoRouterState state,
+  required Widget child,
+  ValueKey? key,
+}) {
+  return MaterialTransitionPage<T>(
+    key: key ?? state.pageKey,
+    child: child,
+  );
+}
+
+CustomTransitionPage<T> buildPageWithSharedAxisTransition<T>({
   required BuildContext context,
   required GoRouterState state,
   required Widget child,
@@ -375,17 +387,5 @@ CustomTransitionPage<T> buildPageWithMediaLibraryTransition<T>({
       transitionType: SharedAxisTransitionType.vertical,
       child: child,
     ),
-  );
-}
-
-MaterialTransitionPage<T> buildPageWithDefaultTransition<T>({
-  required BuildContext context,
-  required GoRouterState state,
-  required Widget child,
-  ValueKey? key,
-}) {
-  return MaterialTransitionPage<T>(
-    key: key ?? state.pageKey,
-    child: child,
   );
 }
