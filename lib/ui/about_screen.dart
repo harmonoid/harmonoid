@@ -27,16 +27,30 @@ class _AboutScreenState extends State<AboutScreen> {
 
   SvgPicture? _imagePicture;
 
+  Color get _bgM3 {
+    final theme = Theme.of(context);
+    return theme.brightness == Brightness.dark ? theme.colorScheme.inversePrimary : theme.colorScheme.primary;
+  }
+
+  Color get _fg0M3 {
+    final theme = Theme.of(context);
+    return theme.brightness == Brightness.dark ? theme.colorScheme.onSurface : theme.colorScheme.onPrimary;
+  }
+
+  Color get _fg1M3 {
+    final theme = Theme.of(context);
+    return theme.brightness == Brightness.dark ? theme.colorScheme.onSurfaceVariant : theme.colorScheme.primaryFixedDim;
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (isMaterial3) {
-        final colorScheme = Theme.of(context).colorScheme;
         final result = await rootBundle.loadString(_kImageAsset);
         setState(() {
           _imagePicture = SvgPicture.string(
-            result.replaceAll('white', Colors.white.toHex()).replaceAll('#B388FF', colorScheme.primaryFixed.toHex()),
+            result.replaceAll('white', _fg0M3.toHex()).replaceAll('#B388FF', _fg1M3.toHex()),
             fit: BoxFit.contain,
           );
         });
@@ -127,7 +141,7 @@ class _AboutScreenState extends State<AboutScreen> {
           child: Card(
             margin: EdgeInsets.zero,
             clipBehavior: Clip.antiAlias,
-            color: Theme.of(context).colorScheme.primaryFixedDim,
+            color: _bgM3,
             child: SizedBox(
               width: double.infinity,
               height: 96.0,
@@ -151,7 +165,7 @@ class _AboutScreenState extends State<AboutScreen> {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                color: Theme.of(context).colorScheme.onPrimaryFixed,
+                                color: _fg0M3,
                               ),
                         ),
                         Text(
@@ -159,7 +173,7 @@ class _AboutScreenState extends State<AboutScreen> {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Theme.of(context).colorScheme.onPrimaryFixed,
+                                color: _fg0M3,
                               ),
                         ),
                       ],
