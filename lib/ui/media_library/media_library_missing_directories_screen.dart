@@ -26,12 +26,10 @@ class MediaLibraryMissingDirectoriesScreen extends StatefulWidget {
     }
 
     if (directories.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.push(
-          '/$kMissingDirectoriesPath',
-          extra: MissingDirectoriesPathExtra(directories: directories),
-        );
-      });
+      context.push(
+        '/$kMissingDirectoriesPath',
+        extra: MissingDirectoriesPathExtra(directories: directories),
+      );
     }
   }
 

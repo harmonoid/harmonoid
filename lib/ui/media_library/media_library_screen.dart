@@ -1,15 +1,16 @@
 import 'dart:math';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
-import 'package:harmonoid/ui/media_library/media_library_missing_directories_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
+import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/extensions/media_library.dart';
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/ui/media_library/media_library_missing_directories_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_no_items_banner.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
 import 'package:harmonoid/ui/router.dart';
@@ -41,7 +42,10 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
   @override
   void initState() {
     super.initState();
-    MediaLibraryMissingDirectoriesScreen.showIfRequired(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      MediaLibraryMissingDirectoriesScreen.showIfRequired(context);
+      Intent.instance.notify(playbackState: Configuration.instance.playbackState);
+    });
   }
 
   @override

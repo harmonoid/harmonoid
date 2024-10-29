@@ -59,7 +59,7 @@ class MediaPlayer extends ChangeNotifier {
   static Future<void> ensureInitialized({required PlaybackState playbackState}) async {
     if (initialized) return;
     initialized = true;
-    await instance.setPlaybackState(playbackState);
+    // NO/OP
   }
 
   Playable get current => _current ?? state.playables[state.index];

@@ -82,7 +82,7 @@ class Intent {
       debugPrint('Intent: play: Resource: $_resource');
 
       // Skip the same resource.
-      if (_current == _resource) {
+      if (_current != null && _resource != null && _current == _resource) {
         debugPrint('Intent: play: Skip: $_resource.');
         return;
       } else {
