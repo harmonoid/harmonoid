@@ -47,16 +47,20 @@ class NowPlayingPlaylistItem extends StatelessWidget {
                       children: [
                         Container(
                           alignment: Alignment.center,
-                          width: height + 8.0,
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: IgnorePointer(
-                            child: Text(
-                              '${index - mediaPlayer.state.index}',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.bodyLarge,
-                            ),
-                          ),
+                          width: height * 2 + 8.0,
+                          child: index == mediaPlayer.state.index
+                              ? MusicAnimation(
+                                  width: height / 2.0,
+                                  height: height / 2.0,
+                                )
+                              : IgnorePointer(
+                                  child: Text(
+                                    '${index - mediaPlayer.state.index}',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                ),
                         ),
                         const VerticalDivider(width: 1.0),
                         Expanded(

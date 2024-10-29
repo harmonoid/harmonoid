@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 import 'dart:ui';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:collection/collection.dart';
@@ -2042,5 +2043,101 @@ class SliverSpacer extends StatelessWidget {
       return _buildMobileLayout(context);
     }
     throw UnimplementedError();
+  }
+}
+
+// --------------------------------------------------
+
+class MusicAnimation extends StatelessWidget {
+  final Color? color;
+  final double width;
+  final double height;
+  final int separatorFlex;
+
+  const MusicAnimation({
+    super.key,
+    this.color,
+    this.width = double.infinity,
+    this.height = double.infinity,
+    this.separatorFlex = 1,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    const durations = <int>[1000, 1250, 1500];
+
+    return SizedBox(
+      width: width,
+      height: height,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          for (final duration in durations) ...[
+            Expanded(
+              flex: 4,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return _MusicAnimationComponent(
+                    curve: Curves.bounceOut,
+                    color: color ?? Theme.of(context).iconTheme.color ?? Theme.of(context).colorScheme.primary,
+                    duration: Duration(milliseconds: duration),
+                    height: constraints.maxHeight,
+                  );
+                },
+              ),
+            ),
+            Spacer(flex: separatorFlex),
+          ],
+        ]..removeLast(),
+      ),
+    );
+  }
+}
+
+class _MusicAnimationComponent extends StatefulWidget {
+  final Curve curve;
+  final Color color;
+  final Duration duration;
+  final double height;
+
+  const _MusicAnimationComponent({
+    required this.curve,
+    required this.color,
+    required this.duration,
+    required this.height,
+  });
+
+  @override
+  _MusicAnimationComponentState createState() => _MusicAnimationComponentState();
+}
+
+class _MusicAnimationComponentState extends State<_MusicAnimationComponent> with SingleTickerProviderStateMixin {
+  late final AnimationController controller = AnimationController(duration: widget.duration, vsync: this);
+  late final Animation<double> animation = Tween<double>(begin: 0.0, end: widget.height).animate(CurvedAnimation(parent: controller, curve: widget.curve));
+
+  @override
+  void initState() {
+    super.initState();
+    controller
+      ..value = widget.height * Random().nextDouble() * 0.5
+      ..repeat(reverse: true);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, _) => Container(
+        height: animation.value,
+        color: widget.color,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
   }
 }
