@@ -72,7 +72,6 @@ class Configuration extends ConfigurationBase {
       }
     }
 
-    _audioFormatDisplay = await db.getBoolean(kKeyAudioFormatDisplay);
     _desktopNowPlayingBarColorPalette = await db.getBoolean(kKeyDesktopNowPlayingBarColorPalette);
     _desktopNowPlayingScreenCarousel = await db.getInteger(kKeyDesktopNowPlayingScreenCarousel);
     _desktopNowPlayingScreenLyrics = await db.getBoolean(kKeyDesktopNowPlayingScreenLyrics);
@@ -100,6 +99,8 @@ class Configuration extends ConfigurationBase {
     _mediaLibraryRefreshOnLaunch = await db.getBoolean(kKeyMediaLibraryRefreshOnLaunch);
     _mediaLibraryTrackSortAscending = await db.getBoolean(kKeyMediaLibraryTrackSortAscending);
     _mediaLibraryTrackSortType = TrackSortType.values[(await db.getInteger(kKeyMediaLibraryTrackSortType))!];
+    _mediaPlayerAudioFormatDisplay = await db.getBoolean(kKeyMediaPlayerAudioFormatDisplay);
+    _mediaPlayerPlaybackState = PlaybackState.fromJson(await db.getJson(kKeyMediaPlayerPlaybackState));
     _mobileAlbumGridSpan = await db.getInteger(kKeyMobileAlbumGridSpan);
     _mobileArtistGridSpan = await db.getInteger(kKeyMobileArtistGridSpan);
     _mobileGenreGridSpan = await db.getInteger(kKeyMobileGenreGridSpan);
@@ -108,7 +109,6 @@ class Configuration extends ConfigurationBase {
     _mpvOptions = Map<String, String>.from(await db.getJson(kKeyMpvOptions));
     _mpvPath = await db.getString(kKeyMpvPath);
     _notificationLyrics = await db.getBoolean(kKeyNotificationLyrics);
-    _playbackState = PlaybackState.fromJson(await db.getJson(kKeyPlaybackState));
     _themeAnimationDuration = AnimationDuration.fromJson(await db.getJson(kKeyThemeAnimationDuration));
     _themeMaterialStandard = await db.getInteger(kKeyThemeMaterialStandard);
     _themeMode = ThemeMode.values[(await db.getInteger(kKeyThemeMode))!];

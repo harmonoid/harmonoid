@@ -56,7 +56,7 @@ class MediaPlayer extends ChangeNotifier {
   }
 
   /// Initializes the [instance].
-  static Future<void> ensureInitialized({required PlaybackState playbackState}) async {
+  static Future<void> ensureInitialized() async {
     if (initialized) return;
     initialized = true;
     // NO/OP

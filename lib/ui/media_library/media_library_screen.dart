@@ -44,7 +44,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       MediaLibraryMissingDirectoriesScreen.showIfRequired(context);
-      Intent.instance.notify(playbackState: Configuration.instance.playbackState);
+      Intent.instance.notify(playbackState: Configuration.instance.mediaPlayerPlaybackState);
     });
   }
 

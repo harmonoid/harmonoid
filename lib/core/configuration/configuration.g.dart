@@ -12,7 +12,6 @@ class ConfigurationBase {
 
   ConfigurationBase({required this.directory, required this.db});
 
-  bool get audioFormatDisplay => _audioFormatDisplay!;
   bool get desktopNowPlayingBarColorPalette => _desktopNowPlayingBarColorPalette!;
   int get desktopNowPlayingScreenCarousel => _desktopNowPlayingScreenCarousel!;
   bool get desktopNowPlayingScreenLyrics => _desktopNowPlayingScreenLyrics!;
@@ -40,6 +39,8 @@ class ConfigurationBase {
   bool get mediaLibraryRefreshOnLaunch => _mediaLibraryRefreshOnLaunch!;
   bool get mediaLibraryTrackSortAscending => _mediaLibraryTrackSortAscending!;
   TrackSortType get mediaLibraryTrackSortType => _mediaLibraryTrackSortType!;
+  bool get mediaPlayerAudioFormatDisplay => _mediaPlayerAudioFormatDisplay!;
+  PlaybackState get mediaPlayerPlaybackState => _mediaPlayerPlaybackState!;
   int get mobileAlbumGridSpan => _mobileAlbumGridSpan!;
   int get mobileArtistGridSpan => _mobileArtistGridSpan!;
   int get mobileGenreGridSpan => _mobileGenreGridSpan!;
@@ -48,7 +49,6 @@ class ConfigurationBase {
   Map<String, String> get mpvOptions => _mpvOptions!;
   String get mpvPath => _mpvPath!;
   bool get notificationLyrics => _notificationLyrics!;
-  PlaybackState get playbackState => _playbackState!;
   AnimationDuration get themeAnimationDuration => _themeAnimationDuration!;
   int get themeMaterialStandard => _themeMaterialStandard!;
   ThemeMode get themeMode => _themeMode!;
@@ -56,7 +56,6 @@ class ConfigurationBase {
   bool get windowsTaskbarProgress => _windowsTaskbarProgress!;
 
   Future<void> set({
-    bool? audioFormatDisplay,
     bool? desktopNowPlayingBarColorPalette,
     int? desktopNowPlayingScreenCarousel,
     bool? desktopNowPlayingScreenLyrics,
@@ -84,6 +83,8 @@ class ConfigurationBase {
     bool? mediaLibraryRefreshOnLaunch,
     bool? mediaLibraryTrackSortAscending,
     TrackSortType? mediaLibraryTrackSortType,
+    bool? mediaPlayerAudioFormatDisplay,
+    PlaybackState? mediaPlayerPlaybackState,
     int? mobileAlbumGridSpan,
     int? mobileArtistGridSpan,
     int? mobileGenreGridSpan,
@@ -92,17 +93,12 @@ class ConfigurationBase {
     Map<String, String>? mpvOptions,
     String? mpvPath,
     bool? notificationLyrics,
-    PlaybackState? playbackState,
     AnimationDuration? themeAnimationDuration,
     int? themeMaterialStandard,
     ThemeMode? themeMode,
     bool? themeSystemColorScheme,
     bool? windowsTaskbarProgress,
   }) async {
-    if (audioFormatDisplay != null) {
-      _audioFormatDisplay = audioFormatDisplay;
-      await db.setValue(kKeyAudioFormatDisplay, kTypeBoolean, booleanValue: audioFormatDisplay);
-    }
     if (desktopNowPlayingBarColorPalette != null) {
       _desktopNowPlayingBarColorPalette = desktopNowPlayingBarColorPalette;
       await db.setValue(kKeyDesktopNowPlayingBarColorPalette, kTypeBoolean, booleanValue: desktopNowPlayingBarColorPalette);
@@ -211,6 +207,14 @@ class ConfigurationBase {
       _mediaLibraryTrackSortType = mediaLibraryTrackSortType;
       await db.setValue(kKeyMediaLibraryTrackSortType, kTypeInteger, integerValue: mediaLibraryTrackSortType.index);
     }
+    if (mediaPlayerAudioFormatDisplay != null) {
+      _mediaPlayerAudioFormatDisplay = mediaPlayerAudioFormatDisplay;
+      await db.setValue(kKeyMediaPlayerAudioFormatDisplay, kTypeBoolean, booleanValue: mediaPlayerAudioFormatDisplay);
+    }
+    if (mediaPlayerPlaybackState != null) {
+      _mediaPlayerPlaybackState = mediaPlayerPlaybackState;
+      await db.setValue(kKeyMediaPlayerPlaybackState, kTypeJson, jsonValue: mediaPlayerPlaybackState.toJson());
+    }
     if (mobileAlbumGridSpan != null) {
       _mobileAlbumGridSpan = mobileAlbumGridSpan;
       await db.setValue(kKeyMobileAlbumGridSpan, kTypeInteger, integerValue: mobileAlbumGridSpan);
@@ -243,10 +247,6 @@ class ConfigurationBase {
       _notificationLyrics = notificationLyrics;
       await db.setValue(kKeyNotificationLyrics, kTypeBoolean, booleanValue: notificationLyrics);
     }
-    if (playbackState != null) {
-      _playbackState = playbackState;
-      await db.setValue(kKeyPlaybackState, kTypeJson, jsonValue: playbackState.toJson());
-    }
     if (themeAnimationDuration != null) {
       _themeAnimationDuration = themeAnimationDuration;
       await db.setValue(kKeyThemeAnimationDuration, kTypeJson, jsonValue: themeAnimationDuration.toJson());
@@ -271,7 +271,6 @@ class ConfigurationBase {
 
   Future<Map<String, dynamic>> getDefaults() async {
     return {
-      /* Boolean */ kKeyAudioFormatDisplay: true,
       /* Boolean */ kKeyDesktopNowPlayingBarColorPalette: true,
       /* Integer */ kKeyDesktopNowPlayingScreenCarousel: 0,
       /* Boolean */ kKeyDesktopNowPlayingScreenLyrics: true,
@@ -299,6 +298,8 @@ class ConfigurationBase {
       /* Boolean */ kKeyMediaLibraryRefreshOnLaunch: true,
       /* Boolean */ kKeyMediaLibraryTrackSortAscending: true,
       /* Integer */ kKeyMediaLibraryTrackSortType: TrackSortType.title.index,
+      /* Boolean */ kKeyMediaPlayerAudioFormatDisplay: true,
+      /* Json    */ kKeyMediaPlayerPlaybackState: PlaybackState.defaults(),
       /* Integer */ kKeyMobileAlbumGridSpan: 2,
       /* Integer */ kKeyMobileArtistGridSpan: 3,
       /* Integer */ kKeyMobileGenreGridSpan: 3,
@@ -307,7 +308,6 @@ class ConfigurationBase {
       /* Json    */ kKeyMpvOptions: <String, String>{},
       /* String  */ kKeyMpvPath: '',
       /* Boolean */ kKeyNotificationLyrics: true,
-      /* Json    */ kKeyPlaybackState: PlaybackState.defaults(),
       /* Json    */ kKeyThemeAnimationDuration: const AnimationDuration(),
       /* Integer */ kKeyThemeMaterialStandard: isDesktop ? 2 : 3,
       /* Integer */ kKeyThemeMode: ThemeMode.system.index,
@@ -316,7 +316,6 @@ class ConfigurationBase {
     };
   }
 
-  bool? _audioFormatDisplay;
   bool? _desktopNowPlayingBarColorPalette;
   int? _desktopNowPlayingScreenCarousel;
   bool? _desktopNowPlayingScreenLyrics;
@@ -344,6 +343,8 @@ class ConfigurationBase {
   bool? _mediaLibraryRefreshOnLaunch;
   bool? _mediaLibraryTrackSortAscending;
   TrackSortType? _mediaLibraryTrackSortType;
+  bool? _mediaPlayerAudioFormatDisplay;
+  PlaybackState? _mediaPlayerPlaybackState;
   int? _mobileAlbumGridSpan;
   int? _mobileArtistGridSpan;
   int? _mobileGenreGridSpan;
@@ -352,7 +353,6 @@ class ConfigurationBase {
   Map<String, String>? _mpvOptions;
   String? _mpvPath;
   bool? _notificationLyrics;
-  PlaybackState? _playbackState;
   AnimationDuration? _themeAnimationDuration;
   int? _themeMaterialStandard;
   ThemeMode? _themeMode;
@@ -362,7 +362,6 @@ class ConfigurationBase {
 
 // ----- Keys -----
 
-const kKeyAudioFormatDisplay = 'AUDIO_FORMAT_DISPLAY';
 const kKeyDesktopNowPlayingBarColorPalette = 'DESKTOP_NOW_PLAYING_BAR_COLOR_PALETTE';
 const kKeyDesktopNowPlayingScreenCarousel = 'DESKTOP_NOW_PLAYING_SCREEN_CAROUSEL';
 const kKeyDesktopNowPlayingScreenLyrics = 'DESKTOP_NOW_PLAYING_SCREEN_LYRICS';
@@ -390,6 +389,8 @@ const kKeyMediaLibraryPath = 'MEDIA_LIBRARY_PATH';
 const kKeyMediaLibraryRefreshOnLaunch = 'MEDIA_LIBRARY_REFRESH_ON_LAUNCH';
 const kKeyMediaLibraryTrackSortAscending = 'MEDIA_LIBRARY_TRACK_SORT_ASCENDING';
 const kKeyMediaLibraryTrackSortType = 'MEDIA_LIBRARY_TRACK_SORT_TYPE';
+const kKeyMediaPlayerAudioFormatDisplay = 'MEDIA_PLAYER_AUDIO_FORMAT_DISPLAY';
+const kKeyMediaPlayerPlaybackState = 'MEDIA_PLAYER_PLAYBACK_STATE';
 const kKeyMobileAlbumGridSpan = 'MOBILE_ALBUM_GRID_SPAN';
 const kKeyMobileArtistGridSpan = 'MOBILE_ARTIST_GRID_SPAN';
 const kKeyMobileGenreGridSpan = 'MOBILE_GENRE_GRID_SPAN';
@@ -398,7 +399,6 @@ const kKeyMobileNowPlayingSlider = 'MOBILE_NOW_PLAYING_SLIDER';
 const kKeyMpvOptions = 'MPV_OPTIONS';
 const kKeyMpvPath = 'MPV_PATH';
 const kKeyNotificationLyrics = 'NOTIFICATION_LYRICS';
-const kKeyPlaybackState = 'PLAYBACK_STATE';
 const kKeyThemeAnimationDuration = 'THEME_ANIMATION_DURATION';
 const kKeyThemeMaterialStandard = 'THEME_MATERIAL_STANDARD';
 const kKeyThemeMode = 'THEME_MODE';

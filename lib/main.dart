@@ -87,7 +87,7 @@ Future<void> main(List<String> args) async {
       minimumFileSize: Configuration.instance.mediaLibraryMinimumFileSize,
       albumGroupingParameters: Configuration.instance.mediaLibraryAlbumGroupingParameters,
     );
-    await MediaPlayer.ensureInitialized(playbackState: Configuration.instance.playbackState);
+    await MediaPlayer.ensureInitialized();
     await Intent.ensureInitialized(args: args);
     await ThemeNotifier.ensureInitialized(
       themeMode: Configuration.instance.themeMode,

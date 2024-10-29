@@ -48,7 +48,7 @@ class WindowLifecycle {
     if (!MediaLibrary.instance.refreshing || force) {
       MediaLibrary.instance.dispose();
       MediaPlayer.instance.dispose();
-      Configuration.instance.set(playbackState: MediaPlayer.instance.state.toPlaybackState());
+      Configuration.instance.set(mediaPlayerPlaybackState: MediaPlayer.instance.state.toPlaybackState());
       await Future.delayed(const Duration(seconds: 1));
       return true;
     } else {
