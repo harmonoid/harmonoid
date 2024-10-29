@@ -3,19 +3,19 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:harmonoid/core/configuration/configuration.dart';
-import 'package:harmonoid/extensions/configuration.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 
+import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/extensions/configuration.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
-class MediaLibraryMissingDirectoriesScreen extends StatefulWidget {
+class MediaLibraryInaccessibleDirectoriesScreen extends StatefulWidget {
   final List<Directory> directories;
-  const MediaLibraryMissingDirectoriesScreen({super.key, required this.directories});
+  const MediaLibraryInaccessibleDirectoriesScreen({super.key, required this.directories});
 
   static Future<void> showIfRequired(BuildContext context) async {
     final directories = <Directory>[];
@@ -27,17 +27,17 @@ class MediaLibraryMissingDirectoriesScreen extends StatefulWidget {
 
     if (directories.isNotEmpty) {
       context.push(
-        '/$kMissingDirectoriesPath',
-        extra: MissingDirectoriesPathExtra(directories: directories),
+        '/$kInaccessibleDirectoriesPath',
+        extra: InaccessibleDirectoriesPathExtra(directories: directories),
       );
     }
   }
 
   @override
-  State<MediaLibraryMissingDirectoriesScreen> createState() => _MediaLibraryMissingDirectoriesScreenState();
+  State<MediaLibraryInaccessibleDirectoriesScreen> createState() => _MediaLibraryInaccessibleDirectoriesScreenState();
 }
 
-class _MediaLibraryMissingDirectoriesScreenState extends State<MediaLibraryMissingDirectoriesScreen> {
+class _MediaLibraryInaccessibleDirectoriesScreenState extends State<MediaLibraryInaccessibleDirectoriesScreen> {
   bool removing = false;
   bool refreshing = false;
 
@@ -77,9 +77,11 @@ class _MediaLibraryMissingDirectoriesScreenState extends State<MediaLibraryMissi
     return HeaderListItemsScreen(
       palette: [Colors.red.shade800],
       caption: kCaption,
-      title: Localization.instance.MEDIA_LIBRARY_MISSING_FOLDERS_TITLE,
-      // No new-line characters on mobile.
-      subtitle: isDesktop ? Localization.instance.MEDIA_LIBRARY_MISSING_FOLDERS_SUBTITLE : Localization.instance.MEDIA_LIBRARY_MISSING_FOLDERS_SUBTITLE.replaceAll(RegExp(r'\s'), ' '),
+      title: Localization.instance.MEDIA_LIBRARY_INACCESSIBLE_FOLDERS_TITLE,
+      subtitle: isDesktop
+          ? Localization.instance.MEDIA_LIBRARY_INACCESSIBLE_FOLDERS_SUBTITLE.replaceAll('"OPERATING_SYSTEM"', operatingSystem)
+          // No new-line characters on mobile.
+          : Localization.instance.MEDIA_LIBRARY_INACCESSIBLE_FOLDERS_SUBTITLE.replaceAll('"OPERATING_SYSTEM"', operatingSystem).replaceAll(RegExp(r'\s'), ' '),
       leading: IconButton(
         onPressed: () => refresh(),
         icon: const Icon(Icons.arrow_back),

@@ -4,10 +4,10 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:harmonoid/ui/about_screen.dart';
 import 'package:media_library/media_library.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
+import 'package:harmonoid/ui/about_screen.dart';
 import 'package:harmonoid/ui/file_info_screen.dart';
 import 'package:harmonoid/ui/home_screen.dart';
 import 'package:harmonoid/ui/media_library/albums/album_screen.dart';
@@ -16,7 +16,7 @@ import 'package:harmonoid/ui/media_library/artists/artist_screen.dart';
 import 'package:harmonoid/ui/media_library/artists/artists_screen.dart';
 import 'package:harmonoid/ui/media_library/genres/genre_screen.dart';
 import 'package:harmonoid/ui/media_library/genres/genres_screen.dart';
-import 'package:harmonoid/ui/media_library/media_library_missing_directories_screen.dart';
+import 'package:harmonoid/ui/media_library/media_library_inaccessible_directories_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_screen.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_screen.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlists_screen.dart';
@@ -106,11 +106,11 @@ class PlaylistPathExtra {
   });
 }
 
-const String kMissingDirectoriesPath = 'missing-directories';
+const String kInaccessibleDirectoriesPath = 'inaccessible-directories';
 
-class MissingDirectoriesPathExtra {
+class InaccessibleDirectoriesPathExtra {
   final List<Directory> directories;
-  const MissingDirectoriesPathExtra({
+  const InaccessibleDirectoriesPathExtra({
     required this.directories,
   });
 }
@@ -302,13 +302,13 @@ final router = GoRouter(
       ],
     ),
     GoRoute(
-      path: '/$kMissingDirectoriesPath',
+      path: '/$kInaccessibleDirectoriesPath',
       pageBuilder: (context, state) {
-        final extra = state.extra as MissingDirectoriesPathExtra;
+        final extra = state.extra as InaccessibleDirectoriesPathExtra;
         return buildPageWithDefaultTransition(
           context: context,
           state: state,
-          child: MediaLibraryMissingDirectoriesScreen(
+          child: MediaLibraryInaccessibleDirectoriesScreen(
             directories: extra.directories,
           ),
         );

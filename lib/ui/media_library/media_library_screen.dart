@@ -10,7 +10,7 @@ import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/extensions/media_library.dart';
 import 'package:harmonoid/localization/localization.dart';
-import 'package:harmonoid/ui/media_library/media_library_missing_directories_screen.dart';
+import 'package:harmonoid/ui/media_library/media_library_inaccessible_directories_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_no_items_banner.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
 import 'package:harmonoid/ui/router.dart';
@@ -42,8 +42,8 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      MediaLibraryMissingDirectoriesScreen.showIfRequired(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      MediaLibraryInaccessibleDirectoriesScreen.showIfRequired(context);
       Intent.instance.notify(playbackState: Configuration.instance.mediaPlayerPlaybackState);
     });
   }

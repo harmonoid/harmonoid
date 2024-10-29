@@ -110,6 +110,22 @@ EdgeInsets get mediaLibraryScrollViewBuilderPadding {
 
 double get navigationBarHeight => isMaterial3 ? 80.0 : kBottomNavigationBarHeight;
 
+String get operatingSystem {
+  if (Platform.isAndroid) {
+    return 'Android';
+  } else if (Platform.isIOS) {
+    return 'iOS';
+  } else if (Platform.isMacOS) {
+    return 'macOS';
+  } else if (Platform.isLinux) {
+    return 'GNU/Linux';
+  } else if (Platform.isWindows) {
+    return 'Windows';
+  } else {
+    return 'operating system';
+  }
+}
+
 String label(String value) => isMaterial3OrGreater ? value : value.toUpperCase();
 
 ImageProvider cover({
