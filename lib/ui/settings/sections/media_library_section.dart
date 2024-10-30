@@ -338,7 +338,7 @@ class DesktopMediaLibrarySection extends StatelessWidget {
           subtitle: Localization.instance.SETTINGS_SECTION_MEDIA_LIBRARY_SUBTITLE,
           children: [
             Transform.translate(
-              offset: const Offset(-8.0, 0.0),
+              offset: Offset(-textButtonPadding, 0.0),
               child: TextButton(
                 onPressed: () => MediaLibrarySection.addFolder(context, mediaLibrary),
                 child: Text(label(Localization.instance.ADD_NEW_FOLDER)),
@@ -349,7 +349,7 @@ class DesktopMediaLibrarySection extends StatelessWidget {
             MediaLibrarySection.buildAddedFolders(context, mediaLibrary),
             MediaLibrarySection.buildRefreshIndicator(context, mediaLibrary),
             Transform.translate(
-              offset: const Offset(-8.0, 0.0),
+              offset: Offset(-textButtonPadding, 0.0),
               child: Row(
                 children: [
                   TextButton(
@@ -365,7 +365,7 @@ class DesktopMediaLibrarySection extends StatelessWidget {
             ),
             const SizedBox(height: 8.0),
             Transform.translate(
-              offset: const Offset(-8.0, 0.0),
+              offset: Offset(-textButtonPadding, 0.0),
               child: TextButton(
                 onPressed: () => MediaLibrarySection.editAlbumParameters(context, mediaLibrary),
                 child: Text(label(Localization.instance.EDIT_ALBUM_PARAMETERS_TITLE)),
@@ -373,7 +373,7 @@ class DesktopMediaLibrarySection extends StatelessWidget {
             ),
             const SizedBox(height: 8.0),
             Transform.translate(
-              offset: const Offset(-8.0, 0.0),
+              offset: Offset(-textButtonPadding, 0.0),
               child: TextButton(
                 onPressed: () => MediaLibrarySection.editMinimumFileSize(context, mediaLibrary),
                 child: Text(label(Localization.instance.EDIT_MINIMUM_FILE_SIZE)),

@@ -422,9 +422,8 @@ class Controls extends StatelessWidget {
                         iconSize: 20.0,
                         tooltip: mediaPlayer.state.volume == 0.0 ? Localization.instance.UNMUTE : Localization.instance.MUTE,
                       ),
-                      const SizedBox(width: 8.0),
                       SizedBox(
-                        width: 96.0,
+                        width: 108.0,
                         child: ScrollableSlider(
                           min: 0.0,
                           max: 100.0,
@@ -434,7 +433,6 @@ class Controls extends StatelessWidget {
                           onScrolledUp: () => mediaPlayer.setVolume((mediaPlayer.state.volume + 5.0).clamp(0.0, 100.0)),
                         ),
                       ),
-                      const SizedBox(width: 12.0),
                       IconButton(
                         onPressed: () => NowPlayingControlPanel.show(context),
                         color: nowPlayingColors.backgroundEnabledIcon,

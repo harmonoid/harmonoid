@@ -110,6 +110,16 @@ EdgeInsets get mediaLibraryScrollViewBuilderPadding {
 
 double get navigationBarHeight => isMaterial3 ? 80.0 : kBottomNavigationBarHeight;
 
+double get textButtonPadding {
+  if (isMaterial3) {
+    return 12.0;
+  }
+  if (isMaterial2) {
+    return 8.0;
+  }
+  return 0.0;
+}
+
 String get operatingSystem {
   if (Platform.isAndroid) {
     return 'Android';
@@ -936,6 +946,7 @@ Future<Directory?> pickDirectory({bool native = false}) async {
     //   pageBuilder: (context, animation, secondaryAnimation) => DirectoryPickerScreen(),
     // );
   }
+  return null;
 }
 
 Future<String?> pickResource(BuildContext context, String title) async {
