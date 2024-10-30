@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
@@ -12,6 +14,8 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_core/theme.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
@@ -1218,21 +1222,27 @@ class ShowAllButton extends StatelessWidget {
 class ScrollableSlider extends StatelessWidget {
   final double min;
   final double max;
-  final bool enabled;
   final double value;
-  final void Function(double) onChanged;
+  final double? interval;
+  final double? stepSize;
+  final bool showLabels;
+  final void Function(/* double */ dynamic)? onChanged;
   final VoidCallback? onScrolledUp;
   final VoidCallback? onScrolledDown;
+  final LabelFormatterCallback? labelFormatterCallback;
 
   const ScrollableSlider({
     super.key,
     this.min = 0.0,
     this.max = 1.0,
-    this.enabled = true,
     required this.value,
+    this.interval,
+    this.stepSize,
+    this.showLabels = false,
     required this.onChanged,
     this.onScrolledUp,
     this.onScrolledDown,
+    this.labelFormatterCallback,
   });
 
   @override
@@ -1248,18 +1258,29 @@ class ScrollableSlider extends StatelessWidget {
           }
         }
       },
-      child: SliderTheme(
-        data: SliderTheme.of(context).copyWith(
-          trackHeight: isMobile ? null : 2.0,
-          trackShape: CustomTrackShape(),
-          thumbShape: isMobile ? null : const RoundSliderThumbShape(enabledThumbRadius: 6.0, pressedElevation: 4.0, elevation: 2.0),
-          overlayShape: isMobile ? null : const RoundSliderOverlayShape(overlayRadius: 12.0),
+      child: SfSliderTheme(
+        data: SfSliderThemeData(
+          activeTrackHeight: isMobile ? null : 4.0,
+          inactiveTrackHeight: isMobile ? null : 2.0,
+          thumbRadius: isMobile ? null : 6.0,
+          overlayRadius: isMobile ? null : 12.0,
+          // Map colors from Slider (package:flutter) to SfSlider (package:syncfusion_flutter_sliders).
+          thumbColor: SliderTheme.of(context).thumbColor,
+          overlayColor: SliderTheme.of(context).overlayColor,
+          activeTrackColor: SliderTheme.of(context).activeTrackColor,
+          inactiveTrackColor: SliderTheme.of(context).inactiveTrackColor,
+          disabledActiveTrackColor: SliderTheme.of(context).disabledActiveTrackColor,
         ),
-        child: Slider(
-          value: value,
-          onChanged: enabled ? onChanged : null,
+        child: SfSlider(
           min: min,
           max: max,
+          value: value,
+          interval: interval,
+          stepSize: stepSize,
+          showLabels: showLabels,
+          labelFormatterCallback: labelFormatterCallback,
+          edgeLabelPlacement: EdgeLabelPlacement.inside,
+          onChanged: onChanged,
         ),
       ),
     );

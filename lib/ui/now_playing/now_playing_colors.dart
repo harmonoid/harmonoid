@@ -66,4 +66,14 @@ class NowPlayingColors {
       sliderBackground: sliderBackground,
     );
   }
+
+  SliderThemeData toSliderThemeData() => SliderThemeData(
+        thumbColor: sliderForeground,
+        overlayColor: sliderForeground?.withOpacity(0.2),
+        activeTrackColor: sliderForeground,
+        inactiveTrackColor: sliderBackground,
+        disabledThumbColor: sliderForeground,
+        disabledActiveTrackColor: sliderForeground,
+        disabledInactiveTrackColor: sliderBackground,
+      );
 }

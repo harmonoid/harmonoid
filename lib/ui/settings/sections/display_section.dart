@@ -105,65 +105,21 @@ class _DisplaySectionState extends State<DisplaySection> {
         Container(
           height: 64.0,
           alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Stack(
-            children: [
-              ScrollableSlider(
-                min: 50,
-                max: 1000,
-                value: Configuration.instance.themeAnimationDuration.medium.inMilliseconds.toDouble().clamp(50.0, 1000.0),
-                enabled: Configuration.instance.themeAnimationDuration.medium > Duration.zero,
-                onChanged: (value) => setAnimationDuration(value.round()),
-              ),
-              Positioned(
-                left: 0.0,
-                bottom: 0.0,
-                child: MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () => setAnimationDuration(50),
-                    child: const Text('50ms'),
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 0.0,
-                right: 0.0,
-                top: 4.0,
-                bottom: 0.0,
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const Spacer(flex: (300 - 50)),
-                    MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: () => setAnimationDuration(300),
-                        child: const Column(
-                          children: [
-                            Spacer(),
-                            Text('300ms'),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const Spacer(flex: 1000 - (300 - 50)),
-                  ],
-                ),
-              ),
-              Positioned(
-                right: 0.0,
-                bottom: 0.0,
-                child: MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () => setAnimationDuration(1000),
-                    child: const Text('1000ms'),
-                  ),
-                ),
-              ),
-            ],
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: ScrollableSlider(
+            min: 50.0,
+            max: 1000.0,
+            interval: 50.0,
+            stepSize: 50.0,
+            showLabels: true,
+            labelFormatterCallback: (value, _) {
+              return switch (value) {
+                50.0 || 300.0 || 1000.0 => '${value ~/ 1}ms',
+                _ => '',
+              };
+            },
+            value: Configuration.instance.themeAnimationDuration.medium.inMilliseconds.toDouble().clamp(50.0, 1000.0),
+            onChanged: Configuration.instance.themeAnimationDuration.medium > Duration.zero ? (value) => setAnimationDuration(value.round()) : null,
           ),
         ),
         const SizedBox(height: 16.0),

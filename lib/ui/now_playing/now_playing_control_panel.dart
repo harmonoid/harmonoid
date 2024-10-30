@@ -157,7 +157,7 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12.0),
+                  const SizedBox(width: 4.0),
                   Expanded(
                     child: ScrollableSlider(
                       min: 0.5,
@@ -207,7 +207,7 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12.0),
+                  const SizedBox(width: 4.0),
                   Expanded(
                     child: ScrollableSlider(
                       min: 0.5,
@@ -257,7 +257,7 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12.0),
+                  const SizedBox(width: 4.0),
                   Expanded(
                     child: ScrollableSlider(
                       min: 100.0,

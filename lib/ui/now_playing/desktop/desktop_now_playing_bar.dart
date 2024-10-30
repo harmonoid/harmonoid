@@ -61,14 +61,7 @@ class DesktopNowPlayingBarState extends State<DesktopNowPlayingBar> {
                         child: RippleSurface(color: nowPlayingColors.background),
                       ),
                       SliderTheme(
-                        data: SliderThemeData(
-                          thumbColor: nowPlayingColors.sliderForeground,
-                          activeTrackColor: nowPlayingColors.sliderForeground,
-                          inactiveTrackColor: nowPlayingColors.sliderBackground,
-                          disabledThumbColor: nowPlayingColors.sliderForeground,
-                          disabledActiveTrackColor: nowPlayingColors.sliderForeground,
-                          disabledInactiveTrackColor: nowPlayingColors.sliderBackground,
-                        ),
+                        data: nowPlayingColors.toSliderThemeData(),
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width,
                           height: NowPlayingBar.height,
@@ -199,9 +192,8 @@ class DesktopNowPlayingBarState extends State<DesktopNowPlayingBar> {
                                       iconSize: 20.0,
                                       tooltip: mediaPlayer.state.volume == 0.0 ? Localization.instance.UNMUTE : Localization.instance.MUTE,
                                     ),
-                                    const SizedBox(width: 8.0),
                                     SizedBox(
-                                      width: 96.0,
+                                      width: 108.0,
                                       child: ScrollableSlider(
                                         min: 0.0,
                                         max: 100.0,
@@ -211,7 +203,6 @@ class DesktopNowPlayingBarState extends State<DesktopNowPlayingBar> {
                                         onScrolledUp: () => mediaPlayer.setVolume((mediaPlayer.state.volume + 5.0).clamp(0.0, 100.0)),
                                       ),
                                     ),
-                                    const SizedBox(width: 12.0),
                                     IconButton(
                                       onPressed: () => NowPlayingControlPanel.show(context),
                                       color: nowPlayingColors.backgroundEnabledIcon,

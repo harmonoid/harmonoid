@@ -167,14 +167,7 @@ class Controls extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: SliderTheme(
-        data: SliderThemeData(
-          thumbColor: nowPlayingColors.sliderForeground,
-          activeTrackColor: nowPlayingColors.sliderForeground,
-          inactiveTrackColor: nowPlayingColors.sliderBackground,
-          disabledThumbColor: nowPlayingColors.sliderForeground,
-          disabledActiveTrackColor: nowPlayingColors.sliderForeground,
-          disabledInactiveTrackColor: nowPlayingColors.sliderBackground,
-        ),
+        data: nowPlayingColors.toSliderThemeData(),
         child: Consumer<MediaPlayer>(
           builder: (context, mediaPlayer, _) {
             const sliderMin = 0.0;

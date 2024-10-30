@@ -42,7 +42,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       MediaLibraryInaccessibleDirectoriesScreen.showIfRequired(context);
       Intent.instance.notify(playbackState: Configuration.instance.mediaPlayerPlaybackState);
     });
