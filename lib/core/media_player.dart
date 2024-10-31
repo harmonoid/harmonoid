@@ -184,6 +184,7 @@ class MediaPlayer extends ChangeNotifier {
     _player.stream.completed.listen((event) => state = state.copyWith(completed: event));
     _player.stream.audioBitrate.listen((event) => state = state.copyWith(audioBitrate: event));
     _player.stream.audioParams.listen((event) => state = state.copyWith(audioParams: event));
+    _player.stream.error.listen((event) => debugPrint(event));
   }
 
   Future<void> notifyCurrent() async {
