@@ -981,7 +981,6 @@ Future<String?> pickResource(BuildContext context, String title) async {
         ),
         ListTile(
           onTap: () async {
-            await Navigator.of(ctx).maybePop();
             final resultValue = await showInput(
               context,
               title,
@@ -1000,6 +999,7 @@ Future<String?> pickResource(BuildContext context, String title) async {
 
             if (resultValue.isNotEmpty) {
               result = resultValue;
+              await Navigator.of(ctx).maybePop();
             }
           },
           leading: CircleAvatar(
