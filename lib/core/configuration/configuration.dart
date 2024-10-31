@@ -83,7 +83,7 @@ class Configuration extends ConfigurationBase {
     _lyricsViewTextAlign = TextAlign.values[(await db.getInteger(kKeyLyricsViewTextAlign))!];
     _lyricsViewUnfocusedFontSize = await db.getDouble(kKeyLyricsViewUnfocusedFontSize);
     _lyricsViewUnfocusedLineHeight = await db.getDouble(kKeyLyricsViewUnfocusedLineHeight);
-    _mediaLibraryAddTracksToPlaylist = await db.getBoolean(kKeyMediaLibraryAddTracksToPlaylist);
+    _mediaLibraryAddPlaylistToNowPlaying = await db.getBoolean(kKeyMediaLibraryAddPlaylistToNowPlaying);
     _mediaLibraryAlbumGroupingParameters = (await db.getJson(kKeyMediaLibraryAlbumGroupingParameters)).map<AlbumGroupingParameter>((e) => AlbumGroupingParameter.values[e]).toSet();
     _mediaLibraryAlbumSortAscending = await db.getBoolean(kKeyMediaLibraryAlbumSortAscending);
     _mediaLibraryAlbumSortType = AlbumSortType.values[(await db.getInteger(kKeyMediaLibraryAlbumSortType))!];

@@ -4,6 +4,7 @@ import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:media_library/media_library.dart' as _ show MediaLibrary;
 import 'package:tag_reader/tag_reader.dart';
 
+import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/extensions/media_library.dart';
 import 'package:harmonoid/mappers/tags.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
@@ -74,10 +75,12 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
       insert: false,
       delete: false,
     );
-    if (instance.isEmpty) {
+    debugPrint('MediaLibrary: refresh(insert: false, delete: false)');
+    if (instance.isEmpty || Configuration.instance.mediaLibraryRefreshUponStart) {
       // Look for updates from the file-system if the media library is empty.
       // This situation occurs for the first-time application launch.
       await instance.refresh();
+      debugPrint('MediaLibrary: refresh()');
     }
     await instance.playlists.refresh();
   }

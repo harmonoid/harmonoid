@@ -287,7 +287,7 @@ class MediaPlayer extends ChangeNotifier {
   Future<void> notifyWindowsTaskbar() async {
     if (!Platform.isWindows) return;
     try {
-      await WindowsTaskbar.setThumbnailToolbar(
+      WindowsTaskbar.setThumbnailToolbar(
         [
           ThumbnailToolbarButton(
             ThumbnailToolbarAssetIcon('assets/icons/previous.ico'),
@@ -318,7 +318,7 @@ class MediaPlayer extends ChangeNotifier {
       if (Configuration.instance.windowsTaskbarProgress) {
         const total = 1 << 16;
         final completed = (state.position.inSeconds / state.duration.inSeconds * total).round();
-        await WindowsTaskbar.setProgress(total, completed);
+        WindowsTaskbar.setProgress(completed, total);
       }
     } catch (_) {}
   }

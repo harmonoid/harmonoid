@@ -71,6 +71,18 @@ class MobileTrackScreen extends StatelessWidget {
               track: mediaLibrary.tracks[j],
               width: w,
               height: h,
+              onTap: () async {
+                if (Configuration.instance.mediaLibraryAddPlaylistToNowPlaying) {
+                  await MediaPlayer.instance.open(
+                    mediaLibrary.tracks.map((e) => e.toPlayable()).toList(),
+                    index: j,
+                  );
+                } else {
+                  await MediaPlayer.instance.open(
+                    [mediaLibrary.tracks[j].toPlayable()],
+                  );
+                }
+              },
             ),
             labelConstraints: scrollViewBuilderHelperData.labelConstraints,
             labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
@@ -161,10 +173,16 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
                       },
                       onCellTap: (e) async {
                         if (e.rowColumnIndex.rowIndex == 0) return;
-                        await MediaPlayer.instance.open(
-                          mediaLibrary.tracks.map((e) => e.toPlayable()).toList(),
-                          index: e.rowColumnIndex.rowIndex - 1,
-                        );
+                        if (Configuration.instance.mediaLibraryAddPlaylistToNowPlaying) {
+                          await MediaPlayer.instance.open(
+                            mediaLibrary.tracks.map((e) => e.toPlayable()).toList(),
+                            index: e.rowColumnIndex.rowIndex - 1,
+                          );
+                        } else {
+                          await MediaPlayer.instance.open(
+                            [mediaLibrary.tracks[e.rowColumnIndex.rowIndex - 1].toPlayable()],
+                          );
+                        }
                       },
                       onCellSecondaryTap: (e) async {
                         if (e.rowColumnIndex.rowIndex == 0) return;

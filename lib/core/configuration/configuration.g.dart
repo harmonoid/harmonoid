@@ -23,7 +23,7 @@ class ConfigurationBase {
   TextAlign get lyricsViewTextAlign => _lyricsViewTextAlign!;
   double get lyricsViewUnfocusedFontSize => _lyricsViewUnfocusedFontSize!;
   double get lyricsViewUnfocusedLineHeight => _lyricsViewUnfocusedLineHeight!;
-  bool get mediaLibraryAddTracksToPlaylist => _mediaLibraryAddTracksToPlaylist!;
+  bool get mediaLibraryAddPlaylistToNowPlaying => _mediaLibraryAddPlaylistToNowPlaying!;
   Set<AlbumGroupingParameter> get mediaLibraryAlbumGroupingParameters => _mediaLibraryAlbumGroupingParameters!;
   bool get mediaLibraryAlbumSortAscending => _mediaLibraryAlbumSortAscending!;
   AlbumSortType get mediaLibraryAlbumSortType => _mediaLibraryAlbumSortType!;
@@ -68,7 +68,7 @@ class ConfigurationBase {
     TextAlign? lyricsViewTextAlign,
     double? lyricsViewUnfocusedFontSize,
     double? lyricsViewUnfocusedLineHeight,
-    bool? mediaLibraryAddTracksToPlaylist,
+    bool? mediaLibraryAddPlaylistToNowPlaying,
     Set<AlbumGroupingParameter>? mediaLibraryAlbumGroupingParameters,
     bool? mediaLibraryAlbumSortAscending,
     AlbumSortType? mediaLibraryAlbumSortType,
@@ -145,9 +145,9 @@ class ConfigurationBase {
       _lyricsViewUnfocusedLineHeight = lyricsViewUnfocusedLineHeight;
       await db.setValue(kKeyLyricsViewUnfocusedLineHeight, kTypeDouble, doubleValue: lyricsViewUnfocusedLineHeight);
     }
-    if (mediaLibraryAddTracksToPlaylist != null) {
-      _mediaLibraryAddTracksToPlaylist = mediaLibraryAddTracksToPlaylist;
-      await db.setValue(kKeyMediaLibraryAddTracksToPlaylist, kTypeBoolean, booleanValue: mediaLibraryAddTracksToPlaylist);
+    if (mediaLibraryAddPlaylistToNowPlaying != null) {
+      _mediaLibraryAddPlaylistToNowPlaying = mediaLibraryAddPlaylistToNowPlaying;
+      await db.setValue(kKeyMediaLibraryAddPlaylistToNowPlaying, kTypeBoolean, booleanValue: mediaLibraryAddPlaylistToNowPlaying);
     }
     if (mediaLibraryAlbumGroupingParameters != null) {
       _mediaLibraryAlbumGroupingParameters = mediaLibraryAlbumGroupingParameters;
@@ -288,7 +288,7 @@ class ConfigurationBase {
       /* Integer */ kKeyLyricsViewTextAlign: TextAlign.start.index,
       /* Double  */ kKeyLyricsViewUnfocusedFontSize: 28.0,
       /* Double  */ kKeyLyricsViewUnfocusedLineHeight: 1.2,
-      /* Boolean */ kKeyMediaLibraryAddTracksToPlaylist: true,
+      /* Boolean */ kKeyMediaLibraryAddPlaylistToNowPlaying: false,
       /* Json    */ kKeyMediaLibraryAlbumGroupingParameters: [AlbumGroupingParameter.album.index],
       /* Boolean */ kKeyMediaLibraryAlbumSortAscending: true,
       /* Integer */ kKeyMediaLibraryAlbumSortType: isDesktop ? AlbumSortType.albumArtist.index : AlbumSortType.album.index,
@@ -314,7 +314,7 @@ class ConfigurationBase {
       /* String  */ kKeyMpvPath: '',
       /* Boolean */ kKeyNotificationLyrics: true,
       /* Boolean */ kKeyNowPlayingAudioFormat: true,
-      /* Boolean */ kKeyNowPlayingDisplayUponPlay: true,
+      /* Boolean */ kKeyNowPlayingDisplayUponPlay: false,
       /* Json    */ kKeyThemeAnimationDuration: const AnimationDuration(),
       /* Integer */ kKeyThemeMaterialStandard: isDesktop ? 2 : 3,
       /* Integer */ kKeyThemeMode: ThemeMode.system.index,
@@ -334,7 +334,7 @@ class ConfigurationBase {
   TextAlign? _lyricsViewTextAlign;
   double? _lyricsViewUnfocusedFontSize;
   double? _lyricsViewUnfocusedLineHeight;
-  bool? _mediaLibraryAddTracksToPlaylist;
+  bool? _mediaLibraryAddPlaylistToNowPlaying;
   Set<AlbumGroupingParameter>? _mediaLibraryAlbumGroupingParameters;
   bool? _mediaLibraryAlbumSortAscending;
   AlbumSortType? _mediaLibraryAlbumSortType;
@@ -381,7 +381,7 @@ const kKeyLyricsViewFocusedLineHeight = 'LYRICS_VIEW_FOCUSED_LINE_HEIGHT';
 const kKeyLyricsViewTextAlign = 'LYRICS_VIEW_TEXT_ALIGN';
 const kKeyLyricsViewUnfocusedFontSize = 'LYRICS_VIEW_UNFOCUSED_FONT_SIZE';
 const kKeyLyricsViewUnfocusedLineHeight = 'LYRICS_VIEW_UNFOCUSED_LINE_HEIGHT';
-const kKeyMediaLibraryAddTracksToPlaylist = 'MEDIA_LIBRARY_ADD_TRACKS_TO_PLAYLIST';
+const kKeyMediaLibraryAddPlaylistToNowPlaying = 'MEDIA_LIBRARY_ADD_PLAYLIST_TO_NOW_PLAYING';
 const kKeyMediaLibraryAlbumGroupingParameters = 'MEDIA_LIBRARY_ALBUM_GROUPING_PARAMETERS';
 const kKeyMediaLibraryAlbumSortAscending = 'MEDIA_LIBRARY_ALBUM_SORT_ASCENDING';
 const kKeyMediaLibraryAlbumSortType = 'MEDIA_LIBRARY_ALBUM_SORT_TYPE';

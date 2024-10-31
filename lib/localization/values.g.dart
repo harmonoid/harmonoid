@@ -12,6 +12,7 @@ class Values {
   late String ADDING_YOUR_MUSIC;
   late String ADD_NEW_FOLDER;
   late String ADD_NEW_FOLDER_SUBTITLE;
+  late String ADD_PLAYLIST_TO_NOW_PLAYING;
   late String ADD_THIS_FOLDER;
   late String ADD_TO_NOW_PLAYING;
   late String ADD_TO_PLAYLIST;
@@ -45,6 +46,7 @@ class Values {
   late String DEVELOPER;
   late String DISCOVERING_FILES;
   late String DISPLAY_AUDIO_FORMAT;
+  late String DISPLAY_PROGRESS_ON_TASKBAR;
   late String DISPLAY_UPON_PLAYBACK;
   late String DISPLAY_VOLUME_SLIDER;
   late String DONATE;
@@ -56,6 +58,7 @@ class Values {
   late String EDIT_MINIMUM_FILE_SIZE;
   late String ENABLE_ANIMATION_EFFECTS;
   late String ENABLE_DISCORD_RPC;
+  late String ENABLE_NOTIFICATION_LYRICS;
   late String ENABLE_NOW_PLAYING_RIPPLE_EFFECT;
   late String ENABLE_VOLUME_BOOST_FILTER;
   late String ENABLE_VOLUME_BOOST_FILTER_WARNING;
@@ -87,7 +90,8 @@ class Values {
   late String LESS;
   late String LICENSE;
   late String LIKED_SONGS;
-  late String LOOKUP_FOR_FALLBACK_ALBUM_ARTS;
+  late String LOOKUP_FOR_FALLBACK_COVERS;
+  late String LOOKUP_FOR_LRC_IN_DIRECTORY;
   late String LYRICS;
   late String LYRICS_NOT_FOUND;
   late String LYRICS_RETRIEVING;
@@ -113,8 +117,6 @@ class Values {
   late String NEXT;
   late String NO;
   late String NOTHING_IN_QUEUE;
-  late String NOTIFICATION_LYRICS_SUBTITLE;
-  late String NOTIFICATION_LYRICS_TITLE;
   late String NOW_PLAYING;
   late String NOW_YOU_ARE_GOOD_TO_GO_BACK;
   late String NO_FOLDERS_ADDED;
@@ -161,6 +163,8 @@ class Values {
   late String RECOMMENDATIONS;
   late String RECOMMENDED_HINT;
   late String REFRESH;
+  late String REFRESH_MEDIA_LIBRARY_UPON_START;
+  late String REFRESH_MEDIA_LIBRARY_UPON_START_WARNING;
   late String REFRESH_SUBTITLE;
   late String REINDEX;
   late String REINDEX_SUBTITLE;
@@ -190,6 +194,8 @@ class Values {
   late String SETTINGS_SECTION_LANGUAGE_TITLE;
   late String SETTINGS_SECTION_MEDIA_LIBRARY_SUBTITLE;
   late String SETTINGS_SECTION_MEDIA_LIBRARY_TITLE;
+  late String SETTINGS_SECTION_MISCELLANEOUS_SUBTITLE;
+  late String SETTINGS_SECTION_MISCELLANEOUS_TITLE;
   late String SETTINGS_SECTION_NOW_PLAYING_SUBTITLE;
   late String SETTINGS_SECTION_NOW_PLAYING_TITLE;
   late String SETTINGS_SECTION_STATS_SUBTITLE;

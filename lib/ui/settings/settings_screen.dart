@@ -9,6 +9,7 @@ import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/ui/settings/sections/display_section.dart';
 import 'package:harmonoid/ui/settings/sections/language_section.dart';
 import 'package:harmonoid/ui/settings/sections/media_library_section.dart';
+import 'package:harmonoid/ui/settings/sections/miscellaneous_section.dart';
 import 'package:harmonoid/ui/settings/sections/now_playing_screen_section.dart';
 import 'package:harmonoid/ui/settings/sections/stats_section.dart';
 import 'package:harmonoid/utils/constants.dart';
@@ -49,6 +50,7 @@ class SettingsScreen extends StatelessWidget {
               DisplaySection(),
               LanguageSection(),
               NowPlayingScreenSection(),
+              MiscellaneousSection(),
               SliverSpacer(),
             ],
           ),
