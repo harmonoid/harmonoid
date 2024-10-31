@@ -73,8 +73,8 @@ class Configuration extends ConfigurationBase {
     }
 
     _desktopNowPlayingBarColorPalette = await db.getBoolean(kKeyDesktopNowPlayingBarColorPalette);
-    _desktopNowPlayingScreenCarousel = await db.getInteger(kKeyDesktopNowPlayingScreenCarousel);
-    _desktopNowPlayingScreenLyrics = await db.getBoolean(kKeyDesktopNowPlayingScreenLyrics);
+    _desktopNowPlayingCarousel = await db.getInteger(kKeyDesktopNowPlayingCarousel);
+    _desktopNowPlayingLyrics = await db.getBoolean(kKeyDesktopNowPlayingLyrics);
     _discordRpc = await db.getBoolean(kKeyDiscordRpc);
     _localization = LocalizationData.fromJson(await db.getJson(kKeyLocalization));
     _lrcFromDirectory = await db.getBoolean(kKeyLrcFromDirectory);
@@ -96,19 +96,20 @@ class Configuration extends ConfigurationBase {
     _mediaLibraryGenreSortType = GenreSortType.values[(await db.getInteger(kKeyMediaLibraryGenreSortType))!];
     _mediaLibraryMinimumFileSize = await db.getInteger(kKeyMediaLibraryMinimumFileSize);
     _mediaLibraryPath = await db.getString(kKeyMediaLibraryPath);
-    _mediaLibraryRefreshOnLaunch = await db.getBoolean(kKeyMediaLibraryRefreshOnLaunch);
+    _mediaLibraryRefreshUponStart = await db.getBoolean(kKeyMediaLibraryRefreshUponStart);
     _mediaLibraryTrackSortAscending = await db.getBoolean(kKeyMediaLibraryTrackSortAscending);
     _mediaLibraryTrackSortType = TrackSortType.values[(await db.getInteger(kKeyMediaLibraryTrackSortType))!];
-    _mediaPlayerAudioFormatDisplay = await db.getBoolean(kKeyMediaPlayerAudioFormatDisplay);
     _mediaPlayerPlaybackState = PlaybackState.fromJson(await db.getJson(kKeyMediaPlayerPlaybackState));
-    _mobileAlbumGridSpan = await db.getInteger(kKeyMobileAlbumGridSpan);
-    _mobileArtistGridSpan = await db.getInteger(kKeyMobileArtistGridSpan);
-    _mobileGenreGridSpan = await db.getInteger(kKeyMobileGenreGridSpan);
+    _mobileMediaLibraryAlbumGridSpan = await db.getInteger(kKeyMobileMediaLibraryAlbumGridSpan);
+    _mobileMediaLibraryArtistGridSpan = await db.getInteger(kKeyMobileMediaLibraryArtistGridSpan);
+    _mobileMediaLibraryGenreGridSpan = await db.getInteger(kKeyMobileMediaLibraryGenreGridSpan);
     _mobileNowPlayingRipple = await db.getBoolean(kKeyMobileNowPlayingRipple);
-    _mobileNowPlayingSlider = await db.getBoolean(kKeyMobileNowPlayingSlider);
+    _mobileNowPlayingVolumeSlider = await db.getBoolean(kKeyMobileNowPlayingVolumeSlider);
     _mpvOptions = Map<String, String>.from(await db.getJson(kKeyMpvOptions));
     _mpvPath = await db.getString(kKeyMpvPath);
     _notificationLyrics = await db.getBoolean(kKeyNotificationLyrics);
+    _nowPlayingAudioFormat = await db.getBoolean(kKeyNowPlayingAudioFormat);
+    _nowPlayingDisplayUponPlay = await db.getBoolean(kKeyNowPlayingDisplayUponPlay);
     _themeAnimationDuration = AnimationDuration.fromJson(await db.getJson(kKeyThemeAnimationDuration));
     _themeMaterialStandard = await db.getInteger(kKeyThemeMaterialStandard);
     _themeMode = ThemeMode.values[(await db.getInteger(kKeyThemeMode))!];

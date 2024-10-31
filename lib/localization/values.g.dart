@@ -44,6 +44,8 @@ class Values {
   late String DESCENDING;
   late String DEVELOPER;
   late String DISCOVERING_FILES;
+  late String DISPLAY_AUDIO_FORMAT;
+  late String DISPLAY_UPON_PLAYBACK;
   late String DISPLAY_VOLUME_SLIDER;
   late String DONATE;
   late String DONE;
@@ -89,6 +91,7 @@ class Values {
   late String LYRICS;
   late String LYRICS_NOT_FOUND;
   late String LYRICS_RETRIEVING;
+  late String LYRICS_SIZE;
   late String MATERIAL_DESIGN;
   late String MEDIA_FILES;
   late String MEDIA_LIBRARY;
@@ -103,6 +106,7 @@ class Values {
   late String MOBILE_ALBUM_GRID_SIZE;
   late String MOBILE_ARTIST_GRID_SIZE;
   late String MOBILE_GENRE_GRID_SIZE;
+  late String MODIFY_BACKGROUND_IMAGES;
   late String MORE;
   late String MUTE;
   late String M_TRACKS_AND_N_ALBUMS;
@@ -212,6 +216,7 @@ class Values {
   late String TYPE;
   late String UNMUTE;
   late String URL;
+  late String USE_COLOR_PALETTE;
   late String USE_SYSTEM_COLOR_SCHEME;
   late String USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS;
   late String VALUE;

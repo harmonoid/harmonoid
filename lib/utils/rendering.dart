@@ -15,6 +15,7 @@ import 'package:uri_parser/uri_parser.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/extensions/go_router.dart';
 import 'package:harmonoid/extensions/playable.dart';
 import 'package:harmonoid/extensions/track.dart';
 import 'package:harmonoid/localization/localization.dart';
@@ -1202,7 +1203,7 @@ Future<void> recursivelyPopNavigator(BuildContext context) async {
   if (isDesktop) {
     bool result;
     try {
-      result = ![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath, kSearchPath].contains(GoRouterState.of(context).uri.pathSegments.last);
+      result = ![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath, kSearchPath].contains(router.location.split('/').last);
     } catch (_) {
       result = true;
     }

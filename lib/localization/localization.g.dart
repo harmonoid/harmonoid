@@ -48,6 +48,8 @@ class LocalizationBase extends Values {
     DESCENDING = map['DESCENDING']!;
     DEVELOPER = map['DEVELOPER']!;
     DISCOVERING_FILES = map['DISCOVERING_FILES']!;
+    DISPLAY_AUDIO_FORMAT = map['DISPLAY_AUDIO_FORMAT']!;
+    DISPLAY_UPON_PLAYBACK = map['DISPLAY_UPON_PLAYBACK']!;
     DISPLAY_VOLUME_SLIDER = map['DISPLAY_VOLUME_SLIDER']!;
     DONATE = map['DONATE']!;
     DONE = map['DONE']!;
@@ -93,6 +95,7 @@ class LocalizationBase extends Values {
     LYRICS = map['LYRICS']!;
     LYRICS_NOT_FOUND = map['LYRICS_NOT_FOUND']!;
     LYRICS_RETRIEVING = map['LYRICS_RETRIEVING']!;
+    LYRICS_SIZE = map['LYRICS_SIZE']!;
     MATERIAL_DESIGN = map['MATERIAL_DESIGN']!;
     MEDIA_FILES = map['MEDIA_FILES']!;
     MEDIA_LIBRARY = map['MEDIA_LIBRARY']!;
@@ -107,6 +110,7 @@ class LocalizationBase extends Values {
     MOBILE_ALBUM_GRID_SIZE = map['MOBILE_ALBUM_GRID_SIZE']!;
     MOBILE_ARTIST_GRID_SIZE = map['MOBILE_ARTIST_GRID_SIZE']!;
     MOBILE_GENRE_GRID_SIZE = map['MOBILE_GENRE_GRID_SIZE']!;
+    MODIFY_BACKGROUND_IMAGES = map['MODIFY_BACKGROUND_IMAGES']!;
     MORE = map['MORE']!;
     MUTE = map['MUTE']!;
     M_TRACKS_AND_N_ALBUMS = map['M_TRACKS_AND_N_ALBUMS']!;
@@ -216,6 +220,7 @@ class LocalizationBase extends Values {
     TYPE = map['TYPE']!;
     UNMUTE = map['UNMUTE']!;
     URL = map['URL']!;
+    USE_COLOR_PALETTE = map['USE_COLOR_PALETTE']!;
     USE_SYSTEM_COLOR_SCHEME = map['USE_SYSTEM_COLOR_SCHEME']!;
     USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS = map['USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS']!;
     VALUE = map['VALUE']!;

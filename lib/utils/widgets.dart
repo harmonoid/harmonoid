@@ -22,6 +22,7 @@ import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/extensions/global_key.dart';
+import 'package:harmonoid/extensions/go_router.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
@@ -44,7 +45,7 @@ class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
 
   @override
   Widget build(BuildContext context) {
-    final path = GoRouterState.of(context).uri.pathSegments.last;
+    final path = router.location.split('/').last;
 
     if (![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath].contains(path)) {
       return const SizedBox.shrink();
@@ -153,7 +154,7 @@ class DesktopMediaLibraryFloatingSortButton extends StatefulWidget {
 class DesktopMediaLibraryFloatingSortButtonState extends State<DesktopMediaLibraryFloatingSortButton> {
   @override
   Widget build(BuildContext context) {
-    final path = GoRouterState.of(context).uri.pathSegments.last;
+    final path = router.location.split('/').last;
 
     if (![kAlbumsPath, /* kTracksPath, */ kArtistsPath, kGenresPath].contains(path)) {
       return const SizedBox.shrink();
@@ -200,7 +201,7 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
 
   @override
   Widget build(BuildContext context) {
-    final path = GoRouterState.of(context).uri.pathSegments.last;
+    final path = router.location.split('/').last;
     return Consumer<MediaLibrary>(
       builder: (context, mediaLibrary, _) => Row(
         mainAxisSize: MainAxisSize.min,
@@ -553,7 +554,7 @@ class MobileMediaLibraryHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final path = GoRouterState.of(context).uri.pathSegments.last;
+    final path = router.location.split('/').last;
     return Container(
       height: kMobileHeaderHeight,
       padding: EdgeInsets.symmetric(horizontal: margin),
@@ -892,7 +893,7 @@ class ContextMenuListenerState extends State<ContextMenuListener> {
         if (!_reactToSecondaryPress) {
           return;
         }
-        final path = GoRouterState.of(context).uri.pathSegments.last;
+        final path = router.location.split('/').last;
         widget.onSecondaryPress(
           RelativeRect.fromLTRB(
             e.position.dx,
@@ -1071,7 +1072,7 @@ class MobileNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final path = GoRouterState.of(context).uri.pathSegments.last;
+    final path = router.location.split('/').last;
     final paths = [
       kAlbumsPath,
       kTracksPath,
@@ -1222,11 +1223,12 @@ class ShowAllButton extends StatelessWidget {
 class ScrollableSlider extends StatelessWidget {
   final double min;
   final double max;
-  final double value;
+  final double? value;
+  final List<double>? values;
   final double? interval;
   final double? stepSize;
   final bool showLabels;
-  final void Function(/* double */ dynamic)? onChanged;
+  final void Function(dynamic)? onChanged;
   final VoidCallback? onScrolledUp;
   final VoidCallback? onScrolledDown;
   final LabelFormatterCallback? labelFormatterCallback;
@@ -1234,8 +1236,9 @@ class ScrollableSlider extends StatelessWidget {
   const ScrollableSlider({
     super.key,
     this.min = 0.0,
-    this.max = 1.0,
-    required this.value,
+    double max = 1.0,
+    this.value,
+    this.values,
     this.interval,
     this.stepSize,
     this.showLabels = false,
@@ -1243,66 +1246,82 @@ class ScrollableSlider extends StatelessWidget {
     this.onScrolledUp,
     this.onScrolledDown,
     this.labelFormatterCallback,
-  });
+  }) : max = min >= max ? 4294967296.0 /* 2^32 */ : max;
 
   @override
   Widget build(BuildContext context) {
-    return Listener(
-      onPointerSignal: (event) {
-        if (event is PointerScrollEvent) {
-          if (event.scrollDelta.dy < 0) {
-            onScrolledUp?.call();
+    return MouseRegion(
+      cursor: onChanged == null ? SystemMouseCursors.none : SystemMouseCursors.click,
+      child: Listener(
+        onPointerSignal: (event) {
+          if (event is PointerScrollEvent) {
+            if (event.scrollDelta.dy < 0) {
+              onScrolledUp?.call();
+            }
+            if (event.scrollDelta.dy > 0) {
+              onScrolledDown?.call();
+            }
           }
-          if (event.scrollDelta.dy > 0) {
-            onScrolledDown?.call();
+        },
+        child: () {
+          if (value != null) {
+            return SfSliderTheme(
+              data: SfSliderThemeData(
+                activeTrackHeight: isMobile ? null : 4.0,
+                inactiveTrackHeight: isMobile ? null : 2.0,
+                thumbRadius: isMobile ? null : 6.0,
+                overlayRadius: isMobile ? null : 12.0,
+                // Map colors from Slider (package:flutter) to SfSlider (package:syncfusion_flutter_sliders).
+                thumbColor: SliderTheme.of(context).thumbColor,
+                overlayColor: SliderTheme.of(context).overlayColor,
+                activeTrackColor: SliderTheme.of(context).activeTrackColor,
+                inactiveTrackColor: SliderTheme.of(context).inactiveTrackColor,
+                disabledActiveTrackColor: SliderTheme.of(context).disabledActiveTrackColor,
+              ),
+              child: SfSlider(
+                min: min,
+                max: max,
+                value: value,
+                interval: interval,
+                stepSize: stepSize,
+                showLabels: showLabels,
+                labelFormatterCallback: labelFormatterCallback,
+                edgeLabelPlacement: EdgeLabelPlacement.inside,
+                onChanged: onChanged == null ? null : (result) => onChanged?.call(result),
+              ),
+            );
           }
-        }
-      },
-      child: SfSliderTheme(
-        data: SfSliderThemeData(
-          activeTrackHeight: isMobile ? null : 4.0,
-          inactiveTrackHeight: isMobile ? null : 2.0,
-          thumbRadius: isMobile ? null : 6.0,
-          overlayRadius: isMobile ? null : 12.0,
-          // Map colors from Slider (package:flutter) to SfSlider (package:syncfusion_flutter_sliders).
-          thumbColor: SliderTheme.of(context).thumbColor,
-          overlayColor: SliderTheme.of(context).overlayColor,
-          activeTrackColor: SliderTheme.of(context).activeTrackColor,
-          inactiveTrackColor: SliderTheme.of(context).inactiveTrackColor,
-          disabledActiveTrackColor: SliderTheme.of(context).disabledActiveTrackColor,
-        ),
-        child: SfSlider(
-          min: min,
-          max: max,
-          value: value,
-          interval: interval,
-          stepSize: stepSize,
-          showLabels: showLabels,
-          labelFormatterCallback: labelFormatterCallback,
-          edgeLabelPlacement: EdgeLabelPlacement.inside,
-          onChanged: onChanged,
-        ),
+          if (values != null) {
+            return SfRangeSliderTheme(
+              data: SfRangeSliderThemeData(
+                activeTrackHeight: isMobile ? null : 4.0,
+                inactiveTrackHeight: isMobile ? null : 2.0,
+                thumbRadius: isMobile ? null : 6.0,
+                overlayRadius: isMobile ? null : 12.0,
+                // Map colors from Slider (package:flutter) to SfSlider (package:syncfusion_flutter_sliders).
+                thumbColor: SliderTheme.of(context).thumbColor,
+                overlayColor: SliderTheme.of(context).overlayColor,
+                activeTrackColor: SliderTheme.of(context).activeTrackColor,
+                inactiveTrackColor: SliderTheme.of(context).inactiveTrackColor,
+                disabledActiveTrackColor: SliderTheme.of(context).disabledActiveTrackColor,
+              ),
+              child: SfRangeSlider(
+                min: min,
+                max: max,
+                values: SfRangeValues(values![0], values![1]),
+                interval: interval,
+                stepSize: stepSize,
+                showLabels: showLabels,
+                labelFormatterCallback: labelFormatterCallback,
+                edgeLabelPlacement: EdgeLabelPlacement.inside,
+                onChanged: onChanged == null ? null : (result) => onChanged?.call([result.start, result.end]),
+              ),
+            );
+          }
+          return const SizedBox.shrink();
+        }(),
       ),
     );
-  }
-}
-
-// --------------------------------------------------
-
-class CustomTrackShape extends RoundedRectSliderTrackShape {
-  @override
-  Rect getPreferredRect({
-    required RenderBox parentBox,
-    Offset offset = Offset.zero,
-    required SliderThemeData sliderTheme,
-    bool isEnabled = false,
-    bool isDiscrete = false,
-  }) {
-    final double trackHeight = sliderTheme.trackHeight!;
-    final double trackLeft = offset.dx;
-    final double trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2;
-    final double trackWidth = parentBox.size.width;
-    return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }
 }
 
@@ -1537,7 +1556,7 @@ class MobileGridSpanButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final path = GoRouterState.of(context).uri.pathSegments.last;
+    final path = router.location.split('/').last;
     if (![kAlbumsPath, kArtistsPath, kGenresPath].contains(path)) {
       return const SizedBox.shrink();
     }
@@ -1550,18 +1569,18 @@ class MobileGridSpanButton extends StatelessWidget {
         switch (path) {
           case kAlbumsPath:
             title = Localization.instance.MOBILE_ALBUM_GRID_SIZE;
-            groupValue = Configuration.instance.mobileAlbumGridSpan;
-            onChanged = (value) => Configuration.instance.set(mobileAlbumGridSpan: value);
+            groupValue = Configuration.instance.mobileMediaLibraryAlbumGridSpan;
+            onChanged = (value) => Configuration.instance.set(mobileMediaLibraryAlbumGridSpan: value);
             break;
           case kArtistsPath:
             title = Localization.instance.MOBILE_ARTIST_GRID_SIZE;
-            groupValue = Configuration.instance.mobileArtistGridSpan;
-            onChanged = (value) => Configuration.instance.set(mobileArtistGridSpan: value);
+            groupValue = Configuration.instance.mobileMediaLibraryArtistGridSpan;
+            onChanged = (value) => Configuration.instance.set(mobileMediaLibraryArtistGridSpan: value);
             break;
           case kGenresPath:
             title = Localization.instance.MOBILE_GENRE_GRID_SIZE;
-            groupValue = Configuration.instance.mobileGenreGridSpan;
-            onChanged = (value) => Configuration.instance.set(mobileGenreGridSpan: value);
+            groupValue = Configuration.instance.mobileMediaLibraryGenreGridSpan;
+            onChanged = (value) => Configuration.instance.set(mobileMediaLibraryGenreGridSpan: value);
             break;
           default:
             throw UnimplementedError();
