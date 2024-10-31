@@ -27,7 +27,10 @@ extension MediaPlayerStateExtensions on MediaPlayerState {
     String sampleRateValue = '';
     String channelCountValue = '';
     try {
-      formatValue = extension(playables[index].uri).substring(1).toUpperCase();
+      final format = extension(playables[index].uri).substring(1).toUpperCase();
+      if (format.length <= 5) {
+        formatValue = format;
+      }
     } catch (_) {}
     try {
       if (audioBitrate > 0.0) {
