@@ -59,7 +59,10 @@ class MediaPlayer extends ChangeNotifier {
   static Future<void> ensureInitialized() async {
     if (initialized) return;
     initialized = true;
-    // NO/OP
+    for (final MapEntry(key: property, value: value) in Configuration.instance.mpvOptions.entries) {
+      final platform = instance._player.platform as NativePlayer;
+      await platform.setProperty(property, value);
+    }
   }
 
   Playable get current => _current ?? state.playables[state.index];
@@ -128,11 +131,11 @@ class MediaPlayer extends ChangeNotifier {
     List<Playable> playables, {
     int index = 0,
     bool play = true,
-    void Function() onOpen = mediaPlayerOpenOnOpen,
+    void Function()? onOpen = mediaPlayerOpenOnOpen,
   }) async {
     await _player.open(Playlist(playables.map((playable) => playable.toMedia()).toList(), index: index), play: play);
     state = state.copyWith(index: index, playables: playables);
-    mediaPlayerOpenOnOpen.call();
+    onOpen?.call();
   }
 
   Future<void> add(List<Playable> playables) async {
@@ -145,6 +148,7 @@ class MediaPlayer extends ChangeNotifier {
   Future<void> setPlaybackState(
     PlaybackState playbackState, {
     bool play = true,
+    void Function()? onOpen,
   }) async {
     state = playbackState.toMediaPlayerState();
     await setRate(state.rate);
@@ -156,7 +160,10 @@ class MediaPlayer extends ChangeNotifier {
       await open(
         state.playables,
         index: state.index,
+        // --------------------------------------------------
         play: false,
+        onOpen: onOpen,
+        // --------------------------------------------------
       );
     }
   }

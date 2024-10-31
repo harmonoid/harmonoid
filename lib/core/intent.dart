@@ -60,7 +60,7 @@ class Intent {
   /// Notifies to [play] about externally opened resource.
   Future<void> notify({
     PlaybackState? playbackState,
-    void Function() onPlaybackStateRestore = intentNotifyOnPlaybackStateRestore,
+    void Function()? onPlaybackStateRestore = intentNotifyOnPlaybackStateRestore,
   }) {
     return _notifyLock.synchronized(() async {
       _notifyInvoked = true;
@@ -91,15 +91,18 @@ class Intent {
       _current = _resource;
 
       // Restore the playback state.
-      try {
-        if (!_mediaPlayerPlaybackStateRestored && playbackState != null) {
+      if (!_mediaPlayerPlaybackStateRestored && playbackState != null) {
+        try {
           _mediaPlayerPlaybackStateRestored = true;
-          await MediaPlayer.instance.setPlaybackState(playbackState, play: _current == null);
-          intentNotifyOnPlaybackStateRestore.call();
+          await MediaPlayer.instance.setPlaybackState(
+            playbackState,
+            play: _current == null,
+            onOpen: intentNotifyOnPlaybackStateRestore,
+          );
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
         }
-      } catch (exception, stacktrace) {
-        debugPrint(exception.toString());
-        debugPrint(stacktrace.toString());
       }
 
       if (_current != null) {
@@ -116,7 +119,7 @@ class Intent {
   /// Plays the [uri].
   Future<void> play(
     String uri, {
-    void Function() onMediaPlayerOpen = intentPlayOnMediaPlayerOpen,
+    void Function()? onMediaPlayerOpen = intentPlayOnMediaPlayerOpen,
   }) async {
     _playInvoked = true;
     return _playLock.synchronized(
@@ -137,8 +140,8 @@ class Intent {
                   [
                     playable,
                   ],
+                  onOpen: onMediaPlayerOpen,
                 );
-                onMediaPlayerOpen.call();
               } catch (exception, stacktrace) {
                 debugPrint(exception.toString());
                 debugPrint(stacktrace.toString());
@@ -164,8 +167,8 @@ class Intent {
                       [
                         playable,
                       ],
+                      onOpen: onMediaPlayerOpen,
                     );
-                    onMediaPlayerOpen.call();
                   } else {
                     await MediaPlayer.instance.add(
                       [
@@ -192,8 +195,8 @@ class Intent {
                     description: [],
                   ),
                 ],
+                onOpen: onMediaPlayerOpen,
               );
-              onMediaPlayerOpen.call();
               break;
             }
           default:

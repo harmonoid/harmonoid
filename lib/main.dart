@@ -70,6 +70,7 @@ Future<void> main(List<String> args) async {
       await WindowPlus.instance.setMinimumSize(const Size(960.0, 360.0));
       WindowLifecycle.ensureInitialized();
     }
+
     await Configuration.ensureInitialized();
     MediaKit.ensureInitialized(libmpv: Configuration.instance.mpvPath.nullIfBlank());
     await Localization.ensureInitialized(localization: Configuration.instance.localization);

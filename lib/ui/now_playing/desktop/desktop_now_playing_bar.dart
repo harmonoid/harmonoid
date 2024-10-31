@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 
+import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player.dart';
 import 'package:harmonoid/extensions/duration.dart';
 import 'package:harmonoid/extensions/media_player_state.dart';
@@ -45,8 +46,7 @@ class DesktopNowPlayingBarState extends State<DesktopNowPlayingBar> {
         return Provider<NowPlayingColors>.value(
           value: NowPlayingColors.fromPalette(
             context,
-            // DO NOT USE PALETTE IN MATERIAL DESIGN 3
-            isMaterial3 ? null : nowPlayingColorPaletteNotifier.palette,
+            isMaterial2 && Configuration.instance.desktopNowPlayingBarColorPalette ? nowPlayingColorPaletteNotifier.palette : null,
           ),
           builder: (context, _) {
             final nowPlayingColors = context.read<NowPlayingColors>();
@@ -155,12 +155,13 @@ class DesktopNowPlayingBarState extends State<DesktopNowPlayingBar> {
                                                   ),
                                                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: nowPlayingColors.backgroundText),
                                                 ),
-                                              Text(
-                                                mediaPlayer.state.getAudioFormatLabel(),
-                                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: nowPlayingColors.backgroundText),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
+                                              if (Configuration.instance.nowPlayingAudioFormat)
+                                                Text(
+                                                  mediaPlayer.state.getAudioFormatLabel(),
+                                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: nowPlayingColors.backgroundText),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
                                             ],
                                           ),
                                         ),

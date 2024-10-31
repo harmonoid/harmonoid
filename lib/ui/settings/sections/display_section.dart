@@ -95,9 +95,9 @@ class _DisplaySectionState extends State<DisplaySection> {
         ),
         const SizedBox(height: 8.0),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Text(
-            Localization.instance.ANIMATION_SPEED,
+            '${Localization.instance.ANIMATION_SPEED} ${Configuration.instance.themeAnimationDuration.medium.inMilliseconds}ms',
             style: Theme.of(context).textTheme.bodyLarge,
           ),
         ),
@@ -105,7 +105,7 @@ class _DisplaySectionState extends State<DisplaySection> {
         Container(
           height: 64.0,
           alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
           child: ScrollableSlider(
             min: 50.0,
             max: 1000.0,

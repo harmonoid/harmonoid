@@ -24,7 +24,7 @@ class NowPlayingVisualsNotifier {
 
   /// Initializes the [instance].
   static Future<void> ensureInitialized() async {
-    instance.directory = Directory(join(Configuration.instance.directory.path, 'UserVisuals'));
+    instance.directory = Directory(join(Configuration.instance.directory.path, 'NowPlayingVisuals'));
     if (await instance.directory.exists_()) {
       final directory = await instance.directory.list_();
       instance.external.addAll(directory.map((e) => e.path));

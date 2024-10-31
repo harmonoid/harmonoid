@@ -1,7 +1,6 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:harmonoid/utils/widgets.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/media_library.dart';
@@ -13,6 +12,7 @@ import 'package:harmonoid/ui/settings/sections/media_library_section.dart';
 import 'package:harmonoid/ui/settings/sections/now_playing_screen_section.dart';
 import 'package:harmonoid/ui/settings/sections/stats_section.dart';
 import 'package:harmonoid/utils/constants.dart';
+import 'package:harmonoid/utils/widgets.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -39,17 +39,19 @@ class SettingsScreen extends StatelessWidget {
       labels: {
         Icons.info: Localization.instance.ABOUT,
       },
-      slivers: [
-        SliverList.list(
-          children: const [
-            SliverSpacer(),
-            MediaLibrarySection(),
-            StatsSection(),
-            DisplaySection(),
-            LanguageSection(),
-            NowPlayingScreenSection(),
-            SliverSpacer(),
-          ],
+      slivers: const [
+        SliverToBoxAdapter(
+          child: Column(
+            children: [
+              SliverSpacer(),
+              MediaLibrarySection(),
+              StatsSection(),
+              DisplaySection(),
+              LanguageSection(),
+              NowPlayingScreenSection(),
+              SliverSpacer(),
+            ],
+          ),
         ),
       ],
     );

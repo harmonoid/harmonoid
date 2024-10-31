@@ -73,6 +73,7 @@ class NowPlayingColorPaletteNotifier extends ChangeNotifier {
   /// Resets the [_current].
   void resetCurrent() {
     _current = null;
+    notifyListeners();
   }
 
   /// Disposes the [instance]. Releases allocated resources back to the system.

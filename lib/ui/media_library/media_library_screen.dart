@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/extensions/go_router.dart';
 import 'package:harmonoid/extensions/media_library.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/media_library/media_library_inaccessible_directories_screen.dart';
@@ -37,7 +38,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
 
   String? _current;
 
-  String get _path => GoRouterState.of(context).uri.pathSegments.last;
+  String get _path => router.location.split('/').last;
 
   @override
   void initState() {

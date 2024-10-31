@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/extensions/go_router.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -83,8 +84,7 @@ Future<void> navigateToGenre(BuildContext context, GenreLookupKey key) async {
 BuildContext _handle(BuildContext context) {
   bool shouldPop() {
     try {
-      final path = GoRouterState.of(context).uri.toString();
-      return !path.startsWith('/$kMediaLibraryPath');
+      return !router.location.startsWith('/$kMediaLibraryPath');
     } catch (_) {
       return true;
     }

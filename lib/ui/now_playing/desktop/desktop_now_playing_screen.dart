@@ -32,20 +32,20 @@ class DesktopNowPlayingScreen extends StatefulWidget {
 }
 
 class DesktopNowPlayingScreenState extends State<DesktopNowPlayingScreen> {
-  int desktopNowPlayingScreenCarousel = Configuration.instance.desktopNowPlayingScreenCarousel;
-  bool desktopNowPlayingScreenLyrics = Configuration.instance.desktopNowPlayingScreenLyrics;
+  int desktopNowPlayingScreenCarousel = Configuration.instance.desktopNowPlayingCarousel;
+  bool desktopNowPlayingScreenLyrics = Configuration.instance.desktopNowPlayingLyrics;
 
   Timer? fullscreenTimer;
 
-  void setDesktopNowPlayingScreenCarousel(int value) {
+  void setDesktopNowPlayingCarousel(int value) {
     desktopNowPlayingScreenCarousel = value;
-    Configuration.instance.set(desktopNowPlayingScreenCarousel: value);
+    Configuration.instance.set(desktopNowPlayingCarousel: value);
     setState(() {});
   }
 
-  void setDesktopNowPlayingScreenLyrics(bool value) {
+  void setDesktopNowPlayingLyrics(bool value) {
     desktopNowPlayingScreenLyrics = value;
-    Configuration.instance.set(desktopNowPlayingScreenLyrics: value);
+    Configuration.instance.set(desktopNowPlayingLyrics: value);
     setState(() {});
   }
 
@@ -120,8 +120,8 @@ class DesktopNowPlayingScreenState extends State<DesktopNowPlayingScreen> {
                     left: 0.0,
                     right: 0.0,
                     child: Controls(
-                      setDesktopNowPlayingScreenCarousel: setDesktopNowPlayingScreenCarousel,
-                      setDesktopNowPlayingScreenLyrics: setDesktopNowPlayingScreenLyrics,
+                      setDesktopNowPlayingCarousel: setDesktopNowPlayingCarousel,
+                      setDesktopNowPlayingLyrics: setDesktopNowPlayingLyrics,
                     ),
                   ),
                   Positioned(
@@ -153,12 +153,12 @@ class DesktopNowPlayingScreenState extends State<DesktopNowPlayingScreen> {
 }
 
 class Controls extends StatelessWidget {
-  final void Function(int value) setDesktopNowPlayingScreenCarousel;
-  final void Function(bool value) setDesktopNowPlayingScreenLyrics;
+  final void Function(int value) setDesktopNowPlayingCarousel;
+  final void Function(bool value) setDesktopNowPlayingLyrics;
   const Controls({
     super.key,
-    required this.setDesktopNowPlayingScreenCarousel,
-    required this.setDesktopNowPlayingScreenLyrics,
+    required this.setDesktopNowPlayingCarousel,
+    required this.setDesktopNowPlayingLyrics,
   });
 
   @override
@@ -265,7 +265,7 @@ class Controls extends StatelessWidget {
                                     ],
                                   ),
                                 ],
-                                if (audioFormatLabel.isNotEmpty) ...[
+                                if (Configuration.instance.nowPlayingAudioFormat) ...[
                                   const SizedBox(height: 4.0),
                                   Text(
                                     audioFormatLabel,
@@ -408,11 +408,11 @@ class Controls extends StatelessWidget {
                         tooltip: Localization.instance.ADD_TO_PLAYLIST,
                       ),
                       IconButton(
-                        onPressed: () => setDesktopNowPlayingScreenLyrics(!Configuration.instance.desktopNowPlayingScreenLyrics),
-                        color: Configuration.instance.desktopNowPlayingScreenLyrics ? nowPlayingColors.backgroundEnabledIcon : nowPlayingColors.backgroundDisabledIcon,
+                        onPressed: () => setDesktopNowPlayingLyrics(!Configuration.instance.desktopNowPlayingLyrics),
+                        color: Configuration.instance.desktopNowPlayingLyrics ? nowPlayingColors.backgroundEnabledIcon : nowPlayingColors.backgroundDisabledIcon,
                         icon: const Icon(Icons.text_format),
                         splashRadius: 20.0,
-                        tooltip: Configuration.instance.desktopNowPlayingScreenLyrics ? Localization.instance.HIDE_LYRICS : Localization.instance.SHOW_LYRICS,
+                        tooltip: Configuration.instance.desktopNowPlayingLyrics ? Localization.instance.HIDE_LYRICS : Localization.instance.SHOW_LYRICS,
                       ),
                       IconButton(
                         onPressed: mediaPlayer.muteOrUnmute,
@@ -443,8 +443,8 @@ class Controls extends StatelessWidget {
                       ),
                       const Spacer(),
                       IconButton(
-                        onPressed: () => setDesktopNowPlayingScreenCarousel(
-                          (Configuration.instance.desktopNowPlayingScreenCarousel - 1) % DesktopNowPlayingScreenCarousel.itemCount,
+                        onPressed: () => setDesktopNowPlayingCarousel(
+                          (Configuration.instance.desktopNowPlayingCarousel - 1) % DesktopNowPlayingScreenCarousel.itemCount,
                         ),
                         color: nowPlayingColors.backgroundEnabledIcon,
                         icon: const Icon(Icons.chevron_left),
@@ -452,8 +452,8 @@ class Controls extends StatelessWidget {
                         tooltip: Localization.instance.PREVIOUS,
                       ),
                       IconButton(
-                        onPressed: () => setDesktopNowPlayingScreenCarousel(
-                          (Configuration.instance.desktopNowPlayingScreenCarousel + 1) % DesktopNowPlayingScreenCarousel.itemCount,
+                        onPressed: () => setDesktopNowPlayingCarousel(
+                          (Configuration.instance.desktopNowPlayingCarousel + 1) % DesktopNowPlayingScreenCarousel.itemCount,
                         ),
                         color: nowPlayingColors.backgroundEnabledIcon,
                         icon: const Icon(Icons.chevron_right),

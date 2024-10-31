@@ -2,22 +2,22 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/extensions/go_router.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/slide_on_enter.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:provider/provider.dart';
 
 class NowPlayingControlPanel extends StatefulWidget {
   const NowPlayingControlPanel({super.key});
 
   static Future<void> show(BuildContext context) async {
-    final path = GoRouterState.of(context).uri.pathSegments.last;
+    final path = router.location.split('/').last;
     if (isDesktop) {
       await showDialog(
         context: context,
