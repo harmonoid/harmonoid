@@ -71,15 +71,17 @@ static void my_application_window_new(GApplication* application) {
   } else {
     gtk_window_set_title(window, "Harmonoid");
   }
+  gtk_widget_show(GTK_WIDGET(window));
 
   g_autoptr(FlDartProject) project = fl_dart_project_new();
   fl_dart_project_set_dart_entrypoint_arguments(
       project, self->dart_entrypoint_arguments);
   FlView* view = fl_view_new(project);
+  gtk_widget_show(GTK_WIDGET(view));
   gtk_container_add(GTK_CONTAINER(window), GTK_WIDGET(view));
-  gtk_widget_realize(GTK_WIDGET(view));
-  gtk_widget_realize(GTK_WIDGET(window));
   fl_register_plugins(FL_PLUGIN_REGISTRY(view));
+
+  gtk_widget_hide(GTK_WIDGET(window));
 }
 
 // Implements GApplication::activate.

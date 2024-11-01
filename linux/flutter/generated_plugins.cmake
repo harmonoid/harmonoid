@@ -4,7 +4,6 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   awesome_notifications
-  dart_discord_rpc
   dynamic_color
   media_kit_libs_linux
   sqlite3_flutter_libs
@@ -13,7 +12,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
-  media_kit_native_event_loop
+  flutter_discord_rpc
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)
