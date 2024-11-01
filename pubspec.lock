@@ -626,6 +626,15 @@ packages:
       url: "https://github.com/media-kit/media-kit.git"
     source: git
     version: "1.1.11"
+  media_kit_libs_linux:
+    dependency: "direct main"
+    description:
+      path: "libs/linux/media_kit_libs_linux"
+      ref: HEAD
+      resolved-ref: "18f155fe81cae93db712307411a17b2b93760eb6"
+      url: "https://github.com/media-kit/media-kit.git"
+    source: git
+    version: "1.1.3"
   media_library:
     dependency: "direct main"
     description:
@@ -1274,7 +1283,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "9e41951b6cffa445ae9add86e5309b5ec2304015"
+      resolved-ref: "0db7e6e6b5446e1b93a14b7067c8c1f0f9fcedc9"
       url: "https://github.com/alexmercerind/window_plus.git"
     source: git
     version: "0.0.1"
