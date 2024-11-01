@@ -7,53 +7,14 @@ import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/color.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
-class SearchBanner extends StatefulWidget {
+class SearchBanner extends StatelessWidget {
   const SearchBanner({super.key});
 
-  @override
-  State<SearchBanner> createState() => SearchBannerState();
-}
-
-class SearchBannerState extends State<SearchBanner> {
   static const _kImageWidth = 164.0;
   static const _kImageHeight = 164.0;
   static const _kImageAssetM3 = 'assets/vectors/media_library.svg';
   static const _kImageAssetM2Light = 'assets/vectors/media_library.svg';
   static const _kImageAssetM2Dark = 'assets/vectors/media_library_dark.svg';
-
-  SvgPicture? _imagePicture;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (isMaterial3) {
-        final colorScheme = Theme.of(context).colorScheme;
-        final result = await rootBundle.loadString(_kImageAssetM3);
-        setState(() {
-          _imagePicture = SvgPicture.string(
-            result
-                .replaceAll('"white"', '"${colorScheme.background.toHex()}"')
-                .replaceAll('"black"', '"${colorScheme.onBackground.toHex()}"')
-                .replaceAll('"#651FFF"', '"${colorScheme.primary.toHex()}"')
-                .replaceAll('"#B388FF"', '"${colorScheme.inversePrimary.toHex()}"'),
-            height: _kImageHeight,
-            width: _kImageWidth,
-            fit: BoxFit.contain,
-          );
-        });
-      } else {
-        setState(() {
-          _imagePicture = SvgPicture.asset(
-            Theme.of(context).brightness == Brightness.dark ? _kImageAssetM2Dark : _kImageAssetM2Light,
-            height: _kImageHeight,
-            width: _kImageWidth,
-            fit: BoxFit.contain,
-          );
-        });
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +27,36 @@ class SearchBannerState extends State<SearchBanner> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _imagePicture ?? const SizedBox(height: _kImageHeight, width: _kImageWidth),
+              FutureBuilder<String>(
+                future: () async {
+                  final theme = Theme.of(context);
+                  if (isMaterial3) {
+                    final data = await rootBundle.loadString(_kImageAssetM3);
+                    return data
+                        .replaceAll('"white"', '"${theme.colorScheme.background.toHex()}"')
+                        .replaceAll('"black"', '"${theme.colorScheme.onBackground.toHex()}"')
+                        .replaceAll('"#651FFF"', '"${theme.colorScheme.primary.toHex()}"')
+                        .replaceAll('"#B388FF"', '"${theme.colorScheme.inversePrimary.toHex()}"');
+                  } else {
+                    return await rootBundle.loadString(theme.brightness == Brightness.dark ? _kImageAssetM2Dark : _kImageAssetM2Light);
+                  }
+                }(),
+                builder: (context, snapshot) {
+                  final data = snapshot.data;
+                  if (data == null) {
+                    return const SizedBox(
+                      height: _kImageHeight,
+                      width: _kImageWidth,
+                    );
+                  }
+                  return SvgPicture.string(
+                    data,
+                    height: _kImageHeight,
+                    width: _kImageWidth,
+                    fit: BoxFit.contain,
+                  );
+                },
+              ),
               const SizedBox(height: 16.0),
               Text(
                 Localization.instance.SEARCH_BANNER_TITLE,

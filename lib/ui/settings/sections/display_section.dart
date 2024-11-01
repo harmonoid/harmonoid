@@ -1,5 +1,6 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/localization/localization.dart';
@@ -67,6 +68,7 @@ class _DisplaySectionState extends State<DisplaySection> {
             if (result != null) {
               await Configuration.instance.set(themeMode: result);
               await ThemeNotifier.instance.update(themeMode: result);
+              context.pop();
               setState(() {});
             }
           },
@@ -89,6 +91,7 @@ class _DisplaySectionState extends State<DisplaySection> {
             if (result != null) {
               await Configuration.instance.set(themeMaterialStandard: result);
               await ThemeNotifier.instance.update(materialStandard: result);
+              context.pop();
               setState(() {});
             }
           },
