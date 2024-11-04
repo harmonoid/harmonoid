@@ -9,7 +9,6 @@ import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/extensions/go_router.dart';
-import 'package:harmonoid/extensions/media_library.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/media_library/media_library_inaccessible_directories_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_no_items_banner.dart';
@@ -83,7 +82,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                 padding: EdgeInsets.only(
                   top: captionHeight + kDesktopAppBarHeight,
                 ),
-                child: mediaLibrary.isEmpty
+                child: mediaLibrary.tracks.isEmpty
                     ? const Center(
                         child: MediaLibraryNoItemsBanner(),
                       )
@@ -311,7 +310,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                   }
                   return false;
                 },
-                child: mediaLibrary.isEmpty
+                child: mediaLibrary.tracks.isEmpty
                     ? const Center(
                         child: MediaLibraryNoItemsBanner(),
                       )
