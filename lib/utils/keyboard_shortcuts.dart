@@ -17,12 +17,12 @@ class KeyboardShortcuts {
   /// {@macro keyboard_shortcuts}
   KeyboardShortcuts._();
 
-  final Map<LogicalKeySet, VoidCallback> bindings = {
-    LogicalKeySet(LogicalKeyboardKey.space): MediaPlayer.instance.playOrPause,
-    LogicalKeySet(LogicalKeyboardKey.mediaPlayPause): MediaPlayer.instance.playOrPause,
-    LogicalKeySet(LogicalKeyboardKey.mediaTrackNext): MediaPlayer.instance.next,
-    LogicalKeySet(LogicalKeyboardKey.mediaTrackPrevious): MediaPlayer.instance.previous,
-    LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyQ): SystemNavigator.pop,
+  final Map<ShortcutActivator, VoidCallback> bindings = {
+    const SingleActivator(LogicalKeyboardKey.space): MediaPlayer.instance.playOrPause,
+    const SingleActivator(LogicalKeyboardKey.mediaPlayPause): MediaPlayer.instance.playOrPause,
+    const SingleActivator(LogicalKeyboardKey.mediaTrackNext): MediaPlayer.instance.next,
+    const SingleActivator(LogicalKeyboardKey.mediaTrackPrevious): MediaPlayer.instance.previous,
+    const SingleActivator(LogicalKeyboardKey.keyQ, control: true): SystemNavigator.pop,
   };
 }
 
@@ -43,7 +43,10 @@ class KeyboardShortcutsListener extends StatelessWidget {
   Widget build(BuildContext context) {
     return CallbackShortcuts(
       bindings: KeyboardShortcuts.instance.bindings,
-      child: child,
+      child: Focus(
+        autofocus: true,
+        child: child,
+      ),
     );
   }
 }
