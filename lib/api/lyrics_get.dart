@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:harmonoid/api/utils/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 
+import 'package:harmonoid/api/utils/constants.dart';
 import 'package:harmonoid/models/lyric.dart';
 import 'package:harmonoid/models/lyrics.dart';
 
