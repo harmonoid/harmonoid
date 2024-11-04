@@ -6,7 +6,7 @@ import 'package:harmonoid/models/playable.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
 import 'package:harmonoid/localization/localization.dart';
-import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/mappers/playlist_entry.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_image.dart';
 import 'package:harmonoid/utils/constants.dart';

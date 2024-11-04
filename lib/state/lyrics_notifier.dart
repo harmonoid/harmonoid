@@ -15,7 +15,7 @@ import 'package:harmonoid/api/lyrics_get.dart';
 import 'package:harmonoid/mappers/lyrics.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
-import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/playable.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/models/lyric.dart';

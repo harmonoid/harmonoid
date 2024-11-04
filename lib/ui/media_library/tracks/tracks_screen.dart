@@ -9,7 +9,7 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
-import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/track.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';

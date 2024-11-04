@@ -14,7 +14,7 @@ import 'package:uri_parser/uri_parser.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
-import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/go_router.dart';
 import 'package:harmonoid/extensions/playable.dart';
 import 'package:harmonoid/extensions/track.dart';
@@ -193,8 +193,10 @@ ImageProvider cover({
       result ??= playlistEntry?.uri;
       result ??= uri;
       if (MediaPlayer.instance.current.uri == result) {
-        MediaPlayer.instance.resetNotifySystemMediaTransportControlsFlagPlayable();
-        MediaPlayer.instance.resetNotifyDiscordRPCFlagPlayable();
+        MediaPlayer.instance.resetFlagsAudioService();
+        MediaPlayer.instance.resetFlagsDiscordRpc();
+        MediaPlayer.instance.resetFlagsMpris();
+        MediaPlayer.instance.resetFlagsSystemMediaTransportControls();
         NowPlayingColorPaletteNotifier.instance.resetCurrent();
       }
     },

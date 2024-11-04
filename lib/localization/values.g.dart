@@ -72,6 +72,7 @@ class Values {
   late String FILE;
   late String FILE_INFORMATION;
   late String FILE_PATH_OR_URL;
+  late String FIND;
   late String FOLDER;
   late String FOLDER_NOT_FOUND;
   late String FOLLOW_ON_X;
@@ -134,6 +135,7 @@ class Values {
   late String OPTIONS;
   late String ORDER;
   late String PAUSE;
+  late String PAUSED;
   late String PERMISSION_IMAGES_AND_PHOTOS;
   late String PERMISSION_IMAGES_AND_PHOTOS_SUBTITLE;
   late String PERMISSION_MUSIC_AND_AUDIO;
@@ -143,6 +145,7 @@ class Values {
   late String PHONE;
   late String PITCH;
   late String PLAY;
+  late String PLAYING;
   late String PLAYLIST;
   late String PLAYLISTS;
   late String PLAYLIST_ADD_DIALOG_SUBTITLE;

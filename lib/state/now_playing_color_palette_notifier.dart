@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:synchronized/synchronized.dart';
 
-import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/utils/rendering.dart';

@@ -5,7 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/media_library.dart';
-import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';

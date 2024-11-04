@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;

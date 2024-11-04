@@ -6,7 +6,7 @@ import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
-import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/duration.dart';
 import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/localization/localization.dart';
@@ -236,6 +236,7 @@ class Controls extends StatelessWidget {
   const Controls({super.key});
 
   static double? get floatingActionButtonElevation => isMaterial3 ? 0.0 : null;
+  static double? get floatingActionButtonDimension => isMaterial3 ? null : 48.0;
 
   @override
   Widget build(BuildContext context) {
@@ -272,20 +273,23 @@ class Controls extends StatelessWidget {
                   tooltip: Localization.instance.PREVIOUS,
                 ),
                 const SizedBox(width: 8.0),
-                FloatingActionButton(
-                  heroTag: 'desktop_now_playing_bar_play_pause',
-                  elevation: floatingActionButtonElevation,
-                  focusElevation: floatingActionButtonElevation,
-                  hoverElevation: floatingActionButtonElevation,
-                  highlightElevation: floatingActionButtonElevation,
-                  onPressed: mediaPlayer.playOrPause,
-                  backgroundColor: nowPlayingColors.foreground,
-                  foregroundColor: nowPlayingColors.foregroundIcon,
-                  tooltip: mediaPlayer.state.playing ? Localization.instance.PAUSE : Localization.instance.PLAY,
-                  child: StatefulAnimatedIcon(
-                    dismissed: mediaPlayer.state.playing,
-                    icon: AnimatedIcons.play_pause,
-                    size: Theme.of(context).iconTheme.size! * 1.4,
+                SizedBox.square(
+                  dimension: floatingActionButtonDimension,
+                  child: FloatingActionButton(
+                    heroTag: 'desktop_now_playing_bar_play_pause',
+                    elevation: floatingActionButtonElevation,
+                    focusElevation: floatingActionButtonElevation,
+                    hoverElevation: floatingActionButtonElevation,
+                    highlightElevation: floatingActionButtonElevation,
+                    onPressed: mediaPlayer.playOrPause,
+                    backgroundColor: nowPlayingColors.foreground,
+                    foregroundColor: nowPlayingColors.foregroundIcon,
+                    tooltip: mediaPlayer.state.playing ? Localization.instance.PAUSE : Localization.instance.PLAY,
+                    child: StatefulAnimatedIcon(
+                      dismissed: mediaPlayer.state.playing,
+                      icon: AnimatedIcons.play_pause,
+                      size: Theme.of(context).iconTheme.size! * 1.4,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8.0),
@@ -323,10 +327,13 @@ class Controls extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 4.0),
+                    padding: const EdgeInsets.only(bottom: 2.0),
                     child: Text(
                       mediaPlayer.state.position.label,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: nowPlayingColors.backgroundText),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: nowPlayingColors.backgroundText,
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
                     ),
                   ),
                   const SizedBox(width: 12.0),
@@ -352,10 +359,13 @@ class Controls extends StatelessWidget {
                     ),
                   const SizedBox(width: 12.0),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 4.0),
+                    padding: const EdgeInsets.only(bottom: 2.0),
                     child: Text(
                       mediaPlayer.state.duration.label,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: nowPlayingColors.backgroundText),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: nowPlayingColors.backgroundText,
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
                     ),
                   ),
                 ],

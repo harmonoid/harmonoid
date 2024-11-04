@@ -17,7 +17,7 @@ class MediaLibraryInaccessibleDirectoriesScreen extends StatefulWidget {
   final List<Directory> directories;
   const MediaLibraryInaccessibleDirectoriesScreen({super.key, required this.directories});
 
-  static Future<void> showIfRequired(BuildContext context) async {
+  static Future<bool> showIfRequired(BuildContext context) async {
     final directories = <Directory>[];
     for (final directory in MediaLibrary.instance.directories) {
       if (!await directory.exists_()) {
@@ -30,7 +30,10 @@ class MediaLibraryInaccessibleDirectoriesScreen extends StatefulWidget {
         '/$kInaccessibleDirectoriesPath',
         extra: InaccessibleDirectoriesPathExtra(directories: directories),
       );
+      return true;
     }
+
+    return false;
   }
 
   @override

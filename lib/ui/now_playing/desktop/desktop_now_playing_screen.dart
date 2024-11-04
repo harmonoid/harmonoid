@@ -8,7 +8,7 @@ import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
-import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/duration.dart';
 import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/localization/localization.dart';
@@ -307,10 +307,13 @@ class Controls extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 4.0),
+                        padding: const EdgeInsets.only(bottom: 2.0),
                         child: Text(
                           mediaPlayer.state.position.label,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: nowPlayingColors.backgroundText),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: nowPlayingColors.backgroundText,
+                            fontFeatures: const [FontFeature.tabularFigures()],
+                          ),
                         ),
                       ),
                       const SizedBox(width: 12.0),
@@ -336,10 +339,13 @@ class Controls extends StatelessWidget {
                         ),
                       const SizedBox(width: 12.0),
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 4.0),
+                        padding: const EdgeInsets.only(bottom: 2.0),
                         child: Text(
                           mediaPlayer.state.duration.label,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: nowPlayingColors.backgroundText),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: nowPlayingColors.backgroundText,
+                            fontFeatures: const [FontFeature.tabularFigures()],
+                          ),
                         ),
                       ),
                     ],

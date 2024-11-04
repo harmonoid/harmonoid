@@ -77,6 +77,7 @@ class LocalizationBase extends Values {
     FILE = map['FILE']!;
     FILE_INFORMATION = map['FILE_INFORMATION']!;
     FILE_PATH_OR_URL = map['FILE_PATH_OR_URL']!;
+    FIND = map['FIND']!;
     FOLDER = map['FOLDER']!;
     FOLDER_NOT_FOUND = map['FOLDER_NOT_FOUND']!;
     FOLLOW_ON_X = map['FOLLOW_ON_X']!;
@@ -139,6 +140,7 @@ class LocalizationBase extends Values {
     OPTIONS = map['OPTIONS']!;
     ORDER = map['ORDER']!;
     PAUSE = map['PAUSE']!;
+    PAUSED = map['PAUSED']!;
     PERMISSION_IMAGES_AND_PHOTOS = map['PERMISSION_IMAGES_AND_PHOTOS']!;
     PERMISSION_IMAGES_AND_PHOTOS_SUBTITLE = map['PERMISSION_IMAGES_AND_PHOTOS_SUBTITLE']!;
     PERMISSION_MUSIC_AND_AUDIO = map['PERMISSION_MUSIC_AND_AUDIO']!;
@@ -148,6 +150,7 @@ class LocalizationBase extends Values {
     PHONE = map['PHONE']!;
     PITCH = map['PITCH']!;
     PLAY = map['PLAY']!;
+    PLAYING = map['PLAYING']!;
     PLAYLIST = map['PLAYLIST']!;
     PLAYLISTS = map['PLAYLISTS']!;
     PLAYLIST_ADD_DIALOG_SUBTITLE = map['PLAYLIST_ADD_DIALOG_SUBTITLE']!;

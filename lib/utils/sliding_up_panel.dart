@@ -5,7 +5,8 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
-import 'package:harmonoid/core/media_player.dart';
+
+import 'package:harmonoid/core/media_player/media_player.dart';
 
 enum SlideDirection {
   UP,

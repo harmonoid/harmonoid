@@ -43,9 +43,11 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      MediaLibraryInaccessibleDirectoriesScreen.showIfRequired(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       Intent.instance.notify(playbackState: Configuration.instance.mediaPlayerPlaybackState);
+      if (Configuration.instance.mediaLibraryRefreshUponStart && !await MediaLibraryInaccessibleDirectoriesScreen.showIfRequired(context)) {
+        MediaLibrary.instance.refresh();
+      }
     });
   }
 
@@ -166,6 +168,8 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                               kPlaylistsPath: Localization.instance.PLAYLISTS,
                             }.entries.map<Widget>(
                               (e) {
+                                const selected = TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600);
+                                const unselected = TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300);
                                 return MouseRegion(
                                   cursor: SystemMouseCursors.click,
                                   child: GestureDetector(
@@ -176,25 +180,33 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                     child: Container(
                                       height: kDesktopAppBarHeight - 20.0,
                                       alignment: Alignment.center,
-                                      padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
                                       child: Stack(
                                         alignment: Alignment.center,
                                         children: [
                                           Text(
                                             e.value.toUpperCase(),
-                                            style: TextStyle(
-                                              fontSize: 20.0,
-                                              fontWeight: FontWeight.w600,
-                                              color: e.key == _path ? Theme.of(context).textTheme.bodyLarge?.color : Colors.transparent,
-                                            ),
+                                            style: selected.copyWith(color: Colors.transparent),
                                           ),
                                           Text(
                                             e.value.toUpperCase(),
-                                            style: TextStyle(
-                                              fontSize: 20.0,
-                                              fontWeight: FontWeight.w300,
-                                              color: e.key != _path ? Theme.of(context).textTheme.bodyMedium?.color : Colors.transparent,
-                                            ),
+                                            style: unselected.copyWith(color: Colors.transparent),
+                                          ),
+                                          AnimatedSwitcher(
+                                            duration: _duration.fast,
+                                            switchInCurve: Curves.easeInOut,
+                                            switchOutCurve: Curves.easeInOut,
+                                            child: e.key == _path
+                                                ? Text(
+                                                    e.value.toUpperCase(),
+                                                    key: ValueKey('${e.key}-w600'),
+                                                    style: selected.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color),
+                                                  )
+                                                : Text(
+                                                    e.value.toUpperCase(),
+                                                    key: ValueKey('${e.key}-w300'),
+                                                    style: unselected.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color),
+                                                  ),
                                           ),
                                         ],
                                       ),
