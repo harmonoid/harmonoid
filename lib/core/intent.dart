@@ -7,7 +7,7 @@ import 'package:synchronized/synchronized.dart';
 import 'package:uri_parser/uri_parser.dart';
 
 import 'package:harmonoid/core/media_library.dart';
-import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/models/playback_state.dart';
 import 'package:harmonoid/utils/actions.dart';
@@ -92,12 +92,11 @@ class Intent {
 
       // Restore the playback state.
       if (!_mediaPlayerPlaybackStateRestored && playbackState != null) {
+        _mediaPlayerPlaybackStateRestored = true;
         try {
-          _mediaPlayerPlaybackStateRestored = true;
           await MediaPlayer.instance.setPlaybackState(
             playbackState,
-            play: _current == null,
-            onOpen: intentNotifyOnPlaybackStateRestore,
+            onOpen: _current == null ? intentNotifyOnPlaybackStateRestore : null,
           );
         } catch (exception, stacktrace) {
           debugPrint(exception.toString());
