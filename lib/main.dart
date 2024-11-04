@@ -8,7 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_library.dart';
-import 'package:harmonoid/core/media_player.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
@@ -59,7 +59,7 @@ Future<void> main(List<String> args) async {
         application: kApplication,
         enableEventStreams: false,
       );
-      await WindowPlus.instance.setMinimumSize(const Size(960.0, 360.0));
+      await WindowPlus.instance.setMinimumSize(const Size(1024.0, 360.0));
       WindowLifecycle.ensureInitialized();
     }
     if (Platform.isWindows) {
@@ -67,7 +67,7 @@ Future<void> main(List<String> args) async {
         application: kApplication,
         enableEventStreams: false,
       );
-      await WindowPlus.instance.setMinimumSize(const Size(960.0, 360.0));
+      await WindowPlus.instance.setMinimumSize(const Size(1024.0, 360.0));
       WindowLifecycle.ensureInitialized();
     }
 
@@ -108,7 +108,7 @@ Future<void> main(List<String> args) async {
         application: kApplication,
         enableEventStreams: false,
       );
-      await WindowPlus.instance.setMinimumSize(const Size(960.0, 360.0));
+      await WindowPlus.instance.setMinimumSize(const Size(1024.0, 360.0));
       WindowLifecycle.ensureInitialized();
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
