@@ -16,6 +16,7 @@ class ConfigurationBase {
   int get desktopNowPlayingCarousel => _desktopNowPlayingCarousel!;
   bool get desktopNowPlayingLyrics => _desktopNowPlayingLyrics!;
   bool get discordRpc => _discordRpc!;
+  String get identifier => _identifier!;
   LocalizationData get localization => _localization!;
   bool get lrcFromDirectory => _lrcFromDirectory!;
   double get lyricsViewFocusedFontSize => _lyricsViewFocusedFontSize!;
@@ -61,6 +62,7 @@ class ConfigurationBase {
     int? desktopNowPlayingCarousel,
     bool? desktopNowPlayingLyrics,
     bool? discordRpc,
+    String? identifier,
     LocalizationData? localization,
     bool? lrcFromDirectory,
     double? lyricsViewFocusedFontSize,
@@ -116,6 +118,10 @@ class ConfigurationBase {
     if (discordRpc != null) {
       _discordRpc = discordRpc;
       await db.setValue(kKeyDiscordRpc, kTypeBoolean, booleanValue: discordRpc);
+    }
+    if (identifier != null) {
+      _identifier = identifier;
+      await db.setValue(kKeyIdentifier, kTypeString, stringValue: identifier);
     }
     if (localization != null) {
       _localization = localization;
@@ -281,6 +287,7 @@ class ConfigurationBase {
       /* Integer */ kKeyDesktopNowPlayingCarousel: 0,
       /* Boolean */ kKeyDesktopNowPlayingLyrics: true,
       /* Boolean */ kKeyDiscordRpc: true,
+      /* String  */ kKeyIdentifier: const Uuid().v4(),
       /* Json    */ kKeyLocalization: const LocalizationData(code: 'en_US', name: 'English (United States)', country: 'United States'),
       /* Boolean */ kKeyLrcFromDirectory: false,
       /* Double  */ kKeyLyricsViewFocusedFontSize: 64.0,
@@ -291,7 +298,7 @@ class ConfigurationBase {
       /* Boolean */ kKeyMediaLibraryAddPlaylistToNowPlaying: false,
       /* Json    */ kKeyMediaLibraryAlbumGroupingParameters: [AlbumGroupingParameter.album.index],
       /* Boolean */ kKeyMediaLibraryAlbumSortAscending: true,
-      /* Integer */ kKeyMediaLibraryAlbumSortType: isDesktop ? AlbumSortType.albumArtist.index : AlbumSortType.album.index,
+      /* Integer */ kKeyMediaLibraryAlbumSortType: AlbumSortType.album.index,
       /* Boolean */ kKeyMediaLibraryArtistSortAscending: true,
       /* Integer */ kKeyMediaLibraryArtistSortType: ArtistSortType.artist.index,
       /* Boolean */ kKeyMediaLibraryCoverFallback: false,
@@ -327,6 +334,7 @@ class ConfigurationBase {
   int? _desktopNowPlayingCarousel;
   bool? _desktopNowPlayingLyrics;
   bool? _discordRpc;
+  String? _identifier;
   LocalizationData? _localization;
   bool? _lrcFromDirectory;
   double? _lyricsViewFocusedFontSize;
@@ -374,6 +382,7 @@ const kKeyDesktopNowPlayingBarColorPalette = 'DESKTOP_NOW_PLAYING_BAR_COLOR_PALE
 const kKeyDesktopNowPlayingCarousel = 'DESKTOP_NOW_PLAYING_CAROUSEL';
 const kKeyDesktopNowPlayingLyrics = 'DESKTOP_NOW_PLAYING_LYRICS';
 const kKeyDiscordRpc = 'DISCORD_RPC';
+const kKeyIdentifier = 'IDENTIFIER';
 const kKeyLocalization = 'LOCALIZATION';
 const kKeyLrcFromDirectory = 'LRC_FROM_DIRECTORY';
 const kKeyLyricsViewFocusedFontSize = 'LYRICS_VIEW_FOCUSED_FONT_SIZE';

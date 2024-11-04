@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:media_library/media_library.dart';
 import 'package:path/path.dart' as path;
 import 'package:safe_local_storage/safe_local_storage.dart';
+import 'package:uuid/uuid.dart';
 import 'package:win32/win32.dart';
 
 import 'package:harmonoid/localization/localization_data.dart';
@@ -76,6 +77,7 @@ class Configuration extends ConfigurationBase {
     _desktopNowPlayingCarousel = await db.getInteger(kKeyDesktopNowPlayingCarousel);
     _desktopNowPlayingLyrics = await db.getBoolean(kKeyDesktopNowPlayingLyrics);
     _discordRpc = await db.getBoolean(kKeyDiscordRpc);
+    _identifier = await db.getString(kKeyIdentifier);
     _localization = LocalizationData.fromJson(await db.getJson(kKeyLocalization));
     _lrcFromDirectory = await db.getBoolean(kKeyLrcFromDirectory);
     _lyricsViewFocusedFontSize = await db.getDouble(kKeyLyricsViewFocusedFontSize);
