@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
@@ -37,6 +38,7 @@ class LanguageSection extends StatelessWidget {
                 if (result == null) return;
                 await Configuration.instance.set(localization: result);
                 await Localization.instance.set(value: result);
+                context.pop();
               },
             );
           },

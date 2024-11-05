@@ -385,6 +385,7 @@ CustomTransitionPage<T> buildPageWithSharedAxisTransition<T>({
       animation: animation,
       secondaryAnimation: secondaryAnimation,
       transitionType: SharedAxisTransitionType.vertical,
+      fillColor: Theme.of(context).scaffoldBackgroundColor,
       child: child,
     ),
   );
