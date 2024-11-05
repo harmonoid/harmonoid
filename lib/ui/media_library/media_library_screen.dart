@@ -177,9 +177,10 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                       Configuration.instance.set(mediaLibraryPath: e.key);
                                     },
                                     child: Container(
-                                      height: kDesktopAppBarHeight - 20.0,
+                                      color: Colors.transparent,
                                       alignment: Alignment.center,
-                                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                      height: kDesktopAppBarHeight - 20.0,
+                                      padding: const EdgeInsets.only(left: 12.0),
                                       child: Stack(
                                         alignment: Alignment.center,
                                         children: [
