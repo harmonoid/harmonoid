@@ -25,7 +25,7 @@ class ActivitySet {
   Future<String?> call(String deviceId, Playable playable, File? cover) async {
     try {
       // https://pub.dev/documentation/http/latest/http/MultipartRequest-class.html
-      final uri = Uri.https(baseUrl, '/functions/v1/activity-set');
+      final uri = Uri.https(apiBaseUrl, '/functions/v1/activity-set');
       final request = http.MultipartRequest('POST', uri)
         ..fields['device-id'] = deviceId
         ..fields['playable'] = json.encode(playable)

@@ -23,7 +23,7 @@ class LyricsGet {
     try {
       final response = await http.get(
         Uri.https(
-          baseUrl,
+          apiBaseUrl,
           '/functions/v1/lyrics-get',
           {
             'query': query.toString(),
