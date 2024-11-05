@@ -56,7 +56,7 @@ class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const SizedBox(width: 4.0),
+        const SizedBox(width: 16.0),
         GestureDetector(
           onTap: () {
             MediaPlayer.instance.open(MediaLibrary.instance.tracks.map((e) => e.toPlayable()).toList());
