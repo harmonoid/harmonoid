@@ -34,34 +34,37 @@ mixin WindowsTaskbarMixin implements BaseMediaPlayer {
 
   void _listenerWindowsTaskbar() {
     _lockWindowsTaskbar.synchronized(() async {
-      WindowsTaskbar.setThumbnailToolbar(
-        [
-          ThumbnailToolbarButton(
-            ThumbnailToolbarAssetIcon('assets/icons/previous.ico'),
-            Localization.instance.PREVIOUS,
-            previous,
-            mode: state.isFirst ? ThumbnailToolbarButtonMode.disabled : 0,
-          ),
-          if (state.playing)
+      if (_flagPlayingWindowsTaskbar != state.playing) {
+        _flagPlayingWindowsTaskbar = state.playing;
+        WindowsTaskbar.setThumbnailToolbar(
+          [
             ThumbnailToolbarButton(
-              ThumbnailToolbarAssetIcon('assets/icons/pause.ico'),
-              Localization.instance.PAUSE,
-              pause,
-            )
-          else
-            ThumbnailToolbarButton(
-              ThumbnailToolbarAssetIcon('assets/icons/play.ico'),
-              Localization.instance.PLAY,
-              play,
+              ThumbnailToolbarAssetIcon('assets/icons/previous.ico'),
+              Localization.instance.PREVIOUS,
+              previous,
+              mode: state.isFirst ? ThumbnailToolbarButtonMode.disabled : 0,
             ),
-          ThumbnailToolbarButton(
-            ThumbnailToolbarAssetIcon('assets/icons/next.ico'),
-            Localization.instance.NEXT,
-            next,
-            mode: state.isLast ? ThumbnailToolbarButtonMode.disabled : 0,
-          ),
-        ],
-      );
+            if (state.playing)
+              ThumbnailToolbarButton(
+                ThumbnailToolbarAssetIcon('assets/icons/pause.ico'),
+                Localization.instance.PAUSE,
+                pause,
+              )
+            else
+              ThumbnailToolbarButton(
+                ThumbnailToolbarAssetIcon('assets/icons/play.ico'),
+                Localization.instance.PLAY,
+                play,
+              ),
+            ThumbnailToolbarButton(
+              ThumbnailToolbarAssetIcon('assets/icons/next.ico'),
+              Localization.instance.NEXT,
+              next,
+              mode: state.isLast ? ThumbnailToolbarButtonMode.disabled : 0,
+            ),
+          ],
+        );
+      }
       if (Configuration.instance.windowsTaskbarProgress) {
         const total = 1 << 16;
         final completed = (state.position.inSeconds / state.duration.inSeconds * total).round();
@@ -71,4 +74,6 @@ mixin WindowsTaskbarMixin implements BaseMediaPlayer {
   }
 
   final Lock _lockWindowsTaskbar = Lock();
+
+  bool? _flagPlayingWindowsTaskbar;
 }
