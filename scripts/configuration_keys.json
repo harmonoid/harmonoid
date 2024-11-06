@@ -24,7 +24,7 @@
   {"key": "MEDIA_LIBRARY_GENRE_SORT_TYPE", "serializedType": "Integer", "dartType": "GenreSortType", "default": "GenreSortType.genre.index"},
   {"key": "MEDIA_LIBRARY_MINIMUM_FILE_SIZE", "serializedType": "Integer", "dartType": "int", "default": "0"},
   {"key": "MEDIA_LIBRARY_PATH", "serializedType": "String", "dartType": "String", "default": "kAlbumsPath"},
-  {"key": "MEDIA_LIBRARY_REFRESH_UPON_START", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
+  {"key": "MEDIA_LIBRARY_REFRESH_UPON_START", "serializedType": "Boolean", "dartType": "bool", "default": "false"},
   {"key": "MEDIA_LIBRARY_TRACK_SORT_ASCENDING", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
   {"key": "MEDIA_LIBRARY_TRACK_SORT_TYPE", "serializedType": "Integer", "dartType": "TrackSortType", "default": "TrackSortType.title.index"},
   {"key": "MEDIA_PLAYER_PLAYBACK_STATE", "serializedType": "Json", "dartType": "PlaybackState", "default": "PlaybackState.defaults()"},

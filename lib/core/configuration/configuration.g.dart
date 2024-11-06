@@ -308,7 +308,7 @@ class ConfigurationBase {
       /* Integer */ kKeyMediaLibraryGenreSortType: GenreSortType.genre.index,
       /* Integer */ kKeyMediaLibraryMinimumFileSize: 0,
       /* String  */ kKeyMediaLibraryPath: kAlbumsPath,
-      /* Boolean */ kKeyMediaLibraryRefreshUponStart: true,
+      /* Boolean */ kKeyMediaLibraryRefreshUponStart: false,
       /* Boolean */ kKeyMediaLibraryTrackSortAscending: true,
       /* Integer */ kKeyMediaLibraryTrackSortType: TrackSortType.title.index,
       /* Json    */ kKeyMediaPlayerPlaybackState: PlaybackState.defaults(),
