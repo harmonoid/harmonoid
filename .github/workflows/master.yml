@@ -3,11 +3,11 @@ on:
   push:
     branches:
       - master
-  workflow_dispatch:
+      - vnext
 
 jobs:
   build_windows:
-    name: Harmonoid Windows
+    name: Windows
     env:
       ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
     runs-on: windows-latest
@@ -24,19 +24,13 @@ jobs:
         run: echo ${{ steps.vars.outputs.sha_short }}
       - uses: subosito/flutter-action@v1
         with:
-          channel: "beta"
-          flutter-version: "3.9.0-0.1.pre"
-
-      - run: |
-          rmdir /s /q "assets/fonts"
-          mkdir "assets/fonts"
-        shell: cmd
+          channel: "stable"
+          flutter-version: "3.24.4"
 
       - run: git config --system core.longpaths true
 
-      - run: flutter config --enable-windows-desktop
       - run: flutter pub get
-      - run: flutter build windows
+      - run: flutter build windows --verbose --dart-define=API_KEY=${{ secrets.API_KEY }} --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }}
 
       - name: Create PFX
         id: create_pfx
@@ -46,9 +40,9 @@ jobs:
           encodedString: ${{ secrets.CERTIFICATE }}
 
       - run: |
-          "%programfiles(x86)%\Windows Kits\10\App Certification Kit\signtool.exe" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /f "${{ steps.create_pfx.outputs.filePath }}" /p ${{ secrets.PASSWORD }} "build/windows/runner/Release/harmonoid.exe"
+          "%programfiles(x86)%\Windows Kits\10\App Certification Kit\signtool.exe" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /f "${{ steps.create_pfx.outputs.filePath }}" /p ${{ secrets.PASSWORD }} "build/windows/x64/runner/Release/harmonoid.exe"
         shell: cmd
-      - run: cp -r build/windows/runner/Release harmonoid-windows-exe
+      - run: cp -r build/windows/x64/runner/Release harmonoid-windows-exe
       - run: tar.exe -a -c -f harmonoid-windows-exe.zip harmonoid-windows-exe
 
       - run: |
@@ -57,6 +51,7 @@ jobs:
       - run: |
           "%programfiles(x86)%\Windows Kits\10\App Certification Kit\signtool.exe" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /f "${{ steps.create_pfx.outputs.filePath }}" /p ${{ secrets.PASSWORD }} "Output/harmonoid-windows-setup.exe"
         shell: cmd
+
       - name: Release
         uses: softprops/action-gh-release@v1
         env:
@@ -87,8 +82,8 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN_2 }}
 
   build_linux:
-    name: Harmonoid Linux
-    runs-on: ubuntu-20.04
+    name: Linux
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
@@ -101,8 +96,8 @@ jobs:
         run: echo ${{ steps.vars.outputs.sha_short }}
       - uses: subosito/flutter-action@v1
         with:
-          channel: "beta"
-          flutter-version: "3.9.0-0.1.pre"
+          channel: "stable"
+          flutter-version: "3.24.4"
 
       - run: sudo apt-get update
       - run: sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev mpv libmpv-dev dpkg-dev rpm tree
@@ -110,24 +105,8 @@ jobs:
       - run: rm -r "assets/icons"
       - run: mkdir "assets/icons"
 
-      - name: Compile Tag Reader
-        run: |
-          cd external/media_kit_tag_reader
-          dart pub get
-          cd example
-          dart compile exe cli.dart
-          mv cli.exe tag_reader
-          mkdir ../../../assets/platform
-          mv tag_reader ../../../assets/platform
-          tree ../../../assets
-
-      - run: git apply --reject --whitespace=fix patches/linux-bundle-external-tag-reader-and-fonts.patch
-
-      - run: flutter config --enable-linux-desktop
       - run: flutter pub get
-      - run: flutter build linux --verbose
-
-      - run: chmod +x build/linux/x64/release/bundle/data/flutter_assets/assets/platform/tag_reader
+      - run: flutter build linux --verbose --dart-define=API_KEY=${{ secrets.API_KEY }} --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }}
 
       - name: Build RPM Package
         run: |
@@ -178,66 +157,67 @@ jobs:
           files: harmonoid-linux-*
           token: ${{ secrets.ACCESS_TOKEN_2 }}
 
-  build_android:
-    name: Harmonoid Android
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.ACCESS_TOKEN }}
-          submodules: recursive
-      - name: Set Git Commit Hash
-        id: vars
-        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-      - name: Check Git Commit Hash
-        run: echo ${{ steps.vars.outputs.sha_short }}
-      - uses: subosito/flutter-action@v1
-        with:
-          channel: "beta"
-          flutter-version: "3.9.0-0.1.pre"
+  # TODO: Android
 
-      - name: Create Key Store
-        id: create_key_store
-        uses: timheuer/base64-to-file@v1
-        with:
-          fileName: "keystore.pfx"
-          encodedString: ${{ secrets.KEY_STORE }}
+  # build_android:
+  #   name: Android
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #       with:
+  #         token: ${{ secrets.ACCESS_TOKEN }}
+  #         submodules: recursive
+  #     - name: Set Git Commit Hash
+  #       id: vars
+  #       run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+  #     - name: Check Git Commit Hash
+  #       run: echo ${{ steps.vars.outputs.sha_short }}
+  #     - uses: subosito/flutter-action@v1
+  #       with:
+  #         channel: "stable"
+  #         flutter-version: "3.24.4"
 
-      - name: Create Key Properties
-        id: create_key_properties
-        uses: timheuer/base64-to-file@v1
-        with:
-          fileName: "key.properties"
-          encodedString: ${{ secrets.KEY_PROPERTIES }}
+  #     - name: Create Key Store
+  #       id: create_key_store
+  #       uses: timheuer/base64-to-file@v1
+  #       with:
+  #         fileName: "keystore.pfx"
+  #         encodedString: ${{ secrets.KEY_STORE }}
 
-      - run: cp "${{ steps.create_key_store.outputs.filePath }}" android/app/keystore.jks
-      - run: cp "${{ steps.create_key_properties.outputs.filePath }}" android/key.properties
+  #     - name: Create Key Properties
+  #       id: create_key_properties
+  #       uses: timheuer/base64-to-file@v1
+  #       with:
+  #         fileName: "key.properties"
+  #         encodedString: ${{ secrets.KEY_PROPERTIES }}
 
-      - run: rm -r "assets/fonts"
-      - run: mkdir "assets/fonts"
-      - run: rm -r "assets/icons"
-      - run: mkdir "assets/icons"
-      - run: rm -r "assets/preloaded_visuals"
-      - run: mkdir "assets/preloaded_visuals"
+  #     - run: cp "${{ steps.create_key_store.outputs.filePath }}" android/app/keystore.jks
+  #     - run: cp "${{ steps.create_key_properties.outputs.filePath }}" android/key.properties
 
-      - run: flutter pub get
-      - run: flutter build apk --verbose --split-per-abi
-      - run: cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk harmonoid-android-arm64-v8a-release.apk
-      - run: cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk harmonoid-android-armeabi-v7a-release.apk
-      - run: cp build/app/outputs/flutter-apk/app-x86_64-release.apk harmonoid-android-x86_64-release.apk
+  #     - run: rm -r "assets/icons"
+  #     - run: mkdir "assets/icons"
+  #     - run: rm -r "assets/visuals"
+  #     - run: mkdir "assets/visuals"
 
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_REPOSITORY: alexmercerind2/harmonoid-releases
-        with:
-          repository: alexmercerind2/harmonoid-releases
-          draft: true
-          prerelease: false
-          body: ""
-          tag_name: "vnext"
-          files: |
-            harmonoid-android-arm64-v8a-release.apk
-            harmonoid-android-armeabi-v7a-release.apk
-            harmonoid-android-x86_64-release.apk
-          token: ${{ secrets.ACCESS_TOKEN_2 }}
+  #     - run: flutter pub get
+  #     - run: flutter build apk --verbose --split-per-abi --dart-define=API_KEY=${{ secrets.API_KEY }} --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }}
+
+  #     - run: cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk harmonoid-android-arm64-v8a-release.apk
+  #     - run: cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk harmonoid-android-armeabi-v7a-release.apk
+  #     - run: cp build/app/outputs/flutter-apk/app-x86_64-release.apk harmonoid-android-x86_64-release.apk
+
+  #     - name: Release
+  #       uses: softprops/action-gh-release@v1
+  #       env:
+  #         GITHUB_REPOSITORY: alexmercerind2/harmonoid-releases
+  #       with:
+  #         repository: alexmercerind2/harmonoid-releases
+  #         draft: true
+  #         prerelease: false
+  #         body: ""
+  #         tag_name: "vnext"
+  #         files: |
+  #           harmonoid-android-arm64-v8a-release.apk
+  #           harmonoid-android-armeabi-v7a-release.apk
+  #           harmonoid-android-x86_64-release.apk
+  #         token: ${{ secrets.ACCESS_TOKEN_2 }}
