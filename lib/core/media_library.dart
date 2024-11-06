@@ -15,6 +15,9 @@ import 'package:harmonoid/utils/android_storage_controller.dart';
 ///
 /// {@endtemplate}
 class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
+  /// Pool size for [PooledTagReader].
+  static const int kPooledTagReaderSize = 4;
+
   /// Singleton instance.
   static late final MediaLibrary instance;
 
@@ -135,7 +138,7 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
   }
 
   /// Tag reader.
-  final TagReader _tagReader = TagReader();
+  final PooledTagReader _tagReader = PooledTagReader(size: kPooledTagReaderSize);
 
   /// Whether [remove] has been invoked.
   bool _removeInvoked = false;
