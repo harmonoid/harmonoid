@@ -26,12 +26,14 @@ class GenreItem extends StatelessWidget {
   late final title = genre.genre.isNotEmpty ? genre.genre : kDefaultGenre;
   late final color = kGenreColors[genre.genre.hashCode % kGenreColors.length];
 
-  Future<void> navigate(BuildContext context) async {
+  Future<void> navigate() async {
     final tracks = await MediaLibrary.instance.tracksFromGenre(genre);
 
-    await precacheImage(cover(item: genre), context);
+    try {
+      await precacheImage(cover(item: genre), rootNavigatorKey.currentContext!);
+    } catch (_) {}
 
-    await context.push(
+    await rootNavigatorKey.currentContext!.push(
       '/$kMediaLibraryPath/$kGenrePath',
       extra: GenrePathExtra(
         genre: genre,
@@ -49,9 +51,7 @@ class GenreItem extends StatelessWidget {
         color: color,
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: () {
-            navigate(context);
-          },
+          onTap: navigate,
           child: Container(
             width: width,
             height: height,
@@ -80,9 +80,7 @@ class GenreItem extends StatelessWidget {
       return SizedBox(
         height: height,
         child: InkWell(
-          onTap: () {
-            navigate(context);
-          },
+          onTap: navigate,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.start,

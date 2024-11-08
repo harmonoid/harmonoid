@@ -21,8 +21,8 @@ import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/extensions/build_context.dart';
 import 'package:harmonoid/extensions/global_key.dart';
-import 'package:harmonoid/extensions/go_router.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
@@ -45,7 +45,7 @@ class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
 
   @override
   Widget build(BuildContext context) {
-    final path = router.location.split('/').last;
+    final path = context.location.split('/').last;
 
     if (![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath].contains(path)) {
       return const SizedBox.shrink();
@@ -154,7 +154,7 @@ class DesktopMediaLibraryFloatingSortButton extends StatefulWidget {
 class DesktopMediaLibraryFloatingSortButtonState extends State<DesktopMediaLibraryFloatingSortButton> {
   @override
   Widget build(BuildContext context) {
-    final path = router.location.split('/').last;
+    final path = context.location.split('/').last;
 
     if (![kAlbumsPath, /* kTracksPath, */ kArtistsPath, kGenresPath].contains(path)) {
       return const SizedBox.shrink();
@@ -201,7 +201,7 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
 
   @override
   Widget build(BuildContext context) {
-    final path = router.location.split('/').last;
+    final path = context.location.split('/').last;
     return Consumer<MediaLibrary>(
       builder: (context, mediaLibrary, _) => Row(
         mainAxisSize: MainAxisSize.min,
@@ -554,7 +554,7 @@ class MobileMediaLibraryHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final path = router.location.split('/').last;
+    final path = context.location.split('/').last;
     return Container(
       height: kMobileHeaderHeight,
       padding: EdgeInsets.symmetric(horizontal: margin),
@@ -893,7 +893,7 @@ class ContextMenuListenerState extends State<ContextMenuListener> {
         if (!_reactToSecondaryPress) {
           return;
         }
-        final path = router.location.split('/').last;
+        final path = context.location.split('/').last;
         widget.onSecondaryPress(
           RelativeRect.fromLTRB(
             e.position.dx,
@@ -1072,7 +1072,7 @@ class MobileNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final path = router.location.split('/').last;
+    final path = context.location.split('/').last;
     final paths = [
       kAlbumsPath,
       kTracksPath,
@@ -1556,7 +1556,7 @@ class MobileGridSpanButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final path = router.location.split('/').last;
+    final path = context.location.split('/').last;
     if (![kAlbumsPath, kArtistsPath, kGenresPath].contains(path)) {
       return const SizedBox.shrink();
     }

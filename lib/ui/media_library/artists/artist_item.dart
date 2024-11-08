@@ -25,23 +25,20 @@ class ArtistItem extends StatelessWidget {
 
   late final title = artist.artist.isNotEmpty ? artist.artist : kDefaultArtist;
 
-  Future<void> navigate(BuildContext context) async {
+  Future<void> navigate() async {
     final tracks = await MediaLibrary.instance.tracksFromArtist(artist);
 
     List<Color>? palette;
     if (isMaterial2) {
-      final result = await PaletteGenerator.fromImageProvider(
-        cover(
-          item: artist,
-          cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
-        ),
-      );
+      final result = await PaletteGenerator.fromImageProvider(cover(item: artist, cacheWidth: 20));
       palette = result.colors?.toList();
     }
 
-    await precacheImage(cover(item: artist), context);
+    try {
+      await precacheImage(cover(item: artist), rootNavigatorKey.currentContext!);
+    } catch (_) {}
 
-    await context.push(
+    await rootNavigatorKey.currentContext!.push(
       '/$kMediaLibraryPath/$kArtistPath',
       extra: ArtistPathExtra(
         artist: artist,
@@ -70,9 +67,7 @@ class ArtistItem extends StatelessWidget {
                 child: ClipOval(
                   child: Material(
                     child: InkWell(
-                      onTap: () {
-                        navigate(context);
-                      },
+                      onTap: navigate,
                       child: ScaleOnHover(
                         child: Ink.image(
                           width: width,
@@ -116,9 +111,7 @@ class ArtistItem extends StatelessWidget {
       return SizedBox(
         height: height,
         child: InkWell(
-          onTap: () {
-            navigate(context);
-          },
+          onTap: navigate,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.start,

@@ -29,7 +29,7 @@ class AlbumItem extends StatelessWidget {
     if (album.year != 0) album.year.toString(),
   ].join(' • ');
 
-  Future<void> navigate(BuildContext context) async {
+  Future<void> navigate() async {
     final tracks = await MediaLibrary.instance.tracksFromAlbum(album);
 
     List<Color>? palette;
@@ -38,9 +38,11 @@ class AlbumItem extends StatelessWidget {
       palette = result.colors?.toList();
     }
 
-    await precacheImage(cover(item: album), context);
+    try {
+      await precacheImage(cover(item: album), rootNavigatorKey.currentContext!);
+    } catch (_) {}
 
-    await context.push(
+    await rootNavigatorKey.currentContext!.push(
       '/$kMediaLibraryPath/$kAlbumPath',
       extra: AlbumPathExtra(
         album: album,
@@ -64,9 +66,7 @@ class AlbumItem extends StatelessWidget {
         margin: EdgeInsets.zero,
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: () async {
-            navigate(context);
-          },
+          onTap: navigate,
           child: SizedBox(
             width: width,
             height: height,
@@ -139,9 +139,7 @@ class AlbumItem extends StatelessWidget {
       return SizedBox(
         height: height,
         child: InkWell(
-          onTap: () {
-            navigate(context);
-          },
+          onTap: navigate,
           onLongPress: onLongPress,
           child: Column(
             mainAxisSize: MainAxisSize.max,
