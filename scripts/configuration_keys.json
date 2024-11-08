@@ -37,7 +37,7 @@
   {"key": "MPV_PATH", "serializedType": "String", "dartType": "String", "default": "''"},
   {"key": "NOTIFICATION_LYRICS", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
   {"key": "NOW_PLAYING_AUDIO_FORMAT", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
-  {"key": "NOW_PLAYING_DISPLAY_UPON_PLAY", "serializedType": "Boolean", "dartType": "bool", "default": "false"},
+  {"key": "NOW_PLAYING_DISPLAY_UPON_PLAY", "serializedType": "Boolean", "dartType": "bool", "default": "isDesktop"},
   {"key": "THEME_ANIMATION_DURATION", "serializedType": "Json", "dartType": "AnimationDuration", "default": "const AnimationDuration()"},
   {"key": "THEME_MATERIAL_STANDARD", "serializedType": "Integer", "dartType": "int", "default": "isDesktop ? 2 : 3"},
   {"key": "THEME_MODE", "serializedType": "Integer", "dartType": "ThemeMode", "default": "ThemeMode.system.index"},

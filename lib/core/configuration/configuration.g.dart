@@ -321,7 +321,7 @@ class ConfigurationBase {
       /* String  */ kKeyMpvPath: '',
       /* Boolean */ kKeyNotificationLyrics: true,
       /* Boolean */ kKeyNowPlayingAudioFormat: true,
-      /* Boolean */ kKeyNowPlayingDisplayUponPlay: false,
+      /* Boolean */ kKeyNowPlayingDisplayUponPlay: isDesktop,
       /* Json    */ kKeyThemeAnimationDuration: const AnimationDuration(),
       /* Integer */ kKeyThemeMaterialStandard: isDesktop ? 2 : 3,
       /* Integer */ kKeyThemeMode: ThemeMode.system.index,
