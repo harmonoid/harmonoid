@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   awesome_notifications
   dynamic_color
+  media_kit_libs_windows_audio
   permission_handler_windows
   sqlite3_flutter_libs
   url_launcher_windows
