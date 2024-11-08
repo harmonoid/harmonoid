@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
@@ -73,9 +72,6 @@ class DefaultScrollBehavior extends MaterialScrollBehavior {
         return const BouncingScrollPhysics(decelerationRate: ScrollDecelerationRate.fast);
     }
   }
-
-  @override
-  Set<PointerDeviceKind> get dragDevices => Platform.isLinux || Platform.isAndroid ? PointerDeviceKind.values.toSet() : super.dragDevices;
 }
 
 class DefaultScrollPhysics extends ScrollPhysics {
