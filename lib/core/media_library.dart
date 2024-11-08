@@ -18,9 +18,9 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
   /// Pool size for [PooledTagReader].
   static final int kPooledTagReaderSize = () {
     try {
-      return Platform.numberOfProcessors;
+      return (Platform.numberOfProcessors / 2).round().clamp(1, 4);
     } catch (_) {
-      return 4;
+      return 2;
     }
   }();
 
@@ -109,7 +109,6 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
   /// Removes specified [tracks] from the media library.
   @override
   Future<void> remove(List<Track> tracks, {bool delete = true}) async {
-    debugPrint('MediaLibrary: remove: Remove invoked: $_removeInvoked');
     if (_removeInvoked) return;
     _removeInvoked = true;
     await super.remove(tracks, delete: delete);
