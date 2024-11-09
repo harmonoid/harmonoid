@@ -33,7 +33,7 @@ class ActivitySet {
           await http.MultipartFile.fromPath(
             'cover',
             cover!.path,
-            contentType: MediaType('image', 'png'),
+            contentType: MediaType('image', 'jpeg'),
           ),
         )
         ..headers['Content-Type'] = 'application/json'
