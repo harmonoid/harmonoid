@@ -80,6 +80,11 @@ jobs:
             Output/harmonoid-windows-setup.exe
             harmonoid-windows-exe.zip
           token: ${{ secrets.ACCESS_TOKEN_2 }}
+      - name: Release Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: build/windows/x64/runner/Release
 
   build_linux:
     name: Linux
@@ -155,6 +160,11 @@ jobs:
           tag_name: snapshot
           files: harmonoid-linux-*
           token: ${{ secrets.ACCESS_TOKEN_2 }}
+      - name: Release Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: build/linux/x64/release/bundle
 
   # TODO: Android
 
