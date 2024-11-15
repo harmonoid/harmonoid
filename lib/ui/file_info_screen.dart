@@ -27,7 +27,7 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
   File? _cover;
   Map<String, String>? _metadata;
 
-  final TagReader _tagReader = TagReader(configuration: const TagReaderConfiguration(verbose: true));
+  final TagReader _tagReader = TagReader();
 
   @override
   void initState() {

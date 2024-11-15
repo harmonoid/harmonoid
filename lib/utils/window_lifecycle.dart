@@ -45,27 +45,33 @@ class WindowLifecycle {
 
   /// Invoked when window is about to close.
   static Future<bool> windowCloseHandler({bool force = false}) async {
-    if (!MediaLibrary.instance.refreshing || force) {
-      MediaLibrary.instance.dispose();
-      MediaPlayer.instance.dispose();
-      Configuration.instance.set(mediaPlayerPlaybackState: MediaPlayer.instance.state.toPlaybackState());
-      await Future.delayed(const Duration(seconds: 1));
+    try {
+      if (!MediaLibrary.instance.refreshing || force) {
+        MediaLibrary.instance.dispose();
+        MediaPlayer.instance.dispose();
+        Configuration.instance.set(mediaPlayerPlaybackState: MediaPlayer.instance.state.toPlaybackState());
+        await Future.delayed(const Duration(seconds: 1));
+        return true;
+      } else {
+        await showDialog(
+          context: rootNavigatorKey.currentContext!,
+          builder: (context) => AlertDialog(
+            title: Text(Localization.instance.WARNING),
+            content: Text(Localization.instance.MEDIA_LIBRARY_REFRESHING_DIALOG_SUBTITLE.replaceAll('\n', ' ')),
+            actions: [
+              TextButton(
+                onPressed: Navigator.of(context).maybePop,
+                child: Text(label(Localization.instance.OK)),
+              ),
+            ],
+          ),
+        );
+        return false;
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
       return true;
-    } else {
-      await showDialog(
-        context: rootNavigatorKey.currentContext!,
-        builder: (context) => AlertDialog(
-          title: Text(Localization.instance.WARNING),
-          content: Text(Localization.instance.MEDIA_LIBRARY_REFRESHING_DIALOG_SUBTITLE.replaceAll('\n', ' ')),
-          actions: [
-            TextButton(
-              onPressed: Navigator.of(context).maybePop,
-              child: Text(label(Localization.instance.OK)),
-            ),
-          ],
-        ),
-      );
-      return false;
     }
   }
 }

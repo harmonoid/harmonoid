@@ -11,10 +11,10 @@ class ExceptionApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      themeMode: ThemeMode.dark,
       debugShowCheckedModeBanner: false,
       theme: createM2Theme(context: context, color: Colors.white, mode: ThemeMode.light),
       darkTheme: createM2Theme(context: context, color: Colors.white, mode: ThemeMode.dark),
-      themeMode: ThemeMode.dark,
       home: ExceptionScreen(
         exception: exception,
         stacktrace: stacktrace,

@@ -17,6 +17,7 @@ import 'package:harmonoid/state/now_playing_visuals_notifier.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
 import 'package:harmonoid/ui/exception.dart';
 import 'package:harmonoid/ui/harmonoid.dart';
+import 'package:harmonoid/ui/splash.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/window_lifecycle.dart';
@@ -61,6 +62,7 @@ Future<void> main(List<String> args) async {
       );
       await WindowPlus.instance.setMinimumSize(const Size(1024.0, 360.0));
       WindowLifecycle.ensureInitialized();
+      runApp(const SplashApp());
     }
     if (Platform.isWindows) {
       await WindowPlus.ensureInitialized(
@@ -69,6 +71,7 @@ Future<void> main(List<String> args) async {
       );
       await WindowPlus.instance.setMinimumSize(const Size(1024.0, 360.0));
       WindowLifecycle.ensureInitialized();
+      runApp(const SplashApp());
     }
 
     await Configuration.ensureInitialized();
@@ -103,17 +106,6 @@ Future<void> main(List<String> args) async {
   } catch (exception, stacktrace) {
     debugPrint(exception.toString());
     debugPrint(stacktrace.toString());
-    try {
-      await WindowPlus.ensureInitialized(
-        application: kApplication,
-        enableEventStreams: false,
-      );
-      await WindowPlus.instance.setMinimumSize(const Size(1024.0, 360.0));
-      WindowLifecycle.ensureInitialized();
-    } catch (exception, stacktrace) {
-      debugPrint(exception.toString());
-      debugPrint(stacktrace.toString());
-    }
     runApp(ExceptionApp(exception: exception, stacktrace: stacktrace));
   }
 }
