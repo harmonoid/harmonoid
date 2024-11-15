@@ -33,8 +33,8 @@ class SearchNoItemsBanner extends StatelessWidget {
                   if (isMaterial3) {
                     final data = await rootBundle.loadString(_kImageAssetM3);
                     return data
-                        .replaceAll('"white"', '"${theme.colorScheme.background.toHex()}"')
-                        .replaceAll('"black"', '"${theme.colorScheme.onBackground.toHex()}"')
+                        .replaceAll('"white"', '"${theme.colorScheme.surface.toHex()}"')
+                        .replaceAll('"black"', '"${theme.colorScheme.onSurface.toHex()}"')
                         .replaceAll('"#651FFF"', '"${theme.colorScheme.primary.toHex()}"')
                         .replaceAll('"#B388FF"', '"${theme.colorScheme.inversePrimary.toHex()}"');
                   } else {

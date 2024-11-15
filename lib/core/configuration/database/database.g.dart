@@ -461,22 +461,122 @@ typedef $$EntriesTableUpdateCompanionBuilder = EntriesCompanion Function({
   Value<int> rowid,
 });
 
+class $$EntriesTableFilterComposer extends Composer<_$Database, $EntriesTable> {
+  $$EntriesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get key => $composableBuilder(
+      column: $table.key, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get type => $composableBuilder(
+      column: $table.type, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get booleanValue => $composableBuilder(
+      column: $table.booleanValue, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get integerValue => $composableBuilder(
+      column: $table.integerValue, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get doubleValue => $composableBuilder(
+      column: $table.doubleValue, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get stringValue => $composableBuilder(
+      column: $table.stringValue, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get jsonValue => $composableBuilder(
+      column: $table.jsonValue, builder: (column) => ColumnFilters(column));
+}
+
+class $$EntriesTableOrderingComposer
+    extends Composer<_$Database, $EntriesTable> {
+  $$EntriesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get key => $composableBuilder(
+      column: $table.key, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get type => $composableBuilder(
+      column: $table.type, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get booleanValue => $composableBuilder(
+      column: $table.booleanValue,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get integerValue => $composableBuilder(
+      column: $table.integerValue,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get doubleValue => $composableBuilder(
+      column: $table.doubleValue, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get stringValue => $composableBuilder(
+      column: $table.stringValue, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get jsonValue => $composableBuilder(
+      column: $table.jsonValue, builder: (column) => ColumnOrderings(column));
+}
+
+class $$EntriesTableAnnotationComposer
+    extends Composer<_$Database, $EntriesTable> {
+  $$EntriesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get key =>
+      $composableBuilder(column: $table.key, builder: (column) => column);
+
+  GeneratedColumn<int> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<bool> get booleanValue => $composableBuilder(
+      column: $table.booleanValue, builder: (column) => column);
+
+  GeneratedColumn<int> get integerValue => $composableBuilder(
+      column: $table.integerValue, builder: (column) => column);
+
+  GeneratedColumn<double> get doubleValue => $composableBuilder(
+      column: $table.doubleValue, builder: (column) => column);
+
+  GeneratedColumn<String> get stringValue => $composableBuilder(
+      column: $table.stringValue, builder: (column) => column);
+
+  GeneratedColumn<String> get jsonValue =>
+      $composableBuilder(column: $table.jsonValue, builder: (column) => column);
+}
+
 class $$EntriesTableTableManager extends RootTableManager<
     _$Database,
     $EntriesTable,
     Entry,
     $$EntriesTableFilterComposer,
     $$EntriesTableOrderingComposer,
+    $$EntriesTableAnnotationComposer,
     $$EntriesTableCreateCompanionBuilder,
-    $$EntriesTableUpdateCompanionBuilder> {
+    $$EntriesTableUpdateCompanionBuilder,
+    (Entry, BaseReferences<_$Database, $EntriesTable, Entry>),
+    Entry,
+    PrefetchHooks Function()> {
   $$EntriesTableTableManager(_$Database db, $EntriesTable table)
       : super(TableManagerState(
           db: db,
           table: table,
-          filteringComposer:
-              $$EntriesTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$EntriesTableOrderingComposer(ComposerState(db, table)),
+          createFilteringComposer: () =>
+              $$EntriesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$EntriesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$EntriesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<String> key = const Value.absent(),
             Value<int> type = const Value.absent(),
@@ -517,86 +617,25 @@ class $$EntriesTableTableManager extends RootTableManager<
             jsonValue: jsonValue,
             rowid: rowid,
           ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
         ));
 }
 
-class $$EntriesTableFilterComposer
-    extends FilterComposer<_$Database, $EntriesTable> {
-  $$EntriesTableFilterComposer(super.$state);
-  ColumnFilters<String> get key => $state.composableBuilder(
-      column: $state.table.key,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<int> get type => $state.composableBuilder(
-      column: $state.table.type,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<bool> get booleanValue => $state.composableBuilder(
-      column: $state.table.booleanValue,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<int> get integerValue => $state.composableBuilder(
-      column: $state.table.integerValue,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<double> get doubleValue => $state.composableBuilder(
-      column: $state.table.doubleValue,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get stringValue => $state.composableBuilder(
-      column: $state.table.stringValue,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get jsonValue => $state.composableBuilder(
-      column: $state.table.jsonValue,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-}
-
-class $$EntriesTableOrderingComposer
-    extends OrderingComposer<_$Database, $EntriesTable> {
-  $$EntriesTableOrderingComposer(super.$state);
-  ColumnOrderings<String> get key => $state.composableBuilder(
-      column: $state.table.key,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<int> get type => $state.composableBuilder(
-      column: $state.table.type,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<bool> get booleanValue => $state.composableBuilder(
-      column: $state.table.booleanValue,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<int> get integerValue => $state.composableBuilder(
-      column: $state.table.integerValue,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<double> get doubleValue => $state.composableBuilder(
-      column: $state.table.doubleValue,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get stringValue => $state.composableBuilder(
-      column: $state.table.stringValue,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get jsonValue => $state.composableBuilder(
-      column: $state.table.jsonValue,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-}
+typedef $$EntriesTableProcessedTableManager = ProcessedTableManager<
+    _$Database,
+    $EntriesTable,
+    Entry,
+    $$EntriesTableFilterComposer,
+    $$EntriesTableOrderingComposer,
+    $$EntriesTableAnnotationComposer,
+    $$EntriesTableCreateCompanionBuilder,
+    $$EntriesTableUpdateCompanionBuilder,
+    (Entry, BaseReferences<_$Database, $EntriesTable, Entry>),
+    Entry,
+    PrefetchHooks Function()>;
 
 class $DatabaseManager {
   final _$Database _db;

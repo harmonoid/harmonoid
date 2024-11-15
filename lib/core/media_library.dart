@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:media_library/media_library.dart' as _ show MediaLibrary;
+import 'package:media_library/media_library.dart' hide MediaLibrary;
+import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:tag_reader/tag_reader.dart';
 
 import 'package:harmonoid/mappers/tags.dart';
@@ -18,7 +19,7 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
   /// Pool size for [PooledTagReader].
   static final int kPooledTagReaderSize = () {
     try {
-      return (Platform.numberOfProcessors / 2).round().clamp(1, 4);
+      return Platform.numberOfProcessors.round().clamp(1, 4);
     } catch (_) {
       return 2;
     }
@@ -63,6 +64,12 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
   }) async {
     if (initialized) return;
     initialized = true;
+
+    // NOTE: Must create [cache] directory if it doesn't exist. SQLite will fuck up otherwise.
+    if (!await cache.exists_()) {
+      await cache.create_();
+    }
+
     instance = MediaLibrary._(
       cache: cache,
       directories: directories,
@@ -128,9 +135,9 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
       timeout: timeout,
     );
     final result = tags.toTrack();
-    debugPrint('MediaLibrary: parse: URI: $uri');
-    debugPrint('MediaLibrary: parse: Tags: $tags');
-    debugPrint('MediaLibrary: parse: Result: $result');
+    // debugPrint('MediaLibrary: parse: URI: $uri');
+    // debugPrint('MediaLibrary: parse: Tags: $tags');
+    // debugPrint('MediaLibrary: parse: Result: $result');
     return result;
   }
 
