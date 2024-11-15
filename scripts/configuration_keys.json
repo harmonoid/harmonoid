@@ -40,7 +40,7 @@
   {"key": "NOW_PLAYING_DISPLAY_UPON_PLAY", "serializedType": "Boolean", "dartType": "bool", "default": "isDesktop"},
   {"key": "THEME_ANIMATION_DURATION", "serializedType": "Json", "dartType": "AnimationDuration", "default": "const AnimationDuration()"},
   {"key": "THEME_MATERIAL_STANDARD", "serializedType": "Integer", "dartType": "int", "default": "isDesktop ? 2 : 3"},
-  {"key": "THEME_MODE", "serializedType": "Integer", "dartType": "ThemeMode", "default": "ThemeMode.system.index"},
+  {"key": "THEME_MODE", "serializedType": "Integer", "dartType": "ThemeMode", "default": "isDesktop ? ThemeMode.light.index: ThemeMode.system.index"},
   {"key": "THEME_SYSTEM_COLOR_SCHEME", "serializedType": "Boolean", "dartType": "bool", "default": "isMobile"},
   {"key": "WINDOWS_TASKBAR_PROGRESS", "serializedType": "Boolean", "dartType": "bool", "default": "false"}
 ]

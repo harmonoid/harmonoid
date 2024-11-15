@@ -324,7 +324,7 @@ class ConfigurationBase {
       /* Boolean */ kKeyNowPlayingDisplayUponPlay: isDesktop,
       /* Json    */ kKeyThemeAnimationDuration: const AnimationDuration(),
       /* Integer */ kKeyThemeMaterialStandard: isDesktop ? 2 : 3,
-      /* Integer */ kKeyThemeMode: ThemeMode.system.index,
+      /* Integer */ kKeyThemeMode: isDesktop ? ThemeMode.light.index: ThemeMode.system.index,
       /* Boolean */ kKeyThemeSystemColorScheme: isMobile,
       /* Boolean */ kKeyWindowsTaskbarProgress: false,
     };
