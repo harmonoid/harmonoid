@@ -7,6 +7,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
+import 'package:synchronized/synchronized.dart';
 
 /// {@template async_file_image}
 ///
@@ -26,13 +27,13 @@ class AsyncFileImage extends ImageProvider<AsyncFileImage> {
 
   final String _key;
 
-  final FutureOr<File?> _file;
+  final Future<File?> Function() _file;
 
-  final FutureOr<File> Function() _default;
+  final Future<File> Function() _default;
 
   final double scale = 1.0;
 
-  FutureOr<File?> get file => _file;
+  Future<File?> get file => _file();
 
   @override
   Future<AsyncFileImage> obtainKey(ImageConfiguration configuration) {
@@ -63,19 +64,36 @@ class AsyncFileImage extends ImageProvider<AsyncFileImage> {
     required _SimpleDecoderCallback decode,
   }) async {
     assert(key == this);
-    final File instance;
 
-    File? result = await _resolve(_file);
-    if (result != null) {
-      instance = result;
-    } else {
-      instance = await _default();
-    }
+    fileResolveLocks.putIfAbsent(_key, () => Lock());
 
-    // --------------------------------------------------
-    fileImages[_key] ??= FileImage(instance, scale: scale);
-    defaults[_key] ??= result == null;
-    // --------------------------------------------------
+    final instance = await fileResolveLocks[_key]!.synchronized(() async {
+      // There's a chance that the file got resolved in another call, return that instead of attempting to resolve again.
+      final fileImage = getFileImage(_key);
+      if (fileImage != null) {
+        return fileImage.file;
+      }
+
+      final result = await _resolve(_file());
+
+      if (result != null) {
+        // --------------------------------------------------
+        fileImages[_key] ??= FileImage(result, scale: scale);
+        defaults[_key] ??= false;
+        // --------------------------------------------------
+
+        return result;
+      } else {
+        final file = await _default();
+
+        // --------------------------------------------------
+        fileImages[_key] ??= FileImage(file, scale: scale);
+        defaults[_key] ??= true;
+        // --------------------------------------------------
+
+        return file;
+      }
+    });
 
     final lengthInBytes = await instance.length_();
     if (lengthInBytes == 0) {
@@ -102,23 +120,32 @@ class AsyncFileImage extends ImageProvider<AsyncFileImage> {
   /// Whether the default image is loaded or not.
   static final HashMap<String, bool> defaults = HashMap<String, bool>();
 
+  static final HashMap<String, Lock> fileResolveLocks = HashMap<String, Lock>();
+
+  /// Counts for [attemptToResolveIfDefault], to reduce the number of invocations.
+  static final HashMap<String, int> attemptToResolveIfDefaultCounts = HashMap<String, int>();
+
   /// Timestamps for [attemptToResolveIfDefault], to reduce the number of invocations.
   static final HashMap<String, DateTime> attemptToResolveIfDefaultTimestamps = HashMap<String, DateTime>();
 
   static FileImage? getFileImage(String key) => fileImages[key];
 
-  static void attemptToResolveIfDefault(Future<File?> file, String key, {VoidCallback? onResolve}) async {
+  static bool isDefault(String key) => defaults[key] ?? false;
+
+  static void attemptToResolveIfDefault(String key, Future<File?> Function() file, {VoidCallback? onResolve}) async {
     // Try to resolve the actual cover file in background, if the current one is default.
     // There is a possibility that actual cover file was loaded sometime in the future.
-    if (defaults[key] ?? false) {
-      // Return if an attempt was recently made.
+    if (isDefault(key)) {
+      // Return if an attempt was recently made or if the limit is reached.
+      attemptToResolveIfDefaultCounts[key] ??= 0;
       attemptToResolveIfDefaultTimestamps[key] ??= DateTime.now();
-      if (DateTime.now().difference(attemptToResolveIfDefaultTimestamps[key]!) < const Duration(milliseconds: 500)) {
+      if (attemptToResolveIfDefaultCounts[key]! < 3 && DateTime.now().difference(attemptToResolveIfDefaultTimestamps[key]!) < const Duration(seconds: 1)) {
         return;
       }
+      attemptToResolveIfDefaultCounts[key] = attemptToResolveIfDefaultCounts[key]! + 1;
       attemptToResolveIfDefaultTimestamps[key] = DateTime.now();
 
-      if (await file != null) {
+      if (await file() != null) {
         // A file could be resolved, evict the incorrect cache.
         fileImages.remove(key);
         defaults.remove(key);

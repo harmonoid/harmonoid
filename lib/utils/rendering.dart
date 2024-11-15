@@ -149,23 +149,6 @@ ImageProvider cover({
   if (cacheWidth != null) cacheWidth *= 2;
   if (cacheHeight != null) cacheHeight *= 2;
 
-  final Future<File?> file;
-  if (item != null) {
-    file = MediaLibrary.instance.coverFileForMediaLibraryItem(item, fallback: Configuration.instance.mediaLibraryCoverFallback);
-  } else if (playlistEntry != null) {
-    if (playlistEntry.uri != null) {
-      file = MediaLibrary.instance.coverFileForUri(playlistEntry.uri!, fallback: Configuration.instance.mediaLibraryCoverFallback);
-    } else {
-      file = () async {
-        return MediaLibrary.instance.coverFileForMediaLibraryItem((await MediaLibrary.instance.db.selectTrackByHash(playlistEntry.hash!))!, fallback: Configuration.instance.mediaLibraryCoverFallback);
-      }();
-    }
-  } else if (uri != null) {
-    file = MediaLibrary.instance.coverFileForUri(uri, fallback: Configuration.instance.mediaLibraryCoverFallback);
-  } else {
-    throw ArgumentError('None of [item], [playlistEntry] or [uri] is provided.');
-  }
-
   final String key;
   if (item != null) {
     key = '${item.runtimeType}-${item.hashCode}';
@@ -181,11 +164,28 @@ ImageProvider cover({
     throw ArgumentError('None of [item], [playlistEntry] or [uri] is provided.');
   }
 
-  final result = AsyncFileImage.getFileImage(key);
+  Future<File?> file() async {
+    final Future<File?> result;
+    if (item != null) {
+      result = MediaLibrary.instance.coverFileForMediaLibraryItem(item, fallback: Configuration.instance.mediaLibraryCoverFallback);
+    } else if (playlistEntry != null) {
+      if (playlistEntry.uri != null) {
+        result = MediaLibrary.instance.coverFileForUri(playlistEntry.uri!, fallback: Configuration.instance.mediaLibraryCoverFallback);
+      } else {
+        final track = await MediaLibrary.instance.db.selectTrackByHash(playlistEntry.hash!);
+        result = MediaLibrary.instance.coverFileForMediaLibraryItem(track!, fallback: Configuration.instance.mediaLibraryCoverFallback);
+      }
+    } else if (uri != null) {
+      result = MediaLibrary.instance.coverFileForUri(uri, fallback: Configuration.instance.mediaLibraryCoverFallback);
+    } else {
+      throw ArgumentError('None of [item], [playlistEntry] or [uri] is provided.');
+    }
+    return result;
+  }
 
   AsyncFileImage.attemptToResolveIfDefault(
-    file,
     key,
+    file,
     onResolve: () async {
       // Allow few things to update to the just resolved cover.
       String? result;
@@ -202,7 +202,10 @@ ImageProvider cover({
     },
   );
 
+  final result = AsyncFileImage.getFileImage(key);
+
   final ImageProvider image;
+
   if (result == null) {
     image = AsyncFileImage(
       key,
@@ -789,7 +792,7 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
       await MediaLibrary.instance.remove([track], delete: false);
       await recursivelyPopNavigatorIfRequired();
 
-      await MediaLibrary.instance.add([File(track.uri)]);
+      await MediaLibrary.instance.add(File(track.uri));
       await MediaLibrary.instance.populate();
       break;
     case 7:
@@ -1147,7 +1150,7 @@ InputDecoration inputDecoration(BuildContext context, String hintText, {Widget? 
     hintText: hintText,
     filled: true,
     isCollapsed: true,
-    fillColor: fillColor ?? Theme.of(context).colorScheme.surfaceVariant,
+    fillColor: fillColor ?? Theme.of(context).colorScheme.surfaceContainerHighest,
     border: UnderlineInputBorder(
       borderSide: BorderSide(
         color: Theme.of(context).colorScheme.onSurfaceVariant,
