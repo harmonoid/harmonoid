@@ -190,7 +190,7 @@ class LyricsNotifier extends ChangeNotifier {
     try {
       final result = await LyricsGet.instance.call(
         playable.lyricsGetQuery,
-        duration: _currentDuration?.inMilliseconds,
+        _currentDuration?.inMilliseconds,
       );
       if (result != null) {
         lyrics.addAll(result);

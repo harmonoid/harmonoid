@@ -19,7 +19,7 @@ class LyricsGet {
   /// {@macro lyrics_get}
   const LyricsGet._();
 
-  Future<Lyrics?> call(String query, {int? duration}) async {
+  Future<Lyrics?> call(String query, int? duration) async {
     try {
       final response = await http.get(
         Uri.https(
