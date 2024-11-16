@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 
 import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/ui/media_library/media_library_screen.dart';
+import 'package:harmonoid/ui/router.dart';
 
 /// {@template keyboard_shortcuts}
 ///
@@ -22,7 +24,14 @@ class KeyboardShortcuts {
     const SingleActivator(LogicalKeyboardKey.mediaPlayPause): MediaPlayer.instance.playOrPause,
     const SingleActivator(LogicalKeyboardKey.mediaTrackNext): MediaPlayer.instance.next,
     const SingleActivator(LogicalKeyboardKey.mediaTrackPrevious): MediaPlayer.instance.previous,
+    const SingleActivator(LogicalKeyboardKey.keyS, control: true): MediaLibraryScreenState.queryTextFieldFocusNode.requestFocus,
     const SingleActivator(LogicalKeyboardKey.keyQ, control: true): SystemNavigator.pop,
+    const SingleActivator(LogicalKeyboardKey.arrowLeft, control: true): router.pop,
+    const SingleActivator(LogicalKeyboardKey.digit1, control: true): () => router.go('/$kMediaLibraryPath/$kAlbumsPath'),
+    const SingleActivator(LogicalKeyboardKey.digit2, control: true): () => router.go('/$kMediaLibraryPath/$kTracksPath'),
+    const SingleActivator(LogicalKeyboardKey.digit3, control: true): () => router.go('/$kMediaLibraryPath/$kArtistsPath'),
+    const SingleActivator(LogicalKeyboardKey.digit4, control: true): () => router.go('/$kMediaLibraryPath/$kGenresPath'),
+    const SingleActivator(LogicalKeyboardKey.digit5, control: true): () => router.go('/$kMediaLibraryPath/$kPlaylistsPath'),
   };
 }
 
