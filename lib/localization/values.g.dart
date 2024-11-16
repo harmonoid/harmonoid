@@ -160,6 +160,7 @@ class Values {
   late String PLAY_URL_SUBTITLE;
   late String PREVIOUS;
   late String PRIVACY;
+  late String PROCEED;
   late String PROPERTY;
   late String READ;
   late String READ_METADATA;
@@ -171,6 +172,7 @@ class Values {
   late String REFRESH_SUBTITLE;
   late String REINDEX;
   late String REINDEX_SUBTITLE;
+  late String REINDEX_WARNING;
   late String REMOVE;
   late String REMOVE_FROM_PLAYLIST;
   late String RENAME;

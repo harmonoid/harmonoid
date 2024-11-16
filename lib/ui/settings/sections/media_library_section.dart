@@ -173,7 +173,18 @@ class MediaLibrarySection extends StatelessWidget {
   static Future<void> reindex(BuildContext context, MediaLibrary mediaLibrary) => ensureNotRefreshing(
         context,
         mediaLibrary,
-        mediaLibrary.reindex,
+        () async {
+          final result = await showConfirmation(
+            context,
+            Localization.instance.WARNING,
+            Localization.instance.REINDEX_WARNING.replaceAll('"REFRESH"', '"${label(Localization.instance.REFRESH)}"'),
+            positiveAction: label(Localization.instance.PROCEED),
+            negativeAction: label(Localization.instance.CANCEL),
+          );
+          if (result) {
+            await mediaLibrary.reindex();
+          }
+        },
       );
 
   static Future<void> editAlbumParameters(BuildContext context, MediaLibrary mediaLibrary) => ensureNotRefreshing(context, mediaLibrary, () async {

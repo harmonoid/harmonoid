@@ -165,6 +165,7 @@ class LocalizationBase extends Values {
     PLAY_URL_SUBTITLE = map['PLAY_URL_SUBTITLE']!;
     PREVIOUS = map['PREVIOUS']!;
     PRIVACY = map['PRIVACY']!;
+    PROCEED = map['PROCEED']!;
     PROPERTY = map['PROPERTY']!;
     READ = map['READ']!;
     READ_METADATA = map['READ_METADATA']!;
@@ -176,6 +177,7 @@ class LocalizationBase extends Values {
     REFRESH_SUBTITLE = map['REFRESH_SUBTITLE']!;
     REINDEX = map['REINDEX']!;
     REINDEX_SUBTITLE = map['REINDEX_SUBTITLE']!;
+    REINDEX_WARNING = map['REINDEX_WARNING']!;
     REMOVE = map['REMOVE']!;
     REMOVE_FROM_PLAYLIST = map['REMOVE_FROM_PLAYLIST']!;
     RENAME = map['RENAME']!;
