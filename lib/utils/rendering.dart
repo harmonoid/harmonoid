@@ -399,7 +399,13 @@ Future<String> showInput(
   return input;
 }
 
-Future<bool> showConfirmation(BuildContext context, String title, String subtitle) async {
+Future<bool> showConfirmation(
+  BuildContext context,
+  String title,
+  String subtitle, {
+  String? positiveAction,
+  String? negativeAction,
+}) async {
   bool result = false;
   await showDialog(
     context: context,
@@ -412,11 +418,11 @@ Future<bool> showConfirmation(BuildContext context, String title, String subtitl
             result = true;
             Navigator.of(ctx).maybePop();
           },
-          child: Text(label(Localization.instance.YES)),
+          child: Text(label(positiveAction ?? Localization.instance.YES)),
         ),
         TextButton(
           onPressed: Navigator.of(ctx).pop,
-          child: Text(label(Localization.instance.NO)),
+          child: Text(label(negativeAction ?? Localization.instance.NO)),
         ),
       ],
     ),
