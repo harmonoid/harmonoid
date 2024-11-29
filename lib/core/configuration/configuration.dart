@@ -5,6 +5,7 @@ import 'package:ffi/ffi.dart';
 import 'package:flutter/material.dart';
 import 'package:media_library/media_library.dart';
 import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart' as path;
 import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:uuid/uuid.dart';
 import 'package:win32/win32.dart';
@@ -147,7 +148,8 @@ Future<String> getDefaultDirectory() async {
       calloc.free(result);
     }
   } else if (Platform.isMacOS) {
-    // TODO:
+    final directory = await path.getApplicationSupportDirectory();
+    return directory.path;
   } else if (Platform.isLinux) {
     return path.normalize(Platform.environment['HOME']!);
   } else if (Platform.isAndroid) {
@@ -184,7 +186,8 @@ Future<String> getDefaultMediaLibraryDirectory() async {
       calloc.free(result);
     }
   } else if (Platform.isMacOS) {
-    // TODO:
+    final directory = await path.getApplicationSupportDirectory();
+    return directory.path;
   } else if (Platform.isLinux) {
     try {
       // Invoke xdg-user-dir command.
