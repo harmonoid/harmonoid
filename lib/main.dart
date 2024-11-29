@@ -60,7 +60,16 @@ Future<void> main(List<String> args) async {
         application: kApplication,
         enableEventStreams: false,
       );
-      await WindowPlus.instance.setMinimumSize(const Size(1024.0, 360.0));
+      await WindowPlus.instance.setMinimumSize(const Size(1024.0, 600.0));
+      WindowLifecycle.ensureInitialized();
+      runApp(const SplashApp());
+    }
+    if (Platform.isMacOS) {
+      await WindowPlus.ensureInitialized(
+        application: kApplication,
+        enableEventStreams: false,
+      );
+      await WindowPlus.instance.setMinimumSize(const Size(1024.0, 600.0));
       WindowLifecycle.ensureInitialized();
       runApp(const SplashApp());
     }
@@ -69,7 +78,7 @@ Future<void> main(List<String> args) async {
         application: kApplication,
         enableEventStreams: false,
       );
-      await WindowPlus.instance.setMinimumSize(const Size(1024.0, 360.0));
+      await WindowPlus.instance.setMinimumSize(const Size(1024.0, 600.0));
       WindowLifecycle.ensureInitialized();
       runApp(const SplashApp());
     }

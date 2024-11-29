@@ -73,211 +73,215 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
   }
 
   Widget _buildDesktopLayout(BuildContext context) {
-    return Consumer<MediaLibrary>(
-      builder: (context, mediaLibrary, _) {
-        return Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: Stack(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                  top: captionHeight + kDesktopAppBarHeight,
-                ),
-                child: mediaLibrary.tracks.isEmpty
-                    ? const Center(
-                        child: MediaLibraryNoItemsBanner(),
-                      )
-                    : NotificationListener<ScrollMetricsNotification>(
-                        // https://github.com/flutter/flutter/issues/70504#issuecomment-1170609808
-                        onNotification: (notification) {
-                          if (notification.metrics.axis == Axis.vertical) {
-                            _floatingNotifier.value = notification.metrics.pixels > 0.0;
-                            _desktopAppBarElevatedNotifier.value = notification.metrics.pixels > 0.0;
-                          }
-                          return false;
-                        },
-                        child: widget.child,
-                      ),
-              ),
-              DesktopMediaLibraryFloatingSortButton(
-                floatingNotifier: _floatingNotifier,
-              ),
-              const Positioned(
-                left: 16.0,
-                bottom: 16.0,
-                child: DesktopMediaLibraryRefreshIndicator(),
-              ),
-              Positioned(
-                right: 16.0,
-                bottom: 16.0,
-                child: _path == kPlaylistsPath ? const MediaLibraryCreatePlaylistButton() : const MediaLibraryRefreshButton(),
-              ),
-              ClipRect(
-                clipBehavior: Clip.antiAlias,
-                child: Container(
-                  height: captionHeight + kDesktopAppBarHeight + 8.0,
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: ValueListenableBuilder<bool>(
-                    valueListenable: _desktopAppBarElevatedNotifier,
-                    builder: (context, desktopAppBarElevated, _) => TweenAnimationBuilder<Color?>(
-                      tween: ColorTween(
-                        begin: Theme.of(context).appBarTheme.backgroundColor ?? Colors.transparent,
-                        end: (desktopAppBarElevated
-                                ? Color.lerp(
-                                    Theme.of(context).appBarTheme.backgroundColor,
-                                    Theme.of(context).appBarTheme.surfaceTintColor,
-                                    0.08,
-                                  )
-                                : Theme.of(context).appBarTheme.backgroundColor) ??
-                            Colors.transparent,
-                      ),
-                      duration: _duration!.fast,
-                      builder: (context, value, child) {
-                        return Material(
-                          elevation: Theme.of(context).appBarTheme.elevation ?? kDefaultAppBarElevation,
-                          color: value,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              DesktopCaptionBar(
-                                caption: kCaption,
-                                color: value,
-                              ),
-                              Expanded(
-                                child: Container(
-                                  height: kDesktopAppBarHeight - 20.0,
-                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                  child: child!,
-                                ),
-                              ),
-                            ],
+    return LayoutBuilder(
+      builder: (context, _) {
+        return Consumer<MediaLibrary>(
+          builder: (context, mediaLibrary, _) {
+            return Scaffold(
+              resizeToAvoidBottomInset: false,
+              body: Stack(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: captionHeight + kDesktopAppBarHeight,
+                    ),
+                    child: mediaLibrary.tracks.isEmpty
+                        ? const Center(
+                            child: MediaLibraryNoItemsBanner(),
+                          )
+                        : NotificationListener<ScrollMetricsNotification>(
+                            // https://github.com/flutter/flutter/issues/70504#issuecomment-1170609808
+                            onNotification: (notification) {
+                              if (notification.metrics.axis == Axis.vertical) {
+                                _floatingNotifier.value = notification.metrics.pixels > 0.0;
+                                _desktopAppBarElevatedNotifier.value = notification.metrics.pixels > 0.0;
+                              }
+                              return false;
+                            },
+                            child: widget.child,
                           ),
-                        );
-                      },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: {
-                              kAlbumsPath: Localization.instance.ALBUMS,
-                              kTracksPath: Localization.instance.TRACKS,
-                              kArtistsPath: Localization.instance.ARTISTS,
-                              kGenresPath: Localization.instance.GENRES,
-                              kPlaylistsPath: Localization.instance.PLAYLISTS,
-                            }.entries.map<Widget>(
-                              (e) {
-                                const selected = TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600);
-                                const unselected = TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300);
-                                return MouseRegion(
-                                  cursor: SystemMouseCursors.click,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      context.go('/$kMediaLibraryPath/${e.key}');
-                                      Configuration.instance.set(mediaLibraryPath: e.key);
-                                    },
+                  ),
+                  DesktopMediaLibraryFloatingSortButton(
+                    floatingNotifier: _floatingNotifier,
+                  ),
+                  const Positioned(
+                    left: 16.0,
+                    bottom: 16.0,
+                    child: DesktopMediaLibraryRefreshIndicator(),
+                  ),
+                  Positioned(
+                    right: 16.0,
+                    bottom: 16.0,
+                    child: _path == kPlaylistsPath ? const MediaLibraryCreatePlaylistButton() : const MediaLibraryRefreshButton(),
+                  ),
+                  ClipRect(
+                    clipBehavior: Clip.antiAlias,
+                    child: Container(
+                      height: captionHeight + kDesktopAppBarHeight + 8.0,
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: ValueListenableBuilder<bool>(
+                        valueListenable: _desktopAppBarElevatedNotifier,
+                        builder: (context, desktopAppBarElevated, _) => TweenAnimationBuilder<Color?>(
+                          tween: ColorTween(
+                            begin: Theme.of(context).appBarTheme.backgroundColor ?? Colors.transparent,
+                            end: (desktopAppBarElevated
+                                    ? Color.lerp(
+                                        Theme.of(context).appBarTheme.backgroundColor,
+                                        Theme.of(context).appBarTheme.surfaceTintColor,
+                                        0.08,
+                                      )
+                                    : Theme.of(context).appBarTheme.backgroundColor) ??
+                                Colors.transparent,
+                          ),
+                          duration: _duration!.fast,
+                          builder: (context, value, child) {
+                            return Material(
+                              elevation: Theme.of(context).appBarTheme.elevation ?? kDefaultAppBarElevation,
+                              color: value,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  DesktopCaptionBar(
+                                    caption: kCaption,
+                                    color: value,
+                                  ),
+                                  Expanded(
                                     child: Container(
-                                      color: Colors.transparent,
-                                      alignment: Alignment.center,
                                       height: kDesktopAppBarHeight - 20.0,
-                                      padding: const EdgeInsets.only(left: 12.0),
-                                      child: Stack(
-                                        alignment: Alignment.center,
-                                        children: [
-                                          Text(
-                                            e.value.toUpperCase(),
-                                            style: selected.copyWith(color: Colors.transparent),
-                                          ),
-                                          Text(
-                                            e.value.toUpperCase(),
-                                            style: unselected.copyWith(color: Colors.transparent),
-                                          ),
-                                          AnimatedSwitcher(
-                                            duration: _duration.fast,
-                                            switchInCurve: Curves.easeInOut,
-                                            switchOutCurve: Curves.easeInOut,
-                                            child: e.key == _path
-                                                ? Text(
-                                                    e.value.toUpperCase(),
-                                                    key: ValueKey('${e.key}-w600'),
-                                                    style: selected.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color),
-                                                  )
-                                                : Text(
-                                                    e.value.toUpperCase(),
-                                                    key: ValueKey('${e.key}-w300'),
-                                                    style: unselected.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color),
-                                                  ),
-                                          ),
-                                        ],
-                                      ),
+                                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                      child: child!,
                                     ),
                                   ),
-                                );
-                              },
-                            ).toList() +
-                            [
-                              const Spacer(),
-                              const SizedBox(width: 8.0),
-                              SizedBox(
-                                height: 40.0,
-                                width: 280.0,
-                                child: DefaultTextField(
-                                  focusNode: queryTextFieldFocusNode,
-                                  controller: _queryTextFieldEditingController,
-                                  cursorWidth: 1.0,
-                                  onSubmitted: (value) async {
-                                    context.go(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: value}).toString());
-                                    await Future.delayed(MaterialRoute.animationDuration?.medium ?? const Duration(milliseconds: 300));
-                                    queryTextFieldFocusNode.requestFocus();
-                                  },
-                                  textAlignVertical: TextAlignVertical.center,
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                  decoration: inputDecoration(
-                                    context,
-                                    Localization.instance.SEARCH_BANNER_SUBTITLE,
-                                    suffixIcon: Transform.rotate(
-                                      angle: pi / 2,
-                                      child: Tooltip(
-                                        message: Localization.instance.SEARCH,
-                                        child: Icon(
-                                          Icons.search,
-                                          size: 20.0,
-                                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                ],
+                              ),
+                            );
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: {
+                                  kAlbumsPath: Localization.instance.ALBUMS,
+                                  kTracksPath: Localization.instance.TRACKS,
+                                  kArtistsPath: Localization.instance.ARTISTS,
+                                  kGenresPath: Localization.instance.GENRES,
+                                  kPlaylistsPath: Localization.instance.PLAYLISTS,
+                                }.entries.map<Widget>(
+                                  (e) {
+                                    const selected = TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600);
+                                    const unselected = TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300);
+                                    return MouseRegion(
+                                      cursor: SystemMouseCursors.click,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          context.go('/$kMediaLibraryPath/${e.key}');
+                                          Configuration.instance.set(mediaLibraryPath: e.key);
+                                        },
+                                        child: Container(
+                                          color: Colors.transparent,
+                                          alignment: Alignment.center,
+                                          height: kDesktopAppBarHeight - 20.0,
+                                          padding: const EdgeInsets.only(left: 12.0),
+                                          child: Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              Text(
+                                                e.value.toUpperCase(),
+                                                style: selected.copyWith(color: Colors.transparent),
+                                              ),
+                                              Text(
+                                                e.value.toUpperCase(),
+                                                style: unselected.copyWith(color: Colors.transparent),
+                                              ),
+                                              AnimatedSwitcher(
+                                                duration: _duration.fast,
+                                                switchInCurve: Curves.easeInOut,
+                                                switchOutCurve: Curves.easeInOut,
+                                                child: e.key == _path
+                                                    ? Text(
+                                                        e.value.toUpperCase(),
+                                                        key: ValueKey('${e.key}-w600'),
+                                                        style: selected.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color),
+                                                      )
+                                                    : Text(
+                                                        e.value.toUpperCase(),
+                                                        key: ValueKey('${e.key}-w300'),
+                                                        style: unselected.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color),
+                                                      ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
+                                    );
+                                  },
+                                ).toList() +
+                                [
+                                  const Spacer(),
+                                  const SizedBox(width: 8.0),
+                                  SizedBox(
+                                    height: 40.0,
+                                    width: 280.0,
+                                    child: DefaultTextField(
+                                      focusNode: queryTextFieldFocusNode,
+                                      controller: _queryTextFieldEditingController,
+                                      cursorWidth: 1.0,
+                                      onSubmitted: (value) async {
+                                        context.go(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: value}).toString());
+                                        await Future.delayed(MaterialRoute.animationDuration?.medium ?? const Duration(milliseconds: 300));
+                                        queryTextFieldFocusNode.requestFocus();
+                                      },
+                                      textAlignVertical: TextAlignVertical.center,
+                                      style: Theme.of(context).textTheme.bodyMedium,
+                                      decoration: inputDecoration(
+                                        context,
+                                        Localization.instance.SEARCH_BANNER_SUBTITLE,
+                                        suffixIcon: Transform.rotate(
+                                          angle: pi / 2,
+                                          child: Tooltip(
+                                            message: Localization.instance.SEARCH,
+                                            child: Icon(
+                                              Icons.search,
+                                              size: 20.0,
+                                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                            ),
+                                          ),
+                                        ),
+                                        onSuffixIconPressed: () async {
+                                          context.go(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: _queryTextFieldEditingController.text}).toString());
+                                          await Future.delayed(MaterialRoute.animationDuration?.medium ?? const Duration(milliseconds: 300));
+                                          queryTextFieldFocusNode.requestFocus();
+                                        },
+                                      ),
                                     ),
-                                    onSuffixIconPressed: () async {
-                                      context.go(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: _queryTextFieldEditingController.text}).toString());
-                                      await Future.delayed(MaterialRoute.animationDuration?.medium ?? const Duration(milliseconds: 300));
-                                      queryTextFieldFocusNode.requestFocus();
-                                    },
                                   ),
-                                ),
-                              ),
-                              const SizedBox(width: 8.0),
-                              const PlayFileOrURLButton(),
-                              const ReadFileOrURLMetadataButton(),
-                              IconButton(
-                                onPressed: () {
-                                  context.push('/$kSettingsPath');
-                                },
-                                tooltip: Localization.instance.SETTINGS,
-                                icon: const Icon(Icons.settings),
-                                iconSize: 20.0,
-                                splashRadius: 18.0,
-                                color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
-                              ),
-                            ],
+                                  const SizedBox(width: 8.0),
+                                  const PlayFileOrURLButton(),
+                                  const ReadFileOrURLMetadataButton(),
+                                  IconButton(
+                                    onPressed: () {
+                                      context.push('/$kSettingsPath');
+                                    },
+                                    tooltip: Localization.instance.SETTINGS,
+                                    icon: const Icon(Icons.settings),
+                                    iconSize: 20.0,
+                                    splashRadius: 18.0,
+                                    color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
+                                  ),
+                                ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         );
-      },
+      }
     );
   }
 

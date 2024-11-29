@@ -1,9 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +14,7 @@ import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/models/loop.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
+import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/ui/now_playing/desktop/desktop_now_playing_playlist.dart';
 import 'package:harmonoid/ui/now_playing/desktop/desktop_now_playing_screen_carousel.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_colors.dart';
@@ -57,97 +58,101 @@ class DesktopNowPlayingScreenState extends State<DesktopNowPlayingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: ThemeNotifier.instance.darkTheme,
-      child: Provider<NowPlayingColors>(
-        create: (context) => NowPlayingColors.of(context),
-        builder: (context, _) => Scaffold(
-          body: Consumer<MediaPlayer>(
-            builder: (context, mediaPlayer, _) {
-              return Stack(
-                children: [
-                  Positioned.fill(
-                    child: DesktopNowPlayingScreenCarousel(value: desktopNowPlayingScreenCarousel),
-                  ),
-                  Positioned.fill(
-                    child: ColoredBox(color: Colors.black.withOpacity(0.2)),
-                  ),
-                  Positioned.fill(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          stops: const [0.0, 0.2, 0.5, 0.8],
-                          colors: [
-                            Colors.black.withOpacity(0.2),
-                            Colors.transparent,
-                            Colors.transparent,
-                            Colors.black.withOpacity(0.2),
-                          ],
+    return LayoutBuilder(
+      builder: (context, _) {
+        return Theme(
+          data: ThemeNotifier.instance.darkTheme,
+          child: Provider<NowPlayingColors>(
+            create: (context) => NowPlayingColors.of(context),
+            builder: (context, _) => Scaffold(
+              body: Consumer<MediaPlayer>(
+                builder: (context, mediaPlayer, _) {
+                  return Stack(
+                    children: [
+                      Positioned.fill(
+                        child: DesktopNowPlayingScreenCarousel(value: desktopNowPlayingScreenCarousel),
+                      ),
+                      Positioned.fill(
+                        child: ColoredBox(color: Colors.black.withOpacity(0.2)),
+                      ),
+                      Positioned.fill(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              stops: const [0.0, 0.2, 0.5, 0.8],
+                              colors: [
+                                Colors.black.withOpacity(0.2),
+                                Colors.transparent,
+                                Colors.transparent,
+                                Colors.black.withOpacity(0.2),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: AnimatedSwitcher(
-                      duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
-                      switchInCurve: Curves.easeInOut,
-                      switchOutCurve: Curves.easeInOut,
-                      child: SizedBox(
-                        key: ValueKey(desktopNowPlayingScreenLyrics),
-                        width: double.infinity,
-                        height: double.infinity,
-                        child: desktopNowPlayingScreenLyrics ? const NowPlayingLyrics() : const SizedBox(),
+                      Positioned.fill(
+                        child: AnimatedSwitcher(
+                          duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+                          switchInCurve: Curves.easeInOut,
+                          switchOutCurve: Curves.easeInOut,
+                          child: SizedBox(
+                            key: ValueKey(desktopNowPlayingScreenLyrics),
+                            width: double.infinity,
+                            height: double.infinity,
+                            child: desktopNowPlayingScreenLyrics ? const NowPlayingLyrics() : const SizedBox(),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: GestureDetector(
-                      onTap: () async {
-                        if (fullscreenTimer?.isActive ?? false) {
-                          WindowPlus.instance.setIsFullscreen(!await WindowPlus.instance.fullscreen);
-                        }
-                        fullscreenTimer = Timer(const Duration(milliseconds: 200), () => fullscreenTimer = null);
-                      },
-                      child: Container(
-                        color: Colors.transparent,
+                      Positioned.fill(
+                        child: GestureDetector(
+                          onTap: () async {
+                            if (fullscreenTimer?.isActive ?? false) {
+                              WindowPlus.instance.setIsFullscreen(!await WindowPlus.instance.fullscreen);
+                            }
+                            fullscreenTimer = Timer(const Duration(milliseconds: 200), () => fullscreenTimer = null);
+                          },
+                          child: Container(
+                            color: Colors.transparent,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0.0,
-                    left: 0.0,
-                    right: 0.0,
-                    child: Controls(
-                      setDesktopNowPlayingCarousel: setDesktopNowPlayingCarousel,
-                      setDesktopNowPlayingLyrics: setDesktopNowPlayingLyrics,
-                    ),
-                  ),
-                  Positioned(
-                    top: 0.0,
-                    left: 0.0,
-                    right: 0.0,
-                    child: FutureBuilder<bool>(
-                      future: WindowPlus.instance.fullscreen,
-                      builder: (context, snapshot) {
-                        if (snapshot.data ?? false) {
-                          return const SizedBox.shrink();
-                        }
-                        return const DesktopAppBar(
-                          caption: kCaption,
-                          color: Colors.transparent,
-                          elevation: 0.0,
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              );
-            },
+                      Positioned(
+                        bottom: 0.0,
+                        left: 0.0,
+                        right: 0.0,
+                        child: Controls(
+                          setDesktopNowPlayingCarousel: setDesktopNowPlayingCarousel,
+                          setDesktopNowPlayingLyrics: setDesktopNowPlayingLyrics,
+                        ),
+                      ),
+                      Positioned(
+                        top: 0.0,
+                        left: 0.0,
+                        right: 0.0,
+                        child: FutureBuilder<bool>(
+                          future: WindowPlus.instance.fullscreen,
+                          builder: (context, snapshot) {
+                            if (!Platform.isMacOS && (snapshot.data ?? false)) {
+                              return const SizedBox.shrink();
+                            }
+                            return const DesktopAppBar(
+                              caption: kCaption,
+                              color: Colors.transparent,
+                              elevation: 0.0,
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -155,6 +160,7 @@ class DesktopNowPlayingScreenState extends State<DesktopNowPlayingScreen> {
 class Controls extends StatelessWidget {
   final void Function(int value) setDesktopNowPlayingCarousel;
   final void Function(bool value) setDesktopNowPlayingLyrics;
+
   const Controls({
     super.key,
     required this.setDesktopNowPlayingCarousel,
@@ -317,26 +323,16 @@ class Controls extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 12.0),
-                      if (isMaterial3)
-                        Expanded(
-                          child: MaterialWaveSlider(
-                            height: 28.0,
-                            min: sliderMin,
-                            max: sliderMax,
-                            value: sliderValue,
-                            onChanged: (value) => mediaPlayer.seek(Duration(milliseconds: value.round())),
-                            paused: !mediaPlayer.state.playing,
-                          ),
+                      Expanded(
+                        child: MaterialWaveSlider(
+                          height: 28.0,
+                          min: sliderMin,
+                          max: sliderMax,
+                          value: sliderValue,
+                          onChanged: (value) => mediaPlayer.seek(Duration(milliseconds: value.round())),
+                          paused: !mediaPlayer.state.playing,
                         ),
-                      if (isMaterial2)
-                        Expanded(
-                          child: ScrollableSlider(
-                            min: sliderMin,
-                            max: sliderMax,
-                            value: sliderValue,
-                            onChanged: (value) => mediaPlayer.seek(Duration(milliseconds: value.round())),
-                          ),
-                        ),
+                      ),
                       const SizedBox(width: 12.0),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 2.0),

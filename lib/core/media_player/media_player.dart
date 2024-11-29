@@ -144,7 +144,7 @@ class MediaPlayer extends ChangeNotifier with AudioServiceMixin, DiscordRpcMixin
     void Function()? onOpen = mediaPlayerOpenOnOpen,
   }) async {
     await _player.open(Playlist(playables.map((playable) => playable.toMedia()).toList(), index: index), play: play);
-    state = state.copyWith(index: index, playables: playables);
+    state = state.copyWith(index: index, playables: playables, duration: Duration.zero);
     onOpen?.call();
   }
 
@@ -179,7 +179,7 @@ class MediaPlayer extends ChangeNotifier with AudioServiceMixin, DiscordRpcMixin
   }
 
   Future<void> mapPlayerToState() async {
-    _player.stream.playlist.listen((event) => state = state.copyWith(index: event.index, playables: event.medias.map((event) => event.toPlayable()).toList()));
+    _player.stream.playlist.listen((event) => state = state.copyWith(index: event.index, playables: event.medias.map((event) => event.toPlayable()).toList(), duration: Duration.zero));
     _player.stream.rate.listen((event) => state = state.copyWith(rate: event));
     _player.stream.pitch.listen((event) => state = state.copyWith(pitch: event));
     _player.stream.volume.listen((event) => state = state.copyWith(volume: event));
