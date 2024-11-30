@@ -11,6 +11,7 @@ class LocalizationBase extends Values {
     final map = json.decode(data);
     current = value;
     ABOUT = map['ABOUT']!;
+    ABOUT_HARMONOID = map['ABOUT_HARMONOID']!;
     ADD = map['ADD']!;
     ADDED_FOLDERS = map['ADDED_FOLDERS']!;
     ADDED_M_OF_N_FILES = map['ADDED_M_OF_N_FILES']!;
@@ -167,6 +168,7 @@ class LocalizationBase extends Values {
     PRIVACY = map['PRIVACY']!;
     PROCEED = map['PROCEED']!;
     PROPERTY = map['PROPERTY']!;
+    QUIT_HARMONOID = map['QUIT_HARMONOID']!;
     READ = map['READ']!;
     READ_METADATA = map['READ_METADATA']!;
     RECOMMENDATIONS = map['RECOMMENDATIONS']!;

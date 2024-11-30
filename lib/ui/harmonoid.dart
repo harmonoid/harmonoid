@@ -11,6 +11,7 @@ import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/keyboard_shortcuts.dart';
+import 'package:harmonoid/utils/macos_menu_bar.dart';
 
 class Harmonoid extends StatelessWidget {
   const Harmonoid({super.key});
@@ -39,14 +40,16 @@ class Harmonoid extends StatelessWidget {
         ),
       ],
       builder: (context, _) => Consumer<ThemeNotifier>(
-        builder: (context, themeNotifier, _) => KeyboardShortcutsListener(
-          child: MaterialApp.router(
-            scrollBehavior: const DefaultScrollBehavior(),
-            debugShowCheckedModeBanner: false,
-            theme: themeNotifier.theme,
-            darkTheme: themeNotifier.darkTheme,
-            themeMode: themeNotifier.themeMode,
-            routerConfig: router,
+        builder: (context, themeNotifier, _) => MacOSMenuBar(
+          child: KeyboardShortcutsListener(
+            child: MaterialApp.router(
+              scrollBehavior: const DefaultScrollBehavior(),
+              debugShowCheckedModeBanner: false,
+              theme: themeNotifier.theme,
+              darkTheme: themeNotifier.darkTheme,
+              themeMode: themeNotifier.themeMode,
+              routerConfig: router,
+            ),
           ),
         ),
       ),

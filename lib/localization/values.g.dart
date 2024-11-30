@@ -6,6 +6,7 @@ part of 'localization.dart';
 
 class Values {
   late String ABOUT;
+  late String ABOUT_HARMONOID;
   late String ADD;
   late String ADDED_FOLDERS;
   late String ADDED_M_OF_N_FILES;
@@ -162,6 +163,7 @@ class Values {
   late String PRIVACY;
   late String PROCEED;
   late String PROPERTY;
+  late String QUIT_HARMONOID;
   late String READ;
   late String READ_METADATA;
   late String RECOMMENDATIONS;
