@@ -30,6 +30,7 @@ import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/constants.dart';
+import 'package:harmonoid/utils/macos_storage_controller.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
 bool get isMaterial3 => Theme.of(rootNavigatorKey.currentContext!).extension<MaterialStandard>()?.value == 3;
@@ -806,7 +807,6 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
       break;
     case 8:
       final file = await pickFile(
-        label: 'LRC',
         // Compatiblitity issues with Android 5.0: SDK 21.
         extensions: Platform.isAndroid ? null : {'LRC'},
       );
@@ -928,7 +928,11 @@ Future<void> playlistEntryPopupMenuHandle(BuildContext context, Playlist playlis
   }
 }
 
-Future<File?> pickFile({required String label, Set<String>? extensions}) async {
+Future<File?> pickFile({Set<String>? extensions}) async {
+  if (Platform.isMacOS) {
+    return MacOSStorageController.instance.pickFile(extensions?.toList() ?? []);
+  }
+
   final result = await FilePicker.platform.pickFiles(
     type: extensions == null ? FileType.any : FileType.custom,
     allowedExtensions: extensions == null
@@ -945,11 +949,8 @@ Future<File?> pickFile({required String label, Set<String>? extensions}) async {
   return null;
 }
 
-Future<Directory?> pickDirectory({bool native = false}) async {
-  if (!Platform.isAndroid || native) {
-    final path = await FilePicker.platform.getDirectoryPath();
-    return path != null ? Directory(path) : null;
-  } else {
+Future<Directory?> pickDirectory() async {
+  if (Platform.isAndroid) {
     // return showGeneralDialog(
     //   context: rootNavigatorKey.currentContext!,
     //   useRootNavigator: true,
@@ -958,7 +959,11 @@ Future<Directory?> pickDirectory({bool native = false}) async {
     //   pageBuilder: (context, animation, secondaryAnimation) => DirectoryPickerScreen(),
     // );
   }
-  return null;
+  if (Platform.isMacOS) {
+    return MacOSStorageController.instance.pickDirectory();
+  }
+  final path = await FilePicker.platform.getDirectoryPath();
+  return path != null ? Directory(path) : null;
 }
 
 Future<String?> pickResource(BuildContext context, String title) async {
@@ -972,7 +977,6 @@ Future<String?> pickResource(BuildContext context, String title) async {
         ListTile(
           onTap: () async {
             final file = await pickFile(
-              label: Localization.instance.MEDIA_FILES,
               extensions: MediaLibrary.instance.supportedFileTypes,
             );
             if (file != null) {

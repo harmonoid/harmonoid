@@ -8,7 +8,7 @@ import 'package:path/path.dart' as path;
 ///
 /// AndroidStorageController
 /// ------------------------
-/// Implementation to retrieve cache & external storage directories on Android.
+/// Implementation to handle Android specific file operations.
 ///
 /// {@endtemplate}
 class AndroidStorageController {
@@ -20,6 +20,7 @@ class AndroidStorageController {
 
   /// Initializes the [instance].
   static Future<void> ensureInitialized() async {
+    if (!Platform.isAndroid) return;
     if (initialized) return;
     initialized = true;
     // According to:

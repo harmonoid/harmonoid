@@ -11,17 +11,32 @@ import 'package:harmonoid/extensions/configuration.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
+import 'package:harmonoid/utils/macos_storage_controller.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 class MediaLibraryInaccessibleDirectoriesScreen extends StatefulWidget {
   final List<Directory> directories;
+
   const MediaLibraryInaccessibleDirectoriesScreen({super.key, required this.directories});
 
   static Future<bool> showIfRequired(BuildContext context) async {
     final directories = <Directory>[];
     for (final directory in MediaLibrary.instance.directories) {
-      if (!await directory.exists_()) {
-        directories.add(directory);
+      // On macOS, try to list the contents of the directory to check if it's accessible.
+      // On other platforms, just check if the directory exists.
+      if (Platform.isMacOS) {
+        try {
+          // NOTE: Not using package:safe_local_storage API.
+          directory.listSync();
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
+          directories.add(directory);
+        }
+      } else {
+        if (!await directory.exists_()) {
+          directories.add(directory);
+        }
       }
     }
 
@@ -70,6 +85,7 @@ class _MediaLibraryInaccessibleDirectoriesScreenState extends State<MediaLibrary
     try {
       await Configuration.instance.removeMediaLibraryDirectory(directory);
       await MediaLibrary.instance.removeDirectories({directory});
+      await MacOSStorageController.instance.invalidateAccess(directory);
       await refresh();
     } catch (_) {}
     removing = false;

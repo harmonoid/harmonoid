@@ -10,6 +10,7 @@ import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/extensions/configuration.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/settings/settings_section.dart';
+import 'package:harmonoid/utils/macos_storage_controller.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
@@ -155,6 +156,7 @@ class MediaLibrarySection extends StatelessWidget {
         }
         await Configuration.instance.removeMediaLibraryDirectory(directory);
         await mediaLibrary.removeDirectories({directory});
+        await MacOSStorageController.instance.invalidateAccess(directory);
       });
 
   static Future<void> addFolder(BuildContext context, MediaLibrary mediaLibrary) => ensureNotRefreshing(context, mediaLibrary, () async {

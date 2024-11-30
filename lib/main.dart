@@ -20,6 +20,7 @@ import 'package:harmonoid/ui/harmonoid.dart';
 import 'package:harmonoid/ui/splash.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/constants.dart';
+import 'package:harmonoid/utils/macos_storage_controller.dart';
 import 'package:harmonoid/utils/window_lifecycle.dart';
 
 Future<void> main(List<String> args) async {
@@ -84,6 +85,12 @@ Future<void> main(List<String> args) async {
     }
 
     await Configuration.ensureInitialized();
+
+    if (Platform.isMacOS) {
+      // HACK: Bit ugly to place this here... but it works.
+      await MacOSStorageController.ensureInitialized(directories: Configuration.instance.mediaLibraryDirectories);
+    }
+
     MediaKit.ensureInitialized(libmpv: Configuration.instance.mpvPath.nullIfBlank());
     await Localization.ensureInitialized(localization: Configuration.instance.localization);
     await MediaLibrary.ensureInitialized(
