@@ -1,11 +1,10 @@
 import 'dart:io';
-import 'package:flutter/rendering.dart';
-import 'package:synchronized/synchronized.dart';
 
 import 'package:harmonoid/core/media_player/base_media_player.dart';
+import 'package:harmonoid/mappers/image_provider.dart';
 import 'package:harmonoid/models/playable.dart';
-import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:synchronized/synchronized.dart';
 import 'package:system_media_transport_controls/system_media_transport_controls.dart';
 
 /// {@template system_media_transport_controls_mixin}
@@ -68,12 +67,7 @@ mixin SystemMediaTransportControlsMixin implements BaseMediaPlayer {
         _flagPlayableSystemMediaTransportControls = current;
 
         final image = cover(uri: current.uri);
-        final artwork = switch (image) {
-          AsyncFileImage() => await image.file,
-          FileImage() => image.file,
-          NetworkImage() => image.url,
-          _ => null,
-        };
+        final artwork = await image.toResource();
         _instanceSystemMediaTransportControls
           ?..setMusicData(
             albumTitle: current.description.firstOrNull,

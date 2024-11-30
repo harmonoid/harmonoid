@@ -10,7 +10,7 @@ import 'package:windows_taskbar/windows_taskbar.dart';
 /// {@template windows_taskbar_mixin}
 ///
 /// WindowsTaskbarMixin
-/// ---------
+/// -------------------
 /// package:windows_taskbar mixin for [BaseMediaPlayer].
 ///
 /// {@endtemplate}
