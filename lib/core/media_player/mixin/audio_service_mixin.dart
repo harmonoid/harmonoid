@@ -66,7 +66,10 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
         );
         _instanceAudioService?.mediaItem.add(mediaItem);
 
-        final playbackState = _instanceAudioService?.playbackState.value.copyWith(queueIndex: state.index);
+        final playbackState = _instanceAudioService?.playbackState.value.copyWith(
+          queueIndex: state.index,
+          processingState: AudioProcessingState.ready,
+        );
         if (playbackState != null) {
           _instanceAudioService?.playbackState.add(playbackState);
         }
@@ -154,7 +157,6 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
         _flagCompletedAudioService = state.completed;
         final playbackState = _instanceAudioService?.playbackState.value.copyWith(
           processingState: AudioProcessingState.completed,
-          playing: false,
           controls: [
             MediaControl.skipToPrevious,
             MediaControl.play,
