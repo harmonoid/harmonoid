@@ -19,7 +19,7 @@
   {"key": "MEDIA_LIBRARY_ARTIST_SORT_TYPE", "serializedType": "Integer", "dartType": "ArtistSortType", "default": "ArtistSortType.artist.index"},
   {"key": "MEDIA_LIBRARY_COVER_FALLBACK", "serializedType": "Boolean", "dartType": "bool", "default": "false"},
   {"key": "MEDIA_LIBRARY_DESKTOP_TRACKS_SCREEN_COLUMN_WIDTHS", "serializedType": "Json", "dartType": "Map<String, double>", "default": "<String, double>{}"},
-  {"key": "MEDIA_LIBRARY_DIRECTORIES", "serializedType": "Json", "dartType": "Set<Directory>", "default": "[await getDefaultMediaLibraryDirectory()]"},
+  {"key": "MEDIA_LIBRARY_DIRECTORIES", "serializedType": "Json", "dartType": "Set<Directory>", "default": "await getDefaultMediaLibraryDirectories()"},
   {"key": "MEDIA_LIBRARY_GENRE_SORT_ASCENDING", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
   {"key": "MEDIA_LIBRARY_GENRE_SORT_TYPE", "serializedType": "Integer", "dartType": "GenreSortType", "default": "GenreSortType.genre.index"},
   {"key": "MEDIA_LIBRARY_MINIMUM_FILE_SIZE", "serializedType": "Integer", "dartType": "int", "default": "0"},

@@ -5,14 +5,15 @@ import window_plus
 class MainFlutterWindow: NSWindow {
     static let kStorageControllerMethodChannelName = "com.alexmercerind.harmonoid/storage_controller"
     
-    static let pickDirectoryMethodName = "pickDirectory"
-    static let pickFileMethodName = "pickFile"
-    static let preserveAccessMethodName = "preserveAccess"
-    static let invalidateAccessMethodName = "invalidateAccess"
+    static let kPickDirectoryMethodName = "pickDirectory"
+    static let kPickFileMethodName = "pickFile"
+    static let kPreserveAccessMethodName = "preserveAccess"
+    static let kInvalidateAccessMethodName = "invalidateAccess"
+    static let kGetDefaultMediaLibraryDirectoryMethodName = "getDefaultMediaLibraryDirectory"
     
     private var storageControllerMethodChannel: FlutterMethodChannel?
     
-    override public func awakeFromNib() {        
+    override public func awakeFromNib() {
         let flutterViewController = FlutterViewController()
         let windowFrame = self.frame
         self.contentViewController = flutterViewController
@@ -26,14 +27,16 @@ class MainFlutterWindow: NSWindow {
         )
         storageControllerMethodChannel?.setMethodCallHandler({
             (_ call: FlutterMethodCall, _ result: FlutterResult) -> Void in
-            if (call.method == MainFlutterWindow.pickDirectoryMethodName) {
+            if (call.method == MainFlutterWindow.kPickDirectoryMethodName) {
                 self.flutterPickDirectory(call: call, result: result)
-            } else if (call.method == MainFlutterWindow.pickFileMethodName) {
+            } else if (call.method == MainFlutterWindow.kPickFileMethodName) {
                 self.flutterPickFile(call: call, result: result)
-            } else if (call.method == MainFlutterWindow.preserveAccessMethodName) {
+            } else if (call.method == MainFlutterWindow.kPreserveAccessMethodName) {
                 self.flutterPreserveAccess(call: call, result: result)
-            } else if (call.method == MainFlutterWindow.invalidateAccessMethodName) {
+            } else if (call.method == MainFlutterWindow.kInvalidateAccessMethodName) {
                 self.flutterInvalidateAccess(call: call, result: result)
+            } else if (call.method == MainFlutterWindow.kGetDefaultMediaLibraryDirectoryMethodName) {
+                self.flutterGetDefaultMediaLibraryDirectory(call: call, result: result)
             } else {
                 result(FlutterMethodNotImplemented)
             }
@@ -135,5 +138,17 @@ class MainFlutterWindow: NSWindow {
         UserDefaults.standard.removeObject(forKey: "bookmark_\(path)")
         
         result(true)
+    }
+    
+    private func flutterGetDefaultMediaLibraryDirectory(call: FlutterMethodCall, result: FlutterResult) {
+        if let directory = NSSearchPathForDirectoriesInDomains(.musicDirectory, .userDomainMask, true).first {
+            var url = URL(fileURLWithPath: directory)
+            // Resolve the symlink before sending it. It makes the path same as if it has been picked by NSOpenPanel.
+            // /Users/alexmercerind/Library/Containers/com.alexmercerind.harmonoid/Data/Music -> /Users/alexmercerind/Music
+            url.resolveSymlinksInPath()
+            result(url.path)
+        } else {
+            result(nil)
+        }
     }
 }

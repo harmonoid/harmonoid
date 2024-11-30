@@ -16,6 +16,7 @@ import 'package:harmonoid/core/configuration/database/database.dart';
 import 'package:harmonoid/models/playback_state.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
+import 'package:harmonoid/utils/macos_storage_controller.dart';
 
 part 'configuration.g.dart';
 
@@ -159,8 +160,8 @@ Future<String> getDefaultDirectory() async {
   throw UnsupportedError('Unsupported platform: ${Platform.operatingSystem}');
 }
 
-/// Returns the default directory to scan the media files.
-Future<String> getDefaultMediaLibraryDirectory() async {
+/// Returns the default directories to scan the media files.
+Future<List<String>> getDefaultMediaLibraryDirectories() async {
   if (Platform.isWindows) {
     // SHGetKnownFolderPath Win32 API call.
     final rfid = GUIDFromString(FOLDERID_Music);
@@ -175,19 +176,19 @@ Future<String> getDefaultMediaLibraryDirectory() async {
       if (FAILED(hr)) {
         throw WindowsException(hr);
       }
-      return path.normalize(result.value.toDartString());
+      return [path.normalize(result.value.toDartString())];
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
       // Fallback.
-      return path.normalize(path.join(Platform.environment['USERPROFILE']!, 'Music'));
+      return [path.normalize(path.join(Platform.environment['USERPROFILE']!, 'Music'))];
     } finally {
       calloc.free(rfid);
       calloc.free(result);
     }
   } else if (Platform.isMacOS) {
-    final directory = await path.getApplicationSupportDirectory();
-    return directory.path;
+    final directory = await MacOSStorageController.instance.getDefaultMediaLibraryDirectory();
+    return [if (directory != null) directory.path];
   } else if (Platform.isLinux) {
     try {
       // Invoke xdg-user-dir command.
@@ -195,23 +196,23 @@ Future<String> getDefaultMediaLibraryDirectory() async {
       if (result.exitCode != 0) {
         throw Exception('xdg-user-dir command failed with exit code ${result.exitCode}');
       }
-      return path.normalize(result.stdout.toString().trim());
+      return [path.normalize(result.stdout.toString().trim())];
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
       try {
         // Fallback 1.
-        return path.normalize(Platform.environment['XDG_MUSIC_DIR']!);
+        return [path.normalize(Platform.environment['XDG_MUSIC_DIR']!)];
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
         // Fallback 2.
-        return path.join(path.normalize(Platform.environment['HOME']!), 'Music');
+        return [path.join(path.normalize(Platform.environment['HOME']!), 'Music')];
       }
     }
   } else if (Platform.isAndroid) {
     final result = await AndroidStorageController.instance.external;
-    return result.first.path;
+    return [result.first.path];
   }
   throw UnsupportedError('Unsupported platform: ${Platform.operatingSystem}');
 }

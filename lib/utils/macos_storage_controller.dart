@@ -17,6 +17,7 @@ class MacOSStorageController {
   static const kPickFileMethodName = 'pickFile';
   static const kPreserveAccessMethodName = 'preserveAccess';
   static const kInvalidateAccessMethodName = 'invalidateAccess';
+  static const kGetDefaultMediaLibraryDirectoryMethodName = 'getDefaultMediaLibraryDirectory';
 
   /// Singleton instance.
   static const MacOSStorageController instance = MacOSStorageController._();
@@ -96,6 +97,16 @@ class MacOSStorageController {
         ),
       },
     );
+  }
+
+  Future<Directory?> getDefaultMediaLibraryDirectory() async {
+    final result = await _channel.invokeMethod(
+      kGetDefaultMediaLibraryDirectoryMethodName,
+    );
+    if (result != null) {
+      return Directory(path.normalize(result));
+    }
+    return null;
   }
 
   final MethodChannel _channel = const MethodChannel(kMethodChannelName);

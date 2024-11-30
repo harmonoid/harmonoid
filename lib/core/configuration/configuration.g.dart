@@ -303,7 +303,7 @@ class ConfigurationBase {
       /* Integer */ kKeyMediaLibraryArtistSortType: ArtistSortType.artist.index,
       /* Boolean */ kKeyMediaLibraryCoverFallback: false,
       /* Json    */ kKeyMediaLibraryDesktopTracksScreenColumnWidths: <String, double>{},
-      /* Json    */ kKeyMediaLibraryDirectories: [await getDefaultMediaLibraryDirectory()],
+      /* Json    */ kKeyMediaLibraryDirectories: await getDefaultMediaLibraryDirectories(),
       /* Boolean */ kKeyMediaLibraryGenreSortAscending: true,
       /* Integer */ kKeyMediaLibraryGenreSortType: GenreSortType.genre.index,
       /* Integer */ kKeyMediaLibraryMinimumFileSize: 0,
