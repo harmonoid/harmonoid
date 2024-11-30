@@ -114,23 +114,28 @@ class AsyncFileImage extends ImageProvider<AsyncFileImage> {
     }
   }
 
-  /// [FileImage] cache.
-  static final HashMap<String, FileImage> fileImages = HashMap<String, FileImage>();
-
-  /// Whether the default image is loaded or not.
   static final HashMap<String, bool> defaults = HashMap<String, bool>();
+
+  static final HashMap<String, FileImage> fileImages = HashMap<String, FileImage>();
 
   static final HashMap<String, Lock> fileResolveLocks = HashMap<String, Lock>();
 
-  /// Counts for [attemptToResolveIfDefault], to reduce the number of invocations.
   static final HashMap<String, int> attemptToResolveIfDefaultCounts = HashMap<String, int>();
 
-  /// Timestamps for [attemptToResolveIfDefault], to reduce the number of invocations.
   static final HashMap<String, DateTime> attemptToResolveIfDefaultTimestamps = HashMap<String, DateTime>();
 
   static FileImage? getFileImage(String key) => fileImages[key];
 
   static bool isDefault(String key) => defaults[key] ?? false;
+
+  static void reset(String key) {
+    defaults.remove(key);
+    fileImages.remove(key);
+    fileResolveLocks.remove(key);
+    // DO NOT RESET THE COUNT; PREVENT ENDLESS ATTEMPTS.
+    // attemptToResolveIfDefaultCounts.remove(key);
+    attemptToResolveIfDefaultTimestamps.remove(key);
+  }
 
   static void attemptToResolveIfDefault(String key, Future<File?> Function() file, {VoidCallback? onResolve}) async {
     // Try to resolve the actual cover file in background, if the current one is default.

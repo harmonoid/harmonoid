@@ -135,9 +135,9 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
       timeout: timeout,
     );
     final result = tags.toTrack();
-    // debugPrint('MediaLibrary: parse: URI: $uri');
-    // debugPrint('MediaLibrary: parse: Tags: $tags');
-    // debugPrint('MediaLibrary: parse: Result: $result');
+    debugPrint('MediaLibrary: parse: URI: $uri');
+    debugPrint('MediaLibrary: parse: Tags: $tags');
+    debugPrint('MediaLibrary: parse: Result: $result');
     return result;
   }
 

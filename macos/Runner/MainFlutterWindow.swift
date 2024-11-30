@@ -12,9 +12,7 @@ class MainFlutterWindow: NSWindow {
     
     private var storageControllerMethodChannel: FlutterMethodChannel?
     
-    override public func awakeFromNib() {
-        WindowPlusPlugin.handleSingleInstance()
-        
+    override public func awakeFromNib() {        
         let flutterViewController = FlutterViewController()
         let windowFrame = self.frame
         self.contentViewController = flutterViewController

@@ -194,7 +194,7 @@ class MediaPlayer extends ChangeNotifier with AudioServiceMixin, DiscordRpcMixin
     _player.stream.error.listen((event) => debugPrint(event));
   }
 
-  Future<void> updateCurrent() {
+  Future<void> updateCurrent({void Function(String)? onUpdateCurrent = mediaPlayerUpdateCurrentOnUpdateCurrent}) {
     return _updateCurrentLock.synchronized(() async {
       try {
         final uri = state.playables[state.index].uri;
@@ -212,6 +212,8 @@ class MediaPlayer extends ChangeNotifier with AudioServiceMixin, DiscordRpcMixin
         );
         _current = tags.toTrack().toPlayable();
         notifyListeners();
+
+        onUpdateCurrent?.call(uri);
 
         debugPrint('MediaPlayer: updateCurrent: URI: $uri');
         debugPrint('MediaPlayer: updateCurrent: Tags: $tags');

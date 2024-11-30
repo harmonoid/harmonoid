@@ -194,10 +194,11 @@ ImageProvider cover({
       result ??= playlistEntry?.uri;
       result ??= uri;
       if (MediaPlayer.instance.current.uri == result) {
-        MediaPlayer.instance.resetFlagsAudioService();
-        MediaPlayer.instance.resetFlagsDiscordRpc();
-        MediaPlayer.instance.resetFlagsMpris();
-        MediaPlayer.instance.resetFlagsSystemMediaTransportControls();
+        MediaPlayer.instance
+          ..resetFlagsAudioService()
+          ..resetFlagsDiscordRpc()
+          ..resetFlagsMpris()
+          ..resetFlagsSystemMediaTransportControls();
         NowPlayingColorPaletteNotifier.instance.resetCurrent();
       }
     },
