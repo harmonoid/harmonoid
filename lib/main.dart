@@ -119,6 +119,11 @@ Future<void> main(List<String> args) async {
     await NowPlayingVisualsNotifier.ensureInitialized();
     await NowPlayingColorPaletteNotifier.ensureInitialized();
     runApp(const Harmonoid());
+
+    if (Platform.isMacOS) {
+      // HACK: Bit ugly to place this here... but it works.
+      await const MethodChannel('com.alexmercerind/window_plus').invokeMethod('notifyUrls');
+    }
   } catch (exception, stacktrace) {
     debugPrint(exception.toString());
     debugPrint(stacktrace.toString());
