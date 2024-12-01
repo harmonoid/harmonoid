@@ -47,7 +47,17 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
     await _instanceAudioService?.stop();
   }
 
-  void resetFlagsAudioService() {}
+  void resetFlagsAudioService() {
+    _flagPlayableAudioService = null;
+    _flagIndexAudioService = null;
+    _flagRateAudioService = null;
+    _flagShuffleAudioService = null;
+    _flagLoopAudioService = null;
+    _flagPositionAudioService = null;
+    _flagDurationAudioService = null;
+    _flagPlayingAudioService = null;
+    _flagCompletedAudioService = null;
+  }
 
   void _listenerAudioService() {
     _lockAudioService.synchronized(() async {
