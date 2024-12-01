@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = harmonoid
+PRODUCT_NAME = Harmonoid
 
 // The application's bundle identifier
 PRODUCT_BUNDLE_IDENTIFIER = com.alexmercerind.harmonoid
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2024 com.alexmercerind. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2024 Hitesh Kumar Saini. All rights reserved.
