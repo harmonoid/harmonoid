@@ -66,7 +66,7 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
         _flagPlayableAudioService = current;
         final image = cover(uri: current.uri);
         final artUri = await image.toUri();
-        final mediaItem = MediaItem(
+        _mediaItemAudioService = _mediaItemAudioService.copyWith(
           id: current.uri,
           title: current.title,
           artist: current.subtitle.join(', '),
@@ -74,71 +74,59 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
           displayTitle: current.title,
           displaySubtitle: current.subtitle.join(', '),
         );
-        _instanceAudioService?.mediaItem.add(mediaItem);
+        _instanceAudioService?.mediaItem.add(_mediaItemAudioService);
 
-        final playbackState = _instanceAudioService?.playbackState.value.copyWith(
+        _playbackStateAudioService = _playbackStateAudioService.copyWith(
           queueIndex: state.index,
           processingState: AudioProcessingState.ready,
         );
-        if (playbackState != null) {
-          _instanceAudioService?.playbackState.add(playbackState);
-        }
+        _instanceAudioService?.playbackState.add(_playbackStateAudioService);
       }
 
       if (_flagRateAudioService != state.rate) {
         _flagRateAudioService = state.rate;
-        final playbackState = _instanceAudioService?.playbackState.value.copyWith(speed: state.rate);
-        if (playbackState != null) {
-          _instanceAudioService?.playbackState.add(playbackState);
-        }
+        _playbackStateAudioService = _playbackStateAudioService.copyWith(speed: state.rate);
+        _instanceAudioService?.playbackState.add(_playbackStateAudioService);
       }
 
       if (_flagShuffleAudioService != state.shuffle) {
         _flagShuffleAudioService = state.shuffle;
-        final playbackState = _instanceAudioService?.playbackState.value.copyWith(
+        _playbackStateAudioService = _playbackStateAudioService.copyWith(
           shuffleMode: switch (state.shuffle) {
             true => AudioServiceShuffleMode.all,
             false => AudioServiceShuffleMode.none,
           },
         );
-        if (playbackState != null) {
-          _instanceAudioService?.playbackState.add(playbackState);
-        }
+        _instanceAudioService?.playbackState.add(_playbackStateAudioService);
       }
 
       if (_flagLoopAudioService != state.loop) {
         _flagLoopAudioService = state.loop;
-        final playbackState = _instanceAudioService?.playbackState.value.copyWith(
+        _playbackStateAudioService = _playbackStateAudioService.copyWith(
           repeatMode: switch (state.loop) {
             Loop.off => AudioServiceRepeatMode.none,
             Loop.one => AudioServiceRepeatMode.one,
             Loop.all => AudioServiceRepeatMode.all,
           },
         );
-        if (playbackState != null) {
-          _instanceAudioService?.playbackState.add(playbackState);
-        }
+        _instanceAudioService?.playbackState.add(_playbackStateAudioService);
       }
 
       if (_flagPositionAudioService != state.position) {
         _flagPositionAudioService = state.position;
-        final playbackState = _instanceAudioService?.playbackState.value.copyWith(updatePosition: state.position);
-        if (playbackState != null) {
-          _instanceAudioService?.playbackState.add(playbackState);
-        }
+        _playbackStateAudioService = _playbackStateAudioService.copyWith(updatePosition: state.position);
+        _instanceAudioService?.playbackState.add(_playbackStateAudioService);
       }
 
       if (_flagDurationAudioService != state.duration && state.duration > Duration.zero) {
         _flagDurationAudioService = state.duration;
-        final mediaItem = _instanceAudioService?.mediaItem.value?.copyWith(duration: state.duration);
-        if (mediaItem != null) {
-          _instanceAudioService?.mediaItem.add(mediaItem);
-        }
+        _mediaItemAudioService = _mediaItemAudioService.copyWith(duration: state.duration);
+        _instanceAudioService?.mediaItem.add(_mediaItemAudioService);
       }
 
       if (_flagPlayingAudioService != state.playing) {
         _flagPlayingAudioService = state.playing;
-        final playbackState = _instanceAudioService?.playbackState.value.copyWith(
+        _playbackStateAudioService = _playbackStateAudioService.copyWith(
           processingState: AudioProcessingState.ready,
           playing: state.playing,
           controls: [
@@ -158,14 +146,12 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
             MediaAction.setSpeed,
           },
         );
-        if (playbackState != null) {
-          _instanceAudioService?.playbackState.add(playbackState);
-        }
+        _instanceAudioService?.playbackState.add(_playbackStateAudioService);
       }
 
       if (_flagCompletedAudioService != state.completed) {
         _flagCompletedAudioService = state.completed;
-        final playbackState = _instanceAudioService?.playbackState.value.copyWith(
+        _playbackStateAudioService = _playbackStateAudioService.copyWith(
           processingState: AudioProcessingState.completed,
           controls: [
             MediaControl.skipToPrevious,
@@ -173,9 +159,7 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
             MediaControl.skipToNext,
           ],
         );
-        if (playbackState != null) {
-          _instanceAudioService?.playbackState.add(playbackState);
-        }
+        _instanceAudioService?.playbackState.add(_playbackStateAudioService);
       }
     });
   }
@@ -192,6 +176,9 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
   Duration? _flagDurationAudioService;
   bool? _flagPlayingAudioService;
   bool? _flagCompletedAudioService;
+
+  MediaItem _mediaItemAudioService = const MediaItem(id: '~', title: '~');
+  PlaybackState _playbackStateAudioService = PlaybackState();
 }
 
 class _AudioServiceImpl extends BaseAudioHandler with QueueHandler, SeekHandler {
