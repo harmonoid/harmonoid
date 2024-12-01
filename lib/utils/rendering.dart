@@ -1073,11 +1073,19 @@ Future<void> showAddToPlaylistDialog(
                                 await MediaLibrary.instance.playlists.createEntry(playlists[i], track: track);
                               }
                               if (playable != null) {
-                                await MediaLibrary.instance.playlists.createEntry(
-                                  playlists[i],
-                                  uri: playable.uri,
-                                  title: playable.playlistEntryTitle,
-                                );
+                                // Check if this [playable] is available in the media library?
+                                track = await MediaLibrary.instance.db.selectTrackByUri(playable.uri);
+                                if (track != null) {
+                                  // YES
+                                  await MediaLibrary.instance.playlists.createEntry(playlists[i], track: track);
+                                } else {
+                                  // NO
+                                  await MediaLibrary.instance.playlists.createEntry(
+                                    playlists[i],
+                                    uri: playable.uri,
+                                    title: playable.playlistEntryTitle,
+                                  );
+                                }
                               }
                               await Navigator.of(ctx).maybePop();
                             },
