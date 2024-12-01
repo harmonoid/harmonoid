@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'dart:math';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +22,7 @@ import 'package:harmonoid/utils/widgets.dart';
 
 class MediaLibraryScreen extends StatefulWidget {
   final Widget child;
+
   const MediaLibraryScreen({super.key, required this.child});
 
   @override
@@ -44,7 +47,10 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      Intent.instance.notify(playbackState: Configuration.instance.mediaPlayerPlaybackState);
+      await Intent.instance.notify(playbackState: Configuration.instance.mediaPlayerPlaybackState);
+      if (Platform.isMacOS) {
+        await const MethodChannel('com.alexmercerind/window_plus').invokeMethod('notifyUrls');
+      }
       if (Configuration.instance.mediaLibraryRefreshUponStart && !await MediaLibraryInaccessibleDirectoriesScreen.showIfRequired(context)) {
         MediaLibrary.instance.refresh();
       }
@@ -281,7 +287,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
             );
           },
         );
-      }
+      },
     );
   }
 

@@ -29,7 +29,7 @@ class Intent {
   /// {@macro intent}
   Intent._() {
     if (Platform.isAndroid) {
-      _channel.setMethodCallHandler((call) async {
+      _intentControllerMethodChannel.setMethodCallHandler((call) async {
         debugPrint('Intent: _: Arguments: ${call.arguments}');
         debugPrint('Intent: _: Notify invoked: ${instance._notifyInvoked}');
         // Skip calls from platform channel until [notify] has been invoked at least once.
@@ -68,7 +68,7 @@ class Intent {
       // Android: Attempt to refresh the resource.
       try {
         if (Platform.isAndroid) {
-          final result = await _channel.invokeMethod('resource');
+          final result = await _intentControllerMethodChannel.invokeMethod('getUrl');
           if (result != null) {
             _resource = result;
           }
@@ -227,5 +227,5 @@ class Intent {
   final Lock _playLock = Lock();
 
   /// [MethodChannel] used to communicate with the native platform.
-  final MethodChannel _channel = const MethodChannel('com.alexmercerind.harmonoid.IntentController');
+  final MethodChannel _intentControllerMethodChannel = const MethodChannel('com.alexmercerind.harmonoid/intent_controller');
 }

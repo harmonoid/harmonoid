@@ -1300,7 +1300,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: d00982dba751df5a7174b95e6864099951802275
+      resolved-ref: "6e88b2895e14c4256584a20ec30536dd965e5422"
       url: "https://github.com/alexmercerind/window_plus.git"
     source: git
     version: "0.0.1"
