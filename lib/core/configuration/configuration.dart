@@ -125,7 +125,7 @@ class Configuration extends ConfigurationBase {
 /// Returns the default directory to save the application data.
 Future<String> getDefaultDirectory() async {
   if (Platform.isAndroid) {
-    final result = await AndroidStorageController.instance.cache;
+    final result = await AndroidStorageController.instance.getCacheDirectory();
     return result.path;
   } else if (Platform.isLinux) {
     return path.normalize(Platform.environment['HOME']!);
@@ -163,7 +163,7 @@ Future<String> getDefaultDirectory() async {
 /// Returns the default directories to scan the media files.
 Future<List<String>> getDefaultMediaLibraryDirectories() async {
   if (Platform.isAndroid) {
-    final result = await AndroidStorageController.instance.external;
+    final result = await AndroidStorageController.instance.getStorageDirectories();
     return [result.first.path];
   } else if (Platform.isLinux) {
     try {

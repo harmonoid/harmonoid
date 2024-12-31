@@ -30,11 +30,7 @@ import 'package:harmonoid/utils/constants.dart';
 ///
 /// MediaPlayer
 /// -----------
-/// Implementation to handle the playback of playable resources & control the system interfaces e.g.
-/// * Android   : Notification.MediaStyle
-/// * GNU/Linux : D-Bus MPRIS Controls
-/// * macOS     : MPNowPlayingInfoCenter
-/// * Windows   : System Media Transport Controls, Windows Taskbar
+/// Implementation to handle the media playback & other related functionalities.
 ///
 /// {@endtemplate}
 class MediaPlayer extends ChangeNotifier with AudioServiceMixin, DiscordRpcMixin, HistoryPlaylistMixin, MprisMixin, SystemMediaTransportControlsMixin, WindowsTaskbarMixin implements BaseMediaPlayer {

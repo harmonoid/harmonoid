@@ -12,6 +12,14 @@ import 'package:path/path.dart' as path;
 ///
 /// {@endtemplate}
 class AndroidStorageController {
+  static const kGetStorageDirectoriesMethodName = 'getStorageDirectories';
+  static const kGetCacheDirectoryMethodName = 'getCacheDirectory';
+  static const kGetVersion = 'getVersion';
+  static const kDelete = 'delete';
+  static const kNotifyDeleteMethodName = 'notifyDelete';
+
+  static const kDeletePathsArg = 'paths';
+
   /// Singleton instance.
   static final AndroidStorageController instance = AndroidStorageController._();
 
@@ -50,7 +58,7 @@ class AndroidStorageController {
         debugPrint(call.method.toString());
         debugPrint(call.arguments.toString());
         switch (call.method) {
-          case 'delete':
+          case kNotifyDeleteMethodName:
             {
               _deleteCompleter.complete(call.arguments);
               break;
@@ -60,47 +68,36 @@ class AndroidStorageController {
     );
   }
 
-  /// The value of `android.os.Build.VERSION.SDK_INT`. This is used to determine the Android version.
   int version = -1;
 
-  /// Returns the cache directory.
-  Future<Directory> get cache async {
-    final result = await _channel.invokeMethod('cache');
-    return Directory(path.normalize(result));
-  }
-
-  /// Returns the [List] of available external storages e.g. internal storage & SD card.
-  Future<List<Directory>> get external async {
-    final result = await _channel.invokeMethod('external');
+  Future<List<Directory>> getStorageDirectories() async {
+    final result = await _channel.invokeMethod(kGetStorageDirectoriesMethodName);
     return result.map((e) => Directory(path.normalize(e))).toList().cast<Directory>();
   }
 
-  /// Deletes given [File]s from the user's device.
-  /// Returns [bool] based on success & user approval.
-  ///
-  /// Deleting multiple [File]s at once is not supported only on Android 10 (API 29).
-  ///
+  Future<Directory> getCacheDirectory() async {
+    final result = await _channel.invokeMethod(kGetCacheDirectoryMethodName);
+    return Directory(path.normalize(result));
+  }
+
+  Future<int> getVersion() async {
+    final result = await _channel.invokeMethod(kGetVersion);
+    return result;
+  }
+
   Future<bool> delete(Iterable<File> files) async {
     _deleteCompleter = Completer();
     await _channel.invokeMethod(
-      'delete',
+      kDelete,
       {
-        'paths': files.map((e) => e.path).toList(),
+        kDeletePathsArg: files.map((e) => e.path).toList(),
       },
     );
     final result = await _deleteCompleter.future;
     return result;
   }
 
-  /// Returns the value of `android.os.Build.VERSION.SDK_INT`. This is used to determine the Android version.
-  Future<int> getVersion() async {
-    final result = await _channel.invokeMethod('version');
-    return result;
-  }
-
-  /// Used by [delete] to receive pending result from platform channels.
   Completer<bool> _deleteCompleter = Completer<bool>();
 
-  /// [MethodChannel] used to communicate with the native platform.
-  final MethodChannel _channel = const MethodChannel('com.alexmercerind.harmonoid.AndroidStorageController');
+  final MethodChannel _channel = const MethodChannel('com.alexmercerind.harmonoid/storage_controller');
 }

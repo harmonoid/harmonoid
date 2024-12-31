@@ -68,7 +68,7 @@ class Intent {
       // Android: Attempt to refresh the resource.
       try {
         if (Platform.isAndroid) {
-          final result = await _intentControllerMethodChannel.invokeMethod('getUrl');
+          final result = await _intentControllerMethodChannel.invokeMethod('~');
           if (result != null) {
             _resource = result;
           }
