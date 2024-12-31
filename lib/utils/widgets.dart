@@ -142,6 +142,7 @@ class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
 
 class DesktopMediaLibraryFloatingSortButton extends StatefulWidget {
   final ValueNotifier<bool> floatingNotifier;
+
   const DesktopMediaLibraryFloatingSortButton({
     super.key,
     required this.floatingNotifier,
@@ -582,6 +583,7 @@ class MobileMediaLibraryHeader extends StatelessWidget {
 
 class MobileMediaLibrarySortButton extends StatefulWidget {
   final String path;
+
   const MobileMediaLibrarySortButton({super.key, required this.path});
 
   @override
@@ -847,6 +849,7 @@ class MobileMediaLibrarySortButtonPopupMenuItem<T> extends StatelessWidget {
 
 class ScaleOnHover extends StatefulWidget {
   final Widget child;
+
   const ScaleOnHover({super.key, required this.child});
 
   @override
@@ -855,6 +858,7 @@ class ScaleOnHover extends StatefulWidget {
 
 class ScaleOnHoverState extends State<ScaleOnHover> {
   double scale = 1.0;
+
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
@@ -874,6 +878,7 @@ class ScaleOnHoverState extends State<ScaleOnHover> {
 class ContextMenuListener extends StatefulWidget {
   final Widget child;
   final void Function(RelativeRect position) onSecondaryPress;
+
   const ContextMenuListener({super.key, required this.child, required this.onSecondaryPress});
 
   @override
@@ -1013,6 +1018,7 @@ class MediaLibraryCreatePlaylistButton extends StatelessWidget {
 class HyperLink extends StatefulWidget {
   final TextSpan text;
   final TextStyle? style;
+
   const HyperLink({
     super.key,
     required this.text,
@@ -1184,6 +1190,7 @@ class MobileNavigationBar extends StatelessWidget {
 
 class ShowAllButton extends StatelessWidget {
   final void Function()? onPressed;
+
   const ShowAllButton({super.key, this.onPressed});
 
   @override
@@ -1267,10 +1274,10 @@ class ScrollableSlider extends StatelessWidget {
           if (value != null) {
             return SfSliderTheme(
               data: SfSliderThemeData(
-                activeTrackHeight: isMobile ? null : 4.0,
-                inactiveTrackHeight: isMobile ? null : 2.0,
-                thumbRadius: isMobile ? null : 6.0,
-                overlayRadius: isMobile ? null : 12.0,
+                activeTrackHeight: 4.0,
+                inactiveTrackHeight: 2.0,
+                thumbRadius: 6.0,
+                overlayRadius: 12.0,
                 // Map colors from Slider (package:flutter) to SfSlider (package:syncfusion_flutter_sliders).
                 thumbColor: SliderTheme.of(context).thumbColor,
                 overlayColor: SliderTheme.of(context).overlayColor,
@@ -1294,10 +1301,10 @@ class ScrollableSlider extends StatelessWidget {
           if (values != null) {
             return SfRangeSliderTheme(
               data: SfRangeSliderThemeData(
-                activeTrackHeight: isMobile ? null : 4.0,
-                inactiveTrackHeight: isMobile ? null : 2.0,
-                thumbRadius: isMobile ? null : 6.0,
-                overlayRadius: isMobile ? null : 12.0,
+                activeTrackHeight: 4.0,
+                inactiveTrackHeight: 2.0,
+                thumbRadius: 6.0,
+                overlayRadius: 12.0,
                 // Map colors from Slider (package:flutter) to SfSlider (package:syncfusion_flutter_sliders).
                 thumbColor: SliderTheme.of(context).thumbColor,
                 overlayColor: SliderTheme.of(context).overlayColor,
@@ -1346,6 +1353,7 @@ class DefaultTextField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final ScrollPhysics? scrollPhysics;
   final TextAlign? textAlign;
+
   const DefaultTextField({
     super.key,
     this.controller,
@@ -1418,6 +1426,7 @@ class DefaultTextFormField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final ScrollPhysics? scrollPhysics;
   final TextAlign? textAlign;
+
   const DefaultTextFormField({
     super.key,
     this.initialValue,
@@ -1475,6 +1484,7 @@ class DefaultTextFormField extends StatelessWidget {
 
 class NowPlayingBarScrollHideNotifier extends StatelessWidget {
   final Widget child;
+
   const NowPlayingBarScrollHideNotifier({super.key, required this.child});
 
   @override
@@ -2008,6 +2018,7 @@ class StatefulPageViewBuilder extends StatefulWidget {
   final Widget Function(BuildContext, int) itemBuilder;
   final int? itemCount;
   final ScrollPhysics? physics;
+
   const StatefulPageViewBuilder({
     super.key,
     required this.index,

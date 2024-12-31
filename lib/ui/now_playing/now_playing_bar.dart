@@ -40,7 +40,7 @@ class NowPlayingBarState extends State<NowPlayingBar> {
   }
 
   Widget _buildMobileLayout(BuildContext context) {
-    throw UnimplementedError();
+    return const SizedBox.shrink();
   }
 
   @override

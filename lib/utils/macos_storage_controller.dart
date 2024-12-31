@@ -19,6 +19,10 @@ class MacOSStorageController {
   static const kInvalidateAccessMethodName = 'invalidateAccess';
   static const kGetDefaultMediaLibraryDirectoryMethodName = 'getDefaultMediaLibraryDirectory';
 
+  static const kPickFileAllowedFileTypesArg = 'allowedFileTypes';
+  static const kPreserveAccessPathArg = 'path';
+  static const kInvalidateAccessPathArg = 'path';
+
   /// Singleton instance.
   static const MacOSStorageController instance = MacOSStorageController._();
 
@@ -65,7 +69,7 @@ class MacOSStorageController {
     final result = await _channel.invokeMethod(
       kPickFileMethodName,
       {
-        'allowedFileTypes': allowedFileTypes,
+        kPickFileAllowedFileTypesArg: allowedFileTypes,
       },
     );
 
@@ -83,7 +87,7 @@ class MacOSStorageController {
     await _channel.invokeMethod(
       kPreserveAccessMethodName,
       {
-        'path': path.normalize(fileSystemEntity.path),
+        kPreserveAccessPathArg: path.normalize(fileSystemEntity.path),
       },
     );
   }
@@ -92,9 +96,7 @@ class MacOSStorageController {
     await _channel.invokeMethod(
       kInvalidateAccessMethodName,
       {
-        'path': path.normalize(
-          fileSystemEntity.path,
-        ),
+        kInvalidateAccessPathArg: path.normalize(fileSystemEntity.path),
       },
     );
   }

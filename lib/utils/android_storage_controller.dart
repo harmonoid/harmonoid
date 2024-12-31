@@ -12,6 +12,7 @@ import 'package:path/path.dart' as path;
 ///
 /// {@endtemplate}
 class AndroidStorageController {
+  static const kMethodChannelName = 'com.alexmercerind.harmonoid/storage_controller';
   static const kGetStorageDirectoriesMethodName = 'getStorageDirectories';
   static const kGetCacheDirectoryMethodName = 'getCacheDirectory';
   static const kGetVersion = 'getVersion';
@@ -99,5 +100,5 @@ class AndroidStorageController {
 
   Completer<bool> _deleteCompleter = Completer<bool>();
 
-  final MethodChannel _channel = const MethodChannel('com.alexmercerind.harmonoid/storage_controller');
+  final MethodChannel _channel = const MethodChannel(kMethodChannelName);
 }

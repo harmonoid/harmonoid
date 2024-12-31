@@ -27,7 +27,7 @@ class _NowPlayingScreenSectionState extends State<NowPlayingScreenSection> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Text(
-            '${Localization.instance.LYRICS_SIZE} ${Configuration.instance.lyricsViewUnfocusedFontSize.toStringAsFixed(1)}/${Configuration.instance.lyricsViewFocusedFontSize.toStringAsFixed(1)}',
+            '${Localization.instance.LYRICS_SIZE} ${Configuration.instance.lyricsViewUnfocusedFontSize.toInt()}/${Configuration.instance.lyricsViewFocusedFontSize.toInt()}',
             style: Theme.of(context).textTheme.bodyLarge,
           ),
         ),
@@ -44,7 +44,7 @@ class _NowPlayingScreenSectionState extends State<NowPlayingScreenSection> {
             showLabels: true,
             labelFormatterCallback: (value, _) {
               return switch (value) {
-                12.0 || 28.0 || 64.0 || 128.0 => '${value ~/ 1}.0',
+                12.0 || 28.0 || 64.0 || 128.0 => '${value.toInt()}',
                 _ => '',
               };
             },
@@ -64,7 +64,11 @@ class _NowPlayingScreenSectionState extends State<NowPlayingScreenSection> {
         const SizedBox(height: 16.0),
         if (/* ONLY DESKTOP */ isDesktop)
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0 - textButtonPadding),
+            padding: EdgeInsets.only(
+              left: 16.0 - textButtonPadding,
+              right: 16.0 - textButtonPadding,
+              bottom: 16.0,
+            ),
             child: TextButton(
               onPressed: () async {
                 final directory = NowPlayingVisualsNotifier.instance.directory;
@@ -76,7 +80,6 @@ class _NowPlayingScreenSectionState extends State<NowPlayingScreenSection> {
               child: Text(label(Localization.instance.MODIFY_BACKGROUND_IMAGES)),
             ),
           ),
-        const SizedBox(height: 16.0),
         ListItem(
           trailing: Switch(
             value: Configuration.instance.nowPlayingDisplayUponPlay,

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:lrc/lrc.dart';
@@ -17,7 +16,6 @@ import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/playable.dart';
-import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/models/lyric.dart';
 import 'package:harmonoid/models/lyrics.dart';
 import 'package:harmonoid/models/playable.dart';
@@ -245,66 +243,66 @@ class LyricsNotifier extends ChangeNotifier {
 
   /// Initializes the notification.
   Future<void> initializeNotification() async {
-    if (!Platform.isAndroid) return;
-    if (!(AndroidStorageController.instance.version < 33 || await Permission.notification.isGranted)) return;
-    if (_initializeNotificationInvoked) return;
-    _initializeNotificationInvoked = true;
-    await AwesomeNotifications().initialize(
-      'resource://drawable/ic_stat_format_color_text',
-      [
-        NotificationChannel(
-          channelKey: _kNotificationChannelKey,
-          channelGroupKey: _kNotificationChannelKey,
-          channelName: _kNotificationChannelName,
-          channelDescription: _kNotificationChannelDescription,
-          playSound: false,
-          enableVibration: false,
-          enableLights: false,
-          locked: false,
-          criticalAlerts: false,
-          onlyAlertOnce: true,
-          importance: NotificationImportance.Low,
-          defaultPrivacy: NotificationPrivacy.Public,
-        ),
-      ],
-      debug: kDebugMode,
-    );
-    AwesomeNotifications().setListeners(onActionReceivedMethod: _onNotificationActionReceived);
+    // if (!Platform.isAndroid) return;
+    // if (!(AndroidStorageController.instance.version < 33 || await Permission.notification.isGranted)) return;
+    // if (_initializeNotificationInvoked) return;
+    // _initializeNotificationInvoked = true;
+    // await AwesomeNotifications().initialize(
+    //   'resource://drawable/ic_stat_format_color_text',
+    //   [
+    //     NotificationChannel(
+    //       channelKey: _kNotificationChannelKey,
+    //       channelGroupKey: _kNotificationChannelKey,
+    //       channelName: _kNotificationChannelName,
+    //       channelDescription: _kNotificationChannelDescription,
+    //       playSound: false,
+    //       enableVibration: false,
+    //       enableLights: false,
+    //       locked: false,
+    //       criticalAlerts: false,
+    //       onlyAlertOnce: true,
+    //       importance: NotificationImportance.Low,
+    //       defaultPrivacy: NotificationPrivacy.Public,
+    //     ),
+    //   ],
+    //   debug: kDebugMode,
+    // );
+    // AwesomeNotifications().setListeners(onActionReceivedMethod: _onNotificationActionReceived);
   }
 
   /// Displayes the notification.
   Future<void> displayNotification(String body) async {
-    return ensureNotification(() async {
-      await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-          id: _kNotificationID,
-          channelKey: _kNotificationChannelKey,
-          groupKey: _kNotificationChannelKey,
-          title: _current?.title ?? '',
-          summary: _current?.title ?? '',
-          body: body,
-          showWhen: false,
-          wakeUpScreen: false,
-          autoDismissible: true,
-          actionType: ActionType.DisabledAction,
-          category: NotificationCategory.Status,
-          notificationLayout: NotificationLayout.Messaging,
-        ),
-        actionButtons: [
-          NotificationActionButton(
-            key: _kNotificationHideButtonKey,
-            label: Localization.instance.HIDE,
-          ),
-        ],
-      );
-    });
+    // return ensureNotification(() async {
+    //   await AwesomeNotifications().createNotification(
+    //     content: NotificationContent(
+    //       id: _kNotificationID,
+    //       channelKey: _kNotificationChannelKey,
+    //       groupKey: _kNotificationChannelKey,
+    //       title: _current?.title ?? '',
+    //       summary: _current?.title ?? '',
+    //       body: body,
+    //       showWhen: false,
+    //       wakeUpScreen: false,
+    //       autoDismissible: true,
+    //       actionType: ActionType.DisabledAction,
+    //       category: NotificationCategory.Status,
+    //       notificationLayout: NotificationLayout.Messaging,
+    //     ),
+    //     actionButtons: [
+    //       NotificationActionButton(
+    //         key: _kNotificationHideButtonKey,
+    //         label: Localization.instance.HIDE,
+    //       ),
+    //     ],
+    //   );
+    // });
   }
 
   /// Dismisses the notification.
   FutureOr<void> dismissNotification() {
-    return ensureNotification(() async {
-      await AwesomeNotifications().dismiss(_kNotificationID);
-    });
+    // return ensureNotification(() async {
+    //   await AwesomeNotifications().dismiss(_kNotificationID);
+    // });
   }
 
   /// Invokes the [callback] if the notification can be handled.
@@ -330,13 +328,13 @@ class LyricsNotifier extends ChangeNotifier {
   final SplayTreeMap<int, int> _timestampsAndIndexes = SplayTreeMap<int, int>();
   final Lock _lock = Lock();
 
-  @pragma('vm:entry-point')
-  static Future<void> _onNotificationActionReceived(ReceivedAction action) async {
-    if (action.buttonKeyPressed == _kNotificationHideButtonKey) {
-      instance._notificationVisible = false;
-      AwesomeNotifications().dismiss(_kNotificationID);
-    }
-  }
+  // @pragma('vm:entry-point')
+  // static Future<void> _onNotificationActionReceived(ReceivedAction action) async {
+  //   if (action.buttonKeyPressed == _kNotificationHideButtonKey) {
+  //     instance._notificationVisible = false;
+  //     AwesomeNotifications().dismiss(_kNotificationID);
+  //   }
+  // }
 
   /// Notification: ID.
   static const _kNotificationID = 7;

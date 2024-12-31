@@ -27,6 +27,7 @@ import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_screen.dart';
 import 'package:harmonoid/ui/settings/settings_screen.dart';
 import 'package:harmonoid/utils/material_transition_page.dart';
+import 'package:harmonoid/utils/rendering.dart';
 
 const String kMediaLibraryPath = 'media-library';
 
@@ -48,6 +49,7 @@ const String kSearchItemsPath = 'search-items';
 class SearchItemsPathExtra {
   final String query;
   final List<MediaLibraryItem> items;
+
   const SearchItemsPathExtra({
     required this.query,
     required this.items,
@@ -60,6 +62,7 @@ class AlbumPathExtra {
   final Album album;
   final List<Track> tracks;
   final List<Color>? palette;
+
   const AlbumPathExtra({
     required this.album,
     required this.tracks,
@@ -73,6 +76,7 @@ class ArtistPathExtra {
   final Artist artist;
   final List<Track> tracks;
   final List<Color>? palette;
+
   const ArtistPathExtra({
     required this.artist,
     required this.tracks,
@@ -86,6 +90,7 @@ class GenrePathExtra {
   final Genre genre;
   final List<Track> tracks;
   final List<Color>? palette;
+
   const GenrePathExtra({
     required this.genre,
     required this.tracks,
@@ -99,6 +104,7 @@ class PlaylistPathExtra {
   final Playlist playlist;
   final List<PlaylistEntry> entries;
   final List<Color>? palette;
+
   const PlaylistPathExtra({
     required this.playlist,
     required this.entries,
@@ -110,6 +116,7 @@ const String kInaccessibleDirectoriesPath = 'inaccessible-directories';
 
 class InaccessibleDirectoriesPathExtra {
   final List<Directory> directories;
+
   const InaccessibleDirectoriesPathExtra({
     required this.directories,
   });
@@ -134,16 +141,25 @@ final router = GoRouter(
     ShellRoute(
       navigatorKey: homeNavigatorKey,
       builder: (context, state, child) {
-        return Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            Positioned.fill(
-              bottom: NowPlayingBar.height,
-              child: HomeScreen(child: child),
-            ),
-            const NowPlayingBar(),
-          ],
-        );
+        if (isDesktop) {
+          return Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              Positioned.fill(
+                bottom: NowPlayingBar.height,
+                child: HomeScreen(child: child),
+              ),
+              const NowPlayingBar(),
+            ],
+          );
+        }
+        if (isTablet) {
+          throw UnimplementedError();
+        }
+        if (isMobile) {
+          return HomeScreen(child: child);
+        }
+        throw UnimplementedError();
       },
       routes: [
         GoRoute(

@@ -19,7 +19,7 @@ class NowPlayingMobileNotifier {
 
   /// Whether the [NowPlayingBarMobile] is in restored state.
   // TODO:
-  final bool restored = true;
+  final bool restored = false;
 
   /// Offset for the bottom navigation bar & floating action button.
   final ValueNotifier<double> bottomNavigationBarOffset = ValueNotifier<double>(0.0);

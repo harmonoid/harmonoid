@@ -1,10 +1,8 @@
 // ignore_for_file: implementation_imports
-import 'dart:io';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:dynamic_color/src/corepalette_to_colorscheme.dart';
 import 'package:dynamic_color/src/dynamic_color_plugin.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 /// {@template theme_notifier}
 ///
@@ -130,13 +128,13 @@ class ThemeNotifier extends ChangeNotifier {
   final ColorScheme? systemLightColorScheme;
   final ColorScheme? systemDarkColorScheme;
 
-  Future<void> update({
+  void update({
     BuildContext? context,
     ThemeMode? themeMode,
     int? materialStandard,
     bool? systemColorScheme,
     AnimationDuration? animationDuration,
-  }) async {
+  }) {
     this.context = context ?? this.context;
     this.themeMode = themeMode ?? this.themeMode;
     this.materialStandard = materialStandard ?? this.materialStandard;
@@ -147,46 +145,6 @@ class ThemeNotifier extends ChangeNotifier {
     materialStandard ??= this.materialStandard;
     systemColorScheme ??= this.systemColorScheme;
     animationDuration ??= this.animationDuration;
-    if (context != null) {
-      if (Platform.isAndroid || Platform.isIOS) {
-        final theme = Theme.of(context);
-        final brightness = theme.brightness == Brightness.dark ? Brightness.light : Brightness.dark;
-        switch (materialStandard) {
-          case 3:
-            SystemChrome.setSystemUIOverlayStyle(
-              SystemUiOverlayStyle(
-                statusBarBrightness: brightness,
-                statusBarIconBrightness: brightness,
-                statusBarColor: Colors.transparent,
-                // Edge-to-edge.
-                systemNavigationBarIconBrightness: brightness,
-                systemNavigationBarColor: theme.navigationBarTheme.backgroundColor,
-                systemNavigationBarDividerColor: theme.navigationBarTheme.backgroundColor,
-              ),
-            );
-            break;
-          case 2:
-            SystemChrome.setSystemUIOverlayStyle(
-              SystemUiOverlayStyle(
-                statusBarBrightness: brightness,
-                statusBarIconBrightness: brightness,
-                statusBarColor: Colors.transparent,
-                // Black.
-                systemNavigationBarIconBrightness: Brightness.dark,
-                systemNavigationBarColor: Colors.black,
-                systemNavigationBarDividerColor: Colors.black,
-              ),
-            );
-            break;
-          default:
-            throw ArgumentError.value(
-              materialStandard,
-              'standard',
-              'Only valid values are 2 & 3.',
-            );
-        }
-      }
-    }
     notifyListeners();
   }
 

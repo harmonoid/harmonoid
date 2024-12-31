@@ -24,7 +24,7 @@ class _DisplaySectionState extends State<DisplaySection> {
       slow: Duration(milliseconds: (value * 3 / 2).round()),
     );
     await Configuration.instance.set(themeAnimationDuration: animationDuration);
-    await ThemeNotifier.instance.update(animationDuration: animationDuration);
+    ThemeNotifier.instance.update(animationDuration: animationDuration);
     setState(() {});
   }
 
@@ -67,7 +67,7 @@ class _DisplaySectionState extends State<DisplaySection> {
             );
             if (result != null) {
               await Configuration.instance.set(themeMode: result);
-              await ThemeNotifier.instance.update(themeMode: result);
+              ThemeNotifier.instance.update(themeMode: result);
               context.pop();
               setState(() {});
             }
@@ -90,7 +90,7 @@ class _DisplaySectionState extends State<DisplaySection> {
             );
             if (result != null) {
               await Configuration.instance.set(themeMaterialStandard: result);
-              await ThemeNotifier.instance.update(materialStandard: result);
+              ThemeNotifier.instance.update(materialStandard: result);
               context.pop();
               setState(() {});
             }
@@ -139,7 +139,7 @@ class _DisplaySectionState extends State<DisplaySection> {
             value: Configuration.instance.themeSystemColorScheme,
             onChanged: (value) async {
               await Configuration.instance.set(themeSystemColorScheme: value);
-              await ThemeNotifier.instance.update(systemColorScheme: value);
+              ThemeNotifier.instance.update(systemColorScheme: value);
               setState(() {});
             },
           ),
@@ -147,7 +147,7 @@ class _DisplaySectionState extends State<DisplaySection> {
           onTap: () async {
             final value = Configuration.instance.themeSystemColorScheme;
             await Configuration.instance.set(themeSystemColorScheme: !value);
-            await ThemeNotifier.instance.update(systemColorScheme: !value);
+            ThemeNotifier.instance.update(systemColorScheme: !value);
             setState(() {});
           },
         ),

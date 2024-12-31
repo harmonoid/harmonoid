@@ -39,7 +39,7 @@ class _AboutScreenState extends State<AboutScreen> {
 
   Color get _fg1M3 {
     final theme = Theme.of(context);
-    return theme.brightness == Brightness.dark ? theme.colorScheme.onSurfaceVariant : theme.colorScheme.primaryFixedDim;
+    return theme.brightness == Brightness.dark ? theme.colorScheme.onSurfaceVariant : theme.colorScheme.primaryContainer;
   }
 
   @override

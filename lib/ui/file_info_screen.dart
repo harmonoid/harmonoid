@@ -39,6 +39,7 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
         cover: _cover,
         timeout: kTimeout,
       );
+      _metadata?['resource'] = widget.resource;
       setState(() {});
     });
   }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:harmonoid/mappers/build_context.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
@@ -296,61 +297,67 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
   }
 
   Widget _buildMobileLayout(BuildContext context) {
-    return Consumer<MediaLibrary>(
-      builder: (context, mediaLibrary, _) {
-        return Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: Stack(
-            children: [
-              NotificationListener<ScrollNotification>(
-                onNotification: (notification) {
-                  if (notification is UserScrollNotification) {
-                    if (notification.metrics.axis == Axis.vertical) {
-                      if (notification.direction == ScrollDirection.forward) {
-                        _mediaLibrarySearchBarOffsetNotifier.value = 0.0;
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: context.toSystemUiOverlayStyle(
+        systemNavigationBarColor: isMaterial3 ? Theme.of(context).navigationBarTheme.backgroundColor : null,
+        systemNavigationBarDividerColor: isMaterial3 ? Theme.of(context).navigationBarTheme.backgroundColor : null,
+      ),
+      child: Consumer<MediaLibrary>(
+        builder: (context, mediaLibrary, _) {
+          return Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: Stack(
+              children: [
+                NotificationListener<ScrollNotification>(
+                  onNotification: (notification) {
+                    if (notification is UserScrollNotification) {
+                      if (notification.metrics.axis == Axis.vertical) {
+                        if (notification.direction == ScrollDirection.forward) {
+                          _mediaLibrarySearchBarOffsetNotifier.value = 0.0;
+                        }
+                        if (notification.direction == ScrollDirection.reverse) {
+                          _mediaLibrarySearchBarOffsetNotifier.value = -1.0 * mediaLibraryScrollViewBuilderPadding.top;
+                        }
                       }
-                      if (notification.direction == ScrollDirection.reverse) {
-                        _mediaLibrarySearchBarOffsetNotifier.value = -1.0 * mediaLibraryScrollViewBuilderPadding.top;
+                    } else {
+                      if (notification.metrics.axis == Axis.vertical) {
+                        if (notification.metrics.pixels == 0.0) {
+                          _mediaLibrarySearchBarOffsetNotifier.value = 0.0;
+                        }
                       }
                     }
-                  } else {
-                    if (notification.metrics.axis == Axis.vertical) {
-                      if (notification.metrics.pixels == 0.0) {
-                        _mediaLibrarySearchBarOffsetNotifier.value = 0.0;
-                      }
-                    }
-                  }
-                  return false;
-                },
-                child: mediaLibrary.tracks.isEmpty
-                    ? const Center(
-                        child: MediaLibraryNoItemsBanner(),
-                      )
-                    : widget.child,
-              ),
-              ValueListenableBuilder<double>(
-                valueListenable: _mediaLibrarySearchBarOffsetNotifier,
-                builder: (context, offset, _) {
-                  return AnimatedPositioned(
-                    top: offset,
-                    left: 0.0,
-                    right: 0.0,
-                    curve: Curves.easeInOut,
-                    duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
-                    child: const MediaLibrarySearchBar(),
-                  );
-                },
-              ),
-              Positioned(
-                right: 16.0,
-                bottom: 16.0,
-                child: _path == kPlaylistsPath ? const MediaLibraryCreatePlaylistButton() : const MediaLibraryRefreshButton(),
-              ),
-            ],
-          ),
-          bottomNavigationBar: const MobileNavigationBar(),
-        );
-      },
+                    return false;
+                  },
+                  child: mediaLibrary.tracks.isEmpty
+                      ? const Center(
+                          child: MediaLibraryNoItemsBanner(),
+                        )
+                      : widget.child,
+                ),
+                ValueListenableBuilder<double>(
+                  valueListenable: _mediaLibrarySearchBarOffsetNotifier,
+                  builder: (context, offset, _) {
+                    return AnimatedPositioned(
+                      top: offset,
+                      left: 0.0,
+                      right: 0.0,
+                      curve: Curves.easeInOut,
+                      duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+                      child: const MediaLibrarySearchBar(),
+                    );
+                  },
+                ),
+                Positioned(
+                  right: 16.0,
+                  bottom: 16.0,
+                  child: _path == kPlaylistsPath ? const MediaLibraryCreatePlaylistButton() : const MediaLibraryRefreshButton(),
+                ),
+              ],
+            ),
+            bottomNavigationBar: const MobileNavigationBar(),
+          );
+        },
+      ),
     );
   }
 

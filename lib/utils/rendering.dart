@@ -15,7 +15,6 @@ import 'package:uri_parser/uri_parser.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
-import 'package:harmonoid/extensions/go_router.dart';
 import 'package:harmonoid/extensions/playable.dart';
 import 'package:harmonoid/extensions/track.dart';
 import 'package:harmonoid/localization/localization.dart';
@@ -256,7 +255,7 @@ Future<int?> showMenuItems(BuildContext context, List<PopupMenuItem<int>> items,
           for (int i = 0; i < items.length; i++) ...[
             InkWell(
               onTap: () {
-                result = i;
+                result = items[i].value;
                 Navigator.of(context).maybePop();
               },
               child: items[i].child,
@@ -770,8 +769,8 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
       }
       break;
     case 1:
-      await Share.shareFiles(
-        [track.uri],
+      await Share.shareXFiles(
+        [XFile(track.uri)],
         subject: track.shareSubject,
       );
       break;
@@ -782,17 +781,15 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
       await MediaPlayer.instance.add([track.toPlayable()]);
       break;
     case 4:
-      {
-        await navigateToAlbum(
-          context,
-          AlbumLookupKey(
-            album: track.album,
-            albumArtist: track.albumArtist,
-            year: track.year,
-          ),
-        );
-        break;
-      }
+      await navigateToAlbum(
+        context,
+        AlbumLookupKey(
+          album: track.album,
+          albumArtist: track.albumArtist,
+          year: track.year,
+        ),
+      );
+      break;
     case 5:
       File(track.uri).explore_();
       break;
@@ -808,7 +805,7 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
       break;
     case 8:
       final file = await pickFile(
-        // Compatiblitity issues with Android 5.0: SDK 21.
+        // Compatibility issues with Android 5.0: SDK 21.
         extensions: Platform.isAndroid ? null : {'LRC'},
       );
       if (file != null) {
@@ -1224,21 +1221,8 @@ InputDecoration inputDecorationMobile(BuildContext context, String hintText) {
 }
 
 Future<void> recursivelyPopNavigator(BuildContext context) async {
-  if (isDesktop) {
-    bool result;
-    try {
-      result = ![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath, kSearchPath].contains(router.location.split('/').last);
-    } catch (_) {
-      result = true;
-    }
-    if (result) rootNavigatorKey.currentContext!.go('/');
+  while (router.canPop()) {
+    router.pop();
   }
-  if (isMobile) {
-    while (Navigator.of(context).canPop()) {
-      Navigator.of(context).pop();
-      if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(router.routerDelegate.currentConfiguration.uri.pathSegments.last)) {
-        break;
-      }
-    }
-  }
+  router.go('/');
 }
