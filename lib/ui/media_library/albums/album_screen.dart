@@ -16,6 +16,7 @@ class AlbumScreen extends StatefulWidget {
   final Album album;
   final List<Track> tracks;
   final List<Color>? palette;
+
   const AlbumScreen({super.key, required this.album, required this.tracks, this.palette});
 
   @override
@@ -24,7 +25,9 @@ class AlbumScreen extends StatefulWidget {
 
 class _AlbumScreenState extends State<AlbumScreen> {
   late final _tracks = widget.tracks;
+
   String get _title => widget.album.album.isEmpty ? kDefaultAlbum : widget.album.album;
+
   String get _subtitle => isDesktop
       ? [
           '${Localization.instance.ARTIST}: ${widget.album.albumArtist.isEmpty ? kDefaultArtist : widget.album.albumArtist}',
@@ -32,8 +35,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
           '${Localization.instance.TRACKS}: ${_tracks.length}'
         ].join('\n')
       : [
-          widget.album.albumArtist.isEmpty ? kDefaultArtist : widget.album.albumArtist,
-          widget.album.year == 0 ? kDefaultYear : widget.album.year,
+          if (widget.album.albumArtist.isNotEmpty) widget.album.albumArtist,
+          if (widget.album.year != 0) widget.album.year,
         ].join('\n');
 
   @override

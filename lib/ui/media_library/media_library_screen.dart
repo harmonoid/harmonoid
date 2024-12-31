@@ -5,7 +5,6 @@ import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:harmonoid/mappers/build_context.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
@@ -13,6 +12,7 @@ import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/extensions/build_context.dart';
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/mappers/build_context.dart';
 import 'package:harmonoid/ui/media_library/media_library_inaccessible_directories_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_no_items_banner.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
@@ -298,10 +298,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
 
   Widget _buildMobileLayout(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: context.toSystemUiOverlayStyle(
-        systemNavigationBarColor: isMaterial3 ? Theme.of(context).navigationBarTheme.backgroundColor : null,
-        systemNavigationBarDividerColor: isMaterial3 ? Theme.of(context).navigationBarTheme.backgroundColor : null,
-      ),
+      value: context.toSystemUiOverlayStyle(),
       child: Consumer<MediaLibrary>(
         builder: (context, mediaLibrary, _) {
           return Scaffold(

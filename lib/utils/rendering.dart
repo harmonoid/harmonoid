@@ -249,19 +249,22 @@ Future<int?> showMenuItems(BuildContext context, List<PopupMenuItem<int>> items,
       isScrollControlled: true,
       elevation: kDefaultHeavyElevation,
       showDragHandle: isMaterial3OrGreater,
-      builder: (context) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (int i = 0; i < items.length; i++) ...[
-            InkWell(
-              onTap: () {
-                result = items[i].value;
-                Navigator.of(context).maybePop();
-              },
-              child: items[i].child,
-            ),
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (int i = 0; i < items.length; i++) ...[
+              InkWell(
+                onTap: () {
+                  result = items[i].value;
+                  Navigator.of(context).maybePop();
+                },
+                child: items[i].child,
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
     return result;
@@ -347,9 +350,7 @@ Future<String> showInput(
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setState) {
           return Container(
-            margin: EdgeInsets.only(
-              bottom: MediaQuery.of(ctx).viewInsets.bottom - MediaQuery.of(ctx).padding.bottom,
-            ),
+            margin: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
             padding: const EdgeInsets.all(8.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -994,6 +995,7 @@ Future<String?> pickResource(BuildContext context, String title) async {
         ),
         ListTile(
           onTap: () async {
+            await Navigator.of(ctx).maybePop();
             final resultValue = await showInput(
               context,
               title,
@@ -1116,7 +1118,7 @@ Future<void> showAddToPlaylistDialog(
         maxChildSize: 0.8,
         expand: false,
         builder: (context, controller) => ListView.builder(
-          padding: EdgeInsets.zero,
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
           controller: controller,
           shrinkWrap: true,
           itemCount: playlists.length,

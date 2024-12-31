@@ -33,12 +33,8 @@ Future<void> main(List<String> args) async {
   }
   try {
     if (Platform.isAndroid) {
-      SystemChrome.setPreferredOrientations(
-        [
-          DeviceOrientation.portraitUp,
-          DeviceOrientation.portraitDown,
-        ],
-      );
+      await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: SystemUiOverlay.values);
+      await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
       await AndroidStorageController.ensureInitialized();
       if (AndroidStorageController.instance.version >= 33) {
         if (await Permission.audio.isDenied || await Permission.audio.isPermanentlyDenied) {

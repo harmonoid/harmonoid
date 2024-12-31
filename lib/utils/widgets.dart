@@ -778,6 +778,7 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
                   const PopupMenuDivider(),
                   ...order,
                   if (!isDesktop && NowPlayingMobileNotifier.instance.restored) const SizedBox(height: kMobileNowPlayingBarHeight),
+                  SizedBox(height: MediaQuery.of(context).padding.bottom),
                 ],
               );
             },
@@ -1701,6 +1702,7 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                 ),
               ),
               if (!isDesktop && NowPlayingMobileNotifier.instance.restored) const SizedBox(height: kMobileNowPlayingBarHeight),
+              SizedBox(height: MediaQuery.of(context).padding.bottom),
             ],
           ),
         );

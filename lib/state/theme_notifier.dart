@@ -1,8 +1,11 @@
 // ignore_for_file: implementation_imports
+import 'dart:ui';
+
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:dynamic_color/src/corepalette_to_colorscheme.dart';
 import 'package:dynamic_color/src/dynamic_color_plugin.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// {@template theme_notifier}
 ///
@@ -145,6 +148,51 @@ class ThemeNotifier extends ChangeNotifier {
     materialStandard ??= this.materialStandard;
     systemColorScheme ??= this.systemColorScheme;
     animationDuration ??= this.animationDuration;
+
+    final isGestureNavigationEnabled = window.systemGestureInsets.bottom < 48.0 && window.systemGestureInsets.bottom != 0.0;
+
+    const statusBarColor = Colors.transparent;
+    final statusBarBrightness = switch (themeMode) {
+      ThemeMode.light => Brightness.light,
+      ThemeMode.dark => Brightness.dark,
+      _ => throw UnimplementedError(),
+    };
+    final statusBarIconBrightness = switch (themeMode) {
+      ThemeMode.light => Brightness.dark,
+      ThemeMode.dark => Brightness.light,
+      _ => throw UnimplementedError(),
+    };
+    final systemNavigationBarColor = switch ((materialStandard, themeMode, isGestureNavigationEnabled)) {
+      (2, _, _) => Colors.black,
+      (3, _, true) => Colors.transparent,
+      (3, ThemeMode.light, false) => Colors.white.withOpacity(0.02),
+      (3, ThemeMode.dark, false) => Colors.black.withOpacity(0.02),
+      _ => throw UnimplementedError(),
+    };
+    final systemNavigationBarDividerColor = switch ((materialStandard, themeMode, isGestureNavigationEnabled)) {
+      (2, _, _) => Colors.black,
+      (3, _, true) => Colors.transparent,
+      (3, ThemeMode.light, false) => Colors.white.withOpacity(0.02),
+      (3, ThemeMode.dark, false) => Colors.black.withOpacity(0.02),
+      _ => throw UnimplementedError(),
+    };
+    final systemNavigationBarIconBrightness = switch ((materialStandard, themeMode)) {
+      (2, _) => Brightness.light,
+      (3, ThemeMode.light) => Brightness.dark,
+      (3, ThemeMode.dark) => Brightness.light,
+      _ => throw UnimplementedError(),
+    };
+
+    final style = SystemUiOverlayStyle(
+      statusBarColor: statusBarColor,
+      statusBarBrightness: statusBarBrightness,
+      statusBarIconBrightness: statusBarIconBrightness,
+      systemNavigationBarColor: systemNavigationBarColor,
+      systemNavigationBarDividerColor: systemNavigationBarDividerColor,
+      systemNavigationBarIconBrightness: systemNavigationBarIconBrightness,
+    );
+    SystemChrome.setSystemUIOverlayStyle(style);
+
     notifyListeners();
   }
 
