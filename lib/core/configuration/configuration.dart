@@ -126,14 +126,16 @@ class Configuration extends ConfigurationBase {
 Future<String> getDefaultDirectory() async {
   if (Platform.isAndroid) {
     final result = await AndroidStorageController.instance.getCacheDirectory();
-    return result.path;
+    return path.normalize(result.path);
   } else if (Platform.isLinux) {
-    return path.normalize(Platform.environment['HOME']!);
+    final result = Platform.environment['HOME'];
+    return path.normalize(result!);
   } else if (Platform.isMacOS) {
-    final directory = await path.getApplicationSupportDirectory();
-    return directory.path;
+    final result = await path.getApplicationSupportDirectory();
+    return path.normalize(result.path);
   } else if (Platform.isWindows) {
-    // SHGetKnownFolderPath Win32 API call.
+    String? value;
+
     final rfid = GUIDFromString(FOLDERID_Profile);
     final result = calloc<PWSTR>();
     try {
@@ -143,19 +145,28 @@ Future<String> getDefaultDirectory() async {
         NULL,
         result,
       );
-      if (FAILED(hr)) {
-        throw WindowsException(hr);
+      if (SUCCEEDED(hr)) {
+        value ??= path.normalize(result.value.toDartString());
       }
-      return path.normalize(result.value.toDartString());
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
-      // Fallback.
-      return path.normalize(Platform.environment['USERPROFILE']!);
     } finally {
       calloc.free(rfid);
       calloc.free(result);
     }
+
+    try {
+      final result = Platform.environment['USERPROFILE'];
+      if (result != null) {
+        value ??= path.normalize(result);
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
+
+    return value!;
   }
   throw UnsupportedError('Unsupported platform: ${Platform.operatingSystem}');
 }
@@ -164,35 +175,50 @@ Future<String> getDefaultDirectory() async {
 Future<List<String>> getDefaultMediaLibraryDirectories() async {
   if (Platform.isAndroid) {
     final result = await AndroidStorageController.instance.getStorageDirectories();
-    return [result.first.path];
+    return [path.normalize(result.first.path)];
   } else if (Platform.isLinux) {
+    String? value;
+
     try {
-      // Invoke xdg-user-dir command.
       final result = await Process.run('xdg-user-dir', ['MUSIC']);
-      if (result.exitCode != 0) {
-        throw Exception('xdg-user-dir command failed with exit code ${result.exitCode}');
+      if (result.exitCode == 0) {
+        value ??= path.normalize(result.stdout.toString().trim());
       }
-      return [path.normalize(result.stdout.toString().trim())];
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
-      try {
-        // Fallback 1.
-        return [path.normalize(Platform.environment['XDG_MUSIC_DIR']!)];
-      } catch (exception, stacktrace) {
-        debugPrint(exception.toString());
-        debugPrint(stacktrace.toString());
-        // Fallback 2.
-        return [path.join(path.normalize(Platform.environment['HOME']!), 'Music')];
-      }
     }
+
+    try {
+      final result = Platform.environment['XDG_MUSIC_DIR'];
+      if (result != null) {
+        value ??= path.normalize(result);
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
+
+    try {
+      final result = Platform.environment['HOME'];
+      if (result != null) {
+        value ??= path.join(path.normalize(result), 'Music');
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
+
+    return [value!];
   } else if (Platform.isMacOS) {
-    final directory = await MacOSStorageController.instance.getDefaultMediaLibraryDirectory();
-    return [if (directory != null) directory.path];
+    final result = await MacOSStorageController.instance.getDefaultMediaLibraryDirectory();
+    return [if (result != null) result.path];
   } else if (Platform.isWindows) {
-    // SHGetKnownFolderPath Win32 API call.
+    String? value;
+
     final rfid = GUIDFromString(FOLDERID_Music);
     final result = calloc<PWSTR>();
+
     try {
       final hr = SHGetKnownFolderPath(
         rfid,
@@ -200,19 +226,28 @@ Future<List<String>> getDefaultMediaLibraryDirectories() async {
         NULL,
         result,
       );
-      if (FAILED(hr)) {
-        throw WindowsException(hr);
+      if (SUCCEEDED(hr)) {
+        value ??= path.normalize(result.value.toDartString());
       }
-      return [path.normalize(result.value.toDartString())];
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
-      // Fallback.
-      return [path.normalize(path.join(Platform.environment['USERPROFILE']!, 'Music'))];
     } finally {
       calloc.free(rfid);
       calloc.free(result);
     }
+
+    try {
+      final result = Platform.environment['USERPROFILE'];
+      if (result != null) {
+        value ??= path.join(path.normalize(result), 'Music');
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
+
+    return [value!];
   }
   throw UnsupportedError('Unsupported platform: ${Platform.operatingSystem}');
 }
