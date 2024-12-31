@@ -155,32 +155,32 @@ class ThemeNotifier extends ChangeNotifier {
     final statusBarBrightness = switch (themeMode) {
       ThemeMode.light => Brightness.light,
       ThemeMode.dark => Brightness.dark,
-      _ => throw UnimplementedError(),
+      _ => Brightness.light,
     };
     final statusBarIconBrightness = switch (themeMode) {
       ThemeMode.light => Brightness.dark,
       ThemeMode.dark => Brightness.light,
-      _ => throw UnimplementedError(),
+      _ => Brightness.dark,
     };
     final systemNavigationBarColor = switch ((materialStandard, themeMode, isGestureNavigationEnabled)) {
       (2, _, _) => Colors.black,
       (3, _, true) => Colors.transparent,
       (3, ThemeMode.light, false) => Colors.white.withOpacity(0.02),
       (3, ThemeMode.dark, false) => Colors.black.withOpacity(0.02),
-      _ => throw UnimplementedError(),
+      _ => Colors.transparent,
     };
     final systemNavigationBarDividerColor = switch ((materialStandard, themeMode, isGestureNavigationEnabled)) {
       (2, _, _) => Colors.black,
       (3, _, true) => Colors.transparent,
       (3, ThemeMode.light, false) => Colors.white.withOpacity(0.02),
       (3, ThemeMode.dark, false) => Colors.black.withOpacity(0.02),
-      _ => throw UnimplementedError(),
+      _ => Colors.transparent,
     };
     final systemNavigationBarIconBrightness = switch ((materialStandard, themeMode)) {
       (2, _) => Brightness.light,
       (3, ThemeMode.light) => Brightness.dark,
       (3, ThemeMode.dark) => Brightness.light,
-      _ => throw UnimplementedError(),
+      _ => Brightness.light,
     };
 
     final style = SystemUiOverlayStyle(
