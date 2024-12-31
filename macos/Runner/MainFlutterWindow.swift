@@ -10,6 +10,10 @@ class MainFlutterWindow: NSWindow {
     static let kPreserveAccessMethodName = "preserveAccess"
     static let kInvalidateAccessMethodName = "invalidateAccess"
     static let kGetDefaultMediaLibraryDirectoryMethodName = "getDefaultMediaLibraryDirectory"
+
+    static let kPickFileAllowedFileTypesArg = "allowedFileTypes"
+    static let kPreserveAccessPathArg = "path"
+    static let kInvalidateAccessPathArg = "path"
     
     private var storageControllerMethodChannel: FlutterMethodChannel?
     
@@ -69,7 +73,7 @@ class MainFlutterWindow: NSWindow {
         var value: String?
         
         let arguments = call.arguments as! [String: Any]
-        let allowedFileTypes = arguments["allowedFileTypes"] as! [String]
+        let allowedFileTypes = arguments[kPickFileAllowedFileTypesArg] as! [String]
         
         let panel = NSOpenPanel()
         panel.directoryURL = URL(fileURLWithPath: NSHomeDirectory())
@@ -88,7 +92,7 @@ class MainFlutterWindow: NSWindow {
         // https://developer.apple.com/documentation/security/accessing-files-from-the-macos-app-sandbox
         
         let arguments = call.arguments as! [String: Any]
-        let path = arguments["path"] as! String
+        let path = arguments[kPreserveAccessPathArg] as! String
         
         // Return early if bookmark is already saved.
         if let bookmark = UserDefaults.standard.data(forKey: "bookmark_\(path)") {
@@ -125,7 +129,7 @@ class MainFlutterWindow: NSWindow {
         // https://developer.apple.com/documentation/security/accessing-files-from-the-macos-app-sandbox
         
         let arguments = call.arguments as! [String: Any]
-        let path = arguments["path"] as! String
+        let path = arguments[kInvalidateAccessPathArg] as! String
         
         // Return early if bookmark is not saved.
         if UserDefaults.standard.data(forKey: "bookmark_\(path)") == nil {
