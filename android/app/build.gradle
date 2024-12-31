@@ -1,76 +1,83 @@
 def localProperties = new Properties()
-def localPropertiesFile = rootProject.file('local.properties')
+def localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader ->
+    localPropertiesFile.withReader("UTF-8") { reader ->
         localProperties.load(reader)
     }
 }
 
-def flutterRoot = localProperties.getProperty('flutter.sdk')
+def flutterRoot = localProperties.getProperty("flutter.sdk")
 if (flutterRoot == null) {
     throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
 if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
+    flutterVersionCode = "1"
 }
 
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
+def flutterVersionName = localProperties.getProperty("flutter.versionName")
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
+    flutterVersionName = "1.0"
 }
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+apply plugin: "com.android.application"
+apply plugin: "kotlin-android"
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file('key.properties')
+def keystorePropertiesFile = rootProject.file("key.properties")
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
 android {
-    compileSdkVersion 33
+    namespace "com.alexmercerind.harmonoid"
+
+    compileSdkVersion 34
     sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
+        main.java.srcDirs += "src/main/kotlin"
     }
 
     lintOptions {
-        disable 'InvalidPackage'
+        disable "InvalidPackage"
     }
 
     defaultConfig {
-        applicationId 'com.alexmercerind.harmonoid'
+        applicationId "com.alexmercerind.harmonoid"
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
 
     signingConfigs {
-       release {
-           keyAlias keystoreProperties['keyAlias']
-           keyPassword keystoreProperties['keyPassword']
-           storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-           storePassword keystoreProperties['storePassword']
-       }
-   }
+        release {
+            keyAlias keystoreProperties["keyAlias"]
+            keyPassword keystoreProperties["keyPassword"]
+            storeFile keystoreProperties["storeFile"] ? file(keystoreProperties["storeFile"]) : null
+            storePassword keystoreProperties["storePassword"]
+        }
+    }
 
     buildTypes {
         debug {
-            applicationIdSuffix ".private"
+            applicationIdSuffix ".debug"
         }
 
         release {
             signingConfig signingConfigs.release
         }
     }
+
+    compileOptions {
+        sourceCompatibility 21
+        targetCompatibility 21
+    }
 }
 
 flutter {
-    source '../..'
+    source "../.."
 }
 
 dependencies {
