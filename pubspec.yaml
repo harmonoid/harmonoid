@@ -15,7 +15,6 @@ dependencies:
   animations: ^2.0.0
   audio_service: ^0.18.7
   auto_size_text: ^3.0.0
-  awesome_notifications: ^0.7.0-beta.5
   collection: ^1.18.0
   crypto: ^3.0.3
   drift: ^2.15.0
@@ -32,12 +31,14 @@ dependencies:
     git:
       url: https://github.com/media-kit/media-kit.git
       path: ./media_kit
+  media_kit_libs_android_audio:
+    path: ./libs/android
   media_kit_libs_linux:
     git:
       url: https://github.com/media-kit/media-kit.git
       path: ./libs/linux/media_kit_libs_linux
   media_kit_libs_macos_audio:
-    path: ./macos/libs
+    path: ./libs/macos
   media_kit_libs_windows_audio:
     git:
       url: https://github.com/media-kit/media-kit.git
@@ -54,7 +55,7 @@ dependencies:
   permission_handler: ^11.3.0
   provider: ^6.0.1
   safe_local_storage: ^2.0.1
-  share_plus: ^2.1.4
+  share_plus: ^10.1.2
   sqlite3: ^2.4.0
   sqlite3_flutter_libs: ^0.5.0
   substring_highlight: ^1.0.33

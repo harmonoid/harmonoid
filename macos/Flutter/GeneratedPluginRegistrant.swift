@@ -11,7 +11,7 @@ import dynamic_color
 import media_kit_libs_macos_audio
 import path_provider_foundation
 import share_plus
-import sqflite
+import sqflite_darwin
 import sqlite3_flutter_libs
 import url_launcher_macos
 import window_plus

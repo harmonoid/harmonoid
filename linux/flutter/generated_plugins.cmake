@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  awesome_notifications
   dynamic_color
   media_kit_libs_linux
   sqlite3_flutter_libs
