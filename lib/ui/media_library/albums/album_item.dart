@@ -16,6 +16,7 @@ class AlbumItem extends StatelessWidget {
   final Album album;
   final double width;
   final double height;
+
   AlbumItem({
     super.key,
     required this.album,
@@ -205,6 +206,8 @@ class AlbumItem extends StatelessWidget {
       closedColor: Theme.of(context).cardTheme.color ?? Colors.transparent,
       closedShape: Theme.of(context).cardTheme.shape ?? const RoundedRectangleBorder(),
       closedElevation: Theme.of(context).cardTheme.elevation ?? 0.0,
+      openColor: Theme.of(context).scaffoldBackgroundColor,
+      openShape: const RoundedRectangleBorder(),
       openElevation: Theme.of(context).cardTheme.elevation ?? 0.0,
       closedBuilder: (context, action) {
         return GestureDetector(

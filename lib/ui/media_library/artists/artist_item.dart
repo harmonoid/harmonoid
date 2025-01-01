@@ -161,6 +161,8 @@ class ArtistItem extends StatelessWidget {
             closedColor: Theme.of(context).cardTheme.color ?? Colors.transparent,
             closedShape: const CircleBorder(),
             closedElevation: Theme.of(context).cardTheme.elevation ?? 0.0,
+            openColor: Theme.of(context).scaffoldBackgroundColor,
+            openShape: const RoundedRectangleBorder(),
             openElevation: Theme.of(context).cardTheme.elevation ?? 0.0,
             closedBuilder: (context, action) {
               return Stack(
