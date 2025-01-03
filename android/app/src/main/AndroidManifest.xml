@@ -22,6 +22,7 @@
 
     <application
         android:name="${applicationName}"
+        android:enableOnBackInvokedCallback="true"
         android:hasFragileUserData="true"
         android:icon="@mipmap/ic_launcher"
         android:label="Harmonoid"
