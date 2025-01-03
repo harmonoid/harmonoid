@@ -7,7 +7,7 @@ import 'package:harmonoid/ui/media_library/search/search_screen.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
-final SearchController mediaLibrarySearchBarController = SearchController();
+final SearchController mediaLibrarySearchController = SearchController();
 
 class MediaLibrarySearchBar extends StatelessWidget {
   const MediaLibrarySearchBar({super.key});
@@ -25,52 +25,45 @@ class MediaLibrarySearchBar extends StatelessWidget {
         right: margin,
       ),
       child: SearchAnchor(
-        isFullScreen: true,
-        searchController: mediaLibrarySearchBarController,
+        searchController: mediaLibrarySearchController,
         viewHintText: Localization.instance.SEARCH_HINT,
         builder: (context, controller) {
           return Consumer<MediaLibrary>(
             builder: (context, mediaLibrary, _) {
               return Stack(
+                alignment: Alignment.bottomCenter,
                 children: [
-                  SearchBar(
-                    leading: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Icon(Icons.search),
+                  ExcludeFocus(
+                    child: SearchBar(
+                      autoFocus: false,
+                      leading: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Icon(Icons.search),
+                      ),
+                      onTap: controller.openView,
+                      trailing: const [
+                        MobileGridSpanButton(),
+                        MobileAppBarOverflowButton(),
+                      ],
+                      hintText: !mediaLibrary.refreshing
+                          ? Localization.instance.SEARCH_HINT
+                          : mediaLibrary.current == null
+                              ? Localization.instance.DISCOVERING_FILES
+                              : Localization.instance.ADDED_M_OF_N_FILES
+                                  .replaceAll('"M"', (mediaLibrary.current ?? 0).toString())
+                                  .replaceAll('"N"', (mediaLibrary.total == 0 ? 1 : mediaLibrary.total).toString()),
                     ),
-                    onTap: controller.openView,
-                    onChanged: (text) {
-                      controller.text = text;
-                      controller.openView();
-                    },
-                    onSubmitted: (text) {
-                      controller.text = text;
-                      controller.openView();
-                    },
-                    trailing: const [
-                      MobileGridSpanButton(),
-                      MobileAppBarOverflowButton(),
-                    ],
-                    hintText: !mediaLibrary.refreshing
-                        ? Localization.instance.SEARCH_HINT
-                        : mediaLibrary.current == null
-                            ? Localization.instance.DISCOVERING_FILES
-                            : Localization.instance.ADDED_M_OF_N_FILES
-                                .replaceAll('"M"', (mediaLibrary.current ?? 0).toString())
-                                .replaceAll('"N"', (mediaLibrary.total == 0 ? 1 : mediaLibrary.total).toString()),
                   ),
                   if (mediaLibrary.refreshing)
-                    Positioned(
-                      left: 0.0,
-                      right: 0.0,
-                      top: 0.0,
-                      bottom: 0.0,
-                      child: Container(
-                        clipBehavior: Clip.antiAlias,
-                        alignment: Alignment.bottomCenter,
-                        decoration: BoxDecoration(borderRadius: borderRadius),
-                        child: LinearProgressIndicator(
-                          value: mediaLibrary.current == null ? null : (mediaLibrary.current ?? 0) / (mediaLibrary.total == 0 ? 1 : mediaLibrary.total),
+                    Positioned.fill(
+                      child: IgnorePointer(
+                        child: Container(
+                          clipBehavior: Clip.antiAlias,
+                          alignment: Alignment.bottomCenter,
+                          decoration: BoxDecoration(borderRadius: borderRadius),
+                          child: LinearProgressIndicator(
+                            value: mediaLibrary.current == null ? null : (mediaLibrary.current ?? 0) / (mediaLibrary.total == 0 ? 1 : mediaLibrary.total),
+                          ),
                         ),
                       ),
                     ),
@@ -79,17 +72,8 @@ class MediaLibrarySearchBar extends StatelessWidget {
             },
           );
         },
-        suggestionsBuilder: (context, controller) {
-          return [
-            SearchScreen(
-              key: ValueKey(controller.text),
-              query: controller.text,
-            ),
-          ];
-        },
-        viewBuilder: (suggestions) {
-          return suggestions.first;
-        },
+        suggestionsBuilder: (context, controller) => [SearchScreen(query: controller.text)],
+        viewBuilder: (suggestions) => suggestions.elementAtOrNull(0) ?? const SizedBox.shrink(),
       ),
     );
   }

@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:harmonoid/core/media_player/media_player.dart';
-import 'package:harmonoid/mappers/track.dart';
-import 'package:harmonoid/ui/router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/ui/media_library/albums/album_item.dart';
 import 'package:harmonoid/ui/media_library/artists/artist_item.dart';
 import 'package:harmonoid/ui/media_library/genres/genre_item.dart';
 import 'package:harmonoid/ui/media_library/search/search_banner.dart';
 import 'package:harmonoid/ui/media_library/search/search_no_items_banner.dart';
 import 'package:harmonoid/ui/media_library/tracks/track_item.dart';
+import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:provider/provider.dart';
 
 class SearchScreen extends StatefulWidget {
   final String query;
+
   const SearchScreen({super.key, required this.query});
 
   @override
@@ -33,9 +35,8 @@ class SearchScreenState extends State<SearchScreen> {
   final List<Genre> _genres = <Genre>[];
   final List<Track> _tracks = <Track>[];
 
-  void _listener() {
-    debugPrint('SearchScreenState: _listener: Query: ${widget.query}');
-    final result = MediaLibrary.instance.search(widget.query, limit: kLimit);
+  void update(String query) {
+    final result = context.read<MediaLibrary>().search(query, limit: kLimit);
     if (context.mounted) {
       setState(() {
         _albums
@@ -57,14 +58,15 @@ class SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
-    _listener();
-    MediaLibrary.instance.addListener(_listener);
+    update(widget.query);
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    MediaLibrary.instance.removeListener(_listener);
+  void didUpdateWidget(covariant SearchScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.query != widget.query) {
+      update(widget.query);
+    }
   }
 
   @override
@@ -93,7 +95,7 @@ class SearchScreenState extends State<SearchScreen> {
                         '/$kMediaLibraryPath/$kSearchItemsPath',
                         extra: SearchItemsPathExtra(
                           query: widget.query,
-                          items: MediaLibrary.instance.search(widget.query).whereType<Album>().toList(),
+                          items: context.read<MediaLibrary>().search(widget.query).whereType<Album>().toList(),
                         ),
                       );
                     },
@@ -134,7 +136,7 @@ class SearchScreenState extends State<SearchScreen> {
                         '/$kMediaLibraryPath/$kSearchItemsPath',
                         extra: SearchItemsPathExtra(
                           query: widget.query,
-                          items: MediaLibrary.instance.search(widget.query).whereType<Artist>().toList(),
+                          items: context.read<MediaLibrary>().search(widget.query).whereType<Artist>().toList(),
                         ),
                       );
                     },
@@ -175,7 +177,7 @@ class SearchScreenState extends State<SearchScreen> {
                         '/$kMediaLibraryPath/$kSearchItemsPath',
                         extra: SearchItemsPathExtra(
                           query: widget.query,
-                          items: MediaLibrary.instance.search(widget.query).whereType<Genre>().toList(),
+                          items: context.read<MediaLibrary>().search(widget.query).whereType<Genre>().toList(),
                         ),
                       );
                     },
@@ -216,7 +218,7 @@ class SearchScreenState extends State<SearchScreen> {
                         '/$kMediaLibraryPath/$kSearchItemsPath',
                         extra: SearchItemsPathExtra(
                           query: widget.query,
-                          items: MediaLibrary.instance.search(widget.query).whereType<Track>().toList(),
+                          items: context.read<MediaLibrary>().search(widget.query).whereType<Track>().toList(),
                         ),
                       );
                     },

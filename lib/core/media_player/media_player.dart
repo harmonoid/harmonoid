@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:media_kit/media_kit.dart' hide Playable;
 import 'package:synchronized/synchronized.dart';
@@ -225,6 +227,10 @@ class MediaPlayer extends ChangeNotifier with AudioServiceMixin, DiscordRpcMixin
     for (final MapEntry(key: property, value: value) in Configuration.instance.mpvOptions.entries) {
       final platform = _player.platform as NativePlayer;
       await platform.setProperty(property, value);
+    }
+    if (Platform.isAndroid) {
+      final platform = _player.platform as NativePlayer;
+      await platform.setProperty('ao', 'audiotrack');
     }
   }
 
