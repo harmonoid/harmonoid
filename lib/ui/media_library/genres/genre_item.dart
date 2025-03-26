@@ -3,8 +3,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
+import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/media_library/genres/constants.dart';
 import 'package:harmonoid/ui/media_library/genres/genre_screen.dart';
 import 'package:harmonoid/ui/router.dart';
@@ -16,6 +18,7 @@ class GenreItem extends StatelessWidget {
   final Genre genre;
   final double width;
   final double height;
+
   GenreItem({
     super.key,
     required this.genre,
@@ -122,7 +125,7 @@ class GenreItem extends StatelessWidget {
     return Hero(
       tag: genre,
       child: OpenContainer(
-        navigatorKey: rootNavigatorKey,
+        navigatorKey: homeNavigatorKey,
         transitionDuration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
         closedColor: color,
         closedShape: Theme.of(context).cardTheme.shape ?? const RoundedRectangleBorder(),
@@ -130,6 +133,9 @@ class GenreItem extends StatelessWidget {
         openColor: color,
         openElevation: Theme.of(context).cardTheme.elevation ?? 0.0,
         clipBehavior: Clip.antiAlias,
+        onClosed: (data) {
+          NowPlayingMobileNotifier.instance.showBottomNavigationBar();
+        },
         closedBuilder: (context, action) => InkWell(
           onTap: () async {
             tracks = await MediaLibrary.instance.tracksFromGenre(genre);
@@ -137,6 +143,7 @@ class GenreItem extends StatelessWidget {
             await precacheImage(cover(item: genre), context);
 
             action();
+            context.read<NowPlayingMobileNotifier>().hideBottomNavigationBar();
           },
           child: Container(
             width: width,

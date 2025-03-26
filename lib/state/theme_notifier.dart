@@ -1,6 +1,4 @@
 // ignore_for_file: implementation_imports
-import 'dart:ui';
-
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:dynamic_color/src/corepalette_to_colorscheme.dart';
 import 'package:dynamic_color/src/dynamic_color_plugin.dart';
@@ -149,8 +147,6 @@ class ThemeNotifier extends ChangeNotifier {
     systemColorScheme ??= this.systemColorScheme;
     animationDuration ??= this.animationDuration;
 
-    final isGestureNavigationEnabled = window.systemGestureInsets.bottom < 48.0 && window.systemGestureInsets.bottom != 0.0;
-
     const statusBarColor = Colors.transparent;
     final statusBarBrightness = switch (themeMode) {
       ThemeMode.light => Brightness.light,
@@ -162,18 +158,12 @@ class ThemeNotifier extends ChangeNotifier {
       ThemeMode.dark => Brightness.light,
       _ => Brightness.dark,
     };
-    final systemNavigationBarColor = switch ((materialStandard, themeMode, isGestureNavigationEnabled)) {
-      (2, _, _) => Colors.black,
-      (3, _, true) => Colors.transparent,
-      (3, ThemeMode.light, false) => Colors.white.withOpacity(0.02),
-      (3, ThemeMode.dark, false) => Colors.black.withOpacity(0.02),
+    final systemNavigationBarColor = switch (materialStandard) {
+      2 => Colors.black,
       _ => Colors.transparent,
     };
-    final systemNavigationBarDividerColor = switch ((materialStandard, themeMode, isGestureNavigationEnabled)) {
-      (2, _, _) => Colors.black,
-      (3, _, true) => Colors.transparent,
-      (3, ThemeMode.light, false) => Colors.white.withOpacity(0.02),
-      (3, ThemeMode.dark, false) => Colors.black.withOpacity(0.02),
+    final systemNavigationBarDividerColor = switch (materialStandard) {
+      2 => Colors.black,
       _ => Colors.transparent,
     };
     final systemNavigationBarIconBrightness = switch ((materialStandard, themeMode)) {
@@ -190,6 +180,8 @@ class ThemeNotifier extends ChangeNotifier {
       systemNavigationBarColor: systemNavigationBarColor,
       systemNavigationBarDividerColor: systemNavigationBarDividerColor,
       systemNavigationBarIconBrightness: systemNavigationBarIconBrightness,
+      systemStatusBarContrastEnforced: false,
+      systemNavigationBarContrastEnforced: false,
     );
     SystemChrome.setSystemUIOverlayStyle(style);
 

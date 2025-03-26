@@ -10,9 +10,12 @@ import 'package:provider/provider.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/build_context.dart';
+import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/build_context.dart';
+import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/media_library/media_library_inaccessible_directories_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_no_items_banner.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
@@ -31,14 +34,15 @@ class MediaLibraryScreen extends StatefulWidget {
 }
 
 class MediaLibraryScreenState extends State<MediaLibraryScreen> {
-  static final FocusNode queryTextFieldFocusNode = FocusNode();
+  static final FocusNode desktopQueryTextFieldFocusNode = FocusNode();
 
   late final AnimationDuration? _duration = Theme.of(context).extension<AnimationDuration>();
 
-  final ValueNotifier<bool> _floatingNotifier = ValueNotifier(false);
+  final ValueNotifier<bool> _desktopMediaLibrarySortButtonFloatingNotifier = ValueNotifier(false);
   final ValueNotifier<bool> _desktopAppBarElevatedNotifier = ValueNotifier<bool>(false);
-  final ValueNotifier<double> _mediaLibrarySearchBarOffsetNotifier = ValueNotifier<double>(0.0);
-  final TextEditingController _queryTextFieldEditingController = TextEditingController();
+  final TextEditingController _desktopSearchTextEditingController = TextEditingController();
+  final ValueNotifier<double> _mobileMediaLibrarySearchBarOffsetNotifier = ValueNotifier<double>(0.0);
+  final ValueNotifier<double> _mobileMediaLibraryRefreshButtonOffsetNotifier = ValueNotifier<double>(0.0);
 
   String? _current;
 
@@ -48,6 +52,8 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      context.read<NowPlayingMobileNotifier>().setMediaLibraryScreenStateRef(this);
+
       await Intent.instance.notify(playbackState: Configuration.instance.mediaPlayerPlaybackState);
       if (Platform.isMacOS) {
         await const MethodChannel('com.alexmercerind/window_plus').invokeMethod('notifyUrls');
@@ -63,20 +69,28 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
     super.didChangeDependencies();
     if (_current != _path) {
       _current = _path;
-      _floatingNotifier.value = false;
+      _desktopMediaLibrarySortButtonFloatingNotifier.value = false;
       _desktopAppBarElevatedNotifier.value = false;
-      _mediaLibrarySearchBarOffsetNotifier.value = 0.0;
+      _mobileMediaLibrarySearchBarOffsetNotifier.value = 0.0;
     }
   }
 
   @override
   void dispose() {
-    super.dispose();
-    _floatingNotifier.dispose();
+    _desktopMediaLibrarySortButtonFloatingNotifier.dispose();
     _desktopAppBarElevatedNotifier.dispose();
-    _mediaLibrarySearchBarOffsetNotifier.dispose();
-    queryTextFieldFocusNode.dispose();
-    _queryTextFieldEditingController.dispose();
+    _desktopSearchTextEditingController.dispose();
+    _mobileMediaLibrarySearchBarOffsetNotifier.dispose();
+    _mobileMediaLibraryRefreshButtonOffsetNotifier.dispose();
+    super.dispose();
+  }
+
+  void mobileShiftMediaLibraryRefreshButton() {
+    _mobileMediaLibraryRefreshButtonOffsetNotifier.value = kMobileNowPlayingBarHeight;
+  }
+
+  void mobileUnshiftMediaLibraryRefreshButton() {
+    _mobileMediaLibraryRefreshButtonOffsetNotifier.value = 0.0;
   }
 
   Widget _buildDesktopLayout(BuildContext context) {
@@ -100,7 +114,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                             // https://github.com/flutter/flutter/issues/70504#issuecomment-1170609808
                             onNotification: (notification) {
                               if (notification.metrics.axis == Axis.vertical) {
-                                _floatingNotifier.value = notification.metrics.pixels > 0.0;
+                                _desktopMediaLibrarySortButtonFloatingNotifier.value = notification.metrics.pixels > 0.0;
                                 _desktopAppBarElevatedNotifier.value = notification.metrics.pixels > 0.0;
                               }
                               return false;
@@ -109,7 +123,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                           ),
                   ),
                   DesktopMediaLibraryFloatingSortButton(
-                    floatingNotifier: _floatingNotifier,
+                    floatingNotifier: _desktopMediaLibrarySortButtonFloatingNotifier,
                   ),
                   const Positioned(
                     left: 16.0,
@@ -232,13 +246,13 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                     height: 40.0,
                                     width: 280.0,
                                     child: DefaultTextField(
-                                      focusNode: queryTextFieldFocusNode,
-                                      controller: _queryTextFieldEditingController,
+                                      focusNode: desktopQueryTextFieldFocusNode,
+                                      controller: _desktopSearchTextEditingController,
                                       cursorWidth: 1.0,
                                       onSubmitted: (value) async {
                                         context.go(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: value}).toString());
                                         await Future.delayed(MaterialRoute.animationDuration?.medium ?? const Duration(milliseconds: 300));
-                                        queryTextFieldFocusNode.requestFocus();
+                                        desktopQueryTextFieldFocusNode.requestFocus();
                                       },
                                       textAlignVertical: TextAlignVertical.center,
                                       style: Theme.of(context).textTheme.bodyMedium,
@@ -257,9 +271,9 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                           ),
                                         ),
                                         onSuffixIconPressed: () async {
-                                          context.go(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: _queryTextFieldEditingController.text}).toString());
+                                          context.go(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: _desktopSearchTextEditingController.text}).toString());
                                           await Future.delayed(MaterialRoute.animationDuration?.medium ?? const Duration(milliseconds: 300));
-                                          queryTextFieldFocusNode.requestFocus();
+                                          desktopQueryTextFieldFocusNode.requestFocus();
                                         },
                                       ),
                                     ),
@@ -310,29 +324,25 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                     if (notification is UserScrollNotification) {
                       if (notification.metrics.axis == Axis.vertical) {
                         if (notification.direction == ScrollDirection.forward) {
-                          _mediaLibrarySearchBarOffsetNotifier.value = 0.0;
+                          _mobileMediaLibrarySearchBarOffsetNotifier.value = 0.0;
                         }
                         if (notification.direction == ScrollDirection.reverse) {
-                          _mediaLibrarySearchBarOffsetNotifier.value = -1.0 * mediaLibraryScrollViewBuilderPadding.top;
+                          _mobileMediaLibrarySearchBarOffsetNotifier.value = -1.0 * mediaLibraryScrollViewBuilderPadding.top;
                         }
                       }
                     } else {
                       if (notification.metrics.axis == Axis.vertical) {
                         if (notification.metrics.pixels == 0.0) {
-                          _mediaLibrarySearchBarOffsetNotifier.value = 0.0;
+                          _mobileMediaLibrarySearchBarOffsetNotifier.value = 0.0;
                         }
                       }
                     }
                     return false;
                   },
-                  child: mediaLibrary.tracks.isEmpty
-                      ? const Center(
-                          child: MediaLibraryNoItemsBanner(),
-                        )
-                      : widget.child,
+                  child: mediaLibrary.tracks.isEmpty ? const Center(child: MediaLibraryNoItemsBanner()) : widget.child,
                 ),
                 ValueListenableBuilder<double>(
-                  valueListenable: _mediaLibrarySearchBarOffsetNotifier,
+                  valueListenable: _mobileMediaLibrarySearchBarOffsetNotifier,
                   builder: (context, offset, _) {
                     return AnimatedPositioned(
                       top: offset,
@@ -344,14 +354,27 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                     );
                   },
                 ),
-                Positioned(
-                  right: 16.0,
-                  bottom: 16.0,
-                  child: _path == kPlaylistsPath ? const MediaLibraryCreatePlaylistButton() : const MediaLibraryRefreshButton(),
+                Consumer<MediaPlayer>(
+                  builder: (context, mediaPlayer, _) {
+                    return ValueListenableBuilder<double>(
+                      valueListenable: _mobileMediaLibraryRefreshButtonOffsetNotifier,
+                      builder: (context, offset, _) {
+                        if (mediaPlayer.state.isEmpty) {
+                          offset = 0.0;
+                        }
+                        return AnimatedPositioned(
+                          bottom: 16.0 + offset,
+                          right: 16.0,
+                          curve: Curves.easeInOut,
+                          duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+                          child: _path == kPlaylistsPath ? const MediaLibraryCreatePlaylistButton() : const MediaLibraryRefreshButton(),
+                        );
+                      },
+                    );
+                  },
                 ),
               ],
             ),
-            bottomNavigationBar: const MobileNavigationBar(),
           );
         },
       ),

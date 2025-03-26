@@ -33,19 +33,19 @@ class DesktopNowPlayingScreen extends StatefulWidget {
 }
 
 class DesktopNowPlayingScreenState extends State<DesktopNowPlayingScreen> {
-  int desktopNowPlayingScreenCarousel = Configuration.instance.desktopNowPlayingCarousel;
-  bool desktopNowPlayingScreenLyrics = Configuration.instance.desktopNowPlayingLyrics;
+  int _desktopNowPlayingScreenCarousel = Configuration.instance.desktopNowPlayingCarousel;
+  bool _desktopNowPlayingScreenLyrics = Configuration.instance.desktopNowPlayingLyrics;
 
-  Timer? fullscreenTimer;
+  Timer? _fullscreenTimer;
 
   void setDesktopNowPlayingCarousel(int value) {
-    desktopNowPlayingScreenCarousel = value;
+    _desktopNowPlayingScreenCarousel = value;
     Configuration.instance.set(desktopNowPlayingCarousel: value);
     setState(() {});
   }
 
   void setDesktopNowPlayingLyrics(bool value) {
-    desktopNowPlayingScreenLyrics = value;
+    _desktopNowPlayingScreenLyrics = value;
     Configuration.instance.set(desktopNowPlayingLyrics: value);
     setState(() {});
   }
@@ -53,7 +53,7 @@ class DesktopNowPlayingScreenState extends State<DesktopNowPlayingScreen> {
   @override
   void dispose() {
     super.dispose();
-    fullscreenTimer?.cancel();
+    _fullscreenTimer?.cancel();
   }
 
   @override
@@ -70,7 +70,7 @@ class DesktopNowPlayingScreenState extends State<DesktopNowPlayingScreen> {
                   return Stack(
                     children: [
                       Positioned.fill(
-                        child: DesktopNowPlayingScreenCarousel(value: desktopNowPlayingScreenCarousel),
+                        child: DesktopNowPlayingScreenCarousel(value: _desktopNowPlayingScreenCarousel),
                       ),
                       Positioned.fill(
                         child: ColoredBox(color: Colors.black.withOpacity(0.2)),
@@ -98,20 +98,20 @@ class DesktopNowPlayingScreenState extends State<DesktopNowPlayingScreen> {
                           switchInCurve: Curves.easeInOut,
                           switchOutCurve: Curves.easeInOut,
                           child: SizedBox(
-                            key: ValueKey(desktopNowPlayingScreenLyrics),
+                            key: ValueKey(_desktopNowPlayingScreenLyrics),
                             width: double.infinity,
                             height: double.infinity,
-                            child: desktopNowPlayingScreenLyrics ? const NowPlayingLyrics() : const SizedBox(),
+                            child: _desktopNowPlayingScreenLyrics ? const NowPlayingLyrics() : const SizedBox(),
                           ),
                         ),
                       ),
                       Positioned.fill(
                         child: GestureDetector(
                           onTap: () async {
-                            if (fullscreenTimer?.isActive ?? false) {
+                            if (_fullscreenTimer?.isActive ?? false) {
                               WindowPlus.instance.setIsFullscreen(!await WindowPlus.instance.fullscreen);
                             }
-                            fullscreenTimer = Timer(const Duration(milliseconds: 200), () => fullscreenTimer = null);
+                            _fullscreenTimer = Timer(const Duration(milliseconds: 200), () => _fullscreenTimer = null);
                           },
                           child: Container(
                             color: Colors.transparent,

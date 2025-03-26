@@ -24,7 +24,7 @@ class KeyboardShortcuts {
     const SingleActivator(LogicalKeyboardKey.mediaPlayPause): MediaPlayer.instance.playOrPause,
     const SingleActivator(LogicalKeyboardKey.mediaTrackNext): MediaPlayer.instance.next,
     const SingleActivator(LogicalKeyboardKey.mediaTrackPrevious): MediaPlayer.instance.previous,
-    const SingleActivator(LogicalKeyboardKey.keyS, control: true): MediaLibraryScreenState.queryTextFieldFocusNode.requestFocus,
+    const SingleActivator(LogicalKeyboardKey.keyS, control: true): MediaLibraryScreenState.desktopQueryTextFieldFocusNode.requestFocus,
     const SingleActivator(LogicalKeyboardKey.keyQ, control: true): SystemNavigator.pop,
     const SingleActivator(LogicalKeyboardKey.arrowLeft, control: true): router.pop,
     const SingleActivator(LogicalKeyboardKey.digit1, control: true): () => router.go('/$kMediaLibraryPath/$kAlbumsPath'),

@@ -1,4 +1,7 @@
-import 'package:flutter/widgets.dart';
+import 'package:harmonoid/ui/media_library/media_library_screen.dart';
+import 'package:harmonoid/ui/media_library/media_library_shell_route.dart';
+import 'package:harmonoid/ui/now_playing/mobile/mobile_m2_now_playing_bar.dart';
+import 'package:harmonoid/ui/now_playing/mobile/mobile_m3_now_playing_bar.dart';
 
 /// {@template now_playing_mobile_notifier}
 ///
@@ -14,29 +17,51 @@ class NowPlayingMobileNotifier {
   /// {@macro now_playing_mobile_notifier}
   NowPlayingMobileNotifier._();
 
-  /// [GlobalKey] to access now playing bar.
-  // TODO:
+  MobileM3NowPlayingBarState? _mobileM3NowPlayingBarStateRef;
+  MobileM2NowPlayingBarState? _mobileM2NowPlayingBarStateRef;
+  MediaLibraryScreenState? _mediaLibraryScreenStateRef;
+  MediaLibraryShellRouteState? _mediaLibraryShellRouteStateRef;
 
-  /// Whether the [NowPlayingBarMobile] is in restored state.
-  // TODO:
-  final bool restored = false;
-
-  /// Offset for the bottom navigation bar & floating action button.
-  final ValueNotifier<double> bottomNavigationBarOffset = ValueNotifier<double>(0.0);
-
-  void show() {
-    // TODO:
+  void setMobileM3NowPlayingBarStateRef(MobileM3NowPlayingBarState value) {
+    _mobileM3NowPlayingBarStateRef = value;
   }
 
-  void hide() {
-    // TODO:
+  void setMobileM2NowPlayingBarStateRef(MobileM2NowPlayingBarState value) {
+    _mobileM2NowPlayingBarStateRef = value;
   }
 
-  void maximize() {
-    // TODO:
+  void setMediaLibraryScreenStateRef(MediaLibraryScreenState value) {
+    _mediaLibraryScreenStateRef = value;
   }
 
-  void restore() {
-    // TODO:
+  void setMediaLibraryShellRouteStateRef(MediaLibraryShellRouteState value) {
+    _mediaLibraryShellRouteStateRef = value;
+  }
+
+  void showNowPlayingBar() {
+    _mediaLibraryShellRouteStateRef?.mobileShowNowPlayingBar();
+    _mediaLibraryScreenStateRef?.mobileShiftMediaLibraryRefreshButton();
+  }
+
+  void hideNowPlayingBar() {
+    _mediaLibraryShellRouteStateRef?.mobileHideNowPlayingBar();
+    _mediaLibraryScreenStateRef?.mobileUnshiftMediaLibraryRefreshButton();
+  }
+
+  void maximizeNowPlayingBar() {
+    _mobileM3NowPlayingBarStateRef?.maximizeNowPlayingBar();
+    _mobileM2NowPlayingBarStateRef?.maximizeNowPlayingBar();
+  }
+
+  void showBottomNavigationBar() {
+    _mediaLibraryShellRouteStateRef?.mobileShowBottomNavigationBar();
+  }
+
+  void hideBottomNavigationBar() {
+    _mediaLibraryShellRouteStateRef?.mobileHideBottomNavigationBar();
+  }
+
+  void setBottomNavigationBarVisibility(double value) {
+    _mediaLibraryShellRouteStateRef?.mobileSetBottomNavigationBarVisibility(value);
   }
 }

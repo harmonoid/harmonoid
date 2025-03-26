@@ -71,7 +71,7 @@ class MediaLibraryShellRouteState extends State<MediaLibraryShellRoute> with Tic
     if (_mobileBottomNavigationBarFlag) return;
     _mobileBottomNavigationBarFlag = true;
     Future.delayed(MaterialRoute.kDefaultTransitionDuration, () {
-      final value = MediaQuery.of(context).padding.bottom / _mobileBottomNavigationBarHeight;
+      final value = MediaQuery.paddingOf(context).bottom / _mobileBottomNavigationBarHeight;
       _mobileBottomNavigationBarController.animateTo(value, curve: _kCurve);
     });
   }
@@ -81,7 +81,7 @@ class MediaLibraryShellRouteState extends State<MediaLibraryShellRoute> with Tic
 
     final double factor;
     if (_mobileBottomNavigationBarFlag) {
-      factor = MediaQuery.of(context).padding.bottom / _mobileBottomNavigationBarHeight;
+      factor = MediaQuery.paddingOf(context).bottom / _mobileBottomNavigationBarHeight;
     } else {
       factor = 1.0;
     }
@@ -106,6 +106,8 @@ class MediaLibraryShellRouteState extends State<MediaLibraryShellRoute> with Tic
   }
 
   Widget _buildMobileLayout(BuildContext context) {
+    final viewInsets = MediaQuery.viewInsetsOf(context).bottom;
+
     return Scaffold(
       body: Stack(
         alignment: Alignment.bottomCenter,
@@ -116,6 +118,9 @@ class MediaLibraryShellRouteState extends State<MediaLibraryShellRoute> with Tic
             builder: (context, child) {
               final nowPlayingBarVisibility = _mobileNowPlayingBarController.value;
               if (nowPlayingBarVisibility == 1.0) {
+                return const SizedBox.shrink();
+              }
+              if (viewInsets > 0.0) {
                 return const SizedBox.shrink();
               }
               return Transform.translate(
@@ -140,7 +145,7 @@ class MediaLibraryShellRouteState extends State<MediaLibraryShellRoute> with Tic
           }
           if (!visible) {
             return Container(
-              height: MediaQuery.of(context).padding.bottom,
+              height: MediaQuery.paddingOf(context).bottom,
               color: Theme.of(context).navigationBarTheme.backgroundColor,
             );
           }

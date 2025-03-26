@@ -8,6 +8,7 @@ import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
+import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/keyboard_shortcuts.dart';
@@ -34,6 +35,9 @@ class Harmonoid extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => NowPlayingColorPaletteNotifier.instance,
+        ),
+        Provider(
+          create: (_) => NowPlayingMobileNotifier.instance,
         ),
         ChangeNotifierProvider(
           create: (context) => Localization.instance,
@@ -125,8 +129,6 @@ class DefaultScrollPhysics extends ScrollPhysics {
 
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {
-    // Taken from [ClampingScrollPhysics].
-    // This disables over-scrolling past the edge of the content.
     if (value < position.pixels && position.pixels <= position.minScrollExtent) {
       return value - position.pixels;
     }

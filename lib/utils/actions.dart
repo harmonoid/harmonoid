@@ -17,7 +17,7 @@ void intentNotifyOnPlaybackStateRestore() async {
     // NO/OP
   }
   if (isMobile) {
-    NowPlayingMobileNotifier.instance.restore();
+    NowPlayingMobileNotifier.instance.showBottomNavigationBar();
   }
 }
 
@@ -31,7 +31,7 @@ void intentPlayOnMediaPlayerOpen() async {
     }
   }
   if (isMobile) {
-    NowPlayingMobileNotifier.instance.show();
+    NowPlayingMobileNotifier.instance.showNowPlayingBar();
   }
 }
 
@@ -46,9 +46,9 @@ void mediaPlayerOpenOnOpen() async {
   }
   if (isMobile) {
     if (Configuration.instance.nowPlayingDisplayUponPlay) {
-      NowPlayingMobileNotifier.instance.show();
+      NowPlayingMobileNotifier.instance.maximizeNowPlayingBar();
     } else {
-      NowPlayingMobileNotifier.instance.restore();
+      NowPlayingMobileNotifier.instance.showNowPlayingBar();
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:harmonoid/ui/now_playing/desktop/desktop_now_playing_bar.dart';
+import 'package:harmonoid/ui/now_playing/mobile/mobile_now_playing_bar.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
@@ -40,7 +41,7 @@ class NowPlayingBarState extends State<NowPlayingBar> {
   }
 
   Widget _buildMobileLayout(BuildContext context) {
-    return const SizedBox.shrink();
+    return const MobileNowPlayingBar();
   }
 
   @override

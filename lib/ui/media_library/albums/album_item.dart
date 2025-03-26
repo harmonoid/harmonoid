@@ -2,8 +2,10 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
+import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/media_library/albums/album_screen.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
@@ -209,6 +211,10 @@ class AlbumItem extends StatelessWidget {
       openColor: Theme.of(context).scaffoldBackgroundColor,
       openShape: const RoundedRectangleBorder(),
       openElevation: Theme.of(context).cardTheme.elevation ?? 0.0,
+      tappable: false,
+      onClosed: (data) {
+        NowPlayingMobileNotifier.instance.showBottomNavigationBar();
+      },
       closedBuilder: (context, action) {
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
@@ -223,6 +229,7 @@ class AlbumItem extends StatelessWidget {
             await precacheImage(cover(item: album), context);
 
             action();
+            context.read<NowPlayingMobileNotifier>().hideBottomNavigationBar();
           },
           onLongPress: onLongPress,
           child: SizedBox(

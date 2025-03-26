@@ -118,7 +118,7 @@ class _NowPlayingScreenSectionState extends State<NowPlayingScreenSection> {
                   ? null
                   : (value) async {
                       await Configuration.instance.set(desktopNowPlayingBarColorPalette: value);
-                      NowPlayingColorPaletteNotifier.instance.resetCurrent();
+                      NowPlayingColorPaletteNotifier.instance.clear();
                       setState(() {});
                     },
             ),
@@ -127,7 +127,7 @@ class _NowPlayingScreenSectionState extends State<NowPlayingScreenSection> {
                 ? null
                 : () async {
                     await Configuration.instance.set(desktopNowPlayingBarColorPalette: !Configuration.instance.desktopNowPlayingBarColorPalette);
-                    NowPlayingColorPaletteNotifier.instance.resetCurrent();
+                    NowPlayingColorPaletteNotifier.instance.clear();
                     setState(() {});
                   },
           ),

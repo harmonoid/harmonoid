@@ -13,6 +13,7 @@ class NowPlayingPlaylistItem extends StatelessWidget {
   final int index;
   final double width;
   final double height;
+
   const NowPlayingPlaylistItem({
     super.key,
     required this.index,
@@ -53,13 +54,11 @@ class NowPlayingPlaylistItem extends StatelessWidget {
                                   width: height / 2.0,
                                   height: height / 2.0,
                                 )
-                              : IgnorePointer(
-                                  child: Text(
-                                    '${index - mediaPlayer.state.index}',
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: Theme.of(context).textTheme.bodyLarge,
-                                  ),
+                              : Text(
+                                  '${index - mediaPlayer.state.index}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context).textTheme.bodyLarge,
                                 ),
                         ),
                         const VerticalDivider(width: 1.0),
@@ -123,7 +122,64 @@ class NowPlayingPlaylistItem extends StatelessWidget {
   }
 
   Widget _buildMobileLayout(BuildContext context) {
-    throw UnimplementedError();
+    return Consumer<MediaPlayer>(
+      builder: (context, mediaPlayer, _) {
+        final i = index - mediaPlayer.state.index;
+        final playable = mediaPlayer.state.playables[index];
+        return Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () => mediaPlayer.jump(index),
+            child: SizedBox(
+              height: height,
+              width: double.infinity,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(width: 16.0),
+                  Container(
+                    width: 48.0,
+                    height: 56.0,
+                    alignment: Alignment.center,
+                    child: index == mediaPlayer.state.index
+                        ? const MusicAnimation(width: 20.0, height: 20.0)
+                        : Text(
+                            '${i > 0 ? '+' : ''}$i',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 18.0),
+                          ),
+                  ),
+                  const SizedBox(width: 16.0),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          playable.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        Text(
+                          playable.subtitle.isEmpty ? kDefaultArtist : playable.subtitle.join(', '),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 16.0),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override

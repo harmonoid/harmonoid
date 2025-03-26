@@ -31,12 +31,12 @@ class DesktopNowPlayingBar extends StatefulWidget {
 }
 
 class DesktopNowPlayingBarState extends State<DesktopNowPlayingBar> {
-  final ValueNotifier<bool> coverHoverNotifier = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> _coverHoverNotifier = ValueNotifier<bool>(false);
 
   @override
   void dispose() {
     super.dispose();
-    coverHoverNotifier.dispose();
+    _coverHoverNotifier.dispose();
   }
 
   @override
@@ -75,8 +75,8 @@ class DesktopNowPlayingBarState extends State<DesktopNowPlayingBar> {
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         MouseRegion(
-                                          onEnter: (_) => coverHoverNotifier.value = true,
-                                          onExit: (_) => coverHoverNotifier.value = false,
+                                          onEnter: (_) => _coverHoverNotifier.value = true,
+                                          onExit: (_) => _coverHoverNotifier.value = false,
                                           child: Stack(
                                             children: [
                                               ClipRect(
@@ -93,7 +93,7 @@ class DesktopNowPlayingBarState extends State<DesktopNowPlayingBar> {
                                                 ),
                                               ),
                                               ValueListenableBuilder<bool>(
-                                                valueListenable: coverHoverNotifier,
+                                                valueListenable: _coverHoverNotifier,
                                                 builder: (context, value, _) {
                                                   return Positioned.fill(
                                                     child: AnimatedOpacity(
@@ -276,7 +276,7 @@ class Controls extends StatelessWidget {
                 SizedBox.square(
                   dimension: floatingActionButtonDimension,
                   child: FloatingActionButton(
-                    heroTag: 'desktop_now_playing_bar_play_pause',
+                    heroTag: '***',
                     elevation: floatingActionButtonElevation,
                     focusElevation: floatingActionButtonElevation,
                     hoverElevation: floatingActionButtonElevation,
