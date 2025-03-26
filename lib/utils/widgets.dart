@@ -1,5 +1,3 @@
-// ignore_for_file: depend_on_referenced_packages
-
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
@@ -8,12 +6,13 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart' hide ReorderableDragStartListener, Intent;
+import 'package:flutter/material.dart' hide CarouselView, CarouselController, ReorderableDragStartListener, Intent;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:provider/provider.dart';
+// ignore: depend_on_referenced_packages
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
@@ -40,8 +39,8 @@ class DesktopMediaLibraryHeader extends StatefulWidget {
 }
 
 class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
-  bool hover0 = false;
-  bool hover1 = false;
+  bool _hover0 = false;
+  bool _hover1 = false;
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +63,10 @@ class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
           child: MouseRegion(
             cursor: SystemMouseCursors.click,
             onEnter: (_) => setState(() {
-              hover0 = true;
+              _hover0 = true;
             }),
             onExit: (_) => setState(() {
-              hover0 = false;
+              _hover0 = false;
             }),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
@@ -85,7 +84,7 @@ class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
                     Localization.instance.PLAY_ALL,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
-                          decoration: hover0 ? TextDecoration.underline : TextDecoration.none,
+                          decoration: _hover0 ? TextDecoration.underline : TextDecoration.none,
                         ),
                   ),
                 ],
@@ -101,10 +100,10 @@ class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
           child: MouseRegion(
             cursor: SystemMouseCursors.click,
             onEnter: (_) => setState(() {
-              hover1 = true;
+              _hover1 = true;
             }),
             onExit: (_) => setState(() {
-              hover1 = false;
+              _hover1 = false;
             }),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
@@ -122,7 +121,7 @@ class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
                     Localization.instance.SHUFFLE,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
-                          decoration: hover1 ? TextDecoration.underline : TextDecoration.none,
+                          decoration: _hover1 ? TextDecoration.underline : TextDecoration.none,
                         ),
                   ),
                 ],
@@ -764,6 +763,7 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
         await showModalBottomSheet(
           context: context,
           showDragHandle: isMaterial3OrGreater,
+          useRootNavigator: true,
           isScrollControlled: true,
           elevation: kDefaultHeavyElevation,
           builder: (context) => StatefulBuilder(
@@ -777,7 +777,6 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
                   ...sort,
                   const PopupMenuDivider(),
                   ...order,
-                  if (!isDesktop && NowPlayingMobileNotifier.instance.restored) const SizedBox(height: kMobileNowPlayingBarHeight),
                   SizedBox(height: MediaQuery.of(context).padding.bottom),
                 ],
               );
@@ -848,6 +847,35 @@ class MobileMediaLibrarySortButtonPopupMenuItem<T> extends StatelessWidget {
 
 // --------------------------------------------------
 
+class MobileNowPlayingBarScrollNotifier extends StatelessWidget {
+  final Widget child;
+
+  const MobileNowPlayingBarScrollNotifier({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    if (isDesktop) {
+      return child;
+    } else {
+      return NotificationListener<UserScrollNotification>(
+        onNotification: (notification) {
+          if (notification.metrics.axis == Axis.vertical && (notification.metrics.axisDirection == AxisDirection.up || notification.metrics.axisDirection == AxisDirection.down)) {
+            if (notification.direction == ScrollDirection.forward) {
+              NowPlayingMobileNotifier.instance.showNowPlayingBar();
+            } else if (notification.direction == ScrollDirection.reverse) {
+              NowPlayingMobileNotifier.instance.hideNowPlayingBar();
+            }
+          }
+          return true;
+        },
+        child: child,
+      );
+    }
+  }
+}
+
+// --------------------------------------------------
+
 class ScaleOnHover extends StatefulWidget {
   final Widget child;
 
@@ -858,15 +886,15 @@ class ScaleOnHover extends StatefulWidget {
 }
 
 class ScaleOnHoverState extends State<ScaleOnHover> {
-  double scale = 1.0;
+  double _scale = 1.0;
 
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      onEnter: (e) => setState(() => scale = 1.05),
-      onExit: (e) => setState(() => scale = 1.00),
+      onEnter: (e) => setState(() => _scale = 1.05),
+      onExit: (e) => setState(() => _scale = 1.00),
       child: AnimatedScale(
-        scale: scale,
+        scale: _scale,
         duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
         child: widget.child,
       ),
@@ -1031,7 +1059,7 @@ class HyperLink extends StatefulWidget {
 }
 
 class HyperLinkState extends State<HyperLink> {
-  String hover = '';
+  String _hover = '';
 
   @override
   Widget build(BuildContext context) {
@@ -1046,21 +1074,21 @@ class HyperLinkState extends State<HyperLink> {
                 text: (e as TextSpan).text,
                 style: e.recognizer != null
                     ? widget.style?.copyWith(
-                        decoration: hover == e.text! ? TextDecoration.underline : null,
+                        decoration: _hover == e.text! ? TextDecoration.underline : null,
                       )
                     : null,
                 recognizer: e.recognizer,
                 onEnter: (_) {
                   if (mounted) {
                     setState(() {
-                      hover = e.text!;
+                      _hover = e.text!;
                     });
                   }
                 },
                 onExit: (_) {
                   if (mounted) {
                     setState(() {
-                      hover = '';
+                      _hover = '';
                     });
                   }
                 },
@@ -1103,7 +1131,7 @@ class MobileNavigationBar extends StatelessWidget {
               if (index == i) return;
               context.push('/$kMediaLibraryPath/${paths[i]}');
               Configuration.instance.set(mediaLibraryPath: paths[i]);
-              NowPlayingMobileNotifier.instance.restore();
+              NowPlayingMobileNotifier.instance.showNowPlayingBar();
             },
             labelBehavior: displayLabels ? NavigationDestinationLabelBehavior.alwaysShow : NavigationDestinationLabelBehavior.alwaysHide,
             destinations: [
@@ -1134,7 +1162,7 @@ class MobileNavigationBar extends StatelessWidget {
               duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
               tween: ColorTween(
                 begin: Theme.of(context).colorScheme.primary,
-                end: nowPlayingColorPaletteNotifier.palette?.first ?? Theme.of(context).colorScheme.primary,
+                end: (Configuration.instance.mobileNowPlayingRipple ? nowPlayingColorPaletteNotifier.palette?.first : null) ?? Theme.of(context).colorScheme.primary,
               ),
               builder: (context, color, _) => Container(
                 decoration: const BoxDecoration(
@@ -1151,7 +1179,7 @@ class MobileNavigationBar extends StatelessWidget {
                     if (index == i) return;
                     context.push('/$kMediaLibraryPath/${paths[i]}');
                     Configuration.instance.set(mediaLibraryPath: paths[i]);
-                    NowPlayingMobileNotifier.instance.restore();
+                    NowPlayingMobileNotifier.instance.showNowPlayingBar();
                   },
                   items: [
                     BottomNavigationBarItem(
@@ -1483,39 +1511,6 @@ class DefaultTextFormField extends StatelessWidget {
 
 // --------------------------------------------------
 
-class NowPlayingBarScrollHideNotifier extends StatelessWidget {
-  final Widget child;
-
-  const NowPlayingBarScrollHideNotifier({super.key, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    if (isDesktop) {
-      return child;
-    } else {
-      return NotificationListener<UserScrollNotification>(
-        onNotification: (notification) {
-          if (notification.metrics.axis == Axis.vertical &&
-              [
-                AxisDirection.up,
-                AxisDirection.down,
-              ].contains(notification.metrics.axisDirection)) {
-            if (notification.direction == ScrollDirection.forward) {
-              NowPlayingMobileNotifier.instance.show();
-            } else if (notification.direction == ScrollDirection.reverse) {
-              NowPlayingMobileNotifier.instance.hide();
-            }
-          }
-          return true;
-        },
-        child: child,
-      );
-    }
-  }
-}
-
-// --------------------------------------------------
-
 class PlayFileOrURLButton extends StatelessWidget {
   const PlayFileOrURLButton({super.key});
 
@@ -1641,6 +1636,7 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
         await showModalBottomSheet(
           context: context,
           showDragHandle: isMaterial3OrGreater,
+          useRootNavigator: true,
           isScrollControlled: true,
           elevation: kDefaultHeavyElevation,
           builder: (context) => Column(
@@ -1701,7 +1697,6 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                   style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                 ),
               ),
-              if (!isDesktop && NowPlayingMobileNotifier.instance.restored) const SizedBox(height: kMobileNowPlayingBarHeight),
               SizedBox(height: MediaQuery.of(context).padding.bottom),
             ],
           ),
@@ -1805,7 +1800,7 @@ class StillGIF extends StatefulWidget {
 }
 
 class StillGIFState extends State<StillGIF> {
-  RawImage? image;
+  RawImage? _image;
 
   @override
   void initState() {
@@ -1824,7 +1819,7 @@ class StillGIFState extends State<StillGIF> {
       final codec = await PaintingBinding.instance.instantiateImageCodecWithSize(buffer);
       final frame = await codec.getNextFrame();
       setState(() {
-        image = RawImage(
+        _image = RawImage(
           image: frame.image.clone(),
           height: widget.height,
           width: widget.width,
@@ -1838,7 +1833,7 @@ class StillGIFState extends State<StillGIF> {
       final codec = await PaintingBinding.instance.instantiateImageCodecWithSize(buffer);
       final frame = await codec.getNextFrame();
       setState(() {
-        image = RawImage(
+        _image = RawImage(
           image: frame.image.clone(),
           height: widget.height,
           width: widget.width,
@@ -1851,7 +1846,7 @@ class StillGIFState extends State<StillGIF> {
       final codec = await PaintingBinding.instance.instantiateImageCodecWithSize(buffer);
       final frame = await codec.getNextFrame();
       setState(() {
-        image = RawImage(
+        _image = RawImage(
           image: frame.image.clone(),
           height: widget.height,
           width: widget.width,
@@ -1869,7 +1864,7 @@ class StillGIFState extends State<StillGIF> {
 
   @override
   Widget build(BuildContext context) {
-    return image ??
+    return _image ??
         SizedBox(
           width: widget.width,
           height: widget.height,
@@ -2034,9 +2029,9 @@ class StatefulPageViewBuilder extends StatefulWidget {
 }
 
 class StatefulPageViewBuilderState extends State<StatefulPageViewBuilder> {
-  late final PageController controller = PageController(
+  // https://github.com/flutter/flutter/issues/31191
+  late final PageController _controller = PageController(
     initialPage: widget.index,
-    // https://github.com/flutter/flutter/issues/31191
     viewportFraction: 0.9999999999,
   );
 
@@ -2045,9 +2040,9 @@ class StatefulPageViewBuilderState extends State<StatefulPageViewBuilder> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.index != widget.index) {
       if ((oldWidget.index - widget.index).abs() > 5) {
-        controller.jumpToPage(widget.index);
+        _controller.jumpToPage(widget.index);
       } else {
-        controller.animateToPage(
+        _controller.animateToPage(
           widget.index,
           duration: Theme.of(context).extension<AnimationDuration>()?.slow ?? Duration.zero,
           curve: Curves.easeInOut,
@@ -2059,16 +2054,79 @@ class StatefulPageViewBuilderState extends State<StatefulPageViewBuilder> {
   @override
   void dispose() {
     super.dispose();
-    controller.dispose();
+    _controller.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return PageView.builder(
-      controller: controller,
+      controller: _controller,
       physics: widget.physics,
       itemCount: widget.itemCount,
       itemBuilder: (context, index) => widget.itemBuilder(context, index),
+    );
+  }
+}
+
+// --------------------------------------------------
+
+class StatefulCarouselViewBuilder extends StatefulWidget {
+  final int index;
+  final Widget Function(BuildContext, int) itemBuilder;
+  final int itemCount;
+  final EdgeInsets padding;
+  final List<int> flexWeights;
+  final void Function(int)? onTap;
+
+  const StatefulCarouselViewBuilder({
+    super.key,
+    required this.index,
+    required this.itemBuilder,
+    required this.itemCount,
+    this.padding = const EdgeInsets.symmetric(horizontal: 4.0),
+    required this.flexWeights,
+    this.onTap,
+  });
+
+  @override
+  State<StatefulCarouselViewBuilder> createState() => StatefulCarouselViewBuilderState();
+}
+
+class StatefulCarouselViewBuilderState extends State<StatefulCarouselViewBuilder> {
+  late final CarouselController _controller = CarouselController(initialItem: widget.index);
+
+  @override
+  void didUpdateWidget(covariant StatefulCarouselViewBuilder oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.index != widget.index) {
+      if ((oldWidget.index - widget.index).abs() > 5) {
+        _controller.animateToItem(widget.index, duration: Duration.zero);
+      } else {
+        _controller.animateToItem(
+          widget.index,
+          duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+          curve: Curves.easeInOut,
+        );
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CarouselView.weighted(
+      padding: widget.padding,
+      itemSnapping: true,
+      controller: _controller,
+      itemCount: widget.itemCount,
+      itemBuilder: widget.itemBuilder,
+      flexWeights: widget.flexWeights,
+      onTap: widget.onTap,
     );
   }
 }
@@ -2178,6 +2236,12 @@ class _MusicAnimationComponentState extends State<_MusicAnimationComponent> with
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: animation,
@@ -2186,11 +2250,5 @@ class _MusicAnimationComponentState extends State<_MusicAnimationComponent> with
         color: widget.color,
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    controller.dispose();
   }
 }

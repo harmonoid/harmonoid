@@ -22,7 +22,6 @@ import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
-import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_item.dart';
 import 'package:harmonoid/ui/router.dart';
@@ -45,6 +44,8 @@ bool get isDesktop => Theme.of(rootNavigatorKey.currentContext!).extension<Layou
 bool get isTablet => Theme.of(rootNavigatorKey.currentContext!).extension<LayoutVariantThemeExtension>()?.value == LayoutVariant.tablet;
 
 bool get isMobile => Theme.of(rootNavigatorKey.currentContext!).extension<LayoutVariantThemeExtension>()?.value == LayoutVariant.mobile;
+
+bool get isDarkMode => Theme.of(rootNavigatorKey.currentContext!).brightness == Brightness.dark;
 
 double get margin {
   if (isDesktop) {
@@ -344,9 +345,9 @@ Future<String> showInput(
     await showModalBottomSheet(
       context: context,
       showDragHandle: isMaterial3OrGreater,
-      isScrollControlled: true,
       elevation: kDefaultHeavyElevation,
       useRootNavigator: true,
+      isScrollControlled: true,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setState) {
           return Container(
@@ -631,11 +632,6 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
             ),
           ),
         ),
-      if (!isDesktop && NowPlayingMobileNotifier.instance.restored)
-        const PopupMenuItem<int>(
-          padding: EdgeInsets.zero,
-          child: SizedBox(height: kMobileNowPlayingBarHeight),
-        ),
     ];
 
 List<PopupMenuItem<int>> albumPopupMenuItems(BuildContext context, Album album) => [
@@ -687,11 +683,6 @@ List<PopupMenuItem<int>> albumPopupMenuItems(BuildContext context, Album album) 
           ),
         ),
       ),
-      if (!isDesktop && NowPlayingMobileNotifier.instance.restored)
-        const PopupMenuItem<int>(
-          padding: EdgeInsets.zero,
-          child: SizedBox(height: kMobileNowPlayingBarHeight),
-        ),
     ];
 
 List<PopupMenuItem<int>> playlistPopupMenuItems(BuildContext context, Playlist playlist) => [
@@ -1112,6 +1103,7 @@ Future<void> showAddToPlaylistDialog(
     return showModalBottomSheet(
       context: context,
       showDragHandle: isMaterial3OrGreater,
+      useRootNavigator: true,
       isScrollControlled: true,
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: 0.6,
