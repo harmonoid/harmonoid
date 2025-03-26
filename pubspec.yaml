@@ -27,6 +27,7 @@ dependencies:
   go_router: ^14.2.7
   http: ^1.2.1
   lrc: ^1.0.1
+  measure_size: ^4.0.0
   media_kit:
     git:
       url: https://github.com/media-kit/media-kit.git
