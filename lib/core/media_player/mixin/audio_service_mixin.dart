@@ -221,4 +221,7 @@ class _AudioServiceImpl extends BaseAudioHandler with QueueHandler, SeekHandler 
         AudioServiceRepeatMode.all => Loop.all,
         AudioServiceRepeatMode.group => Loop.all,
       });
+
+  @override
+  Future<void> onTaskRemoved() => stop().then((_) => playbackState.add(PlaybackState()));
 }

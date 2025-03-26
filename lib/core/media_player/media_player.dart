@@ -177,19 +177,19 @@ class MediaPlayer extends ChangeNotifier with AudioServiceMixin, DiscordRpcMixin
   }
 
   Future<void> mapPlayerToState() async {
-    _player.stream.playlist.listen((event) => state = state.copyWith(index: event.index, playables: event.medias.map((event) => event.toPlayable()).toList(), duration: Duration.zero));
-    _player.stream.rate.listen((event) => state = state.copyWith(rate: event));
-    _player.stream.pitch.listen((event) => state = state.copyWith(pitch: event));
-    _player.stream.volume.listen((event) => state = state.copyWith(volume: event));
-    _player.stream.playlistMode.listen((event) => state = state.copyWith(loop: event.toLoop()));
-    _player.stream.position.distinct((previous, next) => (next - previous).abs() < const Duration(milliseconds: 200)).listen((event) => state = state.copyWith(position: event));
-    _player.stream.duration.listen((event) => state = state.copyWith(duration: event));
-    _player.stream.playing.listen((event) => state = state.copyWith(playing: event));
-    _player.stream.buffering.listen((event) => state = state.copyWith(buffering: event));
-    _player.stream.completed.listen((event) => state = state.copyWith(completed: event));
-    _player.stream.audioBitrate.listen((event) => state = state.copyWith(audioBitrate: event));
-    _player.stream.audioParams.listen((event) => state = state.copyWith(audioParams: event));
-    _player.stream.error.listen((event) => debugPrint(event));
+    _player.stream.playlist.listen((e) => state = state.copyWith(index: e.index, playables: e.medias.map((e) => e.toPlayable()).toList(), duration: Duration.zero));
+    _player.stream.rate.listen((e) => state = state.copyWith(rate: e));
+    _player.stream.pitch.listen((e) => state = state.copyWith(pitch: e));
+    _player.stream.volume.listen((e) => state = state.copyWith(volume: e));
+    _player.stream.playlistMode.listen((e) => state = state.copyWith(loop: e.toLoop()));
+    _player.stream.position.listen((e) => state = state.copyWith(position: e));
+    _player.stream.duration.listen((e) => state = state.copyWith(duration: e));
+    _player.stream.playing.listen((e) => state = state.copyWith(playing: e));
+    _player.stream.buffering.listen((e) => state = state.copyWith(buffering: e));
+    _player.stream.completed.listen((e) => state = state.copyWith(completed: e));
+    _player.stream.audioBitrate.listen((e) => state = state.copyWith(audioBitrate: e));
+    _player.stream.audioParams.listen((e) => state = state.copyWith(audioParams: e));
+    _player.stream.error.listen((e) => debugPrint(e));
   }
 
   Future<void> updateCurrent({void Function(String)? onUpdateCurrent = mediaPlayerUpdateCurrentOnUpdateCurrent}) {
