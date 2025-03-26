@@ -19,7 +19,7 @@ class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
   /// Pool size for [PooledTagReader].
   static final int kPooledTagReaderSize = () {
     try {
-      return Platform.numberOfProcessors.round().clamp(1, 4);
+      return Platform.numberOfProcessors.round().clamp(1, 4) ~/ 2;
     } catch (_) {
       return 2;
     }
