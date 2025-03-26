@@ -22,7 +22,6 @@
 
     <application
         android:name="${applicationName}"
-        android:enableOnBackInvokedCallback="true"
         android:hasFragileUserData="true"
         android:icon="@mipmap/ic_launcher"
         android:label="Harmonoid"
@@ -93,6 +92,6 @@
             android:value="2" />
         <meta-data
             android:name="io.flutter.embedding.android.EnableImpeller"
-            android:value="true" />
+            android:value="false" />
     </application>
 </manifest>
