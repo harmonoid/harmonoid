@@ -267,10 +267,10 @@ class OpenContainer<T extends Object?> extends StatefulWidget {
   final Clip clipBehavior;
 
   @override
-  State<OpenContainer<T?>> createState() => _OpenContainerState<T>();
+  State<OpenContainer<T?>> createState() => OpenContainerState<T>();
 }
 
-class _OpenContainerState<T> extends State<OpenContainer<T?>> {
+class OpenContainerState<T> extends State<OpenContainer<T?>> {
   // Key used in [_OpenContainerRoute] to hide the widget returned by
   // [OpenContainer.openBuilder] in the source route while the container is
   // opening/open. A copy of that widget is included in the
@@ -553,10 +553,10 @@ class _OpenContainerRoute<T> extends ModalRoute<T> {
   final CloseContainerBuilder closedBuilder;
   final OpenContainerBuilder<T> openBuilder;
 
-  // See [_OpenContainerState._hideableKey].
+  // See [OpenContainerState._hideableKey].
   final GlobalKey<_HideableState> hideableKey;
 
-  // See [_OpenContainerState._closedBuilderKey].
+  // See [OpenContainerState._closedBuilderKey].
   final GlobalKey closedBuilderKey;
 
   @override

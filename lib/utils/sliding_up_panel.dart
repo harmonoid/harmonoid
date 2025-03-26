@@ -28,7 +28,7 @@ class SlidingUpPanel extends StatefulWidget {
   final Widget? panel;
 
   /// WARNING: This feature is still in beta and is subject to change without
-  /// notice. Stability is not gauranteed. Provides a [ScrollController] and
+  /// notice. Stability is not guaranteed. Provides a [ScrollController] and
   /// [ScrollPhysics] to attach to a scrollable object in the panel that links
   /// the panel position with the scroll position. Useful for implementing an
   /// infinite scroll behavior. If [panel] and [panelBuilder] are both non-null,
@@ -349,7 +349,7 @@ class SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvide
                           child: AnimatedBuilder(
                             animation: _ac,
                             builder: (context, _) {
-                              return (_isPanelOpen || _ac.value == 1.0 || restored) ? const SizedBox.shrink() : widget.collapsed ?? const SizedBox.shrink();
+                              return _isPanelOpen ? const SizedBox.shrink() : widget.collapsed ?? const SizedBox.shrink();
                             },
                           ),
                         ),
