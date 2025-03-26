@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,6 @@ import 'package:media_library/media_library.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/ui/about_screen.dart';
 import 'package:harmonoid/ui/file_info_screen.dart';
-import 'package:harmonoid/ui/home_screen.dart';
 import 'package:harmonoid/ui/media_library/albums/album_screen.dart';
 import 'package:harmonoid/ui/media_library/albums/albums_screen.dart';
 import 'package:harmonoid/ui/media_library/artists/artist_screen.dart';
@@ -18,16 +16,15 @@ import 'package:harmonoid/ui/media_library/genres/genre_screen.dart';
 import 'package:harmonoid/ui/media_library/genres/genres_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_inaccessible_directories_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_screen.dart';
+import 'package:harmonoid/ui/media_library/media_library_shell_route.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_screen.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlists_screen.dart';
 import 'package:harmonoid/ui/media_library/search/search_items_screen.dart';
 import 'package:harmonoid/ui/media_library/search/search_screen.dart';
 import 'package:harmonoid/ui/media_library/tracks/tracks_screen.dart';
-import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_screen.dart';
 import 'package:harmonoid/ui/settings/settings_screen.dart';
 import 'package:harmonoid/utils/material_transition_page.dart';
-import 'package:harmonoid/utils/rendering.dart';
 
 const String kMediaLibraryPath = 'media-library';
 
@@ -141,25 +138,7 @@ final router = GoRouter(
     ShellRoute(
       navigatorKey: homeNavigatorKey,
       builder: (context, state, child) {
-        if (isDesktop) {
-          return Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              Positioned.fill(
-                bottom: NowPlayingBar.height,
-                child: HomeScreen(child: child),
-              ),
-              const NowPlayingBar(),
-            ],
-          );
-        }
-        if (isTablet) {
-          throw UnimplementedError();
-        }
-        if (isMobile) {
-          return HomeScreen(child: child);
-        }
-        throw UnimplementedError();
+        return MediaLibraryShellRoute(child: child);
       },
       routes: [
         GoRoute(
