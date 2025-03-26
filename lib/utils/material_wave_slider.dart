@@ -96,10 +96,12 @@ class MaterialWaveSliderState extends State<MaterialWaveSlider> with SingleTicke
   @override
   void didUpdateWidget(covariant MaterialWaveSlider oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.paused) {
-      pause();
-    } else {
-      resume();
+    if (_current == null) {
+      if (widget.paused) {
+        pause();
+      } else {
+        resume();
+      }
     }
   }
 
@@ -403,7 +405,7 @@ class _SliderDefaultsM3 extends SliderThemeData {
   Color? get activeTrackColor => _colors.primary;
 
   @override
-  Color? get inactiveTrackColor => _colors.surfaceContainerHighest;
+  Color? get inactiveTrackColor => _colors.primary;
 
   @override
   Color? get secondaryActiveTrackColor => _colors.primary.withOpacity(0.54);
