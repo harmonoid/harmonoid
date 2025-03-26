@@ -22,7 +22,7 @@ class _PermissionsSectionState extends State<PermissionsSection> {
 
   @override
   Widget build(BuildContext context) {
-    if (!Platform.isAndroid) return const SizedBox.shrink();
+    if (!(Platform.isAndroid && AndroidStorageController.instance.version >= 33)) return const SizedBox.shrink();
     /* ANDROID */
     return SettingsSection(
       title: Localization.instance.SETTINGS_SECTION_PERMISSIONS_TITLE,

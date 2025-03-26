@@ -62,21 +62,21 @@ class MainActivity : AudioServiceActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
-        receiveIntent(intent)
+        handleIntent(intent)
     }
 
     override fun onResume() {
         super.onResume()
-        receiveIntent(intent)
+        handleIntent(intent)
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        receiveIntent(intent)
+        handleIntent(intent)
     }
 
     @Synchronized
-    private fun receiveIntent(intent: Intent?) {
+    private fun handleIntent(intent: Intent?) {
         if (intent == null) return
         Log.d(TAG, intent.action.toString())
         Log.d(TAG, intent.data.toString())

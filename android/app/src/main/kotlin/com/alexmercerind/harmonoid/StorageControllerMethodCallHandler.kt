@@ -6,12 +6,14 @@ import android.content.ContentUris
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import io.flutter.Log
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.io.File
+import kotlin.io.path.Path
 
 class StorageControllerMethodCallHandler(private val activity: Activity, private val channel: MethodChannel) : MethodChannel.MethodCallHandler {
     companion object {
@@ -19,6 +21,7 @@ class StorageControllerMethodCallHandler(private val activity: Activity, private
 
         private const val GET_STORAGE_DIRECTORIES_METHOD_NAME = "getStorageDirectories"
         private const val GET_CACHE_DIRECTORY_METHOD_NAME = "getCacheDirectory"
+        private const val GET_DEFAULT_MEDIA_LIBRARY_DIRECTORY_METHOD_NAME = "getDefaultMediaLibraryDirectory";
         private const val GET_VERSION_METHOD_NAME = "getVersion"
         private const val DELETE_METHOD_NAME = "delete"
         /* private */ const val NOTIFY_DELETE_METHOD_NAME = "notifyDelete"
@@ -38,7 +41,13 @@ class StorageControllerMethodCallHandler(private val activity: Activity, private
 
             GET_CACHE_DIRECTORY_METHOD_NAME -> {
                 val value = activity.getExternalFilesDirs(null).first().absolutePath
-                Log.d(TAG, value.toString())
+                Log.d(TAG, value)
+                result.success(value)
+            }
+
+            GET_DEFAULT_MEDIA_LIBRARY_DIRECTORY_METHOD_NAME -> {
+                val value = Path(activity.getExternalFilesDirs(null).first().absolutePath.split("/Android/")[0], Environment.DIRECTORY_MUSIC).toString()
+                Log.d(TAG, value)
                 result.success(value)
             }
 

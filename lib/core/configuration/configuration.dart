@@ -174,8 +174,8 @@ Future<String> getDefaultDirectory() async {
 /// Returns the default directories to scan the media files.
 Future<List<String>> getDefaultMediaLibraryDirectories() async {
   if (Platform.isAndroid) {
-    final result = await AndroidStorageController.instance.getStorageDirectories();
-    return [path.normalize(result.first.path)];
+    final result = await AndroidStorageController.instance.getDefaultMediaLibraryDirectory();
+    return [path.normalize(result.path)];
   } else if (Platform.isLinux) {
     String? value;
 

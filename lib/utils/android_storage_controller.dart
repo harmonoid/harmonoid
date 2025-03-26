@@ -15,6 +15,7 @@ class AndroidStorageController {
   static const kMethodChannelName = 'com.alexmercerind.harmonoid/storage_controller';
   static const kGetStorageDirectoriesMethodName = 'getStorageDirectories';
   static const kGetCacheDirectoryMethodName = 'getCacheDirectory';
+  static const kGetDefaultMediaLibraryDirectoryMethodName = 'getDefaultMediaLibraryDirectory';
   static const kGetVersion = 'getVersion';
   static const kDelete = 'delete';
   static const kNotifyDeleteMethodName = 'notifyDelete';
@@ -78,6 +79,11 @@ class AndroidStorageController {
 
   Future<Directory> getCacheDirectory() async {
     final result = await _channel.invokeMethod(kGetCacheDirectoryMethodName);
+    return Directory(path.normalize(result));
+  }
+
+  Future<Directory> getDefaultMediaLibraryDirectory() async {
+    final result = await _channel.invokeMethod(kGetDefaultMediaLibraryDirectoryMethodName);
     return Directory(path.normalize(result));
   }
 
