@@ -1,5 +1,6 @@
 package com.alexmercerind.harmonoid
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -7,10 +8,10 @@ import android.os.Build
 import android.os.Bundle
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.ryanheise.audioservice.AudioServiceActivity
+import com.ryanheise.audioservice.AudioServicePlugin
 import io.flutter.Log
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugins.GeneratedPluginRegistrant
 import java.io.File
 import java.io.FileOutputStream
 import java.security.MessageDigest
@@ -35,8 +36,12 @@ class MainActivity : AudioServiceActivity() {
     private var storageControllerMethodChannel: MethodChannel? = null
     private var uri: String? = null
 
+    override fun provideFlutterEngine(context: Context): FlutterEngine? {
+        AudioServicePlugin.disposeFlutterEngine()
+        return super.provideFlutterEngine(context)
+    }
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-        GeneratedPluginRegistrant.registerWith(flutterEngine)
         Log.d(TAG, context.getExternalFilesDirs(null).map { file -> file.absolutePath }.toString())
 
         intentControllerMethodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, INTENT_CONTROLLER_CHANNEL_NAME).apply {
