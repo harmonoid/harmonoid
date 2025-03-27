@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:media_kit/media_kit.dart' hide Playable;
+import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:tag_reader/tag_reader.dart';
 
@@ -203,9 +204,14 @@ class MediaPlayer extends ChangeNotifier with AudioServiceMixin, DiscordRpcMixin
         _current = null;
         notifyListeners();
 
+        final cover = MediaLibrary.instance.uriToCoverFile(uri);
+
+        // NOTE: Since the cover file already exists, the previously fetched tags are certainly correct, so there is no need to fetch them again.
+        if (await cover.exists_() && await cover.length_() > 0) return;
+
         final tags = await _tagReader.parse(
           uri,
-          cover: MediaLibrary.instance.uriToCoverFile(uri),
+          cover: cover,
           timeout: const Duration(minutes: 1),
         );
         _current = tags.toTrack().toPlayable();
