@@ -22,6 +22,8 @@ class NowPlayingMobileNotifier {
   MediaLibraryScreenState? _mediaLibraryScreenStateRef;
   MediaLibraryShellRouteState? _mediaLibraryShellRouteStateRef;
 
+  bool get maximized => _mobileM3NowPlayingBarStateRef?.maximized ?? _mobileM2NowPlayingBarStateRef?.maximized ?? false;
+
   void setMobileM3NowPlayingBarStateRef(MobileM3NowPlayingBarState value) {
     _mobileM3NowPlayingBarStateRef = value;
   }
@@ -51,6 +53,11 @@ class NowPlayingMobileNotifier {
   void maximizeNowPlayingBar() {
     _mobileM3NowPlayingBarStateRef?.maximizeNowPlayingBar();
     _mobileM2NowPlayingBarStateRef?.maximizeNowPlayingBar();
+  }
+
+  void minimizeNowPlayingBar() {
+    _mobileM3NowPlayingBarStateRef?.minimizeNowPlayingBar();
+    _mobileM2NowPlayingBarStateRef?.minimizeNowPlayingBar();
   }
 
   void showBottomNavigationBar() {

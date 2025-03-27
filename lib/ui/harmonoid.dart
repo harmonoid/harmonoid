@@ -14,8 +14,34 @@ import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/keyboard_shortcuts.dart';
 import 'package:harmonoid/utils/macos_menu_bar.dart';
 
-class Harmonoid extends StatelessWidget {
+class Harmonoid extends StatefulWidget {
   const Harmonoid({super.key});
+
+  @override
+  State<Harmonoid> createState() => _HarmonoidState();
+}
+
+class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  Future<bool> didPopRoute() async {
+    if (NowPlayingMobileNotifier.instance.maximized) {
+      NowPlayingMobileNotifier.instance.minimizeNowPlayingBar();
+      return true;
+    }
+    return super.didPopRoute();
+  }
 
   @override
   Widget build(BuildContext context) {

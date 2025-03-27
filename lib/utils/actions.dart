@@ -17,7 +17,7 @@ void intentNotifyOnPlaybackStateRestore() async {
     // NO/OP
   }
   if (isMobile) {
-    NowPlayingMobileNotifier.instance.showBottomNavigationBar();
+    NowPlayingMobileNotifier.instance.showNowPlayingBar();
   }
 }
 

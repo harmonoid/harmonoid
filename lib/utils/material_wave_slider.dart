@@ -405,7 +405,7 @@ class _SliderDefaultsM3 extends SliderThemeData {
   Color? get activeTrackColor => _colors.primary;
 
   @override
-  Color? get inactiveTrackColor => _colors.primary;
+  Color? get inactiveTrackColor => _colors.primary.withOpacity(0.54);
 
   @override
   Color? get secondaryActiveTrackColor => _colors.primary.withOpacity(0.54);

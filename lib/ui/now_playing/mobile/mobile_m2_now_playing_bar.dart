@@ -8,7 +8,9 @@ class MobileM2NowPlayingBar extends StatefulWidget {
 }
 
 class MobileM2NowPlayingBarState extends State<MobileM2NowPlayingBar> {
+  bool get maximized => false;
   void maximizeNowPlayingBar() {}
+  void minimizeNowPlayingBar() {}
 
   @override
   Widget build(BuildContext context) {

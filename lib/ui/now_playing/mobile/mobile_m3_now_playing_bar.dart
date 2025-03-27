@@ -47,8 +47,14 @@ class MobileM3NowPlayingBarState extends State<MobileM3NowPlayingBar> {
     WidgetsBinding.instance.addPostFrameCallback((_) => context.read<NowPlayingMobileNotifier>().setMobileM3NowPlayingBarStateRef(this));
   }
 
+  bool get maximized => _valueNotifier.value == 1.0;
+
   void maximizeNowPlayingBar() {
     _miniPlayerController.animateToHeight(state: MiniPlayerPanelState.MAX);
+  }
+
+  void minimizeNowPlayingBar() {
+    _miniPlayerController.animateToHeight(state: MiniPlayerPanelState.MIN);
   }
 
   @override
@@ -153,10 +159,14 @@ class MobileM3NowPlayingBarState extends State<MobileM3NowPlayingBar> {
                                                     children: [
                                                       Text(
                                                         mediaPlayer.current.title,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow.ellipsis,
                                                         style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                                                       ),
                                                       Text(
                                                         mediaPlayer.current.subtitle.join(', '),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow.ellipsis,
                                                         style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
                                                       ),
                                                     ],
