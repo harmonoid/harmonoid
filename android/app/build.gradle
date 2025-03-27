@@ -1,14 +1,13 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader("UTF-8") { reader ->
-        localProperties.load(reader)
-    }
-}
-
-def flutterRoot = localProperties.getProperty("flutter.sdk")
-if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+    localPropertiesFile.withReader("UTF-8") { reader -> localProperties.load(reader) }
 }
 
 def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
@@ -21,10 +20,6 @@ if (flutterVersionName == null) {
     flutterVersionName = "1.0"
 }
 
-apply plugin: "com.android.application"
-apply plugin: "kotlin-android"
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file("key.properties")
 if (keystorePropertiesFile.exists()) {
@@ -34,10 +29,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace "com.alexmercerind.harmonoid"
 
-    compileSdkVersion 34
-    sourceSets {
-        main.java.srcDirs += "src/main/kotlin"
-    }
+    compileSdk 35
 
     lintOptions {
         disable "InvalidPackage"
@@ -45,8 +37,8 @@ android {
 
     defaultConfig {
         applicationId "com.alexmercerind.harmonoid"
-        minSdkVersion 21
-        targetSdkVersion 34
+        minSdk 21
+        targetSdk 35
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
@@ -66,13 +58,25 @@ android {
         }
 
         release {
-            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.debug
         }
     }
 
     compileOptions {
-        sourceCompatibility 21
-        targetCompatibility 21
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+
+    kotlinOptions {
+        jvmTarget = '21'
+    }
+
+    packaging {
+        jniLibs {
+            excludes += "/lib/**/libflutter_discord_rpc.so"
+        }
     }
 }
 
@@ -81,7 +85,5 @@ flutter {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "net.sourceforge.streamsupport:android-retrofuture:1.7.2"
-    implementation "androidx.core:core-splashscreen:1.0.0"
+    implementation "androidx.core:core-splashscreen:1.0.1"
 }
