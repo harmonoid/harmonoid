@@ -59,213 +59,207 @@ class MobileM3NowPlayingBarState extends State<MobileM3NowPlayingBar> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      onPopInvokedWithResult: (didPop, _) {
-        if (didPop) return;
-        _miniPlayerController.animateToHeight(state: MiniPlayerPanelState.MIN);
-      },
-      child: Consumer<NowPlayingColorPaletteNotifier>(
-        builder: (context, nowPlayingColorPaletteNotifier, _) {
-          return Provider<NowPlayingColors>.value(
-            value: NowPlayingColors.fromPalette(
-              context,
-              isMaterial2 && Configuration.instance.desktopNowPlayingBarColorPalette ? nowPlayingColorPaletteNotifier.palette : null,
-            ),
-            builder: (context, _) {
-              return Consumer<MediaPlayer>(
-                builder: (context, mediaPlayer, _) {
-                  if (mediaPlayer.state.isEmpty) {
-                    return const SizedBox.shrink();
-                  }
-                  return Stack(
-                    children: [
-                      MiniPlayer(
-                        controller: _miniPlayerController,
-                        curve: Curves.easeInOut,
-                        minHeight: NowPlayingBar.height,
-                        maxHeight: MediaQuery.sizeOf(context).height,
-                        elevation: kDefaultHeavyElevation,
-                        tapToCollapse: false,
-                        builder: (height, percentage) {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            try {
-                              if (percentage == 0.0) {
-                                _panelController.close();
-                              }
+    return Consumer<NowPlayingColorPaletteNotifier>(
+      builder: (context, nowPlayingColorPaletteNotifier, _) {
+        return Provider<NowPlayingColors>.value(
+          value: NowPlayingColors.fromPalette(
+            context,
+            isMaterial2 && Configuration.instance.desktopNowPlayingBarColorPalette ? nowPlayingColorPaletteNotifier.palette : null,
+          ),
+          builder: (context, _) {
+            return Consumer<MediaPlayer>(
+              builder: (context, mediaPlayer, _) {
+                if (mediaPlayer.state.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+                return Stack(
+                  children: [
+                    MiniPlayer(
+                      controller: _miniPlayerController,
+                      curve: Curves.easeInOut,
+                      minHeight: NowPlayingBar.height,
+                      maxHeight: MediaQuery.sizeOf(context).height,
+                      elevation: kDefaultHeavyElevation,
+                      tapToCollapse: false,
+                      builder: (height, percentage) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          try {
+                            if (percentage == 0.0) {
+                              _panelController.close();
+                            }
 
-                              _valueNotifier.value = percentage;
-                              context.read<NowPlayingMobileNotifier>().setBottomNavigationBarVisibility((1.0 - percentage * 2.0).clamp(0.0, 1.0));
-                            } catch (_) {}
-                          });
-                          return Stack(
-                            alignment: Alignment.topCenter,
-                            children: [
-                              Positioned.fill(
-                                child: ColoredBox(color: Theme.of(context).navigationBarTheme.backgroundColor ?? Colors.transparent),
-                              ),
-                              if (percentage > 0.5)
-                                Opacity(
-                                  opacity: ((percentage - 0.5) * 2.0).clamp(0.0, 1.0),
-                                  child: Container(
-                                    color: Theme.of(context).scaffoldBackgroundColor,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      children: [
-                                        _buildCarousel(context, mediaPlayer, percentage),
-                                        _buildDetails(context, mediaPlayer),
-                                        _buildControls(context, mediaPlayer),
-                                      ],
-                                    ),
+                            _valueNotifier.value = percentage;
+                            context.read<NowPlayingMobileNotifier>().setBottomNavigationBarVisibility((1.0 - percentage * 2.0).clamp(0.0, 1.0));
+                          } catch (_) {}
+                        });
+                        return Stack(
+                          alignment: Alignment.topCenter,
+                          children: [
+                            Positioned.fill(
+                              child: ColoredBox(color: Theme.of(context).navigationBarTheme.backgroundColor ?? Colors.transparent),
+                            ),
+                            if (percentage > 0.5)
+                              Opacity(
+                                opacity: ((percentage - 0.5) * 2.0).clamp(0.0, 1.0),
+                                child: Container(
+                                  color: Theme.of(context).scaffoldBackgroundColor,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    children: [
+                                      _buildCarousel(context, mediaPlayer, percentage),
+                                      _buildDetails(context, mediaPlayer),
+                                      _buildControls(context, mediaPlayer),
+                                    ],
                                   ),
                                 ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  IgnorePointer(
-                                    child: Opacity(
-                                      opacity: percentage == 1.0 ? 0.0 : 1.0,
-                                      child: Container(
-                                        width: lerpDouble(NowPlayingBar.height, MediaQuery.sizeOf(context).width, percentage),
-                                        padding: EdgeInsets.only(
-                                          top: lerpDouble(0.0, MediaQuery.paddingOf(context).top + 16.0, percentage) ?? 0.0,
-                                          left: lerpDouble(0.0, MediaQuery.sizeOf(context).width * 1 / 9 + 4.0, percentage) ?? 0.0,
-                                          right: lerpDouble(0.0, MediaQuery.sizeOf(context).width * 1 / 9 + 4.0, percentage) ?? 0.0,
-                                        ),
-                                        child: ClipRRect(
-                                          clipBehavior: Clip.antiAlias,
-                                          borderRadius: BorderRadius.circular(lerpDouble(0.0, 28.0, percentage) ?? 0.0),
-                                          child: Image(
-                                            image: cover(uri: mediaPlayer.current.uri),
-                                            fit: BoxFit.cover,
-                                            width: lerpDouble(NowPlayingBar.height, MediaQuery.sizeOf(context).width * 7 / 9, percentage),
-                                            height: lerpDouble(NowPlayingBar.height, MediaQuery.sizeOf(context).width * 7 / 9, percentage),
-                                          ),
+                              ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                IgnorePointer(
+                                  child: Opacity(
+                                    opacity: percentage == 1.0 ? 0.0 : 1.0,
+                                    child: Container(
+                                      width: lerpDouble(NowPlayingBar.height, MediaQuery.sizeOf(context).width, percentage),
+                                      padding: EdgeInsets.only(
+                                        top: lerpDouble(0.0, MediaQuery.paddingOf(context).top + 16.0, percentage) ?? 0.0,
+                                        left: lerpDouble(0.0, MediaQuery.sizeOf(context).width * 1 / 9 + 4.0, percentage) ?? 0.0,
+                                        right: lerpDouble(0.0, MediaQuery.sizeOf(context).width * 1 / 9 + 4.0, percentage) ?? 0.0,
+                                      ),
+                                      child: ClipRRect(
+                                        clipBehavior: Clip.antiAlias,
+                                        borderRadius: BorderRadius.circular(lerpDouble(0.0, 28.0, percentage) ?? 0.0),
+                                        child: Image(
+                                          image: cover(uri: mediaPlayer.current.uri),
+                                          fit: BoxFit.cover,
+                                          width: lerpDouble(NowPlayingBar.height, MediaQuery.sizeOf(context).width * 7 / 9, percentage),
+                                          height: lerpDouble(NowPlayingBar.height, MediaQuery.sizeOf(context).width * 7 / 9, percentage),
                                         ),
                                       ),
                                     ),
                                   ),
-                                  Expanded(
-                                    child: percentage > 0.2
-                                        ? const SizedBox.shrink()
-                                        : Opacity(
-                                            opacity: (1.0 - percentage / 0.2).clamp(0.0, 1.0),
-                                            child: Row(
-                                              children: [
-                                                const SizedBox(width: 12.0),
-                                                Expanded(
-                                                  child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      Text(
-                                                        mediaPlayer.current.title,
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow.ellipsis,
-                                                        style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Theme.of(context).colorScheme.onSurface),
-                                                      ),
-                                                      Text(
-                                                        mediaPlayer.current.subtitle.join(', '),
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow.ellipsis,
-                                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 12.0),
-                                                Center(
-                                                  child: IconButton(
-                                                    onPressed: mediaPlayer.playOrPause,
-                                                    icon: StatefulAnimatedIcon(
-                                                      dismissed: mediaPlayer.state.playing,
-                                                      icon: AnimatedIcons.play_pause,
+                                ),
+                                Expanded(
+                                  child: percentage > 0.2
+                                      ? const SizedBox.shrink()
+                                      : Opacity(
+                                          opacity: (1.0 - percentage / 0.2).clamp(0.0, 1.0),
+                                          child: Row(
+                                            children: [
+                                              const SizedBox(width: 12.0),
+                                              Expanded(
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      mediaPlayer.current.title,
+                                                      maxLines: 1,
+                                                      overflow: TextOverflow.ellipsis,
+                                                      style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                                                     ),
+                                                    Text(
+                                                      mediaPlayer.current.subtitle.join(', '),
+                                                      maxLines: 1,
+                                                      overflow: TextOverflow.ellipsis,
+                                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(width: 12.0),
+                                              Center(
+                                                child: IconButton(
+                                                  onPressed: mediaPlayer.playOrPause,
+                                                  icon: StatefulAnimatedIcon(
+                                                    dismissed: mediaPlayer.state.playing,
+                                                    icon: AnimatedIcons.play_pause,
                                                   ),
                                                 ),
-                                                const SizedBox(width: 8.0),
-                                              ],
-                                            ),
+                                              ),
+                                              const SizedBox(width: 8.0),
+                                            ],
                                           ),
-                                  ),
-                                ],
+                                        ),
+                                ),
+                              ],
+                            ),
+                            if (percentage < 0.5)
+                              Positioned(
+                                left: 0.0,
+                                right: 0.0,
+                                bottom: 0.0,
+                                child: Opacity(
+                                  opacity: (1.0 - percentage / 0.5).clamp(0.0, 1.0),
+                                  child: const Divider(height: 1.0, thickness: 1.0),
+                                ),
                               ),
-                              if (percentage < 0.5)
-                                Positioned(
+                            if (percentage < 0.5)
+                              () {
+                                const sliderMin = 0.0;
+                                final sliderMax = mediaPlayer.state.duration.inMilliseconds.toDouble();
+                                final sliderValue = mediaPlayer.state.position.inMilliseconds.clamp(sliderMin, sliderMax).toDouble();
+                                final double value;
+                                if (sliderMax == 0.0 || sliderValue == 0.0) {
+                                  value = 0.0;
+                                } else {
+                                  value = sliderValue / (sliderMax - sliderMin);
+                                }
+                                return Positioned(
                                   left: 0.0,
                                   right: 0.0,
-                                  bottom: 0.0,
+                                  top: 0.0,
                                   child: Opacity(
                                     opacity: (1.0 - percentage / 0.5).clamp(0.0, 1.0),
-                                    child: const Divider(height: 1.0, thickness: 1.0),
-                                  ),
-                                ),
-                              if (percentage < 0.5)
-                                () {
-                                  const sliderMin = 0.0;
-                                  final sliderMax = mediaPlayer.state.duration.inMilliseconds.toDouble();
-                                  final sliderValue = mediaPlayer.state.position.inMilliseconds.clamp(sliderMin, sliderMax).toDouble();
-                                  final double value;
-                                  if (sliderMax == 0.0 || sliderValue == 0.0) {
-                                    value = 0.0;
-                                  } else {
-                                    value = sliderValue / (sliderMax - sliderMin);
-                                  }
-                                  return Positioned(
-                                    left: 0.0,
-                                    right: 0.0,
-                                    top: 0.0,
-                                    child: Opacity(
-                                      opacity: (1.0 - percentage / 0.5).clamp(0.0, 1.0),
-                                      child: SizedBox(
-                                        height: 2.0,
-                                        child: LinearProgressIndicator(
-                                          value: value,
-                                          color: context.read<NowPlayingColors>().sliderForeground,
-                                          backgroundColor: context.read<NowPlayingColors>().sliderForeground?.withOpacity(0.2),
-                                        ),
+                                    child: SizedBox(
+                                      height: 2.0,
+                                      child: LinearProgressIndicator(
+                                        value: value,
+                                        color: context.read<NowPlayingColors>().sliderForeground,
+                                        backgroundColor: context.read<NowPlayingColors>().sliderForeground?.withOpacity(0.2),
                                       ),
                                     ),
-                                  );
-                                }(),
-                            ],
-                          );
-                        },
+                                  ),
+                                );
+                              }(),
+                          ],
+                        );
+                      },
+                    ),
+                    ValueListenableBuilder(
+                      valueListenable: _valueNotifier,
+                      builder: (context, percentage, child) {
+                        return AnimatedSwitcher(
+                          switchInCurve: Curves.easeInOut,
+                          switchOutCurve: Curves.easeInOut,
+                          duration: Theme.of(context).extension<AnimationDuration>()?.slow ?? Duration.zero,
+                          child: percentage == 1.0 ? child : const SizedBox.shrink(),
+                        );
+                      },
+                      child: SlidingUpPanel(
+                        controller: _panelController,
+                        maxHeight: MediaQuery.sizeOf(context).height - (MediaQuery.paddingOf(context).top + 32.0),
+                        minHeight: MediaQuery.sizeOf(context).height - (_carouselHeight + _detailsHeight + _controlsHeight),
+                        parallaxEnabled: false,
+                        panelSnapping: true,
+                        renderPanelSheet: true,
+                        backdropEnabled: true,
+                        backdropTapClosesPanel: true,
+                        backdropOpacity: 0.5,
+                        color: _slidingUpPanelColor ?? Colors.transparent,
+                        margin: const EdgeInsets.symmetric(horizontal: 16.0),
+                        borderRadius: (Theme.of(context).cardTheme.shape as RoundedRectangleBorder).borderRadius,
+                        panelBuilder: (controller) => _buildPlaylist(context, mediaPlayer, 0, controller: controller),
+                        collapsed: _buildPlaylist(context, mediaPlayer, mediaPlayer.state.index + 1, physics: const NeverScrollableScrollPhysics()),
                       ),
-                      ValueListenableBuilder(
-                        valueListenable: _valueNotifier,
-                        builder: (context, percentage, child) {
-                          return AnimatedSwitcher(
-                            switchInCurve: Curves.easeInOut,
-                            switchOutCurve: Curves.easeInOut,
-                            duration: Theme.of(context).extension<AnimationDuration>()?.slow ?? Duration.zero,
-                            child: percentage == 1.0 ? child : const SizedBox.shrink(),
-                          );
-                        },
-                        child: SlidingUpPanel(
-                          controller: _panelController,
-                          maxHeight: MediaQuery.sizeOf(context).height - (MediaQuery.paddingOf(context).top + 32.0),
-                          minHeight: MediaQuery.sizeOf(context).height - (_carouselHeight + _detailsHeight + _controlsHeight),
-                          parallaxEnabled: false,
-                          panelSnapping: true,
-                          renderPanelSheet: true,
-                          backdropEnabled: true,
-                          backdropTapClosesPanel: true,
-                          backdropOpacity: 0.5,
-                          color: _slidingUpPanelColor ?? Colors.transparent,
-                          margin: const EdgeInsets.symmetric(horizontal: 16.0),
-                          borderRadius: (Theme.of(context).cardTheme.shape as RoundedRectangleBorder).borderRadius,
-                          panelBuilder: (controller) => _buildPlaylist(context, mediaPlayer, 0, controller: controller),
-                          collapsed: _buildPlaylist(context, mediaPlayer, mediaPlayer.state.index + 1, physics: const NeverScrollableScrollPhysics()),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-          );
-        },
-      ),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        );
+      },
     );
   }
 

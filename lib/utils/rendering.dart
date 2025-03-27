@@ -150,38 +150,36 @@ ImageProvider cover({
   if (cacheWidth != null) cacheWidth *= 2;
   if (cacheHeight != null) cacheHeight *= 2;
 
-  final String key;
-  if (item != null) {
-    key = '${item.runtimeType}-${item.hashCode}';
-  } else if (playlistEntry != null) {
-    if (playlistEntry.uri != null) {
-      key = '${playlistEntry.runtimeType}-${playlistEntry.uri}';
-    } else {
-      key = '${playlistEntry.runtimeType}-${playlistEntry.hash}';
-    }
-  } else if (uri != null) {
-    key = uri;
-  } else {
-    throw ArgumentError('None of [item], [playlistEntry] or [uri] is provided.');
-  }
+  final key = switch ((item, playlistEntry, uri)) {
+    (MediaLibraryItem e, _, _) => '${e.runtimeType}-${e.hashCode}',
+    (_, PlaylistEntry e, _) => '${e.runtimeType}-${e.uri}-${e.hash}',
+    (_, _, String e) => e,
+    _ => throw ArgumentError(),
+  };
 
   Future<File?> file() async {
-    final Future<File?> result;
+    final mediaLibrary = MediaLibrary.instance;
+    final fallback = Configuration.instance.mediaLibraryCoverFallback;
+
     if (item != null) {
-      result = MediaLibrary.instance.coverFileForMediaLibraryItem(item, fallback: Configuration.instance.mediaLibraryCoverFallback);
-    } else if (playlistEntry != null) {
-      if (playlistEntry.uri != null) {
-        result = MediaLibrary.instance.coverFileForUri(playlistEntry.uri!, fallback: Configuration.instance.mediaLibraryCoverFallback);
-      } else {
-        final track = await MediaLibrary.instance.db.selectTrackByHash(playlistEntry.hash!);
-        result = MediaLibrary.instance.coverFileForMediaLibraryItem(track!, fallback: Configuration.instance.mediaLibraryCoverFallback);
-      }
-    } else if (uri != null) {
-      result = MediaLibrary.instance.coverFileForUri(uri, fallback: Configuration.instance.mediaLibraryCoverFallback);
-    } else {
-      throw ArgumentError('None of [item], [playlistEntry] or [uri] is provided.');
+      return mediaLibrary.coverFileForMediaLibraryItem(item, fallback: fallback);
     }
-    return result;
+
+    if (playlistEntry != null) {
+      if (playlistEntry.uri != null) {
+        return mediaLibrary.coverFileForUri(playlistEntry.uri!, fallback: fallback);
+      }
+      if (playlistEntry.hash != null) {
+        final track = await mediaLibrary.db.selectTrackByHash(playlistEntry.hash!);
+        return mediaLibrary.coverFileForMediaLibraryItem(track!, fallback: fallback);
+      }
+    }
+
+    if (uri != null) {
+      return mediaLibrary.coverFileForUri(uri, fallback: fallback);
+    }
+
+    throw ArgumentError();
   }
 
   AsyncFileImage.attemptToResolveIfDefault(
