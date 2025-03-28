@@ -28,7 +28,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class SearchScreenState extends State<SearchScreen> {
-  static const int kLimit = 20;
+  static const int _kLimit = 20;
 
   final List<Album> _albums = <Album>[];
   final List<Artist> _artists = <Artist>[];
@@ -36,7 +36,7 @@ class SearchScreenState extends State<SearchScreen> {
   final List<Track> _tracks = <Track>[];
 
   void update(String query) {
-    final result = context.read<MediaLibrary>().search(query, limit: kLimit);
+    final result = context.read<MediaLibrary>().search(query, limit: _kLimit);
     if (context.mounted) {
       setState(() {
         _albums
@@ -88,7 +88,7 @@ class SearchScreenState extends State<SearchScreen> {
               children: [
                 SubHeader(Localization.instance.ALBUMS),
                 const Spacer(),
-                if (_albums.length > kLimit)
+                if (_albums.length > _kLimit)
                   ShowAllButton(
                     onPressed: () {
                       context.push(
@@ -108,7 +108,7 @@ class SearchScreenState extends State<SearchScreen> {
               height: albumTileHeight + margin,
               child: ListView.separated(
                 shrinkWrap: true,
-                itemCount: _albums.length.clamp(0, kLimit),
+                itemCount: _albums.length.clamp(0, _kLimit),
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.only(
                   left: margin,
@@ -129,7 +129,7 @@ class SearchScreenState extends State<SearchScreen> {
               children: [
                 SubHeader(Localization.instance.ARTISTS),
                 const Spacer(),
-                if (_artists.length > kLimit)
+                if (_artists.length > _kLimit)
                   ShowAllButton(
                     onPressed: () {
                       context.push(
@@ -149,7 +149,7 @@ class SearchScreenState extends State<SearchScreen> {
               height: kArtistTileHeight + margin,
               child: ListView.separated(
                 shrinkWrap: true,
-                itemCount: _artists.length.clamp(0, kLimit),
+                itemCount: _artists.length.clamp(0, _kLimit),
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.only(
                   left: margin,
@@ -170,7 +170,7 @@ class SearchScreenState extends State<SearchScreen> {
               children: [
                 SubHeader(Localization.instance.GENRES),
                 const Spacer(),
-                if (_genres.length > kLimit)
+                if (_genres.length > _kLimit)
                   ShowAllButton(
                     onPressed: () {
                       context.push(
@@ -190,7 +190,7 @@ class SearchScreenState extends State<SearchScreen> {
               height: kGenreTileHeight + margin,
               child: ListView.separated(
                 shrinkWrap: true,
-                itemCount: _genres.length.clamp(0, kLimit),
+                itemCount: _genres.length.clamp(0, _kLimit),
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.only(
                   left: margin,
@@ -211,7 +211,7 @@ class SearchScreenState extends State<SearchScreen> {
               children: [
                 SubHeader(Localization.instance.TRACKS),
                 const Spacer(),
-                if (_tracks.length > kLimit)
+                if (_tracks.length > _kLimit)
                   ShowAllButton(
                     onPressed: () {
                       context.push(
@@ -226,7 +226,7 @@ class SearchScreenState extends State<SearchScreen> {
                 SizedBox(width: margin),
               ],
             ),
-            for (int i = 0; i < _tracks.length.clamp(0, kLimit); i++) ...[
+            for (int i = 0; i < _tracks.length.clamp(0, _kLimit); i++) ...[
               TrackItem(
                 track: _tracks[i],
                 width: double.infinity,

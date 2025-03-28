@@ -28,46 +28,46 @@ class RippleSurface extends StatefulWidget {
 }
 
 class RippleSurfaceState extends State<RippleSurface> {
-  static const kRippleDimension = 2.0;
+  static const _kRippleDimension = 2.0;
 
-  double width = 1.0;
-  double height = 1.0;
-  Widget? background;
-  Widget? ripple;
+  double _width = 1.0;
+  double _height = 1.0;
+  Widget? _background;
+  Widget? _ripple;
 
   @override
   void didUpdateWidget(covariant RippleSurface oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.color != widget.color) {
       // The change in color was very fast, so we don't need to animate the ripple.
-      if (ripple != null) {
+      if (_ripple != null) {
         setState(() {
-          ripple = null;
-          background = Positioned.fill(child: Container(color: widget.color));
+          _ripple = null;
+          _background = Positioned.fill(child: Container(color: widget.color));
         });
       }
 
       setState(() {
-        ripple = TweenAnimationBuilder<double>(
+        _ripple = TweenAnimationBuilder<double>(
           key: ValueKey(Random().nextDouble()),
           tween: Tween<double>(
             begin: 1.0,
-            end: max(width / kRippleDimension, height / kRippleDimension) * 2.0,
+            end: max(_width / _kRippleDimension, _height / _kRippleDimension) * 2.0,
           ),
           duration: widget.duration ?? Theme.of(context).extension<AnimationDuration>()?.slow ?? Duration.zero,
           curve: widget.curve ?? Curves.easeInOut,
           onEnd: () {
             setState(() {
-              background = Positioned.fill(child: Container(color: widget.color));
-              ripple = null;
+              _background = Positioned.fill(child: Container(color: widget.color));
+              _ripple = null;
             });
           },
           builder: (context, scale, _) {
             return Transform.scale(
               scale: scale,
               child: Container(
-                width: kRippleDimension,
-                height: kRippleDimension,
+                width: _kRippleDimension,
+                height: _kRippleDimension,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: widget.color,
@@ -85,13 +85,13 @@ class RippleSurfaceState extends State<RippleSurface> {
     return ClipRect(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          width = constraints.maxWidth;
-          height = constraints.maxHeight;
+          _width = constraints.maxWidth;
+          _height = constraints.maxHeight;
           return Stack(
             alignment: Alignment.center,
             children: [
-              if (background != null) background!,
-              if (ripple != null) ripple!,
+              if (_background != null) _background!,
+              if (_ripple != null) _ripple!,
             ],
           );
         },

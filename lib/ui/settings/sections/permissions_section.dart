@@ -1,11 +1,12 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/ui/settings/settings_section.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class PermissionsSection extends StatefulWidget {
   const PermissionsSection({super.key});
@@ -16,7 +17,10 @@ class PermissionsSection extends StatefulWidget {
 
 class _PermissionsSectionState extends State<PermissionsSection> {
   Future<void> request(Permission permission) async {
-    await permission.request();
+    final result = await permission.request();
+    if (result.isGranted && permission == Permission.notification) {
+      LyricsNotifier.instance.initializeNotification();
+    }
     setState(() {});
   }
 

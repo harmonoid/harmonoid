@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:lrc/lrc.dart';
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -11,11 +13,12 @@ import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:synchronized/synchronized.dart';
 
 import 'package:harmonoid/api/lyrics_get.dart';
-import 'package:harmonoid/mappers/lyrics.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/playable.dart';
+import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/mappers/lyrics.dart';
 import 'package:harmonoid/models/lyric.dart';
 import 'package:harmonoid/models/lyrics.dart';
 import 'package:harmonoid/models/playable.dart';
@@ -29,6 +32,11 @@ import 'package:harmonoid/utils/android_storage_controller.dart';
 ///
 /// {@endtemplate}
 class LyricsNotifier extends ChangeNotifier {
+  static const _kNotificationId = 0;
+  static const _kNotificationChannelId = 'com.alexmercerind.harmonoid.lyrics';
+  static const _kNotificationChannelName = 'Lyrics';
+  static const _kNotificationHideActionId = 'com.alexmercerind.harmonoid.lyrics.hide';
+
   /// Singleton instance.
   static late final LyricsNotifier instance;
 
@@ -46,14 +54,14 @@ class LyricsNotifier extends ChangeNotifier {
         final currentDuration = MediaPlayer.instance.state.duration;
 
         if (current != _current && currentDuration > Duration.zero) {
-          index = 0;
+          index = -1;
           lyrics.clear();
           _timestampsAndIndexes.clear();
           notifyListeners();
 
           // --------------------------------------------------
           _notificationVisible = true;
-          await dismissNotification();
+          dismissNotification();
           // --------------------------------------------------
 
           _current = current;
@@ -72,8 +80,8 @@ class LyricsNotifier extends ChangeNotifier {
           if (nextIndex > 0) nextIndex--;
 
           // --------------------------------------------------
-          if (nextIndex != index + 1 || state.completed) {
-            await dismissNotification();
+          if ((nextIndex - index).abs() > 1 || state.completed) {
+            dismissNotification();
           }
           // --------------------------------------------------
 
@@ -81,7 +89,7 @@ class LyricsNotifier extends ChangeNotifier {
             index = nextIndex;
             notifyListeners();
             // --------------------------------------------------
-            await displayNotification(lyrics[index].text);
+            displayNotification(index);
             // --------------------------------------------------
           }
         }
@@ -102,7 +110,7 @@ class LyricsNotifier extends ChangeNotifier {
   }
 
   /// Index.
-  int index = 0;
+  int index = -1;
 
   /// Lyrics.
   final Lyrics lyrics = <Lyric>[];
@@ -243,111 +251,90 @@ class LyricsNotifier extends ChangeNotifier {
 
   /// Initializes the notification.
   Future<void> initializeNotification() async {
-    // if (!Platform.isAndroid) return;
-    // if (!(AndroidStorageController.instance.version < 33 || await Permission.notification.isGranted)) return;
-    // if (_initializeNotificationInvoked) return;
-    // _initializeNotificationInvoked = true;
-    // await AwesomeNotifications().initialize(
-    //   'resource://drawable/ic_stat_format_color_text',
-    //   [
-    //     NotificationChannel(
-    //       channelKey: _kNotificationChannelKey,
-    //       channelGroupKey: _kNotificationChannelKey,
-    //       channelName: _kNotificationChannelName,
-    //       channelDescription: _kNotificationChannelDescription,
-    //       playSound: false,
-    //       enableVibration: false,
-    //       enableLights: false,
-    //       locked: false,
-    //       criticalAlerts: false,
-    //       onlyAlertOnce: true,
-    //       importance: NotificationImportance.Low,
-    //       defaultPrivacy: NotificationPrivacy.Public,
-    //     ),
-    //   ],
-    //   debug: kDebugMode,
-    // );
-    // AwesomeNotifications().setListeners(onActionReceivedMethod: _onNotificationActionReceived);
+    if (!Platform.isAndroid) return;
+    if (_initializeNotificationInvoked) return;
+    _initializeNotificationInvoked = true;
+    const initializationSettings = InitializationSettings(android: AndroidInitializationSettings('ic_stat_format_color_text'));
+    await FlutterLocalNotificationsPlugin().initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
+    );
   }
 
   /// Displayes the notification.
-  Future<void> displayNotification(String body) async {
-    // return ensureNotification(() async {
-    //   await AwesomeNotifications().createNotification(
-    //     content: NotificationContent(
-    //       id: _kNotificationID,
-    //       channelKey: _kNotificationChannelKey,
-    //       groupKey: _kNotificationChannelKey,
-    //       title: _current?.title ?? '',
-    //       summary: _current?.title ?? '',
-    //       body: body,
-    //       showWhen: false,
-    //       wakeUpScreen: false,
-    //       autoDismissible: true,
-    //       actionType: ActionType.DisabledAction,
-    //       category: NotificationCategory.Status,
-    //       notificationLayout: NotificationLayout.Messaging,
-    //     ),
-    //     actionButtons: [
-    //       NotificationActionButton(
-    //         key: _kNotificationHideButtonKey,
-    //         label: Localization.instance.HIDE,
-    //       ),
-    //     ],
-    //   );
-    // });
+  void displayNotification(int index) {
+    if (!_notificationVisible) return;
+    const diff = 3;
+    final from = max(0, index - diff);
+    final to = min(lyrics.length - 1, index + diff);
+    ensureNotification(() {
+      FlutterLocalNotificationsPlugin().show(
+        _kNotificationId,
+        _current?.title,
+        lyrics[index].text,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            _kNotificationChannelId,
+            _kNotificationChannelName,
+            silent: true,
+            showWhen: false,
+            playSound: false,
+            enableLights: false,
+            priority: Priority.high,
+            importance: Importance.max,
+            visibility: NotificationVisibility.public,
+            category: AndroidNotificationCategory.message,
+            styleInformation: BigTextStyleInformation(
+              [
+                for (int i = from; i <= to; i++)
+                  if (i == index) '<br><b>${lyrics[i].text}</b><br>' else lyrics[i].text,
+              ].join('<br>'),
+              htmlFormatTitle: true,
+              htmlFormatContent: true,
+              htmlFormatBigText: true,
+              htmlFormatSummaryText: true,
+              htmlFormatContentTitle: true,
+            ),
+            actions: [
+              AndroidNotificationAction(
+                _kNotificationHideActionId,
+                Localization.instance.HIDE,
+              ),
+            ],
+          ),
+        ),
+      );
+    });
   }
 
   /// Dismisses the notification.
-  FutureOr<void> dismissNotification() {
-    // return ensureNotification(() async {
-    //   await AwesomeNotifications().dismiss(_kNotificationID);
-    // });
+  void dismissNotification() {
+    ensureNotification(() {
+      FlutterLocalNotificationsPlugin().cancel(_kNotificationId);
+    });
   }
 
   /// Invokes the [callback] if the notification can be handled.
-  Future<void> ensureNotification(Future<void> Function() callback) async {
+  Future<void> ensureNotification(void Function() callback) async {
     if (!Platform.isAndroid) return;
     if (!(AndroidStorageController.instance.version < 33 || await Permission.notification.isGranted)) return;
     if (!Configuration.instance.notificationLyrics) return;
     if (!_initializeNotificationInvoked) return;
     if (!_notificationVisible) return;
-    await callback.call();
+    callback.call();
   }
 
-  /// Whether lyrics are visible for currently playing [Playable].
-  bool _notificationVisible = true;
-
-  /// Whether notification is initialized.
-  bool _initializeNotificationInvoked = false;
-
-  // --------------------------------------------------
+  void onDidReceiveNotificationResponse(NotificationResponse notificationResponse) {
+    if (notificationResponse.actionId == _kNotificationHideActionId) {
+      _notificationVisible = false;
+      dismissNotification();
+    }
+  }
 
   Playable? _current;
   Duration? _currentDuration;
+  bool _notificationVisible = true;
+  bool _initializeNotificationInvoked = false;
   final SplayTreeMap<int, int> _timestampsAndIndexes = SplayTreeMap<int, int>();
   final Lock _lock = Lock();
-
-  // @pragma('vm:entry-point')
-  // static Future<void> _onNotificationActionReceived(ReceivedAction action) async {
-  //   if (action.buttonKeyPressed == _kNotificationHideButtonKey) {
-  //     instance._notificationVisible = false;
-  //     AwesomeNotifications().dismiss(_kNotificationID);
-  //   }
-  // }
-
-  /// Notification: ID.
-  static const _kNotificationID = 7;
-
-  /// Notification: Channel Key.
-  static const _kNotificationChannelKey = 'com.alexmercerind.harmonoid.lyrics';
-
-  /// Notification: Channel Name.
-  static const _kNotificationChannelName = 'Harmonoid Lyrics';
-
-  /// Notification: Channel Description.
-  static const _kNotificationChannelDescription = 'Harmonoid Lyrics';
-
-  /// Notification: Hide Button Key.
-  static const _kNotificationHideButtonKey = 'HIDE_BUTTON';
 }
