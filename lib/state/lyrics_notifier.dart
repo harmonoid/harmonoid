@@ -257,7 +257,8 @@ class LyricsNotifier extends ChangeNotifier {
     const initializationSettings = InitializationSettings(android: AndroidInitializationSettings('ic_stat_format_color_text'));
     await FlutterLocalNotificationsPlugin().initialize(
       initializationSettings,
-      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
+      onDidReceiveNotificationResponse: _onDidReceiveNotificationResponse,
+      onDidReceiveBackgroundNotificationResponse: _onDidReceiveNotificationResponse,
     );
   }
 
@@ -299,6 +300,8 @@ class LyricsNotifier extends ChangeNotifier {
               AndroidNotificationAction(
                 _kNotificationHideActionId,
                 Localization.instance.HIDE,
+                showsUserInterface: true,
+                cancelNotification: true,
               ),
             ],
           ),
@@ -324,10 +327,11 @@ class LyricsNotifier extends ChangeNotifier {
     callback.call();
   }
 
-  void onDidReceiveNotificationResponse(NotificationResponse notificationResponse) {
+  @pragma('vm:entry-point')
+  static void _onDidReceiveNotificationResponse(NotificationResponse notificationResponse) {
     if (notificationResponse.actionId == _kNotificationHideActionId) {
-      _notificationVisible = false;
-      dismissNotification();
+      instance._notificationVisible = false;
+      instance.dismissNotification();
     }
   }
 
