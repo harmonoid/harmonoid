@@ -649,7 +649,7 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
   void Function(void Function())? setStateCallback;
 
   List<MobileMediaLibrarySortButtonPopupMenuItem> get sort => {
-        kAlbumsPath: AlbumSortType.values
+        kAlbumsPath: [AlbumSortType.album, AlbumSortType.timestamp, AlbumSortType.year]
             .map(
               (e) => MobileMediaLibrarySortButtonPopupMenuItem(
                 onTap: () => handle(e),
