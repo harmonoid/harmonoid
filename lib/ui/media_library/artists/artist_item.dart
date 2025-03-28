@@ -10,7 +10,6 @@ import 'package:harmonoid/ui/media_library/artists/artist_screen.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/open_container.dart';
-import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
@@ -29,16 +28,6 @@ class ArtistItem extends StatelessWidget {
 
   Future<void> navigate() async {
     final tracks = await MediaLibrary.instance.tracksFromArtist(artist);
-
-    List<Color>? palette;
-    if (isMaterial2) {
-      final result = await PaletteGenerator.fromImageProvider(cover(item: artist, cacheWidth: 20));
-      palette = result.colors?.toList();
-    }
-
-    try {
-      await precacheImage(cover(item: artist), rootNavigatorKey.currentContext!);
-    } catch (_) {}
 
     await rootNavigatorKey.currentContext!.push(
       '/$kMediaLibraryPath/$kArtistPath',
@@ -68,16 +57,16 @@ class ArtistItem extends StatelessWidget {
                 padding: const EdgeInsets.all(4.0),
                 child: ClipOval(
                   child: Material(
+                    color: Theme.of(context).cardTheme.color,
                     child: InkWell(
                       onTap: navigate,
                       child: ScaleOnHover(
-                        child: Ink.image(
+                        child: SizedBox(
                           width: width,
                           height: width,
-                          fit: BoxFit.cover,
-                          image: cover(
-                            item: artist,
-                            cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
+                          child: Icon(
+                            Icons.person_outline,
+                            size: width * 0.32,
                           ),
                         ),
                       ),
@@ -125,14 +114,12 @@ class ArtistItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image(
+                  Container(
                     width: height - 1.0,
                     height: height - 1.0,
-                    image: cover(
-                      item: artist,
-                      cacheWidth: (kMobileHeaderHeight * MediaQuery.of(context).devicePixelRatio).toInt(),
-                    ),
-                    fit: BoxFit.cover,
+                    alignment: Alignment.center,
+                    color: Theme.of(context).cardTheme.color,
+                    child: const Icon(Icons.person),
                   ),
                   const SizedBox(width: 16.0),
                   Expanded(
@@ -172,20 +159,12 @@ class ArtistItem extends StatelessWidget {
             closedBuilder: (context, action) {
               return Stack(
                 children: [
-                  Container(
+                  SizedBox(
                     width: width,
                     height: width,
-                    padding: const EdgeInsets.all(4.0),
-                    child: ClipOval(
-                      child: Image(
-                        width: width,
-                        height: width,
-                        fit: BoxFit.cover,
-                        image: cover(
-                          item: artist,
-                          cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
-                        ),
-                      ),
+                    child: Icon(
+                      Icons.person_outline,
+                      size: width * 0.32,
                     ),
                   ),
                   Positioned.fill(
@@ -195,13 +174,6 @@ class ArtistItem extends StatelessWidget {
                         behavior: HitTestBehavior.opaque,
                         onTap: () async {
                           tracks = await MediaLibrary.instance.tracksFromArtist(artist);
-
-                          if (isMaterial2) {
-                            final result = await PaletteGenerator.fromImageProvider(cover(item: artist, cacheWidth: 20));
-                            palette = result.colors?.toList();
-                          }
-
-                          await precacheImage(cover(item: artist), context);
 
                           action();
                           context.read<NowPlayingMobileNotifier>().hideBottomNavigationBar();

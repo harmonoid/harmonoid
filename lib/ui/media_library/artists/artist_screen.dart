@@ -44,13 +44,12 @@ class _ArtistScreenState extends State<ArtistScreen> {
                   shape: const CircleBorder(),
                   elevation: Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
                   child: Container(
+                    width: 400.0,
+                    height: 400.0,
                     padding: const EdgeInsets.all(8.0),
-                    child: ClipOval(
-                      clipBehavior: Clip.antiAlias,
-                      child: Image(
-                        image: cover(item: widget.artist),
-                        fit: BoxFit.cover,
-                      ),
+                    child: const Icon(
+                      Icons.person_outline,
+                      size: 400.0 * 0.32,
                     ),
                   ),
                 ),
@@ -59,9 +58,11 @@ class _ArtistScreenState extends State<ArtistScreen> {
           );
         }
         if (isMobile) {
-          return Image(
-            image: cover(item: widget.artist),
-            fit: BoxFit.cover,
+          return SizedBox(
+            child: Icon(
+              Icons.person_outline,
+              size: MediaQuery.sizeOf(context).width * 0.32,
+            ),
           );
         }
         throw UnimplementedError();
