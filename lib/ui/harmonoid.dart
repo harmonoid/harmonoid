@@ -10,6 +10,7 @@ import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
+import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/keyboard_shortcuts.dart';
 import 'package:harmonoid/utils/macos_menu_bar.dart';
@@ -38,6 +39,10 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
   Future<bool> didPopRoute() async {
     if (NowPlayingMobileNotifier.instance.maximized) {
       NowPlayingMobileNotifier.instance.minimizeNowPlayingBar();
+      return true;
+    }
+    if (mediaLibrarySearchController.isAttached && mediaLibrarySearchController.isOpen) {
+      mediaLibrarySearchController.closeView(null);
       return true;
     }
     return super.didPopRoute();
