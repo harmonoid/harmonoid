@@ -89,8 +89,8 @@ class _DisplaySectionState extends State<DisplaySection> {
               actions: false,
             );
             if (result != null) {
-              await Configuration.instance.set(themeMaterialStandard: result);
-              ThemeNotifier.instance.update(materialStandard: result);
+              await Configuration.instance.set(themeMaterialStandard: result, themeSystemColorScheme: result == 3);
+              ThemeNotifier.instance.update(materialStandard: result, systemColorScheme: result == 3);
               context.pop();
               setState(() {});
             }
