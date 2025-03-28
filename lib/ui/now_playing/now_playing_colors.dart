@@ -28,7 +28,8 @@ class NowPlayingColors {
     final background = palette?.first ?? Theme.of(context).bottomAppBarTheme.color ?? Theme.of(context).colorScheme.surface;
     final foregroundIcon = palette == null ? Theme.of(context).floatingActionButtonTheme.foregroundColor : (foreground.computeLuminance() > 0.5 ? Colors.black : Colors.white);
     final backgroundEnabledIcon = palette == null ? Theme.of(context).colorScheme.onSurface : (background.computeLuminance() > 0.5 ? Colors.black : Colors.white);
-    final backgroundDisabledIcon = palette == null ? Theme.of(context).disabledColor : (background.computeLuminance() > 0.5 ? Colors.black.withOpacity(0.3) : Colors.white.withOpacity(0.3));
+    final backgroundDisabledIcon =
+        palette == null ? Theme.of(context).disabledColor : (background.computeLuminance() > 0.5 ? Colors.black.withValues(alpha: 0.3) : Colors.white.withValues(alpha: 0.3));
     final backgroundText = palette == null ? null : (background.computeLuminance() > 0.5 ? Colors.black : Colors.white);
     final sliderForeground = palette == null ? null : foreground;
     final sliderBackground = palette == null ? null : backgroundDisabledIcon;
@@ -51,10 +52,10 @@ class NowPlayingColors {
     const background = Colors.transparent;
     const foregroundIcon = Colors.white;
     final backgroundEnabledIcon = Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white;
-    final backgroundDisabledIcon = Theme.of(context).brightness == Brightness.light ? Colors.black.withOpacity(0.3) : Colors.white.withOpacity(0.3);
+    final backgroundDisabledIcon = Theme.of(context).brightness == Brightness.light ? Colors.black.withValues(alpha: 0.3) : Colors.white.withValues(alpha: 0.3);
     final backgroundText = Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white;
     final sliderForeground = Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white;
-    final sliderBackground = Theme.of(context).brightness == Brightness.light ? Colors.black.withOpacity(0.3) : Colors.white.withOpacity(0.3);
+    final sliderBackground = Theme.of(context).brightness == Brightness.light ? Colors.black.withValues(alpha: 0.3) : Colors.white.withValues(alpha: 0.3);
     return NowPlayingColors(
       background: background,
       foreground: foreground,
@@ -69,7 +70,7 @@ class NowPlayingColors {
 
   SliderThemeData toSliderThemeData() => SliderThemeData(
         thumbColor: sliderForeground,
-        overlayColor: sliderForeground?.withOpacity(0.2),
+        overlayColor: sliderForeground?.withValues(alpha: 0.2),
         activeTrackColor: sliderForeground,
         inactiveTrackColor: sliderBackground,
         disabledThumbColor: sliderForeground,

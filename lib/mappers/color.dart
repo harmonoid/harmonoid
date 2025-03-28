@@ -4,8 +4,8 @@ import 'package:flutter/rendering.dart';
 extension ColorMappers on Color {
   /// Converts the color to a hex string.
   String toHex() => '#'
-          '${red.toRadixString(16).padLeft(2, '0')}'
-          '${green.toRadixString(16).padLeft(2, '0')}'
-          '${blue.toRadixString(16).padLeft(2, '0')}'
+          '${(r * 255.0).toInt().toRadixString(16).padLeft(2, '0')}'
+          '${(g * 255.0).toInt().toRadixString(16).padLeft(2, '0')}'
+          '${(b * 255.0).toInt().toRadixString(16).padLeft(2, '0')}'
       .toUpperCase();
 }

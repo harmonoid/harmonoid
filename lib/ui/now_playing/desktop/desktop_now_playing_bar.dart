@@ -101,7 +101,7 @@ class DesktopNowPlayingBarState extends State<DesktopNowPlayingBar> {
                                                       duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
                                                       curve: Curves.easeInOut,
                                                       child: Material(
-                                                        color: Colors.black.withOpacity(0.5),
+                                                        color: Colors.black.withValues(alpha: 0.5),
                                                         child: InkWell(
                                                           onTap: () {
                                                             context.push('/$kNowPlayingPath');

@@ -339,8 +339,6 @@ extension SelectedColorExtension on MiniPlayerPanelState {
         return -2;
       case MiniPlayerPanelState.DISMISS:
         return -3;
-      default:
-        return -1;
     }
   }
 }

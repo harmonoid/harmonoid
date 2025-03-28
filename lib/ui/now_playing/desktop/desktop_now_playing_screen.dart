@@ -73,7 +73,7 @@ class DesktopNowPlayingScreenState extends State<DesktopNowPlayingScreen> {
                         child: DesktopNowPlayingScreenCarousel(value: _desktopNowPlayingScreenCarousel),
                       ),
                       Positioned.fill(
-                        child: ColoredBox(color: Colors.black.withOpacity(0.2)),
+                        child: ColoredBox(color: Colors.black.withValues(alpha: 0.2)),
                       ),
                       Positioned.fill(
                         child: Container(
@@ -83,10 +83,10 @@ class DesktopNowPlayingScreenState extends State<DesktopNowPlayingScreen> {
                               end: Alignment.bottomCenter,
                               stops: const [0.0, 0.2, 0.5, 0.8],
                               colors: [
-                                Colors.black.withOpacity(0.2),
+                                Colors.black.withValues(alpha: 0.2),
                                 Colors.transparent,
                                 Colors.transparent,
-                                Colors.black.withOpacity(0.2),
+                                Colors.black.withValues(alpha: 0.2),
                               ],
                             ),
                           ),

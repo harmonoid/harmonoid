@@ -1,13 +1,12 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/core/media_library.dart';
-import 'package:harmonoid/models/playable.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
-import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/playlist_entry.dart';
+import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_image.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -29,7 +28,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
 
   Future<List<Playable>> get _playables async {
     final result = await Future.wait(_entries.map((e) => e.toPlayable(MediaLibrary.instance)));
-    return result.whereNotNull().toList();
+    return result.nonNulls.toList();
   }
 
   @override

@@ -290,10 +290,29 @@ class SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvide
                       return Container(
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
-                        color: _ac.value == 0.0 ? null : widget.backdropColor.withOpacity(widget.backdropOpacity * _ac.value),
+                        color: _ac.value == 0.0 ? null : widget.backdropColor.withValues(alpha: widget.backdropOpacity * _ac.value),
                       );
                     }),
               ),
+        Positioned(
+          top: MediaQuery.paddingOf(context).top + 16.0,
+          child: AnimatedBuilder(
+            animation: _ac,
+            builder: (context, child) {
+              if (_ac.value == 0.0) {
+                return const SizedBox.shrink();
+              }
+              return Opacity(opacity: _ac.value, child: child);
+            },
+            child: FloatingActionButton(
+              onPressed: _close,
+              mini: true,
+              backgroundColor: widget.color,
+              foregroundColor: Theme.of(context).colorScheme.onSurface,
+              child: const Icon(Icons.close),
+            ),
+          ),
+        ),
         !_isPanelVisible
             ? Container()
             : _gestureHandler(
@@ -349,7 +368,7 @@ class SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvide
                           child: AnimatedBuilder(
                             animation: _ac,
                             builder: (context, _) {
-                              return _isPanelOpen ? const SizedBox.shrink() : widget.collapsed ?? const SizedBox.shrink();
+                              return (_isPanelOpen || _ac.value == 1.0 || restored) ? const SizedBox.shrink() : widget.collapsed ?? const SizedBox.shrink();
                             },
                           ),
                         ),

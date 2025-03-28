@@ -141,7 +141,7 @@ Future<String> getDefaultDirectory() async {
     try {
       final hr = SHGetKnownFolderPath(
         rfid,
-        KNOWN_FOLDER_FLAG.KF_FLAG_DEFAULT,
+        KF_FLAG_DEFAULT,
         NULL,
         result,
       );
@@ -222,7 +222,7 @@ Future<List<String>> getDefaultMediaLibraryDirectories() async {
     try {
       final hr = SHGetKnownFolderPath(
         rfid,
-        KNOWN_FOLDER_FLAG.KF_FLAG_DEFAULT,
+        KF_FLAG_DEFAULT,
         NULL,
         result,
       );

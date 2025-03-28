@@ -1,3 +1,4 @@
+import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
@@ -45,10 +46,12 @@ void mediaPlayerOpenOnOpen() async {
     }
   }
   if (isMobile) {
+    NowPlayingMobileNotifier.instance.showNowPlayingBar();
     if (Configuration.instance.nowPlayingDisplayUponPlay) {
-      NowPlayingMobileNotifier.instance.maximizeNowPlayingBar();
-    } else {
-      NowPlayingMobileNotifier.instance.showNowPlayingBar();
+      Future.delayed(
+        MaterialRoute.kDefaultTransitionDuration,
+        NowPlayingMobileNotifier.instance.maximizeNowPlayingBar,
+      );
     }
   }
 }

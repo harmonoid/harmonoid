@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart' hide CarouselView;
+import 'package:flutter/services.dart';
 import 'package:measure_size/measure_size.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +10,7 @@ import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/mappers/build_context.dart';
 import 'package:harmonoid/models/loop.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
@@ -36,8 +38,6 @@ class MobileM3NowPlayingBarState extends State<MobileM3NowPlayingBar> {
   double _carouselHeight = 0.0;
   double _detailsHeight = 0.0;
   double _controlsHeight = 0.0;
-
-  double get _playlistHeight => MediaQuery.sizeOf(context).height - (_carouselHeight + _detailsHeight + _controlsHeight + 32.0 + 1.0);
 
   Color? get _slidingUpPanelColor => isDarkMode ? Theme.of(context).colorScheme.surfaceContainer : Theme.of(context).colorScheme.surfaceContainerLowest;
 
@@ -101,15 +101,18 @@ class MobileM3NowPlayingBarState extends State<MobileM3NowPlayingBar> {
                             if (percentage > 0.5)
                               Opacity(
                                 opacity: ((percentage - 0.5) * 2.0).clamp(0.0, 1.0),
-                                child: Container(
-                                  color: Theme.of(context).scaffoldBackgroundColor,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                                    children: [
-                                      _buildCarousel(context, mediaPlayer, percentage),
-                                      _buildDetails(context, mediaPlayer),
-                                      _buildControls(context, mediaPlayer),
-                                    ],
+                                child: AnnotatedRegion<SystemUiOverlayStyle>(
+                                  value: context.toSystemUiOverlayStyle(),
+                                  child: Container(
+                                    color: Theme.of(context).scaffoldBackgroundColor,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      children: [
+                                        _buildCarousel(context, mediaPlayer, percentage),
+                                        _buildDetails(context, mediaPlayer),
+                                        _buildControls(context, mediaPlayer),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -216,7 +219,7 @@ class MobileM3NowPlayingBarState extends State<MobileM3NowPlayingBar> {
                                       child: LinearProgressIndicator(
                                         value: value,
                                         color: context.read<NowPlayingColors>().sliderForeground,
-                                        backgroundColor: context.read<NowPlayingColors>().sliderForeground?.withOpacity(0.2),
+                                        backgroundColor: context.read<NowPlayingColors>().sliderForeground?.withValues(alpha: 0.2),
                                       ),
                                     ),
                                   ),
@@ -238,7 +241,7 @@ class MobileM3NowPlayingBarState extends State<MobileM3NowPlayingBar> {
                       },
                       child: SlidingUpPanel(
                         controller: _panelController,
-                        maxHeight: MediaQuery.sizeOf(context).height - (MediaQuery.paddingOf(context).top + 32.0),
+                        maxHeight: MediaQuery.sizeOf(context).height - (MediaQuery.paddingOf(context).top + 16.0 + 40.0 + 16.0),
                         minHeight: MediaQuery.sizeOf(context).height - (_carouselHeight + _detailsHeight + _controlsHeight),
                         parallaxEnabled: false,
                         panelSnapping: true,
@@ -352,14 +355,6 @@ class MobileM3NowPlayingBarState extends State<MobileM3NowPlayingBar> {
     ScrollPhysics? physics,
     ScrollController? controller,
   }) {
-    final footer = mediaPlayer.state.playables.length - mediaPlayer.state.index == 1
-        ? Center(
-            child: Text(
-              Localization.instance.N_TRACKS.replaceAll('"N"', mediaPlayer.state.playables.length.toString()),
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-          )
-        : const SizedBox.shrink();
     return Container(
       decoration: BoxDecoration(
         color: _slidingUpPanelColor,
@@ -405,7 +400,6 @@ class MobileM3NowPlayingBarState extends State<MobileM3NowPlayingBar> {
                   separatorBuilder: (context, i) => const Divider(height: 1.0, thickness: 1.0),
                   itemCount: mediaPlayer.state.playables.length - diff,
                 ),
-                controller != null ? SliverFillRemaining(child: footer) : SliverToBoxAdapter(child: SizedBox(height: _playlistHeight, child: footer)),
               ],
             ),
           ),

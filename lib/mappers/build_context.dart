@@ -27,15 +27,15 @@ extension ColorMappers on BuildContext {
     final systemNavigationBarColor = switch ((materialStandard, themeMode, isGestureNavigationEnabled)) {
       (2, _, _) => Colors.black,
       (3, _, true) => Colors.transparent,
-      (3, ThemeMode.light, false) => Colors.white.withOpacity(0.02),
-      (3, ThemeMode.dark, false) => Colors.black.withOpacity(0.02),
+      (3, ThemeMode.light, false) => Colors.white.withValues(alpha: 0.02),
+      (3, ThemeMode.dark, false) => Colors.black.withValues(alpha: 0.02),
       _ => throw UnimplementedError(),
     };
     final systemNavigationBarDividerColor = switch ((materialStandard, themeMode, isGestureNavigationEnabled)) {
       (2, _, _) => Colors.black,
       (3, _, true) => Colors.transparent,
-      (3, ThemeMode.light, false) => Colors.white.withOpacity(0.02),
-      (3, ThemeMode.dark, false) => Colors.black.withOpacity(0.02),
+      (3, ThemeMode.light, false) => Colors.white.withValues(alpha: 0.02),
+      (3, ThemeMode.dark, false) => Colors.black.withValues(alpha: 0.02),
       _ => throw UnimplementedError(),
     };
     final systemNavigationBarIconBrightness = switch ((materialStandard, themeMode)) {

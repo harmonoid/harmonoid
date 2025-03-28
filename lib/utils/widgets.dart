@@ -2100,7 +2100,7 @@ class StatefulCarouselViewBuilderState extends State<StatefulCarouselViewBuilder
     super.didUpdateWidget(oldWidget);
     if (oldWidget.index != widget.index) {
       if ((oldWidget.index - widget.index).abs() > 5) {
-        _controller.animateToItem(widget.index, duration: Duration.zero);
+        _controller.jumpToItem(widget.index);
       } else {
         _controller.animateToItem(
           widget.index,
