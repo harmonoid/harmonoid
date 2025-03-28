@@ -83,6 +83,9 @@
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:exported="false"
+            android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver" />
         <!--
             Don't delete the meta-data below.
             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
