@@ -20,7 +20,7 @@ dependencies:
   drift: ^2.15.0
   dynamic_color: ^1.6.9
   ffi: ^2.1.2
-  file_picker: ^6.1.1
+  file_picker: ^9.2.2
   fluentui_system_icons: ^1.1.136
   flutter_discord_rpc: 1.0.0
   flutter_svg: ^1.1.4
