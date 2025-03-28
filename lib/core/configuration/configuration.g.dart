@@ -12,6 +12,7 @@ class ConfigurationBase {
 
   ConfigurationBase({required this.directory, required this.db});
 
+  String get apiBaseUrl => _apiBaseUrl!;
   bool get desktopNowPlayingBarColorPalette => _desktopNowPlayingBarColorPalette!;
   int get desktopNowPlayingCarousel => _desktopNowPlayingCarousel!;
   bool get desktopNowPlayingLyrics => _desktopNowPlayingLyrics!;
@@ -58,6 +59,7 @@ class ConfigurationBase {
   bool get windowsTaskbarProgress => _windowsTaskbarProgress!;
 
   Future<void> set({
+    String? apiBaseUrl,
     bool? desktopNowPlayingBarColorPalette,
     int? desktopNowPlayingCarousel,
     bool? desktopNowPlayingLyrics,
@@ -103,6 +105,10 @@ class ConfigurationBase {
     bool? themeSystemColorScheme,
     bool? windowsTaskbarProgress,
   }) async {
+    if (apiBaseUrl != null) {
+      _apiBaseUrl = apiBaseUrl;
+      await db.setValue(kKeyApiBaseUrl, kTypeString, stringValue: apiBaseUrl);
+    }
     if (desktopNowPlayingBarColorPalette != null) {
       _desktopNowPlayingBarColorPalette = desktopNowPlayingBarColorPalette;
       await db.setValue(kKeyDesktopNowPlayingBarColorPalette, kTypeBoolean, booleanValue: desktopNowPlayingBarColorPalette);
@@ -283,6 +289,7 @@ class ConfigurationBase {
 
   Future<Map<String, dynamic>> getDefaults() async {
     return {
+      /* String  */ kKeyApiBaseUrl: '',
       /* Boolean */ kKeyDesktopNowPlayingBarColorPalette: true,
       /* Integer */ kKeyDesktopNowPlayingCarousel: 0,
       /* Boolean */ kKeyDesktopNowPlayingLyrics: true,
@@ -330,6 +337,7 @@ class ConfigurationBase {
     };
   }
 
+  String? _apiBaseUrl;
   bool? _desktopNowPlayingBarColorPalette;
   int? _desktopNowPlayingCarousel;
   bool? _desktopNowPlayingLyrics;
@@ -378,6 +386,7 @@ class ConfigurationBase {
 
 // ----- Keys -----
 
+const kKeyApiBaseUrl = 'API_BASE_URL';
 const kKeyDesktopNowPlayingBarColorPalette = 'DESKTOP_NOW_PLAYING_BAR_COLOR_PALETTE';
 const kKeyDesktopNowPlayingCarousel = 'DESKTOP_NOW_PLAYING_CAROUSEL';
 const kKeyDesktopNowPlayingLyrics = 'DESKTOP_NOW_PLAYING_LYRICS';

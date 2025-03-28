@@ -1,2 +1,5 @@
-const String apiBaseUrl = String.fromEnvironment('API_BASE_URL');
-const String apiKey = String.fromEnvironment('API_KEY');
+import 'package:harmonoid/core/configuration/configuration.dart';
+import 'package:harmonoid/extensions/string.dart';
+
+String get apiBaseUrl => Configuration.instance.apiBaseUrl.nullIfBlank() ?? const String.fromEnvironment('API_BASE_URL');
+String get apiKey => const String.fromEnvironment('API_KEY');

@@ -75,6 +75,7 @@ class Configuration extends ConfigurationBase {
       }
     }
 
+    _apiBaseUrl = await db.getString(kKeyApiBaseUrl);
     _desktopNowPlayingBarColorPalette = await db.getBoolean(kKeyDesktopNowPlayingBarColorPalette);
     _desktopNowPlayingCarousel = await db.getInteger(kKeyDesktopNowPlayingCarousel);
     _desktopNowPlayingLyrics = await db.getBoolean(kKeyDesktopNowPlayingLyrics);
