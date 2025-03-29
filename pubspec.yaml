@@ -17,7 +17,11 @@ dependencies:
   auto_size_text: ^3.0.0
   collection: ^1.18.0
   crypto: ^3.0.3
-  drift: ^2.15.0
+  drift:
+    git:
+      url: https://github.com/alexmercerind/drift.git
+      path: ./drift
+      ref: feat/group-concat-order-by
   dynamic_color: ^1.6.9
   ffi: ^2.1.2
   file_picker: ^9.2.2
@@ -77,18 +81,32 @@ dependencies:
       url: https://github.com/alexmercerind/windows_taskbar.git
       ref: b3273d58aab9d71f61b51a84d5c6fb6cf0821529
 
+dev_dependencies:
+  build_runner: ^2.4.8
+  drift_dev:
+    git:
+      url: https://github.com/alexmercerind/drift.git
+      path: ./drift_dev
+      ref: feat/group-concat-order-by
+  flutter_lints: ^3.0.1
+
 dependency_overrides:
+  drift:
+    git:
+      url: https://github.com/alexmercerind/drift.git
+      path: ./drift
+      ref: feat/group-concat-order-by
+  drift_dev:
+    git:
+      url: https://github.com/alexmercerind/drift.git
+      path: ./drift_dev
+      ref: feat/group-concat-order-by
   permission_handler_windows:
     # Remove windows support as it causes trouble with Windows 7
     # https://github.com/Baseflow/flutter-permission-handler/issues/1034
     git:
       url: https://github.com/localsend/permission_handler_windows_noop.git
       ref: 2dadd8afbf81e0e3e4791d7144e689555e58f649
-
-dev_dependencies:
-  build_runner: ^2.4.8
-  drift_dev: ^2.15.0
-  flutter_lints: ^3.0.1
 
 flutter:
   uses-material-design: true
@@ -99,3 +117,4 @@ flutter:
     - assets/localizations/localizations/
     - assets/vectors/
     - assets/visuals/
+
