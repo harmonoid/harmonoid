@@ -15,6 +15,7 @@ import 'package:uri_parser/uri_parser.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/extensions/go_router.dart';
 import 'package:harmonoid/extensions/playable.dart';
 import 'package:harmonoid/extensions/track.dart';
 import 'package:harmonoid/localization/localization.dart';
@@ -23,6 +24,7 @@ import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
+import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_item.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
@@ -826,6 +828,14 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
 
 Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result) async {
   if (result == null) return;
+
+  Future<void> recursivelyPopNavigatorIfRequired() async {
+    final tracks = await MediaLibrary.instance.tracksFromAlbum(album);
+    if (tracks.isEmpty) {
+      await recursivelyPopNavigator(context);
+    }
+  }
+
   final tracks = await MediaLibrary.instance.tracksFromAlbum(album);
   switch (result) {
     case 0:
@@ -842,7 +852,7 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
           // No [AlertDialog] required for confirmation.
           // Android 11 or higher (API level 30) will ask for permissions from the user before deletion.
           await MediaLibrary.instance.remove(tracks);
-          await recursivelyPopNavigator(context);
+          await recursivelyPopNavigatorIfRequired();
           return;
         }
       }
@@ -853,7 +863,7 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
       );
       if (result) {
         await MediaLibrary.instance.remove(tracks);
-        await recursivelyPopNavigator(context);
+        await recursivelyPopNavigatorIfRequired();
       }
       break;
     case 3:
@@ -1213,8 +1223,13 @@ InputDecoration inputDecorationMobile(BuildContext context, String hintText) {
 }
 
 Future<void> recursivelyPopNavigator(BuildContext context) async {
+  if (mediaLibrarySearchController.isAttached && mediaLibrarySearchController.isOpen) {
+    mediaLibrarySearchController.closeView('');
+  }
   while (router.canPop()) {
+    if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath, kSearchPath].contains(router.location.split('/').last)) {
+      break;
+    }
     router.pop();
   }
-  router.go('/');
 }

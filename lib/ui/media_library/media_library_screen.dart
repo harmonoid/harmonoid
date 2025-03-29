@@ -55,8 +55,15 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
       context.read<NowPlayingMobileNotifier>().setMediaLibraryScreenStateRef(this);
 
       await Intent.instance.notify(playbackState: Configuration.instance.mediaPlayerPlaybackState);
+      // HACK:
       if (Platform.isMacOS) {
         await const MethodChannel('com.alexmercerind/window_plus').invokeMethod('notifyUrls');
+      }
+      // HACK:
+      if (Platform.isAndroid) {
+        if (Configuration.instance.mediaPlayerPlaybackState.playables.isNotEmpty) {
+          mobileShiftMediaLibraryRefreshButton();
+        }
       }
       if (Configuration.instance.mediaLibraryRefreshUponStart && !await MediaLibraryInaccessibleDirectoriesScreen.showIfRequired(context)) {
         MediaLibrary.instance.refresh();

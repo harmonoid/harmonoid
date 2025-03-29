@@ -137,19 +137,23 @@ class _DisplaySectionState extends State<DisplaySection> {
         ListItem(
           trailing: Switch(
             value: Configuration.instance.themeSystemColorScheme,
-            onChanged: (value) async {
-              await Configuration.instance.set(themeSystemColorScheme: value);
-              ThemeNotifier.instance.update(systemColorScheme: value);
-              setState(() {});
-            },
+            onChanged: !isMaterial3
+                ? null
+                : (value) async {
+                    await Configuration.instance.set(themeSystemColorScheme: value);
+                    ThemeNotifier.instance.update(systemColorScheme: value);
+                    setState(() {});
+                  },
           ),
           title: Localization.instance.USE_SYSTEM_COLOR_SCHEME,
-          onTap: () async {
-            final value = Configuration.instance.themeSystemColorScheme;
-            await Configuration.instance.set(themeSystemColorScheme: !value);
-            ThemeNotifier.instance.update(systemColorScheme: !value);
-            setState(() {});
-          },
+          onTap: !isMaterial3
+              ? null
+              : () async {
+                  final value = Configuration.instance.themeSystemColorScheme;
+                  await Configuration.instance.set(themeSystemColorScheme: !value);
+                  ThemeNotifier.instance.update(systemColorScheme: !value);
+                  setState(() {});
+                },
         ),
       ],
     );

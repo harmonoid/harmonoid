@@ -265,7 +265,7 @@ class LyricsNotifier extends ChangeNotifier {
   /// Displayes the notification.
   void displayNotification(int index) {
     if (!_notificationVisible) return;
-    const diff = 3;
+    const diff = 2;
     final from = max(0, index - diff);
     final to = min(lyrics.length - 1, index + diff);
     ensureNotification(() {
@@ -290,6 +290,7 @@ class LyricsNotifier extends ChangeNotifier {
                 for (int i = from; i <= to; i++)
                   if (i == index) '<br><b>${lyrics[i].text}</b><br>' else lyrics[i].text,
               ].join('<br>'),
+              contentTitle: '<h1>${_current?.title}</h1>',
               htmlFormatTitle: true,
               htmlFormatContent: true,
               htmlFormatBigText: true,

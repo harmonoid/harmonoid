@@ -43,8 +43,9 @@ class _NowPlayingScreenSectionState extends State<NowPlayingScreenSection> {
             stepSize: 1.0,
             showLabels: true,
             labelFormatterCallback: (value, _) {
-              return switch (value) {
-                12.0 || 28.0 || 64.0 || 128.0 => '${value.toInt()}',
+              return switch ((value, isDesktop, isMobile)) {
+                (12.0 || 28.0 || 64.0 || 128.0, true, false) => '${value.toInt()}',
+                (12.0 || 24.0 || 48.0 || 128.0, false, true) => '${value.toInt()}',
                 _ => '',
               };
             },

@@ -81,7 +81,6 @@ class SearchScreenState extends State<SearchScreen> {
       body: ListView(
         shrinkWrap: true,
         padding: EdgeInsets.zero,
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         children: [
           if (_albums.isNotEmpty) ...[
             Row(
