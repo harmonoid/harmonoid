@@ -82,8 +82,8 @@ Future<void> main(List<String> args) async {
 
     await Configuration.ensureInitialized();
 
+    // HACK:
     if (Platform.isMacOS) {
-      // HACK: Bit ugly to place this here... but it works.
       await MacOSStorageController.ensureInitialized(directories: Configuration.instance.mediaLibraryDirectories);
     }
 

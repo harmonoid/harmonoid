@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart' hide CarouselView;
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
+import 'package:harmonoid/ui/router.dart';
 import 'package:measure_size/measure_size.dart';
 import 'package:provider/provider.dart';
 
@@ -24,30 +26,33 @@ import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/sliding_up_panel.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
-class MobileM3NowPlayingBar extends StatefulWidget {
-  const MobileM3NowPlayingBar({super.key});
+class M3MobileNowPlayingBar extends StatefulWidget {
+  const M3MobileNowPlayingBar({super.key});
 
   @override
-  State<MobileM3NowPlayingBar> createState() => MobileM3NowPlayingBarState();
+  State<M3MobileNowPlayingBar> createState() => M3MobileNowPlayingBarState();
 }
 
-class MobileM3NowPlayingBarState extends State<MobileM3NowPlayingBar> {
+class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
   final ValueNotifier<double> _valueNotifier = ValueNotifier<double>(0.0);
   final MiniPlayerController _miniPlayerController = MiniPlayerController();
   final PanelController _panelController = PanelController();
+  bool _lyricsVisible = false;
   double _carouselHeight = 0.0;
   double _detailsHeight = 0.0;
   double _controlsHeight = 0.0;
 
+  double get _slidingUpPanelMaxHeight => MediaQuery.sizeOf(context).height - (MediaQuery.paddingOf(context).top + 16.0 + 40.0 + 16.0);
+  double get _slidingUpPanelMinHeight => MediaQuery.sizeOf(context).height - (_carouselHeight + _detailsHeight + _controlsHeight);
   Color? get _slidingUpPanelColor => isDarkMode ? Theme.of(context).colorScheme.surfaceContainer : Theme.of(context).colorScheme.surfaceContainerLowest;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => context.read<NowPlayingMobileNotifier>().setMobileM3NowPlayingBarStateRef(this));
+    WidgetsBinding.instance.addPostFrameCallback((_) => context.read<NowPlayingMobileNotifier>().setM3MobileNowPlayingBarStateRef(this));
   }
 
-  bool get maximized => _valueNotifier.value == 1.0;
+  bool get maximized => !_lyricsVisible && _valueNotifier.value == 1.0;
 
   void maximizeNowPlayingBar() {
     _miniPlayerController.animateToHeight(state: MiniPlayerPanelState.MAX);
@@ -161,11 +166,18 @@ class MobileM3NowPlayingBarState extends State<MobileM3NowPlayingBar> {
                                                       overflow: TextOverflow.ellipsis,
                                                       style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                                                     ),
-                                                    Text(
-                                                      mediaPlayer.current.subtitle.join(', '),
-                                                      maxLines: 1,
-                                                      overflow: TextOverflow.ellipsis,
-                                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                                                    RichText(
+                                                      text: TextSpan(
+                                                        children: [
+                                                          for (final artist in mediaPlayer.current.subtitle) ...[
+                                                            TextSpan(
+                                                              text: artist.isEmpty ? kDefaultArtist : artist,
+                                                            ),
+                                                            const TextSpan(text: ', '),
+                                                          ]
+                                                        ]..removeLast(),
+                                                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
@@ -232,6 +244,9 @@ class MobileM3NowPlayingBarState extends State<MobileM3NowPlayingBar> {
                     ValueListenableBuilder(
                       valueListenable: _valueNotifier,
                       builder: (context, percentage, child) {
+                        if (_slidingUpPanelMaxHeight < _slidingUpPanelMinHeight) {
+                          return const SizedBox.shrink();
+                        }
                         return AnimatedSwitcher(
                           switchInCurve: Curves.easeInOut,
                           switchOutCurve: Curves.easeInOut,
@@ -239,22 +254,24 @@ class MobileM3NowPlayingBarState extends State<MobileM3NowPlayingBar> {
                           child: percentage == 1.0 ? child : const SizedBox.shrink(),
                         );
                       },
-                      child: SlidingUpPanel(
-                        controller: _panelController,
-                        maxHeight: MediaQuery.sizeOf(context).height - (MediaQuery.paddingOf(context).top + 16.0 + 40.0 + 16.0),
-                        minHeight: MediaQuery.sizeOf(context).height - (_carouselHeight + _detailsHeight + _controlsHeight),
-                        parallaxEnabled: false,
-                        panelSnapping: true,
-                        renderPanelSheet: true,
-                        backdropEnabled: true,
-                        backdropTapClosesPanel: true,
-                        backdropOpacity: 0.5,
-                        color: _slidingUpPanelColor ?? Colors.transparent,
-                        margin: const EdgeInsets.symmetric(horizontal: 16.0),
-                        borderRadius: (Theme.of(context).cardTheme.shape as RoundedRectangleBorder).borderRadius,
-                        panelBuilder: (controller) => _buildPlaylist(context, mediaPlayer, 0, controller: controller),
-                        collapsed: _buildPlaylist(context, mediaPlayer, mediaPlayer.state.index + 1, physics: const NeverScrollableScrollPhysics()),
-                      ),
+                      child: _slidingUpPanelMaxHeight < _slidingUpPanelMinHeight
+                          ? const SizedBox.shrink()
+                          : SlidingUpPanel(
+                              controller: _panelController,
+                              maxHeight: _slidingUpPanelMaxHeight,
+                              minHeight: _slidingUpPanelMinHeight,
+                              parallaxEnabled: false,
+                              panelSnapping: true,
+                              renderPanelSheet: true,
+                              backdropEnabled: true,
+                              backdropTapClosesPanel: true,
+                              backdropOpacity: 0.5,
+                              color: _slidingUpPanelColor ?? Colors.transparent,
+                              margin: const EdgeInsets.symmetric(horizontal: 16.0),
+                              borderRadius: (Theme.of(context).cardTheme.shape as RoundedRectangleBorder).borderRadius,
+                              panelBuilder: (controller) => _buildPlaylist(context, mediaPlayer, 0, controller: controller),
+                              collapsed: _buildPlaylist(context, mediaPlayer, mediaPlayer.state.index + 1, physics: const NeverScrollableScrollPhysics()),
+                            ),
                     ),
                   ],
                 );
@@ -291,9 +308,12 @@ class MobileM3NowPlayingBarState extends State<MobileM3NowPlayingBar> {
                   child: child,
                 );
               },
-              onTap: (i) {
-                if (mediaPlayer.state.index == i) return;
-                mediaPlayer.jump(i);
+              onTap: (i) async {
+                _lyricsVisible = true;
+                await context.push('/$kNowPlayingLyricsPath');
+                _lyricsVisible = false;
+                // if (mediaPlayer.state.index == i) return;
+                // mediaPlayer.jump(i);
               },
             ),
           ),
@@ -320,11 +340,18 @@ class MobileM3NowPlayingBarState extends State<MobileM3NowPlayingBar> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: MediaQuery.sizeOf(context).width * 1 / 9 + 4.0),
-            child: Text(
-              mediaPlayer.current.subtitle.join(', '),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  for (final artist in mediaPlayer.current.subtitle) ...[
+                    TextSpan(
+                      text: artist.isEmpty ? kDefaultArtist : artist,
+                    ),
+                    const TextSpan(text: ', '),
+                  ]
+                ]..removeLast(),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+              ),
             ),
           ),
           Padding(

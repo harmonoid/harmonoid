@@ -22,6 +22,7 @@ import 'package:harmonoid/ui/media_library/playlists/playlists_screen.dart';
 import 'package:harmonoid/ui/media_library/search/search_items_screen.dart';
 import 'package:harmonoid/ui/media_library/search/search_screen.dart';
 import 'package:harmonoid/ui/media_library/tracks/tracks_screen.dart';
+import 'package:harmonoid/ui/now_playing/now_playing_lyrics_screen.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_screen.dart';
 import 'package:harmonoid/ui/settings/settings_screen.dart';
 import 'package:harmonoid/utils/material_transition_page.dart';
@@ -128,6 +129,8 @@ const String kNowPlayingPath = 'now-playing';
 const String kFileInfoPath = 'file-info';
 
 const String kFileInfoArgResource = 'resource';
+
+const String kNowPlayingLyricsPath = 'now-playing-lyrics';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> homeNavigatorKey = GlobalKey<NavigatorState>();
@@ -336,6 +339,16 @@ final router = GoRouter(
           context: context,
           state: state,
           child: const NowPlayingScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/$kNowPlayingLyricsPath',
+      pageBuilder: (context, state) {
+        return buildPageWithDefaultTransition(
+          context: context,
+          state: state,
+          child: const NowPlayingLyricsScreen(),
         );
       },
     ),

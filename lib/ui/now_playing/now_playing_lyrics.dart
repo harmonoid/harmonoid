@@ -23,7 +23,7 @@ class NowPlayingLyricsState extends State<NowPlayingLyrics> {
           padding: EdgeInsets.only(
             left: 32.0,
             right: 32.0,
-            top: kDesktopAppBarHeight + MediaQuery.of(context).size.height * 0.1,
+            top: kDesktopAppBarHeight + MediaQuery.sizeOf(context).height * 0.1,
           ),
           focusedTextStyle: Theme.of(context).textTheme.displayLarge?.copyWith(
                 fontSize: Configuration.instance.lyricsViewFocusedFontSize,
@@ -44,7 +44,30 @@ class NowPlayingLyricsState extends State<NowPlayingLyrics> {
   }
 
   Widget _buildMobileLayout(BuildContext context) {
-    throw UnimplementedError();
+    return Consumer<LyricsNotifier>(
+      builder: (context, lyricsNotifier, _) {
+        return LyricsView(
+          index: lyricsNotifier.index,
+          lyrics: lyricsNotifier.lyrics.map((e) => e.text).toList(),
+          padding: EdgeInsets.only(
+            left: 32.0,
+            right: 32.0,
+            top: kDesktopAppBarHeight + MediaQuery.sizeOf(context).height * 0.1,
+          ),
+          focusedTextStyle: Theme.of(context).textTheme.displayLarge?.copyWith(
+                fontSize: Configuration.instance.lyricsViewFocusedFontSize,
+                height: Configuration.instance.lyricsViewFocusedLineHeight,
+              ),
+          unfocusedTextStyle: Theme.of(context).textTheme.displayLarge?.copyWith(
+                fontSize: Configuration.instance.lyricsViewUnfocusedFontSize,
+                height: Configuration.instance.lyricsViewUnfocusedLineHeight,
+              ),
+          textAlign: Configuration.instance.lyricsViewTextAlign,
+          viewportWidth: MediaQuery.sizeOf(context).width,
+          viewportHeight: MediaQuery.sizeOf(context).height,
+        );
+      },
+    );
   }
 
   @override

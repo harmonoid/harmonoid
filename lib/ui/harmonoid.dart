@@ -42,7 +42,7 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
       return true;
     }
     if (mediaLibrarySearchController.isAttached && mediaLibrarySearchController.isOpen) {
-      mediaLibrarySearchController.closeView(null);
+      mediaLibrarySearchController.closeView('');
       return true;
     }
     return super.didPopRoute();

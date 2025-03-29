@@ -1,7 +1,7 @@
 import 'package:harmonoid/ui/media_library/media_library_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_shell_route.dart';
-import 'package:harmonoid/ui/now_playing/mobile/mobile_m2_now_playing_bar.dart';
-import 'package:harmonoid/ui/now_playing/mobile/mobile_m3_now_playing_bar.dart';
+import 'package:harmonoid/ui/now_playing/mobile/m2_mobile_now_playing_bar.dart';
+import 'package:harmonoid/ui/now_playing/mobile/m3_mobile_now_playing_bar.dart';
 
 /// {@template now_playing_mobile_notifier}
 ///
@@ -17,19 +17,19 @@ class NowPlayingMobileNotifier {
   /// {@macro now_playing_mobile_notifier}
   NowPlayingMobileNotifier._();
 
-  MobileM3NowPlayingBarState? _mobileM3NowPlayingBarStateRef;
-  MobileM2NowPlayingBarState? _mobileM2NowPlayingBarStateRef;
+  M3MobileNowPlayingBarState? _m3MobileNowPlayingBarStateRef;
+  M2MobileNowPlayingBarState? _m2MobileNowPlayingBarStateRef;
   MediaLibraryScreenState? _mediaLibraryScreenStateRef;
   MediaLibraryShellRouteState? _mediaLibraryShellRouteStateRef;
 
-  bool get maximized => _mobileM3NowPlayingBarStateRef?.maximized ?? _mobileM2NowPlayingBarStateRef?.maximized ?? false;
+  bool get maximized => _m3MobileNowPlayingBarStateRef?.maximized ?? _m2MobileNowPlayingBarStateRef?.maximized ?? false;
 
-  void setMobileM3NowPlayingBarStateRef(MobileM3NowPlayingBarState value) {
-    _mobileM3NowPlayingBarStateRef = value;
+  void setM3MobileNowPlayingBarStateRef(M3MobileNowPlayingBarState value) {
+    _m3MobileNowPlayingBarStateRef = value;
   }
 
-  void setMobileM2NowPlayingBarStateRef(MobileM2NowPlayingBarState value) {
-    _mobileM2NowPlayingBarStateRef = value;
+  void setM2MobileNowPlayingBarStateRef(M2MobileNowPlayingBarState value) {
+    _m2MobileNowPlayingBarStateRef = value;
   }
 
   void setMediaLibraryScreenStateRef(MediaLibraryScreenState value) {
@@ -51,13 +51,13 @@ class NowPlayingMobileNotifier {
   }
 
   void maximizeNowPlayingBar() {
-    _mobileM3NowPlayingBarStateRef?.maximizeNowPlayingBar();
-    _mobileM2NowPlayingBarStateRef?.maximizeNowPlayingBar();
+    _m3MobileNowPlayingBarStateRef?.maximizeNowPlayingBar();
+    _m2MobileNowPlayingBarStateRef?.maximizeNowPlayingBar();
   }
 
   void minimizeNowPlayingBar() {
-    _mobileM3NowPlayingBarStateRef?.minimizeNowPlayingBar();
-    _mobileM2NowPlayingBarStateRef?.minimizeNowPlayingBar();
+    _m3MobileNowPlayingBarStateRef?.minimizeNowPlayingBar();
+    _m2MobileNowPlayingBarStateRef?.minimizeNowPlayingBar();
   }
 
   void showBottomNavigationBar() {
