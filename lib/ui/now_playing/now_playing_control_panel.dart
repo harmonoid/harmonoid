@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/go_router.dart';
+import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
 import 'package:harmonoid/ui/router.dart';
@@ -130,7 +131,7 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                       ),
                     ),
                     child: Text(
-                      Localization.instance.BETA.toUpperCase(),
+                      Localization.instance.BETA.uppercase(),
                       style: Theme.of(context).textTheme.labelSmall,
                     ),
                   ),

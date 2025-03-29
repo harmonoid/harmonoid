@@ -13,6 +13,7 @@ import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/build_context.dart';
 import 'package:harmonoid/extensions/media_player_state.dart';
+import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/build_context.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
@@ -216,11 +217,11 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                             alignment: Alignment.center,
                                             children: [
                                               Text(
-                                                e.value.toUpperCase(),
+                                                e.value.uppercase(),
                                                 style: selected.copyWith(color: Colors.transparent),
                                               ),
                                               Text(
-                                                e.value.toUpperCase(),
+                                                e.value.uppercase(),
                                                 style: unselected.copyWith(color: Colors.transparent),
                                               ),
                                               AnimatedSwitcher(
@@ -229,12 +230,12 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                                 switchOutCurve: Curves.easeInOut,
                                                 child: e.key == _path
                                                     ? Text(
-                                                        e.value.toUpperCase(),
+                                                        e.value.uppercase(),
                                                         key: ValueKey('${e.key}-w600'),
                                                         style: selected.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color),
                                                       )
                                                     : Text(
-                                                        e.value.toUpperCase(),
+                                                        e.value.uppercase(),
                                                         key: ValueKey('${e.key}-w300'),
                                                         style: unselected.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color),
                                                       ),

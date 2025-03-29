@@ -1,6 +1,7 @@
+import 'package:path/path.dart';
+
 import 'package:harmonoid/models/media_player_state.dart';
 import 'package:harmonoid/models/playable.dart';
-import 'package:path/path.dart';
 
 /// Extensions for [MediaPlayerState].
 extension MediaPlayerStateExtensions on MediaPlayerState {

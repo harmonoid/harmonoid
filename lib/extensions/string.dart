@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:harmonoid/localization/localization.dart';
+
 /// Extensions for [String].
 extension StringExtensions on String {
   /// Ellipsis the string to [length].
@@ -13,5 +15,13 @@ extension StringExtensions on String {
   /// Returns null if the string is blank.
   String? nullIfBlank() {
     return trim().isEmpty ? null : this;
+  }
+
+  /// Returns the uppercase version of the string.
+  String uppercase() {
+    if (Localization.instance.current.code == 'en_US') {
+      return toUpperCase();
+    }
+    return this;
   }
 }

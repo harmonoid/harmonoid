@@ -17,6 +17,7 @@ import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/go_router.dart';
 import 'package:harmonoid/extensions/playable.dart';
+import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/extensions/track.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
@@ -140,7 +141,7 @@ String get operatingSystem {
   }
 }
 
-String label(String value) => isMaterial3OrGreater ? value : value.toUpperCase();
+String label(String value) => isMaterial3OrGreater ? value : value.uppercase();
 
 ImageProvider cover({
   MediaLibraryItem? item,

@@ -3,6 +3,7 @@ import 'package:media_library/media_library.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/extensions/date_time.dart';
+import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/utils/constants.dart';
 
 /// Extensions for [Track].
@@ -20,7 +21,7 @@ extension TrackExtensions on Track {
     switch (Configuration.instance.mediaLibraryTrackSortType) {
       case TrackSortType.title:
         return ValueKey(
-          title[0].toUpperCase(),
+          title[0].uppercase(),
         );
       case TrackSortType.timestamp:
         return ValueKey(
