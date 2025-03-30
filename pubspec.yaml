@@ -29,8 +29,10 @@ dependencies:
   flutter_discord_rpc: 1.0.0
   flutter_local_notifications: ^19.0.0
   flutter_svg: ^1.1.4
+  freezed_annotation: ^2.4.4
   go_router: ^14.2.7
   http: ^1.2.1
+  json_annotation: ^4.9.0
   lrc: ^1.0.1
   measure_size: ^4.0.0
   media_kit:
@@ -89,6 +91,8 @@ dev_dependencies:
       path: ./drift_dev
       ref: feat/group-concat-order-by
   flutter_lints: ^3.0.1
+  freezed: ^2.5.7
+  json_serializable: ^6.9.0
 
 dependency_overrides:
   drift:
