@@ -4,12 +4,14 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart' hide CarouselView;
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:harmonoid/ui/router.dart';
+import 'package:harmonoid/state/lyrics_notifier.dart';
+import 'package:harmonoid/ui/now_playing/now_playing_control_panel.dart';
 import 'package:measure_size/measure_size.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/extensions/duration.dart';
 import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/build_context.dart';
@@ -19,6 +21,7 @@ import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_colors.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_playlist_item.dart';
+import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/material_wave_slider.dart';
 import 'package:harmonoid/utils/mini_player.dart';
@@ -43,7 +46,7 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
   double _controlsHeight = 0.0;
 
   double get _slidingUpPanelMaxHeight => MediaQuery.sizeOf(context).height - (MediaQuery.paddingOf(context).top + 16.0 + 40.0 + 16.0);
-  double get _slidingUpPanelMinHeight => MediaQuery.sizeOf(context).height - (_carouselHeight + _detailsHeight + _controlsHeight);
+  double get _slidingUpPanelMinHeight => MediaQuery.sizeOf(context).height - (MediaQuery.paddingOf(context).top + kToolbarHeight + _carouselHeight + _detailsHeight + _controlsHeight);
   Color? get _slidingUpPanelColor => isDarkMode ? Theme.of(context).colorScheme.surfaceContainer : Theme.of(context).colorScheme.surfaceContainerLowest;
 
   @override
@@ -113,6 +116,7 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.stretch,
                                       children: [
+                                        _buildAppBar(context, mediaPlayer),
                                         _buildCarousel(context, mediaPlayer, percentage),
                                         _buildDetails(context, mediaPlayer),
                                         _buildControls(context, mediaPlayer),
@@ -130,7 +134,7 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
                                     child: Container(
                                       width: lerpDouble(NowPlayingBar.height, MediaQuery.sizeOf(context).width, percentage),
                                       padding: EdgeInsets.only(
-                                        top: lerpDouble(0.0, MediaQuery.paddingOf(context).top + 16.0, percentage) ?? 0.0,
+                                        top: lerpDouble(0.0, kToolbarHeight + MediaQuery.paddingOf(context).top, percentage) ?? 0.0,
                                         left: lerpDouble(0.0, MediaQuery.sizeOf(context).width * 1 / 9 + 4.0, percentage) ?? 0.0,
                                         right: lerpDouble(0.0, MediaQuery.sizeOf(context).width * 1 / 9 + 4.0, percentage) ?? 0.0,
                                       ),
@@ -178,6 +182,8 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
                                                         ]..removeLast(),
                                                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
                                                       ),
+                                                      maxLines: 1,
+                                                      overflow: TextOverflow.ellipsis,
                                                     ),
                                                   ],
                                                 ),
@@ -244,6 +250,9 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
                     ValueListenableBuilder(
                       valueListenable: _valueNotifier,
                       builder: (context, percentage, child) {
+                        if (MediaQuery.viewInsetsOf(rootNavigatorKey.currentContext!).bottom > 0.0) {
+                          return const SizedBox.shrink();
+                        }
                         if (_slidingUpPanelMaxHeight < _slidingUpPanelMinHeight) {
                           return const SizedBox.shrink();
                         }
@@ -283,13 +292,56 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
     );
   }
 
+  Widget _buildAppBar(BuildContext context, MediaPlayer mediaPlayer) {
+    return Container(
+      height: kToolbarHeight,
+      margin: EdgeInsets.only(top: MediaQuery.paddingOf(context).top, left: 8.0, right: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          IconButton(
+            onPressed: () => _miniPlayerController.animateToHeight(state: MiniPlayerPanelState.MIN),
+            icon: const Icon(Icons.close),
+          ),
+          const Spacer(),
+          Consumer<LyricsNotifier>(
+            builder: (context, lyricsNotifier, _) {
+              if (lyricsNotifier.lyrics.isEmpty) {
+                return const SizedBox.shrink();
+              }
+              return IconButton(
+                onPressed: () async {
+                  _lyricsVisible = true;
+                  await context.push('/$kNowPlayingLyricsPath');
+                  _lyricsVisible = false;
+                },
+                icon: const Icon(Icons.text_format),
+              );
+            },
+          ),
+          IconButton(
+            onPressed: () => NowPlayingControlPanel.show(context),
+            icon: const Icon(Icons.equalizer),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.favorite_border),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.more_vert),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildCarousel(BuildContext context, MediaPlayer mediaPlayer, double percentage) {
     return MeasureSize(
       onChange: (size) => _carouselHeight = size.height,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: MediaQuery.paddingOf(context).top + 16.0),
           SizedBox(
             height: MediaQuery.sizeOf(context).width * 7 / 9,
             child: StatefulCarouselViewBuilder(
@@ -309,11 +361,8 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
                 );
               },
               onTap: (i) async {
-                _lyricsVisible = true;
-                await context.push('/$kNowPlayingLyricsPath');
-                _lyricsVisible = false;
-                // if (mediaPlayer.state.index == i) return;
-                // mediaPlayer.jump(i);
+                if (mediaPlayer.state.index == i) return;
+                mediaPlayer.jump(i);
               },
             ),
           ),
@@ -352,6 +401,8 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
                 ]..removeLast(),
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           Padding(
@@ -464,7 +515,29 @@ class Controls extends StatelessWidget {
                   paused: !mediaPlayer.state.playing,
                 ),
               ),
-              const SizedBox(height: 16.0),
+              Container(
+                height: 16.0,
+                padding: EdgeInsets.symmetric(horizontal: (MediaQuery.sizeOf(context).width * 1 / 9 + 4.0 - 2 * 16.0).clamp(0.0, MediaQuery.sizeOf(context).width)),
+                child: Row(
+                  children: [
+                    Text(
+                      mediaPlayer.state.position.label,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: nowPlayingColors.backgroundText,
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      mediaPlayer.state.duration.label,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: nowPlayingColors.backgroundText,
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.center,

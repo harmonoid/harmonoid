@@ -120,7 +120,7 @@ class MediaLibraryShellRouteState extends State<MediaLibraryShellRoute> with Tic
               if (nowPlayingBarVisibility == 1.0) {
                 return const SizedBox.shrink();
               }
-              if (viewInsets > 0.0) {
+              if (viewInsets > 0.0 && !context.read<NowPlayingMobileNotifier>().maximized) {
                 return const SizedBox.shrink();
               }
               return Transform.translate(

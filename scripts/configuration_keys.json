@@ -28,7 +28,7 @@
   {"key": "MEDIA_LIBRARY_REFRESH_UPON_START", "serializedType": "Boolean", "dartType": "bool", "default": "false"},
   {"key": "MEDIA_LIBRARY_TRACK_SORT_ASCENDING", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
   {"key": "MEDIA_LIBRARY_TRACK_SORT_TYPE", "serializedType": "Integer", "dartType": "TrackSortType", "default": "TrackSortType.title.index"},
-  {"key": "MEDIA_PLAYER_PLAYBACK_STATE", "serializedType": "Json", "dartType": "PlaybackState", "default": "PlaybackState.defaults()"},
+  {"key": "MEDIA_PLAYER_PLAYBACK_STATE", "serializedType": "Json", "dartType": "PlaybackState", "default": "MediaPlayerState.defaults().toPlaybackState()"},
   {"key": "MOBILE_MEDIA_LIBRARY_ALBUM_GRID_SPAN", "serializedType": "Integer", "dartType": "int", "default": "2"},
   {"key": "MOBILE_MEDIA_LIBRARY_ARTIST_GRID_SPAN", "serializedType": "Integer", "dartType": "int", "default": "3"},
   {"key": "MOBILE_MEDIA_LIBRARY_GENRE_GRID_SPAN", "serializedType": "Integer", "dartType": "int", "default": "3"},

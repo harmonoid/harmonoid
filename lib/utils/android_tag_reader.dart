@@ -5,8 +5,6 @@ import 'package:path/path.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:tag_reader/tag_reader.dart';
 
-import 'package:harmonoid/models/android_media_format.dart';
-
 /// {@template android_tag_reader}
 ///
 /// AndroidTagReader
@@ -155,25 +153,6 @@ class AndroidTagReader extends PlatformTagReader {
       artists: artists,
       genres: genres,
     );
-  }
-
-  Future<AndroidMediaFormat> format(String uri) async {
-    try {
-      final result = await _channel.invokeMethod(
-        'format',
-        {
-          'uri': uri,
-        },
-      );
-      return AndroidMediaFormat(
-        bitrate: result['bitrate'],
-        sampleRate: result['sampleRate'],
-        channelCount: result['channelCount'],
-        extension: result['extension'],
-      );
-    } catch (_) {
-      return const AndroidMediaFormat();
-    }
   }
 
   final MethodChannel _channel = const MethodChannel('com.alexmercerind.harmonoid.AndroidStorageController');

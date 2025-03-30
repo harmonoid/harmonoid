@@ -188,7 +188,7 @@ class MediaPlayer extends ChangeNotifier with AudioServiceMixin, DiscordRpcMixin
     _player.stream.playing.listen((e) => state = state.copyWith(playing: e));
     _player.stream.buffering.listen((e) => state = state.copyWith(buffering: e));
     _player.stream.completed.listen((e) => state = state.copyWith(completed: e));
-    _player.stream.audioBitrate.listen((e) => state = state.copyWith(audioBitrate: e));
+    _player.stream.audioBitrate.listen((e) => e == null ? true : state = state.copyWith(audioBitrate: e));
     _player.stream.audioParams.listen((e) => state = state.copyWith(audioParams: e));
     _player.stream.error.listen((e) => debugPrint(e));
   }
