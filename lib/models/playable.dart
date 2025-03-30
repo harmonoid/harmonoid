@@ -1,73 +1,16 @@
-import 'package:collection/collection.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-/// {@template playable}
-///
-/// Playable
-/// --------
-///
-/// {@endtemplate}
-class Playable {
-  /// Uri.
-  final String uri;
+part 'playable.freezed.dart';
+part 'playable.g.dart';
 
-  /// Title.
-  final String title;
+@freezed
+class Playable with _$Playable {
+  const factory Playable({
+    required String uri,
+    required String title,
+    required List<String> subtitle,
+    required List<String> description,
+  }) = _Playable;
 
-  /// Subtitle.
-  final List<String> subtitle;
-
-  /// Description.
-  final List<String> description;
-
-  /// {@macro playable}
-  const Playable({
-    required this.uri,
-    required this.title,
-    required this.subtitle,
-    required this.description,
-  });
-
-  Playable copyWith({
-    String? uri,
-    String? title,
-    List<String>? subtitle,
-    List<String>? description,
-  }) {
-    return Playable(
-      uri: uri ?? this.uri,
-      title: title ?? this.title,
-      subtitle: subtitle ?? this.subtitle,
-      description: description ?? this.description,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Playable && uri == other.uri && title == other.title && const ListEquality().equals(subtitle, other.subtitle) && const ListEquality().equals(description, other.description);
-
-  @override
-  int get hashCode => Object.hash(
-        uri,
-        title,
-        const ListEquality().hash(subtitle),
-        const ListEquality().hash(description),
-      );
-
-  @override
-  String toString() => 'Playable(uri: $uri, title: $title, subtitle: $subtitle, description: $description)';
-
-  Map<String, dynamic> toJson() => {
-        'uri': uri.toString(),
-        'title': title,
-        'subtitle': subtitle,
-        'description': description,
-      };
-
-  factory Playable.fromJson(dynamic json) => Playable(
-        uri: json['uri'],
-        title: json['title'],
-        subtitle: List<String>.from(json['subtitle']),
-        description: List<String>.from(json['description']),
-      );
+  factory Playable.fromJson(Map<String, dynamic> json) => _$PlayableFromJson(json);
 }

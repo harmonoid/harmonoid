@@ -1,51 +1,14 @@
-/// {@template lyric}
-///
-/// Lyric
-/// -----
-///
-/// {@endtemplate}
-class Lyric {
-  /// Timestamp.
-  final int timestamp;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  /// Text.
-  final String text;
+part 'lyric.freezed.dart';
+part 'lyric.g.dart';
 
-  /// {@macro lyric}
-  const Lyric({
-    required this.timestamp,
-    required this.text,
-  });
+@freezed
+class Lyric with _$Lyric {
+  const factory Lyric({
+    required int timestamp,
+    required String text,
+  }) = _Lyric;
 
-  Lyric copyWith({
-    int? timestamp,
-    String? text,
-  }) {
-    return Lyric(
-      timestamp: timestamp ?? this.timestamp,
-      text: text ?? this.text,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is Lyric && timestamp == other.timestamp && text == other.text;
-
-  @override
-  int get hashCode => Object.hash(
-        timestamp,
-        text,
-      );
-
-  @override
-  String toString() => 'Lyric(timestamp: $timestamp, text: $text)';
-
-  Map<String, dynamic> toJson() => {
-        'timestamp': timestamp,
-        'text': text,
-      };
-
-  factory Lyric.fromJson(dynamic json) => Lyric(
-        timestamp: json['timestamp'],
-        text: json['text'],
-      );
+  factory Lyric.fromJson(Map<String, dynamic> json) => _$LyricFromJson(json);
 }

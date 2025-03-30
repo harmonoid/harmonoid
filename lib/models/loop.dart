@@ -1,16 +1,8 @@
-/// {@template loop}
-///
-/// Loop
-/// ----
-///
-/// {@endtemplate}
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+@JsonEnum()
 enum Loop {
-  /// Off.
   off,
-
-  /// One.
   one,
-
-  /// All.
   all,
 }
