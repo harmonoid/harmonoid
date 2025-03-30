@@ -318,7 +318,7 @@ class ConfigurationBase {
       /* Boolean */ kKeyMediaLibraryRefreshUponStart: false,
       /* Boolean */ kKeyMediaLibraryTrackSortAscending: true,
       /* Integer */ kKeyMediaLibraryTrackSortType: TrackSortType.title.index,
-      /* Json    */ kKeyMediaPlayerPlaybackState: PlaybackState.defaults(),
+      /* Json    */ kKeyMediaPlayerPlaybackState: MediaPlayerState.defaults().toPlaybackState(),
       /* Integer */ kKeyMobileMediaLibraryAlbumGridSpan: 2,
       /* Integer */ kKeyMobileMediaLibraryArtistGridSpan: 3,
       /* Integer */ kKeyMobileMediaLibraryGenreGridSpan: 3,

@@ -10,9 +10,11 @@ import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:uuid/uuid.dart';
 import 'package:win32/win32.dart';
 
-import 'package:harmonoid/localization/localization_data.dart';
 import 'package:harmonoid/core/configuration/database/constants.dart';
 import 'package:harmonoid/core/configuration/database/database.dart';
+import 'package:harmonoid/localization/localization_data.dart';
+import 'package:harmonoid/mappers/media_player_state.dart';
+import 'package:harmonoid/models/media_player_state.dart';
 import 'package:harmonoid/models/playback_state.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
@@ -75,51 +77,72 @@ class Configuration extends ConfigurationBase {
       }
     }
 
-    _apiBaseUrl = await db.getString(kKeyApiBaseUrl);
-    _desktopNowPlayingBarColorPalette = await db.getBoolean(kKeyDesktopNowPlayingBarColorPalette);
-    _desktopNowPlayingCarousel = await db.getInteger(kKeyDesktopNowPlayingCarousel);
-    _desktopNowPlayingLyrics = await db.getBoolean(kKeyDesktopNowPlayingLyrics);
-    _discordRpc = await db.getBoolean(kKeyDiscordRpc);
-    _identifier = await db.getString(kKeyIdentifier);
-    _localization = LocalizationData.fromJson(await db.getJson(kKeyLocalization));
-    _lrcFromDirectory = await db.getBoolean(kKeyLrcFromDirectory);
-    _lyricsViewFocusedFontSize = await db.getDouble(kKeyLyricsViewFocusedFontSize);
-    _lyricsViewFocusedLineHeight = await db.getDouble(kKeyLyricsViewFocusedLineHeight);
-    _lyricsViewTextAlign = TextAlign.values[(await db.getInteger(kKeyLyricsViewTextAlign))!];
-    _lyricsViewUnfocusedFontSize = await db.getDouble(kKeyLyricsViewUnfocusedFontSize);
-    _lyricsViewUnfocusedLineHeight = await db.getDouble(kKeyLyricsViewUnfocusedLineHeight);
-    _mediaLibraryAddPlaylistToNowPlaying = await db.getBoolean(kKeyMediaLibraryAddPlaylistToNowPlaying);
-    _mediaLibraryAlbumGroupingParameters = (await db.getJson(kKeyMediaLibraryAlbumGroupingParameters)).map<AlbumGroupingParameter>((e) => AlbumGroupingParameter.values[e]).toSet();
-    _mediaLibraryAlbumSortAscending = await db.getBoolean(kKeyMediaLibraryAlbumSortAscending);
-    _mediaLibraryAlbumSortType = AlbumSortType.values[(await db.getInteger(kKeyMediaLibraryAlbumSortType))!];
-    _mediaLibraryArtistSortAscending = await db.getBoolean(kKeyMediaLibraryArtistSortAscending);
-    _mediaLibraryArtistSortType = ArtistSortType.values[(await db.getInteger(kKeyMediaLibraryArtistSortType))!];
-    _mediaLibraryCoverFallback = await db.getBoolean(kKeyMediaLibraryCoverFallback);
-    _mediaLibraryDesktopTracksScreenColumnWidths = Map<String, double>.from(await db.getJson(kKeyMediaLibraryDesktopTracksScreenColumnWidths));
-    _mediaLibraryDirectories = (await db.getJson(kKeyMediaLibraryDirectories)).map<Directory>((e) => Directory(e)).toSet();
-    _mediaLibraryGenreSortAscending = await db.getBoolean(kKeyMediaLibraryGenreSortAscending);
-    _mediaLibraryGenreSortType = GenreSortType.values[(await db.getInteger(kKeyMediaLibraryGenreSortType))!];
-    _mediaLibraryMinimumFileSize = await db.getInteger(kKeyMediaLibraryMinimumFileSize);
-    _mediaLibraryPath = await db.getString(kKeyMediaLibraryPath);
-    _mediaLibraryRefreshUponStart = await db.getBoolean(kKeyMediaLibraryRefreshUponStart);
-    _mediaLibraryTrackSortAscending = await db.getBoolean(kKeyMediaLibraryTrackSortAscending);
-    _mediaLibraryTrackSortType = TrackSortType.values[(await db.getInteger(kKeyMediaLibraryTrackSortType))!];
-    _mediaPlayerPlaybackState = PlaybackState.fromJson(await db.getJson(kKeyMediaPlayerPlaybackState));
-    _mobileMediaLibraryAlbumGridSpan = await db.getInteger(kKeyMobileMediaLibraryAlbumGridSpan);
-    _mobileMediaLibraryArtistGridSpan = await db.getInteger(kKeyMobileMediaLibraryArtistGridSpan);
-    _mobileMediaLibraryGenreGridSpan = await db.getInteger(kKeyMobileMediaLibraryGenreGridSpan);
-    _mobileNowPlayingRipple = await db.getBoolean(kKeyMobileNowPlayingRipple);
-    _mobileNowPlayingVolumeSlider = await db.getBoolean(kKeyMobileNowPlayingVolumeSlider);
-    _mpvOptions = Map<String, String>.from(await db.getJson(kKeyMpvOptions));
-    _mpvPath = await db.getString(kKeyMpvPath);
-    _notificationLyrics = await db.getBoolean(kKeyNotificationLyrics);
-    _nowPlayingAudioFormat = await db.getBoolean(kKeyNowPlayingAudioFormat);
-    _nowPlayingDisplayUponPlay = await db.getBoolean(kKeyNowPlayingDisplayUponPlay);
-    _themeAnimationDuration = AnimationDuration.fromJson(await db.getJson(kKeyThemeAnimationDuration));
-    _themeMaterialStandard = await db.getInteger(kKeyThemeMaterialStandard);
-    _themeMode = ThemeMode.values[(await db.getInteger(kKeyThemeMode))!];
-    _themeSystemColorScheme = await db.getBoolean(kKeyThemeSystemColorScheme);
-    _windowsTaskbarProgress = await db.getBoolean(kKeyWindowsTaskbarProgress);
+    _apiBaseUrl = await _read<String, String>(kKeyApiBaseUrl, defaults);
+    _desktopNowPlayingBarColorPalette = await _read<bool, bool>(kKeyDesktopNowPlayingBarColorPalette, defaults);
+    _desktopNowPlayingCarousel = await _read<int, int>(kKeyDesktopNowPlayingCarousel, defaults);
+    _desktopNowPlayingLyrics = await _read<bool, bool>(kKeyDesktopNowPlayingLyrics, defaults);
+    _discordRpc = await _read<bool, bool>(kKeyDiscordRpc, defaults);
+    _identifier = await _read<String, String>(kKeyIdentifier, defaults);
+    _localization = await _read<dynamic, LocalizationData>(kKeyLocalization, defaults, (value) => LocalizationData.fromJson(value));
+    _lrcFromDirectory = await _read<bool, bool>(kKeyLrcFromDirectory, defaults);
+    _lyricsViewFocusedFontSize = await _read<double, double>(kKeyLyricsViewFocusedFontSize, defaults);
+    _lyricsViewFocusedLineHeight = await _read<double, double>(kKeyLyricsViewFocusedLineHeight, defaults);
+    _lyricsViewTextAlign = await _read<int, TextAlign>(kKeyLyricsViewTextAlign, defaults, (value) => TextAlign.values[value]);
+    _lyricsViewUnfocusedFontSize = await _read<double, double>(kKeyLyricsViewUnfocusedFontSize, defaults);
+    _lyricsViewUnfocusedLineHeight = await _read<double, double>(kKeyLyricsViewUnfocusedLineHeight, defaults);
+    _mediaLibraryAddPlaylistToNowPlaying = await _read<bool, bool>(kKeyMediaLibraryAddPlaylistToNowPlaying, defaults);
+    _mediaLibraryAlbumGroupingParameters = await _read<dynamic, Set<AlbumGroupingParameter>>(kKeyMediaLibraryAlbumGroupingParameters, defaults, (value) => value.map<AlbumGroupingParameter>((e) => AlbumGroupingParameter.values[e]).toSet());
+    _mediaLibraryAlbumSortAscending = await _read<bool, bool>(kKeyMediaLibraryAlbumSortAscending, defaults);
+    _mediaLibraryAlbumSortType = await _read<int, AlbumSortType>(kKeyMediaLibraryAlbumSortType, defaults, (value) => AlbumSortType.values[value]);
+    _mediaLibraryArtistSortAscending = await _read<bool, bool>(kKeyMediaLibraryArtistSortAscending, defaults);
+    _mediaLibraryArtistSortType = await _read<int, ArtistSortType>(kKeyMediaLibraryArtistSortType, defaults, (value) => ArtistSortType.values[value]);
+    _mediaLibraryCoverFallback = await _read<bool, bool>(kKeyMediaLibraryCoverFallback, defaults);
+    _mediaLibraryDesktopTracksScreenColumnWidths = await _read<dynamic, Map<String, double>>(kKeyMediaLibraryDesktopTracksScreenColumnWidths, defaults, (value) => Map<String, double>.from(value));
+    _mediaLibraryDirectories = await _read<dynamic, Set<Directory>>(kKeyMediaLibraryDirectories, defaults, (value) => value.map<Directory>((e) => Directory(e)).toSet());
+    _mediaLibraryGenreSortAscending = await _read<bool, bool>(kKeyMediaLibraryGenreSortAscending, defaults);
+    _mediaLibraryGenreSortType = await _read<int, GenreSortType>(kKeyMediaLibraryGenreSortType, defaults, (value) => GenreSortType.values[value]);
+    _mediaLibraryMinimumFileSize = await _read<int, int>(kKeyMediaLibraryMinimumFileSize, defaults);
+    _mediaLibraryPath = await _read<String, String>(kKeyMediaLibraryPath, defaults);
+    _mediaLibraryRefreshUponStart = await _read<bool, bool>(kKeyMediaLibraryRefreshUponStart, defaults);
+    _mediaLibraryTrackSortAscending = await _read<bool, bool>(kKeyMediaLibraryTrackSortAscending, defaults);
+    _mediaLibraryTrackSortType = await _read<int, TrackSortType>(kKeyMediaLibraryTrackSortType, defaults, (value) => TrackSortType.values[value]);
+    _mediaPlayerPlaybackState = await _read<dynamic, PlaybackState>(kKeyMediaPlayerPlaybackState, defaults, (value) => PlaybackState.fromJson(value));
+    _mobileMediaLibraryAlbumGridSpan = await _read<int, int>(kKeyMobileMediaLibraryAlbumGridSpan, defaults);
+    _mobileMediaLibraryArtistGridSpan = await _read<int, int>(kKeyMobileMediaLibraryArtistGridSpan, defaults);
+    _mobileMediaLibraryGenreGridSpan = await _read<int, int>(kKeyMobileMediaLibraryGenreGridSpan, defaults);
+    _mobileNowPlayingRipple = await _read<bool, bool>(kKeyMobileNowPlayingRipple, defaults);
+    _mobileNowPlayingVolumeSlider = await _read<bool, bool>(kKeyMobileNowPlayingVolumeSlider, defaults);
+    _mpvOptions = await _read<dynamic, Map<String, String>>(kKeyMpvOptions, defaults, (value) => Map<String, String>.from(value));
+    _mpvPath = await _read<String, String>(kKeyMpvPath, defaults);
+    _notificationLyrics = await _read<bool, bool>(kKeyNotificationLyrics, defaults);
+    _nowPlayingAudioFormat = await _read<bool, bool>(kKeyNowPlayingAudioFormat, defaults);
+    _nowPlayingDisplayUponPlay = await _read<bool, bool>(kKeyNowPlayingDisplayUponPlay, defaults);
+    _themeAnimationDuration = await _read<dynamic, AnimationDuration>(kKeyThemeAnimationDuration, defaults, (value) => AnimationDuration.fromJson(value));
+    _themeMaterialStandard = await _read<int, int>(kKeyThemeMaterialStandard, defaults);
+    _themeMode = await _read<int, ThemeMode>(kKeyThemeMode, defaults, (value) => ThemeMode.values[value]);
+    _themeSystemColorScheme = await _read<bool, bool>(kKeyThemeSystemColorScheme, defaults);
+    _windowsTaskbarProgress = await _read<bool, bool>(kKeyWindowsTaskbarProgress, defaults);
+  }
+
+  Future<O> _read<I, O>(String key, Map<String, dynamic> defaults, [O Function(I)? map]) async {
+    if (I == O) {
+      map ??= (value) => value as O;
+    } else if (map == null) {
+      throw ArgumentError();
+    }
+    try {
+      return switch (I) {
+        const (bool) => map(await db.getBoolean(key) as I),
+        const (int) => map(await db.getInteger(key) as I),
+        const (double) => map(await db.getDouble(key) as I),
+        const (String) => map(await db.getString(key) as I),
+        _ => map(await db.getJson(key) as I),
+      };
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+      return defaults[key];
+    }
   }
 }
 
