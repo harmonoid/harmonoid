@@ -44,19 +44,15 @@ class NowPlayingControlPanel extends StatefulWidget {
       throw UnimplementedError();
     }
     if (isMobile) {
-      await showDialog(
+      await showModalBottomSheet(
         context: context,
+        showDragHandle: isMaterial3OrGreater,
+        elevation: kDefaultHeavyElevation,
         useRootNavigator: true,
-        // NOTE: The default barrier color. I have no fucking idea why this isn't available in Flutter's [ThemeData].
-        barrierColor: Colors.black54,
-        builder: (context) => const SlideOnEnter(
-          child: Align(
-            alignment: Alignment.center,
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: NowPlayingControlPanel(),
-            ),
-          ),
+        isScrollControlled: true,
+        builder: (context) => const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: NowPlayingControlPanel(),
         ),
       );
     }
@@ -108,189 +104,37 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
       child: Container(
         width: 256.0,
         padding: const EdgeInsets.all(20.0),
-        child: Consumer<MediaPlayer>(builder: (context, mediaPlayer, _) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    Localization.instance.CONTROL_PANEL,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(width: 8.0),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Theme.of(context).dividerColor,
-                      ),
-                    ),
-                    child: Text(
-                      Localization.instance.BETA.uppercase(),
-                      style: Theme.of(context).textTheme.labelSmall,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  Localization.instance.CONTROL_PANEL,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(width: 8.0),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Theme.of(context).dividerColor,
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 12.0),
-              Text(
-                Localization.instance.SPEED,
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  MouseRegion(
-                    cursor: SystemMouseCursors.click,
-                    child: GestureDetector(
-                      onTap: () => mediaPlayer.setRate(1.0),
-                      child: const Align(
-                        alignment: Alignment.center,
-                        child: Icon(
-                          Icons.speed,
-                          size: 24.0,
-                        ),
-                      ),
-                    ),
+                  child: Text(
+                    Localization.instance.BETA.uppercase(),
+                    style: Theme.of(context).textTheme.labelSmall,
                   ),
-                  const SizedBox(width: 4.0),
-                  Expanded(
-                    child: ScrollableSlider(
-                      min: 0.5,
-                      max: 1.5,
-                      value: mediaPlayer.state.rate.clamp(0.5, 1.5),
-                      onChanged: (value) => mediaPlayer.setRate(value),
-                      onScrolledUp: () => mediaPlayer.setRate(mediaPlayer.state.rate + 0.05),
-                      onScrolledDown: () => mediaPlayer.setRate(mediaPlayer.state.rate - 0.05),
-                    ),
-                  ),
-                  const SizedBox(width: 12.0),
-                  SizedBox(
-                    height: 32.0,
-                    width: 40.0,
-                    child: DefaultTextField(
-                      focusNode: rate.focusNode,
-                      controller: rate.textEditingController,
-                      onChanged: (value) => mediaPlayer.setRate(double.tryParse(value) ?? 1.0),
-                      cursorWidth: 1.0,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      decoration: inputDecoration(context, 'NaN', contentPadding: EdgeInsets.zero),
-                      inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'[0-9]|\.'))],
-                      keyboardType: TextInputType.number,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8.0),
-              Text(
-                Localization.instance.PITCH,
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  MouseRegion(
-                    cursor: SystemMouseCursors.click,
-                    child: GestureDetector(
-                      onTap: () => mediaPlayer.setPitch(1.0),
-                      child: const Align(
-                        alignment: Alignment.center,
-                        child: Icon(
-                          FluentIcons.pulse_24_filled,
-                          size: 24.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 4.0),
-                  Expanded(
-                    child: ScrollableSlider(
-                      min: 0.5,
-                      max: 1.5,
-                      value: mediaPlayer.state.pitch.clamp(0.5, 1.5),
-                      onChanged: (value) => mediaPlayer.setPitch(value),
-                      onScrolledUp: () => mediaPlayer.setPitch(mediaPlayer.state.pitch + 0.05),
-                      onScrolledDown: () => mediaPlayer.setPitch(mediaPlayer.state.pitch - 0.05),
-                    ),
-                  ),
-                  const SizedBox(width: 12.0),
-                  SizedBox(
-                    height: 32.0,
-                    width: 40.0,
-                    child: DefaultTextField(
-                      focusNode: pitch.focusNode,
-                      controller: pitch.textEditingController,
-                      onChanged: (value) => mediaPlayer.setPitch(double.tryParse(value) ?? 1.0),
-                      cursorWidth: 1.0,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      decoration: inputDecoration(context, 'NaN', contentPadding: EdgeInsets.zero),
-                      inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'[0-9]|\.'))],
-                      keyboardType: TextInputType.number,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8.0),
-              Text(
-                Localization.instance.VOLUME_BOOST,
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  MouseRegion(
-                    cursor: SystemMouseCursors.click,
-                    child: GestureDetector(
-                      onTap: () => mediaPlayer.setVolume(100.0),
-                      child: const Align(
-                        alignment: Alignment.center,
-                        child: Icon(
-                          Icons.speaker,
-                          size: 24.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 4.0),
-                  Expanded(
-                    child: ScrollableSlider(
-                      min: 100.0,
-                      max: 200.0,
-                      value: mediaPlayer.state.volume.clamp(100.0, 200.0),
-                      onChanged: (value) => mediaPlayer.setVolume(value),
-                      onScrolledUp: () => mediaPlayer.setVolume(mediaPlayer.state.volume + 5.0),
-                      onScrolledDown: () => mediaPlayer.setVolume(mediaPlayer.state.volume - 5.0),
-                    ),
-                  ),
-                  const SizedBox(width: 12.0),
-                  SizedBox(
-                    height: 32.0,
-                    width: 40.0,
-                    child: DefaultTextField(
-                      focusNode: volume.focusNode,
-                      controller: volume.textEditingController,
-                      onChanged: (value) => mediaPlayer.setVolume(double.tryParse(value) ?? 100.0),
-                      cursorWidth: 1.0,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      decoration: inputDecoration(context, 'NaN', contentPadding: EdgeInsets.zero),
-                      inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'[0-9]|'))],
-                      keyboardType: TextInputType.number,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8.0),
-            ],
-          );
-        }),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12.0),
+            _buildContent(context),
+          ],
+        ),
       ),
     );
   }
@@ -300,7 +144,178 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
   }
 
   Widget _buildMobileLayout(BuildContext context) {
-    throw UnimplementedError();
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: isMaterial2 ? 16.0 : 0.0),
+        _buildContent(context),
+        SizedBox(height: 16.0 + MediaQuery.viewInsetsOf(context).bottom + MediaQuery.paddingOf(context).bottom),
+      ],
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return Consumer<MediaPlayer>(
+      builder: (context, mediaPlayer, _) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              Localization.instance.SPEED,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () => mediaPlayer.setRate(1.0),
+                    child: const Align(
+                      alignment: Alignment.center,
+                      child: Icon(
+                        Icons.speed,
+                        size: 24.0,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 4.0),
+                Expanded(
+                  child: ScrollableSlider(
+                    min: 0.5,
+                    max: 1.5,
+                    value: mediaPlayer.state.rate.clamp(0.5, 1.5),
+                    onChanged: (value) => mediaPlayer.setRate(value),
+                    onScrolledUp: () => mediaPlayer.setRate(mediaPlayer.state.rate + 0.05),
+                    onScrolledDown: () => mediaPlayer.setRate(mediaPlayer.state.rate - 0.05),
+                  ),
+                ),
+                const SizedBox(width: 12.0),
+                SizedBox(
+                  height: 32.0,
+                  width: 40.0,
+                  child: DefaultTextField(
+                    focusNode: rate.focusNode,
+                    controller: rate.textEditingController,
+                    onChanged: (value) => mediaPlayer.setRate(double.tryParse(value) ?? 1.0),
+                    cursorWidth: 1.0,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    decoration: inputDecoration(context, 'NaN', contentPadding: EdgeInsets.zero),
+                    inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'[0-9]|\.'))],
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8.0),
+            Text(
+              Localization.instance.PITCH,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () => mediaPlayer.setPitch(1.0),
+                    child: const Align(
+                      alignment: Alignment.center,
+                      child: Icon(
+                        FluentIcons.pulse_24_filled,
+                        size: 24.0,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 4.0),
+                Expanded(
+                  child: ScrollableSlider(
+                    min: 0.5,
+                    max: 1.5,
+                    value: mediaPlayer.state.pitch.clamp(0.5, 1.5),
+                    onChanged: (value) => mediaPlayer.setPitch(value),
+                    onScrolledUp: () => mediaPlayer.setPitch(mediaPlayer.state.pitch + 0.05),
+                    onScrolledDown: () => mediaPlayer.setPitch(mediaPlayer.state.pitch - 0.05),
+                  ),
+                ),
+                const SizedBox(width: 12.0),
+                SizedBox(
+                  height: 32.0,
+                  width: 40.0,
+                  child: DefaultTextField(
+                    focusNode: pitch.focusNode,
+                    controller: pitch.textEditingController,
+                    onChanged: (value) => mediaPlayer.setPitch(double.tryParse(value) ?? 1.0),
+                    cursorWidth: 1.0,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    decoration: inputDecoration(context, 'NaN', contentPadding: EdgeInsets.zero),
+                    inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'[0-9]|\.'))],
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8.0),
+            Text(
+              Localization.instance.VOLUME_BOOST,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () => mediaPlayer.setVolume(100.0),
+                    child: const Align(
+                      alignment: Alignment.center,
+                      child: Icon(
+                        Icons.speaker,
+                        size: 24.0,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 4.0),
+                Expanded(
+                  child: ScrollableSlider(
+                    min: 100.0,
+                    max: 200.0,
+                    value: mediaPlayer.state.volume.clamp(100.0, 200.0),
+                    onChanged: (value) => mediaPlayer.setVolume(value),
+                    onScrolledUp: () => mediaPlayer.setVolume(mediaPlayer.state.volume + 5.0),
+                    onScrolledDown: () => mediaPlayer.setVolume(mediaPlayer.state.volume - 5.0),
+                  ),
+                ),
+                const SizedBox(width: 12.0),
+                SizedBox(
+                  height: 32.0,
+                  width: 40.0,
+                  child: DefaultTextField(
+                    focusNode: volume.focusNode,
+                    controller: volume.textEditingController,
+                    onChanged: (value) => mediaPlayer.setVolume(double.tryParse(value) ?? 100.0),
+                    cursorWidth: 1.0,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    decoration: inputDecoration(context, 'NaN', contentPadding: EdgeInsets.zero),
+                    inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'[0-9]|'))],
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
