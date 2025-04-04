@@ -1,25 +1,25 @@
 import 'dart:ui';
-
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart' hide CarouselView;
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:harmonoid/state/lyrics_notifier.dart';
-import 'package:harmonoid/ui/now_playing/now_playing_control_panel.dart';
 import 'package:measure_size/measure_size.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
+import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/duration.dart';
 import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/build_context.dart';
 import 'package:harmonoid/models/loop.dart';
+import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_colors.dart';
+import 'package:harmonoid/ui/now_playing/now_playing_control_panel.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_playlist_item.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
@@ -323,9 +323,21 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
             onPressed: () => NowPlayingControlPanel.show(context),
             icon: const Icon(Icons.equalizer),
           ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.favorite_border),
+          Consumer<MediaLibrary>(
+            builder: (context, mediaLibrary, _) {
+              final uri = mediaPlayer.current.uri;
+              final liked = mediaLibrary.playlists.liked(uri: uri);
+              return IconButton(
+                onPressed: () async {
+                  if (liked) {
+                    await mediaLibrary.playlists.unlike(uri: uri);
+                  } else {
+                    await mediaLibrary.playlists.like(uri: uri);
+                  }
+                },
+                icon: Icon(liked ? Icons.favorite : Icons.favorite_border),
+              );
+            },
           ),
           IconButton(
             onPressed: () {},
