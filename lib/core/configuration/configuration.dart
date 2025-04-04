@@ -131,13 +131,14 @@ class Configuration extends ConfigurationBase {
       throw ArgumentError();
     }
     try {
-      return switch (I) {
-        const (bool) => map(await db.getBoolean(key) as I),
-        const (int) => map(await db.getInteger(key) as I),
-        const (double) => map(await db.getDouble(key) as I),
-        const (String) => map(await db.getString(key) as I),
-        _ => map(await db.getJson(key) as I),
+      final I i = await switch (I) {
+        const (bool) => db.getBoolean(key),
+        const (int) => db.getInteger(key),
+        const (double) => await db.getDouble(key),
+        const (String) => await db.getString(key),
+        _ => await db.getJson(key),
       };
+      return map(i);
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
