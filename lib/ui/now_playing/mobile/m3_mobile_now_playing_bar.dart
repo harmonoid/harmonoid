@@ -340,8 +340,10 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
             },
           ),
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.more_vert),
+            onPressed: () {
+              showAddToPlaylistDialog(context, playable: mediaPlayer.current);
+            },
+            icon: const Icon(Icons.add),
           ),
         ],
       ),
@@ -476,21 +478,22 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
           ),
           const Divider(height: 1.0, thickness: 1.0),
           Expanded(
-            child: CustomScrollView(
+            child: ListView.builder(
               physics: physics,
               controller: controller,
-              slivers: [
-                SliverList.separated(
-                  itemBuilder: (context, i) => NowPlayingPlaylistItem(
-                    key: ValueKey(i.toString()),
-                    index: i + diff,
-                    width: double.infinity,
-                    height: kMobileLinearTileHeight,
-                  ),
-                  separatorBuilder: (context, i) => const Divider(height: 1.0, thickness: 1.0),
-                  itemCount: mediaPlayer.state.playables.length - diff,
-                ),
-              ],
+              padding: EdgeInsets.zero,
+              itemBuilder: (context, i) {
+                if (i % 2 != 0) {
+                  return const Divider(height: 1.0, thickness: 1.0);
+                }
+                return NowPlayingPlaylistItem(
+                  index: (i ~/ 2) + diff,
+                  width: double.infinity,
+                  height: kMobileLinearTileHeight,
+                );
+              },
+              itemExtentBuilder: (i, _) => i % 2 != 0 ? 1.0 : kMobileLinearTileHeight,
+              itemCount: 2 * (mediaPlayer.state.playables.length - diff) - 1,
             ),
           ),
         ],

@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:media_library/media_library.dart';
@@ -143,7 +144,7 @@ class NowPlayingPlaylistItem extends StatelessWidget {
                     alignment: Alignment.center,
                     child: index == mediaPlayer.state.index
                         ? const MusicAnimation(width: 20.0, height: 20.0)
-                        : Text(
+                        : AutoSizeText(
                             '${i > 0 ? '+' : ''}$i',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,

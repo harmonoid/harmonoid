@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
+import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
@@ -9,6 +10,7 @@ import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/ui/media_library/albums/album_item.dart';
 import 'package:harmonoid/ui/media_library/artists/artist_item.dart';
 import 'package:harmonoid/ui/media_library/genres/genre_item.dart';
+import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
 import 'package:harmonoid/ui/media_library/search/search_banner.dart';
 import 'package:harmonoid/ui/media_library/search/search_no_items_banner.dart';
 import 'package:harmonoid/ui/media_library/tracks/track_item.dart';
@@ -16,7 +18,6 @@ import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:provider/provider.dart';
 
 class SearchScreen extends StatefulWidget {
   final String query;
@@ -71,6 +72,7 @@ class SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    mediaLibrarySearchViewVisible = TickerMode.of(context);
     if (widget.query.isEmpty) {
       return const SearchBanner();
     }

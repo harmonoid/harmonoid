@@ -7,6 +7,7 @@ import 'package:harmonoid/ui/media_library/search/search_screen.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
+bool mediaLibrarySearchViewVisible = false;
 final SearchController mediaLibrarySearchController = SearchController();
 
 class MediaLibrarySearchBar extends StatelessWidget {

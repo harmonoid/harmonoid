@@ -145,170 +145,182 @@ class MediaLibrarySection extends StatelessWidget {
     return callback();
   }
 
-  static Future<void> removeFolder(BuildContext context, MediaLibrary mediaLibrary, Directory directory) => ensureNotRefreshing(context, mediaLibrary, () async {
-        if (mediaLibrary.directories.length <= 1) {
-          await showMessage(
-            context,
-            Localization.instance.WARNING,
-            Localization.instance.LAST_DIRECTORY_REMOVED,
-          );
-          return;
+  static Future<void> removeFolder(BuildContext context, MediaLibrary mediaLibrary, Directory directory) {
+    return ensureNotRefreshing(context, mediaLibrary, () async {
+      if (mediaLibrary.directories.length <= 1) {
+        await showMessage(
+          context,
+          Localization.instance.WARNING,
+          Localization.instance.LAST_DIRECTORY_REMOVED,
+        );
+        return;
+      }
+      await Configuration.instance.removeMediaLibraryDirectory(directory);
+      await mediaLibrary.removeDirectories({directory});
+      await MacOSStorageController.instance.invalidateAccess(directory);
+    });
+  }
+
+  static Future<void> addFolder(BuildContext context, MediaLibrary mediaLibrary) {
+    return ensureNotRefreshing(context, mediaLibrary, () async {
+      final directory = await pickDirectory();
+      if (directory == null) return;
+      await Configuration.instance.addMediaLibraryDirectory(directory);
+      await mediaLibrary.addDirectories({directory});
+    });
+  }
+
+  static Future<void> refresh(BuildContext context, MediaLibrary mediaLibrary) {
+    return ensureNotRefreshing(
+      context,
+      mediaLibrary,
+      mediaLibrary.refresh,
+    );
+  }
+
+  static Future<void> reindex(BuildContext context, MediaLibrary mediaLibrary) {
+    return ensureNotRefreshing(
+      context,
+      mediaLibrary,
+      () async {
+        final result = await showConfirmation(
+          context,
+          Localization.instance.WARNING,
+          Localization.instance.REINDEX_WARNING.replaceAll('"REFRESH"', '"${label(Localization.instance.REFRESH)}"'),
+          positiveAction: label(Localization.instance.PROCEED),
+          negativeAction: label(Localization.instance.CANCEL),
+        );
+        if (result) {
+          await mediaLibrary.reindex();
         }
-        await Configuration.instance.removeMediaLibraryDirectory(directory);
-        await mediaLibrary.removeDirectories({directory});
-        await MacOSStorageController.instance.invalidateAccess(directory);
-      });
+      },
+    );
+  }
 
-  static Future<void> addFolder(BuildContext context, MediaLibrary mediaLibrary) => ensureNotRefreshing(context, mediaLibrary, () async {
-        final directory = await pickDirectory();
-        if (directory == null) return;
-        await Configuration.instance.addMediaLibraryDirectory(directory);
-        await mediaLibrary.addDirectories({directory});
-      });
+  static Future<void> editAlbumParameters(BuildContext context, MediaLibrary mediaLibrary) {
+    return ensureNotRefreshing(context, mediaLibrary, () async {
+      final result = {
+        ...mediaLibrary.albumGroupingParameters.isNotEmpty ? mediaLibrary.albumGroupingParameters : AlbumGroupingParameter.values.toSet(),
+      };
 
-  static Future<void> refresh(BuildContext context, MediaLibrary mediaLibrary) => ensureNotRefreshing(
-        context,
-        mediaLibrary,
-        mediaLibrary.refresh,
-      );
-
-  static Future<void> reindex(BuildContext context, MediaLibrary mediaLibrary) => ensureNotRefreshing(
-        context,
-        mediaLibrary,
-        () async {
-          final result = await showConfirmation(
-            context,
-            Localization.instance.WARNING,
-            Localization.instance.REINDEX_WARNING.replaceAll('"REFRESH"', '"${label(Localization.instance.REFRESH)}"'),
-            positiveAction: label(Localization.instance.PROCEED),
-            negativeAction: label(Localization.instance.CANCEL),
-          );
-          if (result) {
-            await mediaLibrary.reindex();
-          }
-        },
-      );
-
-  static Future<void> editAlbumParameters(BuildContext context, MediaLibrary mediaLibrary) => ensureNotRefreshing(context, mediaLibrary, () async {
-        final result = {
-          ...mediaLibrary.albumGroupingParameters.isNotEmpty ? mediaLibrary.albumGroupingParameters : AlbumGroupingParameter.values.toSet(),
-        };
-
-        await showDialog(
-          context: context,
-          builder: (ctx) => StatefulBuilder(
-            builder: (ctx, setState) {
-              void addOrRemove(AlbumGroupingParameter parameter, bool? value) {
-                setState(() {
-                  if (value == null) {
-                    if (result.contains(parameter)) {
-                      result.remove(parameter);
-                    } else {
-                      result.add(parameter);
-                    }
-                  } else if (value) {
-                    result.add(parameter);
-                  } else {
+      await showDialog(
+        context: context,
+        builder: (ctx) => StatefulBuilder(
+          builder: (ctx, setState) {
+            void addOrRemove(AlbumGroupingParameter parameter, bool? value) {
+              setState(() {
+                if (value == null) {
+                  if (result.contains(parameter)) {
                     result.remove(parameter);
+                  } else {
+                    result.add(parameter);
                   }
-                });
-              }
+                } else if (value) {
+                  result.add(parameter);
+                } else {
+                  result.remove(parameter);
+                }
+              });
+            }
 
-              return AlertDialog(
-                titlePadding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 24.0),
-                contentPadding: EdgeInsets.zero,
-                title: Text(Localization.instance.EDIT_ALBUM_PARAMETERS_TITLE),
-                content: Material(
-                  color: Colors.transparent,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Divider(height: 1.0),
-                      Flexible(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-                              ListItem(
-                                leading: Checkbox(
-                                  value: result.contains(AlbumGroupingParameter.album),
-                                  onChanged: (value) => addOrRemove(AlbumGroupingParameter.album, value),
-                                ),
-                                onTap: () => addOrRemove(AlbumGroupingParameter.album, null),
-                                title: Localization.instance.TITLE,
+            return AlertDialog(
+              titlePadding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 24.0),
+              contentPadding: EdgeInsets.zero,
+              title: Text(Localization.instance.EDIT_ALBUM_PARAMETERS_TITLE),
+              content: Material(
+                color: Colors.transparent,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Divider(height: 1.0),
+                    Flexible(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            ListItem(
+                              leading: Checkbox(
+                                value: result.contains(AlbumGroupingParameter.album),
+                                onChanged: (value) => addOrRemove(AlbumGroupingParameter.album, value),
                               ),
-                              ListItem(
-                                leading: Checkbox(
-                                  value: result.contains(AlbumGroupingParameter.albumArtist),
-                                  onChanged: (value) => addOrRemove(AlbumGroupingParameter.albumArtist, value),
-                                ),
-                                onTap: () => addOrRemove(AlbumGroupingParameter.albumArtist, null),
-                                title: Localization.instance.ALBUM_ARTIST,
+                              onTap: () => addOrRemove(AlbumGroupingParameter.album, null),
+                              title: Localization.instance.TITLE,
+                            ),
+                            ListItem(
+                              leading: Checkbox(
+                                value: result.contains(AlbumGroupingParameter.albumArtist),
+                                onChanged: (value) => addOrRemove(AlbumGroupingParameter.albumArtist, value),
                               ),
-                              ListItem(
-                                leading: Checkbox(
-                                  value: result.contains(AlbumGroupingParameter.year),
-                                  onChanged: (value) => addOrRemove(AlbumGroupingParameter.year, value),
-                                ),
-                                onTap: () => addOrRemove(AlbumGroupingParameter.year, null),
-                                title: Localization.instance.YEAR,
+                              onTap: () => addOrRemove(AlbumGroupingParameter.albumArtist, null),
+                              title: Localization.instance.ALBUM_ARTIST,
+                            ),
+                            ListItem(
+                              leading: Checkbox(
+                                value: result.contains(AlbumGroupingParameter.year),
+                                onChanged: (value) => addOrRemove(AlbumGroupingParameter.year, value),
                               ),
-                            ],
-                          ),
+                              onTap: () => addOrRemove(AlbumGroupingParameter.year, null),
+                              title: Localization.instance.YEAR,
+                            ),
+                          ],
                         ),
                       ),
-                      const Divider(height: 1.0),
-                    ],
-                  ),
+                    ),
+                    const Divider(height: 1.0),
+                  ],
                 ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Configuration.instance.set(mediaLibraryAlbumGroupingParameters: result.isNotEmpty ? result : AlbumGroupingParameter.values.toSet());
-                      mediaLibrary.setAlbumGroupingParameters(result.isNotEmpty ? result : AlbumGroupingParameter.values.toSet());
-                      Navigator.of(ctx).pop();
-                    },
-                    child: Text(label(Localization.instance.OK)),
-                  ),
-                  TextButton(
-                    onPressed: Navigator.of(ctx).pop,
-                    child: Text(label(Localization.instance.CANCEL)),
-                  ),
-                ],
-              );
-            },
-          ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Configuration.instance.set(mediaLibraryAlbumGroupingParameters: result.isNotEmpty ? result : AlbumGroupingParameter.values.toSet());
+                    mediaLibrary.setAlbumGroupingParameters(result.isNotEmpty ? result : AlbumGroupingParameter.values.toSet());
+                    Navigator.of(ctx).pop();
+                  },
+                  child: Text(label(Localization.instance.OK)),
+                ),
+                TextButton(
+                  onPressed: Navigator.of(ctx).pop,
+                  child: Text(label(Localization.instance.CANCEL)),
+                ),
+              ],
+            );
+          },
+        ),
+      );
+    });
+  }
+
+  static Future<void> editMinimumFileSize(BuildContext context, MediaLibrary mediaLibrary) {
+    return ensureNotRefreshing(context, mediaLibrary, () async {
+      final result = await showSelection(
+        context,
+        Localization.instance.EDIT_MINIMUM_FILE_SIZE,
+        kDefaultFileSizes,
+        mediaLibrary.minimumFileSize,
+        intFileSizeToLabelFileSize,
+      );
+
+      if (result != null) {
+        Configuration.instance.set(mediaLibraryMinimumFileSize: result);
+        mediaLibrary.setMinimumFileSize(result);
+
+        Future.delayed(
+          const Duration(milliseconds: 500),
+          () {
+            showMessage(
+              context,
+              Localization.instance.WARNING,
+              Localization.instance.MINIMUM_FILE_SIZE_WARNING,
+            );
+          },
         );
-      });
-
-  static Future<void> editMinimumFileSize(BuildContext context, MediaLibrary mediaLibrary) => ensureNotRefreshing(context, mediaLibrary, () async {
-        final result = await showSelection(
-          context,
-          Localization.instance.EDIT_MINIMUM_FILE_SIZE,
-          kDefaultFileSizes,
-          mediaLibrary.minimumFileSize,
-          intFileSizeToLabelFileSize,
-        );
-
-        if (result != null) {
-          Configuration.instance.set(mediaLibraryMinimumFileSize: result);
-          mediaLibrary.setMinimumFileSize(result);
-
-          Future.delayed(
-            const Duration(milliseconds: 500),
-            () {
-              showMessage(
-                context,
-                Localization.instance.WARNING,
-                Localization.instance.MINIMUM_FILE_SIZE_WARNING,
-              );
-            },
-          );
-        }
-      });
+      }
+    });
+  }
 
   // --------------------------------------------------
 
