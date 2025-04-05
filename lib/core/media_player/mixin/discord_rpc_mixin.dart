@@ -6,7 +6,6 @@ import 'package:synchronized/synchronized.dart';
 import 'package:harmonoid/api/activity_set.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player/base_media_player.dart';
-import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/models/playable.dart';
