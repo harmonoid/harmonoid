@@ -13,6 +13,7 @@ class LocalizationBase extends Values {
     ABOUT = map['ABOUT']!;
     ABOUT_HARMONOID = map['ABOUT_HARMONOID']!;
     ADD = map['ADD']!;
+    ADDED_ENTRY_TO_PLAYLIST = map['ADDED_ENTRY_TO_PLAYLIST']!;
     ADDED_FOLDERS = map['ADDED_FOLDERS']!;
     ADDED_M_OF_N_FILES = map['ADDED_M_OF_N_FILES']!;
     ADDING_YOUR_MUSIC = map['ADDING_YOUR_MUSIC']!;

@@ -8,6 +8,7 @@ class Values {
   late String ABOUT;
   late String ABOUT_HARMONOID;
   late String ADD;
+  late String ADDED_ENTRY_TO_PLAYLIST;
   late String ADDED_FOLDERS;
   late String ADDED_M_OF_N_FILES;
   late String ADDING_YOUR_MUSIC;
