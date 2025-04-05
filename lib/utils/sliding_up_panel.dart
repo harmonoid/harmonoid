@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 
 import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/utils/constants.dart';
 
 enum SlideDirection {
   UP,
@@ -233,11 +234,10 @@ class SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvide
         if (_ac.value == 0.0) {
           restored = false;
         } else if (_ac.value != 1.0) {
-          _sc.jumpTo(0.0);
           _scrollingEnabled = false;
         } else if (_ac.value == 1.0 && !restored) {
           restored = true;
-          _sc.jumpTo((MediaPlayer.instance.state.index + 1) * (72.0 + 1.0));
+          _sc.jumpTo((MediaPlayer.instance.state.index + 1) * (kMobileLinearTileHeight + 1.0));
           _scrollingEnabled = true;
         } else {
           _scrollingEnabled = true;
