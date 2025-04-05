@@ -38,16 +38,16 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
 
   @override
   Future<bool> didPopRoute() async {
-    if (!router.canPop()) {
-      AndroidUtils.instance.moveTaskToBack();
-      return true;
-    }
     if (NowPlayingMobileNotifier.instance.maximized) {
       NowPlayingMobileNotifier.instance.minimizeNowPlayingBar();
       return true;
     }
     if (mediaLibrarySearchController.isAttached && mediaLibrarySearchController.isOpen && mediaLibrarySearchViewVisible) {
       mediaLibrarySearchController.closeView('');
+      return true;
+    }
+    if (!router.canPop()) {
+      AndroidUtils.instance.moveTaskToBack();
       return true;
     }
     return super.didPopRoute();
