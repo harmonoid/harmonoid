@@ -17,8 +17,6 @@ import kotlin.io.path.Path
 
 class StorageControllerMethodCallHandler(private val activity: Activity, private val channel: MethodChannel) : MethodChannel.MethodCallHandler {
     companion object {
-        private const val TAG = "Harmonoid"
-
         private const val GET_STORAGE_DIRECTORIES_METHOD_NAME = "getStorageDirectories"
         private const val GET_CACHE_DIRECTORY_METHOD_NAME = "getCacheDirectory"
         private const val GET_DEFAULT_MEDIA_LIBRARY_DIRECTORY_METHOD_NAME = "getDefaultMediaLibraryDirectory";

@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Process
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.ryanheise.audioservice.AudioServiceActivity
 import com.ryanheise.audioservice.AudioServicePlugin
@@ -19,10 +20,9 @@ import kotlin.io.path.Path
 
 class MainActivity : AudioServiceActivity() {
     companion object {
-        private const val TAG = "Harmonoid"
-
         private const val INTENT_CONTROLLER_CHANNEL_NAME: String = "com.alexmercerind.harmonoid/intent_controller"
         private const val STORAGE_CONTROLLER_CHANNEL_NAME: String = "com.alexmercerind.harmonoid/storage_controller"
+        private const val UTILS_CHANNEL_NAME: String = "com.alexmercerind.harmonoid/utils"
 
         private const val NOTIFY_INTENT_METHOD_NAME = "notifyIntent"
 
@@ -34,6 +34,7 @@ class MainActivity : AudioServiceActivity() {
 
     private var intentControllerMethodChannel: MethodChannel? = null
     private var storageControllerMethodChannel: MethodChannel? = null
+    private var utilsMethodChannel: MethodChannel? = null
     private var uri: String? = null
 
     override fun provideFlutterEngine(context: Context): FlutterEngine? {
@@ -49,6 +50,9 @@ class MainActivity : AudioServiceActivity() {
         }
         storageControllerMethodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, STORAGE_CONTROLLER_CHANNEL_NAME).apply {
             setMethodCallHandler(StorageControllerMethodCallHandler(this@MainActivity, this))
+        }
+        utilsMethodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, UTILS_CHANNEL_NAME).apply {
+            setMethodCallHandler(UtilsMethodCallHandler(this@MainActivity))
         }
     }
 
@@ -73,6 +77,11 @@ class MainActivity : AudioServiceActivity() {
     override fun onResume() {
         super.onResume()
         handleIntent(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Process.killProcess(Process.myPid())
     }
 
     override fun onNewIntent(intent: Intent) {
