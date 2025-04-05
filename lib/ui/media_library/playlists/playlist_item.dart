@@ -57,9 +57,11 @@ class PlaylistItem extends StatelessWidget {
                               ),
                             );
                           }),
-                onLongPress: () {
-                  onSecondaryPress(context);
-                },
+                onLongPress: onTap != null
+                    ? null
+                    : () {
+                        onSecondaryPress(context);
+                      },
                 leading: SizedBox.square(
                   dimension: 56.0,
                   child: PlaylistIcon(

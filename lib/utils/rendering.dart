@@ -29,6 +29,7 @@ import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_item.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
+import 'package:harmonoid/utils/android_utils.dart';
 import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/macos_storage_controller.dart';
@@ -1041,6 +1042,26 @@ Future<void> showAddToPlaylistDialog(
 }) {
   assert(track != null || playable != null);
   final playlists = MediaLibrary.instance.playlists.playlists;
+
+  void onTap(int i) async {
+    if (track == null && playable != null) {
+      track = await MediaLibrary.instance.db.selectTrackByUri(playable.uri);
+    }
+    await MediaLibrary.instance.playlists.createEntry(
+      playlists[i],
+      track: track,
+      uri: playable?.uri,
+      title: playable?.playlistEntryTitle,
+    );
+    context.pop();
+
+    if (Platform.isAndroid) {
+      final entry = track?.title ?? playable?.playlistEntryTitle ?? '';
+      final playlist = playlists[i].name;
+      AndroidUtils.instance.showToast(Localization.instance.ADDED_ENTRY_TO_PLAYLIST.replaceAll('"ENTRY"', entry).replaceAll('"PLAYLIST"', playlist));
+    }
+  }
+
   if (isDesktop) {
     return showDialog(
       context: context,
@@ -1067,27 +1088,7 @@ Future<void> showAddToPlaylistDialog(
                         for (int i = 0; i < playlists.length; i++) ...[
                           PlaylistItem(
                             playlist: playlists[i],
-                            onTap: () async {
-                              if (track != null) {
-                                await MediaLibrary.instance.playlists.createEntry(playlists[i], track: track);
-                              }
-                              if (playable != null) {
-                                // Check if this [playable] is available in the media library?
-                                track = await MediaLibrary.instance.db.selectTrackByUri(playable.uri);
-                                if (track != null) {
-                                  // YES
-                                  await MediaLibrary.instance.playlists.createEntry(playlists[i], track: track);
-                                } else {
-                                  // NO
-                                  await MediaLibrary.instance.playlists.createEntry(
-                                    playlists[i],
-                                    uri: playable.uri,
-                                    title: playable.playlistEntryTitle,
-                                  );
-                                }
-                              }
-                              await Navigator.of(ctx).maybePop();
-                            },
+                            onTap: () => onTap(i),
                           ),
                           if (i < playlists.length - 1) const Divider(height: 1.0),
                         ],
@@ -1102,7 +1103,7 @@ Future<void> showAddToPlaylistDialog(
         ),
         actions: [
           TextButton(
-            onPressed: Navigator.of(ctx).pop,
+            onPressed: context.pop,
             child: Text(label(Localization.instance.CANCEL)),
           ),
         ],
@@ -1126,10 +1127,7 @@ Future<void> showAddToPlaylistDialog(
           itemBuilder: (context, i) {
             return PlaylistItem(
               playlist: playlists[i],
-              onTap: () async {
-                await MediaLibrary.instance.playlists.createEntry(playlists[i], track: track);
-                await Navigator.of(context).maybePop();
-              },
+              onTap: () => onTap(i),
             );
           },
         ),
