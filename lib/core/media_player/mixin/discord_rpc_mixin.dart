@@ -91,7 +91,7 @@ mixin DiscordRpcMixin implements BaseMediaPlayer {
             assets: RPCAssets(
               largeImage: _largeImageDiscordRpc,
               smallImage: state.playing ? kPlaySmallImage : kPauseSmallImage,
-              largeText: state.getAudioFormatLabel().ellipsis(128).nullIfBlank(),
+              largeText: current.description.join(' • ').ellipsis(128).nullIfBlank(),
               smallText: state.playing ? Localization.instance.PLAYING : Localization.instance.PAUSED,
             ),
             buttons: [
