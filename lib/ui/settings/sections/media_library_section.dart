@@ -10,6 +10,7 @@ import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/extensions/configuration.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/settings/settings_section.dart';
+import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/macos_storage_controller.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -43,66 +44,6 @@ class MediaLibrarySection extends StatelessWidget {
   }
 
   // --------------------------------------------------
-
-  static Widget buildAddedFolders(BuildContext context, MediaLibrary mediaLibrary) {
-    if (mediaLibrary.directories.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16.0),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Icon(FluentIcons.folder_32_regular, size: 32.0),
-            const SizedBox(width: 8.0),
-            Expanded(
-              child: Text(
-                Localization.instance.NO_FOLDERS_ADDED,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-    return Padding(
-      padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: mediaLibrary.directories.map((directory) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Icon(FluentIcons.folder_32_regular, size: 32.0),
-                const SizedBox(width: 8.0),
-                Expanded(
-                  child: Text(
-                    directory.path,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ),
-                const SizedBox(width: 8.0),
-                TextButton(
-                  onPressed: () => MediaLibrarySection.removeFolder(context, mediaLibrary, directory),
-                  child: Text(label(Localization.instance.REMOVE)),
-                ),
-              ],
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
 
   static Widget buildRefreshIndicator(BuildContext context, MediaLibrary mediaLibrary) {
     if (!mediaLibrary.refreshing) {
@@ -371,7 +312,7 @@ class DesktopMediaLibrarySection extends StatelessWidget {
             ),
             const SizedBox(height: 8.0),
             Text(Localization.instance.ADDED_FOLDERS),
-            MediaLibrarySection.buildAddedFolders(context, mediaLibrary),
+            _buildAddedFolders(context, mediaLibrary),
             MediaLibrarySection.buildRefreshIndicator(context, mediaLibrary),
             Transform.translate(
               offset: Offset(-textButtonPadding, 0.0),
@@ -409,10 +350,87 @@ class DesktopMediaLibrarySection extends StatelessWidget {
       },
     );
   }
+
+  Widget _buildAddedFolders(BuildContext context, MediaLibrary mediaLibrary) {
+    if (mediaLibrary.directories.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(FluentIcons.folder_32_regular, size: 32.0),
+            const SizedBox(width: 8.0),
+            Expanded(
+              child: Text(
+                Localization.instance.NO_FOLDERS_ADDED,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: mediaLibrary.directories.map((directory) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Icon(FluentIcons.folder_32_regular, size: 32.0),
+                const SizedBox(width: 8.0),
+                Expanded(
+                  child: Text(
+                    directory.path,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ),
+                const SizedBox(width: 8.0),
+                TextButton(
+                  onPressed: () => MediaLibrarySection.removeFolder(context, mediaLibrary, directory),
+                  child: Text(label(Localization.instance.REMOVE)),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
 }
 
-class MobileMediaLibrarySection extends StatelessWidget {
+class MobileMediaLibrarySection extends StatefulWidget {
   const MobileMediaLibrarySection({super.key});
+
+  @override
+  State<MobileMediaLibrarySection> createState() => _MobileMediaLibrarySectionState();
+}
+
+class _MobileMediaLibrarySectionState extends State<MobileMediaLibrarySection> {
+  List<Directory>? _storageDirectories;
+
+  @override
+  void initState() {
+    super.initState();
+    AndroidStorageController.instance.getStorageDirectories().then((value) {
+      setState(() {
+        _storageDirectories = value;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -459,11 +477,78 @@ class MobileMediaLibrarySection extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: MediaLibrarySection.buildAddedFolders(context, mediaLibrary),
+              child: _buildAddedFolders(context, mediaLibrary),
             ),
           ],
         );
       },
+    );
+  }
+
+  Widget _buildAddedFolders(BuildContext context, MediaLibrary mediaLibrary) {
+    if (mediaLibrary.directories.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(FluentIcons.folder_32_regular, size: 32.0),
+            const SizedBox(width: 8.0),
+            Expanded(
+              child: Text(
+                Localization.instance.NO_FOLDERS_ADDED,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    return Opacity(
+      opacity: _storageDirectories == null ? 0.0 : 1.0,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: mediaLibrary.directories.map((directory) {
+            final path = _storageDirectories == null
+                ? directory.path
+                : directory.path.replaceAll(_storageDirectories!.first.path, Localization.instance.PHONE).replaceAll(_storageDirectories!.last.path, Localization.instance.SD_CARD);
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Icon(FluentIcons.folder_32_regular, size: 32.0),
+                  const SizedBox(width: 8.0),
+                  Expanded(
+                    child: Text(
+                      path,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ),
+                  const SizedBox(width: 8.0),
+                  TextButton(
+                    onPressed: () => MediaLibrarySection.removeFolder(context, mediaLibrary, directory),
+                    child: Text(label(Localization.instance.REMOVE)),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ),
+      ),
     );
   }
 }

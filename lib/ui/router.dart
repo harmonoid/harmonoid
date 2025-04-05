@@ -7,6 +7,7 @@ import 'package:media_library/media_library.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/ui/about_screen.dart';
+import 'package:harmonoid/ui/directory_picker_screen.dart';
 import 'package:harmonoid/ui/file_info_screen.dart';
 import 'package:harmonoid/ui/media_library/albums/album_screen.dart';
 import 'package:harmonoid/ui/media_library/albums/albums_screen.dart';
@@ -131,6 +132,8 @@ const String kFileInfoPath = 'file-info';
 const String kFileInfoArgResource = 'resource';
 
 const String kNowPlayingLyricsPath = 'now-playing-lyrics';
+
+const String kDirectoryPickerPath = 'directory-picker';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> homeNavigatorKey = GlobalKey<NavigatorState>();
@@ -343,6 +346,17 @@ final router = GoRouter(
       },
     ),
     GoRoute(
+      path: '/$kFileInfoPath',
+      pageBuilder: (context, state) {
+        final resource = state.uri.queryParameters[kFileInfoArgResource]!;
+        return buildPageWithDefaultTransition(
+          context: context,
+          state: state,
+          child: FileInfoScreen(resource: resource),
+        );
+      },
+    ),
+    GoRoute(
       path: '/$kNowPlayingLyricsPath',
       pageBuilder: (context, state) {
         return buildPageWithDefaultTransition(
@@ -353,13 +367,12 @@ final router = GoRouter(
       },
     ),
     GoRoute(
-      path: '/$kFileInfoPath',
+      path: '/$kDirectoryPickerPath',
       pageBuilder: (context, state) {
-        final resource = state.uri.queryParameters[kFileInfoArgResource]!;
         return buildPageWithDefaultTransition(
           context: context,
           state: state,
-          child: FileInfoScreen(resource: resource),
+          child: const DirectoryPickerScreen(),
         );
       },
     ),

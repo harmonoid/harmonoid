@@ -493,7 +493,7 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
                 );
               },
               itemExtentBuilder: (i, _) => i % 2 != 0 ? 1.0 : kMobileLinearTileHeight,
-              itemCount: 2 * (mediaPlayer.state.playables.length - diff) - 1,
+              itemCount: (2 * (mediaPlayer.state.playables.length - diff) - 1).clamp(0, 1 << 32),
             ),
           ),
         ],

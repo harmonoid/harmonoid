@@ -951,13 +951,7 @@ Future<File?> pickFile({Set<String>? extensions}) async {
 
 Future<Directory?> pickDirectory() async {
   if (Platform.isAndroid) {
-    // return showGeneralDialog(
-    //   context: rootNavigatorKey.currentContext!,
-    //   useRootNavigator: true,
-    //   barrierDismissible: false,
-    //   barrierColor: Colors.transparent,
-    //   pageBuilder: (context, animation, secondaryAnimation) => DirectoryPickerScreen(),
-    // );
+    return router.push('/$kDirectoryPickerPath');
   }
   if (Platform.isMacOS) {
     return MacOSStorageController.instance.pickDirectory();
