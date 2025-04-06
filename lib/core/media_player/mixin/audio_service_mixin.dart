@@ -5,6 +5,7 @@ import 'package:synchronized/synchronized.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player/base_media_player.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/mappers/image_provider.dart';
 import 'package:harmonoid/mappers/media_player_state.dart';
 import 'package:harmonoid/models/loop.dart';
@@ -82,6 +83,12 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
         _playbackStateAudioService = _playbackStateAudioService.copyWith(
           queueIndex: state.index,
           processingState: AudioProcessingState.ready,
+          playing: state.playing,
+          controls: [
+            MediaControl.skipToPrevious,
+            if (state.playing) MediaControl.pause else MediaControl.play,
+            MediaControl.skipToNext,
+          ],
         );
         _instanceAudioService?.playbackState.add(_playbackStateAudioService);
       }
@@ -156,11 +163,13 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
         _flagCompletedAudioService = state.completed;
         _playbackStateAudioService = _playbackStateAudioService.copyWith(
           processingState: AudioProcessingState.completed,
-          controls: [
-            MediaControl.skipToPrevious,
-            MediaControl.play,
-            MediaControl.skipToNext,
-          ],
+          controls: state.isLast && state.loop == Loop.off
+              ? [
+                  MediaControl.skipToPrevious,
+                  MediaControl.play,
+                  MediaControl.skipToNext,
+                ]
+              : _playbackStateAudioService.controls,
         );
         _instanceAudioService?.playbackState.add(_playbackStateAudioService);
       }
