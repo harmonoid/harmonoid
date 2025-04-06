@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Process
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.ryanheise.audioservice.AudioServiceActivity
 import com.ryanheise.audioservice.AudioServicePlugin
@@ -77,11 +76,6 @@ class MainActivity : AudioServiceActivity() {
     override fun onResume() {
         super.onResume()
         handleIntent(intent)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Process.killProcess(Process.myPid())
     }
 
     override fun onNewIntent(intent: Intent) {
