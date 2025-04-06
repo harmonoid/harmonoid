@@ -1038,6 +1038,8 @@ Future<void> showAddToPlaylistDialog(
   final playlists = MediaLibrary.instance.playlists.playlists;
 
   void onTap(int i) async {
+    context.pop();
+
     if (track == null && playable != null) {
       track = await MediaLibrary.instance.db.selectTrackByUri(playable.uri);
     }
@@ -1047,7 +1049,6 @@ Future<void> showAddToPlaylistDialog(
       uri: playable?.uri,
       title: playable?.playlistEntryTitle,
     );
-    context.pop();
 
     if (Platform.isAndroid) {
       final entry = track?.title ?? playable?.playlistEntryTitle ?? '';

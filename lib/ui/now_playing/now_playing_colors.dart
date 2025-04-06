@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:harmonoid/utils/rendering.dart';
 
 class NowPlayingColors {
   final Color? background;
@@ -25,11 +26,10 @@ class NowPlayingColors {
 
   factory NowPlayingColors.fromPalette(BuildContext context, List<Color>? palette) {
     final foreground = palette?.last ?? Theme.of(context).floatingActionButtonTheme.backgroundColor!;
-    final background = palette?.first ?? Theme.of(context).bottomAppBarTheme.color ?? Theme.of(context).colorScheme.surface;
+    final background = palette?.first ?? (isMobile ? Theme.of(context).scaffoldBackgroundColor : Theme.of(context).bottomAppBarTheme.color) ?? Theme.of(context).colorScheme.surface;
     final foregroundIcon = palette == null ? Theme.of(context).floatingActionButtonTheme.foregroundColor : (foreground.computeLuminance() > 0.5 ? Colors.black : Colors.white);
     final backgroundEnabledIcon = palette == null ? Theme.of(context).colorScheme.onSurface : (background.computeLuminance() > 0.5 ? Colors.black : Colors.white);
-    final backgroundDisabledIcon =
-        palette == null ? Theme.of(context).disabledColor : (background.computeLuminance() > 0.5 ? Colors.black.withValues(alpha: 0.3) : Colors.white.withValues(alpha: 0.3));
+    final backgroundDisabledIcon = palette == null ? Theme.of(context).disabledColor : (background.computeLuminance() > 0.5 ? Colors.black.withValues(alpha: 0.3) : Colors.white.withValues(alpha: 0.3));
     final backgroundText = palette == null ? null : (background.computeLuminance() > 0.5 ? Colors.black : Colors.white);
     final sliderForeground = palette == null ? null : foreground;
     final sliderBackground = palette == null ? null : backgroundDisabledIcon;

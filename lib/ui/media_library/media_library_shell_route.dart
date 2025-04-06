@@ -96,7 +96,7 @@ class MediaLibraryShellRouteState extends State<MediaLibraryShellRoute> with Tic
           bottom: NowPlayingBar.height,
           child: widget.child,
         ),
-        const NowPlayingBar(),
+        NowPlayingBar(key: ValueKey(Theme.of(context).extension<MaterialStandard>()?.value)),
       ],
     );
   }
@@ -128,7 +128,7 @@ class MediaLibraryShellRouteState extends State<MediaLibraryShellRoute> with Tic
                 child: child,
               );
             },
-            child: const NowPlayingBar(),
+            child: NowPlayingBar(key: ValueKey(Theme.of(context).extension<MaterialStandard>()?.value)),
           ),
         ],
       ),
@@ -160,7 +160,7 @@ class MediaLibraryShellRouteState extends State<MediaLibraryShellRoute> with Tic
                       curve: _kCurve,
                       opacity: _mobileBottomNavigationBarFlag ? 1.0 : 0.0,
                       duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
-                      child: Container(color: Theme.of(context).navigationBarTheme.backgroundColor),
+                      child: Container(color: Theme.of(context).bottomNavigationBarTheme.backgroundColor ?? Theme.of(context).navigationBarTheme.backgroundColor),
                     ),
                   ),
                 ),

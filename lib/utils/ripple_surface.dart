@@ -36,6 +36,12 @@ class RippleSurfaceState extends State<RippleSurface> {
   Widget? _ripple;
 
   @override
+  void initState() {
+    super.initState();
+    _background = Positioned.fill(child: Container(color: widget.color));
+  }
+
+  @override
   void didUpdateWidget(covariant RippleSurface oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.color != widget.color) {

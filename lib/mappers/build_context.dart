@@ -5,9 +5,9 @@ import 'package:flutter/services.dart';
 /// Mappers for [BuildContext].
 extension ColorMappers on BuildContext {
   /// Converts to [SystemUiOverlayStyle].
-  SystemUiOverlayStyle toSystemUiOverlayStyle() {
+  SystemUiOverlayStyle toSystemUiOverlayStyle([ThemeMode? themeMode]) {
     final materialStandard = Theme.of(this).extension<MaterialStandard>()?.value;
-    final themeMode = switch (Theme.of(this).brightness) {
+    themeMode ??= switch (Theme.of(this).brightness) {
       Brightness.light => ThemeMode.light,
       Brightness.dark => ThemeMode.dark,
     };

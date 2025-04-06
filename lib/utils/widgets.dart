@@ -24,7 +24,6 @@ import 'package:harmonoid/extensions/build_context.dart';
 import 'package:harmonoid/extensions/global_key.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
-import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
@@ -1157,59 +1156,48 @@ class MobileNavigationBar extends StatelessWidget {
               ),
             ],
           )
-        : Consumer<NowPlayingColorPaletteNotifier>(
-            builder: (context, nowPlayingColorPaletteNotifier, _) => TweenAnimationBuilder<Color?>(
-              duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
-              tween: ColorTween(
-                begin: Theme.of(context).colorScheme.primary,
-                end: (Configuration.instance.mobileNowPlayingRipple ? nowPlayingColorPaletteNotifier.palette?.first : null) ?? Theme.of(context).colorScheme.primary,
-              ),
-              builder: (context, color, _) => Container(
-                decoration: const BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(color: Colors.black45, blurRadius: 8.0),
-                  ],
+        : Container(
+            decoration: const BoxDecoration(
+              boxShadow: [
+                BoxShadow(color: Colors.black45, blurRadius: 8.0),
+              ],
+            ),
+            child: BottomNavigationBar(
+              currentIndex: index,
+              type: BottomNavigationBarType.shifting,
+              onTap: (i) {
+                if (index == i) return;
+                context.push('/$kMediaLibraryPath/${paths[i]}');
+                Configuration.instance.set(mediaLibraryPath: paths[i]);
+                NowPlayingMobileNotifier.instance.showNowPlayingBar();
+              },
+              items: [
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.album),
+                  label: displayLabels ? Localization.instance.ALBUMS : null,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                 ),
-                child: BottomNavigationBar(
-                  currentIndex: index,
-                  selectedItemColor: (color?.computeLuminance() ?? 0.0) < 0.5 ? null : Colors.black87,
-                  unselectedItemColor: (color?.computeLuminance() ?? 0.0) < 0.5 ? null : Colors.black45,
-                  type: BottomNavigationBarType.shifting,
-                  onTap: (i) {
-                    if (index == i) return;
-                    context.push('/$kMediaLibraryPath/${paths[i]}');
-                    Configuration.instance.set(mediaLibraryPath: paths[i]);
-                    NowPlayingMobileNotifier.instance.showNowPlayingBar();
-                  },
-                  items: [
-                    BottomNavigationBarItem(
-                      icon: const Icon(Icons.album),
-                      label: displayLabels ? Localization.instance.ALBUMS : null,
-                      backgroundColor: color ?? Theme.of(context).colorScheme.primary,
-                    ),
-                    BottomNavigationBarItem(
-                      icon: const Icon(Icons.music_note),
-                      label: displayLabels ? Localization.instance.TRACKS : null,
-                      backgroundColor: color ?? Theme.of(context).colorScheme.primary,
-                    ),
-                    BottomNavigationBarItem(
-                      icon: const Icon(Icons.person),
-                      label: displayLabels ? Localization.instance.ARTISTS : null,
-                      backgroundColor: color ?? Theme.of(context).colorScheme.primary,
-                    ),
-                    BottomNavigationBarItem(
-                      icon: const Icon(Icons.piano),
-                      label: displayLabels ? Localization.instance.GENRES : null,
-                      backgroundColor: color ?? Theme.of(context).colorScheme.primary,
-                    ),
-                    BottomNavigationBarItem(
-                      icon: const Icon(Icons.playlist_play),
-                      label: displayLabels ? Localization.instance.PLAYLISTS : null,
-                      backgroundColor: color ?? Theme.of(context).colorScheme.primary,
-                    ),
-                  ],
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.music_note),
+                  label: displayLabels ? Localization.instance.TRACKS : null,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                 ),
-              ),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.person),
+                  label: displayLabels ? Localization.instance.ARTISTS : null,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.piano),
+                  label: displayLabels ? Localization.instance.GENRES : null,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.playlist_play),
+                  label: displayLabels ? Localization.instance.PLAYLISTS : null,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                ),
+              ],
             ),
           );
   }

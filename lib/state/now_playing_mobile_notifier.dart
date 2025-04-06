@@ -22,7 +22,7 @@ class NowPlayingMobileNotifier {
   MediaLibraryScreenState? _mediaLibraryScreenStateRef;
   MediaLibraryShellRouteState? _mediaLibraryShellRouteStateRef;
 
-  bool get maximized => _m3MobileNowPlayingBarStateRef?.maximized ?? _m2MobileNowPlayingBarStateRef?.maximized ?? false;
+  bool get maximized => (_m3MobileNowPlayingBarStateRef?.maximized ?? false) || (_m2MobileNowPlayingBarStateRef?.maximized ?? false);
 
   void setM3MobileNowPlayingBarStateRef(M3MobileNowPlayingBarState value) {
     _m3MobileNowPlayingBarStateRef = value;

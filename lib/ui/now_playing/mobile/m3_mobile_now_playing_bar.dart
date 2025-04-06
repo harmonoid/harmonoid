@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:measure_size/measure_size.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/duration.dart';
@@ -41,7 +40,10 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
   final MiniPlayerController _miniPlayerController = MiniPlayerController();
   final PanelController _panelController = PanelController();
   bool _lyricsVisible = false;
-  double _carouselHeight = 0.0;
+
+  // FIXED
+  late final double _carouselHeight = (MediaQuery.sizeOf(context).width * 7 / 9).clamp(0.0, (MediaQuery.sizeOf(context).height - MediaQuery.paddingOf(context).vertical) * 2 / 5);
+  // DYNAMIC
   double _detailsHeight = 0.0;
   double _controlsHeight = 0.0;
 
@@ -70,10 +72,7 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
     return Consumer<NowPlayingColorPaletteNotifier>(
       builder: (context, nowPlayingColorPaletteNotifier, _) {
         return Provider<NowPlayingColors>.value(
-          value: NowPlayingColors.fromPalette(
-            context,
-            isMaterial2 && Configuration.instance.desktopNowPlayingBarColorPalette ? nowPlayingColorPaletteNotifier.palette : null,
-          ),
+          value: NowPlayingColors.fromPalette(context, null),
           builder: (context, _) {
             return Consumer<MediaPlayer>(
               builder: (context, mediaPlayer, _) {
@@ -108,7 +107,7 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
                             ),
                             if (percentage > 0.5)
                               Opacity(
-                                opacity: ((percentage - 0.5) * 2.0).clamp(0.0, 1.0),
+                                opacity: ((percentage - 0.5) / 0.5).clamp(0.0, 1.0),
                                 child: AnnotatedRegion<SystemUiOverlayStyle>(
                                   value: context.toSystemUiOverlayStyle(),
                                   child: Container(
@@ -145,7 +144,7 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
                                           image: cover(uri: mediaPlayer.current.uri),
                                           fit: BoxFit.cover,
                                           width: lerpDouble(NowPlayingBar.height, MediaQuery.sizeOf(context).width * 7 / 9, percentage),
-                                          height: lerpDouble(NowPlayingBar.height, MediaQuery.sizeOf(context).width * 7 / 9, percentage),
+                                          height: lerpDouble(NowPlayingBar.height, _carouselHeight, percentage),
                                         ),
                                       ),
                                     ),
@@ -351,59 +350,53 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
   }
 
   Widget _buildCarousel(BuildContext context, MediaPlayer mediaPlayer, double percentage) {
-    return MeasureSize(
-      onChange: (size) => _carouselHeight = size.height,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: MediaQuery.sizeOf(context).width * 7 / 9,
-            child: StatefulCarouselViewBuilder(
-              flexWeights: const [1, 7, 1],
-              index: mediaPlayer.state.index,
-              itemCount: mediaPlayer.state.playables.length,
-              itemBuilder: (context, i) {
-                final child = Image(
-                  image: cover(uri: mediaPlayer.state.playables[i].uri),
-                  fit: BoxFit.cover,
-                );
-                return AnimatedOpacity(
-                  opacity: percentage == 1.0 ? 1.0 : 0.0,
-                  curve: Curves.easeInOut,
-                  duration: i == mediaPlayer.state.index ? Duration.zero : Theme.of(context).extension<AnimationDuration>()?.slow ?? Duration.zero,
-                  child: child,
-                );
-              },
-              onTap: (i) async {
-                if (mediaPlayer.state.index == i) return;
-                mediaPlayer.jump(i);
-              },
-            ),
-          ),
-          const SizedBox(height: 24.0),
-        ],
+    return SizedBox(
+      height: _carouselHeight,
+      child: StatefulCarouselViewBuilder(
+        flexWeights: const [1, 7, 1],
+        index: mediaPlayer.state.index,
+        itemCount: mediaPlayer.state.playables.length,
+        itemBuilder: (context, i) {
+          final child = Image(
+            image: cover(uri: mediaPlayer.state.playables[i].uri),
+            fit: BoxFit.cover,
+          );
+          return AnimatedOpacity(
+            opacity: percentage == 1.0 ? 1.0 : 0.0,
+            curve: Curves.easeInOut,
+            duration: i == mediaPlayer.state.index ? Duration.zero : Theme.of(context).extension<AnimationDuration>()?.slow ?? Duration.zero,
+            child: child,
+          );
+        },
+        onTap: (i) async {
+          if (mediaPlayer.state.index == i) return;
+          mediaPlayer.jump(i);
+        },
       ),
     );
   }
 
   Widget _buildDetails(BuildContext context, MediaPlayer mediaPlayer) {
     return MeasureSize(
-      onChange: (size) => _detailsHeight = size.height,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: MediaQuery.sizeOf(context).width * 1 / 9 + 4.0),
-            child: Text(
+      onChange: (size) {
+        if (_detailsHeight != 0.0) return;
+        setState(() => _detailsHeight = size.height);
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.sizeOf(context).width * 1 / 9 + 4.0,
+          vertical: 16.0,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
               mediaPlayer.current.title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: MediaQuery.sizeOf(context).width * 1 / 9 + 4.0),
-            child: RichText(
+            RichText(
               text: TextSpan(
                 children: [
                   for (final artist in mediaPlayer.current.subtitle) ...[
@@ -418,24 +411,24 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: MediaQuery.sizeOf(context).width * 1 / 9 + 4.0),
-            child: Text(
+            Text(
               mediaPlayer.state.getAudioFormatLabel(),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildControls(BuildContext context, MediaPlayer mediaPlayer) {
     return MeasureSize(
-      onChange: (size) => _controlsHeight = size.height,
+      onChange: (size) {
+        if (_controlsHeight != 0.0) return;
+        setState(() => _controlsHeight = size.height);
+      },
       child: const Controls(),
     );
   }
@@ -517,7 +510,6 @@ class Controls extends StatelessWidget {
           final sliderValue = mediaPlayer.state.position.inMilliseconds.clamp(sliderMin, sliderMax).toDouble();
           return Column(
             children: [
-              const SizedBox(height: 16.0),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: (MediaQuery.sizeOf(context).width * 1 / 9 + 4.0 - 2 * 16.0).clamp(0.0, MediaQuery.sizeOf(context).width)),
                 child: MaterialWaveSlider(
@@ -625,7 +617,7 @@ class Controls extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 24.0),
+              const SizedBox(height: 16.0),
             ],
           );
         },
