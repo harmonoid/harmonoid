@@ -295,7 +295,7 @@ class ConfigurationBase {
       /* Boolean */ kKeyDesktopNowPlayingLyrics: true,
       /* Boolean */ kKeyDiscordRpc: true,
       /* String  */ kKeyIdentifier: const Uuid().v4(),
-      /* Json    */ kKeyLocalization: const LocalizationData(code: 'en_US', name: 'English (United States)', country: 'United States'),
+      /* Json    */ kKeyLocalization: const LocalizationData(code: 'en_US', name: 'English', country: 'United States'),
       /* Boolean */ kKeyLrcFromDirectory: false,
       /* Double  */ kKeyLyricsViewFocusedFontSize: isDesktop ? 64.0: 48.0,
       /* Double  */ kKeyLyricsViewFocusedLineHeight: 1.2,

@@ -5,7 +5,7 @@
   {"key": "DESKTOP_NOW_PLAYING_LYRICS", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
   {"key": "DISCORD_RPC", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
   {"key": "IDENTIFIER", "serializedType": "String", "dartType": "String", "default": "const Uuid().v4()"},
-  {"key": "LOCALIZATION", "serializedType": "Json", "dartType": "LocalizationData", "default": "const LocalizationData(code: 'en_US', name: 'English (United States)', country: 'United States')"},
+  {"key": "LOCALIZATION", "serializedType": "Json", "dartType": "LocalizationData", "default": "const LocalizationData(code: 'en_US', name: 'English', country: 'United States')"},
   {"key": "LRC_FROM_DIRECTORY", "serializedType": "Boolean", "dartType": "bool", "default": "false"},
   {"key": "LYRICS_VIEW_FOCUSED_FONT_SIZE", "serializedType": "Double", "dartType": "double", "default": "isDesktop ? 64.0: 48.0"},
   {"key": "LYRICS_VIEW_FOCUSED_LINE_HEIGHT", "serializedType": "Double", "dartType": "double", "default": "1.2"},
