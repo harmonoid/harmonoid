@@ -1,47 +1,15 @@
-/// {@template localization_data}
-///
-/// LocalizationData
-/// ----------------
-///
-/// {@endtemplate}
-class LocalizationData {
-  /// Code.
-  /// e.g. `en_US`.
-  final String code;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  /// Name.
-  /// e.g. `English (United States)`.
-  final String name;
+part 'localization_data.freezed.dart';
+part 'localization_data.g.dart';
 
-  /// Country.
-  /// e.g. `United States`.
-  final String country;
+@freezed
+class LocalizationData with _$LocalizationData {
+  const factory LocalizationData({
+    required String code,
+    required String name,
+    required String country,
+  }) = _LocalizationData;
 
-  /// {@macro language_data}
-  const LocalizationData({
-    required this.code,
-    required this.name,
-    required this.country,
-  });
-
-  @override
-  int get hashCode => code.hashCode;
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is LocalizationData && other.code == code;
-  }
-
-  factory LocalizationData.fromJson(dynamic json) => LocalizationData(
-        code: json['code'],
-        name: json['name'],
-        country: json['country'],
-      );
-
-  Map<String, String> toJson() => {
-        'code': code,
-        'name': name,
-        'country': country,
-      };
+  factory LocalizationData.fromJson(Map<String, dynamic> json) => _$LocalizationDataFromJson(json);
 }
