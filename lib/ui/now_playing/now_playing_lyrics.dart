@@ -18,6 +18,7 @@ class NowPlayingLyricsState extends State<NowPlayingLyrics> {
     return Consumer<LyricsNotifier>(
       builder: (context, lyricsNotifier, _) {
         return LyricsView(
+          key: ValueKey(MediaQuery.sizeOf(context)),
           index: lyricsNotifier.index,
           lyrics: lyricsNotifier.lyrics.map((e) => e.text).toList(),
           padding: EdgeInsets.only(
@@ -52,7 +53,7 @@ class NowPlayingLyricsState extends State<NowPlayingLyrics> {
           padding: EdgeInsets.only(
             left: 32.0,
             right: 32.0,
-            top: kDesktopAppBarHeight + MediaQuery.sizeOf(context).height * 0.1,
+            top: MediaQuery.sizeOf(context).height * 0.1,
           ),
           focusedTextStyle: Theme.of(context).textTheme.displayLarge?.copyWith(
                 fontSize: Configuration.instance.lyricsViewFocusedFontSize,
