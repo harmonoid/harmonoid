@@ -38,6 +38,10 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
 
   @override
   Future<bool> didPopRoute() async {
+    if (NowPlayingMobileNotifier.instance.slidingUpPanelOpened) {
+      NowPlayingMobileNotifier.instance.closeSlidingUpPanel();
+      return true;
+    }
     if (NowPlayingMobileNotifier.instance.maximized) {
       NowPlayingMobileNotifier.instance.minimizeNowPlayingBar();
       return true;

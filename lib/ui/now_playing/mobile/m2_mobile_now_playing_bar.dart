@@ -44,12 +44,15 @@ class M2MobileNowPlayingBarState extends State<M2MobileNowPlayingBar> {
 
   // FIXED
   late final double _pageViewHeight = MediaQuery.sizeOf(context).width.clamp(0.0, (MediaQuery.sizeOf(context).height - MediaQuery.paddingOf(context).vertical) * 3 / 5);
+
   // DYNAMIC
   double _detailsHeight = 0.0;
   double _controlsHeight = 0.0;
 
   double get _slidingUpPanelMaxHeight => MediaQuery.sizeOf(context).height - (MediaQuery.paddingOf(context).top + 16.0 + 40.0 + 16.0);
+
   double get _slidingUpPanelMinHeight => MediaQuery.sizeOf(context).height - (_pageViewHeight + _detailsHeight + _controlsHeight);
+
   Color? get _slidingUpPanelColor => isDarkMode ? Theme.of(context).colorScheme.surfaceContainer : Theme.of(context).colorScheme.surfaceContainerLowest;
 
   @override
@@ -60,12 +63,18 @@ class M2MobileNowPlayingBarState extends State<M2MobileNowPlayingBar> {
 
   bool get maximized => !_lyricsVisible && _valueNotifier.value == 1.0;
 
+  bool get slidingUpPanelOpened => _panelController.isPanelOpen;
+
   void maximizeNowPlayingBar() {
     _miniPlayerController.animateToHeight(state: MiniPlayerPanelState.MAX);
   }
 
   void minimizeNowPlayingBar() {
     _miniPlayerController.animateToHeight(state: MiniPlayerPanelState.MIN);
+  }
+
+  void closeSlidingUpPanel() {
+    _panelController.close();
   }
 
   @override
@@ -521,6 +530,7 @@ class M2MobileNowPlayingBarState extends State<M2MobileNowPlayingBar> {
 
 class Controls extends StatelessWidget {
   final NowPlayingColors nowPlayingColors;
+
   const Controls({super.key, required this.nowPlayingColors});
 
   @override

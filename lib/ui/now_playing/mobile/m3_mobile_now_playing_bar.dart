@@ -43,12 +43,15 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
 
   // FIXED
   late final double _carouselHeight = (MediaQuery.sizeOf(context).width * 7 / 9).clamp(0.0, (MediaQuery.sizeOf(context).height - MediaQuery.paddingOf(context).vertical) * 2 / 5);
+
   // DYNAMIC
   double _detailsHeight = 0.0;
   double _controlsHeight = 0.0;
 
   double get _slidingUpPanelMaxHeight => MediaQuery.sizeOf(context).height - (MediaQuery.paddingOf(context).top + 16.0 + 40.0 + 16.0);
+
   double get _slidingUpPanelMinHeight => MediaQuery.sizeOf(context).height - (MediaQuery.paddingOf(context).top + kToolbarHeight + _carouselHeight + _detailsHeight + _controlsHeight);
+
   Color? get _slidingUpPanelColor => isDarkMode ? Theme.of(context).colorScheme.surfaceContainer : Theme.of(context).colorScheme.surfaceContainerLowest;
 
   @override
@@ -59,12 +62,18 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
 
   bool get maximized => !_lyricsVisible && _valueNotifier.value == 1.0;
 
+  bool get slidingUpPanelOpened => _panelController.isPanelOpen;
+
   void maximizeNowPlayingBar() {
     _miniPlayerController.animateToHeight(state: MiniPlayerPanelState.MAX);
   }
 
   void minimizeNowPlayingBar() {
     _miniPlayerController.animateToHeight(state: MiniPlayerPanelState.MIN);
+  }
+
+  void closeSlidingUpPanel() {
+    _panelController.close();
   }
 
   @override

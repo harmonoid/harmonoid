@@ -80,6 +80,7 @@ class MaterialWaveSlider extends StatefulWidget {
 
 class MaterialWaveSliderState extends State<MaterialWaveSlider> with SingleTickerProviderStateMixin {
   double get _amplitude => widget.amplitude ?? (widget.height / 12.0);
+
   double get _percent => widget.value == 0.0 ? 0.0 : ((_current ?? widget.value) / (widget.max - widget.min)).clamp(0.0, 1.0);
 
   late bool _paused = widget.paused;
@@ -509,9 +510,7 @@ class _SliderDefaultsM2 extends SliderThemeData {
   Color? get overlayColor => _colors.primary.withValues(alpha: 0.12);
 
   @override
-  TextStyle? get valueIndicatorTextStyle => Theme.of(context).textTheme.bodyLarge!.copyWith(
-        color: _colors.onPrimary,
-      );
+  TextStyle? get valueIndicatorTextStyle => Theme.of(context).textTheme.bodyLarge!.copyWith(color: _colors.onPrimary);
 
   @override
   SliderComponentShape? get valueIndicatorShape => const RectangularSliderValueIndicatorShape();

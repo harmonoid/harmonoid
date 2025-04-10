@@ -1,20 +1,17 @@
 import 'package:path/path.dart';
 
 import 'package:harmonoid/models/media_player_state.dart';
-import 'package:harmonoid/models/playable.dart';
 
 /// Extensions for [MediaPlayerState].
 extension MediaPlayerStateExtensions on MediaPlayerState {
-  /// Whether current list of [Playable]s is empty.
   bool get isEmpty => playables.isEmpty;
 
-  /// Whether currently playing [Playable] is the first.
+  bool get isNotEmpty => playables.isNotEmpty;
+
   bool get isFirst => isEmpty || index == 0;
 
-  /// Whether currently playing [Playable] is the last.
   bool get isLast => isEmpty || index == playables.length - 1;
 
-  /// Audio format label.
   String getAudioFormatLabel({
     bool format = true,
     bool bitrate = true,

@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:synchronized/synchronized.dart';
 
 import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -28,7 +29,7 @@ class NowPlayingColorPaletteNotifier extends ChangeNotifier {
   static Future<void> ensureInitialized() async {
     if (initialized) return;
     initialized = true;
-    WidgetsBinding.instance.addPostFrameCallback((_) => instance.update(MediaPlayer.instance.current));
+    WidgetsBinding.instance.addPostFrameCallback((_) => instance.listener());
     MediaPlayer.instance.addListener(instance.listener);
   }
 
@@ -37,7 +38,9 @@ class NowPlayingColorPaletteNotifier extends ChangeNotifier {
 
   /// Listener to extract the color palette from current [Playable] in [MediaPlayer].
   void listener() {
-    update(MediaPlayer.instance.current);
+    if (MediaPlayer.instance.state.isNotEmpty) {
+      update(MediaPlayer.instance.current);
+    }
   }
 
   /// Updates the [palette] based on the specified [playable].

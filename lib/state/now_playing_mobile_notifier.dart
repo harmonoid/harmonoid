@@ -24,6 +24,8 @@ class NowPlayingMobileNotifier {
 
   bool get maximized => (_m3MobileNowPlayingBarStateRef?.maximized ?? false) || (_m2MobileNowPlayingBarStateRef?.maximized ?? false);
 
+  bool get slidingUpPanelOpened => (_m3MobileNowPlayingBarStateRef?.slidingUpPanelOpened ?? false) || (_m2MobileNowPlayingBarStateRef?.slidingUpPanelOpened ?? false);
+
   void setM3MobileNowPlayingBarStateRef(M3MobileNowPlayingBarState value) {
     _m3MobileNowPlayingBarStateRef = value;
   }
@@ -58,6 +60,11 @@ class NowPlayingMobileNotifier {
   void minimizeNowPlayingBar() {
     _m3MobileNowPlayingBarStateRef?.minimizeNowPlayingBar();
     _m2MobileNowPlayingBarStateRef?.minimizeNowPlayingBar();
+  }
+
+  void closeSlidingUpPanel() {
+    _m3MobileNowPlayingBarStateRef?.closeSlidingUpPanel();
+    _m2MobileNowPlayingBarStateRef?.closeSlidingUpPanel();
   }
 
   void showBottomNavigationBar() {
