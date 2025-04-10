@@ -204,10 +204,10 @@ class MediaPlayer extends ChangeNotifier with AudioServiceMixin, DiscordRpcMixin
         _current = null;
         notifyListeners();
 
-        final cover = MediaLibrary.instance.uriToCoverFile(uri);
-
-        // NOTE: Since the cover file already exists, the previously fetched tags are certainly correct, so there is no need to fetch them again.
-        if (await cover.exists_() && await cover.length_() > 0) return;
+        File? cover = MediaLibrary.instance.uriToCoverFile(uri);
+        if (await cover.exists_() && await cover.length_() > 0) {
+          cover = null;
+        }
 
         final tags = await _tagReader.parse(
           uri,
