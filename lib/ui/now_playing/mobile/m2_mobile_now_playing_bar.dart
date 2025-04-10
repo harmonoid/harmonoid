@@ -63,7 +63,13 @@ class M2MobileNowPlayingBarState extends State<M2MobileNowPlayingBar> {
 
   bool get maximized => !_lyricsVisible && _valueNotifier.value == 1.0;
 
-  bool get slidingUpPanelOpened => _panelController.isPanelOpen;
+  bool get slidingUpPanelOpened {
+    try {
+      return _panelController.isPanelOpen;
+    } catch (_) {
+      return false;
+    }
+  }
 
   void maximizeNowPlayingBar() {
     _miniPlayerController.animateToHeight(state: MiniPlayerPanelState.MAX);
