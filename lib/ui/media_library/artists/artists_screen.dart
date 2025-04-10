@@ -55,6 +55,7 @@ class ArtistsScreenState extends State<ArtistsScreen> {
               final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.artist;
 
               return ScrollViewBuilder(
+                key: ValueKey((mediaLibrary.artistSortType, mediaLibrary.artistSortAscending)),
                 margin: margin,
                 span: scrollViewBuilderHelperData.span,
                 headerCount: 1,

@@ -61,6 +61,7 @@ class AlbumsScreenState extends State<AlbumsScreen> {
               final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.album;
 
               return ScrollViewBuilder(
+                key: ValueKey((mediaLibrary.albumSortType, mediaLibrary.albumSortAscending)),
                 margin: margin,
                 span: scrollViewBuilderHelperData.span,
                 headerCount: 1,

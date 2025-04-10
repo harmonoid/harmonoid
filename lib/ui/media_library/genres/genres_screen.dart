@@ -55,6 +55,7 @@ class GenresScreenState extends State<GenresScreen> {
               final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.genre;
 
               return ScrollViewBuilder(
+                key: ValueKey((mediaLibrary.genreSortType, mediaLibrary.genreSortAscending)),
                 margin: margin,
                 span: scrollViewBuilderHelperData.span,
                 headerCount: 1,
