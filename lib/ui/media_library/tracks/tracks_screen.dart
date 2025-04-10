@@ -60,6 +60,7 @@ class MobileTrackScreen extends StatelessWidget {
           final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.track;
 
           return ScrollViewBuilder(
+            key: ValueKey((mediaLibrary.trackSortType, mediaLibrary.trackSortAscending)),
             margin: margin,
             span: scrollViewBuilderHelperData.span,
             headerCount: 1,
@@ -84,7 +85,6 @@ class MobileTrackScreen extends StatelessWidget {
                 }
               },
             ),
-            labelConstraints: scrollViewBuilderHelperData.labelConstraints,
             labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
             itemWidth: scrollViewBuilderHelperData.itemWidth,
             itemHeight: scrollViewBuilderHelperData.itemHeight,

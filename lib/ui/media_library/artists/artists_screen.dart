@@ -68,7 +68,6 @@ class ArtistsScreenState extends State<ArtistsScreen> {
                   width: w,
                   height: h,
                 ),
-                labelConstraints: scrollViewBuilderHelperData.labelConstraints,
                 labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
                 itemWidth: scrollViewBuilderHelperData.itemWidth,
                 itemHeight: scrollViewBuilderHelperData.itemHeight,

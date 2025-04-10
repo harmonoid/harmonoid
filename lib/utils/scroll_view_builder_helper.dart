@@ -29,34 +29,7 @@ class ScrollViewBuilderHelper {
             : Configuration.instance.mobileMediaLibraryAlbumGridSpan);
     final itemWidth = span != 1 ? albumTileWidth : double.infinity;
     final itemHeight = span != 1 ? albumTileHeight : linearTileHeight;
-    final BoxConstraints labelConstraints;
     final TextStyle labelTextStyle;
-    switch (Configuration.instance.mediaLibraryAlbumSortType) {
-      case AlbumSortType.album:
-        labelConstraints = const BoxConstraints(
-          maxWidth: 56.0,
-          maxHeight: 56.0,
-        );
-        break;
-      case AlbumSortType.timestamp:
-        labelConstraints = const BoxConstraints(
-          maxWidth: 128.0,
-          maxHeight: 28.0,
-        );
-        break;
-      case AlbumSortType.year:
-        labelConstraints = const BoxConstraints(
-          maxWidth: 128.0,
-          maxHeight: 28.0,
-        );
-        break;
-      case AlbumSortType.albumArtist:
-        labelConstraints = const BoxConstraints(
-          maxWidth: 56.0,
-          maxHeight: 56.0,
-        );
-        break;
-    }
     switch (Configuration.instance.mediaLibraryAlbumSortType) {
       case AlbumSortType.album:
         labelTextStyle = Theme.of(rootNavigatorKey.currentContext!).textTheme.titleLarge!;
@@ -75,7 +48,6 @@ class ScrollViewBuilderHelper {
       span,
       itemWidth,
       itemHeight,
-      labelConstraints,
       labelTextStyle,
     );
   }
@@ -84,28 +56,7 @@ class ScrollViewBuilderHelper {
     const span = 1;
     const itemWidth = double.infinity;
     final itemHeight = linearTileHeight;
-    final BoxConstraints labelConstraints;
     final TextStyle labelTextStyle;
-    switch (Configuration.instance.mediaLibraryTrackSortType) {
-      case TrackSortType.title:
-        labelConstraints = const BoxConstraints(
-          maxWidth: 56.0,
-          maxHeight: 56.0,
-        );
-        break;
-      case TrackSortType.timestamp:
-        labelConstraints = const BoxConstraints(
-          maxWidth: 128.0,
-          maxHeight: 28.0,
-        );
-        break;
-      case TrackSortType.year:
-        labelConstraints = const BoxConstraints(
-          maxWidth: 128.0,
-          maxHeight: 28.0,
-        );
-        break;
-    }
     switch (Configuration.instance.mediaLibraryTrackSortType) {
       case TrackSortType.title:
         labelTextStyle = Theme.of(rootNavigatorKey.currentContext!).textTheme.titleLarge!;
@@ -114,14 +65,13 @@ class ScrollViewBuilderHelper {
         labelTextStyle = Theme.of(rootNavigatorKey.currentContext!).textTheme.bodyLarge!;
         break;
       case TrackSortType.year:
-        labelTextStyle = Theme.of(rootNavigatorKey.currentContext!).textTheme.titleLarge!;
+        labelTextStyle = Theme.of(rootNavigatorKey.currentContext!).textTheme.bodyLarge!;
         break;
     }
     return ScrollViewBuilderHelperData(
       span,
       itemWidth,
       itemHeight,
-      labelConstraints,
       labelTextStyle,
     );
   }
@@ -134,22 +84,7 @@ class ScrollViewBuilderHelper {
             : Configuration.instance.mobileMediaLibraryArtistGridSpan);
     final itemWidth = span != 1 ? kArtistTileWidth : double.infinity;
     final itemHeight = span != 1 ? kArtistTileHeight : linearTileHeight;
-    final BoxConstraints labelConstraints;
     final TextStyle labelTextStyle;
-    switch (Configuration.instance.mediaLibraryArtistSortType) {
-      case ArtistSortType.artist:
-        labelConstraints = const BoxConstraints(
-          maxWidth: 56.0,
-          maxHeight: 56.0,
-        );
-        break;
-      case ArtistSortType.timestamp:
-        labelConstraints = const BoxConstraints(
-          maxWidth: 128.0,
-          maxHeight: 28.0,
-        );
-        break;
-    }
     switch (Configuration.instance.mediaLibraryArtistSortType) {
       case ArtistSortType.artist:
         labelTextStyle = Theme.of(rootNavigatorKey.currentContext!).textTheme.titleLarge!;
@@ -162,7 +97,6 @@ class ScrollViewBuilderHelper {
       span,
       itemWidth,
       itemHeight,
-      labelConstraints,
       labelTextStyle,
     );
   }
@@ -175,22 +109,7 @@ class ScrollViewBuilderHelper {
             : Configuration.instance.mobileMediaLibraryGenreGridSpan);
     final itemWidth = span != 1 ? kGenreTileWidth : double.infinity;
     final itemHeight = span != 1 ? kGenreTileHeight : linearTileHeight;
-    final BoxConstraints labelConstraints;
     final TextStyle labelTextStyle;
-    switch (Configuration.instance.mediaLibraryGenreSortType) {
-      case GenreSortType.genre:
-        labelConstraints = const BoxConstraints(
-          maxWidth: 56.0,
-          maxHeight: 56.0,
-        );
-        break;
-      case GenreSortType.timestamp:
-        labelConstraints = const BoxConstraints(
-          maxWidth: 128.0,
-          maxHeight: 28.0,
-        );
-        break;
-    }
     switch (Configuration.instance.mediaLibraryGenreSortType) {
       case GenreSortType.genre:
         labelTextStyle = Theme.of(rootNavigatorKey.currentContext!).textTheme.titleLarge!;
@@ -203,7 +122,6 @@ class ScrollViewBuilderHelper {
       span,
       itemWidth,
       itemHeight,
-      labelConstraints,
       labelTextStyle,
     );
   }
@@ -219,7 +137,6 @@ class ScrollViewBuilderHelperData {
   final int? span;
   final double itemWidth;
   final double itemHeight;
-  final BoxConstraints labelConstraints;
   final TextStyle labelTextStyle;
 
   /// {@macro scroll_view_builder_helper_data}
@@ -227,7 +144,6 @@ class ScrollViewBuilderHelperData {
     this.span,
     this.itemWidth,
     this.itemHeight,
-    this.labelConstraints,
     this.labelTextStyle,
   );
 }

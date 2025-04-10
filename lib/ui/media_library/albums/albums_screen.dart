@@ -74,7 +74,6 @@ class AlbumsScreenState extends State<AlbumsScreen> {
                   width: w,
                   height: h,
                 ),
-                labelConstraints: scrollViewBuilderHelperData.labelConstraints,
                 labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
                 itemWidth: scrollViewBuilderHelperData.itemWidth,
                 itemHeight: scrollViewBuilderHelperData.itemHeight,
