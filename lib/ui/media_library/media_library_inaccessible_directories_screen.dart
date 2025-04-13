@@ -22,8 +22,6 @@ class MediaLibraryInaccessibleDirectoriesScreen extends StatefulWidget {
   static Future<bool> showIfRequired(BuildContext context) async {
     final directories = <Directory>[];
     for (final directory in MediaLibrary.instance.directories) {
-      // On macOS, try to list the contents of the directory to check if it's accessible.
-      // On other platforms, just check if the directory exists.
       if (Platform.isMacOS) {
         try {
           // NOTE: Not using package:safe_local_storage API.
@@ -67,8 +65,19 @@ class _MediaLibraryInaccessibleDirectoriesScreenState extends State<MediaLibrary
     try {
       directories.clear();
       for (final directory in MediaLibrary.instance.directories) {
-        if (!await directory.exists_()) {
-          directories.add(directory);
+        if (Platform.isMacOS) {
+          try {
+            // NOTE: Not using package:safe_local_storage API.
+            directory.listSync();
+          } catch (exception, stacktrace) {
+            debugPrint(exception.toString());
+            debugPrint(stacktrace.toString());
+            directories.add(directory);
+          }
+        } else {
+          if (!await directory.exists_()) {
+            directories.add(directory);
+          }
         }
       }
       setState(() {});
@@ -85,8 +94,10 @@ class _MediaLibraryInaccessibleDirectoriesScreenState extends State<MediaLibrary
     try {
       await Configuration.instance.removeMediaLibraryDirectory(directory);
       await MediaLibrary.instance.removeDirectories({directory});
-      await MacOSStorageController.instance.invalidateAccess(directory);
+
       await refresh();
+
+      await MacOSStorageController.instance.invalidateAccess(directory);
     } catch (_) {}
     removing = false;
   }

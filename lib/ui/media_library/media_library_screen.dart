@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart' hide Intent;
@@ -8,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
-import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/build_context.dart';
@@ -17,7 +15,6 @@ import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/build_context.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
-import 'package:harmonoid/ui/media_library/media_library_inaccessible_directories_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_no_items_banner.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
 import 'package:harmonoid/ui/router.dart';
@@ -43,7 +40,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
   final ValueNotifier<bool> _desktopAppBarElevatedNotifier = ValueNotifier<bool>(false);
   final TextEditingController _desktopSearchTextEditingController = TextEditingController();
   final ValueNotifier<double> _mobileMediaLibrarySearchBarOffsetNotifier = ValueNotifier<double>(0.0);
-  final ValueNotifier<double> _mobileMediaLibraryRefreshButtonOffsetNotifier = ValueNotifier<double>(0.0);
+  final ValueNotifier<double> _mobileMediaLibraryRefreshButtonOffsetNotifier = ValueNotifier<double>(Configuration.instance.mediaPlayerPlaybackState.playables.isEmpty ? 0.0 : kMobileNowPlayingBarHeight);
 
   String? _current;
 
@@ -52,24 +49,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      context.read<NowPlayingMobileNotifier>().setMediaLibraryScreenStateRef(this);
-
-      await Intent.instance.notify(playbackState: Configuration.instance.mediaPlayerPlaybackState);
-      // HACK:
-      if (Platform.isMacOS) {
-        await const MethodChannel('com.alexmercerind/window_plus').invokeMethod('notifyUrls');
-      }
-      // HACK:
-      if (Platform.isAndroid) {
-        if (Configuration.instance.mediaPlayerPlaybackState.playables.isNotEmpty) {
-          mobileShiftMediaLibraryRefreshButton();
-        }
-      }
-      if (Configuration.instance.mediaLibraryRefreshUponStart && !await MediaLibraryInaccessibleDirectoriesScreen.showIfRequired(context)) {
-        MediaLibrary.instance.refresh();
-      }
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => context.read<NowPlayingMobileNotifier>().setMediaLibraryScreenStateRef(this));
   }
 
   @override
@@ -367,14 +347,13 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                     return ValueListenableBuilder<double>(
                       valueListenable: _mobileMediaLibraryRefreshButtonOffsetNotifier,
                       builder: (context, offset, _) {
-                        if (mediaPlayer.state.isEmpty) {
-                          offset = 0.0;
-                        }
+                        final bottom = 16.0 + (mediaPlayer.state.isEmpty ? 0.0 : offset);
+                        final durationValue = mediaPlayer.state.isEmpty ? Duration.zero : _duration?.medium;
                         return AnimatedPositioned(
-                          bottom: 16.0 + offset,
+                          bottom: bottom,
                           right: 16.0,
                           curve: Curves.easeInOut,
-                          duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+                          duration: durationValue ?? Duration.zero,
                           child: _path == kPlaylistsPath ? const MediaLibraryCreatePlaylistButton() : const MediaLibraryRefreshButton(),
                         );
                       },

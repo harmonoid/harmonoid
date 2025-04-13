@@ -1,8 +1,13 @@
+import 'dart:async';
+import 'dart:io';
 import 'dart:math' as math;
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/gestures.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import 'package:harmonoid/core/configuration/configuration.dart';
+import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/localization/localization.dart';
@@ -10,6 +15,7 @@ import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
+import 'package:harmonoid/ui/media_library/media_library_inaccessible_directories_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/android_utils.dart';
@@ -25,9 +31,23 @@ class Harmonoid extends StatefulWidget {
 
 class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
   @override
+  BuildContext get context => router.routerDelegate.navigatorKey.currentContext!;
+
+  @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Intent.instance.notify(playbackState: Configuration.instance.mediaPlayerPlaybackState);
+      // HACK:
+      if (Platform.isMacOS) {
+        await const MethodChannel('com.alexmercerind/window_plus').invokeMethod('notifyUrls');
+      }
+      final inaccessibleDirectories = await MediaLibraryInaccessibleDirectoriesScreen.showIfRequired(context);
+      if (!inaccessibleDirectories && Configuration.instance.mediaLibraryRefreshUponStart) {
+        MediaLibrary.instance.refresh();
+      }
+    });
   }
 
   @override
@@ -61,27 +81,13 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (context) => ThemeNotifier.instance..update(context: context),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => MediaLibrary.instance,
-        ),
-        ChangeNotifierProvider(
-          create: (_) => MediaPlayer.instance,
-        ),
-        ChangeNotifierProvider(
-          create: (_) => LyricsNotifier.instance,
-        ),
-        ChangeNotifierProvider(
-          create: (_) => NowPlayingColorPaletteNotifier.instance,
-        ),
-        Provider(
-          create: (_) => NowPlayingMobileNotifier.instance,
-        ),
-        ChangeNotifierProvider(
-          create: (context) => Localization.instance,
-        ),
+        ChangeNotifierProvider(create: (context) => MediaLibrary.instance),
+        ChangeNotifierProvider(create: (_) => MediaPlayer.instance),
+        ChangeNotifierProvider(create: (context) => Localization.instance),
+        ChangeNotifierProvider(create: (context) => ThemeNotifier.instance..update(context: context)),
+        ChangeNotifierProvider(create: (_) => LyricsNotifier.instance),
+        ChangeNotifierProvider(create: (_) => NowPlayingColorPaletteNotifier.instance),
+        Provider(create: (_) => NowPlayingMobileNotifier.instance),
       ],
       builder: (context, _) => Consumer<ThemeNotifier>(
         builder: (context, themeNotifier, _) => MacOSMenuBar(
