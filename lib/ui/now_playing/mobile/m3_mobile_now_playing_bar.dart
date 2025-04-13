@@ -409,7 +409,8 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
               mediaPlayer.current.title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface).copyWith(height: 1.0),
+              strutStyle: StrutStyle.fromTextStyle(Theme.of(context).textTheme.headlineMedium!.copyWith(height: 1.5)),
             ),
             RichText(
               text: TextSpan(
@@ -421,16 +422,18 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
                     const TextSpan(text: ', '),
                   ]
                 ]..removeLast(),
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant).copyWith(height: 1.0),
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
+              strutStyle: StrutStyle.fromTextStyle(Theme.of(context).textTheme.bodyLarge!.copyWith(height: 1.5)),
             ),
             Text(
               mediaPlayer.state.getAudioFormatLabel(),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant).copyWith(height: 1.0),
+              strutStyle: StrutStyle.fromTextStyle(Theme.of(context).textTheme.bodyLarge!.copyWith(height: 1.5)),
             ),
           ],
         ),
