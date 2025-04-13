@@ -13,10 +13,10 @@ import 'package:flutter/services.dart';
 ///
 /// {@endtemplate}
 class ThemeNotifier extends ChangeNotifier {
-  static final kDefaultLightColorSchemeM3 = ColorScheme.fromSeed(seedColor: const Color(0xFF6750A4), brightness: Brightness.light);
-  static final kDefaultDarkColorSchemeM3 = ColorScheme.fromSeed(seedColor: const Color(0xFF6750A4), brightness: Brightness.dark);
-  static const kDefaultLightPrimaryColorM2 = Color(0xFF651FFF);
-  static const kDefaultDarkPrimaryColorM2 = Color(0xFF7C4DFF);
+  static final ColorScheme kDefaultLightColorSchemeM3 = ColorScheme.fromSeed(seedColor: const Color(0xFF6750A4), brightness: Brightness.light);
+  static final ColorScheme kDefaultDarkColorSchemeM3 = ColorScheme.fromSeed(seedColor: const Color(0xFF6750A4), brightness: Brightness.dark);
+  static const Color kDefaultLightPrimaryColorM2 = Color(0xFF651FFF);
+  static const Color kDefaultDarkPrimaryColorM2 = Color(0xFF7C4DFF);
 
   /// Singleton instance.
   static late final ThemeNotifier instance;

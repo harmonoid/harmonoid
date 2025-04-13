@@ -39,7 +39,6 @@ class _ArtistScreenState extends State<ArtistScreen> {
               Hero(
                 tag: widget.artist,
                 child: Card(
-                  color: Colors.white,
                   margin: EdgeInsets.zero,
                   shape: const CircleBorder(),
                   elevation: Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
