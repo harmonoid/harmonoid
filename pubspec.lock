@@ -671,7 +671,7 @@ packages:
     description:
       path: media_kit
       ref: HEAD
-      resolved-ref: d544e1c52db47a45097a8332a862687c832359d9
+      resolved-ref: "2493429cfdcbb3d0b4868cef70342cdc7c55d28a"
       url: "https://github.com/media-kit/media-kit.git"
     source: git
     version: "1.2.0"
@@ -687,7 +687,7 @@ packages:
     description:
       path: "libs/linux/media_kit_libs_linux"
       ref: HEAD
-      resolved-ref: d544e1c52db47a45097a8332a862687c832359d9
+      resolved-ref: "2493429cfdcbb3d0b4868cef70342cdc7c55d28a"
       url: "https://github.com/media-kit/media-kit.git"
     source: git
     version: "1.2.1"
@@ -703,7 +703,7 @@ packages:
     description:
       path: "libs/windows/media_kit_libs_windows_audio"
       ref: HEAD
-      resolved-ref: d544e1c52db47a45097a8332a862687c832359d9
+      resolved-ref: "2493429cfdcbb3d0b4868cef70342cdc7c55d28a"
       url: "https://github.com/media-kit/media-kit.git"
     source: git
     version: "1.0.9"
