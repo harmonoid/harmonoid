@@ -1212,7 +1212,7 @@ InputDecoration inputDecorationMobile(BuildContext context, String hintText) {
     hintMaxLines: 1,
     errorMaxLines: 1,
     helperMaxLines: 1,
-    errorStyle: const TextStyle(height: 0.0),
+    errorStyle: const TextStyle(height: 0.01),
   );
 }
 

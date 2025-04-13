@@ -12,21 +12,13 @@ extension AlbumExtensions on Album {
   ValueKey<String> get scrollViewBuilderKey {
     switch (Configuration.instance.mediaLibraryAlbumSortType) {
       case AlbumSortType.album:
-        return ValueKey(
-          album.isEmpty ? kDefaultAlbum[0].uppercase() : album[0].uppercase(),
-        );
+        return ValueKey(album.isEmpty ? kDefaultAlbum[0].uppercase() : album[0].uppercase());
       case AlbumSortType.timestamp:
-        return ValueKey(
-          timestamp.label.uppercase(),
-        );
+        return ValueKey(timestamp.label.uppercase());
       case AlbumSortType.year:
-        return ValueKey(
-          year == 0 ? kDefaultYear : year.toString(),
-        );
+        return ValueKey(year == 0 ? kDefaultYear : year.toString());
       case AlbumSortType.albumArtist:
-        return ValueKey(
-          album.isEmpty ? kDefaultAlbum[0].uppercase() : album[0].uppercase(),
-        );
+        return ValueKey(album.isEmpty ? kDefaultAlbum[0].uppercase() : album[0].uppercase());
     }
   }
 }

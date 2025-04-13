@@ -12,13 +12,9 @@ extension GenreExtensions on Genre {
   ValueKey<String> get scrollViewBuilderKey {
     switch (Configuration.instance.mediaLibraryGenreSortType) {
       case GenreSortType.genre:
-        return ValueKey(
-          genre.isEmpty ? kDefaultGenre[0].uppercase() : genre[0].uppercase(),
-        );
+        return ValueKey(genre.isEmpty ? kDefaultGenre[0].uppercase() : genre[0].uppercase());
       case GenreSortType.timestamp:
-        return ValueKey(
-          timestamp.label,
-        );
+        return ValueKey(timestamp.label);
     }
   }
 }

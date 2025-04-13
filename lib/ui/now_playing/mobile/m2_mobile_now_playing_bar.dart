@@ -209,7 +209,7 @@ class M2MobileNowPlayingBarState extends State<M2MobileNowPlayingBar> {
                               Opacity(
                                 opacity: ((percentage - 0.5) / 0.5).clamp(0.0, 1.0),
                                 child: AnnotatedRegion<SystemUiOverlayStyle>(
-                                  value: context.toSystemUiOverlayStyle(ThemeMode.dark),
+                                  value: context.toSystemUiOverlayStyle(null, ThemeMode.dark),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.stretch,
                                     children: [

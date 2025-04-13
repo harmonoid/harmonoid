@@ -12,13 +12,9 @@ extension ArtistExtensions on Artist {
   ValueKey<String> get scrollViewBuilderKey {
     switch (Configuration.instance.mediaLibraryArtistSortType) {
       case ArtistSortType.artist:
-        return ValueKey(
-          artist.isEmpty ? kDefaultArtist[0].uppercase() : artist[0].uppercase(),
-        );
+        return ValueKey(artist.isEmpty ? kDefaultArtist[0].uppercase() : artist[0].uppercase());
       case ArtistSortType.timestamp:
-        return ValueKey(
-          timestamp.label,
-        );
+        return ValueKey(timestamp.label);
     }
   }
 }
