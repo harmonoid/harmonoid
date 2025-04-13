@@ -18,6 +18,7 @@ import 'package:harmonoid/models/media_player_state.dart';
 import 'package:harmonoid/models/playback_state.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/macos_storage_controller.dart';
 
 part 'configuration.g.dart';
@@ -121,6 +122,7 @@ class Configuration extends ConfigurationBase {
     _themeMaterialStandard = await _read<int, int>(kKeyThemeMaterialStandard, defaults);
     _themeMode = await _read<int, ThemeMode>(kKeyThemeMode, defaults, (value) => ThemeMode.values[value]);
     _themeSystemColorScheme = await _read<bool, bool>(kKeyThemeSystemColorScheme, defaults);
+    _updateCheckVersion = await _read<String, String>(kKeyUpdateCheckVersion, defaults);
     _windowsTaskbarProgress = await _read<bool, bool>(kKeyWindowsTaskbarProgress, defaults);
   }
 

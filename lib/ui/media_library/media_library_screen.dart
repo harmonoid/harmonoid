@@ -267,6 +267,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                     ),
                                   ),
                                   const SizedBox(width: 8.0),
+                                  const UpdateButton(),
                                   const PlayFileOrURLButton(),
                                   const ReadFileOrURLMetadataButton(),
                                   IconButton(

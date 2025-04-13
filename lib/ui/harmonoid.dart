@@ -15,6 +15,7 @@ import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
+import 'package:harmonoid/state/update_notifier.dart';
 import 'package:harmonoid/ui/media_library/media_library_inaccessible_directories_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
 import 'package:harmonoid/ui/router.dart';
@@ -47,6 +48,8 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
       if (!inaccessibleDirectories && Configuration.instance.mediaLibraryRefreshUponStart) {
         MediaLibrary.instance.refresh();
       }
+
+      unawaited(UpdateNotifier.instance.check());
     });
   }
 
@@ -85,6 +88,7 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
         ChangeNotifierProvider(create: (_) => MediaPlayer.instance),
         ChangeNotifierProvider(create: (context) => Localization.instance),
         ChangeNotifierProvider(create: (context) => ThemeNotifier.instance..update(context: context)),
+        ChangeNotifierProvider(create: (_) => UpdateNotifier.instance),
         ChangeNotifierProvider(create: (_) => LyricsNotifier.instance),
         ChangeNotifierProvider(create: (_) => NowPlayingColorPaletteNotifier.instance),
         Provider(create: (_) => NowPlayingMobileNotifier.instance),

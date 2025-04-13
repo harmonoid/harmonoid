@@ -93,7 +93,6 @@ class LocalizationBase extends Values {
     HISTORY = map['HISTORY']!;
     IMAGES = map['IMAGES']!;
     IMPORT = map['IMPORT']!;
-    INTERNET_ERROR = map['INTERNET_ERROR']!;
     LAST_DIRECTORY_REMOVED = map['LAST_DIRECTORY_REMOVED']!;
     LESS = map['LESS']!;
     LICENSE = map['LICENSE']!;
@@ -128,8 +127,6 @@ class LocalizationBase extends Values {
     NOW_PLAYING = map['NOW_PLAYING']!;
     NOW_YOU_ARE_GOOD_TO_GO_BACK = map['NOW_YOU_ARE_GOOD_TO_GO_BACK']!;
     NO_FOLDERS_ADDED = map['NO_FOLDERS_ADDED']!;
-    NO_INTERNET_SUBTITLE = map['NO_INTERNET_SUBTITLE']!;
-    NO_INTERNET_TITLE = map['NO_INTERNET_TITLE']!;
     NO_PLAYLISTS_FOUND = map['NO_PLAYLISTS_FOUND']!;
     N_ALBUMS = map['N_ALBUMS']!;
     N_ARTISTS = map['N_ARTISTS']!;
@@ -236,6 +233,7 @@ class LocalizationBase extends Values {
     TRACK_NUMBER = map['TRACK_NUMBER']!;
     TYPE = map['TYPE']!;
     UNMUTE = map['UNMUTE']!;
+    UPDATE_AVAILABLE = map['UPDATE_AVAILABLE']!;
     URL = map['URL']!;
     USE_COLOR_PALETTE = map['USE_COLOR_PALETTE']!;
     USE_SYSTEM_COLOR_SCHEME = map['USE_SYSTEM_COLOR_SCHEME']!;

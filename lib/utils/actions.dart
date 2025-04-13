@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/go_router.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/router.dart';
@@ -66,4 +67,14 @@ void mediaPlayerUpdateCurrentOnUpdateCurrent(String uri) {
       ..resetFlagsSystemMediaTransportControls();
     NowPlayingColorPaletteNotifier.instance.resetCurrent();
   }
+}
+
+Future<bool> updateNotifierCheckOnShowUpdate(String version) async {
+  return showConfirmation(
+    router.routerDelegate.navigatorKey.currentContext!,
+    Localization.instance.UPDATE_AVAILABLE,
+    version,
+    positiveAction: Localization.instance.OK,
+    negativeAction: Localization.instance.CANCEL,
+  );
 }

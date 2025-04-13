@@ -43,5 +43,6 @@
   {"key": "THEME_MATERIAL_STANDARD", "serializedType": "Integer", "dartType": "int", "default": "isDesktop ? 2 : 3"},
   {"key": "THEME_MODE", "serializedType": "Integer", "dartType": "ThemeMode", "default": "isDesktop ? ThemeMode.light.index: ThemeMode.system.index"},
   {"key": "THEME_SYSTEM_COLOR_SCHEME", "serializedType": "Boolean", "dartType": "bool", "default": "isMobile"},
+  {"key": "UPDATE_CHECK_VERSION", "serializedType": "String", "dartType": "String", "default": "kVersion"},
   {"key": "WINDOWS_TASKBAR_PROGRESS", "serializedType": "Boolean", "dartType": "bool", "default": "false"}
 ]

@@ -56,6 +56,7 @@ class ConfigurationBase {
   int get themeMaterialStandard => _themeMaterialStandard!;
   ThemeMode get themeMode => _themeMode!;
   bool get themeSystemColorScheme => _themeSystemColorScheme!;
+  String get updateCheckVersion => _updateCheckVersion!;
   bool get windowsTaskbarProgress => _windowsTaskbarProgress!;
 
   Future<void> set({
@@ -103,6 +104,7 @@ class ConfigurationBase {
     int? themeMaterialStandard,
     ThemeMode? themeMode,
     bool? themeSystemColorScheme,
+    String? updateCheckVersion,
     bool? windowsTaskbarProgress,
   }) async {
     if (apiBaseUrl != null) {
@@ -281,6 +283,10 @@ class ConfigurationBase {
       _themeSystemColorScheme = themeSystemColorScheme;
       await db.setValue(kKeyThemeSystemColorScheme, kTypeBoolean, booleanValue: themeSystemColorScheme);
     }
+    if (updateCheckVersion != null) {
+      _updateCheckVersion = updateCheckVersion;
+      await db.setValue(kKeyUpdateCheckVersion, kTypeString, stringValue: updateCheckVersion);
+    }
     if (windowsTaskbarProgress != null) {
       _windowsTaskbarProgress = windowsTaskbarProgress;
       await db.setValue(kKeyWindowsTaskbarProgress, kTypeBoolean, booleanValue: windowsTaskbarProgress);
@@ -333,6 +339,7 @@ class ConfigurationBase {
       /* Integer */ kKeyThemeMaterialStandard: isDesktop ? 2 : 3,
       /* Integer */ kKeyThemeMode: isDesktop ? ThemeMode.light.index: ThemeMode.system.index,
       /* Boolean */ kKeyThemeSystemColorScheme: isMobile,
+      /* String  */ kKeyUpdateCheckVersion: kVersion,
       /* Boolean */ kKeyWindowsTaskbarProgress: false,
     };
   }
@@ -381,6 +388,7 @@ class ConfigurationBase {
   int? _themeMaterialStandard;
   ThemeMode? _themeMode;
   bool? _themeSystemColorScheme;
+  String? _updateCheckVersion;
   bool? _windowsTaskbarProgress;
 }
 
@@ -430,4 +438,5 @@ const kKeyThemeAnimationDuration = 'THEME_ANIMATION_DURATION';
 const kKeyThemeMaterialStandard = 'THEME_MATERIAL_STANDARD';
 const kKeyThemeMode = 'THEME_MODE';
 const kKeyThemeSystemColorScheme = 'THEME_SYSTEM_COLOR_SCHEME';
+const kKeyUpdateCheckVersion = 'UPDATE_CHECK_VERSION';
 const kKeyWindowsTaskbarProgress = 'WINDOWS_TASKBAR_PROGRESS';

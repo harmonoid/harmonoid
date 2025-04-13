@@ -43,6 +43,7 @@ class MediaLibrarySearchBar extends StatelessWidget {
                       ),
                       onTap: controller.openView,
                       trailing: const [
+                        UpdateButton(),
                         MobileGridSpanButton(),
                         MobileAppBarOverflowButton(),
                       ],

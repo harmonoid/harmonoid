@@ -88,7 +88,6 @@ class Values {
   late String HISTORY;
   late String IMAGES;
   late String IMPORT;
-  late String INTERNET_ERROR;
   late String LAST_DIRECTORY_REMOVED;
   late String LESS;
   late String LICENSE;
@@ -123,8 +122,6 @@ class Values {
   late String NOW_PLAYING;
   late String NOW_YOU_ARE_GOOD_TO_GO_BACK;
   late String NO_FOLDERS_ADDED;
-  late String NO_INTERNET_SUBTITLE;
-  late String NO_INTERNET_TITLE;
   late String NO_PLAYLISTS_FOUND;
   late String N_ALBUMS;
   late String N_ARTISTS;
@@ -231,6 +228,7 @@ class Values {
   late String TRACK_NUMBER;
   late String TYPE;
   late String UNMUTE;
+  late String UPDATE_AVAILABLE;
   late String URL;
   late String USE_COLOR_PALETTE;
   late String USE_SYSTEM_COLOR_SCHEME;
