@@ -194,7 +194,8 @@ class LyricsNotifier extends ChangeNotifier {
 
     debugPrint('LyricsNotifier: retrieve: API: ${playable.uri}');
     try {
-      final result = await LyricsGet.instance.call(
+      final lyricsGet = LyricsGet();
+      final result = await lyricsGet.call(
         playable.lyricsGetQuery,
         _currentDuration?.inMilliseconds,
       );

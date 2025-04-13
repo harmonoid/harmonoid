@@ -16,12 +16,6 @@ import 'package:harmonoid/models/playable.dart';
 ///
 /// {@endtemplate}
 class ActivitySet {
-  /// Singleton instance.
-  static const ActivitySet instance = ActivitySet._();
-
-  /// {@macro activity_set}
-  const ActivitySet._();
-
   Future<String?> call(String deviceId, Playable playable, File? cover) async {
     try {
       // https://pub.dev/documentation/http/latest/http/MultipartRequest-class.html

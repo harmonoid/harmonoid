@@ -13,12 +13,6 @@ import 'package:harmonoid/models/lyrics.dart';
 ///
 /// {@endtemplate}
 class LyricsGet {
-  /// Singleton instance.
-  static const LyricsGet instance = LyricsGet._();
-
-  /// {@macro lyrics_get}
-  const LyricsGet._();
-
   Future<Lyrics?> call(String query, int? duration) async {
     try {
       final response = await http.get(

@@ -55,11 +55,12 @@ mixin DiscordRpcMixin implements BaseMediaPlayer {
         _flagPlayableDiscordRpc = current;
         notify = true;
         try {
+          final activitySet = ActivitySet();
           final deviceId = Configuration.instance.identifier;
           final image = cover(uri: current.uri);
           _largeImageDiscordRpc = switch (image) {
-            AsyncFileImage() => await ActivitySet.instance.call(deviceId, current, await image.file),
-            FileImage() => await ActivitySet.instance.call(deviceId, current, image.file),
+            AsyncFileImage() => await activitySet(deviceId, current, await image.file),
+            FileImage() => await activitySet(deviceId, current, image.file),
             NetworkImage() => image.url,
             _ => null,
           }!;
