@@ -6,6 +6,72 @@ on:
       - vnext
 
 jobs:
+  build_macos:
+    name: macOS
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          submodules: recursive
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+      - name: Build
+        run: |
+          rm -r "assets/icons"
+          mkdir "assets/icons"
+          flutter pub get
+          flutter build macos --verbose --dart-define=API_KEY=${{ secrets.API_KEY }} --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }}
+      - name: Install create-dmg
+        run: |
+          brew install create-dmg
+      - name: Bundle DMG
+        run: |
+          find "build/macos/Build/Products/Release/" -mindepth 1 -maxdepth 1 ! -name 'Harmonoid.app' -exec rm -rf {} +
+          mkdir -p Output
+          create-dmg \
+            --volname "Harmonoid" \
+            --window-pos 200 120 \
+            --window-size 800 400 \
+            --icon-size 100 \
+            --icon "Harmonoid.app" 200 190 \
+            --hide-extension "Harmonoid.app" \
+            --app-drop-link 600 185 \
+            "Output/harmonoid-macos-x86_64.dmg" \
+            "build/macos/Build/Products/Release/"
+          mv Output/harmonoid-macos-x86_64.dmg harmonoid-macos-x86_64.dmg
+      - name: Upload Release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_REPOSITORY: ${{ secrets.REPOSITORY_2 }}
+        with:
+          repository: ${{ secrets.REPOSITORY_2 }}
+          draft: true
+          prerelease: false
+          tag_name: "vnext"
+          files: harmonoid-macos-*.dmg
+          token: ${{ secrets.ACCESS_TOKEN_2 }}
+      - name: Upload Release (Snapshot)
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_REPOSITORY: harmonoid/snapshots
+        with:
+          repository: harmonoid/snapshots
+          draft: false
+          prerelease: true
+          body: ${{ github.sha }}
+          tag_name: snapshot
+          files: harmonoid-macos-*.dmg
+          token: ${{ secrets.ACCESS_TOKEN_2 }}
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos
+          path: build/macos/Build/Products/Release/Harmonoid.app
+
   build_windows:
     name: Windows
     runs-on: windows-latest
