@@ -40,9 +40,9 @@ jobs:
             --icon "Harmonoid.app" 200 190 \
             --hide-extension "Harmonoid.app" \
             --app-drop-link 600 185 \
-            "Output/harmonoid-macos-x86_64.dmg" \
+            "Output/harmonoid-macos-universal.dmg" \
             "build/macos/Build/Products/Release/"
-          mv Output/harmonoid-macos-x86_64.dmg harmonoid-macos-x86_64.dmg
+          mv Output/harmonoid-macos-universal.dmg harmonoid-macos-universal.dmg
       - name: Upload Release
         uses: softprops/action-gh-release@v1
         env:
