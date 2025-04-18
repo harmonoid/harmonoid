@@ -153,21 +153,21 @@ class _NowPlayingScreenSectionState extends State<NowPlayingScreenSection> {
                     setState(() {});
                   },
           ),
-        if (/* MOBILE */ isMobile)
-          ListItem(
-            trailing: Switch(
-              value: Configuration.instance.mobileNowPlayingVolumeSlider,
-              onChanged: (value) async {
-                await Configuration.instance.set(mobileNowPlayingVolumeSlider: value);
-                setState(() {});
-              },
-            ),
-            title: Localization.instance.DISPLAY_VOLUME_SLIDER,
-            onTap: () async {
-              await Configuration.instance.set(mobileNowPlayingVolumeSlider: !Configuration.instance.mobileNowPlayingVolumeSlider);
-              setState(() {});
-            },
-          ),
+        // if (/* MOBILE */ isMobile)
+        //   ListItem(
+        //     trailing: Switch(
+        //       value: Configuration.instance.mobileNowPlayingVolumeSlider,
+        //       onChanged: (value) async {
+        //         await Configuration.instance.set(mobileNowPlayingVolumeSlider: value);
+        //         setState(() {});
+        //       },
+        //     ),
+        //     title: Localization.instance.DISPLAY_VOLUME_SLIDER,
+        //     onTap: () async {
+        //       await Configuration.instance.set(mobileNowPlayingVolumeSlider: !Configuration.instance.mobileNowPlayingVolumeSlider);
+        //       setState(() {});
+        //     },
+        //   ),
       ],
     );
   }

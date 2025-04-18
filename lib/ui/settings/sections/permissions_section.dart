@@ -46,20 +46,20 @@ class _PermissionsSectionState extends State<PermissionsSection> {
             );
           },
         ),
-        FutureBuilder(
-          future: Permission.photos.status,
-          builder: (context, snapshot) {
-            return ListItem(
-              onTap: () => request(Permission.photos),
-              leading: Checkbox(
-                value: snapshot.data == PermissionStatus.granted,
-                onChanged: (_) => request(Permission.photos),
-              ),
-              title: Localization.instance.PERMISSION_IMAGES_AND_PHOTOS,
-              subtitle: Localization.instance.PERMISSION_IMAGES_AND_PHOTOS_SUBTITLE,
-            );
-          },
-        ),
+        // FutureBuilder(
+        //   future: Permission.photos.status,
+        //   builder: (context, snapshot) {
+        //     return ListItem(
+        //       onTap: () => request(Permission.photos),
+        //       leading: Checkbox(
+        //         value: snapshot.data == PermissionStatus.granted,
+        //         onChanged: (_) => request(Permission.photos),
+        //       ),
+        //       title: Localization.instance.PERMISSION_IMAGES_AND_PHOTOS,
+        //       subtitle: Localization.instance.PERMISSION_IMAGES_AND_PHOTOS_SUBTITLE,
+        //     );
+        //   },
+        // ),
         FutureBuilder(
           future: Permission.notification.status,
           builder: (context, snapshot) {
