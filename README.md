@@ -4,12 +4,13 @@
 
 **🎵 Plays & manages your music library. Looks beautiful & juicy.**
 
-[Website](https://harmonoid.com) • [Download](https://harmonoid.com/downloads) • [Discord](https://discord.gg/2Rc3edFWd8) • Available for Android, GNU/Linux, macOS & Windows!
+[Website](https://harmonoid.com) • [Download](https://harmonoid.com/downloads) • [Discord](https://discord.gg/2Rc3edFWd8) • Available for macOS, Windows, GNU/Linux & Android!
 
-![](https://github.com/harmonoid/harmonoid/blob/assets/win32/0.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/win32/1.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/win32/2.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/win32/3.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/macos/light/0.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/macos/light/2.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/macos/dark/0.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/macos/dark/2.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/macos/light/5.webp?raw=true)
 
 <table>
   <tr>
@@ -44,9 +45,8 @@
 
 ## Features
 
-- Efficient music library.
-- Fast tag reader.
-- Material Design 3 & Material Design 2.
+- Performant media library & tag reader.
+- Material Design 3 & 2.
 - Light & dark themes.
 - Gapless playback.
 - Speed adjustment.
@@ -54,24 +54,18 @@
 - Volume boost.
 - Portable.
 - Discord RPC integration.
-- Context menu integrations & file associations.
 - mpv backend.
-- Lyrics support (LRC, tags & online).
-- Playlists support.
-- Online URLs support.
+- Lyrics (LRC, tags & online).
+- Playlists.
 - Multiple artist & genre support.
 - Fallback cover support. e.g. cover.jpg, Folder.jpg etc.
 - Small installer (≈ 35 MB) & low RAM usage (≈ 150 MB).
 - Excellent backward compatibility. Android 5.0 or higher. macOS 10.9 or higher. Windows 7 or higher.
-- Cross-platform (Android, GNU/Linux, macOS, Windows).
+- Cross-platform (macOS, Windows, GNU/Linux & Android).
 - Notification.MediaStyle for Android.
 - D-Bus MPRIS controls for GNU/Linux.
 - MPNowPlayingInfoCenter for macOS.
 - System Media Transport Controls & Taskbar Thumbnail Toolbar for Windows.
-
-## Planned Features
-
-May be found at: [What's next for Harmonoid? & Release Goals](https://github.com/harmonoid/harmonoid/issues/348).
 
 ## Why
 
@@ -82,12 +76,12 @@ Harmonoid very strictly implements Material Design to be a consistent, cohesive 
 ## Support
 
 - [GitHub Sponsors](https://github.com/sponsors/alexmercerind)
-- [PayPal](https://paypal.me/alexmercerind)
 - [Patreon](https://patreon.com/harmonoid)
+- [PayPal](https://paypal.me/alexmercerind)
 
-## Translate
+## Localizations
 
-You can help project by adding or updating translations at [harmonoid/translations](https://github.com/harmonoid/translations).
+You can help the project by adding or updating localizations at [harmonoid/localizations](https://github.com/harmonoid/localizations).
 
 ## License
 
