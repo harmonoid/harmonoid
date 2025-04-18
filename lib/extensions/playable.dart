@@ -2,6 +2,12 @@ import 'package:harmonoid/models/playable.dart';
 
 /// Extensions for [Playable].
 extension PlayableExtensions on Playable {
+  /// Display title.
+  String get displayTitle => title;
+
+  /// Display subtitle.
+  String get displaySubtitle => subtitle.join(', ');
+
   /// Query used to search for lyrics.
   String get lyricsGetQuery => [title, ...subtitle].join(' ');
 

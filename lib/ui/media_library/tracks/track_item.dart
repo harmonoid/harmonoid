@@ -1,10 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
 import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/extensions/track.dart';
 import 'package:harmonoid/mappers/track.dart';
+import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -203,9 +204,6 @@ class TrackItem extends StatelessWidget {
       onSecondaryPress(context);
     }
 
-    final title = track.title;
-    final subtitle = [...track.artists, if (track.album.isNotEmpty) track.album.toString(), if (track.year != 0) track.year.toString()].where((e) => e.isNotEmpty).join(' • ');
-
     return SizedBox(
       height: height,
       child: InkWell(
@@ -242,14 +240,14 @@ class TrackItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        title,
+                        track.displayTitle,
                         style: Theme.of(context).textTheme.titleMedium,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      if (subtitle.isNotEmpty)
+                      if (track.displaySubtitle.isNotEmpty)
                         Text(
-                          subtitle,
+                          track.displaySubtitle,
                           style: Theme.of(context).textTheme.bodyMedium,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,

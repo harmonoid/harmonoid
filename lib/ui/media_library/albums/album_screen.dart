@@ -5,6 +5,7 @@ import 'package:media_library/media_library.dart' hide MediaLibrary;
 
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/extensions/track.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
@@ -99,7 +100,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
           return [
             IgnorePointer(
               child: Text(
-                _tracks[i].title,
+                _tracks[i].displayTitle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -128,15 +129,16 @@ class _AlbumScreenState extends State<AlbumScreen> {
         if (isMobile) {
           return [
             Text(
-              _tracks[i].title,
+              widget.tracks[i].displayTitle,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            Text(
-              (_tracks[i].artists.isEmpty ? {kDefaultArtist} : _tracks[i].artists).join(', '),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+            if (widget.tracks[i].displaySubtitle.isNotEmpty)
+              Text(
+                widget.tracks[i].displaySubtitle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
           ];
         }
         throw UnimplementedError();

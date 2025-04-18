@@ -80,19 +80,15 @@ class MaterialWaveSlider extends StatefulWidget {
 
 class MaterialWaveSliderState extends State<MaterialWaveSlider> with SingleTickerProviderStateMixin {
   double get _amplitude => widget.amplitude ?? (widget.height / 12.0);
-
   double get _percent => widget.value == 0.0 ? 0.0 : ((_current ?? widget.value) / (widget.max - widget.min)).clamp(0.0, 1.0);
 
+  double? _current;
+  Color? _color;
+  Path? _defaultPath;
+  Widget? _defaultPaint;
   late bool _paused = widget.paused;
   late bool _running = !widget.paused;
-
-  double? _current;
-
-  late final ScrollController _controller = ScrollController();
-
-  Color? color;
-  Path? defaultPath;
-  Widget? defaultPaint;
+  final ScrollController _controller = ScrollController();
 
   @override
   void didUpdateWidget(covariant MaterialWaveSlider oldWidget) {
@@ -197,14 +193,14 @@ class MaterialWaveSliderState extends State<MaterialWaveSlider> with SingleTicke
       valueIndicatorTextStyle: sliderTheme.valueIndicatorTextStyle ?? defaults.valueIndicatorTextStyle,
     );
 
-    if (color != sliderTheme.activeTrackColor) {
-      defaultPath = null;
-      defaultPaint = null;
+    if (_color != sliderTheme.activeTrackColor) {
+      _defaultPath = null;
+      _defaultPaint = null;
     }
 
-    color ??= sliderTheme.activeTrackColor;
-    defaultPath ??= SinePainter.calculatePath(widget.height / 25.0, _amplitude, 0.0, widget.height, widget.height);
-    defaultPaint ??= CustomPaint(
+    _color ??= sliderTheme.activeTrackColor;
+    _defaultPath ??= SinePainter.calculatePath(widget.height / 25.0, _amplitude, 0.0, widget.height, widget.height);
+    _defaultPaint ??= CustomPaint(
       key: const ValueKey(true),
       painter: SinePainter(
         color: sliderTheme.activeTrackColor!,
@@ -212,7 +208,7 @@ class MaterialWaveSliderState extends State<MaterialWaveSlider> with SingleTicke
         phase: 0.0,
         amplitude: _amplitude,
         strokeWidth: sliderTheme.trackHeight!,
-        path: defaultPath,
+        path: _defaultPath,
       ),
       size: Size(widget.height, widget.height),
     );
@@ -250,7 +246,7 @@ class MaterialWaveSliderState extends State<MaterialWaveSlider> with SingleTicke
                           duration: widget.transitionDuration,
                           builder: (context, value, _) {
                             if (value == _amplitude) {
-                              return defaultPaint!;
+                              return _defaultPaint!;
                             }
                             return CustomPaint(
                               key: ValueKey(value),

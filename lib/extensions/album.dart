@@ -8,6 +8,15 @@ import 'package:harmonoid/extensions/string.dart';
 
 /// Extensions for [Album].
 extension AlbumExtensions on Album {
+  /// Display title.
+  String get displayTitle => album.isNotEmpty ? album : kDefaultAlbum;
+
+  /// Display subtitle.
+  String get displaySubtitle => [
+        if (album.isNotEmpty) album,
+        if (year != 0) year.toString(),
+      ].where((e) => e.isNotEmpty).join(' • ');
+
   /// [ValueKey] for [ScrollViewBuilder].
   ValueKey<String> get scrollViewBuilderKey {
     switch (Configuration.instance.mediaLibraryAlbumSortType) {

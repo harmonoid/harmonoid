@@ -5,6 +5,7 @@ import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/extensions/album.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/media_library/albums/album_screen.dart';
 import 'package:harmonoid/ui/router.dart';
@@ -19,18 +20,12 @@ class AlbumItem extends StatelessWidget {
   final double width;
   final double height;
 
-  AlbumItem({
+  const AlbumItem({
     super.key,
     required this.album,
     required this.width,
     required this.height,
   });
-
-  late final title = album.album.isNotEmpty ? album.album : kDefaultAlbum;
-  late final subtitle = [
-    if (album.albumArtist.isNotEmpty) album.albumArtist,
-    if (album.year != 0) album.year.toString(),
-  ].join(' • ');
 
   Future<void> navigate() async {
     final tracks = await MediaLibrary.instance.tracksFromAlbum(album);
@@ -103,16 +98,15 @@ class AlbumItem extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (title.isNotEmpty)
+                        Text(
+                          album.displayTitle,
+                          style: Theme.of(context).textTheme.titleSmall,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        if (album.displaySubtitle.isNotEmpty)
                           Text(
-                            title,
-                            style: Theme.of(context).textTheme.titleSmall,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        if (subtitle.isNotEmpty)
-                          Text(
-                            subtitle,
+                            album.displaySubtitle,
                             style: Theme.of(context).textTheme.bodySmall,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -172,17 +166,18 @@ class AlbumItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          title,
+                          album.displayTitle,
                           style: Theme.of(context).textTheme.titleMedium,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        Text(
-                          subtitle,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                        if (album.displaySubtitle.isNotEmpty)
+                          Text(
+                            album.displaySubtitle,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                       ],
                     ),
                   ),
@@ -261,23 +256,22 @@ class AlbumItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (height - width >= 56.0) ...[
-                          if (title.isNotEmpty)
+                          Text(
+                            album.displayTitle,
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          if (album.displaySubtitle.isNotEmpty)
                             Text(
-                              title,
-                              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          if (subtitle.isNotEmpty)
-                            Text(
-                              subtitle,
+                              album.displaySubtitle,
                               style: Theme.of(context).textTheme.bodyMedium,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                         ] else if (height - width >= 32.0) ...[
                           Text(
-                            title,
+                            album.displayTitle,
                             style: Theme.of(context).textTheme.bodyLarge,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,

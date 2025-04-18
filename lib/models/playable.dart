@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'playable.freezed.dart';
 part 'playable.g.dart';
 
+@Deprecated(':/')
 @freezed
 class Playable with _$Playable {
   const factory Playable({
