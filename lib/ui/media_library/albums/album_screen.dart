@@ -133,9 +133,9 @@ class _AlbumScreenState extends State<AlbumScreen> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            if (widget.tracks[i].displaySubtitle.isNotEmpty)
+            if (widget.tracks[i].artists.isNotEmpty)
               Text(
-                widget.tracks[i].displaySubtitle,
+                widget.tracks[i].artists.join(', '),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
