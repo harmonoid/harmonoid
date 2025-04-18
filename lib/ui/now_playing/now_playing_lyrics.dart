@@ -35,6 +35,7 @@ class NowPlayingLyricsState extends State<NowPlayingLyrics> {
                 height: Configuration.instance.lyricsViewUnfocusedLineHeight,
               ),
           textAlign: Configuration.instance.lyricsViewTextAlign,
+          alignment: Alignment.topCenter,
         );
       },
     );
@@ -51,9 +52,9 @@ class NowPlayingLyricsState extends State<NowPlayingLyrics> {
           index: lyricsNotifier.index,
           lyrics: lyricsNotifier.lyrics.map((e) => e.text).toList(),
           padding: EdgeInsets.only(
-            left: 32.0,
-            right: 32.0,
-            top: MediaQuery.sizeOf(context).height * 0.1,
+            left: 16.0,
+            right: 16.0,
+            top: -1.0 * MediaQuery.sizeOf(context).height * 0.2,
           ),
           focusedTextStyle: Theme.of(context).textTheme.displayLarge?.copyWith(
                 fontSize: Configuration.instance.lyricsViewFocusedFontSize,
@@ -66,6 +67,7 @@ class NowPlayingLyricsState extends State<NowPlayingLyrics> {
           textAlign: Configuration.instance.lyricsViewTextAlign,
           viewportWidth: MediaQuery.sizeOf(context).width,
           viewportHeight: MediaQuery.sizeOf(context).height,
+          alignment: Alignment.center,
         );
       },
     );
