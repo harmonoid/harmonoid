@@ -3,15 +3,15 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  awesome_notifications
-  dart_discord_rpc
-  file_selector_linux
-  flutter_platform_alert
+  dynamic_color
+  media_kit_libs_linux
+  sqlite3_flutter_libs
   url_launcher_linux
   window_plus
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
+  flutter_discord_rpc
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

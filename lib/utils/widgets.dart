@@ -1,209 +1,1358 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
 import 'dart:async';
 import 'dart:io';
-import 'dart:ui';
 import 'dart:math';
-import 'package:flutter/material.dart'
-    hide ReorderableDragStartListener, Intent;
+import 'dart:ui';
+import 'package:adaptive_layouts/adaptive_layouts.dart';
+import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart' hide CarouselView, CarouselController, ReorderableDragStartListener, Intent;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
+import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:provider/provider.dart';
-import 'package:flutter/foundation.dart';
-import 'package:uri_parser/uri_parser.dart';
-import 'package:window_plus/window_plus.dart';
-import 'package:media_library/media_library.dart';
-import 'package:visual_assets/visual_assets.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'package:known_extents_list_view_builder/known_extents_list_view_builder.dart';
+// ignore: depend_on_referenced_packages
+import 'package:syncfusion_flutter_core/theme.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 
+import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
-import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/utils/theme.dart';
-import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/extensions/build_context.dart';
+import 'package:harmonoid/extensions/global_key.dart';
+import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/mappers/track.dart';
+import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
+import 'package:harmonoid/state/update_notifier.dart';
+import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
-import 'package:harmonoid/utils/custom_popup_menu.dart';
 import 'package:harmonoid/utils/keyboard_shortcuts.dart';
-import 'package:harmonoid/state/collection_refresh.dart';
-import 'package:harmonoid/state/mobile_now_playing_controller.dart';
-import 'package:harmonoid/interface/file_info_screen.dart';
-import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:harmonoid/interface/settings/about.dart';
-import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/web/web.dart';
+import 'package:harmonoid/utils/rendering.dart';
 
-export 'package:harmonoid/utils/custom_popup_menu.dart';
+class DesktopMediaLibraryHeader extends StatefulWidget {
+  const DesktopMediaLibraryHeader({super.key});
 
-import 'package:harmonoid/main.dart';
+  @override
+  DesktopMediaLibraryHeaderState createState() => DesktopMediaLibraryHeaderState();
+}
 
-class CustomListView extends StatelessWidget {
-  final List<Widget> children;
-  final ScrollController? controller;
-  final ScrollPhysics? physics;
-  final double? cacheExtent;
-  final Axis? scrollDirection;
-  final bool? shrinkWrap;
-  final EdgeInsets? padding;
-  final double? itemExtent;
-  final ScrollViewKeyboardDismissBehavior? keyboardDismissBehavior;
-
-  CustomListView({
-    required this.children,
-    this.controller,
-    this.physics,
-    this.cacheExtent,
-    this.scrollDirection,
-    this.shrinkWrap,
-    this.padding,
-    this.itemExtent,
-    this.keyboardDismissBehavior,
-  });
+class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
+  bool _hover0 = false;
+  bool _hover1 = false;
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      cacheExtent: cacheExtent,
-      physics: physics,
-      keyboardDismissBehavior:
-          keyboardDismissBehavior ?? ScrollViewKeyboardDismissBehavior.onDrag,
-      padding: padding ?? EdgeInsets.zero,
-      controller: controller,
-      scrollDirection: scrollDirection ?? Axis.vertical,
-      shrinkWrap: shrinkWrap ?? false,
-      children: children,
-      itemExtent: itemExtent,
+    final path = context.location.split('/').last;
+
+    if (![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath].contains(path)) {
+      return const SizedBox.shrink();
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const SizedBox(width: 16.0),
+        GestureDetector(
+          onTap: () {
+            MediaPlayer.instance.open(MediaLibrary.instance.tracks.map((e) => e.toPlayable()).toList());
+          },
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            onEnter: (_) => setState(() {
+              _hover0 = true;
+            }),
+            onExit: (_) => setState(() {
+              _hover0 = false;
+            }),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.play_arrow,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  const SizedBox(
+                    width: 4.0,
+                  ),
+                  Text(
+                    Localization.instance.PLAY_ALL,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          decoration: _hover0 ? TextDecoration.underline : TextDecoration.none,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 4.0),
+        GestureDetector(
+          onTap: () {
+            MediaPlayer.instance.open([...MediaLibrary.instance.tracks.map((e) => e.toPlayable())]..shuffle());
+          },
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            onEnter: (_) => setState(() {
+              _hover1 = true;
+            }),
+            onExit: (_) => setState(() {
+              _hover1 = false;
+            }),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.shuffle,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  const SizedBox(
+                    width: 4.0,
+                  ),
+                  Text(
+                    Localization.instance.SHUFFLE,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          decoration: _hover1 ? TextDecoration.underline : TextDecoration.none,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        const Spacer(),
+        const DesktopMediaLibrarySortButton(floating: false),
+        SizedBox(width: margin),
+      ],
     );
   }
 }
 
-class CustomListViewBuilder extends StatelessWidget {
-  final int itemCount;
-  final List<double> itemExtents;
-  final Widget Function(BuildContext, int) itemBuilder;
-  final ScrollController? controller;
-  final Axis? scrollDirection;
-  final bool? shrinkWrap;
-  final EdgeInsets? padding;
-  final ScrollPhysics? physics;
+// --------------------------------------------------
 
-  CustomListViewBuilder({
-    required this.itemCount,
-    required this.itemExtents,
-    required this.itemBuilder,
-    this.controller,
-    this.scrollDirection,
-    this.shrinkWrap,
-    this.padding,
-    this.physics,
+class DesktopMediaLibraryFloatingSortButton extends StatefulWidget {
+  final ValueNotifier<bool> floatingNotifier;
+
+  const DesktopMediaLibraryFloatingSortButton({
+    super.key,
+    required this.floatingNotifier,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return KnownExtentsListView.builder(
-      itemExtents: itemExtents,
-      itemCount: itemCount,
-      itemBuilder: itemBuilder,
-      controller: controller,
-      scrollDirection: scrollDirection ?? Axis.vertical,
-      padding: padding,
-      physics: physics,
-    );
-  }
+  State<DesktopMediaLibraryFloatingSortButton> createState() => DesktopMediaLibraryFloatingSortButtonState();
 }
 
-class CustomListViewSeparated extends StatelessWidget {
-  final int itemCount;
-  final double separatorExtent;
-  final Widget Function(BuildContext, int) separatorBuilder;
-  final List<double> itemExtents;
-  final Widget Function(BuildContext, int) itemBuilder;
-  final ScrollController? controller;
-  final Axis? scrollDirection;
-  final bool? shrinkWrap;
-  final EdgeInsets? padding;
-  final ScrollPhysics? physics;
-
-  CustomListViewSeparated({
-    required this.itemCount,
-    required this.separatorExtent,
-    required this.separatorBuilder,
-    required this.itemExtents,
-    required this.itemBuilder,
-    this.controller,
-    this.scrollDirection,
-    this.shrinkWrap,
-    this.padding,
-    this.physics,
-  });
-
+class DesktopMediaLibraryFloatingSortButtonState extends State<DesktopMediaLibraryFloatingSortButton> {
   @override
   Widget build(BuildContext context) {
-    return KnownExtentsListView.builder(
-      itemExtents: List.generate(
-        2 * itemCount - 1,
-        (i) => i % 2 == 0 ? itemExtents[i ~/ 2] : separatorExtent,
+    final path = context.location.split('/').last;
+
+    if (![kAlbumsPath, /* kTracksPath, */ kArtistsPath, kGenresPath].contains(path)) {
+      return const SizedBox.shrink();
+    }
+
+    return ValueListenableBuilder<bool>(
+      valueListenable: widget.floatingNotifier,
+      child: const DesktopMediaLibrarySortButton(floating: true),
+      builder: (context, floating, child) => AnimatedPositioned(
+        curve: Curves.easeInOut,
+        duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
+        top: margin + captionHeight + kDesktopAppBarHeight + (floating ? 0.0 : -72.0),
+        right: margin,
+        child: Card(
+          elevation: 4.0,
+          margin: EdgeInsets.zero,
+          color: Theme.of(context).appBarTheme.backgroundColor,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: child,
+          ),
+        ),
       ),
-      itemCount: 2 * itemCount - 1,
-      itemBuilder: (context, i) => i % 2 == 0
-          ? itemBuilder(context, i ~/ 2)
-          : separatorBuilder(context, i ~/ 2),
-      controller: controller,
-      scrollDirection: scrollDirection ?? Axis.vertical,
-      padding: padding,
-      physics: physics,
     );
   }
 }
 
-class CustomFutureBuilder<T> extends StatefulWidget {
-  final Future<T>? future;
-  final Widget Function(BuildContext) loadingBuilder;
-  final Widget Function(BuildContext, T?) builder;
-  CustomFutureBuilder({
-    Key? key,
-    required this.future,
-    required this.loadingBuilder,
-    required this.builder,
-  }) : super(key: key);
+// --------------------------------------------------
+
+class DesktopMediaLibrarySortButton extends StatefulWidget {
+  final bool floating;
+
+  const DesktopMediaLibrarySortButton({super.key, required this.floating});
 
   @override
-  State<CustomFutureBuilder<T>> createState() => _CustomFutureBuilderState();
+  State<DesktopMediaLibrarySortButton> createState() => DesktopMediaLibrarySortButtonState();
 }
 
-class _CustomFutureBuilderState<T> extends State<CustomFutureBuilder<T>> {
-  T? data;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      widget.future?.then((value) {
-        setState(() {
-          data = value;
-        });
-      });
-    });
-  }
+class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortButton> {
+  bool _hover0 = false;
+  bool _hover1 = false;
+  final GlobalKey _key0 = GlobalKey();
+  final GlobalKey _key1 = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    return data == null
-        ? widget.loadingBuilder(context)
-        : widget.builder(context, data);
+    final path = context.location.split('/').last;
+    return Consumer<MediaLibrary>(
+      builder: (context, mediaLibrary, _) => Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(width: 8.0),
+          GestureDetector(
+            key: _key0,
+            onTap: () async {
+              final value = await showMaterialMenu(
+                elevation: 4.0,
+                context: context,
+                constraints: const BoxConstraints(maxWidth: double.infinity),
+                position: RelativeRect.fromLTRB(
+                  _key0.globalPaintBounds!.left - 8.0,
+                  widget.floating ? (_key0.globalPaintBounds!.bottom + margin) : (_key1.globalPaintBounds!.bottom + margin - captionHeight - kDesktopAppBarHeight),
+                  MediaQuery.of(context).size.width,
+                  MediaQuery.of(context).size.height,
+                ),
+                items: {
+                  kAlbumsPath: AlbumSortType.values
+                      .map(
+                        (e) => CheckedPopupMenuItem(
+                          value: e,
+                          checked: e == mediaLibrary.albumSortType,
+                          child: Text(
+                            {
+                              AlbumSortType.album: Localization.instance.A_TO_Z,
+                              AlbumSortType.timestamp: Localization.instance.DATE_ADDED,
+                              AlbumSortType.year: Localization.instance.YEAR,
+                              AlbumSortType.albumArtist: Localization.instance.ALBUM_ARTIST,
+                            }[e]!,
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  kTracksPath: TrackSortType.values
+                      .map(
+                        (e) => CheckedPopupMenuItem(
+                          value: e,
+                          checked: e == mediaLibrary.trackSortType,
+                          child: Text(
+                            {
+                              TrackSortType.title: Localization.instance.A_TO_Z,
+                              TrackSortType.timestamp: Localization.instance.DATE_ADDED,
+                              TrackSortType.year: Localization.instance.YEAR,
+                            }[e]!,
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  kArtistsPath: ArtistSortType.values
+                      .map(
+                        (e) => CheckedPopupMenuItem(
+                          value: e,
+                          checked: e == mediaLibrary.artistSortType,
+                          child: Text(
+                            {
+                              ArtistSortType.artist: Localization.instance.A_TO_Z,
+                              ArtistSortType.timestamp: Localization.instance.DATE_ADDED,
+                            }[e]!,
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  kGenresPath: GenreSortType.values
+                      .map(
+                        (e) => CheckedPopupMenuItem(
+                          value: e,
+                          checked: e == mediaLibrary.genreSortType,
+                          child: Text(
+                            {
+                              GenreSortType.genre: Localization.instance.A_TO_Z,
+                              GenreSortType.timestamp: Localization.instance.DATE_ADDED,
+                            }[e]!,
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                          ),
+                        ),
+                      )
+                      .toList(),
+                }[path]!,
+              );
+              if (value is AlbumSortType) {
+                await mediaLibrary.populate(albumSortType: value);
+                await Configuration.instance.set(mediaLibraryAlbumSortType: value);
+              } else if (value is TrackSortType) {
+                await mediaLibrary.populate(trackSortType: value);
+                await Configuration.instance.set(mediaLibraryTrackSortType: value);
+              } else if (value is ArtistSortType) {
+                await mediaLibrary.populate(artistSortType: value);
+                await Configuration.instance.set(mediaLibraryArtistSortType: value);
+              } else if (value is GenreSortType) {
+                await mediaLibrary.populate(genreSortType: value);
+                await Configuration.instance.set(mediaLibraryGenreSortType: value);
+              }
+            },
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              onEnter: (e) => setState(() => _hover0 = true),
+              onExit: (e) => setState(() => _hover0 = false),
+              child: Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                height: 28.0,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(width: 4.0),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: '${Localization.instance.SORT_BY}: ',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                          TextSpan(
+                            text: {
+                              kAlbumsPath: {
+                                AlbumSortType.album: Localization.instance.A_TO_Z,
+                                AlbumSortType.timestamp: Localization.instance.DATE_ADDED,
+                                AlbumSortType.year: Localization.instance.YEAR,
+                                AlbumSortType.albumArtist: Localization.instance.ALBUM_ARTIST,
+                              }[mediaLibrary.albumSortType]!,
+                              kTracksPath: {
+                                TrackSortType.title: Localization.instance.A_TO_Z,
+                                TrackSortType.timestamp: Localization.instance.DATE_ADDED,
+                                TrackSortType.year: Localization.instance.YEAR,
+                              }[mediaLibrary.trackSortType]!,
+                              kArtistsPath: {
+                                ArtistSortType.artist: Localization.instance.A_TO_Z,
+                                ArtistSortType.timestamp: Localization.instance.DATE_ADDED,
+                              }[mediaLibrary.artistSortType]!,
+                              kGenresPath: {
+                                GenreSortType.genre: Localization.instance.A_TO_Z,
+                                GenreSortType.timestamp: Localization.instance.DATE_ADDED,
+                              }[mediaLibrary.genreSortType]!,
+                            }[path]!,
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  decoration: _hover0 ? TextDecoration.underline : null,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 4.0),
+                    Icon(
+                      Icons.expand_more,
+                      color: Theme.of(context).colorScheme.primary,
+                      size: 18.0,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 4.0),
+          GestureDetector(
+            key: _key1,
+            onTap: () async {
+              final value = await showMaterialMenu(
+                elevation: 4.0,
+                context: context,
+                constraints: const BoxConstraints(maxWidth: double.infinity),
+                position: RelativeRect.fromLTRB(
+                  margin,
+                  widget.floating ? (_key1.globalPaintBounds!.bottom + margin) : (_key1.globalPaintBounds!.bottom + margin - captionHeight - kDesktopAppBarHeight),
+                  margin - 1.0,
+                  MediaQuery.of(context).size.height,
+                ),
+                items: <PopupMenuEntry<bool>>[
+                  CheckedPopupMenuItem<bool>(
+                    checked: {
+                      kAlbumsPath: mediaLibrary.albumSortAscending,
+                      kTracksPath: mediaLibrary.trackSortAscending,
+                      kArtistsPath: mediaLibrary.artistSortAscending,
+                      kGenresPath: mediaLibrary.genreSortAscending,
+                    }[path]!,
+                    value: true,
+                    child: Text(
+                      Localization.instance.ASCENDING,
+                      style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                    ),
+                  ),
+                  CheckedPopupMenuItem<bool>(
+                    checked: {
+                      kAlbumsPath: !mediaLibrary.albumSortAscending,
+                      kTracksPath: !mediaLibrary.trackSortAscending,
+                      kArtistsPath: !mediaLibrary.artistSortAscending,
+                      kGenresPath: !mediaLibrary.genreSortAscending,
+                    }[path]!,
+                    value: false,
+                    child: Text(
+                      Localization.instance.DESCENDING,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ),
+                ],
+              );
+              if (value != null) {
+                switch (path) {
+                  case kAlbumsPath:
+                    await mediaLibrary.populate(albumSortAscending: value);
+                    await Configuration.instance.set(mediaLibraryAlbumSortAscending: value);
+                    break;
+                  case kTracksPath:
+                    await mediaLibrary.populate(trackSortAscending: value);
+                    await Configuration.instance.set(mediaLibraryTrackSortAscending: value);
+                    break;
+                  case kArtistsPath:
+                    await mediaLibrary.populate(artistSortAscending: value);
+                    await Configuration.instance.set(mediaLibraryArtistSortAscending: value);
+                    break;
+                  case kGenresPath:
+                    await mediaLibrary.populate(genreSortAscending: value);
+                    await Configuration.instance.set(mediaLibraryGenreSortAscending: value);
+                    break;
+                }
+              }
+            },
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              onEnter: (e) => setState(() => _hover1 = true),
+              onExit: (e) => setState(() => _hover1 = false),
+              child: Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                height: 28.0,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(width: 4.0),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: '${Localization.instance.ORDER}: ',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                          TextSpan(
+                            text: {
+                              true: Localization.instance.ASCENDING,
+                              false: Localization.instance.DESCENDING,
+                            }[{
+                              kAlbumsPath: mediaLibrary.albumSortAscending,
+                              kTracksPath: mediaLibrary.trackSortAscending,
+                              kArtistsPath: mediaLibrary.artistSortAscending,
+                              kGenresPath: mediaLibrary.genreSortAscending,
+                            }[path]!]!,
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  decoration: _hover1 ? TextDecoration.underline : null,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 4.0),
+                    Icon(
+                      Icons.expand_more,
+                      color: Theme.of(context).colorScheme.primary,
+                      size: 18.0,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8.0),
+        ],
+      ),
+    );
   }
 }
 
-/// Wraps vanilla [TextField] inside [KeyboardShortcutsInterceptor] to prevent keyboard shortcuts from being triggered while the text field is focused.
-class CustomTextField extends StatelessWidget {
+// --------------------------------------------------
+
+class DesktopMediaLibraryRefreshIndicator extends StatelessWidget {
+  const DesktopMediaLibraryRefreshIndicator({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<MediaLibrary>(
+      builder: (context, mediaLibrary, _) {
+        if (!mediaLibrary.refreshing) {
+          return const SizedBox.shrink();
+        }
+        return Card(
+          elevation: kDefaultCardElevation,
+          clipBehavior: Clip.antiAlias,
+          margin: EdgeInsets.zero,
+          child: Container(
+            width: 328.0,
+            height: 56.0,
+            color: Theme.of(context).cardTheme.color,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                LinearProgressIndicator(
+                  value: mediaLibrary.current == null ? null : (mediaLibrary.current ?? 0) / (mediaLibrary.total == 0 ? 1 : mediaLibrary.total),
+                ),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(width: 16.0),
+                        const Icon(Icons.library_music),
+                        const SizedBox(width: 16.0),
+                        Text(
+                          mediaLibrary.current == null
+                              ? Localization.instance.DISCOVERING_FILES
+                              : Localization.instance.ADDED_M_OF_N_FILES
+                                  .replaceAll('"M"', (mediaLibrary.current ?? 0).toString())
+                                  .replaceAll('"N"', (mediaLibrary.total == 0 ? 1 : mediaLibrary.total).toString()),
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                        const SizedBox(width: 16.0),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+// --------------------------------------------------
+
+class MobileMediaLibraryHeader extends StatelessWidget {
+  const MobileMediaLibraryHeader({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final path = context.location.split('/').last;
+    return Container(
+      height: kMobileHeaderHeight,
+      padding: EdgeInsets.symmetric(horizontal: margin),
+      alignment: Alignment.centerRight,
+      child: Row(
+        children: [
+          const SizedBox(width: 8.0),
+          if (path == kAlbumsPath)
+            Text(Localization.instance.N_ALBUMS.replaceAll('"N"', MediaLibrary.instance.albums.length.toString()))
+          else if (path == kTracksPath)
+            Text(Localization.instance.N_TRACKS.replaceAll('"N"', MediaLibrary.instance.tracks.length.toString()))
+          else if (path == kArtistsPath)
+            Text(Localization.instance.N_ARTISTS.replaceAll('"N"', MediaLibrary.instance.artists.length.toString()))
+          else if (path == kGenresPath)
+            Text(Localization.instance.N_GENRES.replaceAll('"N"', MediaLibrary.instance.genres.length.toString())),
+          const Spacer(),
+          MobileMediaLibrarySortButton(path: path),
+        ],
+      ),
+    );
+  }
+}
+
+// --------------------------------------------------
+
+class MobileMediaLibrarySortButton extends StatefulWidget {
+  final String path;
+
+  const MobileMediaLibrarySortButton({super.key, required this.path});
+
+  @override
+  State<MobileMediaLibrarySortButton> createState() => MobileMediaLibrarySortButtonState();
+}
+
+class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButton> {
+  Future<void> handle(dynamic value) async {
+    if (value is AlbumSortType) {
+      MediaLibrary.instance.populate(albumSortType: value);
+      Configuration.instance.set(mediaLibraryAlbumSortType: value);
+    } else if (value is TrackSortType) {
+      MediaLibrary.instance.populate(trackSortType: value);
+      Configuration.instance.set(mediaLibraryTrackSortType: value);
+    } else if (value is ArtistSortType) {
+      MediaLibrary.instance.populate(artistSortType: value);
+      Configuration.instance.set(mediaLibraryArtistSortType: value);
+    } else if (value is GenreSortType) {
+      MediaLibrary.instance.populate(genreSortType: value);
+      Configuration.instance.set(mediaLibraryGenreSortType: value);
+    }
+    if (value == true) {
+      switch (widget.path) {
+        case kAlbumsPath:
+          await MediaLibrary.instance.populate(albumSortAscending: true);
+          await Configuration.instance.set(mediaLibraryAlbumSortAscending: true);
+          break;
+        case kTracksPath:
+          await MediaLibrary.instance.populate(trackSortAscending: true);
+          await Configuration.instance.set(mediaLibraryTrackSortAscending: true);
+          break;
+        case kArtistsPath:
+          await MediaLibrary.instance.populate(artistSortAscending: true);
+          await Configuration.instance.set(mediaLibraryArtistSortAscending: true);
+          break;
+        case kGenresPath:
+          await MediaLibrary.instance.populate(genreSortAscending: true);
+          await Configuration.instance.set(mediaLibraryGenreSortAscending: true);
+          break;
+      }
+    } else if (value == false) {
+      switch (widget.path) {
+        case kAlbumsPath:
+          await MediaLibrary.instance.populate(albumSortAscending: false);
+          await Configuration.instance.set(mediaLibraryAlbumSortAscending: false);
+          break;
+        case kTracksPath:
+          await MediaLibrary.instance.populate(trackSortAscending: false);
+          await Configuration.instance.set(mediaLibraryTrackSortAscending: false);
+          break;
+        case kArtistsPath:
+          await MediaLibrary.instance.populate(artistSortAscending: false);
+          await Configuration.instance.set(mediaLibraryArtistSortAscending: false);
+          break;
+        case kGenresPath:
+          await MediaLibrary.instance.populate(genreSortAscending: false);
+          await Configuration.instance.set(mediaLibraryGenreSortAscending: false);
+          break;
+      }
+    }
+    setStateCallback?.call(() {});
+  }
+
+  void Function(void Function())? setStateCallback;
+
+  List<MobileMediaLibrarySortButtonPopupMenuItem> get sort => {
+        kAlbumsPath: [AlbumSortType.album, AlbumSortType.timestamp, AlbumSortType.year]
+            .map(
+              (e) => MobileMediaLibrarySortButtonPopupMenuItem(
+                onTap: () => handle(e),
+                checked: MediaLibrary.instance.albumSortType == e,
+                value: e,
+                padding: EdgeInsets.zero,
+                child: Text(
+                  {
+                    AlbumSortType.album: Localization.instance.A_TO_Z,
+                    AlbumSortType.timestamp: Localization.instance.DATE_ADDED,
+                    AlbumSortType.year: Localization.instance.YEAR,
+                    AlbumSortType.albumArtist: Localization.instance.ALBUM_ARTIST,
+                  }[e]!,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                ),
+              ),
+            )
+            .toList(),
+        kTracksPath: TrackSortType.values
+            .map(
+              (e) => MobileMediaLibrarySortButtonPopupMenuItem(
+                onTap: () => handle(e),
+                checked: MediaLibrary.instance.trackSortType == e,
+                value: e,
+                padding: EdgeInsets.zero,
+                child: Text(
+                  {
+                    TrackSortType.title: Localization.instance.A_TO_Z,
+                    TrackSortType.timestamp: Localization.instance.DATE_ADDED,
+                    TrackSortType.year: Localization.instance.YEAR,
+                  }[e]!,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                ),
+              ),
+            )
+            .toList(),
+        kArtistsPath: ArtistSortType.values
+            .map(
+              (e) => MobileMediaLibrarySortButtonPopupMenuItem(
+                onTap: () => handle(e),
+                checked: MediaLibrary.instance.artistSortType == e,
+                value: e,
+                padding: EdgeInsets.zero,
+                child: Text(
+                  {
+                    ArtistSortType.artist: Localization.instance.A_TO_Z,
+                    ArtistSortType.timestamp: Localization.instance.DATE_ADDED,
+                  }[e]!,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                ),
+              ),
+            )
+            .toList(),
+        kGenresPath: GenreSortType.values
+            .map(
+              (e) => MobileMediaLibrarySortButtonPopupMenuItem(
+                onTap: () => handle(e),
+                checked: MediaLibrary.instance.genreSortType == e,
+                value: e,
+                padding: EdgeInsets.zero,
+                child: Text(
+                  {
+                    GenreSortType.genre: Localization.instance.A_TO_Z,
+                    GenreSortType.timestamp: Localization.instance.DATE_ADDED,
+                  }[e]!,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                ),
+              ),
+            )
+            .toList(),
+      }[widget.path]!;
+
+  List<MobileMediaLibrarySortButtonPopupMenuItem> get order => [
+        MobileMediaLibrarySortButtonPopupMenuItem(
+          onTap: () => handle(true),
+          checked: {
+            kAlbumsPath: MediaLibrary.instance.albumSortAscending,
+            kTracksPath: MediaLibrary.instance.trackSortAscending,
+            kArtistsPath: MediaLibrary.instance.artistSortAscending,
+            kGenresPath: MediaLibrary.instance.genreSortAscending,
+          }[widget.path]!,
+          value: true,
+          padding: EdgeInsets.zero,
+          child: Text(
+            Localization.instance.ASCENDING,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+        MobileMediaLibrarySortButtonPopupMenuItem(
+          onTap: () => handle(false),
+          checked: {
+            kAlbumsPath: !MediaLibrary.instance.albumSortAscending,
+            kTracksPath: !MediaLibrary.instance.trackSortAscending,
+            kArtistsPath: !MediaLibrary.instance.artistSortAscending,
+            kGenresPath: !MediaLibrary.instance.genreSortAscending,
+          }[widget.path]!,
+          value: false,
+          padding: EdgeInsets.zero,
+          child: Text(
+            Localization.instance.DESCENDING,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+      ];
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: isMaterial2 ? BorderRadius.circular(4.0) : BorderRadius.circular(20.0),
+      onTap: () async {
+        await showModalBottomSheet(
+          context: context,
+          showDragHandle: isMaterial3OrGreater,
+          useRootNavigator: true,
+          isScrollControlled: true,
+          elevation: kDefaultHeavyElevation,
+          builder: (context) => StatefulBuilder(
+            builder: (context, setState) {
+              setStateCallback = setState;
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ...sort,
+                  const PopupMenuDivider(),
+                  ...order,
+                  SizedBox(height: MediaQuery.of(context).padding.bottom),
+                ],
+              );
+            },
+          ),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Text(
+              String.fromCharCode(order.firstWhere((e) => e.checked).value ? Icons.arrow_upward.codePoint : Icons.arrow_downward.codePoint),
+              style: TextStyle(
+                inherit: false,
+                fontSize: 18.0,
+                fontWeight: FontWeight.w700,
+                fontFamily: Icons.arrow_downward.fontFamily,
+                package: Icons.arrow_downward.fontPackage,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            const SizedBox(width: 10.0),
+            Text(
+              label((sort.firstWhere((e) => e.checked).child as Text).data.toString()),
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
+            ),
+            const SizedBox(width: 4.0),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// --------------------------------------------------
+
+class MobileMediaLibrarySortButtonPopupMenuItem<T> extends StatelessWidget {
+  final T value;
+  final bool checked;
+  final VoidCallback onTap;
+  final Widget child;
+  final EdgeInsets? padding;
+
+  const MobileMediaLibrarySortButtonPopupMenuItem({
+    super.key,
+    required this.value,
+    this.checked = false,
+    required this.onTap,
+    required this.child,
+    required this.padding,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: onTap,
+      leading: AnimatedOpacity(
+        opacity: checked ? 1.0 : 0.0,
+        curve: Curves.easeInOut,
+        duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
+        child: const Icon(Icons.done),
+      ),
+      title: child,
+    );
+  }
+}
+
+// --------------------------------------------------
+
+class MobileNowPlayingBarScrollNotifier extends StatelessWidget {
+  final Widget child;
+
+  const MobileNowPlayingBarScrollNotifier({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    if (isDesktop) {
+      return child;
+    } else {
+      return NotificationListener<UserScrollNotification>(
+        onNotification: (notification) {
+          if (notification.metrics.axis == Axis.vertical && (notification.metrics.axisDirection == AxisDirection.up || notification.metrics.axisDirection == AxisDirection.down)) {
+            if (notification.direction == ScrollDirection.forward) {
+              NowPlayingMobileNotifier.instance.showNowPlayingBar();
+            } else if (notification.direction == ScrollDirection.reverse) {
+              NowPlayingMobileNotifier.instance.hideNowPlayingBar();
+            }
+          }
+          return true;
+        },
+        child: child,
+      );
+    }
+  }
+}
+
+// --------------------------------------------------
+
+class ScaleOnHover extends StatefulWidget {
+  final Widget child;
+
+  const ScaleOnHover({super.key, required this.child});
+
+  @override
+  ScaleOnHoverState createState() => ScaleOnHoverState();
+}
+
+class ScaleOnHoverState extends State<ScaleOnHover> {
+  double _scale = 1.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (e) => setState(() => _scale = 1.05),
+      onExit: (e) => setState(() => _scale = 1.00),
+      child: AnimatedScale(
+        scale: _scale,
+        duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
+        child: widget.child,
+      ),
+    );
+  }
+}
+
+// --------------------------------------------------
+
+class ContextMenuListener extends StatefulWidget {
+  final Widget child;
+  final void Function(RelativeRect position) onSecondaryPress;
+
+  const ContextMenuListener({super.key, required this.child, required this.onSecondaryPress});
+
+  @override
+  State<ContextMenuListener> createState() => ContextMenuListenerState();
+}
+
+class ContextMenuListenerState extends State<ContextMenuListener> {
+  bool _reactToSecondaryPress = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Listener(
+      onPointerDown: (e) {
+        _reactToSecondaryPress = e.kind == PointerDeviceKind.mouse && e.buttons == kSecondaryMouseButton;
+      },
+      onPointerUp: (e) async {
+        if (!_reactToSecondaryPress) {
+          return;
+        }
+        final path = context.location.split('/').last;
+        widget.onSecondaryPress(
+          RelativeRect.fromLTRB(
+            e.position.dx,
+            e.position.dy - (![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath, kSearchPath].contains(path) ? 0.0 : captionHeight + kDesktopAppBarHeight),
+            MediaQuery.of(context).size.width,
+            MediaQuery.of(context).size.height,
+          ),
+        );
+      },
+      child: widget.child,
+    );
+  }
+}
+
+// --------------------------------------------------
+
+class SubHeader extends StatelessWidget {
+  final String text;
+  final EdgeInsets? padding;
+  final double height;
+
+  const SubHeader(
+    this.text, {
+    super.key,
+    this.padding,
+    this.height = 56.0,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final horizontal = isDesktop ? 24.0 : 16.0;
+    final fontSize = isDesktop ? 16.0 : null;
+    final TextStyle? style;
+    if (isMaterial2 && isMobile) {
+      style = Theme.of(context).textTheme.titleSmall?.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+            fontSize: fontSize,
+          );
+    } else if (isMaterial2 && isDesktop) {
+      style = Theme.of(context).textTheme.titleSmall?.copyWith(
+            fontSize: fontSize,
+          );
+    } else {
+      style = Theme.of(context).textTheme.titleSmall?.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+            fontSize: fontSize,
+          );
+    }
+    return Container(
+      alignment: Alignment.centerLeft,
+      height: height,
+      padding: padding ?? EdgeInsets.symmetric(horizontal: horizontal),
+      child: Text(
+        text,
+        style: style,
+      ),
+    );
+  }
+}
+
+// --------------------------------------------------
+
+class MediaLibraryRefreshButton extends StatelessWidget {
+  const MediaLibraryRefreshButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<MediaLibrary>(
+      builder: (context, mediaLibrary, _) => mediaLibrary.refreshing
+          ? const SizedBox.shrink()
+          : FloatingActionButton(
+              heroTag: 'MediaLibraryRefreshButton',
+              onPressed: mediaLibrary.refresh,
+              child: const Icon(Icons.refresh),
+            ),
+    );
+  }
+}
+
+// --------------------------------------------------
+
+class MediaLibraryCreatePlaylistButton extends StatelessWidget {
+  const MediaLibraryCreatePlaylistButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<MediaLibrary>(
+      builder: (context, mediaLibrary, _) => FloatingActionButton(
+        heroTag: 'MediaLibraryCreatePlaylistButton',
+        onPressed: () async {
+          final result = await showInput(
+            context,
+            Localization.instance.CREATE_NEW_PLAYLIST,
+            Localization.instance.PLAYLIST_CREATE_DIALOG_SUBTITLE,
+            Localization.instance.CREATE,
+            (value) {
+              if (value?.isEmpty ?? true) {
+                return '';
+              }
+              return null;
+            },
+            keyboardType: TextInputType.name,
+            textCapitalization: TextCapitalization.words,
+          );
+          if (result.isNotEmpty) {
+            await mediaLibrary.playlists.create(result);
+          }
+        },
+        child: const Icon(Icons.edit),
+      ),
+    );
+  }
+}
+
+// --------------------------------------------------
+
+class HyperLink extends StatefulWidget {
+  final TextSpan text;
+  final TextStyle? style;
+
+  const HyperLink({
+    super.key,
+    required this.text,
+    required this.style,
+  });
+
+  @override
+  State<HyperLink> createState() => HyperLinkState();
+}
+
+class HyperLinkState extends State<HyperLink> {
+  String _hover = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      text: TextSpan(
+        style: widget.style,
+        children: widget.text.children!
+            .map(
+              (e) => TextSpan(
+                text: (e as TextSpan).text,
+                style: e.recognizer != null
+                    ? widget.style?.copyWith(
+                        decoration: _hover == e.text! ? TextDecoration.underline : null,
+                      )
+                    : null,
+                recognizer: e.recognizer,
+                onEnter: (_) {
+                  if (mounted) {
+                    setState(() {
+                      _hover = e.text!;
+                    });
+                  }
+                },
+                onExit: (_) {
+                  if (mounted) {
+                    setState(() {
+                      _hover = '';
+                    });
+                  }
+                },
+              ),
+            )
+            .toList(),
+      ),
+    );
+  }
+}
+
+// --------------------------------------------------
+
+class MobileNavigationBar extends StatelessWidget {
+  const MobileNavigationBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final path = context.location.split('/').last;
+    final paths = [
+      kAlbumsPath,
+      kTracksPath,
+      kArtistsPath,
+      kGenresPath,
+      kPlaylistsPath,
+    ];
+    final index = paths.indexOf(path);
+    final displayLabels = {
+          Localization.instance.ALBUMS,
+          Localization.instance.TRACKS,
+          Localization.instance.ARTISTS,
+          Localization.instance.GENRES,
+          Localization.instance.PLAYLISTS,
+        }.map((e) => e.length).max <=
+        10;
+    return isMaterial3
+        ? NavigationBar(
+            selectedIndex: index,
+            onDestinationSelected: (i) {
+              if (index == i) return;
+              context.push('/$kMediaLibraryPath/${paths[i]}');
+              Configuration.instance.set(mediaLibraryPath: paths[i]);
+              NowPlayingMobileNotifier.instance.showNowPlayingBar();
+            },
+            labelBehavior: displayLabels ? NavigationDestinationLabelBehavior.alwaysShow : NavigationDestinationLabelBehavior.alwaysHide,
+            destinations: [
+              NavigationDestination(
+                icon: const Icon(Icons.album),
+                label: Localization.instance.ALBUMS,
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.music_note),
+                label: Localization.instance.TRACKS,
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.person),
+                label: Localization.instance.ARTISTS,
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.piano),
+                label: Localization.instance.GENRES,
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.playlist_play),
+                label: Localization.instance.PLAYLISTS,
+              ),
+            ],
+          )
+        : Container(
+            decoration: const BoxDecoration(
+              boxShadow: [
+                BoxShadow(color: Colors.black45, blurRadius: 8.0),
+              ],
+            ),
+            child: BottomNavigationBar(
+              currentIndex: index,
+              type: BottomNavigationBarType.shifting,
+              onTap: (i) {
+                if (index == i) return;
+                context.push('/$kMediaLibraryPath/${paths[i]}');
+                Configuration.instance.set(mediaLibraryPath: paths[i]);
+                NowPlayingMobileNotifier.instance.showNowPlayingBar();
+              },
+              items: [
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.album),
+                  label: displayLabels ? Localization.instance.ALBUMS : null,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.music_note),
+                  label: displayLabels ? Localization.instance.TRACKS : null,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.person),
+                  label: displayLabels ? Localization.instance.ARTISTS : null,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.piano),
+                  label: displayLabels ? Localization.instance.GENRES : null,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.playlist_play),
+                  label: displayLabels ? Localization.instance.PLAYLISTS : null,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                ),
+              ],
+            ),
+          );
+  }
+}
+
+// --------------------------------------------------
+
+class ShowAllButton extends StatelessWidget {
+  final void Function()? onPressed;
+
+  const ShowAllButton({super.key, this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onPressed,
+      borderRadius: BorderRadius.circular(4.0),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 8.0,
+          vertical: 4.0,
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.view_list,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const SizedBox(
+              width: 4.0,
+            ),
+            Text(
+              Localization.instance.SEE_ALL,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// --------------------------------------------------
+
+class ScrollableSlider extends StatelessWidget {
+  final double min;
+  final double max;
+  final double? value;
+  final List<double>? values;
+  final double? interval;
+  final double? stepSize;
+  final bool showLabels;
+  final void Function(dynamic)? onChanged;
+  final VoidCallback? onScrolledUp;
+  final VoidCallback? onScrolledDown;
+  final LabelFormatterCallback? labelFormatterCallback;
+
+  const ScrollableSlider({
+    super.key,
+    this.min = 0.0,
+    double max = 1.0,
+    this.value,
+    this.values,
+    this.interval,
+    this.stepSize,
+    this.showLabels = false,
+    required this.onChanged,
+    this.onScrolledUp,
+    this.onScrolledDown,
+    this.labelFormatterCallback,
+  }) : max = min >= max ? 4294967296.0 /* 2^32 */ : max;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: onChanged == null ? SystemMouseCursors.none : SystemMouseCursors.click,
+      child: Listener(
+        onPointerSignal: (event) {
+          if (event is PointerScrollEvent) {
+            if (event.scrollDelta.dy < 0) {
+              onScrolledUp?.call();
+            }
+            if (event.scrollDelta.dy > 0) {
+              onScrolledDown?.call();
+            }
+          }
+        },
+        child: () {
+          if (value != null) {
+            return SfSliderTheme(
+              data: SfSliderThemeData(
+                activeTrackHeight: 4.0,
+                inactiveTrackHeight: 2.0,
+                thumbRadius: 6.0,
+                overlayRadius: 12.0,
+                // Map colors from Slider (package:flutter) to SfSlider (package:syncfusion_flutter_sliders).
+                thumbColor: SliderTheme.of(context).thumbColor,
+                overlayColor: SliderTheme.of(context).overlayColor,
+                activeTrackColor: SliderTheme.of(context).activeTrackColor,
+                inactiveTrackColor: SliderTheme.of(context).inactiveTrackColor,
+                disabledActiveTrackColor: SliderTheme.of(context).disabledActiveTrackColor,
+              ),
+              child: SfSlider(
+                min: min,
+                max: max,
+                value: value,
+                interval: interval,
+                stepSize: stepSize,
+                showLabels: showLabels,
+                labelFormatterCallback: labelFormatterCallback,
+                edgeLabelPlacement: EdgeLabelPlacement.inside,
+                onChanged: onChanged == null ? null : (result) => onChanged?.call(result),
+              ),
+            );
+          }
+          if (values != null) {
+            return SfRangeSliderTheme(
+              data: SfRangeSliderThemeData(
+                activeTrackHeight: 4.0,
+                inactiveTrackHeight: 2.0,
+                thumbRadius: 6.0,
+                overlayRadius: 12.0,
+                // Map colors from Slider (package:flutter) to SfSlider (package:syncfusion_flutter_sliders).
+                thumbColor: SliderTheme.of(context).thumbColor,
+                overlayColor: SliderTheme.of(context).overlayColor,
+                activeTrackColor: SliderTheme.of(context).activeTrackColor,
+                inactiveTrackColor: SliderTheme.of(context).inactiveTrackColor,
+                disabledActiveTrackColor: SliderTheme.of(context).disabledActiveTrackColor,
+              ),
+              child: SfRangeSlider(
+                min: min,
+                max: max,
+                values: SfRangeValues(values![0], values![1]),
+                interval: interval,
+                stepSize: stepSize,
+                showLabels: showLabels,
+                labelFormatterCallback: labelFormatterCallback,
+                edgeLabelPlacement: EdgeLabelPlacement.inside,
+                onChanged: onChanged == null ? null : (result) => onChanged?.call([result.start, result.end]),
+              ),
+            );
+          }
+          return const SizedBox.shrink();
+        }(),
+      ),
+    );
+  }
+}
+
+// --------------------------------------------------
+
+class DefaultTextField extends StatelessWidget {
   final TextEditingController? controller;
   final FocusNode? focusNode;
   final double? cursorWidth;
@@ -222,8 +1371,9 @@ class CustomTextField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final ScrollPhysics? scrollPhysics;
   final TextAlign? textAlign;
-  const CustomTextField({
-    Key? key,
+
+  const DefaultTextField({
+    super.key,
     this.controller,
     this.focusNode,
     this.cursorWidth,
@@ -231,7 +1381,7 @@ class CustomTextField extends StatelessWidget {
     this.onSubmitted,
     this.onEditingComplete,
     this.decoration,
-    this.textAlignVertical,
+    this.textAlignVertical = TextAlignVertical.center,
     this.autofocus,
     this.autocorrect,
     this.readOnly,
@@ -242,7 +1392,7 @@ class CustomTextField extends StatelessWidget {
     this.inputFormatters,
     this.scrollPhysics,
     this.textAlign,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -271,8 +1421,9 @@ class CustomTextField extends StatelessWidget {
   }
 }
 
-/// Wraps vanilla [TextFormField] inside [KeyboardShortcutsInterceptor] to prevent keyboard shortcuts from being triggered while the text field is focused.
-class CustomTextFormField extends StatelessWidget {
+// --------------------------------------------------
+
+class DefaultTextFormField extends StatelessWidget {
   final String? initialValue;
   final TextEditingController? controller;
   final FocusNode? focusNode;
@@ -293,8 +1444,9 @@ class CustomTextFormField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final ScrollPhysics? scrollPhysics;
   final TextAlign? textAlign;
-  const CustomTextFormField({
-    Key? key,
+
+  const DefaultTextFormField({
+    super.key,
     this.initialValue,
     this.controller,
     this.focusNode,
@@ -304,7 +1456,7 @@ class CustomTextFormField extends StatelessWidget {
     this.onFieldSubmitted,
     this.onEditingComplete,
     this.decoration,
-    this.textAlignVertical,
+    this.textAlignVertical = TextAlignVertical.center,
     this.autofocus,
     this.autocorrect,
     this.readOnly,
@@ -315,7 +1467,7 @@ class CustomTextFormField extends StatelessWidget {
     this.inputFormatters,
     this.scrollPhysics,
     this.textAlign,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -346,2373 +1498,131 @@ class CustomTextFormField extends StatelessWidget {
   }
 }
 
-class SortBarFixedHolder extends StatefulWidget {
-  final int index;
-  final Widget child;
-  const SortBarFixedHolder({
-    Key? key,
-    required this.index,
-    required this.child,
-  }) : super(key: key);
+// --------------------------------------------------
 
-  SortBarFixedHolderState createState() => SortBarFixedHolderState();
-}
-
-class SortBarFixedHolderState extends State<SortBarFixedHolder> {
-  bool hover0 = false;
-  bool hover1 = false;
+class UpdateButton extends StatelessWidget {
+  const UpdateButton({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const SizedBox(width: 4.0),
-        GestureDetector(
-          onTap: () {
-            if (widget.index == kAlbumTabIndex) {
-              Playback.instance.open(
-                Collection.instance.albums.expand((e) => e.tracks).toList(),
-              );
-            } else if (widget.index == kTrackTabIndex) {
-              Playback.instance.open(
-                Collection.instance.tracks,
-              );
-            } else if (widget.index == kArtistTabIndex) {
-              Playback.instance.open(
-                Collection.instance.artists.expand((e) => e.tracks).toList(),
-              );
-            } else if (widget.index == kGenreTabIndex) {
-              Playback.instance.open(
-                Collection.instance.genres.expand((e) => e.tracks).toList(),
-              );
-            }
-          },
-          child: MouseRegion(
-            cursor: SystemMouseCursors.click,
-            onEnter: (_) => setState(() {
-              hover0 = true;
-            }),
-            onExit: (_) => setState(() {
-              hover0 = false;
-            }),
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 6.0,
-                vertical: 2.0,
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.play_arrow,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  const SizedBox(
-                    width: 4.0,
-                  ),
-                  Text(
-                    Language.instance.PLAY_ALL,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          decoration: hover0
-                              ? TextDecoration.underline
-                              : TextDecoration.none,
-                        ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 4.0),
-        GestureDetector(
-          onTap: () {
-            Playback.instance.open(
-              [...Collection.instance.tracks]..shuffle(),
-            );
-          },
-          child: MouseRegion(
-            cursor: SystemMouseCursors.click,
-            onEnter: (_) => setState(() {
-              hover1 = true;
-            }),
-            onExit: (_) => setState(() {
-              hover1 = false;
-            }),
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 6.0,
-                vertical: 2.0,
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.shuffle,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  const SizedBox(
-                    width: 4.0,
-                  ),
-                  Text(
-                    Language.instance.SHUFFLE,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          decoration: hover1
-                              ? TextDecoration.underline
-                              : TextDecoration.none,
-                        ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        Spacer(),
-        widget.child,
-      ],
-    );
-  }
-}
-
-class SortBar extends StatefulWidget {
-  final int tab;
-  final bool fixed;
-  final ValueNotifier<bool> hover;
-  SortBar({
-    Key? key,
-    required this.tab,
-    required this.fixed,
-    required this.hover,
-  }) : super(key: key);
-
-  @override
-  State<SortBar> createState() => _SortBarState();
-}
-
-class _SortBarState extends State<SortBar> {
-  bool _hover0 = false;
-  bool _hover1 = false;
-  final GlobalKey _key0 = GlobalKey();
-  final GlobalKey _key1 = GlobalKey();
-
-  @override
-  Widget build(BuildContext context) {
-    final tab = widget.tab;
-    final child = Consumer<Collection>(
-      builder: (context, collection, _) => Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // TODO(@alexmercerind): Genre support.
-          const SizedBox(width: 8.0),
-          GestureDetector(
-            key: _key0,
-            onTap: () async {
-              final value = await showCustomMenu(
-                elevation: 4.0,
-                context: context,
-                constraints: BoxConstraints(
-                  maxWidth: double.infinity,
-                ),
-                position: RelativeRect.fromLTRB(
-                  _key0.globalPaintBounds!.left - (widget.fixed ? 0.0 : 8.0),
-                  _key0.globalPaintBounds!.bottom +
-                      tileMargin(context) / (widget.fixed ? 2.0 : 1.0),
-                  MediaQuery.of(context).size.width,
-                  MediaQuery.of(context).size.height,
-                ),
-                items: <PopupMenuEntry>[
-                  ...{
-                    kAlbumTabIndex: <PopupMenuItem>[
-                      CheckedPopupMenuItem(
-                        checked:
-                            Collection.instance.albumsSort == AlbumsSort.aToZ,
-                        value: AlbumsSort.aToZ,
-                        padding: EdgeInsets.zero,
-                        child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          dense: true,
-                          title: Text(
-                            Language.instance.A_TO_Z,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.bodyLarge
-                                : null,
-                          ),
-                        ),
-                      ),
-                      CheckedPopupMenuItem(
-                        checked: Collection.instance.albumsSort ==
-                            AlbumsSort.dateAdded,
-                        value: AlbumsSort.dateAdded,
-                        padding: EdgeInsets.zero,
-                        child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          dense: true,
-                          title: Text(
-                            Language.instance.DATE_ADDED,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.bodyLarge
-                                : null,
-                          ),
-                        ),
-                      ),
-                      CheckedPopupMenuItem(
-                        checked:
-                            Collection.instance.albumsSort == AlbumsSort.year,
-                        value: AlbumsSort.year,
-                        padding: EdgeInsets.zero,
-                        child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          dense: true,
-                          title: Text(
-                            Language.instance.YEAR,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.bodyLarge
-                                : null,
-                          ),
-                        ),
-                      ),
-                      CheckedPopupMenuItem(
-                        checked:
-                            Collection.instance.albumsSort == AlbumsSort.artist,
-                        value: AlbumsSort.artist,
-                        padding: EdgeInsets.zero,
-                        child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          dense: true,
-                          title: Text(
-                            Language.instance.ALBUM_ARTIST,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.bodyLarge
-                                : null,
-                          ),
-                        ),
-                      ),
-                    ],
-                    kTrackTabIndex: <PopupMenuItem>[
-                      CheckedPopupMenuItem(
-                        checked:
-                            Collection.instance.tracksSort == TracksSort.aToZ,
-                        value: TracksSort.aToZ,
-                        padding: EdgeInsets.zero,
-                        child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          dense: true,
-                          title: Text(
-                            Language.instance.A_TO_Z,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.bodyLarge
-                                : null,
-                          ),
-                        ),
-                      ),
-                      CheckedPopupMenuItem(
-                        checked: Collection.instance.tracksSort ==
-                            TracksSort.dateAdded,
-                        value: TracksSort.dateAdded,
-                        padding: EdgeInsets.zero,
-                        child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          dense: true,
-                          title: Text(
-                            Language.instance.DATE_ADDED,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.bodyLarge
-                                : null,
-                          ),
-                        ),
-                      ),
-                      CheckedPopupMenuItem(
-                        checked:
-                            Collection.instance.tracksSort == TracksSort.year,
-                        value: TracksSort.year,
-                        padding: EdgeInsets.zero,
-                        child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          dense: true,
-                          title: Text(
-                            Language.instance.YEAR,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.bodyLarge
-                                : null,
-                          ),
-                        ),
-                      ),
-                    ],
-                    kArtistTabIndex: <PopupMenuItem>[
-                      CheckedPopupMenuItem(
-                        checked:
-                            Collection.instance.artistsSort == ArtistsSort.aToZ,
-                        value: ArtistsSort.aToZ,
-                        padding: EdgeInsets.zero,
-                        child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          dense: true,
-                          title: Text(
-                            Language.instance.A_TO_Z,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.bodyLarge
-                                : null,
-                          ),
-                        ),
-                      ),
-                      CheckedPopupMenuItem(
-                        checked: Collection.instance.artistsSort ==
-                            ArtistsSort.dateAdded,
-                        value: ArtistsSort.dateAdded,
-                        padding: EdgeInsets.zero,
-                        child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          dense: true,
-                          title: Text(
-                            Language.instance.DATE_ADDED,
-                            style: isDesktop
-                                ? Theme.of(context).textTheme.bodyLarge
-                                : null,
-                          ),
-                        ),
-                      ),
-                    ],
-                  }[tab]!,
-                ],
-              );
-              if (value is AlbumsSort) {
-                await Collection.instance.sort(albumsSort: value);
-                await Configuration.instance.save(albumsSort: value);
-              }
-              if (value is TracksSort) {
-                await Collection.instance.sort(tracksSort: value);
-                await Configuration.instance.save(tracksSort: value);
-              }
-              if (value is ArtistsSort) {
-                await Collection.instance.sort(artistsSort: value);
-                await Configuration.instance.save(artistsSort: value);
-              }
-            },
-            child: MouseRegion(
-              cursor: SystemMouseCursors.click,
-              onEnter: (e) => setState(() => _hover0 = true),
-              onExit: (e) => setState(() => _hover0 = false),
-              child: Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.symmetric(horizontal: 2.0),
-                height: 28.0,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(width: 4.0),
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: '${Language.instance.SORT_BY}: ',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                          TextSpan(
-                            text: {
-                              kAlbumTabIndex: {
-                                AlbumsSort.aToZ: Language.instance.A_TO_Z,
-                                AlbumsSort.dateAdded:
-                                    Language.instance.DATE_ADDED,
-                                AlbumsSort.year: Language.instance.YEAR,
-                                AlbumsSort.artist:
-                                    Language.instance.ALBUM_ARTIST,
-                              }[collection.albumsSort]!,
-                              kTrackTabIndex: {
-                                TracksSort.aToZ: Language.instance.A_TO_Z,
-                                TracksSort.dateAdded:
-                                    Language.instance.DATE_ADDED,
-                                TracksSort.year: Language.instance.YEAR,
-                              }[collection.tracksSort]!,
-                              kArtistTabIndex: {
-                                ArtistsSort.aToZ: Language.instance.A_TO_Z,
-                                ArtistsSort.dateAdded:
-                                    Language.instance.DATE_ADDED,
-                              }[collection.artistsSort]!,
-                            }[tab]!,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge
-                                ?.copyWith(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  decoration:
-                                      _hover0 ? TextDecoration.underline : null,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 4.0),
-                    Icon(
-                      Icons.expand_more,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 18.0,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 4.0),
-          GestureDetector(
-            key: _key1,
-            onTap: () async {
-              final value = await showCustomMenu(
-                elevation: 4.0,
-                context: context,
-                constraints: BoxConstraints(
-                  maxWidth: double.infinity,
-                ),
-                position: RelativeRect.fromLTRB(
-                  MediaQuery.of(context).size.width,
-                  _key1.globalPaintBounds!.bottom +
-                      tileMargin(context) / (widget.fixed ? 2.0 : 1.0),
-                  tileMargin(context) + (widget.fixed ? 8.0 : 0.0),
-                  0.0,
-                ),
-                items: <PopupMenuEntry>[
-                  CheckedPopupMenuItem(
-                    checked: {
-                      kAlbumTabIndex: Collection.instance.albumsOrderType ==
-                          OrderType.ascending,
-                      kTrackTabIndex: Collection.instance.tracksOrderType ==
-                          OrderType.ascending,
-                      kArtistTabIndex: Collection.instance.artistsOrderType ==
-                          OrderType.ascending,
-                    }[tab]!,
-                    value: OrderType.ascending,
-                    padding: EdgeInsets.zero,
-                    child: ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      dense: true,
-                      title: Text(
-                        Language.instance.ASCENDING,
-                        style: isDesktop
-                            ? Theme.of(context).textTheme.bodyLarge
-                            : null,
-                      ),
-                    ),
-                  ),
-                  CheckedPopupMenuItem(
-                    checked: {
-                      kAlbumTabIndex: Collection.instance.albumsOrderType ==
-                          OrderType.descending,
-                      kTrackTabIndex: Collection.instance.tracksOrderType ==
-                          OrderType.descending,
-                      kArtistTabIndex: Collection.instance.artistsOrderType ==
-                          OrderType.descending,
-                    }[tab]!,
-                    value: OrderType.descending,
-                    padding: EdgeInsets.zero,
-                    child: ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      dense: true,
-                      title: Text(
-                        Language.instance.DESCENDING,
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                    ),
-                  ),
-                ],
-              );
-              if (value is OrderType) {
-                switch (tab) {
-                  case kAlbumTabIndex:
-                    {
-                      await Collection.instance.sort(albumsOrderType: value);
-                      await Configuration.instance.save(albumsOrderType: value);
-                      break;
-                    }
-                  case kTrackTabIndex:
-                    {
-                      await Collection.instance.sort(tracksOrderType: value);
-                      await Configuration.instance.save(tracksOrderType: value);
-                      break;
-                    }
-                  case kArtistTabIndex:
-                    {
-                      await Collection.instance.sort(artistsOrderType: value);
-                      await Configuration.instance
-                          .save(artistsOrderType: value);
-                      break;
-                    }
-                }
-              }
-            },
-            child: MouseRegion(
-              cursor: SystemMouseCursors.click,
-              onEnter: (e) => setState(() => _hover1 = true),
-              onExit: (e) => setState(() => _hover1 = false),
-              child: Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.symmetric(horizontal: 2.0),
-                height: 28.0,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(width: 4.0),
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: '${Language.instance.ORDER}: ',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                          TextSpan(
-                            text: {
-                              kAlbumTabIndex: {
-                                OrderType.ascending:
-                                    Language.instance.ASCENDING,
-                                OrderType.descending:
-                                    Language.instance.DESCENDING,
-                              }[collection.albumsOrderType]!,
-                              kTrackTabIndex: {
-                                OrderType.ascending:
-                                    Language.instance.ASCENDING,
-                                OrderType.descending:
-                                    Language.instance.DESCENDING,
-                              }[collection.tracksOrderType]!,
-                              kArtistTabIndex: {
-                                OrderType.ascending:
-                                    Language.instance.ASCENDING,
-                                OrderType.descending:
-                                    Language.instance.DESCENDING,
-                              }[collection.artistsOrderType]!,
-                            }[tab]!,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge
-                                ?.copyWith(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  decoration:
-                                      _hover1 ? TextDecoration.underline : null,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 4.0),
-                    Icon(
-                      Icons.expand_more,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 18.0,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 8.0),
-        ],
-      ),
-    );
-    return widget.fixed
-        ? ValueListenableBuilder<bool>(
-            valueListenable: widget.hover,
-            child: child,
-            builder: (context, hover, child) => Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.only(right: tileMargin(context)),
-              child: child,
-            ),
-          )
-        : ValueListenableBuilder<bool>(
-            valueListenable: widget.hover,
-            child: child,
-            builder: (context, hover, child) => AnimatedPositioned(
-              curve: Curves.easeInOut,
-              duration:
-                  Theme.of(context).extension<AnimationDuration>()?.fast ??
-                      Duration.zero,
-              top: hover
-                  ? widget.tab == 1
-                      ? 28.0
-                      : 0
-                  : -72.0,
-              right: tileMargin(context),
-              child: Card(
-                color: Theme.of(context).appBarTheme.backgroundColor,
-                margin: EdgeInsets.only(top: tileMargin(context)),
-                elevation: 4.0,
-                child: Container(
-                  padding: EdgeInsets.only(
-                    top: 8.0,
-                    bottom: 8.0,
-                  ),
-                  child: child,
-                ),
-              ),
-            ),
-          );
-  }
-}
-
-class ScaleOnHover extends StatefulWidget {
-  final Widget child;
-  ScaleOnHover({required this.child});
-
-  @override
-  _ScaleOnHoverState createState() => _ScaleOnHoverState();
-}
-
-class _ScaleOnHoverState extends State<ScaleOnHover> {
-  double scale = 1.0;
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (e) => setState(() {
-        scale = 1.05;
-      }),
-      onExit: (e) => setState(() {
-        scale = 1.00;
-      }),
-      child: TweenAnimationBuilder(
-        duration: Theme.of(context).extension<AnimationDuration>()?.fast ??
-            Duration.zero,
-        tween: Tween<double>(begin: 1.0, end: scale),
-        builder: (BuildContext context, double value, _) {
-          return Transform.scale(scale: value, child: widget.child);
-        },
-      ),
-    );
-  }
-}
-
-class SubHeader extends StatelessWidget {
-  final String text;
-  final double height;
-  final EdgeInsets? padding;
-
-  const SubHeader(
-    this.text, {
-    this.height = 56.0,
-    this.padding,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final horizontal = isDesktop ? 24.0 : 16.0;
-    final fontSize = isDesktop ? 16.0 : null;
-    final TextStyle? style;
-    if (isMaterial2(context) && isMobile) {
-      style = Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-            fontSize: fontSize,
-          );
-    } else if (isMaterial2(context) && isDesktop) {
-      style = Theme.of(context).textTheme.titleSmall?.copyWith(
-            fontSize: fontSize,
-          );
-    } else {
-      style = Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: Theme.of(context).colorScheme.primary,
-            fontSize: fontSize,
-          );
-    }
-    return Container(
-      alignment: Alignment.centerLeft,
-      height: height,
-      padding: padding ?? EdgeInsets.symmetric(horizontal: horizontal),
-      child: Text(
-        text,
-        style: style,
-      ),
-    );
-  }
-}
-
-class NavigatorPopButton extends StatelessWidget {
-  final Color? color;
-  final void Function()? onTap;
-  final bool disabled;
-  NavigatorPopButton({
-    Key? key,
-    this.onTap,
-    this.color,
-    this.disabled = false,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap != null ? onTap : Navigator.of(context).pop,
-          borderRadius: BorderRadius.circular(20.0),
-          child: Container(
-            height: 40.0,
-            width: 40.0,
-            child: Icon(
-              Icons.arrow_back,
-              size: 20.0,
-              color: color ?? Theme.of(context).appBarTheme.iconTheme?.color,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class DesktopAppBar extends StatelessWidget {
-  final String? title;
-  final Widget? child;
-  final Color? color;
-  final Widget? leading;
-  final double? height;
-  final double? elevation;
-  final List<Widget>? actions;
-
-  const DesktopAppBar({
-    Key? key,
-    this.title,
-    this.child,
-    this.color,
-    this.leading,
-    this.height,
-    this.elevation,
-    this.actions,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRect(
-      clipBehavior: Clip.antiAlias,
-      child: Container(
-        height: (height ?? kDesktopAppBarHeight) +
-            WindowPlus.instance.captionHeight +
-            8.0,
-        alignment: Alignment.topLeft,
-        padding: EdgeInsets.only(bottom: 8.0),
-        child: Material(
-          animationDuration: Duration.zero,
-          elevation:
-              elevation ?? Theme.of(context).appBarTheme.elevation ?? 4.0,
-          color: color ?? Theme.of(context).appBarTheme.backgroundColor,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              DesktopCaptionBar(
-                color: color,
-              ),
-              Container(
-                height: kDesktopAppBarHeight,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    leading ??
-                        NavigatorPopButton(
-                          color: color != null
-                              ? isDark
-                                  ? Theme.of(context)
-                                      .extension<IconColors>()
-                                      ?.appBarDark
-                                  : Theme.of(context)
-                                      .extension<IconColors>()
-                                      ?.appBarLight
-                              : null,
-                        ),
-                    SizedBox(
-                      width: 16.0,
-                    ),
-                    if (title != null)
-                      Text(
-                        title!,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                    if (actions != null) ...[
-                      const Spacer(),
-                      ...actions!,
-                      const SizedBox(width: 16.0),
-                    ] else if (child != null)
-                      Expanded(
-                        child: child!,
-                      ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  bool get isDark =>
-      (0.299 * (color?.red ?? 256.0)) +
-          (0.587 * (color?.green ?? 256.0)) +
-          (0.114 * (color?.blue ?? 256.0)) <
-      128.0;
-}
-
-class RefreshCollectionButton extends StatefulWidget {
-  final Color? color;
-  RefreshCollectionButton({
-    Key? key,
-    this.color,
-  }) : super(key: key);
-
-  @override
-  _RefreshCollectionButtonState createState() =>
-      _RefreshCollectionButtonState();
-}
-
-class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
-  bool lock = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<CollectionRefresh>(
-      builder: (context, refresh, _) => refresh.progress == refresh.total
-          ? FloatingActionButton(
-              heroTag: 'collection_refresh_button',
-              child: Icon(
-                Icons.refresh,
-                color: widget.color == null
-                    ? null
-                    : (widget.color?.computeLuminance() ?? 0.0) < 0.5
-                        ? kFABDarkForegroundColor
-                        : kFABLightForegroundColor,
-              ),
-              onPressed: () {
-                if (lock) return;
-                lock = true;
-                Collection.instance.refresh(
-                    onProgress: (progress, total, completed) {
-                  CollectionRefresh.instance.set(progress, total);
-                  if (completed) {
-                    setState(() {
-                      lock = false;
-                    });
-                  }
-                });
-              },
-            )
-          : Container(),
-    );
-  }
-}
-
-class HyperLink extends StatefulWidget {
-  final TextSpan text;
-  final TextStyle? style;
-  HyperLink({
-    Key? key,
-    required this.text,
-    required this.style,
-  }) : super(key: key);
-
-  @override
-  State<HyperLink> createState() => _HyperLinkState();
-}
-
-class _HyperLinkState extends State<HyperLink> {
-  String hover = '\0';
-  @override
-  Widget build(BuildContext context) {
-    return RichText(
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      text: TextSpan(
-        style: widget.style,
-        children: widget.text.children!
-            .map(
-              (e) => TextSpan(
-                text: (e as TextSpan).text?.overflow,
-                style: e.recognizer != null
-                    ? widget.style?.copyWith(
-                        decoration:
-                            hover == e.text! ? TextDecoration.underline : null,
-                      )
-                    : null,
-                recognizer: e.recognizer,
-                onEnter: (_) {
-                  if (mounted) {
-                    setState(() {
-                      hover = e.text!;
-                    });
-                  }
-                },
-                onExit: (_) {
-                  if (mounted) {
-                    setState(() {
-                      hover = '\0';
-                    });
-                  }
-                },
-              ),
-            )
-            .toList(),
-      ),
-    );
-  }
-}
-
-/// This piece of code is pure garbage.
-/// There aren't likely going to be any changes to this in future, so it's not worth it to make it better.
-/// But, since it's not much ground-breakingly tough to understand, I'm not going to fix it.
-class ExceptionWidget extends StatelessWidget {
-  final String title;
-  final String subtitle;
-
-  const ExceptionWidget({
-    Key? key,
-    required this.title,
-    required this.subtitle,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: 16.0,
-        vertical: 4.0,
-      ),
-      width: 480.0,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.memory(
-            {
-              Language.instance.NO_COLLECTION_TITLE: VisualAssets.library,
-              Language.instance.NO_INTERNET_TITLE: VisualAssets.library,
-              Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE:
-                  VisualAssets.searchPage,
-              Language.instance.WEB_WELCOME_TITLE: VisualAssets.searchNotes,
-              Language.instance.COLLECTION_SEARCH_LABEL:
-                  VisualAssets.searchPage,
-            }[title]!,
-            height: 164.0,
-            width: 164.0,
-            filterQuality: FilterQuality.high,
-            fit: BoxFit.contain,
-          ),
-          const SizedBox(height: 12.0),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.titleLarge,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 4.0),
-          Text(
-            subtitle,
-            style: Theme.of(context).textTheme.bodyMedium,
-            textAlign: TextAlign.center,
-          ),
-          if (title == Language.instance.NO_COLLECTION_TITLE) ...[
-            const SizedBox(height: 8.0),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialRoute(
-                    builder: (context) => Settings(),
-                  ),
-                );
-              },
-              child: Text(
-                label(context, Language.instance.GO_TO_SETTINGS),
-              ),
-            ),
-          ]
-        ],
-      ),
-    );
-  }
-}
-
-class ClosedTile extends StatelessWidget {
-  final String? title;
-  final String? subtitle;
-  const ClosedTile({
-    Key? key,
-    required this.open,
-    required this.title,
-    required this.subtitle,
-  }) : super(key: key);
-
-  final Function open;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(
-        left: 8.0,
-        right: 8.0,
-        top: 12.0,
-      ),
-      child: ListTile(
-        title: Text(
-          title!,
-          style: TextStyle(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white
-                : Colors.black,
-            fontWeight: FontWeight.w600,
-            fontSize: 24.0,
-          ),
-        ),
-        subtitle: Text(
-          subtitle!,
-          style: TextStyle(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white.withOpacity(0.8)
-                : Colors.black.withOpacity(0.8),
-            fontSize: 14.0,
-          ),
-        ),
-        onTap: open as void Function()?,
-      ),
-    );
-  }
-}
-
-class DesktopCaptionBar extends StatelessWidget {
-  final hideMaximizeAndRestoreButton;
-  final Color? color;
-  const DesktopCaptionBar({
-    Key? key,
-    this.color,
-    this.hideMaximizeAndRestoreButton = false,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    if (Platform.isAndroid || Platform.isIOS)
-      return Container(
-        height: MediaQuery.of(context).padding.top,
-        color: color ?? Theme.of(context).appBarTheme.backgroundColor,
-      );
-    return WindowPlus.instance.captionHeight > 0.0
-        ? Container(
-            width: MediaQuery.of(context).size.width,
-            height: WindowPlus.instance.captionHeight,
-            color: color ?? Theme.of(context).appBarTheme.backgroundColor,
-            alignment: Alignment.topCenter,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: WindowCaption(
-                    brightness: brightness ?? Theme.of(context).brightness,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 14.0,
-                        ),
-                        Text(
-                          kCaption,
-                          style: TextStyle(
-                            color:
-                                (brightness ?? Theme.of(context).brightness) ==
-                                        Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                            fontSize: 12.0,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
-        : Container();
-  }
-
-  Brightness? get brightness {
-    if (color == null) {
-      return null;
-    }
-    return (0.299 * (color?.red ?? 256.0)) +
-                (0.587 * (color?.green ?? 256.0)) +
-                (0.114 * (color?.blue ?? 256.0)) <
-            128.0
-        ? Brightness.dark
-        : Brightness.light;
-  }
-}
-
-class M2MobileBottomNavigationBar extends StatefulWidget {
-  final ValueNotifier<TabRoute> tabControllerNotifier;
-  M2MobileBottomNavigationBar({
-    Key? key,
-    required this.tabControllerNotifier,
-  }) : super(key: key);
-
-  @override
-  State<M2MobileBottomNavigationBar> createState() =>
-      _M2MobileBottomNavigationBarState();
-}
-
-class _M2MobileBottomNavigationBarState
-    extends State<M2MobileBottomNavigationBar> {
-  late int _index;
-
-  @override
-  void initState() {
-    super.initState();
-    widget.tabControllerNotifier.addListener(onChange);
-    _index = widget.tabControllerNotifier.value.index;
-  }
-
-  void onChange() {
-    if (_index != widget.tabControllerNotifier.value.index) {
-      setState(() {
-        _index = widget.tabControllerNotifier.value.index;
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    widget.tabControllerNotifier.removeListener(onChange);
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<Iterable<Color>?>(
-      valueListenable: MobileNowPlayingController.instance.palette,
-      builder: (context, value, _) => TweenAnimationBuilder<Color?>(
-        duration: Theme.of(context).extension<AnimationDuration>()?.medium ??
-            Duration.zero,
-        tween: ColorTween(
-          begin: Theme.of(context).colorScheme.primary,
-          end: value?.first ?? Theme.of(context).colorScheme.primary,
-        ),
-        builder: (context, color, _) => isMaterial3(context)
-            ? NavigationBar(
-                destinations: [
-                  NavigationDestination(
-                    icon: Icon(Icons.album),
-                    label: Language.instance.ALBUM,
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.music_note),
-                    label: Language.instance.TRACK,
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.person),
-                    label: Language.instance.ARTIST,
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.playlist_play),
-                    label: Language.instance.PLAYLIST,
-                  ),
-                ],
-              )
-            : Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(color: Colors.black45, blurRadius: 8.0),
-                  ],
-                ),
-                child: BottomNavigationBar(
-                  currentIndex: _index,
-                  selectedItemColor: (color?.computeLuminance() ?? 0.0) < 0.5
-                      ? null
-                      : Colors.black87,
-                  unselectedItemColor: (color?.computeLuminance() ?? 0.0) < 0.5
-                      ? null
-                      : Colors.black45,
-                  type: BottomNavigationBarType.shifting,
-                  onTap: (index) {
-                    MobileNowPlayingController.instance.restore();
-                    if (index != _index) {
-                      widget.tabControllerNotifier.value =
-                          TabRoute(index, TabRouteSender.bottomNavigationBar);
-                    }
-                    setState(() {
-                      _index = index;
-                    });
-                  },
-                  items: [
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.album),
-                      label: Language.instance.ALBUM,
-                      backgroundColor:
-                          color ?? Theme.of(context).colorScheme.primary,
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.music_note),
-                      label: Language.instance.TRACK,
-                      backgroundColor:
-                          color ?? Theme.of(context).colorScheme.primary,
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.person),
-                      label: Language.instance.ARTIST,
-                      backgroundColor:
-                          color ?? Theme.of(context).colorScheme.primary,
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.playlist_play),
-                      label: Language.instance.PLAYLIST,
-                      backgroundColor:
-                          color ?? Theme.of(context).colorScheme.primary,
-                    ),
-                  ],
-                ),
-              ),
-      ),
-    );
-  }
-}
-
-class DoNotGCCleanThisWidgetFromMemory extends StatefulWidget {
-  final Widget child;
-  DoNotGCCleanThisWidgetFromMemory(this.child, {Key? key}) : super(key: key);
-
-  @override
-  State<DoNotGCCleanThisWidgetFromMemory> createState() =>
-      _DoNotGCCleanThisWidgetFromMemoryState();
-}
-
-class _DoNotGCCleanThisWidgetFromMemoryState
-    extends State<DoNotGCCleanThisWidgetFromMemory>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    return widget.child;
-  }
-
-  @override
-  bool wantKeepAlive = true;
-}
-
-class ShowAllButton extends StatelessWidget {
-  final void Function()? onPressed;
-  const ShowAllButton({Key? key, this.onPressed}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPressed,
-      borderRadius: BorderRadius.circular(4.0),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8.0,
-          vertical: 4.0,
-        ),
-        child: Row(
-          children: [
-            Icon(
-              Icons.view_list,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            const SizedBox(
-              width: 4.0,
-            ),
-            Text(
-              Language.instance.SEE_ALL,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-extension GlobalKeyExtension on GlobalKey {
-  Rect? get globalPaintBounds {
-    final renderObject = currentContext?.findRenderObject();
-    final translation = renderObject?.getTransformTo(null).getTranslation();
-    if (translation != null && renderObject?.paintBounds != null) {
-      final offset = Offset(translation.x, translation.y);
-      return renderObject!.paintBounds.shift(offset);
-    } else {
-      return null;
-    }
-  }
-}
-
-class ScrollableSlider extends StatelessWidget {
-  final double min;
-  final double max;
-  final bool enabled;
-  final double value;
-  final Color? color;
-  final Color? secondaryColor;
-  final VoidCallback onScrolledUp;
-  final VoidCallback onScrolledDown;
-  final void Function(double) onChanged;
-  final bool inferSliderInactiveTrackColor;
-  final bool mobile;
-
-  const ScrollableSlider({
-    Key? key,
-    required this.min,
-    required this.max,
-    this.enabled = true,
-    required this.value,
-    this.color,
-    this.secondaryColor,
-    required this.onScrolledUp,
-    required this.onScrolledDown,
-    required this.onChanged,
-    this.inferSliderInactiveTrackColor = true,
-    this.mobile = false,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Listener(
-      onPointerSignal: (event) {
-        if (event is PointerScrollEvent) {
-          if (event.scrollDelta.dy < 0) {
-            onScrolledUp();
-          }
-          if (event.scrollDelta.dy > 0) {
-            onScrolledDown();
-          }
+    return Consumer<UpdateNotifier>(
+      builder: (context, updateNotifier, _) {
+        if (!updateNotifier.updateAvailable) {
+          return const SizedBox.shrink();
         }
-      },
-      child: SliderTheme(
-        data: SliderThemeData(
-          trackHeight: (mobile && isMobile) ? null : 2.0,
-          trackShape: CustomTrackShape(),
-          thumbShape: (mobile && isMobile)
-              ? null
-              : RoundSliderThumbShape(
-                  enabledThumbRadius: 6.0,
-                  pressedElevation: 4.0,
-                  elevation: 2.0,
-                ),
-          overlayShape: (mobile && isMobile)
-              ? null
-              : RoundSliderOverlayShape(overlayRadius: 12.0),
-          overlayColor:
-              (color ?? Theme.of(context).colorScheme.primary).withOpacity(0.4),
-          thumbColor: enabled
-              ? (color ?? Theme.of(context).colorScheme.primary)
-              : Theme.of(context).disabledColor,
-          activeTrackColor: enabled
-              ? (color ?? Theme.of(context).colorScheme.primary)
-              : Theme.of(context).disabledColor,
-          inactiveTrackColor: enabled
-              ? ((mobile && isMobile)
-                  ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
-                  : inferSliderInactiveTrackColor
-                      ? ((secondaryColor != null
-                              ? (secondaryColor?.computeLuminance() ?? 0.0) <
-                                  0.5
-                              : Theme.of(context).brightness == Brightness.dark)
-                          ? Colors.white.withOpacity(0.4)
-                          : Colors.black.withOpacity(0.2))
-                      : Colors.white.withOpacity(0.4))
-              : Theme.of(context).disabledColor.withOpacity(0.2),
-        ),
-        child: Slider(
-          value: value,
-          onChanged: enabled ? onChanged : null,
-          min: min,
-          max: max,
-        ),
-      ),
-    );
-  }
-}
-
-class CustomTrackShape extends RoundedRectSliderTrackShape {
-  Rect getPreferredRect({
-    required RenderBox parentBox,
-    Offset offset = Offset.zero,
-    required SliderThemeData sliderTheme,
-    bool isEnabled = false,
-    bool isDiscrete = false,
-  }) {
-    final double trackHeight = sliderTheme.trackHeight!;
-    final double trackLeft = offset.dx;
-    final double trackTop =
-        offset.dy + (parentBox.size.height - trackHeight) / 2;
-    final double trackWidth = parentBox.size.width;
-    return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
-  }
-}
-
-class HorizontalList extends StatefulWidget {
-  final List<Widget> children;
-  final EdgeInsetsGeometry? padding;
-  HorizontalList({
-    Key? key,
-    required this.children,
-    this.padding,
-  }) : super(key: key);
-
-  @override
-  State<HorizontalList> createState() => _HorizontalListState();
-}
-
-class _HorizontalListState extends State<HorizontalList> {
-  final ScrollController controller = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    controller.addListener(() {
-      setState(() {});
-    });
-  }
-
-  @override
-  void didChangeDependencies() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {});
-    });
-    super.didChangeDependencies();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  double get extentBefore {
-    return controller.hasClients ? controller.position.extentBefore : 0.0;
-  }
-
-  double get extentAfter {
-    return controller.hasClients ? controller.position.extentAfter : 1.0;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (_, c) => Stack(
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            child: ListView(
-              controller: controller,
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              padding: widget.padding,
-              children: widget.children,
-            ),
-          ),
-          if (extentAfter != 0.0 && isDesktop)
-            Positioned(
-              child: Container(
-                height: c.maxHeight,
-                child: Center(
-                  child: FloatingActionButton(
-                    mini: true,
-                    heroTag: ValueKey(Random().nextInt(1 << 32)),
-                    onPressed: () {
-                      controller.animateTo(
-                        controller.offset +
-                            MediaQuery.of(context).size.width / 2,
-                        duration: Theme.of(context)
-                                .extension<AnimationDuration>()
-                                ?.fast ??
-                            Duration.zero,
-                        curve: Curves.easeInOut,
-                      );
-                    },
-                    child: Icon(Icons.arrow_forward),
-                  ),
-                ),
-              ),
-              right: isDesktop ? 32.0 : tileMargin(context),
-            ),
-          if (extentBefore != 0.0 && isDesktop)
-            Positioned(
-              child: Container(
-                height: c.maxHeight,
-                child: Center(
-                  child: FloatingActionButton(
-                    mini: true,
-                    heroTag: ValueKey(Random().nextInt(1 << 32)),
-                    onPressed: () {
-                      controller.animateTo(
-                        controller.offset -
-                            MediaQuery.of(context).size.width / 2,
-                        duration: Theme.of(context)
-                                .extension<AnimationDuration>()
-                                ?.fast ??
-                            Duration.zero,
-                        curve: Curves.easeInOut,
-                      );
-                    },
-                    child: Icon(Icons.arrow_back),
-                  ),
-                ),
-              ),
-              left: isDesktop ? 32.0 : tileMargin(context),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class CollectionSortButton extends StatelessWidget {
-  final int tab;
-  const CollectionSortButton({
-    Key? key,
-    required this.tab,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Tooltip(
-      message: Language.instance.SORT,
-      child: CustomPopupMenuButton<dynamic>(
-        offset: Offset.fromDirection(pi / 2, 64.0),
-        icon: Icon(
-          Icons.sort_by_alpha,
-          size: 20.0,
-        ),
-        onSelected: (value) async {
-          if (value is AlbumsSort) {
-            await Collection.instance.sort(albumsSort: value);
-            await Configuration.instance.save(albumsSort: value);
-          }
-          if (value is TracksSort) {
-            await Collection.instance.sort(tracksSort: value);
-            await Configuration.instance.save(tracksSort: value);
-          }
-          if (value is ArtistsSort) {
-            await Collection.instance.sort(artistsSort: value);
-            await Configuration.instance.save(artistsSort: value);
-          }
-          if (value is OrderType) {
-            switch (tab) {
-              case kAlbumTabIndex:
-                {
-                  await Collection.instance.sort(albumsOrderType: value);
-                  await Configuration.instance.save(albumsOrderType: value);
-                  break;
-                }
-              case kTrackTabIndex:
-                {
-                  await Collection.instance.sort(tracksOrderType: value);
-                  await Configuration.instance.save(tracksOrderType: value);
-                  break;
-                }
-              case kArtistTabIndex:
-                {
-                  await Collection.instance.sort(artistsOrderType: value);
-                  await Configuration.instance.save(artistsOrderType: value);
-                  break;
-                }
-            }
-          }
-        },
-        itemBuilder: (context) => [
-          ...{
-            kAlbumTabIndex: <PopupMenuItem>[
-              CheckedPopupMenuItem(
-                checked: Collection.instance.albumsSort == AlbumsSort.aToZ,
-                value: AlbumsSort.aToZ,
-                padding: EdgeInsets.zero,
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
-                  title: Text(
-                    Language.instance.A_TO_Z,
-                    style: isDesktop
-                        ? Theme.of(context).textTheme.bodyLarge
-                        : null,
-                  ),
-                ),
-              ),
-              CheckedPopupMenuItem(
-                checked: Collection.instance.albumsSort == AlbumsSort.dateAdded,
-                value: AlbumsSort.dateAdded,
-                padding: EdgeInsets.zero,
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
-                  title: Text(
-                    Language.instance.DATE_ADDED,
-                    style: isDesktop
-                        ? Theme.of(context).textTheme.bodyLarge
-                        : null,
-                  ),
-                ),
-              ),
-              CheckedPopupMenuItem(
-                checked: Collection.instance.albumsSort == AlbumsSort.year,
-                value: AlbumsSort.year,
-                padding: EdgeInsets.zero,
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
-                  title: Text(
-                    Language.instance.YEAR,
-                    style: isDesktop
-                        ? Theme.of(context).textTheme.bodyLarge
-                        : null,
-                  ),
-                ),
-              ),
-              CheckedPopupMenuItem(
-                checked: Collection.instance.albumsSort == AlbumsSort.artist,
-                value: AlbumsSort.artist,
-                padding: EdgeInsets.zero,
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
-                  title: Text(
-                    Language.instance.ALBUM_ARTIST,
-                    style: isDesktop
-                        ? Theme.of(context).textTheme.bodyLarge
-                        : null,
-                  ),
-                ),
-              ),
-            ],
-            kTrackTabIndex: <PopupMenuItem>[
-              CheckedPopupMenuItem(
-                checked: Collection.instance.tracksSort == TracksSort.aToZ,
-                value: TracksSort.aToZ,
-                padding: EdgeInsets.zero,
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
-                  title: Text(
-                    Language.instance.A_TO_Z,
-                    style: isDesktop
-                        ? isDesktop
-                            ? Theme.of(context).textTheme.bodyLarge
-                            : null
-                        : null,
-                  ),
-                ),
-              ),
-              CheckedPopupMenuItem(
-                checked: Collection.instance.tracksSort == TracksSort.dateAdded,
-                value: TracksSort.dateAdded,
-                padding: EdgeInsets.zero,
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
-                  title: Text(
-                    Language.instance.DATE_ADDED,
-                    style: isDesktop
-                        ? Theme.of(context).textTheme.bodyLarge
-                        : null,
-                  ),
-                ),
-              ),
-              CheckedPopupMenuItem(
-                checked: Collection.instance.tracksSort == TracksSort.year,
-                value: TracksSort.year,
-                padding: EdgeInsets.zero,
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
-                  title: Text(
-                    Language.instance.YEAR,
-                    style: isDesktop
-                        ? Theme.of(context).textTheme.bodyLarge
-                        : null,
-                  ),
-                ),
-              ),
-            ],
-            kArtistTabIndex: <PopupMenuItem>[
-              CheckedPopupMenuItem(
-                checked: Collection.instance.artistsSort == ArtistsSort.aToZ,
-                value: ArtistsSort.aToZ,
-                padding: EdgeInsets.zero,
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
-                  title: Text(
-                    Language.instance.A_TO_Z,
-                    style: isDesktop
-                        ? Theme.of(context).textTheme.bodyLarge
-                        : null,
-                  ),
-                ),
-              ),
-              CheckedPopupMenuItem(
-                checked:
-                    Collection.instance.artistsSort == ArtistsSort.dateAdded,
-                value: ArtistsSort.dateAdded,
-                padding: EdgeInsets.zero,
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
-                  title: Text(
-                    Language.instance.DATE_ADDED,
-                    style: isDesktop
-                        ? Theme.of(context).textTheme.bodyLarge
-                        : null,
-                  ),
-                ),
-              ),
-            ],
-          }[tab]!,
-          PopupMenuDivider(),
-          ...[
-            CheckedPopupMenuItem(
-              checked: {
-                kAlbumTabIndex:
-                    Collection.instance.albumsOrderType == OrderType.ascending,
-                kTrackTabIndex:
-                    Collection.instance.tracksOrderType == OrderType.ascending,
-                kArtistTabIndex:
-                    Collection.instance.artistsOrderType == OrderType.ascending,
-              }[tab]!,
-              value: OrderType.ascending,
-              padding: EdgeInsets.zero,
-              child: ListTile(
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-                title: Text(
-                  Language.instance.ASCENDING,
-                  style:
-                      isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                ),
-              ),
-            ),
-            CheckedPopupMenuItem(
-              checked: {
-                kAlbumTabIndex:
-                    Collection.instance.albumsOrderType == OrderType.descending,
-                kTrackTabIndex:
-                    Collection.instance.tracksOrderType == OrderType.descending,
-                kArtistTabIndex: Collection.instance.artistsOrderType ==
-                    OrderType.descending,
-              }[tab]!,
-              value: OrderType.descending,
-              padding: EdgeInsets.zero,
-              child: ListTile(
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-                title: Text(
-                  Language.instance.DESCENDING,
-                  style:
-                      isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class CorrectedSwitchListTile extends StatelessWidget {
-  final bool value;
-  final void Function(bool) onChanged;
-  final String title;
-  final String subtitle;
-  CorrectedSwitchListTile({
-    Key? key,
-    required this.value,
-    required this.onChanged,
-    required this.title,
-    required this.subtitle,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SwitchListTile(
-      value: value,
-      title: Text(
-        isDesktop ? subtitle : title,
-        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
-      onChanged: (value) {
-        onChanged.call(value);
-      },
-    );
-  }
-}
-
-class MobileSortByButton extends StatefulWidget {
-  final int tab;
-  MobileSortByButton({
-    Key? key,
-    required this.tab,
-  }) : super(key: key);
-
-  @override
-  State<MobileSortByButton> createState() => _MobileSortByButtonState();
-}
-
-class _MobileSortByButtonState extends State<MobileSortByButton> {
-  Future<void> handle(dynamic value) async {
-    if (value is AlbumsSort) {
-      if (Collection.instance.albumsSort == value) {
-        return;
-      }
-      await Collection.instance.sort(albumsSort: value);
-      await Configuration.instance.save(albumsSort: value);
-    }
-    if (value is TracksSort) {
-      if (Collection.instance.tracksSort == value) {
-        return;
-      }
-      await Collection.instance.sort(tracksSort: value);
-      await Configuration.instance.save(tracksSort: value);
-    }
-    if (value is ArtistsSort) {
-      if (Collection.instance.artistsSort == value) {
-        return;
-      }
-      await Collection.instance.sort(artistsSort: value);
-      await Configuration.instance.save(artistsSort: value);
-    }
-    if (value is GenresSort) {
-      if (Collection.instance.genresSort == value) {
-        return;
-      }
-      await Collection.instance.sort(genresSort: value);
-      await Configuration.instance.save(genresSort: value);
-    }
-    if (value is OrderType) {
-      switch (widget.tab) {
-        case kAlbumTabIndex:
-          {
-            if (Collection.instance.albumsOrderType == value) {
-              return;
-            }
-            await Collection.instance.sort(albumsOrderType: value);
-            await Configuration.instance.save(albumsOrderType: value);
-            break;
-          }
-        case kTrackTabIndex:
-          {
-            if (Collection.instance.tracksOrderType == value) {
-              return;
-            }
-            await Collection.instance.sort(tracksOrderType: value);
-            await Configuration.instance.save(tracksOrderType: value);
-            break;
-          }
-        case kArtistTabIndex:
-          {
-            if (Collection.instance.artistsOrderType == value) {
-              return;
-            }
-            await Collection.instance.sort(artistsOrderType: value);
-            await Configuration.instance.save(artistsOrderType: value);
-            break;
-          }
-        case kGenreTabIndex:
-          {
-            if (Collection.instance.genresOrderType == value) {
-              return;
-            }
-            await Collection.instance.sort(genresOrderType: value);
-            await Configuration.instance.save(genresOrderType: value);
-            break;
-          }
-      }
-    }
-    debugPrint(setStateCallback.toString());
-    try {
-      setStateCallback?.call(() {
-        debugPrint('setState');
-      });
-    } catch (exception, stacktrace) {
-      debugPrint(exception.toString());
-      debugPrint(stacktrace.toString());
-    }
-  }
-
-  void Function(void Function())? setStateCallback;
-
-  List<CustomCheckedPopupMenuItem> get sort => {
-        kAlbumTabIndex: <CustomCheckedPopupMenuItem>[
-          CustomCheckedPopupMenuItem(
-            onTap: () => handle(AlbumsSort.aToZ),
-            checked: Collection.instance.albumsSort == AlbumsSort.aToZ,
-            value: AlbumsSort.aToZ,
-            padding: EdgeInsets.zero,
-            child: Text(
-              Language.instance.A_TO_Z,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-          CustomCheckedPopupMenuItem(
-            onTap: () => handle(AlbumsSort.dateAdded),
-            checked: Collection.instance.albumsSort == AlbumsSort.dateAdded,
-            value: AlbumsSort.dateAdded,
-            padding: EdgeInsets.zero,
-            child: Text(
-              Language.instance.DATE_ADDED,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-          CustomCheckedPopupMenuItem(
-            onTap: () => handle(AlbumsSort.year),
-            checked: Collection.instance.albumsSort == AlbumsSort.year,
-            value: AlbumsSort.year,
-            padding: EdgeInsets.zero,
-            child: Text(
-              Language.instance.YEAR,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-        ],
-        kTrackTabIndex: <CustomCheckedPopupMenuItem>[
-          CustomCheckedPopupMenuItem(
-            onTap: () => handle(TracksSort.aToZ),
-            checked: Collection.instance.tracksSort == TracksSort.aToZ,
-            value: TracksSort.aToZ,
-            padding: EdgeInsets.zero,
-            child: Text(
-              Language.instance.A_TO_Z,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-          CustomCheckedPopupMenuItem(
-            onTap: () => handle(TracksSort.dateAdded),
-            checked: Collection.instance.tracksSort == TracksSort.dateAdded,
-            value: TracksSort.dateAdded,
-            padding: EdgeInsets.zero,
-            child: Text(
-              Language.instance.DATE_ADDED,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-          CustomCheckedPopupMenuItem(
-            onTap: () => handle(TracksSort.year),
-            checked: Collection.instance.tracksSort == TracksSort.year,
-            value: TracksSort.year,
-            padding: EdgeInsets.zero,
-            child: Text(
-              Language.instance.YEAR,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-        ],
-        kArtistTabIndex: <CustomCheckedPopupMenuItem>[
-          CustomCheckedPopupMenuItem(
-            onTap: () => handle(ArtistsSort.aToZ),
-            checked: Collection.instance.artistsSort == ArtistsSort.aToZ,
-            value: ArtistsSort.aToZ,
-            padding: EdgeInsets.zero,
-            child: Text(
-              Language.instance.A_TO_Z,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-          CustomCheckedPopupMenuItem(
-            onTap: () => handle(ArtistsSort.dateAdded),
-            checked: Collection.instance.artistsSort == ArtistsSort.dateAdded,
-            value: ArtistsSort.dateAdded,
-            padding: EdgeInsets.zero,
-            child: Text(
-              Language.instance.DATE_ADDED,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-        ],
-        kGenreTabIndex: <CustomCheckedPopupMenuItem>[
-          CustomCheckedPopupMenuItem(
-            onTap: () => handle(GenresSort.aToZ),
-            checked: Collection.instance.genresSort == GenresSort.aToZ,
-            value: GenresSort.aToZ,
-            padding: EdgeInsets.zero,
-            child: Text(
-              Language.instance.A_TO_Z,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-          CustomCheckedPopupMenuItem(
-            onTap: () => handle(GenresSort.dateAdded),
-            checked: Collection.instance.genresSort == GenresSort.dateAdded,
-            value: GenresSort.dateAdded,
-            padding: EdgeInsets.zero,
-            child: Text(
-              Language.instance.DATE_ADDED,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-        ],
-      }[widget.tab]!;
-
-  List<CustomCheckedPopupMenuItem> get order => [
-        CustomCheckedPopupMenuItem(
-          onTap: () => handle(OrderType.ascending),
-          checked: {
-            kAlbumTabIndex:
-                Collection.instance.albumsOrderType == OrderType.ascending,
-            kTrackTabIndex:
-                Collection.instance.tracksOrderType == OrderType.ascending,
-            kArtistTabIndex:
-                Collection.instance.artistsOrderType == OrderType.ascending,
-            kGenreTabIndex:
-                Collection.instance.genresOrderType == OrderType.ascending,
-          }[widget.tab]!,
-          value: OrderType.ascending,
-          padding: EdgeInsets.zero,
-          child: Text(
-            Language.instance.ASCENDING,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
-        CustomCheckedPopupMenuItem(
-          onTap: () => handle(OrderType.descending),
-          checked: {
-            kAlbumTabIndex:
-                Collection.instance.albumsOrderType == OrderType.descending,
-            kTrackTabIndex:
-                Collection.instance.tracksOrderType == OrderType.descending,
-            kArtistTabIndex:
-                Collection.instance.artistsOrderType == OrderType.descending,
-            kGenreTabIndex:
-                Collection.instance.genresOrderType == OrderType.descending,
-          }[widget.tab]!,
-          value: OrderType.descending,
-          padding: EdgeInsets.zero,
-          child: Text(
-            Language.instance.DESCENDING,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
-      ];
-
-  @override
-  Widget build(BuildContext context) {
-    final color =
-        isMaterial2(context) && Theme.of(context).brightness == Brightness.light
-            ? Theme.of(context).colorScheme.primary
-            : Theme.of(context).textTheme.bodyLarge?.color;
-    return InkWell(
-      borderRadius: isMaterial2(context)
-          ? BorderRadius.circular(4.0)
-          : BorderRadius.circular(20.0),
-      onTap: () async {
-        if (widget.tab == 3) return;
-        await showModalBottomSheet(
-          isScrollControlled: true,
-          context: context,
-          elevation: kDefaultHeavyElevation,
-          builder: (context) => StatefulBuilder(
-            builder: (context, setState) {
-              setStateCallback = setState;
-              return Container(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ...sort,
-                    PopupMenuDivider(),
-                    ...order,
-                    if (!isDesktop &&
-                        !MobileNowPlayingController.instance.isHidden)
-                      const SizedBox(height: kMobileNowPlayingBarHeight),
-                  ],
-                ),
-              );
-            },
-          ),
+        return IconButton(
+          tooltip: Localization.instance.UPDATE_AVAILABLE,
+          icon: const Icon(Icons.download),
+          iconSize: 20.0,
+          splashRadius: 18.0,
+          color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
+          onPressed: () => UpdateNotifier.instance.check(true),
         );
       },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Text(
-              String.fromCharCode(
-                order.firstWhere((e) => e.checked).value == OrderType.ascending
-                    ? Icons.arrow_upward.codePoint
-                    : Icons.arrow_downward.codePoint,
-              ),
-              style: TextStyle(
-                inherit: false,
-                fontSize: 18.0,
-                fontWeight: FontWeight.w700,
-                fontFamily: Icons.arrow_downward.fontFamily,
-                package: Icons.arrow_downward.fontPackage,
-                color: color,
-              ),
-            ),
-            const SizedBox(width: 10.0),
-            Text(
-              label(
-                context,
-                (sort.firstWhere((e) => e.checked).child as Text)
-                    .data
-                    .toString(),
-              ),
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: color,
-                  ),
-            ),
-            const SizedBox(width: 4.0),
-          ],
-        ),
-      ),
     );
   }
 }
 
-class NowPlayingBarScrollHideNotifier extends StatelessWidget {
-  final Widget child;
-  const NowPlayingBarScrollHideNotifier({
-    Key? key,
-    required this.child,
-  }) : super(key: key);
+// --------------------------------------------------
 
-  @override
-  Widget build(BuildContext context) {
-    if (isDesktop) {
-      return child;
-    } else {
-      return NotificationListener<UserScrollNotification>(
-        onNotification: (notification) {
-          if (notification.metrics.axis == Axis.vertical &&
-              [
-                AxisDirection.up,
-                AxisDirection.down,
-              ].contains(notification.metrics.axisDirection)) {
-            // Do not handle [ScrollDirection.idle].
-            if (notification.direction == ScrollDirection.forward) {
-              MobileNowPlayingController.instance.show();
-            } else if (notification.direction == ScrollDirection.reverse) {
-              MobileNowPlayingController.instance.hide();
-            }
-          }
-          return true;
-        },
-        child: child,
-      );
-    }
-  }
-}
+class PlayFileOrURLButton extends StatelessWidget {
+  const PlayFileOrURLButton({super.key});
 
-class CollectionMoreButton extends StatelessWidget {
-  const CollectionMoreButton({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomPopupMenuButton<int>(
-      icon: Icon(
-        Icons.more_vert,
-        size: 20.0,
-        color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
-      ),
-      elevation: 4.0,
-      splashRadius: 20.0,
-      padding: EdgeInsets.zero,
-      offset: Offset.fromDirection(pi / 2, 64.0),
-      onSelected: (value) async {
-        switch (value) {
-          case 0:
-            {
-              FileInfoScreen.show(context);
-              break;
-            }
-          case 1:
-            {
-              Navigator.of(context).push(
-                MaterialRoute(
-                  builder: (context) => WebTab(),
-                ),
-              );
-              break;
-            }
-        }
-      },
-      itemBuilder: (context) => [
-        PopupMenuItem(
-          value: 0,
-          child: ListTile(
-            contentPadding: EdgeInsets.zero,
-            dense: true,
-            leading: Icon(Icons.code),
-            title: Text(
-              Language.instance.READ_METADATA,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-        ),
-        PopupMenuItem(
-          value: 1,
-          child: ListTile(
-            contentPadding: EdgeInsets.zero,
-            dense: true,
-            leading: Icon(Icons.waves),
-            title: Text(
-              Language.instance.STREAM,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class PlayFileOrURLButton extends StatefulWidget {
-  PlayFileOrURLButton({Key? key}) : super(key: key);
-
-  @override
-  State<PlayFileOrURLButton> createState() => _PlayFileOrURLButtonState();
-}
-
-class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      tooltip: Language.instance.OPEN_FILE_OR_URL,
-      icon: Icon(
-        Icons.file_open,
-        color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
-      ),
-      splashRadius: 20.0,
+      tooltip: Localization.instance.OPEN_FILE_OR_URL,
+      icon: const Icon(Icons.file_open),
       iconSize: 20.0,
+      splashRadius: 18.0,
+      color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
       onPressed: () async {
+        final result = await pickResource(context, Localization.instance.OPEN_FILE_OR_URL);
+        if (result != null) {
+          await Intent.instance.play(result);
+        }
+      },
+    );
+  }
+}
+
+// --------------------------------------------------
+
+class ReadFileOrURLMetadataButton extends StatelessWidget {
+  const ReadFileOrURLMetadataButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      tooltip: Localization.instance.READ_METADATA,
+      icon: const Icon(Icons.code),
+      iconSize: 20.0,
+      splashRadius: 18.0,
+      color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
+      onPressed: () async {
+        final result = await pickResource(context, Localization.instance.READ_METADATA);
+        if (result != null) {
+          context.push(Uri(path: '/$kFileInfoPath', queryParameters: {kFileInfoArgResource: result}).toString());
+        }
+      },
+    );
+  }
+}
+
+// --------------------------------------------------
+
+class MobileGridSpanButton extends StatelessWidget {
+  const MobileGridSpanButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final path = context.location.split('/').last;
+    if (![kAlbumsPath, kArtistsPath, kGenresPath].contains(path)) {
+      return const SizedBox.shrink();
+    }
+    return IconButton(
+      icon: const Icon(Icons.view_list_outlined),
+      onPressed: () async {
+        final String title;
+        final int groupValue;
+        Future<void> Function(int?) onChanged;
+        switch (path) {
+          case kAlbumsPath:
+            title = Localization.instance.MOBILE_ALBUM_GRID_SIZE;
+            groupValue = Configuration.instance.mobileMediaLibraryAlbumGridSpan;
+            onChanged = (value) => Configuration.instance.set(mobileMediaLibraryAlbumGridSpan: value);
+            break;
+          case kArtistsPath:
+            title = Localization.instance.MOBILE_ARTIST_GRID_SIZE;
+            groupValue = Configuration.instance.mobileMediaLibraryArtistGridSpan;
+            onChanged = (value) => Configuration.instance.set(mobileMediaLibraryArtistGridSpan: value);
+            break;
+          case kGenresPath:
+            title = Localization.instance.MOBILE_GENRE_GRID_SIZE;
+            groupValue = Configuration.instance.mobileMediaLibraryGenreGridSpan;
+            onChanged = (value) => Configuration.instance.set(mobileMediaLibraryGenreGridSpan: value);
+            break;
+          default:
+            throw UnimplementedError();
+        }
+
         await showDialog(
           context: context,
-          builder: (ctx) => SimpleDialog(
-            title: Text(
-              Language.instance.OPEN_FILE_OR_URL,
-            ),
+          builder: (context) => SimpleDialog(
+            title: Text(title),
             children: [
-              ListTile(
-                onTap: () async {
-                  final file = await pickFile(
-                    label: Language.instance.MEDIA_FILES,
-                    extensions: kSupportedFileTypes,
-                  );
-                  if (file != null) {
-                    await Navigator.of(ctx).maybePop();
-                    await Intent.instance.playURI(file.uri.toString());
-                  }
-                },
-                leading: CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  foregroundColor: Theme.of(ctx).iconTheme.color,
-                  child: Icon(
-                    Icons.folder,
+              for (int i = 0; i <= 4; i++)
+                RadioListTile<int?>(
+                  value: i,
+                  groupValue: groupValue,
+                  onChanged: (value) {
+                    onChanged(value).then((_) => Navigator.of(context).pop()).then((_) => MediaLibrary.instance.notify());
+                  },
+                  title: Text(
+                    i == 0 ? '#' : i.toString(),
+                    style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
                   ),
                 ),
-                title: Text(
-                  Language.instance.FILE,
-                  style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
-                ),
-              ),
-              ListTile(
-                onTap: () async {
-                  await Navigator.of(ctx).maybePop();
-                  String input = '';
-                  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-                  await showDialog(
-                    context: ctx,
-                    builder: (ctx) => AlertDialog(
-                      title: Text(
-                        Language.instance.OPEN_FILE_OR_URL,
-                      ),
-                      content: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            height: 40.0,
-                            width: 420.0,
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
-                            padding: EdgeInsets.only(top: 2.0),
-                            child: Focus(
-                              child: Form(
-                                key: formKey,
-                                child: CustomTextFormField(
-                                  autofocus: true,
-                                  cursorWidth: 1.0,
-                                  onChanged: (value) => input = value,
-                                  validator: (value) {
-                                    final parser = URIParser(value);
-                                    if (!parser.validate()) {
-                                      debugPrint(value);
-                                      // Empty [String] prevents the message from showing & does not distort the UI.
-                                      return '';
-                                    }
-                                    return null;
-                                  },
-                                  onFieldSubmitted: (value) async {
-                                    if (value.isNotEmpty &&
-                                        (formKey.currentState?.validate() ??
-                                            false)) {
-                                      Navigator.of(ctx).maybePop();
-                                      await Intent.instance.playURI(value);
-                                    }
-                                  },
-                                  textAlignVertical: TextAlignVertical.center,
-                                  style: Theme.of(ctx).textTheme.bodyLarge,
-                                  decoration: inputDecoration(
-                                    ctx,
-                                    Language.instance.PLAY_URL_SUBTITLE,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      actions: [
-                        TextButton(
-                          child: Text(
-                            label(
-                              context,
-                              Language.instance.PLAY,
-                            ),
-                          ),
-                          onPressed: () async {
-                            if (input.isNotEmpty &&
-                                (formKey.currentState?.validate() ?? false)) {
-                              Navigator.of(ctx).maybePop();
-                              await Intent.instance.playURI(input);
-                            }
-                          },
-                        ),
-                        TextButton(
-                          child: Text(
-                            label(
-                              context,
-                              Language.instance.CANCEL,
-                            ),
-                          ),
-                          onPressed: Navigator.of(ctx).maybePop,
-                        ),
-                      ],
-                    ),
-                  );
-                },
-                leading: CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  foregroundColor: Theme.of(ctx).iconTheme.color,
-                  child: Icon(
-                    Icons.link,
-                  ),
-                ),
-                title: Text(
-                  Language.instance.URL,
-                  style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
-                ),
-              ),
             ],
           ),
         );
@@ -2721,49 +1631,144 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
   }
 }
 
-class ContextMenuArea extends StatefulWidget {
-  final Widget child;
-  final void Function(PointerUpEvent) onPressed;
-  ContextMenuArea({
-    Key? key,
-    required this.onPressed,
-    required this.child,
-  }) : super(key: key);
+// --------------------------------------------------
+
+class MobileAppBarOverflowButton extends StatefulWidget {
+  const MobileAppBarOverflowButton({super.key});
 
   @override
-  State<ContextMenuArea> createState() => _ContextMenuAreaState();
+  State<MobileAppBarOverflowButton> createState() => MobileAppBarOverflowButtonState();
 }
 
-class _ContextMenuAreaState extends State<ContextMenuArea> {
-  bool reactToSecondaryPress = false;
-
+class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> {
   @override
   Widget build(BuildContext context) {
-    return Listener(
-      onPointerDown: (e) async {
-        reactToSecondaryPress = e.kind == PointerDeviceKind.mouse &&
-            e.buttons == kSecondaryMouseButton;
+    return IconButton(
+      icon: const Icon(Icons.more_vert),
+      onPressed: () async {
+        Completer<int> completer = Completer<int>();
+        await showModalBottomSheet(
+          context: context,
+          showDragHandle: isMaterial3OrGreater,
+          useRootNavigator: true,
+          isScrollControlled: true,
+          elevation: kDefaultHeavyElevation,
+          builder: (context) => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                onTap: () {
+                  completer.complete(0);
+                  Navigator.of(context).maybePop();
+                },
+                leading: const Icon(Icons.play_arrow),
+                title: Text(
+                  Localization.instance.PLAY_ALL,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                ),
+              ),
+              ListTile(
+                onTap: () {
+                  completer.complete(1);
+                  Navigator.of(context).maybePop();
+                },
+                leading: const Icon(Icons.shuffle),
+                title: Text(
+                  Localization.instance.SHUFFLE,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                ),
+              ),
+              ListTile(
+                onTap: () {
+                  completer.complete(2);
+                  Navigator.of(context).maybePop();
+                },
+                leading: const Icon(Icons.file_open),
+                title: Text(
+                  Localization.instance.OPEN_FILE_OR_URL,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                ),
+              ),
+              ListTile(
+                onTap: () {
+                  completer.complete(3);
+                  Navigator.of(context).maybePop();
+                },
+                leading: const Icon(Icons.code),
+                title: Text(
+                  Localization.instance.READ_METADATA,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                ),
+              ),
+              ListTile(
+                onTap: () {
+                  completer.complete(4);
+                  Navigator.of(context).maybePop();
+                },
+                leading: const Icon(Icons.settings),
+                title: Text(
+                  Localization.instance.SETTINGS,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                ),
+              ),
+              SizedBox(height: MediaQuery.of(context).padding.bottom),
+            ],
+          ),
+        );
+        completer.future.then((value) async {
+          await Future.delayed(const Duration(milliseconds: 300));
+          switch (value) {
+            case 0:
+              {
+                await MediaPlayer.instance.open(MediaLibrary.instance.tracks.map((e) => e.toPlayable()).toList());
+                break;
+              }
+            case 1:
+              {
+                MediaPlayer.instance.open([...MediaLibrary.instance.tracks.map((e) => e.toPlayable())]..shuffle());
+                break;
+              }
+            case 2:
+              {
+                final result = await pickResource(context, Localization.instance.OPEN_FILE_OR_URL);
+                if (result != null) {
+                  await Intent.instance.play(result);
+                }
+                break;
+              }
+            case 3:
+              {
+                final result = await pickResource(context, Localization.instance.READ_METADATA);
+                if (result != null) {
+                  context.push(Uri(path: '/$kFileInfoPath', queryParameters: {kFileInfoArgResource: result}).toString());
+                }
+                break;
+              }
+            case 4:
+              {
+                await context.push('/$kSettingsPath');
+                break;
+              }
+          }
+        });
       },
-      onPointerUp: (e) {
-        if (!reactToSecondaryPress) return;
-        widget.onPressed.call(e);
-      },
-      child: widget.child,
     );
   }
 }
+
+// --------------------------------------------------
 
 class StillGIF extends StatefulWidget {
   final ImageProvider image;
   final double width;
   final double height;
 
-  StillGIF({
-    Key? key,
+  const StillGIF({
+    super.key,
     required this.image,
     required this.width,
     required this.height,
-  }) : super(key: key);
+  });
 
   factory StillGIF.asset(
     String image, {
@@ -2805,30 +1810,19 @@ class StillGIF extends StatefulWidget {
       );
 
   @override
-  State<StillGIF> createState() => _StillGIFState();
+  State<StillGIF> createState() => StillGIFState();
 }
 
-class _StillGIFState extends State<StillGIF> {
-  static const int _kMaximumDrawRetryCount = 5;
-
-  int count = 0;
-  RawImage? image;
+class StillGIFState extends State<StillGIF> {
+  RawImage? _image;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // Flutter 3.3.x seems to have a bug where the image is not drawn in some rare cases.
-      while (image == null && count < _kMaximumDrawRetryCount) {
-        await draw();
-        count++;
-        debugPrint('#$count draw: ${widget.image}');
-      }
-    });
+    draw();
   }
 
   Future<void> draw() async {
-    // [ImageProvider.evict] is needed since Flutter 3.3.x.
     await widget.image.evict();
     if (widget.image is NetworkImage) {
       final resolved = Uri.base.resolve((widget.image as NetworkImage).url);
@@ -2836,11 +1830,10 @@ class _StillGIFState extends State<StillGIF> {
       final HttpClientResponse response = await request.close();
       final data = await consolidateHttpClientResponseBytes(response);
       final buffer = await ImmutableBuffer.fromUint8List(data);
-      final codec = await PaintingBinding.instance
-          .instantiateImageCodecFromBuffer(buffer);
+      final codec = await PaintingBinding.instance.instantiateImageCodecWithSize(buffer);
       final frame = await codec.getNextFrame();
       setState(() {
-        image = RawImage(
+        _image = RawImage(
           image: frame.image.clone(),
           height: widget.height,
           width: widget.width,
@@ -2851,11 +1844,10 @@ class _StillGIFState extends State<StillGIF> {
       final buffer = await ImmutableBuffer.fromAsset(
         (widget.image as AssetImage).assetName,
       );
-      final codec = await PaintingBinding.instance
-          .instantiateImageCodecFromBuffer(buffer);
+      final codec = await PaintingBinding.instance.instantiateImageCodecWithSize(buffer);
       final frame = await codec.getNextFrame();
       setState(() {
-        image = RawImage(
+        _image = RawImage(
           image: frame.image.clone(),
           height: widget.height,
           width: widget.width,
@@ -2865,11 +1857,10 @@ class _StillGIFState extends State<StillGIF> {
     } else if (widget.image is FileImage) {
       final data = await (widget.image as FileImage).file.readAsBytes();
       final buffer = await ImmutableBuffer.fromUint8List(data);
-      final codec = await PaintingBinding.instance
-          .instantiateImageCodecFromBuffer(buffer);
+      final codec = await PaintingBinding.instance.instantiateImageCodecWithSize(buffer);
       final frame = await codec.getNextFrame();
       setState(() {
-        image = RawImage(
+        _image = RawImage(
           image: frame.image.clone(),
           height: widget.height,
           width: widget.width,
@@ -2887,7 +1878,7 @@ class _StillGIFState extends State<StillGIF> {
 
   @override
   Widget build(BuildContext context) {
-    return image ??
+    return _image ??
         SizedBox(
           width: widget.width,
           height: widget.height,
@@ -2895,458 +1886,382 @@ class _StillGIFState extends State<StillGIF> {
   }
 }
 
-class MobileAppBarOverflowButton extends StatefulWidget {
-  final Color? color;
-  MobileAppBarOverflowButton({
-    Key? key,
-    this.color,
-  }) : super(key: key);
+// --------------------------------------------------
+
+class ListItem extends StatefulWidget {
+  final String title;
+  final String? subtitle;
+  final Widget? leading;
+  final Widget? trailing;
+  final VoidCallback? onTap;
+
+  // https://github.com/flutter/flutter/issues/29549
+  // https://stackoverflow.com/a/54113677/12825435
+
+  const ListItem({
+    super.key,
+    required this.title,
+    this.subtitle,
+    this.leading,
+    this.trailing,
+    this.onTap,
+  });
 
   @override
-  State<MobileAppBarOverflowButton> createState() =>
-      _MobileAppBarOverflowButtonState();
+  State<ListItem> createState() => ListItemState();
 }
 
-class _MobileAppBarOverflowButtonState
-    extends State<MobileAppBarOverflowButton> {
+class ListItemState extends State<ListItem> {
+  final ValueNotifier<bool> isThreeLineNotifier = ValueNotifier<bool>(false);
+
   @override
   Widget build(BuildContext context) {
-    return CircularButton(
-      icon: Icon(
-        Icons.more_vert,
-        color: widget.color ??
-            Theme.of(context).appBarTheme.actionsIconTheme?.color,
-      ),
-      onPressed: () async {
-        Completer<int> completer = Completer<int>();
-        await showModalBottomSheet(
-          isScrollControlled: true,
-          context: context,
-          elevation: kDefaultHeavyElevation,
-          useRootNavigator: false,
-          builder: (context) => Container(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                PopupMenuItem(
-                  onTap: () {
-                    completer.complete(0);
-                    Navigator.of(context).maybePop();
-                  },
-                  child: ListTile(
-                    leading: Icon(Icons.file_open),
-                    title: Text(
-                      Language.instance.OPEN_FILE_OR_URL,
-                      style: isDesktop
-                          ? Theme.of(context).textTheme.bodyLarge
-                          : null,
-                    ),
-                  ),
-                ),
-                PopupMenuItem(
-                  onTap: () {
-                    completer.complete(1);
-                    Navigator.of(context).maybePop();
-                  },
-                  child: ListTile(
-                    leading: Icon(Icons.code),
-                    title: Text(
-                      Language.instance.READ_METADATA,
-                      style: isDesktop
-                          ? Theme.of(context).textTheme.bodyLarge
-                          : null,
-                    ),
-                  ),
-                ),
-                PopupMenuItem(
-                  onTap: () {
-                    completer.complete(2);
-                    Navigator.of(context).maybePop();
-                  },
-                  child: ListTile(
-                    leading: Icon(Icons.settings),
-                    title: Text(
-                      Language.instance.SETTING,
-                      style: isDesktop
-                          ? Theme.of(context).textTheme.bodyLarge
-                          : null,
-                    ),
-                  ),
-                ),
-                PopupMenuItem(
-                  onTap: () {
-                    completer.complete(3);
-                    Navigator.of(context).maybePop();
-                  },
-                  child: ListTile(
-                    leading: Icon(Icons.info),
-                    title: Text(
-                      Language.instance.ABOUT_TITLE,
-                      style: isDesktop
-                          ? Theme.of(context).textTheme.bodyLarge
-                          : null,
-                    ),
-                  ),
-                ),
-                if (!isDesktop && !MobileNowPlayingController.instance.isHidden)
-                  const SizedBox(height: kMobileNowPlayingBarHeight),
-              ],
-            ),
+    return ValueListenableBuilder<bool>(
+      valueListenable: isThreeLineNotifier,
+      builder: (context, isThreeLine, _) {
+        return ListTile(
+          leading: widget.leading,
+          trailing: widget.trailing,
+          title: Text(
+            widget.title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).listTileTheme.titleTextStyle,
           ),
-        );
-        completer.future.then((value) async {
-          // Prevent visual glitches when pushing a new route into the view.
-          await Future.delayed(const Duration(milliseconds: 300));
-          switch (value) {
-            case 0:
-              {
-                await showDialog(
-                  context: context,
-                  builder: (ctx) => SimpleDialog(
-                    title: Text(
-                      Language.instance.OPEN_FILE_OR_URL,
+          subtitle: widget.subtitle == null
+              ? null
+              : Stack(
+                  children: [
+                    Positioned.fill(
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          final textSpan = TextSpan(
+                            text: widget.subtitle,
+                            style: Theme.of(context).listTileTheme.subtitleTextStyle,
+                          );
+                          final textPainter = TextPainter(text: textSpan, textDirection: TextDirection.ltr);
+                          textPainter.layout(maxWidth: constraints.maxWidth);
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (textPainter.computeLineMetrics().length >= 2) {
+                              isThreeLineNotifier.value = true;
+                            } else {
+                              isThreeLineNotifier.value = false;
+                            }
+                          });
+                          return const SizedBox.shrink();
+                        },
+                      ),
                     ),
-                    children: [
-                      ListTile(
-                        onTap: () async {
-                          final file = await pickFile(
-                            label: Language.instance.MEDIA_FILES,
-                            extensions: kSupportedFileTypes,
-                          );
-                          if (file != null) {
-                            await Navigator.of(ctx).maybePop();
-                            await Intent.instance.playURI(file.uri.toString());
-                          }
-                        },
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          foregroundColor: Theme.of(ctx).iconTheme.color,
-                          child: Icon(
-                            Icons.folder,
-                          ),
-                        ),
-                        title: Text(
-                          Language.instance.FILE,
-                          style: isDesktop
-                              ? Theme.of(ctx).textTheme.bodyLarge
-                              : null,
-                        ),
-                      ),
-                      ListTile(
-                        onTap: () async {
-                          await Navigator.of(ctx).maybePop();
-                          String input = '';
-                          final GlobalKey<FormState> formKey =
-                              GlobalKey<FormState>();
-                          await showModalBottomSheet(
-                            isScrollControlled: true,
-                            context: context,
-                            elevation: kDefaultHeavyElevation,
-                            useRootNavigator: true,
-                            builder: (context) => StatefulBuilder(
-                              builder: (context, setState) {
-                                return Container(
-                                  margin: EdgeInsets.only(
-                                    bottom: MediaQuery.of(context)
-                                            .viewInsets
-                                            .bottom -
-                                        MediaQuery.of(context).padding.bottom,
-                                  ),
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      const SizedBox(height: 4.0),
-                                      Form(
-                                        key: formKey,
-                                        child: CustomTextFormField(
-                                          autofocus: true,
-                                          autocorrect: false,
-                                          validator: (value) {
-                                            final parser = URIParser(value);
-                                            if (!parser.validate()) {
-                                              debugPrint(value);
-                                              // Empty [String] prevents the message from showing & does not distort the UI.
-                                              return '';
-                                            }
-                                            return null;
-                                          },
-                                          onChanged: (value) => input = value,
-                                          keyboardType: TextInputType.url,
-                                          textCapitalization:
-                                              TextCapitalization.none,
-                                          textInputAction: TextInputAction.done,
-                                          onFieldSubmitted: (value) async {
-                                            if (formKey.currentState
-                                                    ?.validate() ??
-                                                false) {
-                                              await Navigator.of(context)
-                                                  .maybePop();
-                                              await Intent.instance
-                                                  .playURI(value);
-                                            }
-                                          },
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge
-                                              ?.copyWith(
-                                                fontSize: 16.0,
-                                              ),
-                                          decoration:
-                                              mobileUnderlinedInputDecoration(
-                                            context,
-                                            Language.instance.FILE_PATH_OR_URL,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4.0),
-                                      ElevatedButton(
-                                        onPressed: () async {
-                                          if (formKey.currentState
-                                                  ?.validate() ??
-                                              false) {
-                                            await Navigator.of(context)
-                                                .maybePop();
-                                            await Intent.instance
-                                                .playURI(input);
-                                          }
-                                        },
-                                        child: Text(
-                                          label(
-                                            context,
-                                            Language.instance.PLAY,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-                        },
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          foregroundColor: Theme.of(ctx).iconTheme.color,
-                          child: Icon(
-                            Icons.link,
-                          ),
-                        ),
-                        title: Text(
-                          Language.instance.URL,
-                          style: isDesktop
-                              ? Theme.of(ctx).textTheme.bodyLarge
-                              : null,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-                break;
-              }
-            case 1:
-              {
-                await FileInfoScreen.show(context);
-                break;
-              }
-            case 2:
-              {
-                await Navigator.push(
-                  context,
-                  MaterialRoute(
-                    builder: (context) => Settings(),
-                  ),
-                );
-                break;
-              }
-            case 3:
-              {
-                await Navigator.push(
-                  context,
-                  MaterialRoute(
-                    builder: (context) => AboutPage(),
-                  ),
-                );
-                break;
-              }
-          }
-        });
+                    Text(
+                      widget.subtitle!,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+          isThreeLine: isThreeLine,
+          onTap: widget.onTap,
+        );
       },
     );
   }
 }
 
-class NoOverscrollGlowBehavior extends ScrollBehavior {
-  @override
-  Widget buildOverscrollIndicator(
-      BuildContext context, Widget child, ScrollableDetails details) {
-    return child;
-  }
-}
+// --------------------------------------------------
 
-// FIX FOR: https://github.com/flutter/flutter/issues/120516
-class ScrollUnderFlexibleSpace extends StatelessWidget {
-  const ScrollUnderFlexibleSpace({
-    this.title,
-    this.centerCollapsedTitle,
-    this.primary = true,
+class StatefulAnimatedIcon extends StatefulWidget {
+  final bool dismissed;
+  final AnimatedIconData icon;
+  final double size;
+
+  const StatefulAnimatedIcon({
+    super.key,
+    required this.dismissed,
+    required this.icon,
+    this.size = 24.0,
   });
 
-  final Widget? title;
-  final bool? centerCollapsedTitle;
-  final bool primary;
+  @override
+  State<StatefulAnimatedIcon> createState() => StatefulAnimatedIconState();
+}
+
+class StatefulAnimatedIconState extends State<StatefulAnimatedIcon> with SingleTickerProviderStateMixin {
+  late final AnimationController progress = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 200),
+    reverseDuration: const Duration(milliseconds: 200),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.dismissed) {
+      progress.value = 1.0;
+    }
+  }
+
+  @override
+  void didUpdateWidget(StatefulAnimatedIcon oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.dismissed != widget.dismissed) {
+      if (widget.dismissed) {
+        progress.forward();
+      } else {
+        progress.reverse();
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    late final ThemeData theme = Theme.of(context);
-    final FlexibleSpaceBarSettings settings =
-        context.dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>()!;
-    final double topPadding =
-        primary ? MediaQuery.of(context).viewPadding.top : 0;
-    final double collapsedHeight = settings.minExtent - topPadding;
-    final double scrollUnderHeight = settings.maxExtent - settings.minExtent;
-    final LargeScrollUnderFlexibleConfig config =
-        LargeScrollUnderFlexibleConfig(context);
-
-    late final Widget? collapsedTitle;
-    late final Widget? expandedTitle;
-    if (title != null) {
-      collapsedTitle = config.collapsedTextStyle != null
-          ? DefaultTextStyle(
-              style: config.collapsedTextStyle!,
-              child: title!,
-            )
-          : title;
-      expandedTitle = config.expandedTextStyle != null
-          ? DefaultTextStyle(
-              style: config.expandedTextStyle!,
-              child: title!,
-            )
-          : title;
-    }
-
-    late final bool centerTitle;
-    {
-      bool platformCenter() {
-        switch (theme.platform) {
-          case TargetPlatform.android:
-          case TargetPlatform.fuchsia:
-          case TargetPlatform.linux:
-          case TargetPlatform.windows:
-            return false;
-          case TargetPlatform.iOS:
-          case TargetPlatform.macOS:
-            return true;
-        }
-      }
-
-      centerTitle = centerCollapsedTitle ??
-          theme.appBarTheme.centerTitle ??
-          platformCenter();
-    }
-
-    final bool isCollapsed = settings.isScrolledUnder ?? false;
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(top: topPadding),
-          child: Container(
-            height: collapsedHeight,
-            padding: centerTitle
-                ? config.collapsedCenteredTitlePadding
-                : config.collapsedTitlePadding,
-            child: AnimatedOpacity(
-              opacity: isCollapsed ? 1 : 0,
-              duration: const Duration(milliseconds: 500),
-              curve: const Cubic(0.2, 0.0, 0.0, 1.0),
-              child: Align(
-                  alignment: centerTitle
-                      ? Alignment.center
-                      : AlignmentDirectional.centerStart,
-                  child: collapsedTitle),
-            ),
-          ),
-        ),
-        Flexible(
-          child: ClipRect(
-            child: OverflowBox(
-              minHeight: scrollUnderHeight,
-              maxHeight: scrollUnderHeight,
-              alignment: Alignment.bottomLeft,
-              child: Container(
-                alignment: AlignmentDirectional.bottomStart,
-                padding: config.expandedTitlePadding,
-                child: expandedTitle,
-              ),
-            ),
-          ),
-        ),
-      ],
+    return AnimatedIcon(
+      progress: progress,
+      icon: widget.icon,
+      size: widget.size,
     );
   }
 }
 
-class LargeScrollUnderFlexibleConfig {
-  LargeScrollUnderFlexibleConfig(this.context);
+// --------------------------------------------------
 
-  final BuildContext context;
-  late final ThemeData _theme = Theme.of(context);
-  late final ColorScheme _colors = _theme.colorScheme;
-  late final TextTheme _textTheme = _theme.textTheme;
+class StatefulPageViewBuilder extends StatefulWidget {
+  final int index;
+  final Widget Function(BuildContext, int) itemBuilder;
+  final int? itemCount;
+  final ScrollPhysics? physics;
 
-  static const double collapsedHeight = 64.0;
-  static const double expandedHeight = 152.0;
+  const StatefulPageViewBuilder({
+    super.key,
+    required this.index,
+    required this.itemBuilder,
+    this.itemCount,
+    this.physics,
+  });
 
-  TextStyle? get collapsedTextStyle =>
-      _textTheme.titleLarge?.apply(color: _colors.onSurface);
-
-  TextStyle? get expandedTextStyle =>
-      _textTheme.headlineMedium?.apply(color: _colors.onSurface);
-
-  EdgeInsetsGeometry? get collapsedTitlePadding =>
-      const EdgeInsets.fromLTRB(48 + 16, 0, 16, 0);
-
-  EdgeInsetsGeometry? get collapsedCenteredTitlePadding =>
-      const EdgeInsets.fromLTRB(16, 0, 16, 0);
-
-  EdgeInsetsGeometry? get expandedTitlePadding =>
-      const EdgeInsets.fromLTRB(16, 0, 16, 28);
+  @override
+  State<StatefulPageViewBuilder> createState() => StatefulPageViewBuilderState();
 }
 
-class CustomCheckedPopupMenuItem<T> extends StatelessWidget {
-  final T value;
-  final bool checked;
-  final VoidCallback onTap;
-  final Widget child;
-  final EdgeInsets? padding;
+class StatefulPageViewBuilderState extends State<StatefulPageViewBuilder> {
+  // https://github.com/flutter/flutter/issues/31191
+  late final PageController _controller = PageController(
+    initialPage: widget.index,
+    viewportFraction: 0.9999999999,
+  );
 
-  const CustomCheckedPopupMenuItem({
-    Key? key,
-    required this.value,
-    this.checked = false,
-    required this.onTap,
-    required this.child,
-    required this.padding,
-  }) : super(key: key);
+  @override
+  void didUpdateWidget(covariant StatefulPageViewBuilder oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.index != widget.index) {
+      if ((oldWidget.index - widget.index).abs() > 5) {
+        _controller.jumpToPage(widget.index);
+      } else {
+        _controller.animateToPage(
+          widget.index,
+          duration: Theme.of(context).extension<AnimationDuration>()?.slow ?? Duration.zero,
+          curve: Curves.easeInOut,
+        );
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return PopupMenuItem(
-      padding: padding,
-      child: ListTile(
-        onTap: () {
-          onTap();
-        },
-        leading: AnimatedOpacity(
-          opacity: checked ? 1.0 : 0.0,
+    return PageView.builder(
+      controller: _controller,
+      physics: widget.physics,
+      itemCount: widget.itemCount,
+      itemBuilder: (context, index) => widget.itemBuilder(context, index),
+    );
+  }
+}
+
+// --------------------------------------------------
+
+class StatefulCarouselViewBuilder extends StatefulWidget {
+  final int index;
+  final Widget Function(BuildContext, int) itemBuilder;
+  final int itemCount;
+  final EdgeInsets padding;
+  final List<int> flexWeights;
+  final void Function(int)? onTap;
+
+  const StatefulCarouselViewBuilder({
+    super.key,
+    required this.index,
+    required this.itemBuilder,
+    required this.itemCount,
+    this.padding = const EdgeInsets.symmetric(horizontal: 4.0),
+    required this.flexWeights,
+    this.onTap,
+  });
+
+  @override
+  State<StatefulCarouselViewBuilder> createState() => StatefulCarouselViewBuilderState();
+}
+
+class StatefulCarouselViewBuilderState extends State<StatefulCarouselViewBuilder> {
+  late final CarouselController _controller = CarouselController(initialItem: widget.index);
+
+  @override
+  void didUpdateWidget(covariant StatefulCarouselViewBuilder oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.index != widget.index) {
+      if ((oldWidget.index - widget.index).abs() > 5) {
+        _controller.jumpToItem(widget.index);
+      } else {
+        _controller.animateToItem(
+          widget.index,
+          duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
           curve: Curves.easeInOut,
-          duration: Theme.of(context).extension<AnimationDuration>()?.fast ??
-              Duration.zero,
-          child: Icon(Icons.done),
-        ),
-        title: child,
+        );
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CarouselView.weighted(
+      padding: widget.padding,
+      itemSnapping: true,
+      controller: _controller,
+      itemCount: widget.itemCount,
+      itemBuilder: widget.itemBuilder,
+      flexWeights: widget.flexWeights,
+      onTap: widget.onTap,
+    );
+  }
+}
+
+// --------------------------------------------------
+
+class SliverSpacer extends StatelessWidget {
+  const SliverSpacer({super.key});
+
+  Widget _buildDesktopLayout(BuildContext context) => const SizedBox(height: kDesktopSliverTileSpacerHeight);
+
+  Widget _buildTabletLayout(BuildContext context) => throw UnimplementedError();
+
+  Widget _buildMobileLayout(BuildContext context) => const SizedBox(height: kMobileSliverTileSpacerHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    if (isDesktop) {
+      return _buildDesktopLayout(context);
+    }
+    if (isTablet) {
+      return _buildTabletLayout(context);
+    }
+    if (isMobile) {
+      return _buildMobileLayout(context);
+    }
+    throw UnimplementedError();
+  }
+}
+
+// --------------------------------------------------
+
+class MusicAnimation extends StatelessWidget {
+  final Color? color;
+  final double width;
+  final double height;
+  final int separatorFlex;
+
+  const MusicAnimation({
+    super.key,
+    this.color,
+    this.width = double.infinity,
+    this.height = double.infinity,
+    this.separatorFlex = 1,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    const durations = <int>[1000, 1250, 1500];
+
+    return SizedBox(
+      width: width,
+      height: height,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          for (final duration in durations) ...[
+            Expanded(
+              flex: 4,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return _MusicAnimationComponent(
+                    curve: Curves.bounceOut,
+                    color: color ?? Theme.of(context).iconTheme.color ?? Theme.of(context).colorScheme.primary,
+                    duration: Duration(milliseconds: duration),
+                    height: constraints.maxHeight,
+                  );
+                },
+              ),
+            ),
+            Spacer(flex: separatorFlex),
+          ],
+        ]..removeLast(),
+      ),
+    );
+  }
+}
+
+class _MusicAnimationComponent extends StatefulWidget {
+  final Curve curve;
+  final Color color;
+  final Duration duration;
+  final double height;
+
+  const _MusicAnimationComponent({
+    required this.curve,
+    required this.color,
+    required this.duration,
+    required this.height,
+  });
+
+  @override
+  _MusicAnimationComponentState createState() => _MusicAnimationComponentState();
+}
+
+class _MusicAnimationComponentState extends State<_MusicAnimationComponent> with SingleTickerProviderStateMixin {
+  late final AnimationController controller = AnimationController(duration: widget.duration, vsync: this);
+  late final Animation<double> animation = Tween<double>(begin: 0.0, end: widget.height).animate(CurvedAnimation(parent: controller, curve: widget.curve));
+
+  @override
+  void initState() {
+    super.initState();
+    controller
+      ..value = widget.height * Random().nextDouble() * 0.5
+      ..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, _) => Container(
+        height: animation.value,
+        color: widget.color,
       ),
     );
   }

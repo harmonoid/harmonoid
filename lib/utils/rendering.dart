@@ -1,1008 +1,1128 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-
-import 'dart:io';
 import 'dart:async';
-import 'dart:collection';
-import 'package:flutter/material.dart';
-import 'package:share_plus/share_plus.dart';
+import 'dart:io';
+import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:file_selector/file_selector.dart';
-import 'package:media_library/media_library.dart';
-import 'package:extended_image/extended_image.dart';
-import 'package:filepicker_windows/filepicker_windows.dart';
-import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
-import 'package:external_media_provider/external_media_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
+import 'package:media_library/media_library.dart' hide MediaLibrary;
+import 'package:path/path.dart';
+import 'package:safe_local_storage/safe_local_storage.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:uri_parser/uri_parser.dart';
 
-import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/interface/home.dart';
-import 'package:harmonoid/interface/collection/album.dart';
-import 'package:harmonoid/interface/file_info_screen.dart';
-import 'package:harmonoid/interface/collection/playlist.dart';
-import 'package:harmonoid/interface/edit_details_screen.dart';
-import 'package:harmonoid/interface/directory_picker_screen.dart';
-import 'package:harmonoid/state/lyrics.dart';
-import 'package:harmonoid/state/mobile_now_playing_controller.dart';
-import 'package:harmonoid/utils/theme.dart';
-import 'package:harmonoid/utils/widgets.dart';
-export 'package:harmonoid/utils/extensions.dart';
+import 'package:harmonoid/core/configuration/configuration.dart';
+import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/extensions/go_router.dart';
+import 'package:harmonoid/extensions/playable.dart';
+import 'package:harmonoid/extensions/string.dart';
+import 'package:harmonoid/extensions/track.dart';
+import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/mappers/track.dart';
+import 'package:harmonoid/models/playable.dart';
+import 'package:harmonoid/state/lyrics_notifier.dart';
+import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
+import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
+import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
+import 'package:harmonoid/ui/media_library/playlists/playlist_item.dart';
+import 'package:harmonoid/ui/router.dart';
+import 'package:harmonoid/utils/android_storage_controller.dart';
+import 'package:harmonoid/utils/android_utils.dart';
+import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/constants.dart';
-import 'package:harmonoid/utils/palette_generator.dart';
-import 'package:harmonoid/utils/storage_retriever.dart';
-import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/utils/macos_storage_controller.dart';
+import 'package:harmonoid/utils/widgets.dart';
 
-// TODO(@alexmercerind): Clean-up global variables.
+bool get isMaterial3 => Theme.of(rootNavigatorKey.currentContext!).extension<MaterialStandard>()?.value == 3;
 
-final isDesktop = Platform.isWindows || Platform.isLinux || Platform.isMacOS;
-final isMobile = Platform.isAndroid || Platform.isIOS;
+bool get isMaterial2 => Theme.of(rootNavigatorKey.currentContext!).extension<MaterialStandard>()?.value == 2;
 
-// Remaining source code in this file consists of helper & utility methods used for rendering & handling some repeated tasks linked at multiple places.
+bool get isMaterial3OrGreater => (Theme.of(rootNavigatorKey.currentContext!).extension<MaterialStandard>()?.value ?? 0) >= 3;
 
-double tileMargin(BuildContext context) =>
-    isDesktop ? k16tileMargin : k8tileMargin;
+bool get isMaterial2OrGreater => (Theme.of(rootNavigatorKey.currentContext!).extension<MaterialStandard>()?.value ?? 0) >= 2;
 
-bool isMaterial3(BuildContext context) =>
-    Theme.of(context).extension<MaterialStandard>()?.value == 3;
+bool get isDesktop => Theme.of(rootNavigatorKey.currentContext!).extension<LayoutVariantThemeExtension>()?.value == LayoutVariant.desktop;
 
-bool isMaterial2(BuildContext context) =>
-    Theme.of(context).extension<MaterialStandard>()?.value == 2;
+bool get isTablet => Theme.of(rootNavigatorKey.currentContext!).extension<LayoutVariantThemeExtension>()?.value == LayoutVariant.tablet;
 
-String label(BuildContext context, String value) =>
-    // All button labels are uppercase in Material Design 2.
-    isMaterial2(context) ? value.toUpperCase() : value;
+bool get isMobile => Theme.of(rootNavigatorKey.currentContext!).extension<LayoutVariantThemeExtension>()?.value == LayoutVariant.mobile;
 
-double navigationBarHeight(BuildContext context) => isMaterial3(context)
-    // Based on Material Design 3 specification.
-    ? 80.0
-    : kBottomNavigationBarHeight;
+bool get isDarkMode => Theme.of(rootNavigatorKey.currentContext!).brightness == Brightness.dark;
 
-List<Widget> tileGridListWidgets({
-  required double tileHeight,
-  required double tileWidth,
-  required String? subHeader,
-  required BuildContext context,
-  required int widgetCount,
-  required Widget Function(BuildContext context, int index) builder,
-  required String? leadingSubHeader,
-  required Widget? leadingWidget,
-  required int elementsPerRow,
-  MainAxisAlignment mainAxisAlignment = MainAxisAlignment.center,
-  bool showIncompleteRow = true,
-  double? margin,
-}) {
-  List<Widget> widgets = <Widget>[];
-  widgets.addAll([
-    if (leadingSubHeader != null) SubHeader(leadingSubHeader),
-    if (leadingWidget != null) leadingWidget,
-    if (subHeader != null) SubHeader(subHeader),
-  ]);
-  int rowIndex = 0;
-  List<Widget> rowChildren = <Widget>[];
-  margin ??= tileMargin(context);
-  for (int index = 0; index < widgetCount; index++) {
-    rowChildren.add(
-      Container(
-        child: builder(context, index),
-        margin: EdgeInsets.symmetric(
-          horizontal: margin / 2.0,
-        ),
-      ),
-    );
-    rowIndex++;
-    if (rowIndex > elementsPerRow - 1) {
-      widgets.add(
-        Container(
-          height: tileHeight + margin,
-          margin: EdgeInsets.only(left: margin / 2.0, right: margin / 2.0),
-          alignment: Alignment.topCenter,
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: mainAxisAlignment,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: rowChildren,
-          ),
-        ),
-      );
-      rowIndex = 0;
-      rowChildren = <Widget>[];
-    }
-  }
-  if (elementsPerRow != 0) {
-    if (widgetCount % elementsPerRow != 0 && showIncompleteRow) {
-      rowChildren = <Widget>[];
-      for (int index = widgetCount - (widgetCount % elementsPerRow);
-          index < widgetCount;
-          index++) {
-        rowChildren.add(
-          Container(
-            child: builder(context, index),
-            margin: EdgeInsets.symmetric(
-              horizontal: margin / 2.0,
-            ),
-          ),
-        );
-      }
-      for (int index = 0;
-          index < elementsPerRow - (widgetCount % elementsPerRow);
-          index++) {
-        rowChildren.add(
-          Container(
-            height: tileHeight + margin,
-            width: tileWidth,
-            margin: EdgeInsets.only(left: margin / 2.0, right: margin / 2.0),
-          ),
-        );
-      }
-      widgets.add(
-        Container(
-          height: tileHeight + margin,
-          margin: EdgeInsets.only(left: margin / 2.0, right: margin / 2.0),
-          alignment: Alignment.topCenter,
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: mainAxisAlignment,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: rowChildren,
-          ),
-        ),
-      );
-    }
-  }
-  return widgets;
-}
-
-class TileGridListWidgetsData {
-  /// Actual List of [Widget]s to render inside a [ListView].
-  final List<Widget> widgets;
-
-  /// Structurized data returned by the passed builder's [ValueKey].
-  final List<List<dynamic>> data;
-
-  const TileGridListWidgetsData(this.widgets, this.data);
-}
-
-TileGridListWidgetsData tileGridListWidgetsWithScrollbarSupport({
-  required double tileHeight,
-  required double tileWidth,
-  required BuildContext context,
-  required int widgetCount,
-  required Widget Function(BuildContext context, int index) builder,
-  required int elementsPerRow,
-  double? margin,
-}) {
-  if (elementsPerRow == 1) {
-    final children = List.generate(
-      widgetCount,
-      (i) => builder(
-        context,
-        i,
-      ),
-    );
-    return TileGridListWidgetsData(
-      children,
-      children.map((e) => [(e.key as ValueKey).value]).toList(),
-    );
-  }
-  final widgets = <Widget>[];
-  final data = <List<dynamic>>[];
-  var rowIndex = 0;
-  var rowChildren = <Widget>[];
-  var rowData = <dynamic>[];
-  margin ??= tileMargin(context);
-  for (int index = 0; index < widgetCount; index++) {
-    final widget = builder(context, index);
-    rowChildren.add(
-      Container(
-        child: widget,
-        margin: EdgeInsets.symmetric(
-          horizontal: margin / 2.0,
-        ),
-      ),
-    );
-    rowData.add((widget.key as ValueKey).value);
-    rowIndex++;
-    if (rowIndex > elementsPerRow - 1) {
-      widgets.add(
-        Container(
-          height: tileHeight + margin,
-          margin: EdgeInsets.only(left: margin / 2.0, right: margin / 2.0),
-          alignment: Alignment.topCenter,
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: rowChildren,
-          ),
-        ),
-      );
-      data.add(rowData);
-      rowIndex = 0;
-      rowChildren = <Widget>[];
-      rowData = <dynamic>[];
-    }
-  }
-  if (elementsPerRow != 0) {
-    if (widgetCount % elementsPerRow != 0) {
-      rowChildren = <Widget>[];
-      for (int index = widgetCount - (widgetCount % elementsPerRow);
-          index < widgetCount;
-          index++) {
-        final widget = builder(context, index);
-        rowChildren.add(
-          Container(
-            child: widget,
-            margin: EdgeInsets.symmetric(
-              horizontal: margin / 2.0,
-            ),
-          ),
-        );
-        rowData.add((widget.key as ValueKey).value);
-      }
-      for (int index = 0;
-          index < elementsPerRow - (widgetCount % elementsPerRow);
-          index++) {
-        rowChildren.add(
-          Container(
-            height: tileHeight + margin,
-            width: tileWidth,
-            margin: EdgeInsets.only(left: margin / 2.0, right: margin / 2.0),
-          ),
-        );
-      }
-      widgets.add(
-        Container(
-          height: tileHeight + margin,
-          margin: EdgeInsets.only(left: margin / 2.0, right: margin / 2.0),
-          alignment: Alignment.topCenter,
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: rowChildren,
-          ),
-        ),
-      );
-      data.add(rowData);
-    }
-  }
-  return TileGridListWidgetsData(
-    widgets,
-    data,
-  );
-}
-
-List<PopupMenuItem<int>> trackPopupMenuItems(
-  Track track,
-  BuildContext context,
-) {
-  return [
-    PopupMenuItem<int>(
-      padding: EdgeInsets.zero,
-      value: 0,
-      child: ListTile(
-        leading: Icon(
-            Platform.isWindows ? FluentIcons.delete_16_regular : Icons.delete),
-        title: Text(
-          Language.instance.DELETE,
-          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-        ),
-      ),
-    ),
-    if (Platform.isAndroid || Platform.isIOS)
-      PopupMenuItem<int>(
-        padding: EdgeInsets.zero,
-        value: 1,
-        child: ListTile(
-          leading: Icon(
-              Platform.isWindows ? FluentIcons.share_16_regular : Icons.share),
-          title: Text(
-            Language.instance.SHARE,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
-      ),
-    PopupMenuItem<int>(
-      padding: EdgeInsets.zero,
-      value: 3,
-      child: ListTile(
-        leading: Icon(Platform.isWindows
-            ? FluentIcons.music_note_2_16_regular
-            : Icons.music_note),
-        title: Text(
-          Language.instance.ADD_TO_NOW_PLAYING,
-          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-        ),
-      ),
-    ),
-    PopupMenuItem<int>(
-      padding: EdgeInsets.zero,
-      value: 2,
-      child: ListTile(
-        leading: Icon(Platform.isWindows
-            ? FluentIcons.list_16_regular
-            : Icons.queue_music),
-        title: Text(
-          Language.instance.ADD_TO_PLAYLIST,
-          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-        ),
-      ),
-    ),
-    // TODO: Add Android support.
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-      PopupMenuItem<int>(
-        padding: EdgeInsets.zero,
-        value: 5,
-        child: ListTile(
-          leading: Icon(Platform.isWindows
-              ? FluentIcons.folder_24_regular
-              : Icons.folder),
-          title: Text(
-            Language.instance.SHOW_IN_FILE_MANAGER,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
-      ),
-    PopupMenuItem<int>(
-      padding: EdgeInsets.zero,
-      value: 6,
-      child: ListTile(
-        leading:
-            Icon(Platform.isWindows ? FluentIcons.edit_24_regular : Icons.edit),
-        title: Text(
-          Language.instance.EDIT_DETAILS,
-          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-        ),
-      ),
-    ),
-    PopupMenuItem<int>(
-      padding: EdgeInsets.zero,
-      value: 4,
-      child: ListTile(
-        leading: Icon(
-            Platform.isWindows ? FluentIcons.album_24_regular : Icons.album),
-        title: Text(
-          Language.instance.SHOW_ALBUM,
-          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-        ),
-      ),
-    ),
-    PopupMenuItem<int>(
-      padding: EdgeInsets.zero,
-      value: 7,
-      child: ListTile(
-        leading:
-            Icon(Platform.isWindows ? FluentIcons.info_24_regular : Icons.info),
-        title: Text(
-          Language.instance.FILE_INFORMATION,
-          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-        ),
-      ),
-    ),
-    if (Lyrics.instance.hasLRCFile(track))
-      PopupMenuItem<int>(
-        padding: EdgeInsets.zero,
-        value: 9,
-        child: ListTile(
-          leading: Icon(
-            Platform.isWindows
-                ? FluentIcons.clear_formatting_24_regular
-                : Icons.clear,
-          ),
-          title: Text(
-            Language.instance.CLEAR_LRC_FILE,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
-      )
-    else
-      PopupMenuItem<int>(
-        padding: EdgeInsets.zero,
-        value: 8,
-        child: ListTile(
-          leading: Icon(
-            Platform.isWindows ? FluentIcons.text_font_24_regular : Icons.abc,
-          ),
-          title: Text(
-            Language.instance.SET_LRC_FILE,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
-      ),
-    if (!isDesktop && !MobileNowPlayingController.instance.isHidden)
-      PopupMenuItem<int>(
-        padding: EdgeInsets.zero,
-        child: SizedBox(height: kMobileNowPlayingBarHeight),
-      ),
-  ];
-}
-
-List<PopupMenuItem<int>> albumPopupMenuItems(
-  Album album,
-  BuildContext context,
-) {
-  return [
-    PopupMenuItem<int>(
-      padding: EdgeInsets.zero,
-      value: 0,
-      child: ListTile(
-        leading: Icon(
-          Platform.isWindows ? FluentIcons.play_24_regular : Icons.play_circle,
-        ),
-        title: Text(
-          Language.instance.PLAY,
-          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-        ),
-      ),
-    ),
-    PopupMenuItem<int>(
-      padding: EdgeInsets.zero,
-      value: 1,
-      child: ListTile(
-        leading: Icon(
-          Platform.isWindows
-              ? FluentIcons.arrow_shuffle_24_regular
-              : Icons.shuffle,
-        ),
-        title: Text(
-          Language.instance.SHUFFLE,
-          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-        ),
-      ),
-    ),
-    PopupMenuItem<int>(
-      padding: EdgeInsets.zero,
-      value: 2,
-      child: ListTile(
-        leading: Icon(
-          Platform.isWindows ? FluentIcons.delete_16_regular : Icons.delete,
-        ),
-        title: Text(
-          Language.instance.DELETE,
-          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-        ),
-      ),
-    ),
-    PopupMenuItem<int>(
-      padding: EdgeInsets.zero,
-      value: 3,
-      child: ListTile(
-        leading: Icon(
-          Platform.isWindows
-              ? FluentIcons.music_note_2_16_regular
-              : Icons.queue_music,
-        ),
-        title: Text(
-          Language.instance.ADD_TO_NOW_PLAYING,
-          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-        ),
-      ),
-    ),
-    if (!isDesktop && !MobileNowPlayingController.instance.isHidden)
-      PopupMenuItem<int>(
-        padding: EdgeInsets.zero,
-        child: SizedBox(height: kMobileNowPlayingBarHeight),
-      ),
-  ];
-}
-
-Future<void> trackPopupMenuHandle(
-  BuildContext context,
-  Track track,
-  int? result, {
-  bool Function()? recursivelyPopNavigatorOnDeleteIf,
-}) async {
-  if (result != null) {
-    switch (result) {
-      case 0:
-        if (Platform.isAndroid) {
-          final sdk = StorageRetriever.instance.version;
-          if (sdk >= 30) {
-            // No [AlertDialog] required for confirmation.
-            // Android 11 or higher (API level 30) will ask for permissions from the user before deletion.
-            await Collection.instance.delete(track);
-            if (recursivelyPopNavigatorOnDeleteIf != null) {
-              if (recursivelyPopNavigatorOnDeleteIf()) {
-                while (Navigator.of(context).canPop()) {
-                  await Navigator.of(context).maybePop();
-                }
-                if (floatingSearchBarController.isOpen) {
-                  floatingSearchBarController.close();
-                }
-              }
-            }
-            return;
-          }
-        }
-        await showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            title: Text(
-              Language.instance.COLLECTION_TRACK_DELETE_DIALOG_HEADER,
-            ),
-            content: Text(
-              Language.instance.COLLECTION_TRACK_DELETE_DIALOG_BODY.replaceAll(
-                'NAME',
-                track.trackName,
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () async {
-                  await Collection.instance.delete(track);
-                  await Navigator.of(ctx).maybePop();
-                  if (recursivelyPopNavigatorOnDeleteIf != null) {
-                    if (recursivelyPopNavigatorOnDeleteIf()) {
-                      while (Navigator.of(context).canPop()) {
-                        await Navigator.of(context).maybePop();
-                      }
-                      if (floatingSearchBarController.isOpen) {
-                        floatingSearchBarController.close();
-                      }
-                    }
-                  }
-                },
-                child: Text(
-                  label(
-                    context,
-                    Language.instance.YES,
-                  ),
-                ),
-              ),
-              TextButton(
-                onPressed: Navigator.of(ctx).pop,
-                child: Text(
-                  label(
-                    context,
-                    Language.instance.NO,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-        break;
-      case 1:
-        if (track.uri.isScheme('FILE')) {
-          await Share.shareFiles(
-            [track.uri.toFilePath()],
-            subject: '${track.trackName} • ${[
-              '',
-              kUnknownArtist,
-            ].contains(track.albumArtistName) ? track.trackArtistNames.take(2).join(', ') : track.albumArtistName}',
-          );
-        } else {
-          await Share.share(
-            '${track.trackName} • ${[
-              '',
-              kUnknownArtist,
-            ].contains(track.albumArtistName) ? track.trackArtistNames.take(2).join(', ') : track.albumArtistName} • ${track.uri.toString()}',
-          );
-        }
-        break;
-      case 2:
-        await showAddToPlaylistDialog(context, track);
-        break;
-      case 3:
-        Playback.instance.add([track]);
-        break;
-      case 4:
-        {
-          Iterable<Color>? palette;
-          final album = Collection.instance.albumsSet.lookup(
-            Album(
-              albumName: track.albumName,
-              year: track.year,
-              albumArtistName: track.albumArtistName,
-              albumHashCodeParameters:
-                  Configuration.instance.albumHashCodeParameters,
-            ),
-          );
-          if (album != null) {
-            if (isMobile) {
-              final result = await PaletteGenerator.fromImageProvider(
-                getAlbumArt(album, small: true),
-              );
-              palette = result.colors;
-            }
-            await precacheImage(getAlbumArt(album), context);
-            Playback.instance.interceptPositionChangeRebuilds = true;
-            Navigator.of(context).push(
-              MaterialRoute(
-                builder: (context) => AlbumScreen(
-                  album: album,
-                  palette: palette,
-                ),
-              ),
-            );
-          }
-          Timer(
-            const Duration(milliseconds: 400),
-            () {
-              Playback.instance.interceptPositionChangeRebuilds = false;
-            },
-          );
-          break;
-        }
-      case 5:
-        File(track.uri.toFilePath()).explore_();
-        break;
-      case 6:
-        await Navigator.of(context).push(
-          MaterialRoute(
-            builder: (context) => EditDetailsScreen(track: track),
-          ),
-        );
-        break;
-      case 7:
-        await FileInfoScreen.show(
-          context,
-          uri: track.uri,
-        );
-        break;
-      case 8:
-        final file = await pickFile(
-          label: 'LRC',
-          // Compatiblitity issues with Android 5.0. SDK 21.
-          extensions: Platform.isAndroid ? null : ['lrc'],
-        );
-        if (file != null) {
-          final added = await Lyrics.instance.addLRCFile(
-            track,
-            file,
-          );
-          if (!added) {
-            await showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                backgroundColor: Theme.of(context).cardTheme.color,
-                title: Text(
-                  Language.instance.ERROR,
-                ),
-                content: Text(Language.instance.CORRUPT_LRC_FILE),
-                actions: [
-                  TextButton(
-                    onPressed: Navigator.of(context).pop,
-                    child: Text(
-                      label(
-                        context,
-                        Language.instance.OK,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
-        }
-        break;
-      case 9:
-        Lyrics.instance.removeLRCFile(track);
-        break;
-    }
-  }
-}
-
-Future<void> albumPopupMenuHandle(
-  BuildContext context,
-  Album album,
-  int? result,
-) async {
-  final tracks = album.tracks.toList();
-  tracks.sort(
-    (first, second) =>
-        first.discNumber.compareTo(second.discNumber) * 100000000 +
-        first.trackNumber.compareTo(second.trackNumber) * 1000000 +
-        first.trackName.compareTo(second.trackName) * 10000 +
-        first.trackArtistNames
-                .join()
-                .compareTo(second.trackArtistNames.join()) *
-            100 +
-        first.uri.toString().compareTo(second.uri.toString()),
-  );
-  if (result != null) {
-    switch (result) {
-      case 0:
-        await Playback.instance.open(tracks);
-        break;
-      case 1:
-        tracks.shuffle();
-        await Playback.instance.open(tracks);
-        break;
-      case 2:
-        if (Platform.isAndroid) {
-          final sdk = StorageRetriever.instance.version;
-          if (sdk >= 30) {
-            // No [AlertDialog] required for confirmation.
-            // Android 11 or higher (API level 30) will ask for permissions from the user before deletion.
-            await Collection.instance.delete(album);
-            while (Navigator.of(context).canPop()) {
-              await Navigator.of(context).maybePop();
-            }
-            if (floatingSearchBarController.isOpen) {
-              floatingSearchBarController.close();
-            }
-            return;
-          }
-        }
-        await showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            title: Text(
-              Language.instance.COLLECTION_ALBUM_DELETE_DIALOG_HEADER,
-            ),
-            content: Text(
-              Language.instance.COLLECTION_ALBUM_DELETE_DIALOG_BODY.replaceAll(
-                'NAME',
-                album.albumName,
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () async {
-                  await Collection.instance.delete(album);
-                  await Navigator.of(ctx).maybePop();
-                  while (Navigator.of(context).canPop()) {
-                    await Navigator.of(context).maybePop();
-                  }
-                  if (floatingSearchBarController.isOpen) {
-                    floatingSearchBarController.close();
-                  }
-                },
-                child: Text(
-                  label(
-                    context,
-                    Language.instance.YES,
-                  ),
-                ),
-              ),
-              TextButton(
-                onPressed: Navigator.of(ctx).pop,
-                child: Text(
-                  label(
-                    context,
-                    Language.instance.NO,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-        break;
-      case 3:
-        await Playback.instance.add(tracks);
-        break;
-    }
-  }
-}
-
-Future<File?> pickFile({
-  required String label,
-  List<String>? extensions,
-}) async {
-  String? path;
-  if (Platform.isWindows) {
-    OpenFilePicker picker = OpenFilePicker()
-      ..filterSpecification = {
-        if (extensions != null) ...{
-          label: extensions.map((e) => '*.${e.toLowerCase()}').join(';'),
-        },
-        Language.instance.ALL_FILES: '*',
-      }
-      // Choosing first [extensions] extension as default.
-      ..defaultFilterIndex = 0
-      ..defaultExtension = extensions?.first.toLowerCase();
-    path = picker.getFile()?.path;
-  } else if (Platform.isLinux) {
-    final result = await openFile(
-      acceptedTypeGroups: [
-        XTypeGroup(
-          label: label,
-          // Case sensitive paths on GNU/Linux.
-          extensions: [
-            if (extensions != null) ...[
-              ...extensions.map((e) => e.toLowerCase()).toList(),
-              ...extensions.map((e) => e.toUpperCase()).toList(),
-            ],
-          ].toSet().toList(),
-        ),
-        XTypeGroup(
-          label: Language.instance.ALL_FILES,
-        ),
-      ],
-    );
-    path = result?.path;
-  }
-  // Using `package:file_picker` on other platforms.
-  else {
-    final result = await FilePicker.platform.pickFiles(
-      // Case sensitive paths on Android.
-      allowedExtensions: extensions == null
-          ? null
-          : [
-              ...extensions.map((e) => e.toLowerCase()).toList(),
-              ...extensions.map((e) => e.toUpperCase()).toList(),
-            ].toSet().toList(),
-      // Needed for [allowedExtensions].
-      type: extensions == null ? FileType.any : FileType.custom,
-    );
-    if ((result?.count ?? 0) > 0) {
-      path = result?.files.first.path;
-    }
-  }
-  return path == null ? null : File(path);
-}
-
-/// Prompts the user to select a folder.
-///
-/// [useNativePicker] only works on Android.
-/// Modern Android SDK 30+ are strictier about file access & enforce Scoped Storage.
-/// This means that native file picker cannot pick the root phone or SD card directory & the downloads folder.
-///
-/// To address this issue with directory selection for file indexing, a custom file picker is used, which is entirely Flutter based.
-///
-Future<Directory?> pickDirectory({
-  bool useNativePicker = false,
-}) async {
-  Directory? directory;
-  if (Platform.isWindows) {
-    final picker = DirectoryPicker();
-    directory = picker.getDirectory();
-  } else if (Platform.isLinux) {
-    final path = await getDirectoryPath();
-    if (path != null) {
-      directory = Directory(path);
-    }
-  }
-  // Using `package:file_picker` on other platforms.
-  else {
-    if (useNativePicker) {
-      final path = await FilePicker.platform.getDirectoryPath();
-      if (path != null) {
-        directory = Directory(path);
-      }
-    } else {
-      return showGeneralDialog(
-        context: navigatorKey.currentContext!,
-        useRootNavigator: true,
-        barrierDismissible: false,
-        barrierColor: Colors.transparent,
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            DirectoryPickerScreen(),
-      );
-    }
-  }
-  return directory;
-}
-
-Future<void> showAddToPlaylistDialog(
-  BuildContext context,
-  Track track, {
-  bool elevated = false,
-}) {
-  final playlists = Collection.instance.playlists.toList();
+double get margin {
   if (isDesktop) {
-    return showDialog(
+    return kDesktopMargin;
+  } else if (isTablet) {
+    throw UnimplementedError();
+  } else if (isMobile) {
+    return kMobileMargin;
+  }
+  throw UnimplementedError();
+}
+
+double get albumTileWidth {
+  if (isDesktop) {
+    return kDesktopAlbumTileWidth;
+  } else if (isTablet) {
+    throw UnimplementedError();
+  } else if (isMobile) {
+    return kMobileAlbumTileWidth;
+  }
+  throw UnimplementedError();
+}
+
+double get albumTileHeight {
+  if (isDesktop) {
+    return kDesktopAlbumTileHeight;
+  } else if (isTablet) {
+    throw UnimplementedError();
+  } else if (isMobile) {
+    return kMobileAlbumTileHeight;
+  }
+  throw UnimplementedError();
+}
+
+double get linearTileHeight {
+  if (isDesktop) {
+    return kDesktopLinearTileHeight;
+  } else if (isTablet) {
+    throw UnimplementedError();
+  } else if (isMobile) {
+    return kMobileLinearTileHeight;
+  }
+  throw UnimplementedError();
+}
+
+double get captionHeight {
+  try {
+    return WindowPlus.instance.captionHeight;
+  } catch (_) {
+    return 0.0;
+  }
+}
+
+EdgeInsets get mediaLibraryScrollViewBuilderPadding {
+  if (isDesktop) {
+    return EdgeInsets.zero;
+  } else if (isTablet) {
+    throw UnimplementedError();
+  } else if (isMobile) {
+    return EdgeInsets.only(top: MediaQuery.of(rootNavigatorKey.currentContext!).padding.top + margin + kMobileSearchBarHeight);
+  }
+  throw UnimplementedError();
+}
+
+double get navigationBarHeight => isMaterial3 ? 80.0 : kBottomNavigationBarHeight;
+
+double get textButtonPadding {
+  if (isMaterial3) {
+    return 12.0;
+  }
+  if (isMaterial2) {
+    return 8.0;
+  }
+  return 0.0;
+}
+
+String get operatingSystem {
+  if (Platform.isAndroid) {
+    return 'Android';
+  } else if (Platform.isIOS) {
+    return 'iOS';
+  } else if (Platform.isMacOS) {
+    return 'macOS';
+  } else if (Platform.isLinux) {
+    return 'GNU/Linux';
+  } else if (Platform.isWindows) {
+    return 'Windows';
+  } else {
+    return 'operating system';
+  }
+}
+
+String label(String value) => isMaterial3OrGreater ? value : value.uppercase();
+
+ImageProvider cover({
+  MediaLibraryItem? item,
+  PlaylistEntry? playlistEntry,
+  String? uri,
+  int? cacheWidth,
+  int? cacheHeight,
+}) {
+  if (cacheWidth != null) cacheWidth *= 2;
+  if (cacheHeight != null) cacheHeight *= 2;
+
+  final key = switch ((item, playlistEntry, uri)) {
+    (MediaLibraryItem e, _, _) => '${e.runtimeType}-${e.hashCode}',
+    (_, PlaylistEntry e, _) => '${e.runtimeType}-${e.uri}-${e.hash}',
+    (_, _, String e) => e,
+    _ => throw ArgumentError(),
+  };
+
+  Future<File?> file() async {
+    final mediaLibrary = MediaLibrary.instance;
+    final fallback = Configuration.instance.mediaLibraryCoverFallback;
+
+    if (item != null) {
+      return mediaLibrary.coverFileForMediaLibraryItem(item, fallback: fallback);
+    }
+
+    if (playlistEntry != null) {
+      if (playlistEntry.uri != null) {
+        return mediaLibrary.coverFileForUri(playlistEntry.uri!, fallback: fallback);
+      }
+      if (playlistEntry.hash != null) {
+        final track = await mediaLibrary.db.selectTrackByHash(playlistEntry.hash!);
+        return mediaLibrary.coverFileForMediaLibraryItem(track!, fallback: fallback);
+      }
+    }
+
+    if (uri != null) {
+      return mediaLibrary.coverFileForUri(uri, fallback: fallback);
+    }
+
+    throw ArgumentError();
+  }
+
+  AsyncFileImage.attemptToResolveIfDefault(
+    key,
+    file,
+    onResolve: () async {
+      // Allow few things to update to the just resolved cover.
+      String? result;
+      if (item is Track) result ??= item.uri;
+      result ??= playlistEntry?.uri;
+      result ??= uri;
+      if (MediaPlayer.instance.current.uri == result) {
+        MediaPlayer.instance
+          ..resetFlagsAudioService()
+          ..resetFlagsDiscordRpc()
+          ..resetFlagsMpris()
+          ..resetFlagsSystemMediaTransportControls();
+        NowPlayingColorPaletteNotifier.instance.resetCurrent();
+      }
+    },
+  );
+
+  final result = AsyncFileImage.getFileImage(key);
+
+  final ImageProvider image;
+
+  if (result == null) {
+    image = AsyncFileImage(
+      key,
+      file,
+      () async {
+        // Save default cover, if it does not exist.
+        final cover = File(join(MediaLibrary.instance.covers.path, kCoverDefaultFileName));
+        if (!await cover.exists_()) {
+          final data = await rootBundle.load(kCoverDefaultAssetKey);
+          await cover.write_(data.buffer.asUint8List());
+        }
+        return cover;
+      },
+    );
+  } else {
+    image = result;
+  }
+
+  if (cacheWidth != null || cacheHeight != null) {
+    return ResizeImage.resizeIfNeeded(cacheWidth, cacheHeight, image);
+  }
+  return image;
+}
+
+Future<int?> showMenuItems(BuildContext context, List<PopupMenuItem<int>> items, {RelativeRect? position}) async {
+  if (isDesktop) {
+    return showMaterialMenu(
       context: context,
-      builder: (subContext) => AlertDialog(
-        contentPadding: EdgeInsets.only(top: 20.0),
-        title: Text(Language.instance.PLAYLIST_ADD_DIALOG_TITLE),
-        content: Container(
-          height: 480.0,
-          width: 512.0,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Divider(
-                height: 1.0,
+      constraints: const BoxConstraints(
+        maxWidth: double.infinity,
+      ),
+      position: position!,
+      items: items,
+    );
+  } else {
+    int? result;
+    await showModalBottomSheet(
+      context: context,
+      useRootNavigator: true,
+      isScrollControlled: true,
+      elevation: kDefaultHeavyElevation,
+      showDragHandle: isMaterial3OrGreater,
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (int i = 0; i < items.length; i++) ...[
+              InkWell(
+                onTap: () {
+                  result = items[i].value;
+                  Navigator.of(context).maybePop();
+                },
+                child: items[i].child,
               ),
-              Expanded(
-                child: CustomListViewBuilder(
-                  itemExtents: List.generate(
-                    playlists.length,
-                    (index) => 64.0 + 9.0,
-                  ),
-                  shrinkWrap: true,
-                  itemCount: playlists.length,
-                  itemBuilder: (context, i) => PlaylistTile(
-                    playlist: playlists[i],
-                    onTap: () async {
-                      await Collection.instance.playlistAddTrack(
-                        playlists[i],
-                        track,
-                      );
-                      Navigator.of(subContext).pop();
+            ],
+          ],
+        ),
+      ),
+    );
+    return result;
+  }
+}
+
+Future<String> showInput(
+  BuildContext context,
+  String title,
+  String subtitle,
+  String action,
+  String? Function(String? value) validator, {
+  TextInputType? keyboardType,
+  TextCapitalization? textCapitalization,
+}) async {
+  bool done = false;
+  String input = '';
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  if (isDesktop) {
+    await showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(title),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              height: 40.0,
+              width: 420.0,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.only(top: 2.0),
+              child: Focus(
+                child: Form(
+                  key: formKey,
+                  child: DefaultTextFormField(
+                    autofocus: true,
+                    cursorWidth: 1.0,
+                    onChanged: (value) => input = value,
+                    validator: validator,
+                    keyboardType: keyboardType,
+                    textCapitalization: textCapitalization,
+                    textInputAction: TextInputAction.done,
+                    onFieldSubmitted: (value) {
+                      input = value;
+                      if (formKey.currentState!.validate()) {
+                        done = true;
+                        Navigator.of(ctx).maybePop();
+                      }
                     },
+                    style: Theme.of(ctx).textTheme.bodyLarge,
+                    decoration: inputDecoration(ctx, subtitle),
                   ),
                 ),
               ),
-              const Divider(height: 1.0),
-            ],
-          ),
+            ),
+          ],
         ),
         actions: [
           TextButton(
-            onPressed: Navigator.of(subContext).pop,
-            child: Text(
-              label(
-                context,
-                Language.instance.CANCEL,
-              ),
-            ),
+            onPressed: () {
+              if (formKey.currentState!.validate()) {
+                done = true;
+                Navigator.of(ctx).maybePop();
+              }
+            },
+            child: Text(label(action)),
+          ),
+          TextButton(
+            onPressed: Navigator.of(ctx).maybePop,
+            child: Text(label(Localization.instance.CANCEL)),
           ),
         ],
       ),
     );
   } else {
-    if (elevated) {
-      return showModalBottomSheet(
-        backgroundColor: Colors.transparent,
-        isScrollControlled: true,
-        context: context,
-        builder: (context) => Card(
-          margin: EdgeInsets.only(
-            left: 8.0,
-            right: 8.0,
-            bottom: kBottomNavigationBarHeight + 8.0,
-          ),
-          elevation: kDefaultHeavyElevation,
-          child: DraggableScrollableSheet(
-            initialChildSize: 0.6,
-            maxChildSize: 0.8,
-            expand: false,
-            builder: (context, controller) => ListView.builder(
-              padding: EdgeInsets.zero,
-              controller: controller,
-              shrinkWrap: true,
-              itemCount: playlists.length,
-              itemBuilder: (context, i) {
-                return PlaylistTile(
-                  playlist: playlists[i],
-                  onTap: () async {
-                    await Collection.instance.playlistAddTrack(
-                      playlists[i],
-                      track,
-                    );
-                    Navigator.of(context).pop();
+    await showModalBottomSheet(
+      context: context,
+      showDragHandle: isMaterial3OrGreater,
+      elevation: kDefaultHeavyElevation,
+      useRootNavigator: true,
+      isScrollControlled: true,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setState) {
+          return Container(
+            margin: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 4.0),
+                Form(
+                  key: formKey,
+                  child: DefaultTextFormField(
+                    autofocus: true,
+                    autocorrect: false,
+                    validator: validator,
+                    onChanged: (value) => input = value,
+                    keyboardType: keyboardType,
+                    textCapitalization: textCapitalization,
+                    textInputAction: TextInputAction.done,
+                    onFieldSubmitted: (value) {
+                      input = value;
+                      if (formKey.currentState!.validate()) {
+                        done = true;
+                        Navigator.of(ctx).maybePop();
+                      }
+                    },
+                    style: Theme.of(ctx).textTheme.bodyLarge?.copyWith(fontSize: 16.0),
+                    decoration: inputDecorationMobile(ctx, subtitle),
+                  ),
+                ),
+                const SizedBox(height: 4.0),
+                FilledButton(
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
+                      done = true;
+                      Navigator.of(ctx).maybePop();
+                    }
                   },
-                );
-              },
+                  child: Text(label(action)),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+  if (!done) {
+    input = '';
+  }
+  return input;
+}
+
+Future<bool> showConfirmation(
+  BuildContext context,
+  String title,
+  String subtitle, {
+  String? positiveAction,
+  String? negativeAction,
+}) async {
+  bool result = false;
+  await showDialog(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: Text(title),
+      content: Text(subtitle),
+      actions: [
+        TextButton(
+          onPressed: () {
+            result = true;
+            Navigator.of(ctx).maybePop();
+          },
+          child: Text(label(positiveAction ?? Localization.instance.YES)),
+        ),
+        TextButton(
+          onPressed: Navigator.of(ctx).pop,
+          child: Text(label(negativeAction ?? Localization.instance.NO)),
+        ),
+      ],
+    ),
+  );
+  return result;
+}
+
+Future<T?> showSelection<T>(BuildContext context, String title, List<T> values, T? selected, String Function(T) text, {bool actions = true}) async {
+  T? result;
+
+  await showDialog(
+    context: context,
+    builder: (ctx) => StatefulBuilder(
+      builder: (ctx, setState) {
+        void set(T? value) {
+          if (value != null) {
+            setState(() => result = value);
+          }
+        }
+
+        return AlertDialog(
+          clipBehavior: Clip.antiAlias,
+          titlePadding: actions ? const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 24.0) : const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 8.0),
+          contentPadding: EdgeInsets.zero,
+          title: Text(title),
+          content: Material(
+            color: Colors.transparent,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (actions) const Divider(height: 1.0),
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: values
+                          .map(
+                            (value) => ListItem(
+                              leading: Radio(
+                                value: value,
+                                groupValue: result ?? selected,
+                                onChanged: set,
+                              ),
+                              onTap: () => set(value),
+                              title: text(value),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
+                if (actions) const Divider(height: 1.0),
+                if (!actions) const SizedBox(height: 8.0),
+              ],
+            ),
+          ),
+          actions: actions
+              ? [
+                  TextButton(
+                    onPressed: Navigator.of(ctx).maybePop,
+                    child: Text(label(Localization.instance.OK)),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      result = null;
+                      Navigator.of(ctx).maybePop();
+                    },
+                    child: Text(label(Localization.instance.CANCEL)),
+                  ),
+                ]
+              : null,
+        );
+      },
+    ),
+  );
+  return result;
+}
+
+Future<void> showMessage(BuildContext context, String title, String subtitle) async {
+  await showDialog(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: Text(title),
+      content: Text(subtitle),
+      actions: [
+        TextButton(
+          onPressed: Navigator.of(ctx).pop,
+          child: Text(label(Localization.instance.OK)),
+        ),
+      ],
+    ),
+  );
+}
+
+List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) => [
+      PopupMenuItem<int>(
+        value: 0,
+        child: ListTile(
+          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_16_regular : Icons.delete),
+          title: Text(
+            Localization.instance.DELETE,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+      ),
+      if (Platform.isAndroid || Platform.isIOS)
+        PopupMenuItem<int>(
+          value: 1,
+          child: ListTile(
+            leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.share_16_regular : Icons.share),
+            title: Text(
+              Localization.instance.SHARE,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
             ),
           ),
         ),
-      );
+      PopupMenuItem<int>(
+        value: 2,
+        child: ListTile(
+          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.list_16_regular : Icons.queue_music),
+          title: Text(
+            Localization.instance.ADD_TO_PLAYLIST,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+      ),
+      PopupMenuItem<int>(
+        value: 3,
+        child: ListTile(
+          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.music_note_2_16_regular : Icons.music_note),
+          title: Text(
+            Localization.instance.ADD_TO_NOW_PLAYING,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+      ),
+      PopupMenuItem<int>(
+        value: 4,
+        child: ListTile(
+          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.album_24_regular : Icons.album),
+          title: Text(
+            Localization.instance.SHOW_ALBUM,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+      ),
+      if (Platform.isLinux || Platform.isMacOS || Platform.isWindows)
+        PopupMenuItem<int>(
+          value: 5,
+          child: ListTile(
+            leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.folder_24_regular : Icons.folder),
+            title: Text(
+              Localization.instance.SHOW_IN_FILE_MANAGER,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+        ),
+      PopupMenuItem<int>(
+        value: 6,
+        child: ListTile(
+          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.arrow_sync_24_regular : Icons.refresh),
+          title: Text(
+            Localization.instance.REFRESH,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+      ),
+      PopupMenuItem<int>(
+        value: 7,
+        child: ListTile(
+          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.info_24_regular : Icons.info),
+          title: Text(
+            Localization.instance.FILE_INFORMATION,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+      ),
+      if (!LyricsNotifier.instance.contains(track.toPlayable()))
+        PopupMenuItem<int>(
+          value: 8,
+          child: ListTile(
+            leading: Icon(
+              Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.text_font_24_regular : Icons.abc,
+            ),
+            title: Text(
+              Localization.instance.SET_LRC_FILE,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+        )
+      else
+        PopupMenuItem<int>(
+          value: 9,
+          child: ListTile(
+            leading: Icon(
+              Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.clear_formatting_24_regular : Icons.clear,
+            ),
+            title: Text(
+              Localization.instance.CLEAR_LRC_FILE,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+        ),
+    ];
+
+List<PopupMenuItem<int>> albumPopupMenuItems(BuildContext context, Album album) => [
+      PopupMenuItem<int>(
+        value: 0,
+        child: ListTile(
+          leading: Icon(
+            Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.play_24_regular : Icons.play_circle,
+          ),
+          title: Text(
+            Localization.instance.PLAY,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+      ),
+      PopupMenuItem<int>(
+        value: 1,
+        child: ListTile(
+          leading: Icon(
+            Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.arrow_shuffle_24_regular : Icons.shuffle,
+          ),
+          title: Text(
+            Localization.instance.SHUFFLE,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+      ),
+      PopupMenuItem<int>(
+        value: 2,
+        child: ListTile(
+          leading: Icon(
+            Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_16_regular : Icons.delete,
+          ),
+          title: Text(
+            Localization.instance.DELETE,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+      ),
+      PopupMenuItem<int>(
+        value: 3,
+        child: ListTile(
+          leading: Icon(
+            Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.music_note_2_16_regular : Icons.queue_music,
+          ),
+          title: Text(
+            Localization.instance.ADD_TO_NOW_PLAYING,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+      ),
+    ];
+
+List<PopupMenuItem<int>> playlistPopupMenuItems(BuildContext context, Playlist playlist) => [
+      PopupMenuItem<int>(
+        value: 0,
+        child: ListTile(
+          leading: Icon(
+            Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_24_regular : Icons.delete,
+          ),
+          title: Text(
+            Localization.instance.DELETE,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+      ),
+      PopupMenuItem<int>(
+        value: 1,
+        child: ListTile(
+          leading: Icon(
+            Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.rename_24_filled : Icons.drive_file_rename_outline,
+          ),
+          title: Text(
+            Localization.instance.RENAME,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+      ),
+    ];
+
+List<PopupMenuItem<int>> playlistEntryPopupMenuItems(BuildContext context, PlaylistEntry entry) => [
+      PopupMenuItem<int>(
+        value: 0,
+        child: ListTile(
+          leading: Icon(
+            Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_24_regular : Icons.delete,
+          ),
+          title: Text(
+            Localization.instance.REMOVE,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+      ),
+    ];
+
+Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result, {Future<bool> Function()? recursivelyPopNavigatorOnDeleteIf}) async {
+  if (result == null) return;
+
+  Future<void> recursivelyPopNavigatorIfRequired() async {
+    if (recursivelyPopNavigatorOnDeleteIf != null) {
+      if (await recursivelyPopNavigatorOnDeleteIf()) {
+        await recursivelyPopNavigator(context);
+      }
     }
-    return showModalBottomSheet(
-      isScrollControlled: true,
+  }
+
+  switch (result) {
+    case 0:
+      if (Platform.isAndroid) {
+        final sdk = AndroidStorageController.instance.version;
+        if (sdk >= 30) {
+          // No [AlertDialog] required for confirmation.
+          // Android 11 or higher (API level 30) will ask for permissions from the user before deletion.
+          await MediaLibrary.instance.remove([track]);
+          await recursivelyPopNavigatorIfRequired();
+          return;
+        }
+      }
+      final result = await showConfirmation(
+        context,
+        Localization.instance.DELETE,
+        Localization.instance.TRACK_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', track.title),
+      );
+      if (result) {
+        await MediaLibrary.instance.remove([track]);
+        await recursivelyPopNavigatorIfRequired();
+      }
+      break;
+    case 1:
+      await Share.shareXFiles(
+        [XFile(track.uri)],
+        subject: track.shareSubject,
+      );
+      break;
+    case 2:
+      await showAddToPlaylistDialog(context, track: track);
+      break;
+    case 3:
+      await MediaPlayer.instance.add([track.toPlayable()]);
+      break;
+    case 4:
+      await navigateToAlbum(
+        context,
+        AlbumLookupKey(
+          album: track.album,
+          albumArtist: track.albumArtist,
+          year: track.year,
+        ),
+      );
+      break;
+    case 5:
+      File(track.uri).explore_();
+      break;
+    case 6:
+      await MediaLibrary.instance.remove([track], delete: false);
+      await recursivelyPopNavigatorIfRequired();
+
+      await MediaLibrary.instance.add(File(track.uri));
+      await MediaLibrary.instance.populate();
+      break;
+    case 7:
+      context.push(Uri(path: '/$kFileInfoPath', queryParameters: {kFileInfoArgResource: track.uri.toString()}).toString());
+      break;
+    case 8:
+      final file = await pickFile(
+        // Compatibility issues with Android 5.0: SDK 21.
+        extensions: Platform.isAndroid ? null : {'LRC'},
+      );
+      if (file != null) {
+        final result = await LyricsNotifier.instance.add(track.toPlayable(), file);
+        if (!result) {
+          await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              backgroundColor: Theme.of(context).cardTheme.color,
+              title: Text(Localization.instance.ERROR),
+              content: Text(Localization.instance.CORRUPT_LRC_FILE),
+              actions: [
+                TextButton(
+                  onPressed: Navigator.of(context).pop,
+                  child: Text(label(Localization.instance.OK)),
+                ),
+              ],
+            ),
+          );
+        }
+      }
+      break;
+    case 9:
+      LyricsNotifier.instance.remove(track.toPlayable());
+      break;
+  }
+}
+
+Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result) async {
+  if (result == null) return;
+
+  Future<void> recursivelyPopNavigatorIfRequired() async {
+    final tracks = await MediaLibrary.instance.tracksFromAlbum(album);
+    if (tracks.isEmpty) {
+      await recursivelyPopNavigator(context);
+    }
+  }
+
+  final tracks = await MediaLibrary.instance.tracksFromAlbum(album);
+  switch (result) {
+    case 0:
+      await MediaPlayer.instance.open(tracks.map((e) => e.toPlayable()).toList());
+      break;
+    case 1:
+      tracks.shuffle();
+      await MediaPlayer.instance.open(tracks.map((e) => e.toPlayable()).toList());
+      break;
+    case 2:
+      if (Platform.isAndroid) {
+        final sdk = AndroidStorageController.instance.version;
+        if (sdk >= 30) {
+          // No [AlertDialog] required for confirmation.
+          // Android 11 or higher (API level 30) will ask for permissions from the user before deletion.
+          await MediaLibrary.instance.remove(tracks);
+          await recursivelyPopNavigatorIfRequired();
+          return;
+        }
+      }
+      final result = await showConfirmation(
+        context,
+        Localization.instance.DELETE,
+        Localization.instance.ALBUM_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', album.album),
+      );
+      if (result) {
+        await MediaLibrary.instance.remove(tracks);
+        await recursivelyPopNavigatorIfRequired();
+      }
+      break;
+    case 3:
+      await MediaPlayer.instance.add(tracks.map((e) => e.toPlayable()).toList());
+      break;
+  }
+}
+
+Future<void> playlistPopupMenuHandle(BuildContext context, Playlist playlist, int? result) async {
+  if (result == null) return;
+  if (playlist == MediaLibrary.instance.playlists.likedPlaylist || playlist == MediaLibrary.instance.playlists.historyPlaylist) return;
+  switch (result) {
+    case 0:
+      final result = await showConfirmation(
+        context,
+        Localization.instance.DELETE,
+        Localization.instance.PLAYLIST_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', playlist.name),
+      );
+      if (result) {
+        await MediaLibrary.instance.playlists.delete(playlist);
+      }
+      break;
+    case 1:
+      final name = await showInput(
+        context,
+        Localization.instance.RENAME,
+        Localization.instance.PLAYLIST_RENAME_DIALOG_SUBTITLE.replaceAll('"NAME"', playlist.name),
+        Localization.instance.OK,
+        (value) {
+          if (value?.isEmpty ?? true) {
+            return '';
+          }
+          return null;
+        },
+      );
+      if (name.isNotEmpty) {
+        await MediaLibrary.instance.playlists.rename(playlist, name);
+      }
+      break;
+    default:
+      break;
+  }
+}
+
+Future<void> playlistEntryPopupMenuHandle(BuildContext context, Playlist playlist, PlaylistEntry entry, int? result) async {
+  if (result == null) return;
+  switch (result) {
+    case 0:
+      final result = await showConfirmation(
+        context,
+        Localization.instance.REMOVE,
+        Localization.instance.PLAYLIST_ENTRY_REMOVE_DIALOG_SUBTITLE.replaceAll('"ENTRY"', entry.title).replaceAll('"PLAYLIST"', playlist.name),
+      );
+      if (result) {
+        await MediaLibrary.instance.playlists.deleteEntry(entry);
+      }
+      break;
+    default:
+      break;
+  }
+}
+
+Future<File?> pickFile({Set<String>? extensions}) async {
+  if (Platform.isMacOS) {
+    return MacOSStorageController.instance.pickFile(extensions?.toList() ?? []);
+  }
+
+  final result = await FilePicker.platform.pickFiles(
+    type: extensions == null ? FileType.any : FileType.custom,
+    allowedExtensions: extensions == null
+        ? null
+        : {
+            ...extensions.map((e) => e.toLowerCase()),
+            ...extensions.map((e) => e.toUpperCase()),
+          }.toList(),
+  );
+  if ((result?.count ?? 0) > 0) {
+    final path = result?.files.first.path;
+    return path != null ? File(path) : null;
+  }
+  return null;
+}
+
+Future<Directory?> pickDirectory() async {
+  if (Platform.isAndroid) {
+    return router.push('/$kDirectoryPickerPath');
+  }
+  if (Platform.isMacOS) {
+    return MacOSStorageController.instance.pickDirectory();
+  }
+  final path = await FilePicker.platform.getDirectoryPath();
+  return path != null ? Directory(path) : null;
+}
+
+Future<String?> pickResource(BuildContext context, String title) async {
+  String? result;
+
+  await showDialog(
+    context: context,
+    builder: (ctx) => SimpleDialog(
+      title: Text(title),
+      children: [
+        ListTile(
+          onTap: () async {
+            final file = await pickFile(
+              extensions: MediaLibrary.instance.supportedFileTypes,
+            );
+            if (file != null) {
+              result = file.path;
+              await Navigator.of(ctx).maybePop();
+            }
+          },
+          leading: CircleAvatar(
+            backgroundColor: Colors.transparent,
+            foregroundColor: Theme.of(ctx).iconTheme.color,
+            child: const Icon(Icons.folder),
+          ),
+          title: Text(
+            Localization.instance.FILE,
+            style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
+          ),
+        ),
+        ListTile(
+          onTap: () async {
+            await Navigator.of(ctx).maybePop();
+            final resultValue = await showInput(
+              context,
+              title,
+              Localization.instance.URL,
+              Localization.instance.OK,
+              (value) {
+                final parser = URIParser(value);
+                if (!parser.validate()) {
+                  return '';
+                }
+                return null;
+              },
+              keyboardType: TextInputType.url,
+              textCapitalization: TextCapitalization.none,
+            );
+
+            if (resultValue.isNotEmpty) {
+              result = resultValue;
+              await Navigator.of(ctx).maybePop();
+            }
+          },
+          leading: CircleAvatar(
+            backgroundColor: Colors.transparent,
+            foregroundColor: Theme.of(ctx).iconTheme.color,
+            child: const Icon(Icons.link),
+          ),
+          title: Text(
+            Localization.instance.URL,
+            style: isDesktop ? Theme.of(ctx).textTheme.bodyLarge : null,
+          ),
+        ),
+      ],
+    ),
+  );
+
+  return result;
+}
+
+Future<void> showAddToPlaylistDialog(
+  BuildContext context, {
+  Track? track,
+  Playable? playable,
+}) {
+  assert(track != null || playable != null);
+  final playlists = MediaLibrary.instance.playlists.playlists;
+
+  void onTap(int i) async {
+    context.pop();
+
+    if (track == null && playable != null) {
+      track = await MediaLibrary.instance.db.selectTrackByUri(playable.uri);
+    }
+    await MediaLibrary.instance.playlists.createEntry(
+      playlists[i],
+      track: track,
+      uri: playable?.uri,
+      title: playable?.playlistEntryTitle,
+    );
+
+    if (Platform.isAndroid) {
+      final entry = track?.title ?? playable?.playlistEntryTitle ?? '';
+      final playlist = playlists[i].name;
+      AndroidUtils.instance.showToast(Localization.instance.ADDED_ENTRY_TO_PLAYLIST.replaceAll('"ENTRY"', entry).replaceAll('"PLAYLIST"', playlist));
+    }
+  }
+
+  if (isDesktop) {
+    return showDialog(
       context: context,
+      builder: (ctx) => AlertDialog(
+        contentPadding: const EdgeInsets.only(top: 20.0),
+        title: Text(Localization.instance.PLAYLIST_ADD_DIALOG_TITLE),
+        content: SizedBox(
+          width: 640.0,
+          child: Material(
+            color: Colors.transparent,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Divider(height: 1.0),
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (int i = 0; i < playlists.length; i++) ...[
+                          PlaylistItem(
+                            playlist: playlists[i],
+                            onTap: () => onTap(i),
+                          ),
+                          if (i < playlists.length - 1) const Divider(height: 1.0),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+                const Divider(height: 1.0),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: context.pop,
+            child: Text(label(Localization.instance.CANCEL)),
+          ),
+        ],
+      ),
+    );
+  } else {
+    return showModalBottomSheet(
+      context: context,
+      showDragHandle: isMaterial3OrGreater,
+      useRootNavigator: true,
+      isScrollControlled: true,
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: 0.6,
         maxChildSize: 0.8,
         expand: false,
         builder: (context, controller) => ListView.builder(
-          padding: EdgeInsets.zero,
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
           controller: controller,
           shrinkWrap: true,
           itemCount: playlists.length,
           itemBuilder: (context, i) {
-            return PlaylistTile(
+            return PlaylistItem(
               playlist: playlists[i],
-              onTap: () async {
-                await Collection.instance.playlistAddTrack(
-                  playlists[i],
-                  track,
-                );
-                Navigator.of(context).pop();
-              },
+              onTap: () => onTap(i),
             );
           },
         ),
@@ -1011,17 +1131,10 @@ Future<void> showAddToPlaylistDialog(
   }
 }
 
-InputDecoration inputDecoration(
-  BuildContext context,
-  String hintText, {
-  Widget? trailingIcon,
-  VoidCallback? trailingIconOnPressed,
-  Color? fillColor,
-}) {
+InputDecoration inputDecoration(BuildContext context, String hintText, {Widget? suffixIcon, VoidCallback? onSuffixIconPressed, Color? fillColor, EdgeInsetsGeometry? contentPadding}) {
   return InputDecoration(
-    // Having a [suffixIcon] keeps the [CustomTextField]'s content (label / text)
-    // centered for some reason at all heights. So, this is a good solution.
-    suffixIcon: trailingIcon == null
+    // A [suffixIcon] keeps the [TextField]'s content (label / text) centered for some reason at all heights.
+    suffixIcon: suffixIcon == null
         ? const SizedBox(height: 48.0)
         : Container(
             alignment: Alignment.center,
@@ -1030,33 +1143,26 @@ InputDecoration inputDecoration(
             child: Material(
               color: Colors.transparent,
               child: IconButton(
-                splashRadius: 8.0,
-                iconSize: 24.0,
+                icon: suffixIcon,
+                iconSize: 18.0,
+                splashRadius: 12.0,
+                onPressed: onSuffixIconPressed,
                 highlightColor: Colors.transparent,
-                onPressed: trailingIconOnPressed,
-                icon: trailingIcon,
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
           ),
-    suffixIconConstraints: trailingIcon == null
+    suffixIconConstraints: suffixIcon == null
         ? const BoxConstraints(
             minHeight: 48.0,
             minWidth: 0.0,
           )
         : null,
-    // No requirement for vertical padding/margin since [TextAlignVertical.center] is used now.
-    contentPadding: EdgeInsets.only(
-      left: 12.0,
-      right: 12.0,
-      // [bottom] padding is needed since Flutter v3.7.x.
-      bottom: Platform.isWindows || Platform.isLinux || Platform.isMacOS
-          ? 8.0
-          : 2.0,
-    ),
+    contentPadding: contentPadding ?? const EdgeInsets.symmetric(horizontal: 12.0),
     hintText: hintText,
     filled: true,
-    fillColor: fillColor ?? Theme.of(context).colorScheme.surfaceVariant,
+    isCollapsed: true,
+    fillColor: fillColor ?? Theme.of(context).colorScheme.surfaceContainerHighest,
     border: UnderlineInputBorder(
       borderSide: BorderSide(
         color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -1082,8 +1188,7 @@ InputDecoration inputDecoration(
   );
 }
 
-InputDecoration mobileUnderlinedInputDecoration(
-    BuildContext context, String hintText) {
+InputDecoration inputDecorationMobile(BuildContext context, String hintText) {
   return InputDecoration(
     hintText: hintText,
     border: OutlineInputBorder(
@@ -1107,114 +1212,18 @@ InputDecoration mobileUnderlinedInputDecoration(
     hintMaxLines: 1,
     errorMaxLines: 1,
     helperMaxLines: 1,
-    errorStyle: const TextStyle(height: 0.0),
+    errorStyle: const TextStyle(height: 0.01),
   );
 }
 
-class TabRoute {
-  final int index;
-  final TabRouteSender sender;
-  const TabRoute(
-    this.index,
-    this.sender,
-  );
-}
-
-enum TabRouteSender {
-  pageView,
-  bottomNavigationBar,
-  systemNavigationBackButton,
-}
-
-/// Caches the resolved album arts once requested by [getAlbumArt].
-/// This prevents redundant I/O operations.
-HashMap<Media, ImageProvider> resolvedAlbumArts =
-    HashMap<Media, ImageProvider>();
-
-/// Fetches the album art of a given [Media] either local or online.
-///
-/// Passing [small] as `true` will result in a smaller sized image, which may be useful
-/// for performance reasons e.g. generating palette using `package:palette_generator`
-/// or rendering, especially on desktop platforms.
-///
-/// Automatically falls back to the default album art from Harmonoid's assets.
-///
-ImageProvider getAlbumArt(
-  Media media, {
-  int? cacheWidth,
-  bool small = false,
-  bool? lookupForFallbackAlbumArt,
-  List<String>? fallbackAlbumArtFileNames,
-}) {
-  bool _lookupForFallbackAlbumArt = false;
-  try {
-    _lookupForFallbackAlbumArt =
-        Configuration.instance.lookupForFallbackAlbumArt;
-  } catch (exception, stacktrace) {
-    debugPrint(exception.toString());
-    debugPrint(stacktrace.toString());
+Future<void> recursivelyPopNavigator(BuildContext context) async {
+  if (mediaLibrarySearchController.isAttached && mediaLibrarySearchController.isOpen) {
+    mediaLibrarySearchController.closeView('');
   }
-  lookupForFallbackAlbumArt ??= _lookupForFallbackAlbumArt;
-
-  List<String> _fallbackAlbumArtFileNames = kDefaultFallbackAlbumArtFileNames;
-  try {
-    _fallbackAlbumArtFileNames =
-        Configuration.instance.fallbackAlbumArtFileNames;
-  } catch (exception, stacktrace) {
-    debugPrint(exception.toString());
-    debugPrint(stacktrace.toString());
-  }
-  fallbackAlbumArtFileNames ??= _fallbackAlbumArtFileNames;
-
-  // Result.
-  ImageProvider? image;
-
-  // Already resolved by previous [getAlbumArt] calls.
-  if (resolvedAlbumArts.containsKey(media)) {
-    image = resolvedAlbumArts[media]!;
-  }
-  // Fresh request.
-  else {
-    // Separately handle the web URLs.
-    if (media is Track) {
-      if (ExternalMedia.supported(media.uri)) {
-        image = ExtendedNetworkImageProvider(
-          ExternalMedia.thumbnail(
-            media.uri,
-            small: small,
-          ).toString(),
-          cache: true,
-        );
-      } else if (!media.uri.isScheme('FILE')) {
-        // Album arts are not supported for online [Media] URLs.
-        image = ExtendedFileImageProvider(Collection.instance.unknownAlbumArt);
-      }
+  while (router.canPop()) {
+    if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath, kSearchPath].contains(router.location.split('/').last)) {
+      break;
     }
-    if (image == null) {
-      // The passed [media] wasn't a web entity, fetch album art for the locally stored media.
-      // Automatically checks for fallback album arts e.g. `Folder.jpg` or `cover.jpg` etc.
-      final file = Collection.instance.getAlbumArt(
-        media,
-        lookupForFallbackAlbumArt: lookupForFallbackAlbumArt,
-        fallbackAlbumArtFileNames: fallbackAlbumArtFileNames,
-      );
-      if (file != null) {
-        // An album art is found.
-        image = ExtendedFileImageProvider(file);
-      }
-    }
-    if (image == null) {
-      // No album art found, use the default album art.
-      image = ExtendedFileImageProvider(Collection.instance.unknownAlbumArt);
-    }
-    // Cache the resolved album art.
-    resolvedAlbumArts[media] = image;
-  }
-
-  // [ResizeImage.resizeIfNeeded] is only needed for local images.
-  if (small && !(image is ExtendedNetworkImageProvider)) {
-    return ResizeImage.resizeIfNeeded(null, cacheWidth ?? 200, image);
-  } else {
-    return image;
+    router.pop();
   }
 }

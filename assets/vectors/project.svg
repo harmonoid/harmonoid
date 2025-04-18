@@ -1,0 +1,11 @@
+<svg width="432" height="432" xmlns="http://www.w3.org/2000/svg">
+  <rect
+    style="fill:none;stroke:white;stroke-width:39.2727;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.983936;paint-order:markers fill stroke"
+    width="248.727" height="392.727" x="91.636" y="19.636" ry="0" rx="0" />
+  <circle
+    style="fill:#B388FF;fill-opacity:0.133333;stroke:#B388FF;stroke-width:31.7355;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+    cx="216" cy="288" r="88.859" />
+  <ellipse
+    style="fill:white;fill-opacity:1;stroke:white;stroke-width:37.2832;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+    cx="183.273" cy="111.273" rx="53.358" ry="53.359" />
+</svg>

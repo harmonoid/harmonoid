@@ -1,16 +1,7 @@
-// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-//
-// Copyright © 2020 & onwards, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-// All rights reserved.
-//
-// Use of this source code is governed by the End-User License Agreement for
-// Harmonoid that can be found in the EULA.txt file.
-//
 #include "my_application.h"
 
 #include <flutter_linux/flutter_linux.h>
 
-#include <locale>
 #ifdef GDK_WINDOWING_X11
 #include <gdk/gdkx.h>
 #endif
@@ -31,7 +22,6 @@ G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
 //
 // Does nothing if a window already exists.
 static void my_application_window_new(GApplication* application) {
-  std::setlocale(LC_NUMERIC, "C");
   MyApplication* self = MY_APPLICATION(application);
   // Check for an existing window. If one exists, present it and return.
   GList* windows = gtk_application_get_windows(GTK_APPLICATION(application));
@@ -71,14 +61,13 @@ static void my_application_window_new(GApplication* application) {
   } else {
     gtk_window_set_title(window, "Harmonoid");
   }
-
+  gtk_widget_realize(GTK_WIDGET(window));
   g_autoptr(FlDartProject) project = fl_dart_project_new();
   fl_dart_project_set_dart_entrypoint_arguments(
       project, self->dart_entrypoint_arguments);
   FlView* view = fl_view_new(project);
-  gtk_container_add(GTK_CONTAINER(window), GTK_WIDGET(view));
   gtk_widget_realize(GTK_WIDGET(view));
-  gtk_widget_realize(GTK_WIDGET(window));
+  gtk_container_add(GTK_CONTAINER(window), GTK_WIDGET(view));
   fl_register_plugins(FL_PLUGIN_REGISTRY(view));
 }
 
