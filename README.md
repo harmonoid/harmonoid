@@ -7,10 +7,17 @@
 [Website](https://harmonoid.com) • [Download](https://harmonoid.com/downloads) • [Discord](https://discord.gg/2Rc3edFWd8) • Available for macOS, Windows, GNU/Linux & Android!
 
 ![](https://github.com/harmonoid/harmonoid/blob/assets/macos/light/0.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/macos/light/2.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/macos/dark/0.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/macos/dark/2.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/macos/light/5.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/macos/light/4.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/macos/light/1.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/macos/light/2.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/macos/light/3.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/macos/dark/0.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/macos/dark/5.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/macos/dark/4.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/macos/dark/1.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/macos/dark/2.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/macos/dark/3.webp?raw=true)
 
 <table>
   <tr>
