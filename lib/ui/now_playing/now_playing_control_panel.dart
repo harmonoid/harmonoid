@@ -197,7 +197,7 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                 const SizedBox(width: 12.0),
                 SizedBox(
                   height: 32.0,
-                  width: 40.0,
+                  width: 48.0,
                   child: DefaultTextField(
                     focusNode: rate.focusNode,
                     controller: rate.textEditingController,
@@ -205,7 +205,7 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                     cursorWidth: 1.0,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge,
-                    decoration: inputDecoration(context, 'NaN', contentPadding: EdgeInsets.zero),
+                    decoration: inputDecoration(context, 'NaN', contentPadding: const EdgeInsets.only(left: 4.0)),
                     inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'[0-9]|\.'))],
                     keyboardType: TextInputType.number,
                   ),
@@ -247,7 +247,7 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                 const SizedBox(width: 12.0),
                 SizedBox(
                   height: 32.0,
-                  width: 40.0,
+                  width: 48.0,
                   child: DefaultTextField(
                     focusNode: pitch.focusNode,
                     controller: pitch.textEditingController,
@@ -255,7 +255,7 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                     cursorWidth: 1.0,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge,
-                    decoration: inputDecoration(context, 'NaN', contentPadding: EdgeInsets.zero),
+                    decoration: inputDecoration(context, 'NaN', contentPadding: const EdgeInsets.only(left: 4.0)),
                     inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'[0-9]|\.'))],
                     keyboardType: TextInputType.number,
                   ),
@@ -297,7 +297,7 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                 const SizedBox(width: 12.0),
                 SizedBox(
                   height: 32.0,
-                  width: 40.0,
+                  width: 48.0,
                   child: DefaultTextField(
                     focusNode: volume.focusNode,
                     controller: volume.textEditingController,
@@ -305,7 +305,7 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                     cursorWidth: 1.0,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge,
-                    decoration: inputDecoration(context, 'NaN', contentPadding: EdgeInsets.zero),
+                    decoration: inputDecoration(context, 'NaN', contentPadding: const EdgeInsets.only(left: 4.0)),
                     inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'[0-9]|'))],
                     keyboardType: TextInputType.number,
                   ),
