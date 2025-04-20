@@ -60,24 +60,27 @@ class AlbumsScreenState extends State<AlbumsScreen> {
 
               final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.album;
 
-              return ScrollViewBuilder(
+              return KeyedSubtree(
                 key: ValueKey((mediaLibrary.albumSortType, mediaLibrary.albumSortAscending)),
-                margin: margin,
-                span: scrollViewBuilderHelperData.span,
-                headerCount: 1,
-                headerBuilder: headerBuilder,
-                headerHeight: headerHeight,
-                itemCounts: [mediaLibrary.albums.length],
-                itemBuilder: (context, i, j, w, h) => AlbumItem(
-                  key: mediaLibrary.albums[j].scrollViewBuilderKey,
-                  album: mediaLibrary.albums[j],
-                  width: w,
-                  height: h,
+                child: ScrollViewBuilder(
+                  key: const PageStorageKey(AlbumsScreen),
+                  margin: margin,
+                  span: scrollViewBuilderHelperData.span,
+                  headerCount: 1,
+                  headerBuilder: headerBuilder,
+                  headerHeight: headerHeight,
+                  itemCounts: [mediaLibrary.albums.length],
+                  itemBuilder: (context, i, j, w, h) => AlbumItem(
+                    key: mediaLibrary.albums[j].scrollViewBuilderKey,
+                    album: mediaLibrary.albums[j],
+                    width: w,
+                    height: h,
+                  ),
+                  labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
+                  itemWidth: scrollViewBuilderHelperData.itemWidth,
+                  itemHeight: scrollViewBuilderHelperData.itemHeight,
+                  padding: mediaLibraryScrollViewBuilderPadding,
                 ),
-                labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
-                itemWidth: scrollViewBuilderHelperData.itemWidth,
-                itemHeight: scrollViewBuilderHelperData.itemHeight,
-                padding: mediaLibraryScrollViewBuilderPadding,
               );
             },
           ),

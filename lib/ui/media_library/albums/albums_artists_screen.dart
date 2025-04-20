@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/extensions/album.dart';
 import 'package:harmonoid/ui/media_library/albums/album_item.dart';
+import 'package:harmonoid/ui/media_library/albums/albums_screen.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/scroll_view_builder_helper.dart';
@@ -65,6 +66,7 @@ class DesktopAlbumsArtistsScreenState extends State<DesktopAlbumsArtistsScreen> 
                       child: NotificationListener<ScrollNotification>(
                         onNotification: (_) => true,
                         child: ScrollViewBuilder(
+                          key: const PageStorageKey(AlbumsScreen),
                           margin: 0.0,
                           span: 1,
                           displayHeaders: false,

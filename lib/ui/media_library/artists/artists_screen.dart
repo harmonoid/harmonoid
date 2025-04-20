@@ -54,24 +54,27 @@ class ArtistsScreenState extends State<ArtistsScreen> {
             builder: (context, mediaLibrary, _) {
               final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.artist;
 
-              return ScrollViewBuilder(
+              return KeyedSubtree(
                 key: ValueKey((mediaLibrary.artistSortType, mediaLibrary.artistSortAscending)),
-                margin: margin,
-                span: scrollViewBuilderHelperData.span,
-                headerCount: 1,
-                headerBuilder: headerBuilder,
-                headerHeight: headerHeight,
-                itemCounts: [mediaLibrary.artists.length],
-                itemBuilder: (context, i, j, w, h) => ArtistItem(
-                  key: mediaLibrary.artists[j].scrollViewBuilderKey,
-                  artist: mediaLibrary.artists[j],
-                  width: w,
-                  height: h,
+                child: ScrollViewBuilder(
+                  key: const PageStorageKey(ArtistsScreen),
+                  margin: margin,
+                  span: scrollViewBuilderHelperData.span,
+                  headerCount: 1,
+                  headerBuilder: headerBuilder,
+                  headerHeight: headerHeight,
+                  itemCounts: [mediaLibrary.artists.length],
+                  itemBuilder: (context, i, j, w, h) => ArtistItem(
+                    key: mediaLibrary.artists[j].scrollViewBuilderKey,
+                    artist: mediaLibrary.artists[j],
+                    width: w,
+                    height: h,
+                  ),
+                  labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
+                  itemWidth: scrollViewBuilderHelperData.itemWidth,
+                  itemHeight: scrollViewBuilderHelperData.itemHeight,
+                  padding: mediaLibraryScrollViewBuilderPadding,
                 ),
-                labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
-                itemWidth: scrollViewBuilderHelperData.itemWidth,
-                itemHeight: scrollViewBuilderHelperData.itemHeight,
-                padding: mediaLibraryScrollViewBuilderPadding,
               );
             },
           ),

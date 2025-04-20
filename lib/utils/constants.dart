@@ -1,4 +1,4 @@
-const double kDesktopHeaderHeight = 44.0;
+const double kDesktopHeaderHeight = 52.0;
 const double kMobileHeaderHeight = 56.0;
 
 const double kDesktopM3NowPlayingBarHeight = 94.0;

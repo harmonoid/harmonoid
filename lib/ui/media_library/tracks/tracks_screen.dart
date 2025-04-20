@@ -154,7 +154,7 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
                     ),
                     child: SfDataGrid(
                       rowHeight: linearTileHeight,
-                      headerRowHeight: kDesktopHeaderHeight,
+                      headerRowHeight: linearTileHeight,
                       allowColumnsResizing: true,
                       columnWidthMode: ColumnWidthMode.none,
                       columnResizeMode: ColumnResizeMode.onResize,
