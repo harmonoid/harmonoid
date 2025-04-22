@@ -13,7 +13,7 @@ extension AlbumExtensions on Album {
 
   /// Display subtitle.
   String get displaySubtitle => [
-        if (album.isNotEmpty) album,
+        if (albumArtist.isNotEmpty) albumArtist,
         if (year != 0) year.toString(),
       ].where((e) => e.isNotEmpty).join(' • ');
 
