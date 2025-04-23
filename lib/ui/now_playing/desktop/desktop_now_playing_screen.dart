@@ -242,7 +242,7 @@ class Controls extends StatelessWidget {
                                       HyperLink(
                                         text: TextSpan(
                                           children: [
-                                            for (final artist in mediaPlayer.current.subtitle) ...[
+                                            for (final artist in mediaPlayer.current.subtitle.isEmpty ? {''} : mediaPlayer.current.subtitle) ...[
                                               TextSpan(
                                                 text: artist.isEmpty ? kDefaultArtist : artist,
                                                 recognizer: TapGestureRecognizer()

@@ -173,14 +173,14 @@ class M2MobileNowPlayingBarState extends State<M2MobileNowPlayingBar> {
                                                     RichText(
                                                       text: TextSpan(
                                                         children: [
-                                                          for (final artist in mediaPlayer.current.subtitle) ...[
+                                                          for (final artist in mediaPlayer.current.subtitle.isEmpty ? {''} : mediaPlayer.current.subtitle) ...[
                                                             TextSpan(
                                                               text: artist.isEmpty ? kDefaultArtist : artist,
                                                             ),
                                                             const TextSpan(text: ', '),
                                                           ]
                                                         ]..removeLast(),
-                                                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
                                                       ),
                                                       maxLines: 1,
                                                       overflow: TextOverflow.ellipsis,
@@ -438,7 +438,7 @@ class M2MobileNowPlayingBarState extends State<M2MobileNowPlayingBar> {
             RichText(
               text: TextSpan(
                 children: [
-                  for (final artist in mediaPlayer.current.subtitle) ...[
+                  for (final artist in mediaPlayer.current.subtitle.isEmpty ? {''} : mediaPlayer.current.subtitle) ...[
                     TextSpan(
                       text: artist.isEmpty ? kDefaultArtist : artist,
                     ),
@@ -452,13 +452,14 @@ class M2MobileNowPlayingBarState extends State<M2MobileNowPlayingBar> {
               strutStyle: StrutStyle.fromTextStyle(Theme.of(context).textTheme.bodyLarge!.copyWith(height: 1.5)),
             ),
             const SizedBox(height: 2.0),
-            Text(
-              mediaPlayer.state.getAudioFormatLabel(),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: nowPlayingColors.backgroundText).copyWith(height: 1.0),
-              strutStyle: StrutStyle.fromTextStyle(Theme.of(context).textTheme.bodyLarge!.copyWith(height: 1.5)),
-            ),
+            if (Configuration.instance.nowPlayingAudioFormat)
+              Text(
+                mediaPlayer.state.getAudioFormatLabel(),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: nowPlayingColors.backgroundText).copyWith(height: 1.0),
+                strutStyle: StrutStyle.fromTextStyle(Theme.of(context).textTheme.bodyLarge!.copyWith(height: 1.5)),
+              ),
           ],
         ),
       ),
@@ -560,7 +561,6 @@ class Controls extends StatelessWidget {
                 onChanged: (value) => mediaPlayer.seek(Duration(milliseconds: value.round())),
               ),
               Container(
-                height: 16.0,
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: Row(
                   children: [

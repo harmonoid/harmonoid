@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:measure_size/measure_size.dart';
 import 'package:provider/provider.dart';
 
+import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/duration.dart';
@@ -187,14 +188,14 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
                                                     RichText(
                                                       text: TextSpan(
                                                         children: [
-                                                          for (final artist in mediaPlayer.current.subtitle) ...[
+                                                          for (final artist in mediaPlayer.current.subtitle.isEmpty ? {''} : mediaPlayer.current.subtitle) ...[
                                                             TextSpan(
                                                               text: artist.isEmpty ? kDefaultArtist : artist,
                                                             ),
                                                             const TextSpan(text: ', '),
                                                           ]
                                                         ]..removeLast(),
-                                                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
                                                       ),
                                                       maxLines: 1,
                                                       overflow: TextOverflow.ellipsis,
@@ -415,7 +416,7 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
             RichText(
               text: TextSpan(
                 children: [
-                  for (final artist in mediaPlayer.current.subtitle) ...[
+                  for (final artist in mediaPlayer.current.subtitle.isEmpty ? {''} : mediaPlayer.current.subtitle) ...[
                     TextSpan(
                       text: artist.isEmpty ? kDefaultArtist : artist,
                     ),
@@ -428,13 +429,14 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
               overflow: TextOverflow.ellipsis,
               strutStyle: StrutStyle.fromTextStyle(Theme.of(context).textTheme.bodyLarge!.copyWith(height: 1.5)),
             ),
-            Text(
-              mediaPlayer.state.getAudioFormatLabel(),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant).copyWith(height: 1.0),
-              strutStyle: StrutStyle.fromTextStyle(Theme.of(context).textTheme.bodyLarge!.copyWith(height: 1.5)),
-            ),
+            if (Configuration.instance.nowPlayingAudioFormat)
+              Text(
+                mediaPlayer.state.getAudioFormatLabel(),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant).copyWith(height: 1.0),
+                strutStyle: StrutStyle.fromTextStyle(Theme.of(context).textTheme.bodyLarge!.copyWith(height: 1.5)),
+              ),
           ],
         ),
       ),
@@ -541,7 +543,6 @@ class Controls extends StatelessWidget {
                 ),
               ),
               Container(
-                height: 16.0,
                 padding: EdgeInsets.symmetric(horizontal: (MediaQuery.sizeOf(context).width * 1 / 9 + 4.0 - 2 * 16.0).clamp(0.0, MediaQuery.sizeOf(context).width)),
                 child: Row(
                   children: [
