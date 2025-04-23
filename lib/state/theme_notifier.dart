@@ -5,6 +5,8 @@ import 'package:dynamic_color/src/dynamic_color_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:harmonoid/utils/android_storage_controller.dart';
+
 /// {@template theme_notifier}
 ///
 /// ThemeNotifier
@@ -107,6 +109,12 @@ class ThemeNotifier extends ChangeNotifier {
       ThemeMode.dark => Brightness.light,
       _ => throw UnimplementedError(),
     };
+
+    if (AndroidStorageController.instance.version <= 27) {
+      materialStandard = 2;
+      themeMode = ThemeMode.dark;
+    }
+
     final systemNavigationBarColor = switch (materialStandard) {
       3 => Colors.transparent,
       2 => Colors.black,
