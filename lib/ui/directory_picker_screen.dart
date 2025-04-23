@@ -31,7 +31,7 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
   final ScrollController _controller = ScrollController();
   final ValueNotifier<List<DirectoryEntity>> _directoryPath = ValueNotifier([]);
 
-  Directory get _directory => Directory(_directoryPath.value.map((e) => e.directoryName).join('/'));
+  Directory get _directory => Directory(_directoryPath.value.map((e) => e.directoryName).join(Platform.pathSeparator));
 
   @override
   void initState() {
@@ -93,11 +93,11 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
   }
 
   void _createPageStorageKey() {
-    _pageStorageKeys[_directoryPath.value.map((e) => e.directoryName).join('/')] = PageStorageKey(Random().nextDouble());
+    _pageStorageKeys[_directoryPath.value.map((e) => e.directoryName).join(Platform.pathSeparator)] = PageStorageKey(Random().nextDouble());
   }
 
   PageStorageKey? _getPageStorageKey() {
-    return _pageStorageKeys[_directoryPath.value.map((e) => e.directoryName).join('/')];
+    return _pageStorageKeys[_directoryPath.value.map((e) => e.directoryName).join(Platform.pathSeparator)];
   }
 
   @override
@@ -224,11 +224,12 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
   Widget _buildStorageDirectories() {
     return ListView.builder(
       padding: EdgeInsets.zero,
-      itemCount: _storageDirectories?.length ?? 0,
+      itemCount: ((_storageDirectories?.length ?? 0) * 2 - 1).clamp(0, 1 << 32),
       itemBuilder: (context, i) {
         if (i % 2 != 0) {
           return const Divider(height: 1.0, thickness: 1.0);
         } else {
+          i = i ~/ 2;
           return ListTile(
             leading: Icon(
               switch (i) {
