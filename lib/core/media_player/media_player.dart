@@ -1,6 +1,9 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:media_kit/ffi/ffi.dart';
+import 'package:media_kit/generated/libmpv/bindings.dart' as generated;
 import 'package:media_kit/media_kit.dart' hide Playable;
 import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:synchronized/synchronized.dart';
@@ -27,6 +30,7 @@ import 'package:harmonoid/models/media_player_state.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/models/playback_state.dart';
 import 'package:harmonoid/utils/actions.dart';
+import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/constants.dart';
 
 /// {@template media_player}
@@ -103,7 +107,7 @@ class MediaPlayer extends ChangeNotifier with AudioServiceMixin, DiscordRpcMixin
   Future<void> jump(int index) => _player.jump(index);
 
   @override
-  Future<void> seek(Duration position) => _player.seek(position);
+  Future<void> seek(Duration position) => _player.seek(position) /* HACK: */ .then((_) => updatePositionAudioService(position));
 
   @override
   Future<void> setLoop(Loop loop) => _player.setPlaylistMode(loop.toPlaylistMode());
@@ -236,7 +240,47 @@ class MediaPlayer extends ChangeNotifier with AudioServiceMixin, DiscordRpcMixin
     }
     if (Platform.isAndroid) {
       final platform = _player.platform as NativePlayer;
-      await platform.setProperty('ao', 'audiotrack');
+      if (AndroidStorageController.instance.version <= 27) {
+        await platform.setProperty('ao', 'audiotrack,opensles');
+      } else {
+        await platform.setProperty('ao', 'audiotrack,opensles');
+      }
+    }
+  }
+
+  // HACK:
+  void observeTimePosPlayer() {
+    if (_observeTimePosPlayer) return;
+    _observeTimePosPlayer = true;
+
+    final platform = _player.platform as NativePlayer;
+    final ctx = platform.ctx;
+    final mpv = platform.mpv;
+
+    const properties = ['time-pos', 'audio-bitrate'];
+    for (final property in properties) {
+      final reply = property.hashCode;
+      final name = property.toNativeUtf8().cast<Int8>();
+      const format = generated.mpv_format.MPV_FORMAT_DOUBLE;
+      mpv.mpv_observe_property(ctx, reply, name, format);
+
+      calloc.free(name);
+    }
+  }
+
+  // HACK:
+  void unobserveTimePosPlayer() {
+    if (!_observeTimePosPlayer) return;
+    _observeTimePosPlayer = false;
+
+    final platform = _player.platform as NativePlayer;
+    final ctx = platform.ctx;
+    final mpv = platform.mpv;
+
+    const properties = ['time-pos', 'audio-bitrate'];
+    for (final property in properties) {
+      final reply = property.hashCode;
+      mpv.mpv_unobserve_property(ctx, reply);
     }
   }
 
@@ -254,15 +298,12 @@ class MediaPlayer extends ChangeNotifier with AudioServiceMixin, DiscordRpcMixin
   }
 
   final Player _player = Player(configuration: const PlayerConfiguration(title: kTitle, pitch: true));
-
   final TagReader _tagReader = TagReader();
-
   Playable? _current;
-
   MediaPlayerState _state = MediaPlayerState.defaults();
-
   double _setMuteVolume = 100.0;
-
   String? _updateCurrentFlagUri;
   final Lock _updateCurrentLock = Lock();
+  // HACK:
+  bool _observeTimePosPlayer = true;
 }

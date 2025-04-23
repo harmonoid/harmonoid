@@ -16,6 +16,7 @@ import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
 import 'package:harmonoid/state/update_notifier.dart';
+import 'package:harmonoid/ui/media_library/media_library_flags.dart';
 import 'package:harmonoid/ui/media_library/media_library_inaccessible_directories_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
 import 'package:harmonoid/ui/router.dart';
@@ -78,6 +79,17 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
       return true;
     }
     return super.didPopRoute();
+  }
+
+  // HACK:
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      MediaPlayer.instance.observeTimePosPlayer();
+    } else {
+      MediaPlayer.instance.unobserveTimePosPlayer();
+    }
   }
 
   @override
