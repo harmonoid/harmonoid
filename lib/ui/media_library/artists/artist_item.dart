@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/media_library/artists/artist_screen.dart';
+import 'package:harmonoid/ui/media_library/media_library_flags.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/open_container.dart';
@@ -155,6 +156,7 @@ class ArtistItem extends StatelessWidget {
             openElevation: Theme.of(context).cardTheme.elevation ?? 0.0,
             onClosed: (data) {
               NowPlayingMobileNotifier.instance.showBottomNavigationBar();
+              mediaLibraryArtistOpenContainerBuildContext = null;
             },
             closedBuilder: (context, action) {
               return Stack(
@@ -184,11 +186,14 @@ class ArtistItem extends StatelessWidget {
                 ],
               );
             },
-            openBuilder: (context, _) => ArtistScreen(
-              artist: artist,
-              tracks: tracks!,
-              palette: palette,
-            ),
+            openBuilder: (context, _) {
+              mediaLibraryArtistOpenContainerBuildContext = context;
+              return ArtistScreen(
+                artist: artist,
+                tracks: tracks!,
+                palette: palette,
+              );
+            },
           ),
           Expanded(
             child: Container(

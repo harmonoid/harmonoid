@@ -24,6 +24,7 @@ import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
+import 'package:harmonoid/ui/media_library/media_library_flags.dart';
 import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_item.dart';
@@ -733,10 +734,8 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
   if (result == null) return;
 
   Future<void> recursivelyPopNavigatorIfRequired() async {
-    if (recursivelyPopNavigatorOnDeleteIf != null) {
-      if (await recursivelyPopNavigatorOnDeleteIf()) {
-        await recursivelyPopNavigator(context);
-      }
+    if (await recursivelyPopNavigatorOnDeleteIf?.call() ?? false) {
+      await recursivelyPopNavigator();
     }
   }
 
@@ -832,9 +831,17 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
   if (result == null) return;
 
   Future<void> recursivelyPopNavigatorIfRequired() async {
-    final tracks = await MediaLibrary.instance.tracksFromAlbum(album);
-    if (tracks.isEmpty) {
-      await recursivelyPopNavigator(context);
+    bool result = false;
+    try {
+      final tracks = await MediaLibrary.instance.tracksFromAlbum(album);
+      result = tracks.isEmpty;
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+      result = true;
+    }
+    if (result) {
+      await recursivelyPopNavigator();
     }
   }
 
@@ -1216,10 +1223,15 @@ InputDecoration inputDecorationMobile(BuildContext context, String hintText) {
   );
 }
 
-Future<void> recursivelyPopNavigator(BuildContext context) async {
+Future<void> recursivelyPopNavigator() async {
+  mediaLibraryAlbumOpenContainerBuildContext?.pop();
+  mediaLibraryArtistOpenContainerBuildContext?.pop();
+  mediaLibraryGenreOpenContainerBuildContext?.pop();
+
   if (mediaLibrarySearchController.isAttached && mediaLibrarySearchController.isOpen) {
     mediaLibrarySearchController.closeView('');
   }
+
   while (router.canPop()) {
     if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath, kSearchPath].contains(router.location.split('/').last)) {
       break;

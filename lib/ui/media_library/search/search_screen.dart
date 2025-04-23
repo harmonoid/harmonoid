@@ -10,7 +10,7 @@ import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/ui/media_library/albums/album_item.dart';
 import 'package:harmonoid/ui/media_library/artists/artist_item.dart';
 import 'package:harmonoid/ui/media_library/genres/genre_item.dart';
-import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
+import 'package:harmonoid/ui/media_library/media_library_flags.dart';
 import 'package:harmonoid/ui/media_library/search/search_banner.dart';
 import 'package:harmonoid/ui/media_library/search/search_no_items_banner.dart';
 import 'package:harmonoid/ui/media_library/tracks/track_item.dart';

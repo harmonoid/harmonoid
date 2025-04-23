@@ -9,6 +9,7 @@ import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/media_library/genres/constants.dart';
 import 'package:harmonoid/ui/media_library/genres/genre_screen.dart';
+import 'package:harmonoid/ui/media_library/media_library_flags.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/open_container.dart';
@@ -144,6 +145,7 @@ class GenreItem extends StatelessWidget {
 
             action();
             context.read<NowPlayingMobileNotifier>().hideBottomNavigationBar();
+            mediaLibraryGenreOpenContainerBuildContext = null;
           },
           child: Container(
             width: width,
@@ -169,11 +171,14 @@ class GenreItem extends StatelessWidget {
             ),
           ),
         ),
-        openBuilder: (context, action) => GenreScreen(
-          genre: genre,
-          tracks: tracks!,
-          palette: palette,
-        ),
+        openBuilder: (context, action) {
+          mediaLibraryGenreOpenContainerBuildContext = context;
+          return GenreScreen(
+            genre: genre,
+            tracks: tracks!,
+            palette: palette,
+          );
+        },
       ),
     );
   }

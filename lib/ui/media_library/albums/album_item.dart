@@ -8,6 +8,7 @@ import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/extensions/album.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/media_library/albums/album_screen.dart';
+import 'package:harmonoid/ui/media_library/media_library_flags.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/open_container.dart';
@@ -209,6 +210,7 @@ class AlbumItem extends StatelessWidget {
       tappable: false,
       onClosed: (data) {
         NowPlayingMobileNotifier.instance.showBottomNavigationBar();
+        mediaLibraryAlbumOpenContainerBuildContext = null;
       },
       closedBuilder: (context, action) {
         return GestureDetector(
@@ -286,11 +288,14 @@ class AlbumItem extends StatelessWidget {
           ),
         );
       },
-      openBuilder: (context, _) => AlbumScreen(
-        album: album,
-        tracks: tracks!,
-        palette: palette,
-      ),
+      openBuilder: (context, _) {
+        mediaLibraryAlbumOpenContainerBuildContext = context;
+        return AlbumScreen(
+          album: album,
+          tracks: tracks!,
+          palette: palette,
+        );
+      },
     );
   }
 
