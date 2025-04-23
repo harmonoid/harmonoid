@@ -308,7 +308,7 @@ class ConfigurationBase {
       /* Integer */ kKeyLyricsViewTextAlign: TextAlign.start.index,
       /* Double  */ kKeyLyricsViewUnfocusedFontSize: isDesktop ? 28.0: 24.0,
       /* Double  */ kKeyLyricsViewUnfocusedLineHeight: 1.2,
-      /* Boolean */ kKeyMediaLibraryAddPlaylistToNowPlaying: false,
+      /* Boolean */ kKeyMediaLibraryAddPlaylistToNowPlaying: true,
       /* Json    */ kKeyMediaLibraryAlbumGroupingParameters: [AlbumGroupingParameter.album.index],
       /* Boolean */ kKeyMediaLibraryAlbumSortAscending: true,
       /* Integer */ kKeyMediaLibraryAlbumSortType: AlbumSortType.album.index,
