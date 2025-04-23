@@ -2,6 +2,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'dart:math';
+import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
@@ -378,6 +379,19 @@ class SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvide
                   ),
                 ),
               ),
+        // --------------------------------------------------
+        Positioned(
+          bottom: 0.0,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onPanDown: (_) {/* NO/OP */},
+            child: SizedBox(
+              width: MediaQuery.sizeOf(context).width,
+              height: MediaQuery.of(context).padding.bottom,
+            ),
+          ),
+        ),
+        // --------------------------------------------------
       ],
     );
   }
