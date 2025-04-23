@@ -385,7 +385,8 @@ class SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvide
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
             onPanDown: (_) {/* NO/OP */},
-            child: SizedBox(
+            child: Container(
+              color: Colors.transparent,
               width: MediaQuery.sizeOf(context).width,
               height: MediaQuery.of(context).padding.bottom,
             ),
