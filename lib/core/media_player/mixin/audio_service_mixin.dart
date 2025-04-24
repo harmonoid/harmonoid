@@ -36,7 +36,7 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
         androidNotificationChannelName: kAndroidNotificationChannelName,
         androidNotificationIcon: kAndroidNotificationIcon,
         androidNotificationClickStartsActivity: true,
-        androidNotificationOngoing: true,
+        androidStopForegroundOnPause: false,
       ),
     );
 
