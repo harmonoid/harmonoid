@@ -6,24 +6,13 @@ import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
-class NowPlayingLyrics extends StatefulWidget {
+class NowPlayingLyrics extends StatelessWidget {
   const NowPlayingLyrics({super.key});
-
-  @override
-  State<NowPlayingLyrics> createState() => NowPlayingLyricsState();
-}
-
-class NowPlayingLyricsState extends State<NowPlayingLyrics> {
-  int? _lastIndex;
 
   Widget _buildDesktopLayout(BuildContext context) {
     return Consumer<LyricsNotifier>(
       builder: (context, lyricsNotifier, _) {
-        final shouldRebuild = _lastIndex != null && (_lastIndex! - lyricsNotifier.index).abs() > 2;
-        _lastIndex = lyricsNotifier.index;
-
         return LyricsView(
-          key: ValueKey(shouldRebuild ? '${MediaQuery.sizeOf(context)}_${lyricsNotifier.index}' : MediaQuery.sizeOf(context)),
           index: lyricsNotifier.index,
           lyrics: lyricsNotifier.lyrics.map((e) => e.text).toList(),
           padding: EdgeInsets.only(
@@ -53,11 +42,7 @@ class NowPlayingLyricsState extends State<NowPlayingLyrics> {
   Widget _buildMobileLayout(BuildContext context) {
     return Consumer<LyricsNotifier>(
       builder: (context, lyricsNotifier, _) {
-        final shouldRebuild = _lastIndex != null && (_lastIndex! - lyricsNotifier.index).abs() > 2;
-        _lastIndex = lyricsNotifier.index;
-
         return LyricsView(
-          key: ValueKey(shouldRebuild ? '${MediaQuery.sizeOf(context)}_${lyricsNotifier.index}' : MediaQuery.sizeOf(context)),
           index: lyricsNotifier.index,
           lyrics: lyricsNotifier.lyrics.map((e) => e.text).toList(),
           padding: EdgeInsets.only(

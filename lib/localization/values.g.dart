@@ -23,6 +23,7 @@ class Values {
   late String ALBUM_ARTIST;
   late String ALBUM_ARTISTS;
   late String ALBUM_DELETE_DIALOG_SUBTITLE;
+  late String ALIGNMENT;
   late String ALL_FILES;
   late String ANIMATION_SPEED;
   late String ARTIST;
@@ -33,6 +34,7 @@ class Values {
   late String BETA;
   late String BUFFERING;
   late String CANCEL;
+  late String CENTER;
   late String CLEAR_LRC_FILE;
   late String COMING_UP;
   late String CONTROL_PANEL;
@@ -64,6 +66,7 @@ class Values {
   late String ENABLE_NOW_PLAYING_RIPPLE_EFFECT;
   late String ENABLE_VOLUME_BOOST_FILTER;
   late String ENABLE_VOLUME_BOOST_FILTER_WARNING;
+  late String END;
   late String ENTRIES;
   late String ENTRY;
   late String ERROR;
@@ -217,6 +220,7 @@ class Values {
   late String SORT;
   late String SORT_BY;
   late String SPEED;
+  late String START;
   late String THEME;
   late String THEME_MODE_DARK;
   late String THEME_MODE_LIGHT;

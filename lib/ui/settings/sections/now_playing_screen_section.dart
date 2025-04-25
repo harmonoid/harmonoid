@@ -3,6 +3,7 @@ import 'package:safe_local_storage/safe_local_storage.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/mappers/text_align.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/now_playing_visuals_notifier.dart';
 import 'package:harmonoid/ui/settings/settings_section.dart';
@@ -81,6 +82,26 @@ class _NowPlayingScreenSectionState extends State<NowPlayingScreenSection> {
               child: Text(label(Localization.instance.MODIFY_BACKGROUND_IMAGES)),
             ),
           ),
+        ListItem(
+          leading: CircleAvatar(
+            child: Icon(Configuration.instance.lyricsViewTextAlign.toIcon()),
+          ),
+          title: Localization.instance.ALIGNMENT,
+          subtitle: Configuration.instance.lyricsViewTextAlign.toLabel(),
+          onTap: () async {
+            const values = [TextAlign.start, TextAlign.center, TextAlign.end];
+            final result = await showSelection(
+              context,
+              Localization.instance.ALIGNMENT,
+              values.toList(),
+              Configuration.instance.lyricsViewTextAlign,
+              (value) => value.toLabel(),
+            );
+            if (result == null) return;
+            await Configuration.instance.set(lyricsViewTextAlign: result);
+            setState(() {});
+          },
+        ),
         ListItem(
           trailing: Switch(
             value: Configuration.instance.nowPlayingDisplayUponPlay,

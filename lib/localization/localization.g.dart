@@ -28,6 +28,7 @@ class LocalizationBase extends Values {
     ALBUM_ARTIST = map['ALBUM_ARTIST']!;
     ALBUM_ARTISTS = map['ALBUM_ARTISTS']!;
     ALBUM_DELETE_DIALOG_SUBTITLE = map['ALBUM_DELETE_DIALOG_SUBTITLE']!;
+    ALIGNMENT = map['ALIGNMENT']!;
     ALL_FILES = map['ALL_FILES']!;
     ANIMATION_SPEED = map['ANIMATION_SPEED']!;
     ARTIST = map['ARTIST']!;
@@ -38,6 +39,7 @@ class LocalizationBase extends Values {
     BETA = map['BETA']!;
     BUFFERING = map['BUFFERING']!;
     CANCEL = map['CANCEL']!;
+    CENTER = map['CENTER']!;
     CLEAR_LRC_FILE = map['CLEAR_LRC_FILE']!;
     COMING_UP = map['COMING_UP']!;
     CONTROL_PANEL = map['CONTROL_PANEL']!;
@@ -69,6 +71,7 @@ class LocalizationBase extends Values {
     ENABLE_NOW_PLAYING_RIPPLE_EFFECT = map['ENABLE_NOW_PLAYING_RIPPLE_EFFECT']!;
     ENABLE_VOLUME_BOOST_FILTER = map['ENABLE_VOLUME_BOOST_FILTER']!;
     ENABLE_VOLUME_BOOST_FILTER_WARNING = map['ENABLE_VOLUME_BOOST_FILTER_WARNING']!;
+    END = map['END']!;
     ENTRIES = map['ENTRIES']!;
     ENTRY = map['ENTRY']!;
     ERROR = map['ERROR']!;
@@ -222,6 +225,7 @@ class LocalizationBase extends Values {
     SORT = map['SORT']!;
     SORT_BY = map['SORT_BY']!;
     SPEED = map['SPEED']!;
+    START = map['START']!;
     THEME = map['THEME']!;
     THEME_MODE_DARK = map['THEME_MODE_DARK']!;
     THEME_MODE_LIGHT = map['THEME_MODE_LIGHT']!;
