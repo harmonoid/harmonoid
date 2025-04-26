@@ -37,6 +37,8 @@ class Values {
   late String CENTER;
   late String CLEAR_LRC_FILE;
   late String COMING_UP;
+  late String CONNECT;
+  late String CONNECTED;
   late String CONTROL_PANEL;
   late String COPY_AS_JSON;
   late String COPY_LINK;
@@ -48,12 +50,12 @@ class Values {
   late String DELETE;
   late String DESCENDING;
   late String DEVELOPER;
+  late String DISCONNECT;
   late String DISCOVERING_FILES;
   late String DISPLAY_AUDIO_FORMAT;
   late String DISPLAY_PROGRESS_ON_TASKBAR;
   late String DISPLAY_UPON_PLAYBACK;
   late String DISPLAY_VOLUME_SLIDER;
-  late String DONATE;
   late String DONE;
   late String EDIT;
   late String EDIT_ALBUM_PARAMETERS_SUBTITLE;
@@ -91,10 +93,13 @@ class Values {
   late String HISTORY;
   late String IMAGES;
   late String IMPORT;
+  late String LASTFM;
   late String LAST_DIRECTORY_REMOVED;
   late String LESS;
   late String LICENSE;
   late String LIKED_SONGS;
+  late String LINKED_AS_X;
+  late String LINK_YOUR_ACCOUNT;
   late String LOOKUP_FOR_FALLBACK_COVERS;
   late String LOOKUP_FOR_LRC_IN_DIRECTORY;
   late String LYRICS;
@@ -200,6 +205,8 @@ class Values {
   late String SETTINGS_SECTION_DISPLAY_TITLE;
   late String SETTINGS_SECTION_LANGUAGE_SUBTITLE;
   late String SETTINGS_SECTION_LANGUAGE_TITLE;
+  late String SETTINGS_SECTION_LASTFM_SUBTITLE;
+  late String SETTINGS_SECTION_LASTFM_TITLE;
   late String SETTINGS_SECTION_MEDIA_LIBRARY_SUBTITLE;
   late String SETTINGS_SECTION_MEDIA_LIBRARY_TITLE;
   late String SETTINGS_SECTION_MISCELLANEOUS_SUBTITLE;

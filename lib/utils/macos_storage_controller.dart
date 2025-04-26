@@ -12,16 +12,16 @@ import 'package:path/path.dart' as path;
 ///
 /// {@endtemplate}
 class MacOSStorageController {
-  static const kMethodChannelName = 'com.alexmercerind.harmonoid/storage_controller';
-  static const kPickDirectoryMethodName = 'pickDirectory';
-  static const kPickFileMethodName = 'pickFile';
-  static const kPreserveAccessMethodName = 'preserveAccess';
-  static const kInvalidateAccessMethodName = 'invalidateAccess';
-  static const kGetDefaultMediaLibraryDirectoryMethodName = 'getDefaultMediaLibraryDirectory';
+  static const String kMethodChannelName = 'com.alexmercerind.harmonoid/storage_controller';
+  static const String kPickDirectoryMethodName = 'pickDirectory';
+  static const String kPickFileMethodName = 'pickFile';
+  static const String kPreserveAccessMethodName = 'preserveAccess';
+  static const String kInvalidateAccessMethodName = 'invalidateAccess';
+  static const String kGetDefaultMediaLibraryDirectoryMethodName = 'getDefaultMediaLibraryDirectory';
 
-  static const kPickFileAllowedFileTypesArg = 'allowedFileTypes';
-  static const kPreserveAccessPathArg = 'path';
-  static const kInvalidateAccessPathArg = 'path';
+  static const String kPickFileAllowedFileTypesArg = 'allowedFileTypes';
+  static const String kPreserveAccessPathArg = 'path';
+  static const String kInvalidateAccessPathArg = 'path';
 
   /// Singleton instance.
   static const MacOSStorageController instance = MacOSStorageController._();

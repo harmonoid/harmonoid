@@ -18,6 +18,7 @@ class ConfigurationBase {
   bool get desktopNowPlayingLyrics => _desktopNowPlayingLyrics!;
   bool get discordRpc => _discordRpc!;
   String get identifier => _identifier!;
+  Session get lastfmSession => _lastfmSession!;
   LocalizationData get localization => _localization!;
   bool get lrcFromDirectory => _lrcFromDirectory!;
   double get lyricsViewFocusedFontSize => _lyricsViewFocusedFontSize!;
@@ -66,6 +67,7 @@ class ConfigurationBase {
     bool? desktopNowPlayingLyrics,
     bool? discordRpc,
     String? identifier,
+    Session? lastfmSession,
     LocalizationData? localization,
     bool? lrcFromDirectory,
     double? lyricsViewFocusedFontSize,
@@ -130,6 +132,10 @@ class ConfigurationBase {
     if (identifier != null) {
       _identifier = identifier;
       await db.setValue(kKeyIdentifier, kTypeString, stringValue: identifier);
+    }
+    if (lastfmSession != null) {
+      _lastfmSession = lastfmSession;
+      await db.setValue(kKeyLastfmSession, kTypeJson, jsonValue: lastfmSession.toJson());
     }
     if (localization != null) {
       _localization = localization;
@@ -301,6 +307,7 @@ class ConfigurationBase {
       /* Boolean */ kKeyDesktopNowPlayingLyrics: true,
       /* Boolean */ kKeyDiscordRpc: true,
       /* String  */ kKeyIdentifier: const Uuid().v4(),
+      /* Json    */ kKeyLastfmSession: const Session(name: '', key: ''),
       /* Json    */ kKeyLocalization: const LocalizationData(code: 'en_US', name: 'English', country: 'United States'),
       /* Boolean */ kKeyLrcFromDirectory: false,
       /* Double  */ kKeyLyricsViewFocusedFontSize: isDesktop ? 64.0: 48.0,
@@ -350,6 +357,7 @@ class ConfigurationBase {
   bool? _desktopNowPlayingLyrics;
   bool? _discordRpc;
   String? _identifier;
+  Session? _lastfmSession;
   LocalizationData? _localization;
   bool? _lrcFromDirectory;
   double? _lyricsViewFocusedFontSize;
@@ -400,6 +408,7 @@ const kKeyDesktopNowPlayingCarousel = 'DESKTOP_NOW_PLAYING_CAROUSEL';
 const kKeyDesktopNowPlayingLyrics = 'DESKTOP_NOW_PLAYING_LYRICS';
 const kKeyDiscordRpc = 'DISCORD_RPC';
 const kKeyIdentifier = 'IDENTIFIER';
+const kKeyLastfmSession = 'LASTFM_SESSION';
 const kKeyLocalization = 'LOCALIZATION';
 const kKeyLrcFromDirectory = 'LRC_FROM_DIRECTORY';
 const kKeyLyricsViewFocusedFontSize = 'LYRICS_VIEW_FOCUSED_FONT_SIZE';

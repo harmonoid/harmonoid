@@ -15,6 +15,7 @@ import 'package:harmonoid/core/media_player/base_media_player.dart';
 import 'package:harmonoid/core/media_player/mixin/audio_service_mixin.dart';
 import 'package:harmonoid/core/media_player/mixin/discord_rpc_mixin.dart';
 import 'package:harmonoid/core/media_player/mixin/history_playlist_mixin.dart';
+import 'package:harmonoid/core/media_player/mixin/lastfm_mixin.dart';
 import 'package:harmonoid/core/media_player/mixin/mpris_mixin.dart';
 import 'package:harmonoid/core/media_player/mixin/system_media_transport_controls_mixin.dart';
 import 'package:harmonoid/core/media_player/mixin/windows_taskbar_mixin.dart';
@@ -30,7 +31,6 @@ import 'package:harmonoid/models/media_player_state.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/models/playback_state.dart';
 import 'package:harmonoid/utils/actions.dart';
-import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/constants.dart';
 
 /// {@template media_player}
@@ -40,7 +40,9 @@ import 'package:harmonoid/utils/constants.dart';
 /// Implementation to handle the media playback & other related functionalities.
 ///
 /// {@endtemplate}
-class MediaPlayer extends ChangeNotifier with AudioServiceMixin, DiscordRpcMixin, HistoryPlaylistMixin, MprisMixin, SystemMediaTransportControlsMixin, WindowsTaskbarMixin implements BaseMediaPlayer {
+class MediaPlayer extends ChangeNotifier
+    with AudioServiceMixin, DiscordRpcMixin, HistoryPlaylistMixin, LastFmMixin, MprisMixin, SystemMediaTransportControlsMixin, WindowsTaskbarMixin
+    implements BaseMediaPlayer {
   /// Singleton instance.
   static final MediaPlayer instance = MediaPlayer._();
 
@@ -66,6 +68,7 @@ class MediaPlayer extends ChangeNotifier with AudioServiceMixin, DiscordRpcMixin
         ensureInitializedAudioService(),
         ensureInitializedDiscordRpc(),
         ensureInitializedHistoryPlaylist(),
+        ensureInitializedLastFm(),
         ensureInitializedMpris(),
         ensureInitializedSystemMediaTransportControls(),
         ensureInitializedWindowsTaskbar(),
@@ -240,11 +243,7 @@ class MediaPlayer extends ChangeNotifier with AudioServiceMixin, DiscordRpcMixin
     }
     if (Platform.isAndroid) {
       final platform = _player.platform as NativePlayer;
-      if (AndroidStorageController.instance.version <= 27) {
-        await platform.setProperty('ao', 'audiotrack,opensles');
-      } else {
-        await platform.setProperty('ao', 'audiotrack,opensles');
-      }
+      await platform.setProperty('ao', 'audiotrack,opensles');
     }
   }
 
@@ -292,6 +291,7 @@ class MediaPlayer extends ChangeNotifier with AudioServiceMixin, DiscordRpcMixin
     disposeAudioService();
     disposeDiscordRpc();
     disposeHistoryPlaylist();
+    disposeLastFm();
     disposeMpris();
     disposeSystemMediaTransportControls();
     disposeWindowsTaskbar();

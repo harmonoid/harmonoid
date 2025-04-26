@@ -10,11 +10,11 @@ import 'package:flutter/services.dart';
 ///
 /// {@endtemplate}
 class AndroidUtils {
-  static const kMethodChannelName = 'com.alexmercerind.harmonoid/utils';
-  static const kMoveTaskToBackMethodName = 'moveTaskToBack';
-  static const kShowToastMethodName = 'showToast';
+  static const String kMethodChannelName = 'com.alexmercerind.harmonoid/utils';
+  static const String kMoveTaskToBackMethodName = 'moveTaskToBack';
+  static const String kShowToastMethodName = 'showToast';
 
-  static const kShowToastArgText = 'text';
+  static const String kShowToastArgText = 'text';
 
   /// Singleton instance.
   static final AndroidUtils instance = AndroidUtils._();

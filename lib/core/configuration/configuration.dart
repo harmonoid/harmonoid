@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/material.dart';
+import 'package:lastfm/lastfm.dart';
 import 'package:media_library/media_library.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path;
@@ -84,6 +85,7 @@ class Configuration extends ConfigurationBase {
     _desktopNowPlayingLyrics = await _read<bool, bool>(kKeyDesktopNowPlayingLyrics, defaults);
     _discordRpc = await _read<bool, bool>(kKeyDiscordRpc, defaults);
     _identifier = await _read<String, String>(kKeyIdentifier, defaults);
+    _lastfmSession = await _read<dynamic, Session>(kKeyLastfmSession, defaults, (value) => Session.fromJson(value));
     _localization = await _read<dynamic, LocalizationData>(kKeyLocalization, defaults, (value) => LocalizationData.fromJson(value));
     _lrcFromDirectory = await _read<bool, bool>(kKeyLrcFromDirectory, defaults);
     _lyricsViewFocusedFontSize = await _read<double, double>(kKeyLyricsViewFocusedFontSize, defaults);

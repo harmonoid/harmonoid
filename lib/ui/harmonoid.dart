@@ -89,6 +89,7 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     synchronized(() async {
       try {
+        if (!Platform.isAndroid) return;
         if (Configuration.instance.notificationLyrics && LyricsNotifier.instance.lyrics.isNotEmpty && await Permission.notification.isGranted) {
           return;
         }
