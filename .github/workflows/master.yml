@@ -95,10 +95,10 @@ jobs:
       - name: Build
         run: |
           flutter pub get
-          flutter build windows --verbose \
-            --dart-define=API_KEY=${{ secrets.API_KEY }} \
-            --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }} \
-            --dart-define=LASTFM_API_KEY=${{ secrets.LASTFM_API_KEY }} \
+          flutter build windows --verbose `
+            --dart-define=API_KEY=${{ secrets.API_KEY }} `
+            --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }} `
+            --dart-define=LASTFM_API_KEY=${{ secrets.LASTFM_API_KEY }} `
             --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }}
       - name: Create PFX
         id: create_pfx
