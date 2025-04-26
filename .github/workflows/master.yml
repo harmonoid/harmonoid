@@ -24,7 +24,11 @@ jobs:
           rm -r "assets/icons"
           mkdir "assets/icons"
           flutter pub get
-          flutter build macos --verbose --dart-define=API_KEY=${{ secrets.API_KEY }} --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }}
+          flutter build macos --verbose \
+            --dart-define=API_KEY=${{ secrets.API_KEY }} \
+            --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }} \
+            --dart-define=LASTFM_API_KEY=${{ secrets.LASTFM_API_KEY }} \
+            --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }}
       - name: Install create-dmg
         run: |
           brew install create-dmg
@@ -91,7 +95,11 @@ jobs:
       - name: Build
         run: |
           flutter pub get
-          flutter build windows --verbose --dart-define=API_KEY=${{ secrets.API_KEY }} --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }}
+          flutter build windows --verbose \
+            --dart-define=API_KEY=${{ secrets.API_KEY }} \
+            --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }} \
+            --dart-define=LASTFM_API_KEY=${{ secrets.LASTFM_API_KEY }} \
+            --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }}
       - name: Create PFX
         id: create_pfx
         uses: timheuer/base64-to-file@v1
@@ -169,7 +177,11 @@ jobs:
           rm -r "assets/icons"
           mkdir "assets/icons"
           flutter pub get
-          flutter build linux --verbose --dart-define=API_KEY=${{ secrets.API_KEY }} --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }}
+          flutter build linux --verbose \
+            --dart-define=API_KEY=${{ secrets.API_KEY }} \
+            --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }} \
+            --dart-define=LASTFM_API_KEY=${{ secrets.LASTFM_API_KEY }} \
+            --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }}
       - name: Bundle RPM
         run: |
           cp -fr build/linux/x64/release/bundle linux/debian/usr/share/harmonoid
@@ -261,7 +273,11 @@ jobs:
           cp "${{ steps.create_key_store.outputs.filePath }}" android/app/keystore.jks
           cp "${{ steps.create_key_properties.outputs.filePath }}" android/key.properties
           flutter pub get
-          flutter build apk --split-per-abi --verbose --dart-define=API_KEY=${{ secrets.API_KEY }} --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }}
+          flutter build apk --split-per-abi --verbose \
+            --dart-define=API_KEY=${{ secrets.API_KEY }} \
+            --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }} \
+            --dart-define=LASTFM_API_KEY=${{ secrets.LASTFM_API_KEY }} \
+            --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }}
           cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk harmonoid-android-arm64-v8a-release.apk
           cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk harmonoid-android-armeabi-v7a-release.apk
           cp build/app/outputs/flutter-apk/app-x86_64-release.apk harmonoid-android-x86_64-release.apk
