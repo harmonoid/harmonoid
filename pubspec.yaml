@@ -13,7 +13,7 @@ dependencies:
   adaptive_layouts:
     path: external/adaptive_layouts
   animations: ^2.0.0
-  audio_service: ^0.18.7
+  audio_service: ^0.18.18
   auto_size_text: ^3.0.0
   collection: ^1.18.0
   crypto: ^3.0.3
@@ -33,6 +33,8 @@ dependencies:
   go_router: ^14.2.7
   http: ^1.2.1
   json_annotation: ^4.9.0
+  lastfm:
+    path: external/lastfm
   lrc: ^1.0.1
   measure_size: ^4.0.0
   media_kit:

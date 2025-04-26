@@ -1,15 +1,18 @@
 [submodule "external/smtc-win32"]
 	path = external/smtc-win32
 	url = https://github.com/harmonoid/smtc-win32.git
-[submodule "assets/translations"]
+[submodule "assets/localizations"]
 	path = assets/localizations
-	url = https://github.com/harmonoid/translations.git
+	url = https://github.com/harmonoid/localizations.git
 [submodule "external/tag_reader"]
 	path = external/tag_reader
 	url = https://github.com/harmonoid/tag_reader.git
 [submodule "external/adaptive_layouts"]
 	path = external/adaptive_layouts
-	url = https://github.com/harmonoid/adaptive_layouts
+	url = https://github.com/harmonoid/adaptive_layouts.git
 [submodule "external/media_library"]
 	path = external/media_library
-	url = https://github.com/harmonoid/media_library
+	url = https://github.com/harmonoid/media_library.git
+[submodule "external/lastfm"]
+	path = external/lastfm
+	url = https://github.com/alexmercerind/lastfm.git
