@@ -23,7 +23,6 @@ class Values {
   late String ALBUM_ARTIST;
   late String ALBUM_ARTISTS;
   late String ALBUM_DELETE_DIALOG_SUBTITLE;
-  late String ALIGNMENT;
   late String ALL_FILES;
   late String ANIMATION_SPEED;
   late String ARTIST;
@@ -47,6 +46,7 @@ class Values {
   late String CREATE;
   late String CREATE_NEW_PLAYLIST;
   late String DATE_ADDED;
+  late String DEFAULT;
   late String DELETE;
   late String DESCENDING;
   late String DEVELOPER;
@@ -103,6 +103,8 @@ class Values {
   late String LOOKUP_FOR_FALLBACK_COVERS;
   late String LOOKUP_FOR_LRC_IN_DIRECTORY;
   late String LYRICS;
+  late String LYRICS_ALIGNMENT;
+  late String LYRICS_FONT_FAMILY;
   late String LYRICS_NOT_FOUND;
   late String LYRICS_RETRIEVING;
   late String LYRICS_SIZE;

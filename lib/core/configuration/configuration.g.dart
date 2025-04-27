@@ -23,6 +23,7 @@ class ConfigurationBase {
   bool get lrcFromDirectory => _lrcFromDirectory!;
   double get lyricsViewFocusedFontSize => _lyricsViewFocusedFontSize!;
   double get lyricsViewFocusedLineHeight => _lyricsViewFocusedLineHeight!;
+  String get lyricsViewFontFamily => _lyricsViewFontFamily!;
   TextAlign get lyricsViewTextAlign => _lyricsViewTextAlign!;
   double get lyricsViewUnfocusedFontSize => _lyricsViewUnfocusedFontSize!;
   double get lyricsViewUnfocusedLineHeight => _lyricsViewUnfocusedLineHeight!;
@@ -72,6 +73,7 @@ class ConfigurationBase {
     bool? lrcFromDirectory,
     double? lyricsViewFocusedFontSize,
     double? lyricsViewFocusedLineHeight,
+    String? lyricsViewFontFamily,
     TextAlign? lyricsViewTextAlign,
     double? lyricsViewUnfocusedFontSize,
     double? lyricsViewUnfocusedLineHeight,
@@ -152,6 +154,10 @@ class ConfigurationBase {
     if (lyricsViewFocusedLineHeight != null) {
       _lyricsViewFocusedLineHeight = lyricsViewFocusedLineHeight;
       await db.setValue(kKeyLyricsViewFocusedLineHeight, kTypeDouble, doubleValue: lyricsViewFocusedLineHeight);
+    }
+    if (lyricsViewFontFamily != null) {
+      _lyricsViewFontFamily = lyricsViewFontFamily;
+      await db.setValue(kKeyLyricsViewFontFamily, kTypeString, stringValue: lyricsViewFontFamily);
     }
     if (lyricsViewTextAlign != null) {
       _lyricsViewTextAlign = lyricsViewTextAlign;
@@ -312,6 +318,7 @@ class ConfigurationBase {
       /* Boolean */ kKeyLrcFromDirectory: false,
       /* Double  */ kKeyLyricsViewFocusedFontSize: isDesktop ? 64.0: 48.0,
       /* Double  */ kKeyLyricsViewFocusedLineHeight: 1.2,
+      /* String  */ kKeyLyricsViewFontFamily: '',
       /* Integer */ kKeyLyricsViewTextAlign: TextAlign.start.index,
       /* Double  */ kKeyLyricsViewUnfocusedFontSize: isDesktop ? 28.0: 24.0,
       /* Double  */ kKeyLyricsViewUnfocusedLineHeight: 1.2,
@@ -362,6 +369,7 @@ class ConfigurationBase {
   bool? _lrcFromDirectory;
   double? _lyricsViewFocusedFontSize;
   double? _lyricsViewFocusedLineHeight;
+  String? _lyricsViewFontFamily;
   TextAlign? _lyricsViewTextAlign;
   double? _lyricsViewUnfocusedFontSize;
   double? _lyricsViewUnfocusedLineHeight;
@@ -413,6 +421,7 @@ const kKeyLocalization = 'LOCALIZATION';
 const kKeyLrcFromDirectory = 'LRC_FROM_DIRECTORY';
 const kKeyLyricsViewFocusedFontSize = 'LYRICS_VIEW_FOCUSED_FONT_SIZE';
 const kKeyLyricsViewFocusedLineHeight = 'LYRICS_VIEW_FOCUSED_LINE_HEIGHT';
+const kKeyLyricsViewFontFamily = 'LYRICS_VIEW_FONT_FAMILY';
 const kKeyLyricsViewTextAlign = 'LYRICS_VIEW_TEXT_ALIGN';
 const kKeyLyricsViewUnfocusedFontSize = 'LYRICS_VIEW_UNFOCUSED_FONT_SIZE';
 const kKeyLyricsViewUnfocusedLineHeight = 'LYRICS_VIEW_UNFOCUSED_LINE_HEIGHT';

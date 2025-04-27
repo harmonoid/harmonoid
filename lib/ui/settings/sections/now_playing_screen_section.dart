@@ -1,4 +1,6 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/extensions/string.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
@@ -9,6 +11,7 @@ import 'package:harmonoid/state/now_playing_visuals_notifier.dart';
 import 'package:harmonoid/ui/settings/settings_section.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:system_fonts/system_fonts.dart';
 
 class NowPlayingScreenSection extends StatefulWidget {
   const NowPlayingScreenSection({super.key});
@@ -86,13 +89,13 @@ class _NowPlayingScreenSectionState extends State<NowPlayingScreenSection> {
           leading: CircleAvatar(
             child: Icon(Configuration.instance.lyricsViewTextAlign.toIcon()),
           ),
-          title: Localization.instance.ALIGNMENT,
+          title: Localization.instance.LYRICS_ALIGNMENT,
           subtitle: Configuration.instance.lyricsViewTextAlign.toLabel(),
           onTap: () async {
             const values = [TextAlign.start, TextAlign.center, TextAlign.end];
             final result = await showSelection(
               context,
-              Localization.instance.ALIGNMENT,
+              Localization.instance.LYRICS_ALIGNMENT,
               values.toList(),
               Configuration.instance.lyricsViewTextAlign,
               (value) => value.toLabel(),
@@ -102,6 +105,26 @@ class _NowPlayingScreenSectionState extends State<NowPlayingScreenSection> {
             setState(() {});
           },
         ),
+        if (/* ONLY DESKTOP */ isDesktop)
+          ListItem(
+            leading: const CircleAvatar(child: Icon(Icons.font_download)),
+            title: Localization.instance.LYRICS_FONT_FAMILY,
+            subtitle: Configuration.instance.lyricsViewFontFamily.nullIfBlank() ?? Localization.instance.DEFAULT,
+            onTap: () async {
+              final fonts = [''] + SystemFonts().getFontList();
+              fonts.sortBy((e) => e.toLowerCase());
+              final result = await showSelection(
+                context,
+                Localization.instance.LYRICS_FONT_FAMILY,
+                fonts.toList(),
+                Configuration.instance.lyricsViewFontFamily,
+                (value) => value.nullIfBlank() ?? Localization.instance.DEFAULT,
+              );
+              if (result == null) return;
+              await Configuration.instance.set(lyricsViewFontFamily: result);
+              setState(() {});
+            },
+          ),
         ListItem(
           trailing: Switch(
             value: Configuration.instance.nowPlayingDisplayUponPlay,

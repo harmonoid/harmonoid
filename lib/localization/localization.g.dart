@@ -28,7 +28,6 @@ class LocalizationBase extends Values {
     ALBUM_ARTIST = map['ALBUM_ARTIST']!;
     ALBUM_ARTISTS = map['ALBUM_ARTISTS']!;
     ALBUM_DELETE_DIALOG_SUBTITLE = map['ALBUM_DELETE_DIALOG_SUBTITLE']!;
-    ALIGNMENT = map['ALIGNMENT']!;
     ALL_FILES = map['ALL_FILES']!;
     ANIMATION_SPEED = map['ANIMATION_SPEED']!;
     ARTIST = map['ARTIST']!;
@@ -52,6 +51,7 @@ class LocalizationBase extends Values {
     CREATE = map['CREATE']!;
     CREATE_NEW_PLAYLIST = map['CREATE_NEW_PLAYLIST']!;
     DATE_ADDED = map['DATE_ADDED']!;
+    DEFAULT = map['DEFAULT']!;
     DELETE = map['DELETE']!;
     DESCENDING = map['DESCENDING']!;
     DEVELOPER = map['DEVELOPER']!;
@@ -108,6 +108,8 @@ class LocalizationBase extends Values {
     LOOKUP_FOR_FALLBACK_COVERS = map['LOOKUP_FOR_FALLBACK_COVERS']!;
     LOOKUP_FOR_LRC_IN_DIRECTORY = map['LOOKUP_FOR_LRC_IN_DIRECTORY']!;
     LYRICS = map['LYRICS']!;
+    LYRICS_ALIGNMENT = map['LYRICS_ALIGNMENT']!;
+    LYRICS_FONT_FAMILY = map['LYRICS_FONT_FAMILY']!;
     LYRICS_NOT_FOUND = map['LYRICS_NOT_FOUND']!;
     LYRICS_RETRIEVING = map['LYRICS_RETRIEVING']!;
     LYRICS_SIZE = map['LYRICS_SIZE']!;

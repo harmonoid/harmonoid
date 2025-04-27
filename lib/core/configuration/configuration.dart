@@ -90,6 +90,7 @@ class Configuration extends ConfigurationBase {
     _lrcFromDirectory = await _read<bool, bool>(kKeyLrcFromDirectory, defaults);
     _lyricsViewFocusedFontSize = await _read<double, double>(kKeyLyricsViewFocusedFontSize, defaults);
     _lyricsViewFocusedLineHeight = await _read<double, double>(kKeyLyricsViewFocusedLineHeight, defaults);
+    _lyricsViewFontFamily = await _read<String, String>(kKeyLyricsViewFontFamily, defaults);
     _lyricsViewTextAlign = await _read<int, TextAlign>(kKeyLyricsViewTextAlign, defaults, (value) => TextAlign.values[value]);
     _lyricsViewUnfocusedFontSize = await _read<double, double>(kKeyLyricsViewUnfocusedFontSize, defaults);
     _lyricsViewUnfocusedLineHeight = await _read<double, double>(kKeyLyricsViewUnfocusedLineHeight, defaults);

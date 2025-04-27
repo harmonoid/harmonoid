@@ -72,6 +72,7 @@ dependencies:
   syncfusion_flutter_datagrid: 24.2.7
   syncfusion_flutter_sliders: 24.2.7
   synchronized: ^3.0.0+2
+  system_fonts: ^1.0.1
   system_media_transport_controls:
     path: external/smtc-win32/bindings/system_media_transport_controls
   tag_reader:

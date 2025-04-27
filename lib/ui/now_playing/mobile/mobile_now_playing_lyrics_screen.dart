@@ -24,6 +24,7 @@ class MobileNowPlayingLyricsScreen extends StatelessWidget {
         data: ThemeNotifier.instance.darkTheme,
         child: const Scaffold(
           body: Stack(
+            alignment: Alignment.center,
             children: [
               NowPlayingBackground(),
               NowPlayingLyrics(),
