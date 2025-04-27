@@ -17,7 +17,7 @@ extension TrackMappers on Track {
   /// Convert to a [DataGridRow] used in [TracksScreen].
   DataGridRow toDataGridRow() => DataGridRow(
         cells: [
-          DataGridCell(columnName: TracksDataSource.kTrackNumber, value: this),
+          DataGridCell(columnName: TracksDataSource.kCover, value: this),
           DataGridCell(columnName: TracksDataSource.kTitle, value: this),
           DataGridCell(columnName: TracksDataSource.kArtist, value: this),
           DataGridCell(columnName: TracksDataSource.kAlbum, value: this),

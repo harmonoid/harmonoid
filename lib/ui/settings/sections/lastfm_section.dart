@@ -79,7 +79,7 @@ class _LastfmSectionState extends State<LastfmSection> {
               _kLastFmSvg,
               width: 24.0,
               height: 24.0,
-              color: Theme.of(context).colorScheme.primary,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
             ),
           ),
           title: _connected ? Localization.instance.CONNECTED : Localization.instance.CONNECT,

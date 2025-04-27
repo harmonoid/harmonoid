@@ -25,6 +25,7 @@ import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/state/update_notifier.dart';
+import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/keyboard_shortcuts.dart';
@@ -1089,7 +1090,7 @@ class HyperLink extends StatefulWidget {
 }
 
 class HyperLinkState extends State<HyperLink> {
-  String _hover = '';
+  String hover = '';
 
   @override
   Widget build(BuildContext context) {
@@ -1104,21 +1105,21 @@ class HyperLinkState extends State<HyperLink> {
                 text: (e as TextSpan).text,
                 style: e.recognizer != null
                     ? widget.style?.copyWith(
-                        decoration: _hover == e.text! ? TextDecoration.underline : null,
+                        decoration: hover == e.text! ? TextDecoration.underline : null,
                       )
                     : null,
                 recognizer: e.recognizer,
                 onEnter: (_) {
                   if (mounted) {
                     setState(() {
-                      _hover = e.text!;
+                      hover = e.text!;
                     });
                   }
                 },
                 onExit: (_) {
                   if (mounted) {
                     setState(() {
-                      _hover = '';
+                      hover = '';
                     });
                   }
                 },
@@ -2293,6 +2294,109 @@ class _MusicAnimationComponentState extends State<_MusicAnimationComponent> with
         height: animation.value,
         color: widget.color,
       ),
+    );
+  }
+}
+
+// --------------------------------------------------
+
+class HoverOverlay extends StatefulWidget {
+  final Size overlaySize;
+  final WidgetBuilder overlayBuilder;
+  final EdgeInsets overlayPadding;
+  final Widget child;
+
+  const HoverOverlay({
+    super.key,
+    required this.overlaySize,
+    this.overlayPadding = const EdgeInsets.all(16.0),
+    required this.overlayBuilder,
+    required this.child,
+  });
+
+  @override
+  State<HoverOverlay> createState() => HoverOverlayState();
+}
+
+class HoverOverlayState extends State<HoverOverlay> {
+  OverlayEntry? _overlayEntry;
+  Offset? _mousePosition;
+
+  @override
+  void dispose() {
+    _removeOverlay();
+    super.dispose();
+  }
+
+  void _removeOverlay() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+  }
+
+  void _updateOverlayPosition(PointerEvent event) {
+    _mousePosition = event.position;
+    _overlayEntry?.markNeedsBuild();
+  }
+
+  void _showOverlay(BuildContext context) {
+    _overlayEntry = OverlayEntry(
+      builder: (context) {
+        final screenSize = MediaQuery.sizeOf(context);
+        final position = _mousePosition ?? Offset.zero;
+
+        double screenWidth = screenSize.width;
+        double screenHeight = screenSize.height;
+
+        double left = position.dx;
+        double top = position.dy;
+
+        screenHeight -= kDesktopAppBarHeight + WindowPlus.instance.captionHeight + NowPlayingBar.height;
+        top -= kDesktopAppBarHeight + WindowPlus.instance.captionHeight;
+
+        if (left + widget.overlaySize.width + widget.overlayPadding.right > screenWidth) {
+          left = left - widget.overlaySize.width;
+        }
+        if (screenWidth - (left + widget.overlaySize.width) < widget.overlayPadding.right) {
+          left = screenWidth - widget.overlaySize.width - widget.overlayPadding.right;
+        }
+
+        if (top + widget.overlaySize.height + widget.overlayPadding.bottom > screenHeight) {
+          top = top - widget.overlaySize.height;
+        }
+        if (screenHeight - (top + widget.overlaySize.height) < widget.overlayPadding.bottom) {
+          top = screenHeight - widget.overlaySize.height - widget.overlayPadding.bottom;
+        }
+
+        left = left.clamp(widget.overlayPadding.left, screenWidth - widget.overlaySize.width);
+        top = top.clamp(widget.overlayPadding.top, screenHeight - widget.overlaySize.height);
+
+        return Positioned(
+          left: left,
+          top: top,
+          width: widget.overlaySize.width,
+          height: widget.overlaySize.height,
+          child: widget.overlayBuilder(context),
+        );
+      },
+    );
+
+    Overlay.of(context).insert(_overlayEntry!);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (event) {
+        _mousePosition = event.position;
+        _showOverlay(context);
+      },
+      onExit: (_) {
+        _removeOverlay();
+      },
+      onHover: (event) {
+        _updateOverlayPosition(event);
+      },
+      child: widget.child,
     );
   }
 }

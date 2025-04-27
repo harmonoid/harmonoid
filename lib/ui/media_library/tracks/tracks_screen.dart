@@ -122,12 +122,12 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _widthsNotifier.value[TracksDataSource.kTrackNumber] ??= linearTileHeight + 8.0;
-    _widthsNotifier.value[TracksDataSource.kTitle] ??= (MediaQuery.of(context).size.width - linearTileHeight - 8.0) * 5 / 17;
-    _widthsNotifier.value[TracksDataSource.kArtist] ??= (MediaQuery.of(context).size.width - linearTileHeight - 8.0) * 4 / 17;
-    _widthsNotifier.value[TracksDataSource.kAlbum] ??= (MediaQuery.of(context).size.width - linearTileHeight - 8.0) * 3 / 17;
-    _widthsNotifier.value[TracksDataSource.kGenre] ??= (MediaQuery.of(context).size.width - linearTileHeight - 8.0) * 3 / 17;
-    _widthsNotifier.value[TracksDataSource.kYear] ??= (MediaQuery.of(context).size.width - linearTileHeight - 8.0) * 2 / 17;
+    _widthsNotifier.value[TracksDataSource.kCover] ??= linearTileHeight;
+    _widthsNotifier.value[TracksDataSource.kTitle] ??= (MediaQuery.of(context).size.width - linearTileHeight) * 5 / 17;
+    _widthsNotifier.value[TracksDataSource.kArtist] ??= (MediaQuery.of(context).size.width - linearTileHeight) * 4 / 17;
+    _widthsNotifier.value[TracksDataSource.kAlbum] ??= (MediaQuery.of(context).size.width - linearTileHeight) * 3 / 17;
+    _widthsNotifier.value[TracksDataSource.kGenre] ??= (MediaQuery.of(context).size.width - linearTileHeight) * 3 / 17;
+    _widthsNotifier.value[TracksDataSource.kYear] ??= (MediaQuery.of(context).size.width - linearTileHeight) * 2 / 17;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -162,6 +162,7 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
                       headerGridLinesVisibility: GridLinesVisibility.both,
                       source: source,
                       onColumnResizeUpdate: (ColumnResizeUpdateDetails details) {
+                        if (details.column.columnName == TracksDataSource.kCover) return false;
                         _widthsNotifier.value = {
                           ..._widthsNotifier.value,
                           details.column.columnName: details.width,
@@ -212,20 +213,11 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
                       },
                       columns: [
                         GridColumn(
-                          columnName: TracksDataSource.kTrackNumber,
-                          width: widths[TracksDataSource.kTrackNumber]!,
+                          columnName: TracksDataSource.kCover,
+                          width: widths[TracksDataSource.kCover]!,
                           columnWidthMode: ColumnWidthMode.none,
                           minimumWidth: linearTileHeight,
-                          label: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            alignment: Alignment.center,
-                            child: Text(
-                              '#',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.titleSmall,
-                            ),
-                          ),
+                          label: const Icon(Icons.album, size: 18.0),
                         ),
                         GridColumn(
                           columnName: TracksDataSource.kTitle,
@@ -340,7 +332,7 @@ class TracksDataSource extends DataGridSource {
         (cell) {
           final style = Theme.of(context).textTheme.bodyLarge;
           final alignment = {
-            kTrackNumber: Alignment.center,
+            kCover: Alignment.center,
             kTitle: Alignment.centerLeft,
             kArtist: Alignment.centerLeft,
             kAlbum: Alignment.centerLeft,
@@ -348,95 +340,121 @@ class TracksDataSource extends DataGridSource {
             kYear: Alignment.centerLeft,
           }[cell.columnName]!;
           return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            padding: cell.columnName == kCover ? EdgeInsets.zero : const EdgeInsets.symmetric(horizontal: 8.0),
             alignment: alignment,
-            child: {
-              kTrackNumber: () => Text(
-                    track.trackNumber == 0 ? kDefaultTrackNumber.toString() : track.trackNumber.toString(),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: style,
-                  ),
-              kTitle: () => Text(
-                    track.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: style,
-                  ),
-              kArtist: () => HyperLink(
-                    text: TextSpan(
-                      children: [
-                        for (final artist in (track.artists.isEmpty ? {''} : track.artists)) ...[
-                          TextSpan(
-                            text: artist.isEmpty ? kDefaultArtist : artist,
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                navigateToArtist(context, ArtistLookupKey(artist: artist));
-                              },
+            child: switch (cell.columnName) {
+              kCover => HoverOverlay(
+                  overlayBuilder: (context) => IgnorePointer(
+                    child: Card(
+                      margin: EdgeInsets.zero,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ClipRRect(
+                          clipBehavior: Clip.antiAlias,
+                          borderRadius: Theme.of(context).cardTheme.shape is! RoundedRectangleBorder
+                              ? BorderRadius.zero
+                              : (Theme.of(context).cardTheme.shape as RoundedRectangleBorder).borderRadius.subtract(
+                                    const BorderRadius.all(
+                                      Radius.circular(8.0),
+                                    ),
+                                  ),
+                          child: Image(
+                            fit: BoxFit.cover,
+                            image: cover(item: track),
                           ),
-                          const TextSpan(
-                            text: ', ',
-                          ),
-                        ]
-                      ]..removeLast(),
+                        ),
+                      ),
                     ),
-                    style: style,
                   ),
-              kAlbum: () => HyperLink(
-                    text: TextSpan(
-                      children: [
+                  overlaySize: const Size.square(256.0),
+                  child: Image(
+                    fit: BoxFit.cover,
+                    image: cover(
+                      item: track,
+                      cacheHeight: linearTileHeight.toInt(),
+                    ),
+                  ),
+                ),
+              kTitle => Text(
+                  track.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: style,
+                ),
+              kArtist => HyperLink(
+                  text: TextSpan(
+                    children: [
+                      for (final artist in (track.artists.isEmpty ? {''} : track.artists)) ...[
                         TextSpan(
-                          text: track.album.isEmpty ? kDefaultAlbum : track.album,
+                          text: artist.isEmpty ? kDefaultArtist : artist,
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              navigateToAlbum(
-                                context,
-                                AlbumLookupKey(
-                                  album: track.album,
-                                  albumArtist: track.albumArtist,
-                                  year: track.year,
-                                ),
-                              );
+                              navigateToArtist(context, ArtistLookupKey(artist: artist));
                             },
                         ),
-                      ],
-                    ),
-                    style: style,
+                        const TextSpan(
+                          text: ', ',
+                        ),
+                      ]
+                    ]..removeLast(),
                   ),
-              kGenre: () => HyperLink(
-                    text: TextSpan(
-                      children: [
-                        for (final genre in (track.genres.isEmpty ? {''} : track.genres)) ...[
-                          TextSpan(
-                            text: genre.isEmpty ? kDefaultGenre : genre,
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                navigateToGenre(context, GenreLookupKey(genre: genre));
-                              },
-                          ),
-                          const TextSpan(
-                            text: ', ',
-                          ),
-                        ]
-                      ]..removeLast(),
-                    ),
-                    style: style,
+                  style: style,
+                ),
+              kAlbum => HyperLink(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: track.album.isEmpty ? kDefaultAlbum : track.album,
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            navigateToAlbum(
+                              context,
+                              AlbumLookupKey(
+                                album: track.album,
+                                albumArtist: track.albumArtist,
+                                year: track.year,
+                              ),
+                            );
+                          },
+                      ),
+                    ],
                   ),
-              kYear: () => Text(
-                    track.year == 0 ? kDefaultYear : track.year.toString(),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: style,
+                  style: style,
+                ),
+              kGenre => HyperLink(
+                  text: TextSpan(
+                    children: [
+                      for (final genre in (track.genres.isEmpty ? {''} : track.genres)) ...[
+                        TextSpan(
+                          text: genre.isEmpty ? kDefaultGenre : genre,
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              navigateToGenre(context, GenreLookupKey(genre: genre));
+                            },
+                        ),
+                        const TextSpan(
+                          text: ', ',
+                        ),
+                      ]
+                    ]..removeLast(),
                   ),
-            }[cell.columnName]!
-                .call(),
+                  style: style,
+                ),
+              kYear => Text(
+                  track.year == 0 ? kDefaultYear : track.year.toString(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: style,
+                ),
+              _ => const SizedBox.shrink(),
+            },
           );
         },
       ).toList(),
     );
   }
 
-  static const String kTrackNumber = '0';
+  static const String kCover = '0';
   static const String kTitle = '1';
   static const String kArtist = '2';
   static const String kAlbum = '3';

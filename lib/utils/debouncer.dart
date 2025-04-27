@@ -12,7 +12,7 @@ class Debouncer {
   final Duration timeout;
 
   /// {@macro debouncer}
-  Debouncer({this.timeout = const Duration(milliseconds: 200)});
+  Debouncer({this.timeout = const Duration(seconds: 1)});
 
   /// Runs the provided [action] after applying the debouncing logic.
   void run(void Function() action) {
