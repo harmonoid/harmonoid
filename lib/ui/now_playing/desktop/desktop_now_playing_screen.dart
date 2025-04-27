@@ -471,7 +471,7 @@ class Controls extends StatelessWidget {
                             color: nowPlayingColors.backgroundEnabledIcon,
                             icon: Icon(fullscreen ? Icons.fullscreen_exit : Icons.fullscreen),
                             splashRadius: 20.0,
-                            tooltip: Localization.instance.PREVIOUS,
+                            tooltip: fullscreen ? Localization.instance.EXIT_FULLSCREEN : Localization.instance.FULLSCREEN,
                           );
                         },
                       ),
