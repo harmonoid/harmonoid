@@ -388,7 +388,7 @@ class SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvide
             child: Container(
               color: Colors.transparent,
               width: MediaQuery.sizeOf(context).width,
-              height: MediaQuery.of(context).padding.bottom,
+              height: window.padding.bottom,
             ),
           ),
         ),
