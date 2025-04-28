@@ -1,9 +1,5 @@
-import 'dart:ffi';
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
-import 'package:media_kit/ffi/ffi.dart';
-import 'package:media_kit/generated/libmpv/bindings.dart' as generated;
 import 'package:media_kit/media_kit.dart' hide Playable;
 import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:synchronized/synchronized.dart';
@@ -247,42 +243,6 @@ class MediaPlayer extends ChangeNotifier
     }
   }
 
-  // HACK:
-  void observeTimePosPlayer() {
-    if (_observeTimePosPlayer) return;
-    _observeTimePosPlayer = true;
-
-    final platform = _player.platform as NativePlayer;
-    final ctx = platform.ctx;
-    final mpv = platform.mpv;
-
-    const properties = ['time-pos', 'audio-bitrate'];
-    for (final property in properties) {
-      final reply = property.hashCode;
-      final name = property.toNativeUtf8().cast<Int8>();
-      const format = generated.mpv_format.MPV_FORMAT_DOUBLE;
-      mpv.mpv_observe_property(ctx, reply, name, format);
-
-      calloc.free(name);
-    }
-  }
-
-  // HACK:
-  void unobserveTimePosPlayer() {
-    if (!_observeTimePosPlayer) return;
-    _observeTimePosPlayer = false;
-
-    final platform = _player.platform as NativePlayer;
-    final ctx = platform.ctx;
-    final mpv = platform.mpv;
-
-    const properties = ['time-pos', 'audio-bitrate'];
-    for (final property in properties) {
-      final reply = property.hashCode;
-      mpv.mpv_unobserve_property(ctx, reply);
-    }
-  }
-
   @override
   void dispose() {
     super.dispose();
@@ -304,6 +264,4 @@ class MediaPlayer extends ChangeNotifier
   double _setMuteVolume = 100.0;
   String? _updateCurrentFlagUri;
   final Lock _updateCurrentLock = Lock();
-  // HACK:
-  bool _observeTimePosPlayer = true;
 }

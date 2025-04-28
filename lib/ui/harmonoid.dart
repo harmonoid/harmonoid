@@ -4,9 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:synchronized/extension.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
@@ -81,29 +79,6 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
       return true;
     }
     return super.didPopRoute();
-  }
-
-  // HACK:
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    synchronized(() async {
-      try {
-        if (!Platform.isAndroid) return;
-        if (Configuration.instance.notificationLyrics && LyricsNotifier.instance.lyrics.isNotEmpty && await Permission.notification.isGranted) {
-          return;
-        }
-      } catch (exception, stacktrace) {
-        debugPrint(exception.toString());
-        debugPrint(stacktrace.toString());
-      }
-
-      if (state == AppLifecycleState.resumed) {
-        MediaPlayer.instance.observeTimePosPlayer();
-      } else {
-        MediaPlayer.instance.unobserveTimePosPlayer();
-      }
-    });
   }
 
   @override
