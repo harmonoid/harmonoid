@@ -5,7 +5,6 @@ import 'package:synchronized/synchronized.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player/base_media_player.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
-import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/mappers/image_provider.dart';
 import 'package:harmonoid/mappers/media_player_state.dart';
 import 'package:harmonoid/models/loop.dart';
@@ -161,16 +160,7 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
 
       if (_flagCompletedAudioService != state.completed) {
         _flagCompletedAudioService = state.completed;
-        _playbackStateAudioService = _playbackStateAudioService.copyWith(
-          processingState: AudioProcessingState.completed,
-          controls: state.isLast && state.loop == Loop.off
-              ? [
-                  MediaControl.skipToPrevious,
-                  MediaControl.play,
-                  MediaControl.skipToNext,
-                ]
-              : _playbackStateAudioService.controls,
-        );
+        _playbackStateAudioService = _playbackStateAudioService.copyWith(processingState: AudioProcessingState.completed);
         _instanceAudioService?.playbackState.add(_playbackStateAudioService);
       }
     });
@@ -199,10 +189,10 @@ class _AudioServiceImpl extends BaseAudioHandler with QueueHandler, SeekHandler 
   _AudioServiceImpl(this._instance);
 
   @override
-  Future<void> play() => _instance.play();
+  Future<void> play() => _instance.playOrPause().then((_) => playbackState.add(playbackState.value.copyWith(processingState: AudioProcessingState.ready, playing: true)));
 
   @override
-  Future<void> pause() => _instance.pause();
+  Future<void> pause() => _instance.playOrPause().then((_) => playbackState.add(playbackState.value.copyWith(processingState: AudioProcessingState.ready, playing: false)));
 
   @override
   Future<void> stop() => _instance.pause();
