@@ -57,7 +57,7 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
     _flagRateAudioService = null;
     _flagShuffleAudioService = null;
     _flagLoopAudioService = null;
-    // _flagPositionAudioService = null;
+    _flagPositionAudioService = null;
     _flagDurationAudioService = null;
     _flagPlayingAudioService = null;
     _flagCompletedAudioService = null;
@@ -89,8 +89,6 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
             if (state.playing) MediaControl.pause else MediaControl.play,
             MediaControl.skipToNext,
           ],
-          // HACK:
-          updatePosition: Duration.zero,
         );
         _instanceAudioService?.playbackState.add(_playbackStateAudioService);
       }
@@ -124,11 +122,11 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
         _instanceAudioService?.playbackState.add(_playbackStateAudioService);
       }
 
-      // if (_flagPositionAudioService != state.position) {
-      //   _flagPositionAudioService = state.position;
-      //   _playbackStateAudioService = _playbackStateAudioService.copyWith(updatePosition: state.position);
-      //   _instanceAudioService?.playbackState.add(_playbackStateAudioService);
-      // }
+      if (_flagPositionAudioService == null || (state.position - _flagPositionAudioService!).abs() > const Duration(seconds: 1)) {
+        _flagPositionAudioService = state.position;
+        _playbackStateAudioService = _playbackStateAudioService.copyWith(updatePosition: state.position);
+        _instanceAudioService?.playbackState.add(_playbackStateAudioService);
+      }
 
       if (_flagDurationAudioService != state.duration && state.duration > Duration.zero) {
         _flagDurationAudioService = state.duration;
@@ -157,8 +155,6 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
             MediaAction.setShuffleMode,
             MediaAction.setSpeed,
           },
-          // HACK:
-          updatePosition: state.position,
         );
         _instanceAudioService?.playbackState.add(_playbackStateAudioService);
       }
@@ -180,14 +176,6 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
     });
   }
 
-  // HACK:
-  void updatePositionAudioService(Duration position) {
-    _lockAudioService.synchronized(() {
-      _playbackStateAudioService = _playbackStateAudioService.copyWith(updatePosition: position);
-      _instanceAudioService?.playbackState.add(_playbackStateAudioService);
-    });
-  }
-
   _AudioServiceImpl? _instanceAudioService;
   final Lock _lockAudioService = Lock();
 
@@ -196,7 +184,7 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
   double? _flagRateAudioService;
   bool? _flagShuffleAudioService;
   Loop? _flagLoopAudioService;
-  // Duration? _flagPositionAudioService;
+  Duration? _flagPositionAudioService;
   Duration? _flagDurationAudioService;
   bool? _flagPlayingAudioService;
   bool? _flagCompletedAudioService;

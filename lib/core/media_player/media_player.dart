@@ -106,7 +106,7 @@ class MediaPlayer extends ChangeNotifier
   Future<void> jump(int index) => _player.jump(index);
 
   @override
-  Future<void> seek(Duration position) => _player.seek(position) /* HACK: */ .then((_) => updatePositionAudioService(position));
+  Future<void> seek(Duration position) => _player.seek(position);
 
   @override
   Future<void> setLoop(Loop loop) => _player.setPlaylistMode(loop.toPlaylistMode());
