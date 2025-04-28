@@ -163,8 +163,12 @@ class MediaPlayer extends ChangeNotifier
     void Function()? onOpen,
   }) async {
     state = playbackState.toMediaPlayerState();
-    await setRate(state.rate);
-    await setPitch(state.pitch);
+    if (state.rate != 1.0) {
+      await setRate(state.rate);
+    }
+    if (state.pitch != 1.0) {
+      await setPitch(state.pitch);
+    }
     await setVolume(state.volume);
     await setShuffle(state.shuffle);
     await setLoop(state.loop);
