@@ -1,7 +1,7 @@
 name: harmonoid
 description: Plays & manages your music library. Looks beautiful & juicy.
 publish_to: "none"
-version: 0.3.9+5020
+version: 0.3.9+5021
 
 environment:
   sdk: ">=3.3.0 <4.0.0"
