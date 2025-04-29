@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 
+import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/ui/media_library/media_library_screen.dart';
 import 'package:harmonoid/ui/router.dart';
@@ -19,19 +22,22 @@ class KeyboardShortcuts {
   /// {@macro keyboard_shortcuts}
   KeyboardShortcuts._();
 
-  final Map<ShortcutActivator, VoidCallback> bindings = {
+  final bool control = !Platform.isMacOS;
+
+  late final Map<ShortcutActivator, VoidCallback> bindings = {
     const SingleActivator(LogicalKeyboardKey.space): MediaPlayer.instance.playOrPause,
     const SingleActivator(LogicalKeyboardKey.mediaPlayPause): MediaPlayer.instance.playOrPause,
     const SingleActivator(LogicalKeyboardKey.mediaTrackNext): MediaPlayer.instance.next,
     const SingleActivator(LogicalKeyboardKey.mediaTrackPrevious): MediaPlayer.instance.previous,
-    const SingleActivator(LogicalKeyboardKey.keyS, control: true): MediaLibraryScreenState.desktopQueryTextFieldFocusNode.requestFocus,
-    const SingleActivator(LogicalKeyboardKey.keyQ, control: true): SystemNavigator.pop,
-    const SingleActivator(LogicalKeyboardKey.arrowLeft, control: true): router.pop,
-    const SingleActivator(LogicalKeyboardKey.digit1, control: true): () => router.go('/$kMediaLibraryPath/$kAlbumsPath'),
-    const SingleActivator(LogicalKeyboardKey.digit2, control: true): () => router.go('/$kMediaLibraryPath/$kTracksPath'),
-    const SingleActivator(LogicalKeyboardKey.digit3, control: true): () => router.go('/$kMediaLibraryPath/$kArtistsPath'),
-    const SingleActivator(LogicalKeyboardKey.digit4, control: true): () => router.go('/$kMediaLibraryPath/$kGenresPath'),
-    const SingleActivator(LogicalKeyboardKey.digit5, control: true): () => router.go('/$kMediaLibraryPath/$kPlaylistsPath'),
+    SingleActivator(LogicalKeyboardKey.keyS, control: control, meta: !control): MediaLibraryScreenState.desktopQueryTextFieldFocusNode.requestFocus,
+    SingleActivator(LogicalKeyboardKey.keyQ, control: control, meta: !control): SystemNavigator.pop,
+    SingleActivator(LogicalKeyboardKey.keyR, control: control, meta: !control): MediaLibrary.instance.refresh,
+    SingleActivator(LogicalKeyboardKey.arrowLeft, control: control, meta: !control): router.pop,
+    SingleActivator(LogicalKeyboardKey.digit1, control: control, meta: !control): () => router.go('/$kMediaLibraryPath/$kAlbumsPath'),
+    SingleActivator(LogicalKeyboardKey.digit2, control: control, meta: !control): () => router.go('/$kMediaLibraryPath/$kTracksPath'),
+    SingleActivator(LogicalKeyboardKey.digit3, control: control, meta: !control): () => router.go('/$kMediaLibraryPath/$kArtistsPath'),
+    SingleActivator(LogicalKeyboardKey.digit4, control: control, meta: !control): () => router.go('/$kMediaLibraryPath/$kGenresPath'),
+    SingleActivator(LogicalKeyboardKey.digit5, control: control, meta: !control): () => router.go('/$kMediaLibraryPath/$kPlaylistsPath'),
   };
 }
 
