@@ -198,9 +198,11 @@ class AlbumItem extends StatelessWidget {
       );
     }
 
+    final transitionDuration = Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero;
+
     return OpenContainer(
       navigatorKey: homeNavigatorKey,
-      transitionDuration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+      transitionDuration: transitionDuration,
       closedColor: Theme.of(context).cardTheme.color ?? Colors.transparent,
       closedShape: Theme.of(context).cardTheme.shape ?? const RoundedRectangleBorder(),
       closedElevation: Theme.of(context).cardTheme.elevation ?? 0.0,
@@ -216,6 +218,11 @@ class AlbumItem extends StatelessWidget {
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () async {
+            if (transitionDuration == Duration.zero) {
+              navigate();
+              return;
+            }
+
             tracks = await MediaLibrary.instance.tracksFromAlbum(album);
 
             if (isMaterial2) {

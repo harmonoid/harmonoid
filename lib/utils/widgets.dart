@@ -2084,12 +2084,13 @@ class StatefulPageViewBuilderState extends State<StatefulPageViewBuilder> {
   void didUpdateWidget(covariant StatefulPageViewBuilder oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.index != widget.index) {
-      if ((oldWidget.index - widget.index).abs() > 5) {
+      final duration = Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero;
+      if ((oldWidget.index - widget.index).abs() > 5 || duration == Duration.zero) {
         _controller.jumpToPage(widget.index);
       } else {
         _controller.animateToPage(
           widget.index,
-          duration: Theme.of(context).extension<AnimationDuration>()?.slow ?? Duration.zero,
+          duration: duration,
           curve: Curves.easeInOut,
         );
       }
@@ -2144,12 +2145,13 @@ class StatefulCarouselViewBuilderState extends State<StatefulCarouselViewBuilder
   void didUpdateWidget(covariant StatefulCarouselViewBuilder oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.index != widget.index) {
-      if ((oldWidget.index - widget.index).abs() > 5) {
+      final duration = Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero;
+      if ((oldWidget.index - widget.index).abs() > 5 || duration == Duration.zero) {
         _controller.jumpToItem(widget.index);
       } else {
         _controller.animateToItem(
           widget.index,
-          duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+          duration: duration,
           curve: Curves.easeInOut,
         );
       }

@@ -140,6 +140,8 @@ class ArtistItem extends StatelessWidget {
       );
     }
 
+    final transitionDuration = Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero;
+
     return SizedBox(
       width: width,
       height: height,
@@ -147,7 +149,7 @@ class ArtistItem extends StatelessWidget {
         children: [
           OpenContainer(
             navigatorKey: homeNavigatorKey,
-            transitionDuration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+            transitionDuration: transitionDuration,
             closedColor: Theme.of(context).cardTheme.color ?? Colors.transparent,
             closedShape: const CircleBorder(),
             closedElevation: Theme.of(context).cardTheme.elevation ?? 0.0,
@@ -175,6 +177,11 @@ class ArtistItem extends StatelessWidget {
                       child: GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         onTap: () async {
+                          if (transitionDuration == Duration.zero) {
+                            navigate();
+                            return;
+                          }
+
                           tracks = await MediaLibrary.instance.tracksFromArtist(artist);
 
                           action();

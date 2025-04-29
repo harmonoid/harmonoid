@@ -123,6 +123,9 @@ class GenreItem extends StatelessWidget {
         ),
       );
     }
+
+    final transitionDuration = Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero;
+
     return Hero(
       tag: genre,
       child: OpenContainer(
@@ -139,6 +142,11 @@ class GenreItem extends StatelessWidget {
         },
         closedBuilder: (context, action) => InkWell(
           onTap: () async {
+            if (transitionDuration == Duration.zero) {
+              navigate();
+              return;
+            }
+
             tracks = await MediaLibrary.instance.tracksFromGenre(genre);
 
             await precacheImage(cover(item: genre), context);
