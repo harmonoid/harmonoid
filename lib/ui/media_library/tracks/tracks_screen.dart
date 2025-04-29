@@ -156,6 +156,7 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
                       rowHeight: linearTileHeight,
                       headerRowHeight: linearTileHeight,
                       allowColumnsResizing: true,
+                      selectionMode: SelectionMode.single,
                       columnWidthMode: ColumnWidthMode.none,
                       columnResizeMode: ColumnResizeMode.onResize,
                       gridLinesVisibility: GridLinesVisibility.both,

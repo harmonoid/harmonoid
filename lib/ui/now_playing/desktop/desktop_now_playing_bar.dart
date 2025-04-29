@@ -13,6 +13,7 @@ import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/models/loop.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
+import 'package:harmonoid/ui/now_playing/desktop/desktop_now_playing_playlist.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_colors.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_control_panel.dart';
@@ -185,6 +186,14 @@ class DesktopNowPlayingBarState extends State<DesktopNowPlayingBar> {
                                   children: [
                                     const Spacer(),
                                     const SizedBox(width: 12.0),
+                                    IconButton(
+                                      onPressed: () => DesktopNowPlayingPlaylist.show(context),
+                                      color: nowPlayingColors.backgroundEnabledIcon,
+                                      icon: const Icon(Icons.queue_music),
+                                      splashRadius: 20.0,
+                                      iconSize: 20.0,
+                                      tooltip: Localization.instance.PLAYLIST,
+                                    ),
                                     IconButton(
                                       onPressed: mediaPlayer.muteOrUnmute,
                                       color: nowPlayingColors.backgroundEnabledIcon,

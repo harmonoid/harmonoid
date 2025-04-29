@@ -31,14 +31,14 @@ class DesktopNowPlayingPlaylist extends StatefulWidget {
 
 class _DesktopNowPlayingPlaylistState extends State<DesktopNowPlayingPlaylist> {
   final _scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.track;
-  late final ScrollController _controller = ScrollController(
+  late final ScrollController _scrollController = ScrollController(
     initialScrollOffset: MediaPlayer.instance.state.index * _scrollViewBuilderHelperData.itemHeight,
   );
 
   @override
   void dispose() {
     super.dispose();
-    _controller.dispose();
+    _scrollController.dispose();
   }
 
   @override
@@ -76,11 +76,18 @@ class _DesktopNowPlayingPlaylistState extends State<DesktopNowPlayingPlaylist> {
               Expanded(
                 child: Material(
                   color: Colors.transparent,
-                  child: ListView.builder(
-                    controller: _controller,
+                  child: ReorderableListView.builder(
+                    buildDefaultDragHandles: false,
+                    onReorder: (from, to) {
+                      if (from != to) {
+                        mediaPlayer.move(from, to);
+                      }
+                    },
+                    scrollController: _scrollController,
                     itemCount: mediaPlayer.state.playables.length,
                     itemExtent: _scrollViewBuilderHelperData.itemHeight,
                     itemBuilder: (context, index) => NowPlayingPlaylistItem(
+                      key: ValueKey((index, mediaPlayer.state.playables[index])),
                       index: index,
                       width: _scrollViewBuilderHelperData.itemWidth,
                       height: _scrollViewBuilderHelperData.itemHeight,

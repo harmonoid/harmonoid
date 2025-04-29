@@ -164,6 +164,7 @@ class Values {
   late String PLAYLIST_ENTRY_REMOVE_DIALOG_SUBTITLE;
   late String PLAYLIST_RENAME_DIALOG_SUBTITLE;
   late String PLAY_ALL;
+  late String PLAY_NEXT;
   late String PLAY_NOW;
   late String PLAY_URL;
   late String PLAY_URL_SUBTITLE;

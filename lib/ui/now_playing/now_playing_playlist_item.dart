@@ -26,6 +26,7 @@ class NowPlayingPlaylistItem extends StatelessWidget {
   Widget _buildDesktopLayout(BuildContext context) {
     return Consumer<MediaPlayer>(
       builder: (context, mediaPlayer, _) {
+        final i = index - mediaPlayer.state.index;
         final playable = mediaPlayer.state.playables[index];
         return SizedBox(
           height: height,
@@ -50,15 +51,16 @@ class NowPlayingPlaylistItem extends StatelessWidget {
                       children: [
                         Container(
                           alignment: Alignment.center,
-                          width: height * 2 + 8.0,
+                          width: height * 2.0,
                           child: index == mediaPlayer.state.index
                               ? MusicAnimation(
                                   width: height / 2.0,
                                   height: height / 2.0,
                                 )
-                              : Text(
-                                  '${index - mediaPlayer.state.index}',
+                              : AutoSizeText(
+                                  '${i > 0 ? '+' : ''}$i',
                                   maxLines: 1,
+                                  minFontSize: 1.0,
                                   overflow: TextOverflow.ellipsis,
                                   style: Theme.of(context).textTheme.bodyLarge,
                                 ),
@@ -106,6 +108,39 @@ class NowPlayingPlaylistItem extends StatelessWidget {
                             ),
                           ),
                         ),
+                        const VerticalDivider(width: 1.0),
+                        ReorderableDragStartListener(
+                          index: index,
+                          child: MouseRegion(
+                            cursor: SystemMouseCursors.resizeUpDown,
+                            child: Container(
+                              width: height,
+                              height: height,
+                              color: Colors.transparent,
+                              alignment: Alignment.center,
+                              child: const Icon(Icons.drag_handle),
+                            ),
+                          ),
+                        ),
+                        const VerticalDivider(width: 1.0),
+                        InkWell(
+                          onTap: mediaPlayer.state.playables.length > 1
+                              ? () {
+                                  if (mediaPlayer.state.playables.length > 1) {
+                                    mediaPlayer.remove(index);
+                                  }
+                                }
+                              : null,
+                          child: Container(
+                            width: height,
+                            height: height,
+                            color: Colors.transparent,
+                            alignment: Alignment.center,
+                            child: const Icon(Icons.remove),
+                          ),
+                        ),
+                        const VerticalDivider(width: 1.0),
+                        const SizedBox(width: 8.0),
                       ],
                     ),
                   ),
@@ -148,6 +183,7 @@ class NowPlayingPlaylistItem extends StatelessWidget {
                         : AutoSizeText(
                             '${i > 0 ? '+' : ''}$i',
                             maxLines: 1,
+                            minFontSize: 1.0,
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 18.0),
                           ),

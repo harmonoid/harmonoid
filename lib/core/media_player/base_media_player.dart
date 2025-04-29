@@ -52,5 +52,11 @@ abstract interface class BaseMediaPlayer with ChangeNotifier {
     void Function()? onOpen = mediaPlayerOpenOnOpen,
   });
 
+  Future<void> move(int from, int to);
+
+  Future<void> remove(int index);
+
   Future<void> add(List<Playable> playables);
+
+  Future<void> insert(int index, Playable playable);
 }

@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:uri_parser/uri_parser.dart';
@@ -537,9 +538,19 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
           ),
         ),
       ),
+      PopupMenuItem<int>(
+        value: 1,
+        child: ListTile(
+          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.list_16_regular : Icons.playlist_play),
+          title: Text(
+            Localization.instance.PLAY_NEXT,
+            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+          ),
+        ),
+      ),
       if (Platform.isAndroid || Platform.isIOS)
         PopupMenuItem<int>(
-          value: 1,
+          value: 2,
           child: ListTile(
             leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.share_16_regular : Icons.share),
             title: Text(
@@ -549,9 +560,9 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
           ),
         ),
       PopupMenuItem<int>(
-        value: 2,
+        value: 3,
         child: ListTile(
-          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.list_16_regular : Icons.queue_music),
+          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.list_16_regular : Icons.playlist_add),
           title: Text(
             Localization.instance.ADD_TO_PLAYLIST,
             style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
@@ -559,7 +570,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
         ),
       ),
       PopupMenuItem<int>(
-        value: 3,
+        value: 4,
         child: ListTile(
           leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.music_note_2_16_regular : Icons.music_note),
           title: Text(
@@ -569,7 +580,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
         ),
       ),
       PopupMenuItem<int>(
-        value: 4,
+        value: 5,
         child: ListTile(
           leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.album_24_regular : Icons.album),
           title: Text(
@@ -580,7 +591,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
       ),
       if (Platform.isLinux || Platform.isMacOS || Platform.isWindows)
         PopupMenuItem<int>(
-          value: 5,
+          value: 6,
           child: ListTile(
             leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.folder_24_regular : Icons.folder),
             title: Text(
@@ -590,7 +601,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
           ),
         ),
       PopupMenuItem<int>(
-        value: 6,
+        value: 7,
         child: ListTile(
           leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.arrow_sync_24_regular : Icons.refresh),
           title: Text(
@@ -600,7 +611,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
         ),
       ),
       PopupMenuItem<int>(
-        value: 7,
+        value: 8,
         child: ListTile(
           leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.info_24_regular : Icons.info),
           title: Text(
@@ -611,7 +622,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
       ),
       if (!LyricsNotifier.instance.contains(track.toPlayable()))
         PopupMenuItem<int>(
-          value: 8,
+          value: 9,
           child: ListTile(
             leading: Icon(
               Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.text_font_24_regular : Icons.abc,
@@ -624,7 +635,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) 
         )
       else
         PopupMenuItem<int>(
-          value: 9,
+          value: 10,
           child: ListTile(
             leading: Icon(
               Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.clear_formatting_24_regular : Icons.clear,
@@ -739,6 +750,8 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
     }
   }
 
+  final mediaPlayer = context.read<MediaPlayer>();
+
   switch (result) {
     case 0:
       if (Platform.isAndroid) {
@@ -762,18 +775,21 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
       }
       break;
     case 1:
+      await mediaPlayer.insert(mediaPlayer.state.index, track.toPlayable());
+      break;
+    case 2:
       await Share.shareXFiles(
         [XFile(track.uri)],
         subject: track.shareSubject,
       );
       break;
-    case 2:
+    case 3:
       await showAddToPlaylistDialog(context, track: track);
       break;
-    case 3:
-      await MediaPlayer.instance.add([track.toPlayable()]);
-      break;
     case 4:
+      await mediaPlayer.add([track.toPlayable()]);
+      break;
+    case 5:
       await navigateToAlbum(
         context,
         AlbumLookupKey(
@@ -783,20 +799,20 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
         ),
       );
       break;
-    case 5:
+    case 6:
       File(track.uri).explore_();
       break;
-    case 6:
+    case 7:
       await MediaLibrary.instance.remove([track], delete: false);
       await recursivelyPopNavigatorIfRequired();
 
       await MediaLibrary.instance.add(File(track.uri));
       await MediaLibrary.instance.populate();
       break;
-    case 7:
+    case 8:
       context.push(Uri(path: '/$kFileInfoPath', queryParameters: {kFileInfoArgResource: track.uri.toString()}).toString());
       break;
-    case 8:
+    case 9:
       final file = await pickFile(
         // Compatibility issues with Android 5.0: SDK 21.
         extensions: Platform.isAndroid ? null : {'LRC'},
@@ -821,7 +837,7 @@ Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result
         }
       }
       break;
-    case 9:
+    case 10:
       LyricsNotifier.instance.remove(track.toPlayable());
       break;
   }
@@ -845,14 +861,16 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
     }
   }
 
+  final mediaPlayer = context.read<MediaPlayer>();
+
   final tracks = await MediaLibrary.instance.tracksFromAlbum(album);
   switch (result) {
     case 0:
-      await MediaPlayer.instance.open(tracks.map((e) => e.toPlayable()).toList());
+      await mediaPlayer.open(tracks.map((e) => e.toPlayable()).toList());
       break;
     case 1:
       tracks.shuffle();
-      await MediaPlayer.instance.open(tracks.map((e) => e.toPlayable()).toList());
+      await mediaPlayer.open(tracks.map((e) => e.toPlayable()).toList());
       break;
     case 2:
       if (Platform.isAndroid) {
@@ -876,7 +894,7 @@ Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result
       }
       break;
     case 3:
-      await MediaPlayer.instance.add(tracks.map((e) => e.toPlayable()).toList());
+      await mediaPlayer.add(tracks.map((e) => e.toPlayable()).toList());
       break;
   }
 }

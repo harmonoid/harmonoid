@@ -150,10 +150,22 @@ class MediaPlayer extends ChangeNotifier
   }
 
   @override
+  Future<void> move(int from, int to) => _player.move(from, to);
+
+  @override
+  Future<void> remove(int index) => _player.remove(index);
+
+  @override
   Future<void> add(List<Playable> playables) async {
     for (final playable in playables) {
       await _player.add(playable.toMedia());
     }
+  }
+
+  @override
+  Future<void> insert(int index, Playable playable) async {
+    await add([playable]);
+    await _player.move(state.playables.length - 1, index + 1);
   }
 
   Future<void> setPlaybackState(
