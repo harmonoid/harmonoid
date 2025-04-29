@@ -146,7 +146,6 @@ class MediaPlayer extends ChangeNotifier
     void Function()? onOpen = mediaPlayerOpenOnOpen,
   }) async {
     await _player.open(Playlist(playables.map((playable) => playable.toMedia()).toList(), index: index), play: play);
-    state = state.copyWith(index: index, playables: playables, duration: Duration.zero);
     onOpen?.call();
   }
 
@@ -155,7 +154,6 @@ class MediaPlayer extends ChangeNotifier
     for (final playable in playables) {
       await _player.add(playable.toMedia());
     }
-    state = state.copyWith(playables: [...state.playables, ...playables]);
   }
 
   Future<void> setPlaybackState(
