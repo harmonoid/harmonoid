@@ -210,10 +210,18 @@ class SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvide
   late ScrollController _sc;
 
   final VelocityTracker _vt = VelocityTracker.withKind(PointerDeviceKind.touch);
-  bool _scrollingEnabled = false;
-  bool _isPanelVisible = true;
+  bool _panelVisible = true;
   // --------------------------------------------------
-  bool restored = false;
+  bool _scrollingEnabledAllowed = true;
+  bool _scrollingEnabledValue = false;
+  bool _restored = false;
+
+  bool get _scrollingEnabled => _scrollingEnabledValue;
+  set _scrollingEnabled(bool value) {
+    if (_scrollingEnabledAllowed) {
+      _scrollingEnabledValue = value;
+    }
+  }
   // --------------------------------------------------
 
   @override
@@ -233,11 +241,11 @@ class SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvide
 
         // --------------------------------------------------
         if (_ac.value == 0.0) {
-          restored = false;
+          _restored = false;
         } else if (_ac.value != 1.0) {
           _scrollingEnabled = false;
-        } else if (_ac.value == 1.0 && !restored) {
-          restored = true;
+        } else if (_ac.value == 1.0 && !_restored) {
+          _restored = true;
           _sc.jumpTo((MediaPlayer.instance.state.index + 1) * (kMobileLinearTileHeight + 1.0));
           _scrollingEnabled = true;
         } else {
@@ -314,7 +322,7 @@ class SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvide
             ),
           ),
         ),
-        !_isPanelVisible
+        !_panelVisible
             ? Container()
             : _gestureHandler(
                 child: AnimatedBuilder(
@@ -369,7 +377,7 @@ class SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvide
                           child: AnimatedBuilder(
                             animation: _ac,
                             builder: (context, _) {
-                              return (_isPanelOpen || _ac.value == 1.0 || restored) ? const SizedBox.shrink() : widget.collapsed ?? const SizedBox.shrink();
+                              return (_isPanelOpen || _ac.value == 1.0 || _restored) ? const SizedBox.shrink() : widget.collapsed ?? const SizedBox.shrink();
                             },
                           ),
                         ),
@@ -388,6 +396,7 @@ class SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvide
             child: Container(
               color: Colors.transparent,
               width: MediaQuery.sizeOf(context).width,
+              // ignore: deprecated_member_use
               height: window.padding.bottom,
             ),
           ),
@@ -533,7 +542,7 @@ class SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvide
     _scrollingEnabled = false;
     return _ac.fling(velocity: -1.0).then((x) {
       setState(() {
-        _isPanelVisible = false;
+        _panelVisible = false;
       });
     });
   }
@@ -542,7 +551,7 @@ class SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvide
   Future<void> _show() {
     return _ac.fling(velocity: -1.0).then((x) {
       setState(() {
-        _isPanelVisible = true;
+        _panelVisible = true;
       });
     });
   }
@@ -589,7 +598,7 @@ class SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvide
 
   //returns whether or not the
   //panel is shown/hidden
-  bool get _isPanelShown => _isPanelVisible;
+  bool get _isPanelShown => _panelVisible;
 }
 
 class PanelController {
@@ -697,5 +706,13 @@ class PanelController {
   bool get isPanelShown {
     assert(isAttached, "PanelController must be attached to a SlidingUpPanel");
     return _panelState!._isPanelShown;
+  }
+
+  // --------------------------------------------------
+
+  set scrollingEnabledAllowed(bool value) {
+    assert(isAttached, "PanelController must be attached to a SlidingUpPanel");
+    _panelState!._scrollingEnabledValue = true;
+    _panelState!._scrollingEnabledAllowed = value;
   }
 }

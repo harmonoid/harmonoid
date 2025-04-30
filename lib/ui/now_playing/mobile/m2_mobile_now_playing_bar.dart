@@ -53,7 +53,7 @@ class M2MobileNowPlayingBarState extends State<M2MobileNowPlayingBar> {
 
   double get _slidingUpPanelMinHeight => MediaQuery.sizeOf(context).height - (_pageViewHeight + _detailsHeight + _controlsHeight);
 
-  Color? get _slidingUpPanelColor => isDarkMode ? Theme.of(context).colorScheme.surfaceContainer : Theme.of(context).colorScheme.surfaceContainerLowest;
+  Color? get _slidingUpPanelColor => Theme.of(context).cardTheme.color;
 
   @override
   void initState() {
@@ -514,15 +514,29 @@ class M2MobileNowPlayingBarState extends State<M2MobileNowPlayingBar> {
           ),
           const Divider(height: 1.0, thickness: 1.0),
           Expanded(
-            child: ListView.builder(
+            child: ReorderableListView.builder(
+              onReorderStart: (_) => _panelController.scrollingEnabledAllowed = false,
+              onReorderEnd: (_) => _panelController.scrollingEnabledAllowed = true,
+              onReorder: (from, to) {
+                from = (from / 2).round() + diff;
+                to = (to / 2).round() + diff;
+                if (from != to) {
+                  mediaPlayer.move(from, to);
+                }
+              },
               physics: physics,
-              controller: controller,
+              scrollController: controller,
               padding: EdgeInsets.zero,
               itemBuilder: (context, i) {
                 if (i % 2 != 0) {
-                  return const Divider(height: 1.0, thickness: 1.0);
+                  return Divider(
+                    key: ValueKey((i ~/ 2, false)),
+                    height: 1.0,
+                    thickness: 1.0,
+                  );
                 }
                 return NowPlayingPlaylistItem(
+                  key: ValueKey(((i ~/ 2) + diff, mediaPlayer.state.playables[(i ~/ 2) + diff])),
                   index: (i ~/ 2) + diff,
                   width: double.infinity,
                   height: kMobileLinearTileHeight,

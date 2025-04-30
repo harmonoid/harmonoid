@@ -122,7 +122,7 @@ class DesktopTracksScreenState extends State<DesktopTracksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _widthsNotifier.value[TracksDataSource.kCover] ??= linearTileHeight;
+    _widthsNotifier.value[TracksDataSource.kCover] = linearTileHeight;
     _widthsNotifier.value[TracksDataSource.kTitle] ??= (MediaQuery.of(context).size.width - linearTileHeight) * 5 / 17;
     _widthsNotifier.value[TracksDataSource.kArtist] ??= (MediaQuery.of(context).size.width - linearTileHeight) * 4 / 17;
     _widthsNotifier.value[TracksDataSource.kAlbum] ??= (MediaQuery.of(context).size.width - linearTileHeight) * 3 / 17;

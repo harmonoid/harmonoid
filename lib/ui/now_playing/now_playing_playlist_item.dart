@@ -173,10 +173,10 @@ class NowPlayingPlaylistItem extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(width: 16.0),
+                  const SizedBox(width: 8.0),
                   Container(
-                    width: 48.0,
-                    height: 56.0,
+                    width: height - 16.0,
+                    height: height,
                     alignment: Alignment.center,
                     child: index == mediaPlayer.state.index
                         ? const MusicAnimation(width: 20.0, height: 20.0)
@@ -188,7 +188,7 @@ class NowPlayingPlaylistItem extends StatelessWidget {
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 18.0),
                           ),
                   ),
-                  const SizedBox(width: 16.0),
+                  const SizedBox(width: 8.0),
                   Expanded(
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
@@ -212,6 +212,17 @@ class NowPlayingPlaylistItem extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 16.0),
+                  IconButton(
+                    onPressed: mediaPlayer.state.playables.length > 1
+                        ? () {
+                            if (mediaPlayer.state.playables.length > 1) {
+                              mediaPlayer.remove(index);
+                            }
+                          }
+                        : null,
+                    icon: const Icon(Icons.remove),
+                  ),
+                  const SizedBox(width: 8.0),
                 ],
               ),
             ),
