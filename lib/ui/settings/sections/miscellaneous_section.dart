@@ -58,21 +58,20 @@ class _MiscellaneousSectionState extends State<MiscellaneousSection> {
             }
           },
         ),
-        if (/* DESKTOP */ isDesktop)
-          ListItem(
-            trailing: Switch(
-              value: Configuration.instance.mediaLibraryCoverFallback,
-              onChanged: (value) async {
-                await Configuration.instance.set(mediaLibraryCoverFallback: value);
-                setState(() {});
-              },
-            ),
-            title: Localization.instance.LOOKUP_FOR_FALLBACK_COVERS,
-            onTap: () async {
-              await Configuration.instance.set(mediaLibraryCoverFallback: !Configuration.instance.mediaLibraryCoverFallback);
+        ListItem(
+          trailing: Switch(
+            value: Configuration.instance.mediaLibraryCoverFallback,
+            onChanged: (value) async {
+              await Configuration.instance.set(mediaLibraryCoverFallback: value);
               setState(() {});
             },
           ),
+          title: Localization.instance.LOOKUP_FOR_FALLBACK_COVERS,
+          onTap: () async {
+            await Configuration.instance.set(mediaLibraryCoverFallback: !Configuration.instance.mediaLibraryCoverFallback);
+            setState(() {});
+          },
+        ),
         if (/* DESKTOP */ isDesktop)
           ListItem(
             trailing: Switch(

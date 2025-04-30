@@ -248,17 +248,6 @@ class MediaLibrarySection extends StatelessWidget {
       if (result != null) {
         Configuration.instance.set(mediaLibraryMinimumFileSize: result);
         mediaLibrary.setMinimumFileSize(result);
-
-        Future.delayed(
-          const Duration(milliseconds: 500),
-          () {
-            showMessage(
-              context,
-              Localization.instance.WARNING,
-              Localization.instance.MINIMUM_FILE_SIZE_WARNING,
-            );
-          },
-        );
       }
     });
   }

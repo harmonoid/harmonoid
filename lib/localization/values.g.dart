@@ -66,8 +66,6 @@ class Values {
   late String ENABLE_DISCORD_RPC;
   late String ENABLE_NOTIFICATION_LYRICS;
   late String ENABLE_NOW_PLAYING_RIPPLE_EFFECT;
-  late String ENABLE_VOLUME_BOOST_FILTER;
-  late String ENABLE_VOLUME_BOOST_FILTER_WARNING;
   late String END;
   late String ENTRIES;
   late String ENTRY;
@@ -117,8 +115,6 @@ class Values {
   late String MEDIA_LIBRARY_NO_ITEMS_TITLE;
   late String MEDIA_LIBRARY_REFRESHING_DIALOG_SUBTITLE;
   late String MENU;
-  late String MINIMUM_FILE_SIZE;
-  late String MINIMUM_FILE_SIZE_WARNING;
   late String MOBILE_ALBUM_GRID_SIZE;
   late String MOBILE_ARTIST_GRID_SIZE;
   late String MOBILE_GENRE_GRID_SIZE;
