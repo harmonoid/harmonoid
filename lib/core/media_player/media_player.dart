@@ -195,7 +195,7 @@ class MediaPlayer extends ChangeNotifier
   }
 
   Future<void> mapPlayerToState() async {
-    _player.stream.playlist.listen((e) => state = state.copyWith(index: e.index, playables: e.medias.map((e) => e.toPlayable()).toList()));
+    _player.stream.playlist.listen((e) => state = state.copyWith(position: Duration.zero, index: e.index, playables: e.medias.map((e) => e.toPlayable()).toList()));
     _player.stream.rate.listen((e) => state = state.copyWith(rate: e));
     _player.stream.pitch.listen((e) => state = state.copyWith(pitch: e));
     _player.stream.volume.listen((e) => state = state.copyWith(volume: e));

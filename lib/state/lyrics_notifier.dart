@@ -51,9 +51,10 @@ class LyricsNotifier extends ChangeNotifier {
 
         final state = MediaPlayer.instance.state;
         final current = MediaPlayer.instance.current;
-        final currentDuration = MediaPlayer.instance.state.duration;
+        final currentDuration = state.duration;
+        final currentPosition = state.position;
 
-        if (current != _current && currentDuration > Duration.zero) {
+        if (current != _current && currentDuration != _currentDuration && currentPosition > Duration.zero) {
           index = -1;
           lyrics.clear();
           _timestampsAndIndexes.clear();
