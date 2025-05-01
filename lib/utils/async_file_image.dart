@@ -144,7 +144,7 @@ class AsyncFileImage extends ImageProvider<AsyncFileImage> {
       // Return if an attempt was recently made or if the limit is reached.
       attemptToResolveIfDefaultCounts[key] ??= 0;
       attemptToResolveIfDefaultTimestamps[key] ??= DateTime.now();
-      if (attemptToResolveIfDefaultCounts[key]! < 3 && DateTime.now().difference(attemptToResolveIfDefaultTimestamps[key]!) < const Duration(seconds: 1)) {
+      if (attemptToResolveIfDefaultCounts[key]! > 3 || DateTime.now().difference(attemptToResolveIfDefaultTimestamps[key]!) < const Duration(seconds: 1)) {
         return;
       }
       attemptToResolveIfDefaultCounts[key] = attemptToResolveIfDefaultCounts[key]! + 1;
