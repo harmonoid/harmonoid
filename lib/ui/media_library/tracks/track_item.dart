@@ -223,14 +223,16 @@ class TrackItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image(
+                SizedBox(
                   width: height - 1.0,
                   height: height - 1.0,
-                  image: cover(
-                    item: track,
-                    cacheWidth: (kMobileHeaderHeight * MediaQuery.of(context).devicePixelRatio).toInt(),
+                  child: Image(
+                    image: cover(
+                      item: track,
+                      cacheWidth: (kMobileHeaderHeight * MediaQuery.of(context).devicePixelRatio).toInt(),
+                    ),
+                    fit: BoxFit.cover,
                   ),
-                  fit: BoxFit.cover,
                 ),
                 const SizedBox(width: 16.0),
                 Expanded(

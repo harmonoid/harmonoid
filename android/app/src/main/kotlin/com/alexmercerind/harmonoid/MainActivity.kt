@@ -14,7 +14,6 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import java.io.File
 import java.io.FileOutputStream
-import java.security.MessageDigest
 import kotlin.io.path.Path
 
 class MainActivity : AudioServiceActivity() {
@@ -42,7 +41,7 @@ class MainActivity : AudioServiceActivity() {
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-        Log.d(TAG, context.getExternalFilesDirs(null).map { file -> file.absolutePath }.toString())
+        Log.d(TAG, this.storageDirectories.toString())
 
         intentControllerMethodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, INTENT_CONTROLLER_CHANNEL_NAME).apply {
             setMethodCallHandler { _, result -> result.success(uri) }
@@ -97,17 +96,12 @@ class MainActivity : AudioServiceActivity() {
                     val packageName = resolveInfo.activityInfo.packageName
                     context.grantUriPermission(packageName, intent.data, Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 }
-                contentResolver.openInputStream(intent.data!!).use { stream ->
-                    val file = File(Path(context.getExternalFilesDir(null)!!.absolutePath, "Intent", intent.data.toString().md5()).toString())
-                    if (!file.exists()) {
-                        if (file.parentFile?.exists() == true) {
-                            file.parentFile?.deleteRecursively()
-                        }
-                        file.parentFile?.mkdirs()
-                        file.createNewFile()
-                        stream?.copyTo(FileOutputStream(file))
+                File(Path(this.cacheDirectory, this::class.java.name, intent.data.toString().md5).toString()).run {
+                    if (length() == 0L) {
+                        parentFile?.run { deleteRecursively(); mkdirs() }
+                        contentResolver.openInputStream(intent.data!!).use { it?.copyTo(FileOutputStream(this)) }
                     }
-                    "$SCHEME_FILE://${file.absolutePath}"
+                    "$SCHEME_FILE://${absolutePath}"
                 }
             }
 
@@ -123,7 +117,4 @@ class MainActivity : AudioServiceActivity() {
             intentControllerMethodChannel?.invokeMethod(NOTIFY_INTENT_METHOD_NAME, uri)
         }
     }
-
-    @OptIn(ExperimentalStdlibApi::class)
-    private fun String.md5() = MessageDigest.getInstance("MD5").digest(this.toByteArray()).toHexString()
 }

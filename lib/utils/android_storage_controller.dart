@@ -12,15 +12,17 @@ import 'package:path/path.dart' as path;
 ///
 /// {@endtemplate}
 class AndroidStorageController {
-  static const kMethodChannelName = 'com.alexmercerind.harmonoid/storage_controller';
-  static const kGetStorageDirectoriesMethodName = 'getStorageDirectories';
-  static const kGetCacheDirectoryMethodName = 'getCacheDirectory';
-  static const kGetDefaultMediaLibraryDirectoryMethodName = 'getDefaultMediaLibraryDirectory';
-  static const kGetVersion = 'getVersion';
-  static const kDelete = 'delete';
-  static const kNotifyDeleteMethodName = 'notifyDelete';
+  static const String kMethodChannelName = 'com.alexmercerind.harmonoid/storage_controller';
+  static const String kGetStorageDirectoriesMethodName = 'getStorageDirectories';
+  static const String kGetCacheDirectoryMethodName = 'getCacheDirectory';
+  static const String kGetDefaultMediaLibraryDirectoryMethodName = 'getDefaultMediaLibraryDirectory';
+  static const String kGetVersion = 'getVersion';
+  static const String kDelete = 'delete';
+  static const String kNotifyDeleteMethodName = 'notifyDelete';
+  static const String kGetCoverFileMethodName = 'getCoverFile';
 
-  static const kDeletePathsArg = 'paths';
+  static const String kDeletePathsArg = 'paths';
+  static const String kGetCoverFilePathArg = 'path';
 
   /// Singleton instance.
   static final AndroidStorageController instance = AndroidStorageController._();
@@ -97,11 +99,24 @@ class AndroidStorageController {
     await _channel.invokeMethod(
       kDelete,
       {
-        kDeletePathsArg: files.map((e) => e.path).toList(),
+        kDeletePathsArg: files.map((e) => path.normalize(e.path)).toList(),
       },
     );
     final result = await _deleteCompleter.future;
     return result;
+  }
+
+  Future<File?> getCoverFile(File file) async {
+    final result = await _channel.invokeMethod(
+      kGetCoverFileMethodName,
+      {
+        kGetCoverFilePathArg: file.path,
+      },
+    );
+    if (result != null) {
+      return File(path.normalize(result));
+    }
+    return null;
   }
 
   Completer<bool> _deleteCompleter = Completer<bool>();
