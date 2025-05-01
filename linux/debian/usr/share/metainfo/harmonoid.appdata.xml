@@ -2,7 +2,6 @@
 <component type="desktop-application">
 	<id>harmonoid</id>
 	<name>Harmonoid</name>
-	<!-- <summary>Plays &amp; manages your music library. Looks beautiful & juicy.</summary> -->
 	<metadata_license>CC0-1.0</metadata_license>
 	<project_license>
 		LicenseRef-proprietary=https://github.com/harmonoid/harmonoid/blob/master/EULA.txt</project_license>
@@ -12,29 +11,10 @@
 		<control>touch</control>
 	</recommends>
 	<developer_name>Hitesh Kumar Saini</developer_name>
-	<!-- <url type="homepage"></url>
-	<url type="donation"></url>
-	<url type="contact"></url>
-	<description>
-		<p>Plays &amp; manages your music library. Looks beautiful & juicy.</p>
-		<p></p>
-		<p>Current Features</p>
-		<ul>
-			<li></li>
-		</ul>
-		<p></p>
-		<p>Upcoming Features</p>
-		<ul>
-			<li></li>
-		</ul>
-	</description>
-	<screenshots>
-		<screenshot>
-			<image type="source"></image>
-		</screenshot>
-	</screenshots> -->
 	<launchable type="desktop-id">harmonoid.desktop</launchable>
 	<releases>
+		<release version="0.3.10" date="2025-05-01" />
+		<release version="0.3.9" date="2025-04-24" />
 		<release version="0.3.8" date="2023-04-06" />
 		<release version="0.3.7" date="2023-04-04" />
 		<release version="0.3.6" date="2023-03-30" />
