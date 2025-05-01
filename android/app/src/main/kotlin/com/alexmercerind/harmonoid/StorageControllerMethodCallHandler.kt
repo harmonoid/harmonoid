@@ -83,7 +83,7 @@ class StorageControllerMethodCallHandler(private val activity: Activity, private
                         runCatching {
                             val path = call.argument<String>(GET_COVER_FILE_ARG_PATH)!!
                             val contentUri = path.toCoverContentUri()!!
-                            File(Path(activity.cacheDirectory, this@StorageControllerMethodCallHandler::class.java.name, path.md5).toString()).run {
+                            File(Path(activity.cacheDirectory, "StorageController", path.md5).toString()).run {
                                 if (length() == 0L) {
                                     parentFile?.run { mkdirs() }
                                     activity.contentResolver.openInputStream(contentUri).use { it?.copyTo(FileOutputStream(this)) }

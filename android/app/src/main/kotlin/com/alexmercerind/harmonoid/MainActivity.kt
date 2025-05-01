@@ -41,7 +41,7 @@ class MainActivity : AudioServiceActivity() {
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-        Log.d(TAG, this.storageDirectories.toString())
+        Log.d(TAG, storageDirectories.toString())
 
         intentControllerMethodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, INTENT_CONTROLLER_CHANNEL_NAME).apply {
             setMethodCallHandler { _, result -> result.success(uri) }
@@ -96,12 +96,12 @@ class MainActivity : AudioServiceActivity() {
                     val packageName = resolveInfo.activityInfo.packageName
                     context.grantUriPermission(packageName, intent.data, Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 }
-                File(Path(this.cacheDirectory, this::class.java.name, intent.data.toString().md5).toString()).run {
+                File(Path(cacheDirectory, "IntentController", intent.data.toString().md5).toString()).run {
                     if (length() == 0L) {
                         parentFile?.run { deleteRecursively(); mkdirs() }
                         contentResolver.openInputStream(intent.data!!).use { it?.copyTo(FileOutputStream(this)) }
                     }
-                    "$SCHEME_FILE://${absolutePath}"
+                    "$SCHEME_FILE://$absolutePath"
                 }
             }
 
