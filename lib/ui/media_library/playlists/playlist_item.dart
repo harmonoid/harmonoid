@@ -77,7 +77,7 @@ class PlaylistItem extends StatelessWidget {
                   maxLines: 1,
                 ),
                 subtitle: Text(
-                  entries == null ? '' : Localization.instance.N_TRACKS.replaceAll('"N"', entries.length.toString()),
+                  entries == null ? '' : (entries.length == 1 ? Localization.instance.ONE_TRACK : Localization.instance.N_TRACKS.replaceAll('"N"', entries.length.toString())),
                   style: Theme.of(context).textTheme.bodyMedium,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,

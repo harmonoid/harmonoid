@@ -18,6 +18,7 @@ _$PlaybackStateImpl _$$PlaybackStateImplFromJson(Map<String, dynamic> json) =>
       shuffle: json['shuffle'] as bool,
       loop: $enumDecode(_$LoopEnumMap, json['loop']),
       exclusiveAudio: json['exclusiveAudio'] as bool,
+      replayGain: $enumDecode(_$ReplayGainEnumMap, json['replayGain']),
     );
 
 Map<String, dynamic> _$$PlaybackStateImplToJson(_$PlaybackStateImpl instance) =>
@@ -30,10 +31,17 @@ Map<String, dynamic> _$$PlaybackStateImplToJson(_$PlaybackStateImpl instance) =>
       'shuffle': instance.shuffle,
       'loop': _$LoopEnumMap[instance.loop]!,
       'exclusiveAudio': instance.exclusiveAudio,
+      'replayGain': _$ReplayGainEnumMap[instance.replayGain]!,
     };
 
 const _$LoopEnumMap = {
   Loop.off: 'off',
   Loop.one: 'one',
   Loop.all: 'all',
+};
+
+const _$ReplayGainEnumMap = {
+  ReplayGain.off: 'off',
+  ReplayGain.track: 'track',
+  ReplayGain.album: 'album',
 };

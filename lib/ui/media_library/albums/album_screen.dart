@@ -31,9 +31,9 @@ class _AlbumScreenState extends State<AlbumScreen> {
 
   String get _subtitle => isDesktop
       ? [
-          '${Localization.instance.ARTIST}: ${widget.album.albumArtist.isEmpty ? kDefaultArtist : widget.album.albumArtist}',
-          '${Localization.instance.YEAR}: ${widget.album.year == 0 ? kDefaultYear : widget.album.year}',
-          '${Localization.instance.TRACKS}: ${_tracks.length}'
+          widget.album.albumArtist.isEmpty ? kDefaultArtist : widget.album.albumArtist,
+          '${widget.album.year == 0 ? kDefaultYear : widget.album.year}',
+          _tracks.length == 1 ? Localization.instance.ONE_TRACK : Localization.instance.N_TRACKS.replaceAll('"N"', _tracks.length.toString()),
         ].join('\n')
       : [
           if (widget.album.albumArtist.isNotEmpty) widget.album.albumArtist,

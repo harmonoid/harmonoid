@@ -3,6 +3,7 @@ import 'package:media_kit/media_kit.dart' show AudioParams;
 
 import 'package:harmonoid/models/loop.dart';
 import 'package:harmonoid/models/playable.dart';
+import 'package:harmonoid/models/replaygain.dart';
 
 part 'media_player_state.freezed.dart';
 
@@ -17,6 +18,7 @@ class MediaPlayerState with _$MediaPlayerState {
     required bool shuffle,
     required Loop loop,
     required bool exclusiveAudio,
+    required ReplayGain replayGain,
     required Duration position,
     required Duration duration,
     required bool playing,
@@ -35,6 +37,7 @@ class MediaPlayerState with _$MediaPlayerState {
         shuffle: false,
         loop: Loop.off,
         exclusiveAudio: false,
+        replayGain: ReplayGain.off,
         position: Duration.zero,
         duration: Duration.zero,
         playing: false,

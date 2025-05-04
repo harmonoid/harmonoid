@@ -20,12 +20,14 @@ import 'package:harmonoid/mappers/media.dart';
 import 'package:harmonoid/mappers/playable.dart';
 import 'package:harmonoid/mappers/playback_state.dart';
 import 'package:harmonoid/mappers/playlist_mode.dart';
+import 'package:harmonoid/mappers/replaygain.dart';
 import 'package:harmonoid/mappers/tags.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/models/loop.dart';
 import 'package:harmonoid/models/media_player_state.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/models/playback_state.dart';
+import 'package:harmonoid/models/replaygain.dart';
 import 'package:harmonoid/utils/actions.dart';
 import 'package:harmonoid/utils/constants.dart';
 
@@ -173,6 +175,13 @@ class MediaPlayer extends ChangeNotifier
     final platform = _player.platform as NativePlayer;
     await platform.setProperty('audio-exclusive', exclusiveAudio ? 'yes' : 'no');
     state = state.copyWith(exclusiveAudio: exclusiveAudio);
+  }
+
+  @override
+  Future<void> setReplayGain(ReplayGain replayGain) async {
+    final platform = _player.platform as NativePlayer;
+    await platform.setProperty('replaygain', replayGain.toProperty());
+    state = state.copyWith(replayGain: replayGain);
   }
 
   Future<void> setPlaybackState(

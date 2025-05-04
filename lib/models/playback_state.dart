@@ -1,6 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+
 import 'package:harmonoid/models/loop.dart';
 import 'package:harmonoid/models/playable.dart';
+import 'package:harmonoid/models/replaygain.dart';
 
 part 'playback_state.freezed.dart';
 part 'playback_state.g.dart';
@@ -16,6 +18,7 @@ class PlaybackState with _$PlaybackState {
     required bool shuffle,
     required Loop loop,
     required bool exclusiveAudio,
+    required ReplayGain replayGain,
   }) = _PlaybackState;
 
   factory PlaybackState.fromJson(Map<String, dynamic> json) => _$PlaybackStateFromJson(json);

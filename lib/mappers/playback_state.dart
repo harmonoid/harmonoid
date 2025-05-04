@@ -13,5 +13,6 @@ extension PlaybackStateMappers on PlaybackState {
         shuffle: shuffle,
         loop: loop,
         exclusiveAudio: exclusiveAudio,
+        replayGain: replayGain,
       );
 }

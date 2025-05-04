@@ -5,14 +5,9 @@ import 'package:harmonoid/models/loop.dart';
 /// Mappers for [Loop].
 extension LoopMappers on Loop {
   /// Converts to [PlaylistMode].
-  PlaylistMode toPlaylistMode() {
-    switch (this) {
-      case Loop.off:
-        return PlaylistMode.none;
-      case Loop.one:
-        return PlaylistMode.single;
-      case Loop.all:
-        return PlaylistMode.loop;
-    }
-  }
+  PlaylistMode toPlaylistMode() => switch (this) {
+        Loop.off => PlaylistMode.none,
+        Loop.one => PlaylistMode.single,
+        Loop.all => PlaylistMode.loop,
+      };
 }

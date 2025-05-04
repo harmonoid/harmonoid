@@ -65,7 +65,7 @@ class _DesktopNowPlayingPlaylistState extends State<DesktopNowPlayingPlaylist> {
                     ),
                     const SizedBox(height: 4.0),
                     Text(
-                      Localization.instance.N_TRACKS.replaceAll('"N"', mediaPlayer.state.playables.length.toString()),
+                      mediaPlayer.state.playables.length == 1 ? Localization.instance.ONE_TRACK : Localization.instance.N_TRACKS.replaceAll('"N"', mediaPlayer.state.playables.length.toString()),
                       style: Theme.of(context).dialogTheme.contentTextStyle,
                     ),
                   ],

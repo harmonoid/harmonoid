@@ -140,7 +140,12 @@ class LocalizationBase extends Values {
     N_ENTRIES = map['N_ENTRIES']!;
     N_GENRES = map['N_GENRES']!;
     N_TRACKS = map['N_TRACKS']!;
+    OFF = map['OFF']!;
     OK = map['OK']!;
+    ONE_ALBUM = map['ONE_ALBUM']!;
+    ONE_ARTIST = map['ONE_ARTIST']!;
+    ONE_GENRE = map['ONE_GENRE']!;
+    ONE_TRACK = map['ONE_TRACK']!;
     OPEN_FILE_OR_URL = map['OPEN_FILE_OR_URL']!;
     OPEN_IN_BROWSER = map['OPEN_IN_BROWSER']!;
     OPTIONS = map['OPTIONS']!;
@@ -190,6 +195,7 @@ class LocalizationBase extends Values {
     REMOVE_FROM_PLAYLIST = map['REMOVE_FROM_PLAYLIST']!;
     RENAME = map['RENAME']!;
     REPEAT = map['REPEAT']!;
+    REPLAYGAIN = map['REPLAYGAIN']!;
     RESET_PITCH = map['RESET_PITCH']!;
     RESET_SPEED = map['RESET_SPEED']!;
     RESTORE = map['RESTORE']!;

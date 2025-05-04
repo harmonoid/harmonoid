@@ -13,5 +13,6 @@ extension MediaPlayerStateMappers on MediaPlayerState {
         shuffle: shuffle,
         loop: loop,
         exclusiveAudio: exclusiveAudio,
+        replayGain: replayGain,
       );
 }

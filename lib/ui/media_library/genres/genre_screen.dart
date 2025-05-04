@@ -28,7 +28,7 @@ class GenreScreen extends StatefulWidget {
 class _GenreScreenState extends State<GenreScreen> {
   late final _tracks = widget.tracks;
   String get _title => widget.genre.genre.isNotEmpty ? widget.genre.genre : kDefaultGenre;
-  String get _subtitle => isDesktop ? '${Localization.instance.TRACKS}: ${_tracks.length}' : Localization.instance.N_TRACKS.replaceAll('"N"', _tracks.length.toString());
+  String get _subtitle => _tracks.length == 1 ? Localization.instance.ONE_TRACK : Localization.instance.N_TRACKS.replaceAll('"N"', _tracks.length.toString());
 
   @override
   Widget build(BuildContext context) {

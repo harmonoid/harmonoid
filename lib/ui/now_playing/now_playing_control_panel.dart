@@ -8,6 +8,8 @@ import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/go_router.dart';
 import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/mappers/replaygain.dart';
+import 'package:harmonoid/models/replaygain.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -136,6 +138,8 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
             ),
             const SizedBox(height: 12.0),
             const Divider(height: 1.0, thickness: 1.0),
+            _buildReplayGain(context),
+            const Divider(height: 1.0, thickness: 1.0),
             _buildExclusiveAudio(context),
             const Divider(height: 1.0, thickness: 1.0),
             const SizedBox(height: 12.0),
@@ -184,6 +188,30 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                   value: mediaPlayer.state.exclusiveAudio,
                   onChanged: (value) => mediaPlayer.setExclusiveAudio(value),
                 ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildReplayGain(BuildContext context) {
+    return Consumer<MediaPlayer>(
+      builder: (context, mediaPlayer, _) {
+        return InkWell(
+          onTap: () => mediaPlayer.setReplayGain(ReplayGain.values[(mediaPlayer.state.replayGain.index + 1) % ReplayGain.values.length]),
+          child: Container(
+            height: 48.0,
+            padding: const EdgeInsets.only(left: 20.0, right: 16.0),
+            child: Row(
+              children: [
+                Text(
+                  Localization.instance.REPLAYGAIN,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                const Spacer(),
+                Chip(label: Text(mediaPlayer.state.replayGain.toLabel())),
               ],
             ),
           ),

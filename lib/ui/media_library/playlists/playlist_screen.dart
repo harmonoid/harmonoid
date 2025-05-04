@@ -24,7 +24,7 @@ class PlaylistScreen extends StatefulWidget {
 class _PlaylistScreenState extends State<PlaylistScreen> {
   late final _entries = widget.entries;
   String get _title => widget.playlist.name;
-  String get _subtitle => isDesktop ? '${Localization.instance.ENTRIES}: ${_entries.length}' : Localization.instance.N_ENTRIES.replaceAll('"N"', _entries.length.toString());
+  String get _subtitle => Localization.instance.N_TRACKS.replaceAll('"N"', _entries.length.toString());
 
   Future<List<Playable>> get _playables async {
     final result = await Future.wait(_entries.map((e) => e.toPlayable(MediaLibrary.instance)));

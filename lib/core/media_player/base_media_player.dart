@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:harmonoid/models/loop.dart';
 import 'package:harmonoid/models/media_player_state.dart';
 import 'package:harmonoid/models/playable.dart';
+import 'package:harmonoid/models/replaygain.dart';
 import 'package:harmonoid/utils/actions.dart';
 
 /// {@template base_media_player}
@@ -61,4 +62,6 @@ abstract interface class BaseMediaPlayer with ChangeNotifier {
   Future<void> insert(int index, Playable playable);
 
   Future<void> setExclusiveAudio(bool exclusiveAudio);
+
+  Future<void> setReplayGain(ReplayGain replayGain);
 }

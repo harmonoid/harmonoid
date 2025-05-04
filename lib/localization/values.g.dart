@@ -135,7 +135,12 @@ class Values {
   late String N_ENTRIES;
   late String N_GENRES;
   late String N_TRACKS;
+  late String OFF;
   late String OK;
+  late String ONE_ALBUM;
+  late String ONE_ARTIST;
+  late String ONE_GENRE;
+  late String ONE_TRACK;
   late String OPEN_FILE_OR_URL;
   late String OPEN_IN_BROWSER;
   late String OPTIONS;
@@ -185,6 +190,7 @@ class Values {
   late String REMOVE_FROM_PLAYLIST;
   late String RENAME;
   late String REPEAT;
+  late String REPLAYGAIN;
   late String RESET_PITCH;
   late String RESET_SPEED;
   late String RESTORE;
