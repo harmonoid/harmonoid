@@ -284,7 +284,7 @@ class MediaPlayer extends ChangeNotifier
     disposeWindowsTaskbar();
   }
 
-  final Player _player = Player(configuration: const PlayerConfiguration(title: kTitle, pitch: true, logLevel: MPVLogLevel.v))..stream.log.listen((e) => debugPrint(e.toString()));
+  final Player _player = Player(configuration: const PlayerConfiguration(title: kTitle, pitch: true));
   final TagReader _tagReader = TagReader();
   Playable? _current;
   MediaPlayerState _state = MediaPlayerState.defaults();
