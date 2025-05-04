@@ -175,7 +175,10 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
             padding: const EdgeInsets.only(left: 20.0, right: 16.0),
             child: Row(
               children: [
-                Text(Localization.instance.EXCLUSIVE_AUDIO),
+                Text(
+                  Localization.instance.EXCLUSIVE_AUDIO,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
                 const Spacer(),
                 Switch(
                   value: mediaPlayer.state.exclusiveAudio,
