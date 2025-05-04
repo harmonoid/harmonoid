@@ -17,6 +17,7 @@ _$PlaybackStateImpl _$$PlaybackStateImplFromJson(Map<String, dynamic> json) =>
       volume: (json['volume'] as num).toDouble(),
       shuffle: json['shuffle'] as bool,
       loop: $enumDecode(_$LoopEnumMap, json['loop']),
+      exclusiveAudio: json['exclusiveAudio'] as bool,
     );
 
 Map<String, dynamic> _$$PlaybackStateImplToJson(_$PlaybackStateImpl instance) =>
@@ -28,6 +29,7 @@ Map<String, dynamic> _$$PlaybackStateImplToJson(_$PlaybackStateImpl instance) =>
       'volume': instance.volume,
       'shuffle': instance.shuffle,
       'loop': _$LoopEnumMap[instance.loop]!,
+      'exclusiveAudio': instance.exclusiveAudio,
     };
 
 const _$LoopEnumMap = {

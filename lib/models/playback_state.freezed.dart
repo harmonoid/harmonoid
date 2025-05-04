@@ -27,6 +27,7 @@ mixin _$PlaybackState {
   double get volume => throw _privateConstructorUsedError;
   bool get shuffle => throw _privateConstructorUsedError;
   Loop get loop => throw _privateConstructorUsedError;
+  bool get exclusiveAudio => throw _privateConstructorUsedError;
 
   /// Serializes this PlaybackState to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -51,7 +52,8 @@ abstract class $PlaybackStateCopyWith<$Res> {
       double pitch,
       double volume,
       bool shuffle,
-      Loop loop});
+      Loop loop,
+      bool exclusiveAudio});
 }
 
 /// @nodoc
@@ -76,6 +78,7 @@ class _$PlaybackStateCopyWithImpl<$Res, $Val extends PlaybackState>
     Object? volume = null,
     Object? shuffle = null,
     Object? loop = null,
+    Object? exclusiveAudio = null,
   }) {
     return _then(_value.copyWith(
       index: null == index
@@ -106,6 +109,10 @@ class _$PlaybackStateCopyWithImpl<$Res, $Val extends PlaybackState>
           ? _value.loop
           : loop // ignore: cast_nullable_to_non_nullable
               as Loop,
+      exclusiveAudio: null == exclusiveAudio
+          ? _value.exclusiveAudio
+          : exclusiveAudio // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -125,7 +132,8 @@ abstract class _$$PlaybackStateImplCopyWith<$Res>
       double pitch,
       double volume,
       bool shuffle,
-      Loop loop});
+      Loop loop,
+      bool exclusiveAudio});
 }
 
 /// @nodoc
@@ -148,6 +156,7 @@ class __$$PlaybackStateImplCopyWithImpl<$Res>
     Object? volume = null,
     Object? shuffle = null,
     Object? loop = null,
+    Object? exclusiveAudio = null,
   }) {
     return _then(_$PlaybackStateImpl(
       index: null == index
@@ -178,6 +187,10 @@ class __$$PlaybackStateImplCopyWithImpl<$Res>
           ? _value.loop
           : loop // ignore: cast_nullable_to_non_nullable
               as Loop,
+      exclusiveAudio: null == exclusiveAudio
+          ? _value.exclusiveAudio
+          : exclusiveAudio // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -192,7 +205,8 @@ class _$PlaybackStateImpl implements _PlaybackState {
       required this.pitch,
       required this.volume,
       required this.shuffle,
-      required this.loop})
+      required this.loop,
+      required this.exclusiveAudio})
       : _playables = playables;
 
   factory _$PlaybackStateImpl.fromJson(Map<String, dynamic> json) =>
@@ -218,10 +232,12 @@ class _$PlaybackStateImpl implements _PlaybackState {
   final bool shuffle;
   @override
   final Loop loop;
+  @override
+  final bool exclusiveAudio;
 
   @override
   String toString() {
-    return 'PlaybackState(index: $index, playables: $playables, rate: $rate, pitch: $pitch, volume: $volume, shuffle: $shuffle, loop: $loop)';
+    return 'PlaybackState(index: $index, playables: $playables, rate: $rate, pitch: $pitch, volume: $volume, shuffle: $shuffle, loop: $loop, exclusiveAudio: $exclusiveAudio)';
   }
 
   @override
@@ -236,7 +252,9 @@ class _$PlaybackStateImpl implements _PlaybackState {
             (identical(other.pitch, pitch) || other.pitch == pitch) &&
             (identical(other.volume, volume) || other.volume == volume) &&
             (identical(other.shuffle, shuffle) || other.shuffle == shuffle) &&
-            (identical(other.loop, loop) || other.loop == loop));
+            (identical(other.loop, loop) || other.loop == loop) &&
+            (identical(other.exclusiveAudio, exclusiveAudio) ||
+                other.exclusiveAudio == exclusiveAudio));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -249,7 +267,8 @@ class _$PlaybackStateImpl implements _PlaybackState {
       pitch,
       volume,
       shuffle,
-      loop);
+      loop,
+      exclusiveAudio);
 
   /// Create a copy of PlaybackState
   /// with the given fields replaced by the non-null parameter values.
@@ -275,7 +294,8 @@ abstract class _PlaybackState implements PlaybackState {
       required final double pitch,
       required final double volume,
       required final bool shuffle,
-      required final Loop loop}) = _$PlaybackStateImpl;
+      required final Loop loop,
+      required final bool exclusiveAudio}) = _$PlaybackStateImpl;
 
   factory _PlaybackState.fromJson(Map<String, dynamic> json) =
       _$PlaybackStateImpl.fromJson;
@@ -294,6 +314,8 @@ abstract class _PlaybackState implements PlaybackState {
   bool get shuffle;
   @override
   Loop get loop;
+  @override
+  bool get exclusiveAudio;
 
   /// Create a copy of PlaybackState
   /// with the given fields replaced by the non-null parameter values.

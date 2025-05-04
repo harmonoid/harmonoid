@@ -70,6 +70,7 @@ class Values {
   late String ENTRIES;
   late String ENTRY;
   late String ERROR;
+  late String EXCLUSIVE_AUDIO;
   late String EXIT_FULLSCREEN;
   late String EXIT_NOW_PLAYING;
   late String EXIT_SUBTITLE;

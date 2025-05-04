@@ -168,6 +168,13 @@ class MediaPlayer extends ChangeNotifier
     await _player.move(state.playables.length - 1, index + 1);
   }
 
+  @override
+  Future<void> setExclusiveAudio(bool exclusiveAudio) async {
+    final platform = _player.platform as NativePlayer;
+    await platform.setProperty('audio-exclusive', exclusiveAudio ? 'yes' : 'no');
+    state = state.copyWith(exclusiveAudio: exclusiveAudio);
+  }
+
   Future<void> setPlaybackState(
     PlaybackState playbackState, {
     void Function()? onOpen,
@@ -182,6 +189,7 @@ class MediaPlayer extends ChangeNotifier
     await setVolume(state.volume);
     await setShuffle(state.shuffle);
     await setLoop(state.loop);
+    await setExclusiveAudio(state.exclusiveAudio);
     if (onOpen != null) {
       await open(
         state.playables,
@@ -247,13 +255,18 @@ class MediaPlayer extends ChangeNotifier
   }
 
   Future<void> ensureInitializedPlayer() async {
-    for (final MapEntry(key: property, value: value) in Configuration.instance.mpvOptions.entries) {
-      final platform = _player.platform as NativePlayer;
-      await platform.setProperty(property, value);
-    }
+    final platform = _player.platform as NativePlayer;
     if (Platform.isAndroid) {
-      final platform = _player.platform as NativePlayer;
       await platform.setProperty('ao', 'audiotrack,opensles');
+    }
+    if (Platform.isMacOS) {
+      await platform.setProperty('ao', 'coreaudio');
+    }
+    if (Platform.isWindows) {
+      await platform.setProperty('ao', 'wasapi');
+    }
+    for (final MapEntry(key: property, value: value) in Configuration.instance.mpvOptions.entries) {
+      await platform.setProperty(property, value);
     }
   }
 
@@ -271,7 +284,7 @@ class MediaPlayer extends ChangeNotifier
     disposeWindowsTaskbar();
   }
 
-  final Player _player = Player(configuration: const PlayerConfiguration(title: kTitle, pitch: true));
+  final Player _player = Player(configuration: const PlayerConfiguration(title: kTitle, pitch: true, logLevel: MPVLogLevel.v))..stream.log.listen((e) => debugPrint(e.toString()));
   final TagReader _tagReader = TagReader();
   Playable? _current;
   MediaPlayerState _state = MediaPlayerState.defaults();

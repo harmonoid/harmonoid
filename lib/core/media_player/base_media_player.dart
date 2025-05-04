@@ -59,4 +59,6 @@ abstract interface class BaseMediaPlayer with ChangeNotifier {
   Future<void> add(List<Playable> playables);
 
   Future<void> insert(int index, Playable playable);
+
+  Future<void> setExclusiveAudio(bool exclusiveAudio);
 }

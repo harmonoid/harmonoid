@@ -75,6 +75,7 @@ class LocalizationBase extends Values {
     ENTRIES = map['ENTRIES']!;
     ENTRY = map['ENTRY']!;
     ERROR = map['ERROR']!;
+    EXCLUSIVE_AUDIO = map['EXCLUSIVE_AUDIO']!;
     EXIT_FULLSCREEN = map['EXIT_FULLSCREEN']!;
     EXIT_NOW_PLAYING = map['EXIT_NOW_PLAYING']!;
     EXIT_SUBTITLE = map['EXIT_SUBTITLE']!;

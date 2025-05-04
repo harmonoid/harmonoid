@@ -23,6 +23,7 @@ mixin _$MediaPlayerState {
   double get volume => throw _privateConstructorUsedError;
   bool get shuffle => throw _privateConstructorUsedError;
   Loop get loop => throw _privateConstructorUsedError;
+  bool get exclusiveAudio => throw _privateConstructorUsedError;
   Duration get position => throw _privateConstructorUsedError;
   Duration get duration => throw _privateConstructorUsedError;
   bool get playing => throw _privateConstructorUsedError;
@@ -34,15 +35,12 @@ mixin _$MediaPlayerState {
   /// Create a copy of MediaPlayerState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $MediaPlayerStateCopyWith<MediaPlayerState> get copyWith =>
-      throw _privateConstructorUsedError;
+  $MediaPlayerStateCopyWith<MediaPlayerState> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $MediaPlayerStateCopyWith<$Res> {
-  factory $MediaPlayerStateCopyWith(
-          MediaPlayerState value, $Res Function(MediaPlayerState) then) =
-      _$MediaPlayerStateCopyWithImpl<$Res, MediaPlayerState>;
+  factory $MediaPlayerStateCopyWith(MediaPlayerState value, $Res Function(MediaPlayerState) then) = _$MediaPlayerStateCopyWithImpl<$Res, MediaPlayerState>;
   @useResult
   $Res call(
       {int index,
@@ -52,6 +50,7 @@ abstract class $MediaPlayerStateCopyWith<$Res> {
       double volume,
       bool shuffle,
       Loop loop,
+      bool exclusiveAudio,
       Duration position,
       Duration duration,
       bool playing,
@@ -62,8 +61,7 @@ abstract class $MediaPlayerStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$MediaPlayerStateCopyWithImpl<$Res, $Val extends MediaPlayerState>
-    implements $MediaPlayerStateCopyWith<$Res> {
+class _$MediaPlayerStateCopyWithImpl<$Res, $Val extends MediaPlayerState> implements $MediaPlayerStateCopyWith<$Res> {
   _$MediaPlayerStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -83,6 +81,7 @@ class _$MediaPlayerStateCopyWithImpl<$Res, $Val extends MediaPlayerState>
     Object? volume = null,
     Object? shuffle = null,
     Object? loop = null,
+    Object? exclusiveAudio = null,
     Object? position = null,
     Object? duration = null,
     Object? playing = null,
@@ -120,6 +119,10 @@ class _$MediaPlayerStateCopyWithImpl<$Res, $Val extends MediaPlayerState>
           ? _value.loop
           : loop // ignore: cast_nullable_to_non_nullable
               as Loop,
+      exclusiveAudio: null == exclusiveAudio
+          ? _value.exclusiveAudio
+          : exclusiveAudio // ignore: cast_nullable_to_non_nullable
+              as bool,
       position: null == position
           ? _value.position
           : position // ignore: cast_nullable_to_non_nullable
@@ -153,11 +156,8 @@ class _$MediaPlayerStateCopyWithImpl<$Res, $Val extends MediaPlayerState>
 }
 
 /// @nodoc
-abstract class _$$MediaPlayerStateImplCopyWith<$Res>
-    implements $MediaPlayerStateCopyWith<$Res> {
-  factory _$$MediaPlayerStateImplCopyWith(_$MediaPlayerStateImpl value,
-          $Res Function(_$MediaPlayerStateImpl) then) =
-      __$$MediaPlayerStateImplCopyWithImpl<$Res>;
+abstract class _$$MediaPlayerStateImplCopyWith<$Res> implements $MediaPlayerStateCopyWith<$Res> {
+  factory _$$MediaPlayerStateImplCopyWith(_$MediaPlayerStateImpl value, $Res Function(_$MediaPlayerStateImpl) then) = __$$MediaPlayerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -168,6 +168,7 @@ abstract class _$$MediaPlayerStateImplCopyWith<$Res>
       double volume,
       bool shuffle,
       Loop loop,
+      bool exclusiveAudio,
       Duration position,
       Duration duration,
       bool playing,
@@ -178,12 +179,8 @@ abstract class _$$MediaPlayerStateImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$MediaPlayerStateImplCopyWithImpl<$Res>
-    extends _$MediaPlayerStateCopyWithImpl<$Res, _$MediaPlayerStateImpl>
-    implements _$$MediaPlayerStateImplCopyWith<$Res> {
-  __$$MediaPlayerStateImplCopyWithImpl(_$MediaPlayerStateImpl _value,
-      $Res Function(_$MediaPlayerStateImpl) _then)
-      : super(_value, _then);
+class __$$MediaPlayerStateImplCopyWithImpl<$Res> extends _$MediaPlayerStateCopyWithImpl<$Res, _$MediaPlayerStateImpl> implements _$$MediaPlayerStateImplCopyWith<$Res> {
+  __$$MediaPlayerStateImplCopyWithImpl(_$MediaPlayerStateImpl _value, $Res Function(_$MediaPlayerStateImpl) _then) : super(_value, _then);
 
   /// Create a copy of MediaPlayerState
   /// with the given fields replaced by the non-null parameter values.
@@ -197,6 +194,7 @@ class __$$MediaPlayerStateImplCopyWithImpl<$Res>
     Object? volume = null,
     Object? shuffle = null,
     Object? loop = null,
+    Object? exclusiveAudio = null,
     Object? position = null,
     Object? duration = null,
     Object? playing = null,
@@ -234,6 +232,10 @@ class __$$MediaPlayerStateImplCopyWithImpl<$Res>
           ? _value.loop
           : loop // ignore: cast_nullable_to_non_nullable
               as Loop,
+      exclusiveAudio: null == exclusiveAudio
+          ? _value.exclusiveAudio
+          : exclusiveAudio // ignore: cast_nullable_to_non_nullable
+              as bool,
       position: null == position
           ? _value.position
           : position // ignore: cast_nullable_to_non_nullable
@@ -277,6 +279,7 @@ class _$MediaPlayerStateImpl implements _MediaPlayerState {
       required this.volume,
       required this.shuffle,
       required this.loop,
+      required this.exclusiveAudio,
       required this.position,
       required this.duration,
       required this.playing,
@@ -307,6 +310,8 @@ class _$MediaPlayerStateImpl implements _MediaPlayerState {
   @override
   final Loop loop;
   @override
+  final bool exclusiveAudio;
+  @override
   final Duration position;
   @override
   final Duration duration;
@@ -323,7 +328,7 @@ class _$MediaPlayerStateImpl implements _MediaPlayerState {
 
   @override
   String toString() {
-    return 'MediaPlayerState(index: $index, playables: $playables, rate: $rate, pitch: $pitch, volume: $volume, shuffle: $shuffle, loop: $loop, position: $position, duration: $duration, playing: $playing, buffering: $buffering, completed: $completed, audioBitrate: $audioBitrate, audioParams: $audioParams)';
+    return 'MediaPlayerState(index: $index, playables: $playables, rate: $rate, pitch: $pitch, volume: $volume, shuffle: $shuffle, loop: $loop, exclusiveAudio: $exclusiveAudio, position: $position, duration: $duration, playing: $playing, buffering: $buffering, completed: $completed, audioBitrate: $audioBitrate, audioParams: $audioParams, exclusiveAudio: $exclusiveAudio)';
   }
 
   @override
@@ -332,54 +337,33 @@ class _$MediaPlayerStateImpl implements _MediaPlayerState {
         (other.runtimeType == runtimeType &&
             other is _$MediaPlayerStateImpl &&
             (identical(other.index, index) || other.index == index) &&
-            const DeepCollectionEquality()
-                .equals(other._playables, _playables) &&
+            const DeepCollectionEquality().equals(other._playables, _playables) &&
             (identical(other.rate, rate) || other.rate == rate) &&
             (identical(other.pitch, pitch) || other.pitch == pitch) &&
             (identical(other.volume, volume) || other.volume == volume) &&
             (identical(other.shuffle, shuffle) || other.shuffle == shuffle) &&
             (identical(other.loop, loop) || other.loop == loop) &&
-            (identical(other.position, position) ||
-                other.position == position) &&
-            (identical(other.duration, duration) ||
-                other.duration == duration) &&
+            (identical(other.exclusiveAudio, exclusiveAudio) || other.exclusiveAudio == exclusiveAudio) &&
+            (identical(other.position, position) || other.position == position) &&
+            (identical(other.duration, duration) || other.duration == duration) &&
             (identical(other.playing, playing) || other.playing == playing) &&
-            (identical(other.buffering, buffering) ||
-                other.buffering == buffering) &&
-            (identical(other.completed, completed) ||
-                other.completed == completed) &&
-            (identical(other.audioBitrate, audioBitrate) ||
-                other.audioBitrate == audioBitrate) &&
-            (identical(other.audioParams, audioParams) ||
-                other.audioParams == audioParams));
+            (identical(other.buffering, buffering) || other.buffering == buffering) &&
+            (identical(other.completed, completed) || other.completed == completed) &&
+            (identical(other.audioBitrate, audioBitrate) || other.audioBitrate == audioBitrate) &&
+            (identical(other.audioParams, audioParams) || other.audioParams == audioParams) &&
+            (identical(other.exclusiveAudio, exclusiveAudio) || other.exclusiveAudio == exclusiveAudio));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      index,
-      const DeepCollectionEquality().hash(_playables),
-      rate,
-      pitch,
-      volume,
-      shuffle,
-      loop,
-      position,
-      duration,
-      playing,
-      buffering,
-      completed,
-      audioBitrate,
-      audioParams);
+  int get hashCode => Object.hash(runtimeType, index, const DeepCollectionEquality().hash(_playables), rate, pitch, volume, shuffle, loop, exclusiveAudio, position, duration, playing, buffering,
+      completed, audioBitrate, audioParams, exclusiveAudio);
 
   /// Create a copy of MediaPlayerState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$MediaPlayerStateImplCopyWith<_$MediaPlayerStateImpl> get copyWith =>
-      __$$MediaPlayerStateImplCopyWithImpl<_$MediaPlayerStateImpl>(
-          this, _$identity);
+  _$$MediaPlayerStateImplCopyWith<_$MediaPlayerStateImpl> get copyWith => __$$MediaPlayerStateImplCopyWithImpl<_$MediaPlayerStateImpl>(this, _$identity);
 }
 
 abstract class _MediaPlayerState implements MediaPlayerState {
@@ -391,6 +375,7 @@ abstract class _MediaPlayerState implements MediaPlayerState {
       required final double volume,
       required final bool shuffle,
       required final Loop loop,
+      required final bool exclusiveAudio,
       required final Duration position,
       required final Duration duration,
       required final bool playing,
@@ -414,6 +399,8 @@ abstract class _MediaPlayerState implements MediaPlayerState {
   @override
   Loop get loop;
   @override
+  bool get exclusiveAudio;
+  @override
   Duration get position;
   @override
   Duration get duration;
@@ -432,6 +419,5 @@ abstract class _MediaPlayerState implements MediaPlayerState {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$MediaPlayerStateImplCopyWith<_$MediaPlayerStateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$MediaPlayerStateImplCopyWith<_$MediaPlayerStateImpl> get copyWith => throw _privateConstructorUsedError;
 }

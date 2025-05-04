@@ -103,36 +103,46 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
       elevation: kDefaultHeavyElevation,
       child: Container(
         width: 256.0,
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.symmetric(vertical: 20.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  Localization.instance.CONTROL_PANEL,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(width: 8.0),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Theme.of(context).dividerColor,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    Localization.instance.CONTROL_PANEL,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(width: 8.0),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Theme.of(context).dividerColor,
+                      ),
+                    ),
+                    child: Text(
+                      Localization.instance.BETA.uppercase(),
+                      style: Theme.of(context).textTheme.labelSmall,
                     ),
                   ),
-                  child: Text(
-                    Localization.instance.BETA.uppercase(),
-                    style: Theme.of(context).textTheme.labelSmall,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
             const SizedBox(height: 12.0),
-            _buildContent(context),
+            const Divider(height: 1.0, thickness: 1.0),
+            _buildExclusiveAudio(context),
+            const Divider(height: 1.0, thickness: 1.0),
+            const SizedBox(height: 12.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: _buildContent(context),
+            ),
           ],
         ),
       ),
@@ -152,6 +162,30 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
         _buildContent(context),
         SizedBox(height: 16.0 + MediaQuery.viewInsetsOf(context).bottom + MediaQuery.paddingOf(context).bottom),
       ],
+    );
+  }
+
+  Widget _buildExclusiveAudio(BuildContext context) {
+    return Consumer<MediaPlayer>(
+      builder: (context, mediaPlayer, _) {
+        return InkWell(
+          onTap: () => mediaPlayer.setExclusiveAudio(!mediaPlayer.state.exclusiveAudio),
+          child: Container(
+            height: 48.0,
+            padding: const EdgeInsets.only(left: 20.0, right: 16.0),
+            child: Row(
+              children: [
+                Text(Localization.instance.EXCLUSIVE_AUDIO),
+                const Spacer(),
+                Switch(
+                  value: mediaPlayer.state.exclusiveAudio,
+                  onChanged: (value) => mediaPlayer.setExclusiveAudio(value),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
