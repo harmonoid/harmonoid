@@ -8,7 +8,7 @@ part 'playback_state.freezed.dart';
 part 'playback_state.g.dart';
 
 @freezed
-class PlaybackState with _$PlaybackState {
+abstract class PlaybackState with _$PlaybackState {
   const factory PlaybackState({
     required int index,
     required List<Playable> playables,

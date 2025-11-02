@@ -8,7 +8,7 @@ import 'package:harmonoid/models/replaygain.dart';
 part 'media_player_state.freezed.dart';
 
 @freezed
-class MediaPlayerState with _$MediaPlayerState {
+abstract class MediaPlayerState with _$MediaPlayerState {
   const factory MediaPlayerState({
     required int index,
     required List<Playable> playables,

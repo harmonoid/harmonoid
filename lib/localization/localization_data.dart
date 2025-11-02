@@ -4,7 +4,7 @@ part 'localization_data.freezed.dart';
 part 'localization_data.g.dart';
 
 @freezed
-class LocalizationData with _$LocalizationData {
+abstract class LocalizationData with _$LocalizationData {
   const factory LocalizationData({
     required String code,
     required String name,

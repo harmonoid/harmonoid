@@ -6,8 +6,8 @@ part of 'playback_state.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$PlaybackStateImpl _$$PlaybackStateImplFromJson(Map<String, dynamic> json) =>
-    _$PlaybackStateImpl(
+_PlaybackState _$PlaybackStateFromJson(Map<String, dynamic> json) =>
+    _PlaybackState(
       index: (json['index'] as num).toInt(),
       playables: (json['playables'] as List<dynamic>)
           .map((e) => Playable.fromJson(e as Map<String, dynamic>))
@@ -21,7 +21,7 @@ _$PlaybackStateImpl _$$PlaybackStateImplFromJson(Map<String, dynamic> json) =>
       replayGain: $enumDecode(_$ReplayGainEnumMap, json['replayGain']),
     );
 
-Map<String, dynamic> _$$PlaybackStateImplToJson(_$PlaybackStateImpl instance) =>
+Map<String, dynamic> _$PlaybackStateToJson(_PlaybackState instance) =>
     <String, dynamic>{
       'index': instance.index,
       'playables': instance.playables,
@@ -34,11 +34,7 @@ Map<String, dynamic> _$$PlaybackStateImplToJson(_$PlaybackStateImpl instance) =>
       'replayGain': _$ReplayGainEnumMap[instance.replayGain]!,
     };
 
-const _$LoopEnumMap = {
-  Loop.off: 'off',
-  Loop.one: 'one',
-  Loop.all: 'all',
-};
+const _$LoopEnumMap = {Loop.off: 'off', Loop.one: 'one', Loop.all: 'all'};
 
 const _$ReplayGainEnumMap = {
   ReplayGain.off: 'off',

@@ -67,7 +67,7 @@
 - Multiple artist & genre support.
 - Fallback cover support. e.g. cover.jpg, Folder.jpg etc.
 - Small installer (≈ 35 MB) & low RAM usage (≈ 150 MB).
-- Excellent backward compatibility. Android 5.0 or higher. macOS 10.9 or higher. Windows 7 or higher.
+- Excellent backward compatibility. Android 5.0 or higher. macOS 10.15 or higher. Windows 10 or higher.
 - Cross-platform (macOS, Windows, GNU/Linux & Android).
 - Notification.MediaStyle for Android.
 - D-Bus MPRIS controls for GNU/Linux.

@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:media_library/media_library.dart' as _ show MediaLibrary;
+import 'package:media_library/media_library.dart' as media_library;
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:tag_reader/tag_reader.dart';
@@ -15,7 +15,7 @@ import 'package:harmonoid/utils/android_storage_controller.dart';
 /// Implementation to cache, index, manage & retrieve album artists, albums, artists, genres, tracks & playlists.
 ///
 /// {@endtemplate}
-class MediaLibrary extends _.MediaLibrary with ChangeNotifier {
+class MediaLibrary extends media_library.MediaLibrary with ChangeNotifier {
   /// Pool size for [PooledTagReader].
   static final int kPooledTagReaderSize = () {
     try {

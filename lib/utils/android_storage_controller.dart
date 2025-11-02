@@ -47,6 +47,7 @@ class AndroidStorageController {
     while (result == null) {
       try {
         result = await instance.getVersion();
+        await Future.delayed(const Duration(milliseconds: 200));
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());

@@ -4,7 +4,7 @@ part 'lyric.freezed.dart';
 part 'lyric.g.dart';
 
 @freezed
-class Lyric with _$Lyric {
+abstract class Lyric with _$Lyric {
   const factory Lyric({
     required int timestamp,
     required String text,

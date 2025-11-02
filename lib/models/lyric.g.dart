@@ -6,13 +6,12 @@ part of 'lyric.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$LyricImpl _$$LyricImplFromJson(Map<String, dynamic> json) => _$LyricImpl(
-      timestamp: (json['timestamp'] as num).toInt(),
-      text: json['text'] as String,
-    );
+_Lyric _$LyricFromJson(Map<String, dynamic> json) => _Lyric(
+  timestamp: (json['timestamp'] as num).toInt(),
+  text: json['text'] as String,
+);
 
-Map<String, dynamic> _$$LyricImplToJson(_$LyricImpl instance) =>
-    <String, dynamic>{
-      'timestamp': instance.timestamp,
-      'text': instance.text,
-    };
+Map<String, dynamic> _$LyricToJson(_Lyric instance) => <String, dynamic>{
+  'timestamp': instance.timestamp,
+  'text': instance.text,
+};

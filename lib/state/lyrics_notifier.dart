@@ -264,7 +264,7 @@ class LyricsNotifier extends ChangeNotifier {
     );
   }
 
-  /// Displayes the notification.
+  /// Displays the notification.
   void displayNotification(int index) {
     if (!_notificationVisible) return;
     const diff = 2;

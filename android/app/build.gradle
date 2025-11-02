@@ -29,7 +29,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace "com.alexmercerind.harmonoid"
 
-    compileSdk 35
+    compileSdk 36
 
     lintOptions {
         disable "InvalidPackage"
@@ -37,8 +37,8 @@ android {
 
     defaultConfig {
         applicationId "com.alexmercerind.harmonoid"
-        minSdk 21
-        targetSdk 35
+        minSdkVersion flutter.minSdkVersion
+        targetSdk 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

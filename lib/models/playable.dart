@@ -5,7 +5,7 @@ part 'playable.g.dart';
 
 @Deprecated(':/')
 @freezed
-class Playable with _$Playable {
+abstract class Playable with _$Playable {
   const factory Playable({
     required String uri,
     required String title,
