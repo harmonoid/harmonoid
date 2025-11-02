@@ -37,7 +37,7 @@ android {
 
     defaultConfig {
         applicationId "com.alexmercerind.harmonoid"
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 21
         targetSdk 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

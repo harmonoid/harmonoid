@@ -19,6 +19,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
+          flutter-version: "3.32.8"
       - name: Build
         run: |
           rm -r "assets/icons"
@@ -92,6 +93,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
+          flutter-version: "3.32.8"
       - name: Build
         run: |
           flutter pub get
@@ -168,6 +170,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
+          flutter-version: "3.32.8"
       - name: Install Dependencies
         run: |
           sudo apt-get update
@@ -252,6 +255,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
+          flutter-version: "3.32.8"
       - name: Create Key Store
         id: create_key_store
         uses: timheuer/base64-to-file@v1
