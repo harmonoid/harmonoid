@@ -282,9 +282,15 @@ jobs:
             --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }} \
             --dart-define=LASTFM_API_KEY=${{ secrets.LASTFM_API_KEY }} \
             --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }}
+          flutter build appbundle --verbose \
+            --dart-define=API_KEY=${{ secrets.API_KEY }} \
+            --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }} \
+            --dart-define=LASTFM_API_KEY=${{ secrets.LASTFM_API_KEY }} \
+            --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }}
           cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk harmonoid-android-arm64-v8a-release.apk
           cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk harmonoid-android-armeabi-v7a-release.apk
           cp build/app/outputs/flutter-apk/app-x86_64-release.apk harmonoid-android-x86_64-release.apk
+          cp build/app/outputs/bundle/release/app-release.aab harmonoid-android-release.aab
       - name: Upload Release
         uses: softprops/action-gh-release@v1
         env:
@@ -298,4 +304,5 @@ jobs:
             harmonoid-android-arm64-v8a-release.apk
             harmonoid-android-armeabi-v7a-release.apk
             harmonoid-android-x86_64-release.apk
+            harmonoid-android-release.aab
           token: ${{ secrets.ACCESS_TOKEN_2 }}
