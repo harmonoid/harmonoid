@@ -4,6 +4,6 @@ import 'package:harmonoid/models/playable.dart';
 
 /// Mappers for [Media].
 extension MediaMappers on Media {
-  /// Convert to [Playable].
+  /// Converts to [Playable].
   Playable toPlayable() => Playable.fromJson(extras ?? {});
 }

@@ -229,79 +229,89 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
               controller: _sortMenuController,
               alignmentOffset: _menuAnchorAlignmentOffset,
               menuChildren: switch (path) {
-                kAlbumsPath => AlbumSortType.values
-                    .map(
-                      (e) => MenuItemButton(
-                        onPressed: () async {
-                          await mediaLibrary.populate(albumSortType: e);
-                          await Configuration.instance.set(mediaLibraryAlbumSortType: e);
-                        },
-                        style: _menuItemStyle,
-                        leadingIcon: _buildLeadingIcon(mediaLibrary.albumSortType == e),
-                        child: Text(
-                          switch (e) {
-                            AlbumSortType.album => Localization.instance.A_TO_Z,
-                            AlbumSortType.timestamp => Localization.instance.DATE_ADDED,
-                            AlbumSortType.year => Localization.instance.YEAR,
-                            AlbumSortType.albumArtist => Localization.instance.ALBUM_ARTIST
+                kAlbumsPath =>
+                  AlbumSortType.values
+                      .map(
+                        (e) => MenuItemButton(
+                          onPressed: () async {
+                            await mediaLibrary.populate(albumSortType: e);
+                            await Configuration.instance.set(mediaLibraryAlbumSortType: e);
                           },
-                          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                          style: _menuItemStyle,
+                          leadingIcon: _buildLeadingIcon(mediaLibrary.albumSortType == e),
+                          child: Text(
+                            switch (e) {
+                              AlbumSortType.album => Localization.instance.A_TO_Z,
+                              AlbumSortType.timestamp => Localization.instance.DATE_ADDED,
+                              AlbumSortType.year => Localization.instance.YEAR,
+                              AlbumSortType.albumArtist => Localization.instance.ALBUM_ARTIST,
+                            },
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                          ),
                         ),
-                      ),
-                    )
-                    .toList(),
-                kTracksPath => TrackSortType.values
-                    .map(
-                      (e) => MenuItemButton(
-                        onPressed: () async {
-                          await mediaLibrary.populate(trackSortType: e);
-                          await Configuration.instance.set(mediaLibraryTrackSortType: e);
-                        },
-                        style: _menuItemStyle,
-                        leadingIcon: _buildLeadingIcon(mediaLibrary.trackSortType == e),
-                        child: Text(
-                          switch (e) {
-                            TrackSortType.title => Localization.instance.A_TO_Z,
-                            TrackSortType.timestamp => Localization.instance.DATE_ADDED,
-                            TrackSortType.year => Localization.instance.YEAR
+                      )
+                      .toList(),
+                kTracksPath =>
+                  TrackSortType.values
+                      .map(
+                        (e) => MenuItemButton(
+                          onPressed: () async {
+                            await mediaLibrary.populate(trackSortType: e);
+                            await Configuration.instance.set(mediaLibraryTrackSortType: e);
                           },
-                          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                          style: _menuItemStyle,
+                          leadingIcon: _buildLeadingIcon(mediaLibrary.trackSortType == e),
+                          child: Text(
+                            switch (e) {
+                              TrackSortType.title => Localization.instance.A_TO_Z,
+                              TrackSortType.timestamp => Localization.instance.DATE_ADDED,
+                              TrackSortType.year => Localization.instance.YEAR,
+                            },
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                          ),
                         ),
-                      ),
-                    )
-                    .toList(),
-                kArtistsPath => ArtistSortType.values
-                    .map(
-                      (e) => MenuItemButton(
-                        onPressed: () async {
-                          await mediaLibrary.populate(artistSortType: e);
-                          await Configuration.instance.set(mediaLibraryArtistSortType: e);
-                        },
-                        style: _menuItemStyle,
-                        leadingIcon: _buildLeadingIcon(mediaLibrary.artistSortType == e),
-                        child: Text(
-                          switch (e) { ArtistSortType.artist => Localization.instance.A_TO_Z, ArtistSortType.timestamp => Localization.instance.DATE_ADDED },
-                          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                      )
+                      .toList(),
+                kArtistsPath =>
+                  ArtistSortType.values
+                      .map(
+                        (e) => MenuItemButton(
+                          onPressed: () async {
+                            await mediaLibrary.populate(artistSortType: e);
+                            await Configuration.instance.set(mediaLibraryArtistSortType: e);
+                          },
+                          style: _menuItemStyle,
+                          leadingIcon: _buildLeadingIcon(mediaLibrary.artistSortType == e),
+                          child: Text(
+                            switch (e) {
+                              ArtistSortType.artist => Localization.instance.A_TO_Z,
+                              ArtistSortType.timestamp => Localization.instance.DATE_ADDED,
+                            },
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                          ),
                         ),
-                      ),
-                    )
-                    .toList(),
-                kGenresPath => GenreSortType.values
-                    .map(
-                      (e) => MenuItemButton(
-                        onPressed: () async {
-                          await mediaLibrary.populate(genreSortType: e);
-                          await Configuration.instance.set(mediaLibraryGenreSortType: e);
-                        },
-                        style: _menuItemStyle,
-                        leadingIcon: _buildLeadingIcon(mediaLibrary.genreSortType == e),
-                        child: Text(
-                          switch (e) { GenreSortType.genre => Localization.instance.A_TO_Z, GenreSortType.timestamp => Localization.instance.DATE_ADDED },
-                          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                      )
+                      .toList(),
+                kGenresPath =>
+                  GenreSortType.values
+                      .map(
+                        (e) => MenuItemButton(
+                          onPressed: () async {
+                            await mediaLibrary.populate(genreSortType: e);
+                            await Configuration.instance.set(mediaLibraryGenreSortType: e);
+                          },
+                          style: _menuItemStyle,
+                          leadingIcon: _buildLeadingIcon(mediaLibrary.genreSortType == e),
+                          child: Text(
+                            switch (e) {
+                              GenreSortType.genre => Localization.instance.A_TO_Z,
+                              GenreSortType.timestamp => Localization.instance.DATE_ADDED,
+                            },
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                          ),
                         ),
-                      ),
-                    )
-                    .toList(),
+                      )
+                      .toList(),
                 _ => [],
               },
               child: Padding(
@@ -335,24 +345,24 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
                               TextSpan(
                                 text: switch (path) {
                                   kAlbumsPath => switch (mediaLibrary.albumSortType) {
-                                      AlbumSortType.album => Localization.instance.A_TO_Z,
-                                      AlbumSortType.timestamp => Localization.instance.DATE_ADDED,
-                                      AlbumSortType.year => Localization.instance.YEAR,
-                                      AlbumSortType.albumArtist => Localization.instance.ALBUM_ARTIST,
-                                    },
+                                    AlbumSortType.album => Localization.instance.A_TO_Z,
+                                    AlbumSortType.timestamp => Localization.instance.DATE_ADDED,
+                                    AlbumSortType.year => Localization.instance.YEAR,
+                                    AlbumSortType.albumArtist => Localization.instance.ALBUM_ARTIST,
+                                  },
                                   kTracksPath => switch (mediaLibrary.trackSortType) {
-                                      TrackSortType.title => Localization.instance.A_TO_Z,
-                                      TrackSortType.timestamp => Localization.instance.DATE_ADDED,
-                                      TrackSortType.year => Localization.instance.YEAR,
-                                    },
+                                    TrackSortType.title => Localization.instance.A_TO_Z,
+                                    TrackSortType.timestamp => Localization.instance.DATE_ADDED,
+                                    TrackSortType.year => Localization.instance.YEAR,
+                                  },
                                   kArtistsPath => switch (mediaLibrary.artistSortType) {
-                                      ArtistSortType.artist => Localization.instance.A_TO_Z,
-                                      ArtistSortType.timestamp => Localization.instance.DATE_ADDED,
-                                    },
+                                    ArtistSortType.artist => Localization.instance.A_TO_Z,
+                                    ArtistSortType.timestamp => Localization.instance.DATE_ADDED,
+                                  },
                                   kGenresPath => switch (mediaLibrary.genreSortType) {
-                                      GenreSortType.genre => Localization.instance.A_TO_Z,
-                                      GenreSortType.timestamp => Localization.instance.DATE_ADDED,
-                                    },
+                                    GenreSortType.genre => Localization.instance.A_TO_Z,
+                                    GenreSortType.timestamp => Localization.instance.DATE_ADDED,
+                                  },
                                   _ => '',
                                 },
                                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
@@ -482,13 +492,14 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
                                   style: Theme.of(context).textTheme.bodyLarge,
                                 ),
                                 TextSpan(
-                                  text: switch (path) {
-                                    kAlbumsPath => mediaLibrary.albumSortAscending,
-                                    kTracksPath => mediaLibrary.trackSortAscending,
-                                    kArtistsPath => mediaLibrary.artistSortAscending,
-                                    kGenresPath => mediaLibrary.genreSortAscending,
-                                    _ => false,
-                                  }
+                                  text:
+                                      switch (path) {
+                                        kAlbumsPath => mediaLibrary.albumSortAscending,
+                                        kTracksPath => mediaLibrary.trackSortAscending,
+                                        kArtistsPath => mediaLibrary.artistSortAscending,
+                                        kGenresPath => mediaLibrary.genreSortAscending,
+                                        _ => false,
+                                      }
                                       ? Localization.instance.ASCENDING
                                       : Localization.instance.DESCENDING,
                                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
@@ -558,8 +569,8 @@ class DesktopMediaLibraryRefreshIndicator extends StatelessWidget {
                           mediaLibrary.current == null
                               ? Localization.instance.DISCOVERING_FILES
                               : Localization.instance.ADDED_M_OF_N_FILES
-                                  .replaceAll('"M"', (mediaLibrary.current ?? 0).toString())
-                                  .replaceAll('"N"', (mediaLibrary.total == 0 ? 1 : mediaLibrary.total).toString()),
+                                    .replaceAll('"M"', (mediaLibrary.current ?? 0).toString())
+                                    .replaceAll('"N"', (mediaLibrary.total == 0 ? 1 : mediaLibrary.total).toString()),
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodyLarge,
@@ -684,111 +695,111 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
   void Function(void Function())? setStateCallback;
 
   List<MobileMediaLibrarySortButtonPopupMenuItem> get sort => {
-        kAlbumsPath: [AlbumSortType.album, AlbumSortType.timestamp, AlbumSortType.year]
-            .map(
-              (e) => MobileMediaLibrarySortButtonPopupMenuItem(
-                onTap: () => handle(e),
-                checked: MediaLibrary.instance.albumSortType == e,
-                value: e,
-                padding: EdgeInsets.zero,
-                child: Text(
-                  {
-                    AlbumSortType.album: Localization.instance.A_TO_Z,
-                    AlbumSortType.timestamp: Localization.instance.DATE_ADDED,
-                    AlbumSortType.year: Localization.instance.YEAR,
-                    AlbumSortType.albumArtist: Localization.instance.ALBUM_ARTIST,
-                  }[e]!,
-                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                ),
-              ),
-            )
-            .toList(),
-        kTracksPath: TrackSortType.values
-            .map(
-              (e) => MobileMediaLibrarySortButtonPopupMenuItem(
-                onTap: () => handle(e),
-                checked: MediaLibrary.instance.trackSortType == e,
-                value: e,
-                padding: EdgeInsets.zero,
-                child: Text(
-                  {
-                    TrackSortType.title: Localization.instance.A_TO_Z,
-                    TrackSortType.timestamp: Localization.instance.DATE_ADDED,
-                    TrackSortType.year: Localization.instance.YEAR,
-                  }[e]!,
-                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                ),
-              ),
-            )
-            .toList(),
-        kArtistsPath: ArtistSortType.values
-            .map(
-              (e) => MobileMediaLibrarySortButtonPopupMenuItem(
-                onTap: () => handle(e),
-                checked: MediaLibrary.instance.artistSortType == e,
-                value: e,
-                padding: EdgeInsets.zero,
-                child: Text(
-                  {
-                    ArtistSortType.artist: Localization.instance.A_TO_Z,
-                    ArtistSortType.timestamp: Localization.instance.DATE_ADDED,
-                  }[e]!,
-                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                ),
-              ),
-            )
-            .toList(),
-        kGenresPath: GenreSortType.values
-            .map(
-              (e) => MobileMediaLibrarySortButtonPopupMenuItem(
-                onTap: () => handle(e),
-                checked: MediaLibrary.instance.genreSortType == e,
-                value: e,
-                padding: EdgeInsets.zero,
-                child: Text(
-                  {
-                    GenreSortType.genre: Localization.instance.A_TO_Z,
-                    GenreSortType.timestamp: Localization.instance.DATE_ADDED,
-                  }[e]!,
-                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                ),
-              ),
-            )
-            .toList(),
-      }[widget.path]!;
+    kAlbumsPath: [AlbumSortType.album, AlbumSortType.timestamp, AlbumSortType.year]
+        .map(
+          (e) => MobileMediaLibrarySortButtonPopupMenuItem(
+            onTap: () => handle(e),
+            checked: MediaLibrary.instance.albumSortType == e,
+            value: e,
+            padding: EdgeInsets.zero,
+            child: Text(
+              {
+                AlbumSortType.album: Localization.instance.A_TO_Z,
+                AlbumSortType.timestamp: Localization.instance.DATE_ADDED,
+                AlbumSortType.year: Localization.instance.YEAR,
+                AlbumSortType.albumArtist: Localization.instance.ALBUM_ARTIST,
+              }[e]!,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+        )
+        .toList(),
+    kTracksPath: TrackSortType.values
+        .map(
+          (e) => MobileMediaLibrarySortButtonPopupMenuItem(
+            onTap: () => handle(e),
+            checked: MediaLibrary.instance.trackSortType == e,
+            value: e,
+            padding: EdgeInsets.zero,
+            child: Text(
+              {
+                TrackSortType.title: Localization.instance.A_TO_Z,
+                TrackSortType.timestamp: Localization.instance.DATE_ADDED,
+                TrackSortType.year: Localization.instance.YEAR,
+              }[e]!,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+        )
+        .toList(),
+    kArtistsPath: ArtistSortType.values
+        .map(
+          (e) => MobileMediaLibrarySortButtonPopupMenuItem(
+            onTap: () => handle(e),
+            checked: MediaLibrary.instance.artistSortType == e,
+            value: e,
+            padding: EdgeInsets.zero,
+            child: Text(
+              {
+                ArtistSortType.artist: Localization.instance.A_TO_Z,
+                ArtistSortType.timestamp: Localization.instance.DATE_ADDED,
+              }[e]!,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+        )
+        .toList(),
+    kGenresPath: GenreSortType.values
+        .map(
+          (e) => MobileMediaLibrarySortButtonPopupMenuItem(
+            onTap: () => handle(e),
+            checked: MediaLibrary.instance.genreSortType == e,
+            value: e,
+            padding: EdgeInsets.zero,
+            child: Text(
+              {
+                GenreSortType.genre: Localization.instance.A_TO_Z,
+                GenreSortType.timestamp: Localization.instance.DATE_ADDED,
+              }[e]!,
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+        )
+        .toList(),
+  }[widget.path]!;
 
   List<MobileMediaLibrarySortButtonPopupMenuItem> get order => [
-        MobileMediaLibrarySortButtonPopupMenuItem(
-          onTap: () => handle(true),
-          checked: {
-            kAlbumsPath: MediaLibrary.instance.albumSortAscending,
-            kTracksPath: MediaLibrary.instance.trackSortAscending,
-            kArtistsPath: MediaLibrary.instance.artistSortAscending,
-            kGenresPath: MediaLibrary.instance.genreSortAscending,
-          }[widget.path]!,
-          value: true,
-          padding: EdgeInsets.zero,
-          child: Text(
-            Localization.instance.ASCENDING,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
-        MobileMediaLibrarySortButtonPopupMenuItem(
-          onTap: () => handle(false),
-          checked: {
-            kAlbumsPath: !MediaLibrary.instance.albumSortAscending,
-            kTracksPath: !MediaLibrary.instance.trackSortAscending,
-            kArtistsPath: !MediaLibrary.instance.artistSortAscending,
-            kGenresPath: !MediaLibrary.instance.genreSortAscending,
-          }[widget.path]!,
-          value: false,
-          padding: EdgeInsets.zero,
-          child: Text(
-            Localization.instance.DESCENDING,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
-      ];
+    MobileMediaLibrarySortButtonPopupMenuItem(
+      onTap: () => handle(true),
+      checked: {
+        kAlbumsPath: MediaLibrary.instance.albumSortAscending,
+        kTracksPath: MediaLibrary.instance.trackSortAscending,
+        kArtistsPath: MediaLibrary.instance.artistSortAscending,
+        kGenresPath: MediaLibrary.instance.genreSortAscending,
+      }[widget.path]!,
+      value: true,
+      padding: EdgeInsets.zero,
+      child: Text(
+        Localization.instance.ASCENDING,
+        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+      ),
+    ),
+    MobileMediaLibrarySortButtonPopupMenuItem(
+      onTap: () => handle(false),
+      checked: {
+        kAlbumsPath: !MediaLibrary.instance.albumSortAscending,
+        kTracksPath: !MediaLibrary.instance.trackSortAscending,
+        kArtistsPath: !MediaLibrary.instance.artistSortAscending,
+        kGenresPath: !MediaLibrary.instance.genreSortAscending,
+      }[widget.path]!,
+      value: false,
+      padding: EdgeInsets.zero,
+      child: Text(
+        Localization.instance.DESCENDING,
+        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+      ),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -998,18 +1009,18 @@ class SubHeader extends StatelessWidget {
     final TextStyle? style;
     if (isMaterial2 && isMobile) {
       style = Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-            fontSize: fontSize,
-          );
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+        fontSize: fontSize,
+      );
     } else if (isMaterial2 && isDesktop) {
       style = Theme.of(context).textTheme.titleSmall?.copyWith(
-            fontSize: fontSize,
-          );
+        fontSize: fontSize,
+      );
     } else {
       style = Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: Theme.of(context).colorScheme.primary,
-            fontSize: fontSize,
-          );
+        color: Theme.of(context).colorScheme.primary,
+        fontSize: fontSize,
+      );
     }
     return Container(
       alignment: Alignment.centerLeft,
@@ -1151,7 +1162,8 @@ class MobileNavigationBar extends StatelessWidget {
       kPlaylistsPath,
     ];
     final index = paths.indexOf(path);
-    final displayLabels = {
+    final displayLabels =
+        {
           Localization.instance.ALBUMS,
           Localization.instance.TRACKS,
           Localization.instance.ARTISTS,
@@ -1268,8 +1280,8 @@ class ShowAllButton extends StatelessWidget {
             Text(
               Localization.instance.SEE_ALL,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
           ],
         ),
@@ -1810,39 +1822,36 @@ class StillGIF extends StatefulWidget {
     Key? key,
     required double width,
     required double height,
-  }) =>
-      StillGIF(
-        key: key,
-        image: AssetImage(image),
-        width: width,
-        height: height,
-      );
+  }) => StillGIF(
+    key: key,
+    image: AssetImage(image),
+    width: width,
+    height: height,
+  );
 
   factory StillGIF.file(
     String image, {
     Key? key,
     required double width,
     required double height,
-  }) =>
-      StillGIF(
-        key: key,
-        image: FileImage(File(image)),
-        width: width,
-        height: height,
-      );
+  }) => StillGIF(
+    key: key,
+    image: FileImage(File(image)),
+    width: width,
+    height: height,
+  );
 
   factory StillGIF.network(
     String image, {
     Key? key,
     required double width,
     required double height,
-  }) =>
-      StillGIF(
-        key: key,
-        image: NetworkImage(image),
-        width: width,
-        height: height,
-      );
+  }) => StillGIF(
+    key: key,
+    image: NetworkImage(image),
+    width: width,
+    height: height,
+  );
 
   @override
   State<StillGIF> createState() => StillGIFState();
@@ -2008,12 +2017,18 @@ class StatefulAnimatedIcon extends StatefulWidget {
   final bool dismissed;
   final AnimatedIconData icon;
   final double size;
+  final Color? color;
+  final Curve curve;
+  final Duration duration;
 
   const StatefulAnimatedIcon({
     super.key,
     required this.dismissed,
     required this.icon,
     this.size = 24.0,
+    this.color,
+    this.curve = Curves.easeInOut,
+    this.duration = const Duration(milliseconds: 200),
   });
 
   @override
@@ -2021,17 +2036,22 @@ class StatefulAnimatedIcon extends StatefulWidget {
 }
 
 class StatefulAnimatedIconState extends State<StatefulAnimatedIcon> with SingleTickerProviderStateMixin {
-  late final AnimationController progress = AnimationController(
+  late final AnimationController _controller = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 200),
-    reverseDuration: const Duration(milliseconds: 200),
+    duration: widget.duration,
+    reverseDuration: widget.duration,
+  );
+  late final Animation<double> _animation = CurvedAnimation(
+    parent: _controller,
+    curve: widget.curve,
+    reverseCurve: widget.curve,
   );
 
   @override
   void initState() {
     super.initState();
     if (widget.dismissed) {
-      progress.value = 1.0;
+      _controller.value = 1.0;
     }
   }
 
@@ -2040,9 +2060,9 @@ class StatefulAnimatedIconState extends State<StatefulAnimatedIcon> with SingleT
     super.didUpdateWidget(oldWidget);
     if (oldWidget.dismissed != widget.dismissed) {
       if (widget.dismissed) {
-        progress.forward();
+        _controller.forward();
       } else {
-        progress.reverse();
+        _controller.reverse();
       }
     }
   }
@@ -2050,9 +2070,10 @@ class StatefulAnimatedIconState extends State<StatefulAnimatedIcon> with SingleT
   @override
   Widget build(BuildContext context) {
     return AnimatedIcon(
-      progress: progress,
+      progress: _animation,
       icon: widget.icon,
       size: widget.size,
+      color: widget.color,
     );
   }
 }

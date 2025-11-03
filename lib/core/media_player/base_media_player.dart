@@ -64,4 +64,6 @@ abstract interface class BaseMediaPlayer with ChangeNotifier {
   Future<void> setExclusiveAudio(bool exclusiveAudio);
 
   Future<void> setReplayGain(ReplayGain replayGain);
+
+  Future<void> setReplayGainPreamp(double replayGainPreamp);
 }

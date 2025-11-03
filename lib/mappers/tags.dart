@@ -3,7 +3,7 @@ import 'package:tag_reader/tag_reader.dart';
 
 /// Mappers for [Tags].
 extension TagsMappers on Tags {
-  /// Convert to [Track].
+  /// Converts to [Track].
   Track toTrack() => Track(
         uri: uri,
         title: title,

@@ -3,6 +3,7 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart' hide CarouselView;
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:m3_expressive_shapes/m3_expressive_shapes.dart';
 import 'package:measure_size/measure_size.dart';
 import 'package:provider/provider.dart';
 
@@ -193,7 +194,7 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
                                                               text: artist.isEmpty ? kDefaultArtist : artist,
                                                             ),
                                                             const TextSpan(text: ', '),
-                                                          ]
+                                                          ],
                                                         ]..removeLast(),
                                                         style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
                                                       ),
@@ -421,7 +422,7 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
                       text: artist.isEmpty ? kDefaultArtist : artist,
                     ),
                     const TextSpan(text: ', '),
-                  ]
+                  ],
                 ]..removeLast(),
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant).copyWith(height: 1.0),
               ),
@@ -599,28 +600,28 @@ class Controls extends StatelessWidget {
                     tooltip: Localization.instance.PREVIOUS,
                   ),
                   const SizedBox(width: 8.0),
-                  SizedBox.square(
-                    dimension: 72.0,
-                    child: FloatingActionButton.large(
-                      heroTag: '***',
-                      elevation: 0.0,
-                      focusElevation: 0.0,
-                      hoverElevation: 0.0,
-                      highlightElevation: 0.0,
-                      onPressed: mediaPlayer.playOrPause,
-                      backgroundColor: nowPlayingColors.foreground,
-                      foregroundColor: nowPlayingColors.foregroundIcon,
-                      tooltip: mediaPlayer.state.playing ? Localization.instance.PAUSE : Localization.instance.PLAY,
-                      shape: const StarBorder(
-                        points: 9,
-                        pointRounding: 0.6,
-                        valleyRounding: 0.4,
-                        innerRadiusRatio: 0.75,
-                      ),
-                      child: StatefulAnimatedIcon(
-                        dismissed: mediaPlayer.state.playing,
-                        icon: AnimatedIcons.play_pause,
-                        size: Theme.of(context).iconTheme.size! * 1.5,
+                  AnimatedContainer(
+                    width: 72.0,
+                    height: 72.0,
+                    curve: ElasticOutCurve(0.85),
+                    duration: const Duration(milliseconds: 500),
+                    decoration: ShapeDecoration(
+                      color: nowPlayingColors.foreground,
+                      shape: RoundedPolygonBorder(polygon: mediaPlayer.state.playing ? MaterialShapes.sunny : MaterialShapes.square),
+                    ),
+                    child: Tooltip(
+                      message: mediaPlayer.state.playing ? Localization.instance.PAUSE : Localization.instance.PLAY,
+                      child: InkWell(
+                        onTap: mediaPlayer.playOrPause,
+                        child: Center(
+                          child: StatefulAnimatedIcon(
+                            dismissed: mediaPlayer.state.playing,
+                            icon: AnimatedIcons.play_pause,
+                            size: Theme.of(context).iconTheme.size! * 1.5,
+                            color: nowPlayingColors.foregroundIcon,
+                            duration: const Duration(milliseconds: 500),
+                          ),
+                        ),
                       ),
                     ),
                   ),

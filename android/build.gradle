@@ -17,11 +17,3 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
-
-gradle.taskGraph.whenReady {
-    gradle.taskGraph.allTasks.each {
-        if(it.project.name == "flutter_discord_rpc") {
-            it.onlyIf { false }
-        }
-    }
-}

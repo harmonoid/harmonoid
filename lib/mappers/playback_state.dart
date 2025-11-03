@@ -3,7 +3,7 @@ import 'package:harmonoid/models/playback_state.dart';
 
 /// Mappers for [PlaybackState].
 extension PlaybackStateMappers on PlaybackState {
-  /// Convert to [MediaPlayerState].
+  /// Converts to [MediaPlayerState].
   MediaPlayerState toMediaPlayerState() => MediaPlayerState.defaults().copyWith(
         index: index,
         playables: playables,

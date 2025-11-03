@@ -68,6 +68,7 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
   final rate = (focusNode: FocusNode(), textEditingController: TextEditingController(text: MediaPlayer.instance.state.rate.toStringAsFixed(2)));
   final pitch = (focusNode: FocusNode(), textEditingController: TextEditingController(text: MediaPlayer.instance.state.pitch.toStringAsFixed(2)));
   final volume = (focusNode: FocusNode(), textEditingController: TextEditingController(text: MediaPlayer.instance.state.volume.round().toString()));
+  final replayGainPreamp = (focusNode: FocusNode(), textEditingController: TextEditingController(text: MediaPlayer.instance.state.replayGainPreamp.toStringAsFixed(2)));
 
   void listener() {
     if (!rate.focusNode.hasFocus) {
@@ -78,6 +79,9 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
     }
     if (!volume.focusNode.hasFocus) {
       volume.textEditingController.text = MediaPlayer.instance.state.volume.round().toString();
+    }
+    if (!replayGainPreamp.focusNode.hasFocus) {
+      replayGainPreamp.textEditingController.text = MediaPlayer.instance.state.replayGainPreamp.toStringAsFixed(2);
     }
   }
 
@@ -93,9 +97,11 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
     rate.focusNode.dispose();
     pitch.focusNode.dispose();
     volume.focusNode.dispose();
+    replayGainPreamp.focusNode.dispose();
     rate.textEditingController.dispose();
     pitch.textEditingController.dispose();
     volume.textEditingController.dispose();
+    replayGainPreamp.textEditingController.dispose();
     MediaPlayer.instance.removeListener(listener);
   }
 
@@ -138,14 +144,20 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
             ),
             const SizedBox(height: 12.0),
             const Divider(height: 1.0, thickness: 1.0),
-            _buildReplayGain(context),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+              child: _buildContent(context),
+            ),
             const Divider(height: 1.0, thickness: 1.0),
             _buildExclusiveAudio(context),
             const Divider(height: 1.0, thickness: 1.0),
-            const SizedBox(height: 12.0),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: _buildContent(context),
+              padding: const EdgeInsets.only(
+                top: 16.0,
+                left: 20.0,
+                right: 20.0,
+              ),
+              child: _buildReplayGain(context),
             ),
           ],
         ),
@@ -160,10 +172,18 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
   Widget _buildMobileLayout(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SizedBox(height: isMaterial2 ? 16.0 : 0.0),
-        _buildContent(context),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 24.0),
+          child: _buildContent(context),
+        ),
+        const Divider(height: 1.0, thickness: 1.0),
+        Padding(
+          padding: const EdgeInsets.only(top: 16.0),
+          child: _buildReplayGain(context),
+        ),
         SizedBox(height: 16.0 + MediaQuery.viewInsetsOf(context).bottom + MediaQuery.paddingOf(context).bottom),
       ],
     );
@@ -199,22 +219,49 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
   Widget _buildReplayGain(BuildContext context) {
     return Consumer<MediaPlayer>(
       builder: (context, mediaPlayer, _) {
-        return InkWell(
-          onTap: () => mediaPlayer.setReplayGain(ReplayGain.values[(mediaPlayer.state.replayGain.index + 1) % ReplayGain.values.length]),
-          child: Container(
-            height: 48.0,
-            padding: const EdgeInsets.only(left: 20.0, right: 16.0),
-            child: Row(
+        return Column(
+          children: [
+            Row(
               children: [
                 Text(
                   Localization.instance.REPLAYGAIN,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const Spacer(),
-                Chip(label: Text(mediaPlayer.state.replayGain.toLabel())),
+                ActionChip(
+                  elevation: 0.0,
+                  pressElevation: 0.0,
+                  onPressed: () => mediaPlayer.setReplayGain(ReplayGain.values[(mediaPlayer.state.replayGain.index + 1) % ReplayGain.values.length]),
+                  label: Text(mediaPlayer.state.replayGain.toLabel()),
+                ),
               ],
             ),
-          ),
+            const SizedBox(height: 8.0),
+            Row(
+              children: [
+                Text(
+                  Localization.instance.PREAMP_GAIN,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                const Spacer(),
+                SizedBox(
+                  height: 32.0,
+                  width: 48.0,
+                  child: DefaultTextField(
+                    focusNode: replayGainPreamp.focusNode,
+                    controller: replayGainPreamp.textEditingController,
+                    onChanged: (value) => mediaPlayer.setReplayGainPreamp(double.tryParse(value) ?? 1.0),
+                    cursorWidth: 1.0,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                    decoration: inputDecoration(context, 'NaN', contentPadding: const EdgeInsets.only(left: 4.0)),
+                    inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'[0-9]|\.'))],
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+              ],
+            ),
+          ],
         );
       },
     );

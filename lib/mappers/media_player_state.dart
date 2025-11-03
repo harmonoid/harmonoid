@@ -3,7 +3,7 @@ import 'package:harmonoid/models/playback_state.dart';
 
 /// Mappers for [MediaPlayerState].
 extension MediaPlayerStateMappers on MediaPlayerState {
-  /// Convert to [PlaybackState].
+  /// Converts to [PlaybackState].
   PlaybackState toPlaybackState() => PlaybackState(
         index: index,
         playables: playables,
@@ -14,5 +14,6 @@ extension MediaPlayerStateMappers on MediaPlayerState {
         loop: loop,
         exclusiveAudio: exclusiveAudio,
         replayGain: replayGain,
+        replayGainPreamp: replayGainPreamp
       );
 }

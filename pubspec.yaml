@@ -32,6 +32,10 @@ dependencies:
   lastfm:
     path: external/lastfm
   lrc: ^1.0.1
+  m3_expressive_shapes:
+    git:
+      url: https://github.com/kekland/m3_expressive_shapes.git
+      ref: e023ce817dc087247b59e10660b2eaf3e00ffc38
   measure_size: ^4.0.0
   media_kit: ^1.2.1
   media_kit_libs_android_audio: ^1.3.8

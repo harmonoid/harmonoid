@@ -175,6 +175,7 @@ class LocalizationBase extends Values {
     PLAY_NOW = map['PLAY_NOW']!;
     PLAY_URL = map['PLAY_URL']!;
     PLAY_URL_SUBTITLE = map['PLAY_URL_SUBTITLE']!;
+    PREAMP_GAIN = map['PREAMP_GAIN']!;
     PREVIOUS = map['PREVIOUS']!;
     PRIVACY = map['PRIVACY']!;
     PROCEED = map['PROCEED']!;

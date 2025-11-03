@@ -170,6 +170,7 @@ class Values {
   late String PLAY_NOW;
   late String PLAY_URL;
   late String PLAY_URL_SUBTITLE;
+  late String PREAMP_GAIN;
   late String PREVIOUS;
   late String PRIVACY;
   late String PROCEED;

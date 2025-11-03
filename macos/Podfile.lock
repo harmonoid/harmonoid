@@ -23,28 +23,31 @@ PODS:
   - sqflite_darwin (0.0.4):
     - Flutter
     - FlutterMacOS
-  - sqlite3 (3.49.1):
-    - sqlite3/common (= 3.49.1)
-  - sqlite3/common (3.49.1)
-  - sqlite3/dbstatvtab (3.49.1):
+  - sqlite3 (3.50.4):
+    - sqlite3/common (= 3.50.4)
+  - sqlite3/common (3.50.4)
+  - sqlite3/dbstatvtab (3.50.4):
     - sqlite3/common
-  - sqlite3/fts5 (3.49.1):
+  - sqlite3/fts5 (3.50.4):
     - sqlite3/common
-  - sqlite3/math (3.49.1):
+  - sqlite3/math (3.50.4):
     - sqlite3/common
-  - sqlite3/perf-threadsafe (3.49.1):
+  - sqlite3/perf-threadsafe (3.50.4):
     - sqlite3/common
-  - sqlite3/rtree (3.49.1):
+  - sqlite3/rtree (3.50.4):
+    - sqlite3/common
+  - sqlite3/session (3.50.4):
     - sqlite3/common
   - sqlite3_flutter_libs (0.0.1):
     - Flutter
     - FlutterMacOS
-    - sqlite3 (~> 3.49.1)
+    - sqlite3 (~> 3.50.4)
     - sqlite3/dbstatvtab
     - sqlite3/fts5
     - sqlite3/math
     - sqlite3/perf-threadsafe
     - sqlite3/rtree
+    - sqlite3/session
   - url_launcher_macos (0.0.1):
     - FlutterMacOS
   - window_plus (0.0.1):
@@ -101,22 +104,22 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/window_plus/macos
 
 SPEC CHECKSUMS:
-  audio_service: cab6c1a0eaf01b5a35b567e11fa67d3cc1956910
-  audio_session: 728ae3823d914f809c485d390274861a24b0904e
-  dynamic_color: 2eaa27267de1ca20d879fbd6e01259773fb1670f
-  file_picker: e716a70a9fe5fd9e09ebc922d7541464289443af
-  flutter_discord_rpc: 67a7c10ea24d9d3bf35d01af643f48fbcfa7c24f
-  flutter_local_notifications: 4ccab5b7a22835214a6672e3f9c5e8ae207dab36
-  FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
-  media_kit_libs_macos_audio: 3871782a4f3f84c77f04d7666c87800a781c24da
-  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
-  share_plus: 1fa619de8392a4398bfaf176d441853922614e89
-  sqflite_darwin: 5a7236e3b501866c1c9befc6771dfd73ffb8702d
-  sqlite3: fc1400008a9b3525f5914ed715a5d1af0b8f4983
-  sqlite3_flutter_libs: 487032b9008b28de37c72a3aa66849ef3745f3e6
-  url_launcher_macos: c82c93949963e55b228a30115bd219499a6fe404
-  window_plus: df2d9cf964ef27d0aac7420ebd7bab7b8f33f5b8
+  audio_service: aa99a6ba2ae7565996015322b0bb024e1d25c6fd
+  audio_session: eaca2512cf2b39212d724f35d11f46180ad3a33e
+  dynamic_color: cb7c2a300ee67ed3bd96c3e852df3af0300bf610
+  file_picker: 7584aae6fa07a041af2b36a2655122d42f578c1a
+  flutter_discord_rpc: 90614fcca26f3cebfd33263557ea7875936d184b
+  flutter_local_notifications: 4bf37a31afde695b56091b4ae3e4d9c7a7e6cda0
+  FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
+  media_kit_libs_macos_audio: 06f3cf88d6d89c7c3c87eae57689d1c6adb335b2
+  path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
+  share_plus: 510bf0af1a42cd602274b4629920c9649c52f4cc
+  sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
+  sqlite3: 73513155ec6979715d3904ef53a8d68892d4032b
+  sqlite3_flutter_libs: 83f8e9f5b6554077f1d93119fe20ebaa5f3a9ef1
+  url_launcher_macos: f87a979182d112f911de6820aefddaf56ee9fbfd
+  window_plus: 539706b6976d6dfd1b0b60479e18fb392f51eb7b
 
-PODFILE CHECKSUM: 236401fc2c932af29a9fcf0e97baeeb2d750d367
+PODFILE CHECKSUM: 9ebaf0ce3d369aaa26a9ea0e159195ed94724cf3
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

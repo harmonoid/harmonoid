@@ -184,6 +184,13 @@ class MediaPlayer extends ChangeNotifier
     state = state.copyWith(replayGain: replayGain);
   }
 
+  @override
+  Future<void> setReplayGainPreamp(double replayGainPreamp) async {
+    final platform = _player.platform as NativePlayer;
+    await platform.setProperty('replaygain-preamp', replayGainPreamp.toString());
+    state = state.copyWith(replayGainPreamp: replayGainPreamp);
+  }
+
   Future<void> setPlaybackState(
     PlaybackState playbackState, {
     void Function()? onOpen,
@@ -199,6 +206,8 @@ class MediaPlayer extends ChangeNotifier
     await setShuffle(state.shuffle);
     await setLoop(state.loop);
     await setExclusiveAudio(state.exclusiveAudio);
+    await setReplayGain(state.replayGain);
+    await setReplayGainPreamp(state.replayGainPreamp);
     if (onOpen != null) {
       await open(
         state.playables,

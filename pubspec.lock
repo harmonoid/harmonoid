@@ -623,6 +623,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
+  m3_expressive_shapes:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: e023ce817dc087247b59e10660b2eaf3e00ffc38
+      resolved-ref: e023ce817dc087247b59e10660b2eaf3e00ffc38
+      url: "https://github.com/kekland/m3_expressive_shapes.git"
+    source: git
+    version: "1.0.0+1"
   matcher:
     dependency: transitive
     description:

@@ -6,7 +6,7 @@ import 'package:harmonoid/ui/media_library/tracks/tracks_screen.dart';
 
 /// Mappers for [Track].
 extension TrackMappers on Track {
-  /// Convert to [Playable].
+  /// Converts to [Playable].
   Playable toPlayable() => Playable(
         uri: uri,
         title: title,
@@ -14,7 +14,7 @@ extension TrackMappers on Track {
         description: [if (album.isNotEmpty) album.toString(), if (year != 0) year.toString()],
       );
 
-  /// Convert to a [DataGridRow] used in [TracksScreen].
+  /// Converts to a [DataGridRow] used in [TracksScreen].
   DataGridRow toDataGridRow() => DataGridRow(
         cells: [
           DataGridCell(columnName: TracksDataSource.kCover, value: this),

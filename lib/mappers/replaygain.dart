@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/models/replaygain.dart';
 
@@ -10,6 +12,14 @@ extension ReplayGainMappers on ReplayGain {
         ReplayGain.album => 'album',
       };
 
+  /// Converts to icon.
+  IconData toIcon() => switch (this) {
+    ReplayGain.off => Icons.cancel,
+    ReplayGain.track => Icons.music_note,
+    ReplayGain.album => Icons.album,
+  };
+
+  /// Converts to label.
   String toLabel() => switch (this) {
         ReplayGain.off => Localization.instance.OFF,
         ReplayGain.track => Localization.instance.TRACK,

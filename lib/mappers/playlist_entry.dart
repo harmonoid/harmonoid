@@ -5,7 +5,7 @@ import 'package:harmonoid/models/playable.dart';
 
 /// Mappers for [PlaylistEntry].
 extension PlaylistEntryMappers on PlaylistEntry {
-  /// Convert to [Playable].
+  /// Converts to [Playable].
   Future<Playable?> toPlayable(MediaLibrary mediaLibrary) async {
     if (hash != null) {
       final track = await mediaLibrary.db.selectTrackByHash(hash!);

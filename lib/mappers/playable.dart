@@ -12,10 +12,10 @@ import 'package:harmonoid/utils/rendering.dart';
 
 /// Mappers for [Playable].
 extension PlayableMappers on Playable {
-  /// Convert to [Media].
+  /// Converts to [Media].
   Media toMedia() => Media(uri, extras: toJson());
 
-  /// Convert to [MPRISMetadata].
+  /// Converts to [MPRISMetadata].
   Future<MPRISMetadata> toMPRISMetadata(MediaPlayerState state) async {
     final image = cover(uri: uri);
     final artUrl = switch (image) {
@@ -34,7 +34,7 @@ extension PlayableMappers on Playable {
     );
   }
 
-  /// Convert to [ScrobbleRequest].
+  /// Converts to [ScrobbleRequest].
   ScrobbleRequest? toScrobbleRequest(DateTime? timestamp, Duration? duration) {
     final artist = subtitle.firstOrNull?.nullIfBlank();
     final album = description.firstOrNull?.nullIfBlank();
@@ -50,7 +50,7 @@ extension PlayableMappers on Playable {
     );
   }
 
-  /// Convert to [UpdateNowPlayingRequest].
+  /// Converts to [UpdateNowPlayingRequest].
   UpdateNowPlayingRequest? toUpdateNowPlayingRequest(Duration? duration) {
     final artist = subtitle.firstOrNull?.nullIfBlank();
     final album = description.firstOrNull?.nullIfBlank();

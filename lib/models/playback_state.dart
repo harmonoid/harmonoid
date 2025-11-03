@@ -19,6 +19,7 @@ abstract class PlaybackState with _$PlaybackState {
     required Loop loop,
     required bool exclusiveAudio,
     required ReplayGain replayGain,
+    required double replayGainPreamp,
   }) = _PlaybackState;
 
   factory PlaybackState.fromJson(Map<String, dynamic> json) => _$PlaybackStateFromJson(json);
