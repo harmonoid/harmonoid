@@ -137,6 +137,11 @@ class Database extends _$Database {
     return entry == null ? null : json.decode(entry.jsonValue!);
   }
 
+  /// Removes the entry with the given [key].
+  Future<void> remove(String key) async {
+    await (delete(entries)..where((e) => e.key.equals(key))).go();
+  }
+
   static LazyDatabase _openConnection(Directory directory) {
     return LazyDatabase(() async {
       // https://drift.simonbinder.eu/docs/getting-started

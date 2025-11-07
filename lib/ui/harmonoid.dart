@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
+import 'package:identity/identity.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
@@ -85,14 +86,22 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => MediaLibrary.instance),
+        ChangeNotifierProvider(create: (_) => MediaLibrary.instance),
         ChangeNotifierProvider(create: (_) => MediaPlayer.instance),
-        ChangeNotifierProvider(create: (context) => Localization.instance),
+        ChangeNotifierProvider(create: (_) => Localization.instance),
         ChangeNotifierProvider(create: (context) => ThemeNotifier.instance..update(context: context)),
         ChangeNotifierProvider(create: (_) => UpdateNotifier.instance),
         ChangeNotifierProvider(create: (_) => LyricsNotifier.instance),
         ChangeNotifierProvider(create: (_) => NowPlayingColorPaletteNotifier.instance),
         Provider(create: (_) => NowPlayingMobileNotifier.instance),
+        ChangeNotifierProvider(create: (_) => UserNotifierFactory.create()),
+        ChangeNotifierProvider(
+          create: (context) => SubscriptionNotifierFactory.create(
+            // TODO: https://pub.dev/packages/flutter_udid
+            deviceId: Configuration.instance.identifier,
+            userNotifier: context.read<UserNotifier>(),
+          ),
+        ),
       ],
       builder: (context, _) => Consumer<ThemeNotifier>(
         builder: (context, themeNotifier, _) => MacOSMenuBar(

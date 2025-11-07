@@ -28,6 +28,8 @@ dependencies:
   freezed_annotation: ^3.1.0
   go_router: ^16.3.0
   http: ^1.2.1
+  identity:
+    path: /Users/alexmercerind/identity
   json_annotation: ^4.9.0
   lastfm:
     path: external/lastfm
@@ -94,4 +96,3 @@ flutter:
     - assets/localizations/localizations/
     - assets/vectors/
     - assets/visuals/
-

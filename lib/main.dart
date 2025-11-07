@@ -2,10 +2,12 @@ import 'dart:io';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
+import 'package:identity/identity.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
+import 'package:harmonoid/core/configuration/database/constants.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
@@ -52,25 +54,7 @@ Future<void> main(List<String> args) async {
         }
       }
     }
-    if (Platform.isLinux) {
-      await WindowPlus.ensureInitialized(
-        application: kApplication,
-        enableEventStreams: false,
-      );
-      await WindowPlus.instance.setMinimumSize(const Size(1024.0, 600.0));
-      WindowLifecycle.ensureInitialized();
-      runApp(const SplashApp());
-    }
-    if (Platform.isMacOS) {
-      await WindowPlus.ensureInitialized(
-        application: kApplication,
-        enableEventStreams: false,
-      );
-      await WindowPlus.instance.setMinimumSize(const Size(1024.0, 600.0));
-      WindowLifecycle.ensureInitialized();
-      runApp(const SplashApp());
-    }
-    if (Platform.isWindows) {
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
       await WindowPlus.ensureInitialized(
         application: kApplication,
         enableEventStreams: false,
@@ -114,6 +98,11 @@ Future<void> main(List<String> args) async {
     await LyricsNotifier.ensureInitialized();
     await NowPlayingVisualsNotifier.ensureInitialized();
     await NowPlayingColorPaletteNotifier.ensureInitialized();
+    await IdentityNotifier.ensureInitialized(
+      getItem: (key) => Configuration.instance.db.getString(key),
+      setItem: (key, value) => Configuration.instance.db.setValue(key, kTypeString, stringValue: value),
+      removeItem: (key) => Configuration.instance.db.remove(key),
+    );
     runApp(const Harmonoid());
   } catch (exception, stacktrace) {
     debugPrint(exception.toString());

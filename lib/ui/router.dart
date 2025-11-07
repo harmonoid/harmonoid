@@ -4,6 +4,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart';
+import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/ui/about_screen.dart';
@@ -26,6 +27,8 @@ import 'package:harmonoid/ui/media_library/tracks/tracks_screen.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_lyrics_screen.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_screen.dart';
 import 'package:harmonoid/ui/settings/settings_screen.dart';
+import 'package:harmonoid/ui/user/login/login_screen.dart';
+import 'package:harmonoid/ui/user/login/state/login_notifier.dart';
 import 'package:harmonoid/utils/material_transition_page.dart';
 
 const String kMediaLibraryPath = 'media-library';
@@ -135,6 +138,8 @@ const String kNowPlayingLyricsPath = 'now-playing-lyrics';
 
 const String kDirectoryPickerPath = 'directory-picker';
 
+const String kLoginPath = 'login';
+
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> homeNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -149,7 +154,7 @@ final router = GoRouter(
       routes: [
         GoRoute(
           path: '/',
-          redirect: (_, __) => '/$kMediaLibraryPath/${Configuration.instance.mediaLibraryPath}',
+          redirect: (_, _) => '/$kMediaLibraryPath/${Configuration.instance.mediaLibraryPath}',
         ),
         GoRoute(
           path: '/$kMediaLibraryPath',
@@ -373,6 +378,22 @@ final router = GoRouter(
           context: context,
           state: state,
           child: const DirectoryPickerScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/$kLoginPath',
+      pageBuilder: (context, state) {
+        return buildPageWithDefaultTransition(
+          context: context,
+          state: state,
+          child: ChangeNotifierProvider(
+            create: (_) => LoginNotifier(
+              userNotifier: context.read(),
+              onSuccess: context.pop,
+            ),
+            child: const LoginScreen(),
+          ),
         );
       },
     ),

@@ -40,7 +40,9 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
   final ValueNotifier<bool> _desktopAppBarElevatedNotifier = ValueNotifier<bool>(false);
   final TextEditingController _desktopSearchTextEditingController = TextEditingController();
   final ValueNotifier<double> _mobileMediaLibrarySearchBarOffsetNotifier = ValueNotifier<double>(0.0);
-  final ValueNotifier<double> _mobileMediaLibraryRefreshButtonOffsetNotifier = ValueNotifier<double>(Configuration.instance.mediaPlayerPlaybackState.playables.isEmpty ? 0.0 : kMobileNowPlayingBarHeight);
+  final ValueNotifier<double> _mobileMediaLibraryRefreshButtonOffsetNotifier = ValueNotifier<double>(
+    Configuration.instance.mediaPlayerPlaybackState.playables.isEmpty ? 0.0 : kMobileNowPlayingBarHeight,
+  );
 
   String? _current;
 
@@ -133,7 +135,8 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                         builder: (context, desktopAppBarElevated, _) => TweenAnimationBuilder<Color?>(
                           tween: ColorTween(
                             begin: Theme.of(context).appBarTheme.backgroundColor ?? Colors.transparent,
-                            end: (desktopAppBarElevated
+                            end:
+                                (desktopAppBarElevated
                                     ? Color.lerp(
                                         Theme.of(context).appBarTheme.backgroundColor,
                                         Theme.of(context).appBarTheme.surfaceTintColor,
@@ -171,7 +174,8 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            children: {
+                            children:
+                                {
                                   kAlbumsPath: Localization.instance.ALBUMS,
                                   kTracksPath: Localization.instance.TRACKS,
                                   kArtistsPath: Localization.instance.ARTISTS,
@@ -233,36 +237,37 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                   SizedBox(
                                     height: 40.0,
                                     width: 280.0,
-                                    child: DefaultTextField(
+                                    child: DefaultTextFormField(
                                       focusNode: desktopQueryTextFieldFocusNode,
                                       controller: _desktopSearchTextEditingController,
-                                      cursorWidth: 1.0,
-                                      onSubmitted: (value) async {
+                                      onFieldSubmitted: (value) async {
                                         context.go(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: value}).toString());
                                         await Future.delayed(MaterialRoute.animationDuration?.medium ?? const Duration(milliseconds: 300));
                                         desktopQueryTextFieldFocusNode.requestFocus();
                                       },
-                                      textAlignVertical: TextAlignVertical.center,
                                       style: Theme.of(context).textTheme.bodyMedium,
-                                      decoration: inputDecoration(
-                                        context,
-                                        Localization.instance.SEARCH_BANNER_SUBTITLE,
-                                        suffixIcon: Transform.rotate(
-                                          angle: pi / 2,
-                                          child: Tooltip(
-                                            message: Localization.instance.SEARCH,
-                                            child: Icon(
-                                              Icons.search,
-                                              size: 20.0,
-                                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                      textAlignVertical: TextAlignVertical.center,
+                                      decoration: InputDecoration(
+                                        isCollapsed: true,
+                                        hintText: Localization.instance.SEARCH_BANNER_SUBTITLE,
+                                        suffixIcon: GestureDetector(
+                                          onTap: () async {
+                                            context.go(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: _desktopSearchTextEditingController.text}).toString());
+                                            await Future.delayed(MaterialRoute.animationDuration?.medium ?? const Duration(milliseconds: 300));
+                                            desktopQueryTextFieldFocusNode.requestFocus();
+                                          },
+                                          child: Transform.rotate(
+                                            angle: pi / 2,
+                                            child: Tooltip(
+                                              message: Localization.instance.SEARCH,
+                                              child: Icon(
+                                                Icons.search,
+                                                size: 20.0,
+                                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                        onSuffixIconPressed: () async {
-                                          context.go(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: _desktopSearchTextEditingController.text}).toString());
-                                          await Future.delayed(MaterialRoute.animationDuration?.medium ?? const Duration(milliseconds: 300));
-                                          desktopQueryTextFieldFocusNode.requestFocus();
-                                        },
                                       ),
                                     ),
                                   ),

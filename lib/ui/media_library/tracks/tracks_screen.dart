@@ -345,108 +345,106 @@ class TracksDataSource extends DataGridSource {
             alignment: alignment,
             child: switch (cell.columnName) {
               kCover => HoverOverlay(
-                  overlayBuilder: (context) => IgnorePointer(
-                    child: Card(
-                      margin: EdgeInsets.zero,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ClipRRect(
-                          clipBehavior: Clip.antiAlias,
-                          borderRadius: Theme.of(context).cardTheme.shape is! RoundedRectangleBorder
-                              ? BorderRadius.zero
-                              : (Theme.of(context).cardTheme.shape as RoundedRectangleBorder).borderRadius.subtract(
-                                    const BorderRadius.all(
-                                      Radius.circular(8.0),
-                                    ),
-                                  ),
-                          child: Image(
-                            fit: BoxFit.cover,
-                            image: cover(item: track),
-                          ),
+                overlayBuilder: (context) => IgnorePointer(
+                  child: Card(
+                    margin: EdgeInsets.zero,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        clipBehavior: Clip.antiAlias,
+                        borderRadius: Theme.of(context).cardTheme.shape is! RoundedRectangleBorder
+                            ? BorderRadius.zero
+                            : (Theme.of(context).cardTheme.shape as RoundedRectangleBorder).borderRadius.subtract(const BorderRadius.all(Radius.circular(8.0))),
+                        child: Image(
+                          fit: BoxFit.cover,
+                          image: cover(item: track),
                         ),
                       ),
                     ),
                   ),
-                  overlaySize: const Size.square(256.0),
-                  child: Image(
-                    fit: BoxFit.cover,
-                    image: cover(
-                      item: track,
-                      cacheHeight: linearTileHeight.toInt(),
-                    ),
+                ),
+                overlaySize: const Size.square(256.0),
+                child: Image(
+                  width: linearTileHeight,
+                  height: linearTileHeight,
+                  fit: BoxFit.cover,
+                  image: cover(
+                    item: track,
+                    cacheHeight: linearTileHeight.toInt(),
                   ),
                 ),
+              ),
               kTitle => Text(
-                  track.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: style,
-                ),
+                track.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: style,
+              ),
               kArtist => HyperLink(
-                  text: TextSpan(
-                    children: [
-                      for (final artist in (track.artists.isEmpty ? {''} : track.artists)) ...[
-                        TextSpan(
-                          text: artist.isEmpty ? kDefaultArtist : artist,
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              navigateToArtist(context, ArtistLookupKey(artist: artist));
-                            },
-                        ),
-                        const TextSpan(
-                          text: ', ',
-                        ),
-                      ]
-                    ]..removeLast(),
-                  ),
-                  style: style,
-                ),
-              kAlbum => HyperLink(
-                  text: TextSpan(
-                    children: [
+                text: TextSpan(
+                  children: [
+                    for (final artist in (track.artists.isEmpty ? {''} : track.artists)) ...[
                       TextSpan(
-                        text: track.album.isEmpty ? kDefaultAlbum : track.album,
+                        text: artist.isEmpty ? kDefaultArtist : artist,
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            navigateToAlbum(
-                              context,
-                              AlbumLookupKey(
-                                album: track.album,
-                                albumArtist: track.albumArtist,
-                                year: track.year,
-                              ),
-                            );
+                            navigateToArtist(context, ArtistLookupKey(artist: artist));
                           },
                       ),
+                      const TextSpan(
+                        text: ', ',
+                      ),
                     ],
-                  ),
-                  style: style,
+                  ]..removeLast(),
                 ),
+                style: style,
+              ),
+              kAlbum => HyperLink(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: track.album.isEmpty ? kDefaultAlbum : track.album,
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          navigateToAlbum(
+                            context,
+                            AlbumLookupKey(
+                              album: track.album,
+                              albumArtist: track.albumArtist,
+                              year: track.year,
+                            ),
+                          );
+                        },
+                    ),
+                  ],
+                ),
+                style: style,
+              ),
               kGenre => HyperLink(
-                  text: TextSpan(
-                    children: [
-                      for (final genre in (track.genres.isEmpty ? {''} : track.genres)) ...[
-                        TextSpan(
-                          text: genre.isEmpty ? kDefaultGenre : genre,
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              navigateToGenre(context, GenreLookupKey(genre: genre));
-                            },
-                        ),
-                        const TextSpan(
-                          text: ', ',
-                        ),
-                      ]
-                    ]..removeLast(),
-                  ),
-                  style: style,
+                text: TextSpan(
+                  children: [
+                    for (final genre in (track.genres.isEmpty ? {''} : track.genres)) ...[
+                      TextSpan(
+                        text: genre.isEmpty ? kDefaultGenre : genre,
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            navigateToGenre(context, GenreLookupKey(genre: genre));
+                          },
+                      ),
+                      const TextSpan(
+                        text: ', ',
+                      ),
+                    ],
+                  ]..removeLast(),
                 ),
+                style: style,
+              ),
               kYear => Text(
-                  track.year == 0 ? kDefaultYear : track.year.toString(),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: style,
-                ),
+                track.year == 0 ? kDefaultYear : track.year.toString(),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: style,
+              ),
               _ => const SizedBox.shrink(),
             },
           );

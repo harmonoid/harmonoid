@@ -247,14 +247,18 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                 SizedBox(
                   height: 32.0,
                   width: 48.0,
-                  child: DefaultTextField(
+                  child: DefaultTextFormField(
                     focusNode: replayGainPreamp.focusNode,
                     controller: replayGainPreamp.textEditingController,
                     onChanged: (value) => mediaPlayer.setReplayGainPreamp(double.tryParse(value) ?? 1.0),
-                    cursorWidth: 1.0,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge,
-                    decoration: inputDecoration(context, 'NaN', contentPadding: const EdgeInsets.only(left: 4.0)),
+                    textAlignVertical: TextAlignVertical.center,
+                    decoration: const InputDecoration(
+                      isCollapsed: true,
+                      hintText: 'NaN',
+                      contentPadding: EdgeInsets.only(left: 4.0, top: 8.0, bottom: 8.0),
+                    ),
                     inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'[0-9]|\.'))],
                     keyboardType: TextInputType.number,
                   ),
@@ -310,14 +314,18 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                 SizedBox(
                   height: 32.0,
                   width: 48.0,
-                  child: DefaultTextField(
+                  child: DefaultTextFormField(
                     focusNode: rate.focusNode,
                     controller: rate.textEditingController,
                     onChanged: (value) => mediaPlayer.setRate(double.tryParse(value) ?? 1.0),
-                    cursorWidth: 1.0,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge,
-                    decoration: inputDecoration(context, 'NaN', contentPadding: const EdgeInsets.only(left: 4.0)),
+                    textAlignVertical: TextAlignVertical.center,
+                    decoration: const InputDecoration(
+                      isCollapsed: true,
+                      hintText: 'NaN',
+                      contentPadding: EdgeInsets.only(left: 4.0, top: 8.0, bottom: 8.0),
+                    ),
                     inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'[0-9]|\.'))],
                     keyboardType: TextInputType.number,
                   ),
@@ -360,14 +368,18 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                 SizedBox(
                   height: 32.0,
                   width: 48.0,
-                  child: DefaultTextField(
+                  child: DefaultTextFormField(
                     focusNode: pitch.focusNode,
                     controller: pitch.textEditingController,
                     onChanged: (value) => mediaPlayer.setPitch(double.tryParse(value) ?? 1.0),
-                    cursorWidth: 1.0,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge,
-                    decoration: inputDecoration(context, 'NaN', contentPadding: const EdgeInsets.only(left: 4.0)),
+                    textAlignVertical: TextAlignVertical.center,
+                    decoration: const InputDecoration(
+                      isCollapsed: true,
+                      hintText: 'NaN',
+                      contentPadding: EdgeInsets.only(left: 4.0, top: 8.0, bottom: 8.0),
+                    ),
                     inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'[0-9]|\.'))],
                     keyboardType: TextInputType.number,
                   ),
@@ -410,14 +422,18 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                 SizedBox(
                   height: 32.0,
                   width: 48.0,
-                  child: DefaultTextField(
+                  child: DefaultTextFormField(
                     focusNode: volume.focusNode,
                     controller: volume.textEditingController,
                     onChanged: (value) => mediaPlayer.setVolume(double.tryParse(value) ?? 100.0),
-                    cursorWidth: 1.0,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge,
-                    decoration: inputDecoration(context, 'NaN', contentPadding: const EdgeInsets.only(left: 4.0)),
+                    textAlignVertical: TextAlignVertical.center,
+                    decoration: const InputDecoration(
+                      isCollapsed: true,
+                      hintText: 'NaN',
+                      contentPadding: EdgeInsets.only(left: 4.0, top: 8.0, bottom: 8.0),
+                    ),
                     inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'[0-9]|'))],
                     keyboardType: TextInputType.number,
                   ),

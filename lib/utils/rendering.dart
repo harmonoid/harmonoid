@@ -282,8 +282,8 @@ Future<String> showInput(
   String subtitle,
   String action,
   String? Function(String? value) validator, {
-  TextInputType? keyboardType,
-  TextCapitalization? textCapitalization,
+  TextInputType keyboardType = TextInputType.text,
+  TextCapitalization textCapitalization = TextCapitalization.none,
 }) async {
   bool done = false;
   String input = '';
@@ -297,32 +297,25 @@ Future<String> showInput(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              height: 40.0,
-              width: 420.0,
-              alignment: Alignment.center,
-              padding: const EdgeInsets.only(top: 2.0),
-              child: Focus(
-                child: Form(
-                  key: formKey,
-                  child: DefaultTextFormField(
-                    autofocus: true,
-                    cursorWidth: 1.0,
-                    onChanged: (value) => input = value,
-                    validator: validator,
-                    keyboardType: keyboardType,
-                    textCapitalization: textCapitalization,
-                    textInputAction: TextInputAction.done,
-                    onFieldSubmitted: (value) {
-                      input = value;
-                      if (formKey.currentState!.validate()) {
-                        done = true;
-                        Navigator.of(ctx).maybePop();
-                      }
-                    },
-                    style: Theme.of(ctx).textTheme.bodyLarge,
-                    decoration: inputDecoration(ctx, subtitle),
-                  ),
+            Focus(
+              child: Form(
+                key: formKey,
+                child: DefaultTextFormField(
+                  autofocus: true,
+                  onChanged: (value) => input = value,
+                  validator: validator,
+                  keyboardType: keyboardType,
+                  textCapitalization: textCapitalization,
+                  textInputAction: TextInputAction.done,
+                  onFieldSubmitted: (value) {
+                    input = value;
+                    if (formKey.currentState!.validate()) {
+                      done = true;
+                      Navigator.of(ctx).maybePop();
+                    }
+                  },
+                  style: Theme.of(ctx).textTheme.bodyLarge,
+                  decoration: InputDecoration(hintText: subtitle),
                 ),
               ),
             ),
@@ -380,7 +373,7 @@ Future<String> showInput(
                       }
                     },
                     style: Theme.of(ctx).textTheme.bodyLarge?.copyWith(fontSize: 16.0),
-                    decoration: inputDecorationMobile(ctx, subtitle),
+                    decoration: InputDecoration(hintText: subtitle),
                   ),
                 ),
                 const SizedBox(height: 4.0),
@@ -528,218 +521,218 @@ Future<void> showMessage(BuildContext context, String title, String subtitle) as
 }
 
 List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) => [
-      PopupMenuItem<int>(
-        value: 0,
-        child: ListTile(
-          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_16_regular : Icons.delete),
-          title: Text(
-            Localization.instance.DELETE,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
+  PopupMenuItem<int>(
+    value: 0,
+    child: ListTile(
+      leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_16_regular : Icons.delete),
+      title: Text(
+        Localization.instance.DELETE,
+        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+      ),
+    ),
+  ),
+  PopupMenuItem<int>(
+    value: 1,
+    child: ListTile(
+      leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.list_16_regular : Icons.playlist_play),
+      title: Text(
+        Localization.instance.PLAY_NEXT,
+        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+      ),
+    ),
+  ),
+  if (Platform.isAndroid || Platform.isIOS)
+    PopupMenuItem<int>(
+      value: 2,
+      child: ListTile(
+        leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.share_16_regular : Icons.share),
+        title: Text(
+          Localization.instance.SHARE,
+          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
         ),
       ),
-      PopupMenuItem<int>(
-        value: 1,
-        child: ListTile(
-          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.list_16_regular : Icons.playlist_play),
-          title: Text(
-            Localization.instance.PLAY_NEXT,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
+    ),
+  PopupMenuItem<int>(
+    value: 3,
+    child: ListTile(
+      leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.list_16_regular : Icons.playlist_add),
+      title: Text(
+        Localization.instance.ADD_TO_PLAYLIST,
+        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+      ),
+    ),
+  ),
+  PopupMenuItem<int>(
+    value: 4,
+    child: ListTile(
+      leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.music_note_2_16_regular : Icons.music_note),
+      title: Text(
+        Localization.instance.ADD_TO_NOW_PLAYING,
+        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+      ),
+    ),
+  ),
+  PopupMenuItem<int>(
+    value: 5,
+    child: ListTile(
+      leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.album_24_regular : Icons.album),
+      title: Text(
+        Localization.instance.SHOW_ALBUM,
+        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+      ),
+    ),
+  ),
+  if (Platform.isLinux || Platform.isMacOS || Platform.isWindows)
+    PopupMenuItem<int>(
+      value: 6,
+      child: ListTile(
+        leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.folder_24_regular : Icons.folder),
+        title: Text(
+          Localization.instance.SHOW_IN_FILE_MANAGER,
+          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
         ),
       ),
-      if (Platform.isAndroid || Platform.isIOS)
-        PopupMenuItem<int>(
-          value: 2,
-          child: ListTile(
-            leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.share_16_regular : Icons.share),
-            title: Text(
-              Localization.instance.SHARE,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
+    ),
+  PopupMenuItem<int>(
+    value: 7,
+    child: ListTile(
+      leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.arrow_sync_24_regular : Icons.refresh),
+      title: Text(
+        Localization.instance.REFRESH,
+        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+      ),
+    ),
+  ),
+  PopupMenuItem<int>(
+    value: 8,
+    child: ListTile(
+      leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.info_24_regular : Icons.info),
+      title: Text(
+        Localization.instance.FILE_INFORMATION,
+        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+      ),
+    ),
+  ),
+  if (!LyricsNotifier.instance.contains(track.toPlayable()))
+    PopupMenuItem<int>(
+      value: 9,
+      child: ListTile(
+        leading: Icon(
+          Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.text_font_24_regular : Icons.abc,
         ),
-      PopupMenuItem<int>(
-        value: 3,
-        child: ListTile(
-          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.list_16_regular : Icons.playlist_add),
-          title: Text(
-            Localization.instance.ADD_TO_PLAYLIST,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
+        title: Text(
+          Localization.instance.SET_LRC_FILE,
+          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
         ),
       ),
-      PopupMenuItem<int>(
-        value: 4,
-        child: ListTile(
-          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.music_note_2_16_regular : Icons.music_note),
-          title: Text(
-            Localization.instance.ADD_TO_NOW_PLAYING,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
+    )
+  else
+    PopupMenuItem<int>(
+      value: 10,
+      child: ListTile(
+        leading: Icon(
+          Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.clear_formatting_24_regular : Icons.clear,
+        ),
+        title: Text(
+          Localization.instance.CLEAR_LRC_FILE,
+          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
         ),
       ),
-      PopupMenuItem<int>(
-        value: 5,
-        child: ListTile(
-          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.album_24_regular : Icons.album),
-          title: Text(
-            Localization.instance.SHOW_ALBUM,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
-      ),
-      if (Platform.isLinux || Platform.isMacOS || Platform.isWindows)
-        PopupMenuItem<int>(
-          value: 6,
-          child: ListTile(
-            leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.folder_24_regular : Icons.folder),
-            title: Text(
-              Localization.instance.SHOW_IN_FILE_MANAGER,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-        ),
-      PopupMenuItem<int>(
-        value: 7,
-        child: ListTile(
-          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.arrow_sync_24_regular : Icons.refresh),
-          title: Text(
-            Localization.instance.REFRESH,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
-      ),
-      PopupMenuItem<int>(
-        value: 8,
-        child: ListTile(
-          leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.info_24_regular : Icons.info),
-          title: Text(
-            Localization.instance.FILE_INFORMATION,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
-      ),
-      if (!LyricsNotifier.instance.contains(track.toPlayable()))
-        PopupMenuItem<int>(
-          value: 9,
-          child: ListTile(
-            leading: Icon(
-              Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.text_font_24_regular : Icons.abc,
-            ),
-            title: Text(
-              Localization.instance.SET_LRC_FILE,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-        )
-      else
-        PopupMenuItem<int>(
-          value: 10,
-          child: ListTile(
-            leading: Icon(
-              Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.clear_formatting_24_regular : Icons.clear,
-            ),
-            title: Text(
-              Localization.instance.CLEAR_LRC_FILE,
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-        ),
-    ];
+    ),
+];
 
 List<PopupMenuItem<int>> albumPopupMenuItems(BuildContext context, Album album) => [
-      PopupMenuItem<int>(
-        value: 0,
-        child: ListTile(
-          leading: Icon(
-            Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.play_24_regular : Icons.play_circle,
-          ),
-          title: Text(
-            Localization.instance.PLAY,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
+  PopupMenuItem<int>(
+    value: 0,
+    child: ListTile(
+      leading: Icon(
+        Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.play_24_regular : Icons.play_circle,
       ),
-      PopupMenuItem<int>(
-        value: 1,
-        child: ListTile(
-          leading: Icon(
-            Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.arrow_shuffle_24_regular : Icons.shuffle,
-          ),
-          title: Text(
-            Localization.instance.SHUFFLE,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
+      title: Text(
+        Localization.instance.PLAY,
+        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
       ),
-      PopupMenuItem<int>(
-        value: 2,
-        child: ListTile(
-          leading: Icon(
-            Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_16_regular : Icons.delete,
-          ),
-          title: Text(
-            Localization.instance.DELETE,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
+    ),
+  ),
+  PopupMenuItem<int>(
+    value: 1,
+    child: ListTile(
+      leading: Icon(
+        Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.arrow_shuffle_24_regular : Icons.shuffle,
       ),
-      PopupMenuItem<int>(
-        value: 3,
-        child: ListTile(
-          leading: Icon(
-            Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.music_note_2_16_regular : Icons.queue_music,
-          ),
-          title: Text(
-            Localization.instance.ADD_TO_NOW_PLAYING,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
+      title: Text(
+        Localization.instance.SHUFFLE,
+        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
       ),
-    ];
+    ),
+  ),
+  PopupMenuItem<int>(
+    value: 2,
+    child: ListTile(
+      leading: Icon(
+        Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_16_regular : Icons.delete,
+      ),
+      title: Text(
+        Localization.instance.DELETE,
+        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+      ),
+    ),
+  ),
+  PopupMenuItem<int>(
+    value: 3,
+    child: ListTile(
+      leading: Icon(
+        Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.music_note_2_16_regular : Icons.queue_music,
+      ),
+      title: Text(
+        Localization.instance.ADD_TO_NOW_PLAYING,
+        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+      ),
+    ),
+  ),
+];
 
 List<PopupMenuItem<int>> playlistPopupMenuItems(BuildContext context, Playlist playlist) => [
-      PopupMenuItem<int>(
-        value: 0,
-        child: ListTile(
-          leading: Icon(
-            Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_24_regular : Icons.delete,
-          ),
-          title: Text(
-            Localization.instance.DELETE,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
+  PopupMenuItem<int>(
+    value: 0,
+    child: ListTile(
+      leading: Icon(
+        Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_24_regular : Icons.delete,
       ),
-      PopupMenuItem<int>(
-        value: 1,
-        child: ListTile(
-          leading: Icon(
-            Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.rename_24_filled : Icons.drive_file_rename_outline,
-          ),
-          title: Text(
-            Localization.instance.RENAME,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
+      title: Text(
+        Localization.instance.DELETE,
+        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
       ),
-    ];
+    ),
+  ),
+  PopupMenuItem<int>(
+    value: 1,
+    child: ListTile(
+      leading: Icon(
+        Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.rename_24_filled : Icons.drive_file_rename_outline,
+      ),
+      title: Text(
+        Localization.instance.RENAME,
+        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+      ),
+    ),
+  ),
+];
 
 List<PopupMenuItem<int>> playlistEntryPopupMenuItems(BuildContext context, PlaylistEntry entry) => [
-      PopupMenuItem<int>(
-        value: 0,
-        child: ListTile(
-          leading: Icon(
-            Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_24_regular : Icons.delete,
-          ),
-          title: Text(
-            Localization.instance.REMOVE,
-            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-          ),
-        ),
+  PopupMenuItem<int>(
+    value: 0,
+    child: ListTile(
+      leading: Icon(
+        Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_24_regular : Icons.delete,
       ),
-    ];
+      title: Text(
+        Localization.instance.REMOVE,
+        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+      ),
+    ),
+  ),
+];
 
 Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result, {Future<bool> Function()? recursivelyPopNavigatorOnDeleteIf}) async {
   if (result == null) return;
@@ -1154,91 +1147,6 @@ Future<void> showAddToPlaylistDialog(
       ),
     );
   }
-}
-
-InputDecoration inputDecoration(BuildContext context, String hintText, {Widget? suffixIcon, VoidCallback? onSuffixIconPressed, Color? fillColor, EdgeInsetsGeometry? contentPadding}) {
-  return InputDecoration(
-    // A [suffixIcon] keeps the [TextField]'s content (label / text) centered for some reason at all heights.
-    suffixIcon: suffixIcon == null
-        ? const SizedBox(height: 48.0)
-        : Container(
-            alignment: Alignment.center,
-            height: 48.0,
-            width: 48.0,
-            child: Material(
-              color: Colors.transparent,
-              child: IconButton(
-                icon: suffixIcon,
-                iconSize: 18.0,
-                splashRadius: 12.0,
-                onPressed: onSuffixIconPressed,
-                highlightColor: Colors.transparent,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
-    suffixIconConstraints: suffixIcon == null
-        ? const BoxConstraints(
-            minHeight: 48.0,
-            minWidth: 0.0,
-          )
-        : null,
-    contentPadding: contentPadding ?? const EdgeInsets.symmetric(horizontal: 12.0),
-    hintText: hintText,
-    filled: true,
-    isCollapsed: true,
-    fillColor: fillColor ?? Theme.of(context).colorScheme.surfaceContainerHighest,
-    border: UnderlineInputBorder(
-      borderSide: BorderSide(
-        color: Theme.of(context).colorScheme.onSurfaceVariant,
-        width: 1.8,
-      ),
-    ),
-    enabledBorder: UnderlineInputBorder(
-      borderSide: BorderSide(
-        color: Theme.of(context).colorScheme.onSurfaceVariant,
-        width: 1.8,
-      ),
-    ),
-    focusedBorder: UnderlineInputBorder(
-      borderSide: BorderSide(
-        color: Theme.of(context).colorScheme.primary,
-        width: 1.8,
-      ),
-    ),
-    hintMaxLines: 1,
-    errorMaxLines: 1,
-    helperMaxLines: 1,
-    errorStyle: const TextStyle(height: 0.0),
-  );
-}
-
-InputDecoration inputDecorationMobile(BuildContext context, String hintText) {
-  return InputDecoration(
-    hintText: hintText,
-    border: OutlineInputBorder(
-      borderSide: BorderSide(
-        color: Theme.of(context).colorScheme.onSurfaceVariant,
-        width: 1.8,
-      ),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(
-        color: Theme.of(context).colorScheme.onSurfaceVariant,
-        width: 1.8,
-      ),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(
-        color: Theme.of(context).colorScheme.primary,
-        width: 1.8,
-      ),
-    ),
-    hintMaxLines: 1,
-    errorMaxLines: 1,
-    helperMaxLines: 1,
-    errorStyle: const TextStyle(height: 0.01),
-  );
 }
 
 Future<void> recursivelyPopNavigator() async {

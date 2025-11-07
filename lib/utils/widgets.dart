@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
+import 'dart:ui' as ui;
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
@@ -1399,147 +1400,229 @@ class ScrollableSlider extends StatelessWidget {
 
 // --------------------------------------------------
 
-class DefaultTextField extends StatelessWidget {
-  final TextEditingController? controller;
-  final FocusNode? focusNode;
-  final double? cursorWidth;
-  final void Function(String)? onChanged;
-  final void Function(String)? onSubmitted;
-  final void Function()? onEditingComplete;
-  final InputDecoration? decoration;
-  final TextAlignVertical? textAlignVertical;
-  final bool? autofocus;
-  final bool? autocorrect;
-  final bool? readOnly;
-  final TextStyle? style;
-  final TextInputType? keyboardType;
-  final TextCapitalization? textCapitalization;
-  final TextInputAction? textInputAction;
-  final List<TextInputFormatter>? inputFormatters;
-  final ScrollPhysics? scrollPhysics;
-  final TextAlign? textAlign;
-
-  const DefaultTextField({
-    super.key,
-    this.controller,
-    this.focusNode,
-    this.cursorWidth,
-    this.onChanged,
-    this.onSubmitted,
-    this.onEditingComplete,
-    this.decoration,
-    this.textAlignVertical = TextAlignVertical.center,
-    this.autofocus,
-    this.autocorrect,
-    this.readOnly,
-    this.style,
-    this.keyboardType,
-    this.textCapitalization,
-    this.textInputAction,
-    this.inputFormatters,
-    this.scrollPhysics,
-    this.textAlign,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return KeyboardShortcutsInterceptor(
-      child: TextField(
-        controller: controller,
-        focusNode: focusNode,
-        cursorWidth: cursorWidth ?? 2.0,
-        onChanged: onChanged,
-        onSubmitted: onSubmitted,
-        onEditingComplete: onEditingComplete,
-        decoration: decoration,
-        textAlignVertical: textAlignVertical,
-        autofocus: autofocus ?? false,
-        autocorrect: autocorrect ?? true,
-        readOnly: readOnly ?? false,
-        style: style,
-        keyboardType: keyboardType,
-        textCapitalization: textCapitalization ?? TextCapitalization.none,
-        textInputAction: textInputAction,
-        inputFormatters: inputFormatters,
-        scrollPhysics: scrollPhysics,
-        textAlign: textAlign ?? TextAlign.start,
-      ),
-    );
-  }
-}
-
-// --------------------------------------------------
-
 class DefaultTextFormField extends StatelessWidget {
-  final String? initialValue;
+  final Object groupId;
   final TextEditingController? controller;
+  final String? initialValue;
   final FocusNode? focusNode;
-  final double? cursorWidth;
-  final String? Function(String?)? validator;
-  final void Function(String)? onChanged;
-  final void Function(String)? onFieldSubmitted;
-  final void Function()? onEditingComplete;
+  final String? forceErrorText;
   final InputDecoration? decoration;
-  final TextAlignVertical? textAlignVertical;
-  final bool? autofocus;
-  final bool? autocorrect;
-  final bool? readOnly;
-  final TextStyle? style;
   final TextInputType? keyboardType;
-  final TextCapitalization? textCapitalization;
+  final TextCapitalization textCapitalization;
   final TextInputAction? textInputAction;
+  final TextStyle? style;
+  final StrutStyle? strutStyle;
+  final TextDirection? textDirection;
+  final TextAlign textAlign;
+  final TextAlignVertical? textAlignVertical;
+  final bool autofocus;
+  final bool readOnly;
+  final bool? showCursor;
+  final String obscuringCharacter;
+  final bool obscureText;
+  final bool autocorrect;
+  final SmartDashesType? smartDashesType;
+  final SmartQuotesType? smartQuotesType;
+  final bool enableSuggestions;
+  final MaxLengthEnforcement? maxLengthEnforcement;
+  final int? maxLines;
+  final int? minLines;
+  final bool expands;
+  final int? maxLength;
+  final void Function(String)? onChanged;
+  final GestureTapCallback? onTap;
+  final bool onTapAlwaysCalled;
+  final TapRegionCallback? onTapOutside;
+  final TapRegionUpCallback? onTapUpOutside;
+  final VoidCallback? onEditingComplete;
+  final ValueChanged<String>? onFieldSubmitted;
+  final void Function(String?)? onSaved;
+  final String? Function(String?)? validator;
+  final FormFieldErrorBuilder? errorBuilder;
   final List<TextInputFormatter>? inputFormatters;
+  final bool? enabled;
+  final bool? ignorePointers;
+  final double cursorWidth;
+  final double? cursorHeight;
+  final Radius? cursorRadius;
+  final Color? cursorColor;
+  final Color? cursorErrorColor;
+  final Brightness? keyboardAppearance;
+  final EdgeInsets scrollPadding;
+  final bool? enableInteractiveSelection;
+  final TextSelectionControls? selectionControls;
+  final InputCounterWidgetBuilder? buildCounter;
   final ScrollPhysics? scrollPhysics;
-  final TextAlign? textAlign;
+  final Iterable<String>? autofillHints;
+  final AutovalidateMode? autovalidateMode;
+  final ScrollController? scrollController;
+  final String? restorationId;
+  final bool enableIMEPersonalizedLearning;
+  final MouseCursor? mouseCursor;
+  final EditableTextContextMenuBuilder? contextMenuBuilder;
+  final SpellCheckConfiguration? spellCheckConfiguration;
+  final TextMagnifierConfiguration? magnifierConfiguration;
+  final UndoHistoryController? undoController;
+  final AppPrivateCommandCallback? onAppPrivateCommand;
+  final bool? cursorOpacityAnimates;
+  final ui.BoxHeightStyle selectionHeightStyle;
+  final ui.BoxWidthStyle selectionWidthStyle;
+  final DragStartBehavior dragStartBehavior;
+  final ContentInsertionConfiguration? contentInsertionConfiguration;
+  final Clip clipBehavior;
+  final bool stylusHandwritingEnabled;
+  final bool canRequestFocus;
 
   const DefaultTextFormField({
     super.key,
-    this.initialValue,
+    this.groupId = EditableText,
     this.controller,
+    this.initialValue,
     this.focusNode,
-    this.cursorWidth,
-    this.validator,
-    this.onChanged,
-    this.onFieldSubmitted,
-    this.onEditingComplete,
-    this.decoration,
-    this.textAlignVertical = TextAlignVertical.center,
-    this.autofocus,
-    this.autocorrect,
-    this.readOnly,
-    this.style,
+    this.forceErrorText,
+    this.decoration = const InputDecoration(),
     this.keyboardType,
-    this.textCapitalization,
+    this.textCapitalization = TextCapitalization.none,
     this.textInputAction,
+    this.style,
+    this.strutStyle,
+    this.textDirection,
+    this.textAlign = TextAlign.start,
+    this.textAlignVertical,
+    this.autofocus = false,
+    this.readOnly = false,
+    this.showCursor,
+    this.obscuringCharacter = '•',
+    this.obscureText = false,
+    this.autocorrect = true,
+    this.smartDashesType,
+    this.smartQuotesType,
+    this.enableSuggestions = true,
+    this.maxLengthEnforcement,
+    this.maxLines = 1,
+    this.minLines,
+    this.expands = false,
+    this.maxLength,
+    this.onChanged,
+    this.onTap,
+    this.onTapAlwaysCalled = false,
+    this.onTapOutside,
+    this.onTapUpOutside,
+    this.onEditingComplete,
+    this.onFieldSubmitted,
+    this.onSaved,
+    this.validator,
+    this.errorBuilder,
     this.inputFormatters,
+    this.enabled,
+    this.ignorePointers,
+    this.cursorWidth = 2.0,
+    this.cursorHeight,
+    this.cursorRadius,
+    this.cursorColor,
+    this.cursorErrorColor,
+    this.keyboardAppearance,
+    this.scrollPadding = const EdgeInsets.all(20.0),
+    this.enableInteractiveSelection,
+    this.selectionControls,
+    this.buildCounter,
     this.scrollPhysics,
-    this.textAlign,
+    this.autofillHints,
+    this.autovalidateMode,
+    this.scrollController,
+    this.restorationId,
+    this.enableIMEPersonalizedLearning = true,
+    this.mouseCursor,
+    this.contextMenuBuilder,
+    this.spellCheckConfiguration,
+    this.magnifierConfiguration,
+    this.undoController,
+    this.onAppPrivateCommand,
+    this.cursorOpacityAnimates,
+    this.selectionHeightStyle = ui.BoxHeightStyle.tight,
+    this.selectionWidthStyle = ui.BoxWidthStyle.tight,
+    this.dragStartBehavior = DragStartBehavior.start,
+    this.contentInsertionConfiguration,
+    this.clipBehavior = Clip.hardEdge,
+    this.stylusHandwritingEnabled = EditableText.defaultStylusHandwritingEnabled,
+    this.canRequestFocus = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return KeyboardShortcutsInterceptor(
       child: TextFormField(
-        initialValue: initialValue,
+        groupId: groupId,
         controller: controller,
+        initialValue: initialValue,
         focusNode: focusNode,
-        cursorWidth: cursorWidth ?? 2.0,
-        validator: validator,
-        onChanged: onChanged,
-        onFieldSubmitted: onFieldSubmitted,
-        onEditingComplete: onEditingComplete,
+        forceErrorText: forceErrorText,
         decoration: decoration,
-        textAlignVertical: textAlignVertical,
-        autofocus: autofocus ?? false,
-        autocorrect: autocorrect ?? true,
-        readOnly: readOnly ?? false,
-        style: style,
         keyboardType: keyboardType,
-        textCapitalization: textCapitalization ?? TextCapitalization.none,
+        textCapitalization: textCapitalization,
         textInputAction: textInputAction,
+        style: style,
+        strutStyle: strutStyle,
+        textDirection: textDirection,
+        textAlign: textAlign,
+        textAlignVertical: textAlignVertical,
+        autofocus: autofocus,
+        readOnly: readOnly,
+        showCursor: showCursor,
+        obscuringCharacter: obscuringCharacter,
+        obscureText: obscureText,
+        autocorrect: autocorrect,
+        smartDashesType: smartDashesType,
+        smartQuotesType: smartQuotesType,
+        enableSuggestions: enableSuggestions,
+        maxLengthEnforcement: maxLengthEnforcement,
+        maxLines: maxLines,
+        minLines: minLines,
+        expands: expands,
+        maxLength: maxLength,
+        onChanged: onChanged,
+        onTap: onTap,
+        onTapAlwaysCalled: onTapAlwaysCalled,
+        onTapOutside: onTapOutside,
+        onTapUpOutside: onTapUpOutside,
+        onEditingComplete: onEditingComplete,
+        onFieldSubmitted: onFieldSubmitted,
+        onSaved: onSaved,
+        validator: validator,
+        errorBuilder: errorBuilder,
         inputFormatters: inputFormatters,
+        enabled: enabled,
+        ignorePointers: ignorePointers,
+        cursorWidth: cursorWidth,
+        cursorHeight: cursorHeight,
+        cursorRadius: cursorRadius,
+        cursorColor: cursorColor,
+        cursorErrorColor: cursorErrorColor,
+        keyboardAppearance: keyboardAppearance,
+        scrollPadding: scrollPadding,
+        enableInteractiveSelection: enableInteractiveSelection,
+        selectionControls: selectionControls,
+        buildCounter: buildCounter,
         scrollPhysics: scrollPhysics,
-        textAlign: textAlign ?? TextAlign.start,
+        autofillHints: autofillHints,
+        autovalidateMode: autovalidateMode,
+        scrollController: scrollController,
+        restorationId: restorationId,
+        enableIMEPersonalizedLearning: enableIMEPersonalizedLearning,
+        mouseCursor: mouseCursor,
+        contextMenuBuilder: contextMenuBuilder,
+        spellCheckConfiguration: spellCheckConfiguration,
+        magnifierConfiguration: magnifierConfiguration,
+        undoController: undoController,
+        onAppPrivateCommand: onAppPrivateCommand,
+        cursorOpacityAnimates: cursorOpacityAnimates,
+        selectionHeightStyle: selectionHeightStyle,
+        selectionWidthStyle: selectionWidthStyle,
+        dragStartBehavior: dragStartBehavior,
+        contentInsertionConfiguration: contentInsertionConfiguration,
+        clipBehavior: clipBehavior,
+        stylusHandwritingEnabled: stylusHandwritingEnabled,
+        canRequestFocus: canRequestFocus,
       ),
     );
   }

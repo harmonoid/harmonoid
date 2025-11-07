@@ -13,7 +13,9 @@ import 'package:harmonoid/ui/settings/sections/media_library_section.dart';
 import 'package:harmonoid/ui/settings/sections/miscellaneous_section.dart';
 import 'package:harmonoid/ui/settings/sections/now_playing_screen_section.dart';
 import 'package:harmonoid/ui/settings/sections/permissions_section.dart';
+import 'package:harmonoid/ui/settings/sections/plus_section.dart';
 import 'package:harmonoid/ui/settings/sections/stats_section.dart';
+import 'package:harmonoid/ui/user/user_button.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
@@ -36,6 +38,7 @@ class SettingsScreen extends StatelessWidget {
           },
         ),
       ),
+      trailing: const UserButton(),
       actions: {
         Icons.info: (context) => context.push('/$kAboutPath'),
       },
@@ -51,6 +54,7 @@ class SettingsScreen extends StatelessWidget {
               StatsSection(),
               DisplaySection(),
               NowPlayingScreenSection(),
+              PlusSection(),
               LastfmSection(),
               PermissionsSection(),
               LanguageSection(),

@@ -5,5 +5,8 @@ analyzer:
     library_prefixes: ignore
     no_leading_underscores_for_library_prefixes: ignore
     use_build_context_synchronously: ignore
+linter:
+  rules:
+    prefer_const_constructors: true
 formatter:
   trailing_commas: preserve
