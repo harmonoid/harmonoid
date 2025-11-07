@@ -8,6 +8,7 @@ class SettingsSection extends StatelessWidget {
   final String title;
   final String subtitle;
   final List<Widget> children;
+  final Widget Function(Widget child)? childrenBuilder;
   final EdgeInsets headerPadding;
   final EdgeInsets contentPadding;
   const SettingsSection({
@@ -15,49 +16,51 @@ class SettingsSection extends StatelessWidget {
     required this.title,
     required this.children,
     required this.subtitle,
+    this.childrenBuilder,
     this.headerPadding = const EdgeInsets.symmetric(horizontal: 64.0),
     this.contentPadding = const EdgeInsets.symmetric(horizontal: 64.0),
   });
 
   Widget _buildDesktopLayout(BuildContext context) {
+    final child = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Container(
+          padding: headerPadding,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: 2.0),
+              Text(
+                subtitle,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16.0),
+        Container(
+          padding: contentPadding,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: children,
+          ),
+        ),
+        const SliverSpacer(),
+      ],
+    );
     return Center(
       child: SizedBox(
         width: kDesktopCenteredLayoutWidth,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              padding: headerPadding,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  const SizedBox(height: 2.0),
-                  Text(
-                    subtitle,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16.0),
-            Container(
-              padding: contentPadding,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: children,
-              ),
-            ),
-            const SliverSpacer(),
-          ],
-        ),
+        child: childrenBuilder?.call(child) ?? child,
       ),
     );
   }
@@ -67,7 +70,7 @@ class SettingsSection extends StatelessWidget {
   }
 
   Widget _buildMobileLayout(BuildContext context) {
-    return Column(
+    final child = Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,6 +81,7 @@ class SettingsSection extends StatelessWidget {
         const Divider(height: 1.0),
       ],
     );
+    return childrenBuilder?.call(child) ?? child;
   }
 
   @override

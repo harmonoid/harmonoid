@@ -103,6 +103,7 @@ Future<void> main(List<String> args) async {
       setItem: (key, value) => Configuration.instance.db.setValue(key, kTypeString, stringValue: value),
       removeItem: (key) => Configuration.instance.db.remove(key),
     );
+    await SubscriptionNotifier.ensureInitialized(deviceId: Configuration.instance.identifier);
     runApp(const Harmonoid());
   } catch (exception, stacktrace) {
     debugPrint(exception.toString());

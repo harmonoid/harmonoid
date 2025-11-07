@@ -21,9 +21,11 @@ import 'package:harmonoid/ui/media_library/media_library_flags.dart';
 import 'package:harmonoid/ui/media_library/media_library_inaccessible_directories_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
 import 'package:harmonoid/ui/router.dart';
+import 'package:harmonoid/ui/user/login/login.dart';
 import 'package:harmonoid/utils/android_utils.dart';
 import 'package:harmonoid/utils/keyboard_shortcuts.dart';
 import 'package:harmonoid/utils/macos_menu_bar.dart';
+import 'package:harmonoid/utils/rendering.dart';
 
 class Harmonoid extends StatefulWidget {
   const Harmonoid({super.key});
@@ -83,7 +85,7 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => MediaLibrary.instance),
@@ -96,10 +98,23 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
         Provider(create: (_) => NowPlayingMobileNotifier.instance),
         ChangeNotifierProvider(create: (_) => UserNotifierFactory.create()),
         ChangeNotifierProvider(
-          create: (context) => SubscriptionNotifierFactory.create(
+          create: (ctx) => SubscriptionNotifierFactory.create(
             // TODO: https://pub.dev/packages/flutter_udid
             deviceId: Configuration.instance.identifier,
-            userNotifier: context.read<UserNotifier>(),
+            userNotifier: ctx.read<UserNotifier>(),
+            functions: SubscriptionFunctions(
+              updateAvailable: () => UpdateNotifier.instance.updateAvailable,
+              showUpdate: () => UpdateNotifier.instance.check(),
+              showLogin: () => showLogin(context),
+              onSubscriptionUpdate: (state) {
+                // TODO: Missing implementation.
+              },
+              onSubscriptionError: (state) => showMessage(
+                context,
+                'Membership expired',
+                'Couldn\'t verify your access',
+              ),
+            ),
           ),
         ),
       ],

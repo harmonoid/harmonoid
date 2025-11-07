@@ -11,6 +11,7 @@ Future<void> showLogin(BuildContext context) {
   if (isDesktop) {
     return showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) => ChangeNotifierProvider(
         create: (_) => LoginNotifier(
           userNotifier: context.read(),
