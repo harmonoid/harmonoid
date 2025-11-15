@@ -175,7 +175,7 @@ class MediaPlayer extends ChangeNotifier
     bool exclusiveAudio, {
     void Function()? onError = mediaPlayerSetExclusiveAudioOnError,
   }) async {
-    if (state.crossfadeDuration != Duration.zero) {
+    if (exclusiveAudio && state.crossfadeDuration != Duration.zero) {
       onError?.call();
       return;
     }
@@ -204,7 +204,7 @@ class MediaPlayer extends ChangeNotifier
     void Function()? onError = mediaPlayerSetCrossfadeDurationOnError,
     void Function()? onPlayerReset = mediaPlayerSetCrossfadeDurationPlayerReset,
   }) async {
-    if (state.exclusiveAudio) {
+    if (crossfadeDuration != Duration.zero && state.exclusiveAudio) {
       onError?.call();
       return;
     }

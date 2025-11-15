@@ -83,7 +83,7 @@ class LoginForm extends StatelessWidget {
                           children: [
                             const Icon(Icons.check_circle, size: 16.0),
                             const SizedBox(width: 8.0),
-                            Text(notifier.message!, style: Theme.of(context).textTheme.bodyMedium),
+                            Expanded(child: Text(notifier.message!, style: Theme.of(context).textTheme.bodyMedium)),
                           ],
                         ),
                       ),
@@ -107,7 +107,7 @@ class LoginForm extends StatelessWidget {
                           children: [
                             const Icon(Icons.error, size: 16.0),
                             const SizedBox(width: 8.0),
-                            Text(notifier.error!, style: Theme.of(context).textTheme.bodyMedium),
+                            Expanded(child: Text(notifier.error!, style: Theme.of(context).textTheme.bodyMedium)),
                           ],
                         ),
                       ),
