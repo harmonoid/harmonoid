@@ -93,7 +93,14 @@ void mediaPlayerSetCrossfadeDurationPlayerReset() {
     }
   }
   if (isMobile) {
-    NowPlayingMobileNotifier.instance.closeSlidingUpPanel();
+    // HACK:
+    Future.delayed(
+      const Duration(seconds: 1),
+      () {
+        NowPlayingMobileNotifier.instance.hideBottomNavigationBar();
+        NowPlayingMobileNotifier.instance.showBottomNavigationBar();
+      },
+    );
   }
 }
 
