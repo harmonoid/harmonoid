@@ -1,5 +1,7 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
+import 'package:identity/identity.dart';
+import 'package:synchronized/synchronized.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
@@ -10,6 +12,8 @@ import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/rendering.dart';
+
+final Lock _lock = Lock();
 
 void intentNotifyOnPlaybackStateRestore() async {
   debugPrint('actions.dart: intentNotifyOnPlaybackStateRestore');
@@ -112,4 +116,14 @@ Future<bool> updateNotifierCheckOnShowUpdate(String version) async {
     positiveAction: Localization.instance.OK,
     negativeAction: Localization.instance.CANCEL,
   );
+}
+
+Future<void> subscriptionNotifierOnSubscriptionUpdate(SubscriptionState state) {
+  return _lock.synchronized(() async {
+    if (state is SubscriptionValid) return;
+    if (MediaPlayer.instance.state.crossfadeDuration > Duration.zero) {
+      await MediaPlayer.instance.setExclusiveAudio(false);
+      await MediaPlayer.instance.setCrossfadeDuration(Duration.zero);
+    }
+  });
 }

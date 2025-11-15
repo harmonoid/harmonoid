@@ -22,6 +22,7 @@ import 'package:harmonoid/ui/media_library/media_library_inaccessible_directorie
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/ui/user/login/login.dart';
+import 'package:harmonoid/utils/actions.dart';
 import 'package:harmonoid/utils/android_utils.dart';
 import 'package:harmonoid/utils/keyboard_shortcuts.dart';
 import 'package:harmonoid/utils/macos_menu_bar.dart';
@@ -96,21 +97,27 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
         ChangeNotifierProvider(create: (_) => LyricsNotifier.instance),
         ChangeNotifierProvider(create: (_) => NowPlayingColorPaletteNotifier.instance),
         Provider(create: (_) => NowPlayingMobileNotifier.instance),
-        ChangeNotifierProvider(create: (_) => UserNotifierFactory.create()),
         ChangeNotifierProvider(
+          lazy: false,
+          create: (_) => UserNotifierFactory.create(),
+        ),
+        ChangeNotifierProvider(
+          lazy: false,
           create: (ctx) => SubscriptionNotifierFactory.create(
-            deviceId: Configuration.instance.identifier,
             userNotifier: ctx.read<UserNotifier>(),
             functions: SubscriptionFunctions(
               updateAvailable: () => UpdateNotifier.instance.updateAvailable,
               showUpdate: () => UpdateNotifier.instance.check(),
               showLogin: () => showLogin(context),
-              onSubscriptionUpdate: (state) {},
-              onSubscriptionError: (state) => showMessage(
-                context,
-                'Membership expired',
-                'Couldn\'t verify your access',
-              ),
+              onSubscriptionUpdate: subscriptionNotifierOnSubscriptionUpdate,
+              onSubscriptionError: (state) {
+                showMessage(
+                  context,
+                  Localization.instance.SUBSCRIPTION_EXPIRED_TITLE,
+                  Localization.instance.SUBSCRIPTION_EXPIRED_SUBTITLE,
+                );
+                subscriptionNotifierOnSubscriptionUpdate(state);
+              },
             ),
           ),
         ),

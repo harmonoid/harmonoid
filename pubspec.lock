@@ -36,10 +36,10 @@ packages:
     dependency: transitive
     description:
       name: android_id
-      sha256: "748ba5f93dd5c497e675d8eaa1404346ce4d1794464ea654576ff192d153b92a"
+      sha256: f6489be4c4380cdb55a99db5b03764d936e84e9d5258a26571aa500bd1159fe0
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.0"
+    version: "0.4.1"
   animations:
     dependency: "direct main"
     description:
@@ -627,8 +627,8 @@ packages:
   identity:
     dependency: "direct main"
     description:
-      path: "/Users/alexmercerind/identity"
-      relative: false
+      path: "external/identity"
+      relative: true
     source: path
     version: "1.0.0"
   image:
@@ -1066,10 +1066,10 @@ packages:
     dependency: transitive
     description:
       name: purchases_flutter
-      sha256: "244a35c2a42feced1f43c09faaa6639bd440979a67bc11cba18c9e27b6a07a7d"
+      sha256: "4e537578451cb7c5e58075d497d507271ad1d06ac1ec12016a250d3882e41431"
       url: "https://pub.dev"
     source: hosted
-    version: "9.9.3"
+    version: "9.9.6"
   realtime_client:
     dependency: transitive
     description:

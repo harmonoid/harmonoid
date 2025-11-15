@@ -16,3 +16,6 @@
 [submodule "external/lastfm"]
 	path = external/lastfm
 	url = https://github.com/alexmercerind/lastfm.git
+[submodule "external/identity"]
+	path = external/identity
+	url = https://github.com/harmonoid/identity.git

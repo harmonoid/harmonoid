@@ -94,7 +94,7 @@ mixin LastFmMixin implements BaseMediaPlayer {
     });
   }
 
-  final LastFm _instanceLastFm = LastFm(kApiKey, kSharedSecret, true);
+  final LastFm _instanceLastFm = LastFm(kApiKey, kSharedSecret, kDebugMode);
   final Lock _lockLastFm = Lock();
 
   int? _flagIndexLastFm;

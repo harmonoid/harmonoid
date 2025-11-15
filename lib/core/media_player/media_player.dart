@@ -234,12 +234,19 @@ class MediaPlayer extends ChangeNotifier
     if (state.pitch != 1.0) {
       await setPitch(state.pitch);
     }
+
+    // Both cannot work together. Disable one, otherwise bad things will happen.
+    if (state.exclusiveAudio && state.crossfadeDuration > Duration.zero) {
+      state = state.copyWith(crossfadeDuration: Duration.zero);
+    }
+
     await setVolume(state.volume);
     await setShuffle(state.shuffle);
     await setLoop(state.loop);
     await setExclusiveAudio(state.exclusiveAudio);
     await setReplayGain(state.replayGain);
     await setReplayGainPreamp(state.replayGainPreamp);
+    await setCrossfadeDuration(state.crossfadeDuration);
     if (onOpen != null) {
       await open(
         state.playables,

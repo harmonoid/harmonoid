@@ -2,6 +2,7 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:identity/identity.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/media_player/media_player.dart';
@@ -199,60 +200,62 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
   }
 
   Widget _buildCrossfadeDuration(BuildContext context) {
-    return Consumer<MediaPlayer>(
-      builder: (context, mediaPlayer, _) {
-        return Column(
-          children: [
-            InkWell(
-              onTap: () => mediaPlayer.setCrossfadeDuration(mediaPlayer.state.crossfadeDuration == Duration.zero ? MediaPlayer.kDefaultCrossfadeDuration : Duration.zero),
-              child: Container(
-                height: 48.0,
-                padding: isDesktop ? const EdgeInsets.only(left: 20.0, right: 16.0) : EdgeInsets.zero,
-                child: Row(
-                  children: [
-                    Text(
-                      '${Localization.instance.CROSSFADE} ${mediaPlayer.state.crossfadeDuration > Duration.zero ? '(${mediaPlayer.state.crossfadeDuration.inSeconds}s)' : ''}',
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    const Spacer(),
-                    Switch(
-                      value: mediaPlayer.state.crossfadeDuration != Duration.zero,
-                      onChanged: (value) => mediaPlayer.setCrossfadeDuration(value ? Duration.zero : MediaPlayer.kDefaultCrossfadeDuration),
-                    ),
-                  ],
+    return SubscriptionReveal(
+      child: Consumer<MediaPlayer>(
+        builder: (context, mediaPlayer, _) {
+          return Column(
+            children: [
+              InkWell(
+                onTap: () => mediaPlayer.setCrossfadeDuration(mediaPlayer.state.crossfadeDuration == Duration.zero ? MediaPlayer.kDefaultCrossfadeDuration : Duration.zero),
+                child: Container(
+                  height: 48.0,
+                  padding: isDesktop ? const EdgeInsets.only(left: 20.0, right: 16.0) : EdgeInsets.zero,
+                  child: Row(
+                    children: [
+                      Text(
+                        '${Localization.instance.CROSSFADE} ${mediaPlayer.state.crossfadeDuration > Duration.zero ? '(${mediaPlayer.state.crossfadeDuration.inSeconds}s)' : ''}',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      const Spacer(),
+                      Switch(
+                        value: mediaPlayer.state.crossfadeDuration != Duration.zero,
+                        onChanged: (value) => mediaPlayer.setCrossfadeDuration(value ? Duration.zero : MediaPlayer.kDefaultCrossfadeDuration),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: isDesktop ? const EdgeInsets.symmetric(horizontal: 12.0) : EdgeInsets.zero,
-              child: ScrollableSlider(
-                min: MediaPlayer.kMinCrossfadeDuration.inSeconds.toDouble(),
-                max: MediaPlayer.kMaxCrossfadeDuration.inSeconds.toDouble(),
-                interval: 1.0,
-                stepSize: 1.0,
-                showLabels: true,
-                labelFormatterCallback: (value, _) {
-                  if (value == MediaPlayer.kMinCrossfadeDuration.inSeconds) {
-                    return '${MediaPlayer.kMinCrossfadeDuration.inSeconds}s';
-                  } else if (value == MediaPlayer.kMaxCrossfadeDuration.inSeconds) {
-                    return '${MediaPlayer.kMaxCrossfadeDuration.inSeconds}s';
-                  }
-                  return '';
-                },
-                value: mediaPlayer.state.crossfadeDuration.inSeconds.clamp(MediaPlayer.kMinCrossfadeDuration.inSeconds.toDouble(), MediaPlayer.kMaxCrossfadeDuration.inSeconds.toDouble()).toDouble(),
-                onChanged: mediaPlayer.state.crossfadeDuration != Duration.zero ? (value) => mediaPlayer.setCrossfadeDuration(Duration(seconds: value.round())) : null,
-                onScrolledUp: () => mediaPlayer.setCrossfadeDuration(
-                  (mediaPlayer.state.crossfadeDuration + const Duration(seconds: 1)).clamp(MediaPlayer.kMinCrossfadeDuration, MediaPlayer.kMaxCrossfadeDuration),
-                ),
-                onScrolledDown: () => mediaPlayer.setCrossfadeDuration(
-                  (mediaPlayer.state.crossfadeDuration - const Duration(seconds: 1)).clamp(MediaPlayer.kMinCrossfadeDuration, MediaPlayer.kMaxCrossfadeDuration),
+              Padding(
+                padding: isDesktop ? const EdgeInsets.symmetric(horizontal: 12.0) : EdgeInsets.zero,
+                child: ScrollableSlider(
+                  min: MediaPlayer.kMinCrossfadeDuration.inSeconds.toDouble(),
+                  max: MediaPlayer.kMaxCrossfadeDuration.inSeconds.toDouble(),
+                  interval: 1.0,
+                  stepSize: 1.0,
+                  showLabels: true,
+                  labelFormatterCallback: (value, _) {
+                    if (value == MediaPlayer.kMinCrossfadeDuration.inSeconds) {
+                      return '${MediaPlayer.kMinCrossfadeDuration.inSeconds}s';
+                    } else if (value == MediaPlayer.kMaxCrossfadeDuration.inSeconds) {
+                      return '${MediaPlayer.kMaxCrossfadeDuration.inSeconds}s';
+                    }
+                    return '';
+                  },
+                  value: mediaPlayer.state.crossfadeDuration.inSeconds.clamp(MediaPlayer.kMinCrossfadeDuration.inSeconds.toDouble(), MediaPlayer.kMaxCrossfadeDuration.inSeconds.toDouble()).toDouble(),
+                  onChanged: mediaPlayer.state.crossfadeDuration != Duration.zero ? (value) => mediaPlayer.setCrossfadeDuration(Duration(seconds: value.round())) : null,
+                  onScrolledUp: () => mediaPlayer.setCrossfadeDuration(
+                    (mediaPlayer.state.crossfadeDuration + const Duration(seconds: 1)).clamp(MediaPlayer.kMinCrossfadeDuration, MediaPlayer.kMaxCrossfadeDuration),
+                  ),
+                  onScrolledDown: () => mediaPlayer.setCrossfadeDuration(
+                    (mediaPlayer.state.crossfadeDuration - const Duration(seconds: 1)).clamp(MediaPlayer.kMinCrossfadeDuration, MediaPlayer.kMaxCrossfadeDuration),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 12.0),
-          ],
-        );
-      },
+              const SizedBox(height: 12.0),
+            ],
+          );
+        },
+      ),
     );
   }
 

@@ -251,6 +251,8 @@ class Values {
   late String SORT_BY;
   late String SPEED;
   late String START;
+  late String SUBSCRIPTION_EXPIRED_SUBTITLE;
+  late String SUBSCRIPTION_EXPIRED_TITLE;
   late String THEME;
   late String THEME_MODE_DARK;
   late String THEME_MODE_LIGHT;

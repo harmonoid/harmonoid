@@ -256,6 +256,8 @@ class LocalizationBase extends Values {
     SORT_BY = map['SORT_BY']!;
     SPEED = map['SPEED']!;
     START = map['START']!;
+    SUBSCRIPTION_EXPIRED_SUBTITLE = map['SUBSCRIPTION_EXPIRED_SUBTITLE']!;
+    SUBSCRIPTION_EXPIRED_TITLE = map['SUBSCRIPTION_EXPIRED_TITLE']!;
     THEME = map['THEME']!;
     THEME_MODE_DARK = map['THEME_MODE_DARK']!;
     THEME_MODE_LIGHT = map['THEME_MODE_LIGHT']!;

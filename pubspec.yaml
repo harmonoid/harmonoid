@@ -29,7 +29,7 @@ dependencies:
   go_router: ^16.3.0
   http: ^1.2.1
   identity:
-    path: /Users/alexmercerind/identity
+    path: external/identity
   json_annotation: ^4.9.0
   lastfm:
     path: external/lastfm
