@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/user/login/state/login_notifier.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -31,7 +32,7 @@ class LoginForm extends StatelessWidget {
                   autofocus: true,
                   autocorrect: false,
                   style: Theme.of(context).textTheme.bodyMedium,
-                  decoration: const InputDecoration(hintText: 'Email'),
+                  decoration: InputDecoration(hintText: Localization.instance.EMAIL),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return '';
@@ -52,7 +53,7 @@ class LoginForm extends StatelessWidget {
                   autofocus: false,
                   autocorrect: false,
                   style: Theme.of(context).textTheme.bodyMedium,
-                  decoration: const InputDecoration(hintText: 'OTP'),
+                  decoration: InputDecoration(hintText: Localization.instance.OTP),
                   validator: (value) {
                     if (!notifier.otpSent) return null;
                     if (value == null || value.trim().isEmpty) {

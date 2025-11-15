@@ -14,4 +14,9 @@ extension DurationExtension on Duration {
       return '$minutes:$seconds';
     }
   }
+
+  /// Clamps [Duration] between [min] and [max].
+  Duration clamp(Duration min, Duration max) {
+    return Duration(milliseconds: inMilliseconds.clamp(min.inMilliseconds, max.inMilliseconds));
+  }
 }

@@ -66,4 +66,6 @@ abstract interface class BaseMediaPlayer with ChangeNotifier {
   Future<void> setReplayGain(ReplayGain replayGain);
 
   Future<void> setReplayGainPreamp(double replayGainPreamp);
+
+  Future<void> setCrossfadeDuration(Duration crossfadeDuration);
 }

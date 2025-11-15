@@ -3,6 +3,7 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:identity/identity.dart';
 import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 
@@ -144,9 +145,11 @@ final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> homeNavigatorKey = GlobalKey<NavigatorState>();
 
 final router = GoRouter(
+  observers: [SubscriptionNavigationObserver()],
   navigatorKey: rootNavigatorKey,
   routes: [
     ShellRoute(
+      observers: [SubscriptionNavigationObserver()],
       navigatorKey: homeNavigatorKey,
       builder: (context, state, child) {
         return MediaLibraryShellRoute(child: child);
@@ -161,6 +164,7 @@ final router = GoRouter(
           redirect: (_, state) => state.uri.toString(),
           routes: [
             ShellRoute(
+              observers: [SubscriptionNavigationObserver()],
               builder: (context, state, child) {
                 return MediaLibraryScreen(child: child);
               },

@@ -45,6 +45,10 @@ class Values {
   late String COUNT;
   late String CREATE;
   late String CREATE_NEW_PLAYLIST;
+  late String CROSSFADE;
+  late String CROSSFADE_BETWEEN_TRACKS;
+  late String CROSSFADE_DURATION;
+  late String CROSSFADE_EXCLUSIVE_AUDIO_ERROR;
   late String DATE_ADDED;
   late String DEFAULT;
   late String DELETE;
@@ -52,6 +56,7 @@ class Values {
   late String DEVELOPER;
   late String DISCONNECT;
   late String DISCOVERING_FILES;
+  late String DISPLAY_ARTIST_IMAGES;
   late String DISPLAY_AUDIO_FORMAT;
   late String DISPLAY_PROGRESS_ON_TASKBAR;
   late String DISPLAY_UPON_PLAYBACK;
@@ -62,6 +67,7 @@ class Values {
   late String EDIT_ALBUM_PARAMETERS_TITLE;
   late String EDIT_DETAILS;
   late String EDIT_MINIMUM_FILE_SIZE;
+  late String EMAIL;
   late String ENABLE_ANIMATION_EFFECTS;
   late String ENABLE_DISCORD_RPC;
   late String ENABLE_NOTIFICATION_LYRICS;
@@ -99,6 +105,8 @@ class Values {
   late String LIKED_SONGS;
   late String LINKED_AS_X;
   late String LINK_YOUR_ACCOUNT;
+  late String LOGIN;
+  late String LOGOUT;
   late String LOOKUP_FOR_FALLBACK_COVERS;
   late String LOOKUP_FOR_LRC_IN_DIRECTORY;
   late String LYRICS;
@@ -145,6 +153,13 @@ class Values {
   late String OPEN_IN_BROWSER;
   late String OPTIONS;
   late String ORDER;
+  late String OTP;
+  late String OTP_SEND;
+  late String OTP_SEND_FAILURE;
+  late String OTP_SEND_SUCCESS;
+  late String OTP_VERIFY;
+  late String OTP_VERIFY_FAILURE;
+  late String OTP_VERIFY_SUCCESS;
   late String PAUSE;
   late String PAUSED;
   late String PERMISSION_IMAGES_AND_PHOTOS;
@@ -222,6 +237,7 @@ class Values {
   late String SETTINGS_SECTION_NOW_PLAYING_TITLE;
   late String SETTINGS_SECTION_PERMISSIONS_SUBTITLE;
   late String SETTINGS_SECTION_PERMISSIONS_TITLE;
+  late String SETTINGS_SECTION_PLUS_SUBTITLE;
   late String SETTINGS_SECTION_STATS_SUBTITLE;
   late String SETTINGS_SECTION_STATS_TITLE;
   late String SET_LRC_FILE;

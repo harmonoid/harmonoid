@@ -69,6 +69,34 @@ void mediaPlayerUpdateCurrentOnUpdateCurrent(String uri) {
   }
 }
 
+void mediaPlayerSetExclusiveAudioOnError() {
+  showMessage(
+    router.routerDelegate.navigatorKey.currentContext!,
+    Localization.instance.ERROR,
+    Localization.instance.CROSSFADE_EXCLUSIVE_AUDIO_ERROR,
+  );
+}
+
+void mediaPlayerSetCrossfadeDurationOnError() {
+  showMessage(
+    router.routerDelegate.navigatorKey.currentContext!,
+    Localization.instance.ERROR,
+    Localization.instance.CROSSFADE_EXCLUSIVE_AUDIO_ERROR,
+  );
+}
+
+void mediaPlayerSetCrossfadeDurationPlayerReset() {
+  NowPlayingColorPaletteNotifier.instance.clear();
+  if (isDesktop) {
+    if (router.location.startsWith('/$kNowPlayingPath')) {
+      router.go('/');
+    }
+  }
+  if (isMobile) {
+    NowPlayingMobileNotifier.instance.hideNowPlayingBar();
+  }
+}
+
 Future<bool> updateNotifierCheckOnShowUpdate(String version) async {
   return showConfirmation(
     router.routerDelegate.navigatorKey.currentContext!,

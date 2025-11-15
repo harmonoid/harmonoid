@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/extensions/duration.dart';
 import 'package:harmonoid/extensions/go_router.dart';
 import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
@@ -65,6 +66,8 @@ class NowPlayingControlPanel extends StatefulWidget {
 }
 
 class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
+  EdgeInsets get _contentPadding => isDesktop ? const EdgeInsets.only(left: 4.0, top: 12.0, bottom: 18.0) : const EdgeInsets.only(left: 4.0);
+
   final rate = (focusNode: FocusNode(), textEditingController: TextEditingController(text: MediaPlayer.instance.state.rate.toStringAsFixed(2)));
   final pitch = (focusNode: FocusNode(), textEditingController: TextEditingController(text: MediaPlayer.instance.state.pitch.toStringAsFixed(2)));
   final volume = (focusNode: FocusNode(), textEditingController: TextEditingController(text: MediaPlayer.instance.state.volume.round().toString()));
@@ -108,10 +111,11 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
   Widget _buildDesktopLayout(BuildContext context) {
     return Card(
       margin: EdgeInsets.zero,
+      clipBehavior: Clip.antiAlias,
       elevation: kDefaultHeavyElevation,
       child: Container(
         width: 256.0,
-        padding: const EdgeInsets.symmetric(vertical: 20.0),
+        padding: const EdgeInsets.only(top: 20.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,16 +153,14 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
               child: _buildContent(context),
             ),
             const Divider(height: 1.0, thickness: 1.0),
-            _buildExclusiveAudio(context),
+            _buildCrossfadeDuration(context),
             const Divider(height: 1.0, thickness: 1.0),
             Padding(
-              padding: const EdgeInsets.only(
-                top: 16.0,
-                left: 20.0,
-                right: 20.0,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
               child: _buildReplayGain(context),
             ),
+            const Divider(height: 1.0, thickness: 1.0),
+            _buildExclusiveAudio(context),
           ],
         ),
       ),
@@ -174,18 +176,83 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        SizedBox(height: isMaterial2 ? 16.0 : 0.0),
         Padding(
-          padding: const EdgeInsets.only(bottom: 24.0),
+          padding: EdgeInsets.only(
+            top: isMaterial2 ? 16.0 : 0.0,
+            bottom: 24.0,
+          ),
           child: _buildContent(context),
         ),
         const Divider(height: 1.0, thickness: 1.0),
         Padding(
-          padding: const EdgeInsets.only(top: 16.0),
+          padding: const EdgeInsets.symmetric(vertical: 12.0),
+          child: _buildCrossfadeDuration(context),
+        ),
+        const Divider(height: 1.0, thickness: 1.0),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12.0),
           child: _buildReplayGain(context),
         ),
         SizedBox(height: 16.0 + MediaQuery.viewInsetsOf(context).bottom + MediaQuery.paddingOf(context).bottom),
       ],
+    );
+  }
+
+  Widget _buildCrossfadeDuration(BuildContext context) {
+    return Consumer<MediaPlayer>(
+      builder: (context, mediaPlayer, _) {
+        return Column(
+          children: [
+            InkWell(
+              onTap: () => mediaPlayer.setCrossfadeDuration(mediaPlayer.state.crossfadeDuration == Duration.zero ? MediaPlayer.kDefaultCrossfadeDuration : Duration.zero),
+              child: Container(
+                height: 48.0,
+                padding: isDesktop ? const EdgeInsets.only(left: 20.0, right: 16.0) : EdgeInsets.zero,
+                child: Row(
+                  children: [
+                    Text(
+                      '${Localization.instance.CROSSFADE} ${mediaPlayer.state.crossfadeDuration > Duration.zero ? '(${mediaPlayer.state.crossfadeDuration.inSeconds}s)' : ''}',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    const Spacer(),
+                    Switch(
+                      value: mediaPlayer.state.crossfadeDuration != Duration.zero,
+                      onChanged: (value) => mediaPlayer.setCrossfadeDuration(value ? Duration.zero : MediaPlayer.kDefaultCrossfadeDuration),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: isDesktop ? const EdgeInsets.symmetric(horizontal: 12.0) : EdgeInsets.zero,
+              child: ScrollableSlider(
+                min: MediaPlayer.kMinCrossfadeDuration.inSeconds.toDouble(),
+                max: MediaPlayer.kMaxCrossfadeDuration.inSeconds.toDouble(),
+                interval: 1.0,
+                stepSize: 1.0,
+                showLabels: true,
+                labelFormatterCallback: (value, _) {
+                  if (value == MediaPlayer.kMinCrossfadeDuration.inSeconds) {
+                    return '${MediaPlayer.kMinCrossfadeDuration.inSeconds}s';
+                  } else if (value == MediaPlayer.kMaxCrossfadeDuration.inSeconds) {
+                    return '${MediaPlayer.kMaxCrossfadeDuration.inSeconds}s';
+                  }
+                  return '';
+                },
+                value: mediaPlayer.state.crossfadeDuration.inSeconds.clamp(MediaPlayer.kMinCrossfadeDuration.inSeconds.toDouble(), MediaPlayer.kMaxCrossfadeDuration.inSeconds.toDouble()).toDouble(),
+                onChanged: mediaPlayer.state.crossfadeDuration != Duration.zero ? (value) => mediaPlayer.setCrossfadeDuration(Duration(seconds: value.round())) : null,
+                onScrolledUp: () => mediaPlayer.setCrossfadeDuration(
+                  (mediaPlayer.state.crossfadeDuration + const Duration(seconds: 1)).clamp(MediaPlayer.kMinCrossfadeDuration, MediaPlayer.kMaxCrossfadeDuration),
+                ),
+                onScrolledDown: () => mediaPlayer.setCrossfadeDuration(
+                  (mediaPlayer.state.crossfadeDuration - const Duration(seconds: 1)).clamp(MediaPlayer.kMinCrossfadeDuration, MediaPlayer.kMaxCrossfadeDuration),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12.0),
+          ],
+        );
+      },
     );
   }
 
@@ -254,10 +321,9 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge,
                     textAlignVertical: TextAlignVertical.center,
-                    decoration: const InputDecoration(
-                      isCollapsed: true,
+                    decoration: InputDecoration(
                       hintText: 'NaN',
-                      contentPadding: EdgeInsets.only(left: 4.0, top: 8.0, bottom: 8.0),
+                      contentPadding: _contentPadding,
                     ),
                     inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'[0-9]|\.'))],
                     keyboardType: TextInputType.number,
@@ -321,10 +387,9 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge,
                     textAlignVertical: TextAlignVertical.center,
-                    decoration: const InputDecoration(
-                      isCollapsed: true,
+                    decoration: InputDecoration(
                       hintText: 'NaN',
-                      contentPadding: EdgeInsets.only(left: 4.0, top: 8.0, bottom: 8.0),
+                      contentPadding: _contentPadding,
                     ),
                     inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'[0-9]|\.'))],
                     keyboardType: TextInputType.number,
@@ -375,10 +440,9 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge,
                     textAlignVertical: TextAlignVertical.center,
-                    decoration: const InputDecoration(
-                      isCollapsed: true,
+                    decoration: InputDecoration(
                       hintText: 'NaN',
-                      contentPadding: EdgeInsets.only(left: 4.0, top: 8.0, bottom: 8.0),
+                      contentPadding: _contentPadding,
                     ),
                     inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'[0-9]|\.'))],
                     keyboardType: TextInputType.number,
@@ -429,10 +493,9 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge,
                     textAlignVertical: TextAlignVertical.center,
-                    decoration: const InputDecoration(
-                      isCollapsed: true,
+                    decoration: InputDecoration(
                       hintText: 'NaN',
-                      contentPadding: EdgeInsets.only(left: 4.0, top: 8.0, bottom: 8.0),
+                      contentPadding: _contentPadding,
                     ),
                     inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'[0-9]|'))],
                     keyboardType: TextInputType.number,

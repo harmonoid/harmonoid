@@ -99,16 +99,13 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
         ChangeNotifierProvider(create: (_) => UserNotifierFactory.create()),
         ChangeNotifierProvider(
           create: (ctx) => SubscriptionNotifierFactory.create(
-            // TODO: https://pub.dev/packages/flutter_udid
             deviceId: Configuration.instance.identifier,
             userNotifier: ctx.read<UserNotifier>(),
             functions: SubscriptionFunctions(
               updateAvailable: () => UpdateNotifier.instance.updateAvailable,
               showUpdate: () => UpdateNotifier.instance.check(),
               showLogin: () => showLogin(context),
-              onSubscriptionUpdate: (state) {
-                // TODO: Missing implementation.
-              },
+              onSubscriptionUpdate: (state) {},
               onSubscriptionError: (state) => showMessage(
                 context,
                 'Membership expired',

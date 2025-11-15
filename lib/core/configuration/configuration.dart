@@ -98,6 +98,7 @@ class Configuration extends ConfigurationBase {
     _mediaLibraryAlbumGroupingParameters = await _read<dynamic, Set<AlbumGroupingParameter>>(kKeyMediaLibraryAlbumGroupingParameters, defaults, (value) => value.map<AlbumGroupingParameter>((e) => AlbumGroupingParameter.values[e]).toSet());
     _mediaLibraryAlbumSortAscending = await _read<bool, bool>(kKeyMediaLibraryAlbumSortAscending, defaults);
     _mediaLibraryAlbumSortType = await _read<int, AlbumSortType>(kKeyMediaLibraryAlbumSortType, defaults, (value) => AlbumSortType.values[value]);
+    _mediaLibraryArtistImages = await _read<bool, bool>(kKeyMediaLibraryArtistImages, defaults);
     _mediaLibraryArtistSortAscending = await _read<bool, bool>(kKeyMediaLibraryArtistSortAscending, defaults);
     _mediaLibraryArtistSortType = await _read<int, ArtistSortType>(kKeyMediaLibraryArtistSortType, defaults, (value) => ArtistSortType.values[value]);
     _mediaLibraryCoverFallback = await _read<bool, bool>(kKeyMediaLibraryCoverFallback, defaults);

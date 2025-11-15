@@ -1,5 +1,6 @@
 import 'package:path/path.dart';
 
+import 'package:harmonoid/models/loop.dart';
 import 'package:harmonoid/models/media_player_state.dart';
 
 /// Extensions for [MediaPlayerState].
@@ -8,9 +9,9 @@ extension MediaPlayerStateExtensions on MediaPlayerState {
 
   bool get isNotEmpty => playables.isNotEmpty;
 
-  bool get isFirst => isEmpty || index == 0;
+  bool get isFirst => isEmpty || (loop == Loop.all ? false : index == 0);
 
-  bool get isLast => isEmpty || index == playables.length - 1;
+  bool get isLast => isEmpty || (loop == Loop.all ? false : index == playables.length - 1);
 
   String getAudioFormatLabel({
     bool format = true,

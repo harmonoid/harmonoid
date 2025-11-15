@@ -41,16 +41,17 @@ import 'package:harmonoid/utils/constants.dart';
 class MediaPlayer extends ChangeNotifier
     with AudioServiceMixin, DiscordRpcMixin, HistoryPlaylistMixin, LastFmMixin, MprisMixin, SystemMediaTransportControlsMixin, WindowsTaskbarMixin
     implements BaseMediaPlayer {
+  static const Duration kDefaultCrossfadeDuration = Duration(seconds: 5);
+  static const Duration kMinCrossfadeDuration = Duration(seconds: 2);
+  static const Duration kMaxCrossfadeDuration = Duration(seconds: 30);
+
   /// Singleton instance.
   static final MediaPlayer instance = MediaPlayer._();
 
   /// Whether the [instance] is initialized.
   static bool initialized = false;
 
-  /// {@macro media_player}
-  MediaPlayer._() {
-    mapPlayerToState();
-  }
+  MediaPlayer._();
 
   /// Initializes the [instance].
   static Future<void> ensureInitialized() async {
@@ -62,7 +63,6 @@ class MediaPlayer extends ChangeNotifier
   Future<void> _ensureInitialized() async {
     await Future.wait(
       [
-        ensureInitializedPlayer(),
         ensureInitializedAudioService(),
         ensureInitializedDiscordRpc(),
         ensureInitializedHistoryPlaylist(),
@@ -171,30 +171,62 @@ class MediaPlayer extends ChangeNotifier
   }
 
   @override
-  Future<void> setExclusiveAudio(bool exclusiveAudio) async {
-    final platform = _player.platform as NativePlayer;
+  Future<void> setExclusiveAudio(
+    bool exclusiveAudio, {
+    void Function()? onError = mediaPlayerSetExclusiveAudioOnError,
+  }) async {
+    if (state.crossfadeDuration != Duration.zero) {
+      onError?.call();
+      return;
+    }
+    final platform = _player.platform as dynamic;
     await platform.setProperty('audio-exclusive', exclusiveAudio ? 'yes' : 'no');
     state = state.copyWith(exclusiveAudio: exclusiveAudio);
   }
 
   @override
   Future<void> setReplayGain(ReplayGain replayGain) async {
-    final platform = _player.platform as NativePlayer;
+    final platform = _player.platform as dynamic;
     await platform.setProperty('replaygain', replayGain.toProperty());
     state = state.copyWith(replayGain: replayGain);
   }
 
   @override
   Future<void> setReplayGainPreamp(double replayGainPreamp) async {
-    final platform = _player.platform as NativePlayer;
+    final platform = _player.platform as dynamic;
     await platform.setProperty('replaygain-preamp', replayGainPreamp.toString());
     state = state.copyWith(replayGainPreamp: replayGainPreamp);
+  }
+
+  @override
+  Future<void> setCrossfadeDuration(
+    Duration crossfadeDuration, {
+    void Function()? onError = mediaPlayerSetCrossfadeDurationOnError,
+    void Function()? onPlayerReset = mediaPlayerSetCrossfadeDurationPlayerReset,
+  }) async {
+    if (state.exclusiveAudio) {
+      onError?.call();
+      return;
+    }
+    if ((state.crossfadeDuration != Duration.zero && crossfadeDuration == Duration.zero) || (state.crossfadeDuration == Duration.zero && crossfadeDuration != Duration.zero)) {
+      state = MediaPlayerState.defaults();
+      _current = null;
+      onPlayerReset?.call();
+      await ensureInitializedPlayer(crossfadeDuration: crossfadeDuration);
+    }
+    if (crossfadeDuration != Duration.zero) {
+      final platform = _player.platform as CrossfadePlayer;
+      await platform.setCrossfadeDuration(crossfadeDuration);
+    }
+    state = state.copyWith(crossfadeDuration: crossfadeDuration);
   }
 
   Future<void> setPlaybackState(
     PlaybackState playbackState, {
     void Function()? onOpen,
   }) async {
+    await ensureInitializedPlayer(crossfadeDuration: playbackState.crossfadeDuration);
+
     state = playbackState.toMediaPlayerState();
     if (state.rate != 1.0) {
       await setRate(state.rate);
@@ -239,9 +271,9 @@ class MediaPlayer extends ChangeNotifier
   Future<void> updateCurrent({void Function(String)? onUpdateCurrent = mediaPlayerUpdateCurrentOnUpdateCurrent}) {
     return _updateCurrentLock.synchronized(() async {
       try {
-        final uri = state.playables[state.index].uri;
+        final uri = state.playables.elementAtOrNull(state.index)?.uri;
 
-        if (_updateCurrentFlagUri == uri) return;
+        if (uri == null || _updateCurrentFlagUri == uri) return;
         _updateCurrentFlagUri = uri;
 
         _current = null;
@@ -272,8 +304,24 @@ class MediaPlayer extends ChangeNotifier
     });
   }
 
-  Future<void> ensureInitializedPlayer() async {
-    final platform = _player.platform as NativePlayer;
+  Future<void> ensureInitializedPlayer({required Duration crossfadeDuration}) async {
+    try {
+      await _player.dispose();
+    } catch (_) {}
+
+    if (crossfadeDuration != Duration.zero) {
+      _player = Player(
+        platformPlayer: CrossfadePlayer(
+          configuration: CrossfadePlayerConfiguration(title: kTitle, pitch: true, crossfadeDuration: crossfadeDuration),
+        ),
+      );
+    } else {
+      _player = Player(configuration: const PlayerConfiguration(title: kTitle, pitch: true));
+    }
+
+    mapPlayerToState();
+
+    final platform = _player.platform as dynamic;
     if (Platform.isAndroid) {
       await platform.setProperty('ao', 'audiotrack,opensles');
     }
@@ -283,6 +331,7 @@ class MediaPlayer extends ChangeNotifier
     if (Platform.isWindows) {
       await platform.setProperty('ao', 'wasapi');
     }
+    await platform.setProperty('audio-stream-silence', 'yes');
     for (final MapEntry(key: property, value: value) in Configuration.instance.mpvOptions.entries) {
       await platform.setProperty(property, value);
     }
@@ -302,7 +351,7 @@ class MediaPlayer extends ChangeNotifier
     disposeWindowsTaskbar();
   }
 
-  final Player _player = Player(configuration: const PlayerConfiguration(title: kTitle, pitch: true));
+  late Player _player;
   final TagReader _tagReader = TagReader();
   Playable? _current;
   MediaPlayerState _state = MediaPlayerState.defaults();

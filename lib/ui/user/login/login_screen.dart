@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/ui/user/login/state/login_notifier.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/user/login/login_form.dart';
+import 'package:harmonoid/ui/user/login/state/login_notifier.dart';
+import 'package:harmonoid/utils/rendering.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -16,7 +18,7 @@ class LoginScreen extends StatelessWidget {
           onPressed: context.pop,
           icon: const Icon(Icons.arrow_back),
         ),
-        title: const Text('Login'),
+        title: Text(Localization.instance.LOGIN),
       ),
       body: Consumer<LoginNotifier>(
         builder: (context, notifier, child) {
@@ -27,7 +29,7 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 16.0),
               FilledButton(
                 onPressed: notifier.onPressed,
-                child: Text(notifier.otpSent ? 'Verify OTP' : 'Send OTP'),
+                child: Text(label(notifier.otpSent ? Localization.instance.OTP_VERIFY : Localization.instance.OTP_SEND)),
               ),
             ],
           );

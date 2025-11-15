@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MediaPlayerState {
 
- int get index; List<Playable> get playables; double get rate; double get pitch; double get volume; bool get shuffle; Loop get loop; bool get exclusiveAudio; ReplayGain get replayGain; double get replayGainPreamp; Duration get position; Duration get duration; bool get playing; bool get buffering; bool get completed; double get audioBitrate; AudioParams get audioParams;
+ int get index; List<Playable> get playables; double get rate; double get pitch; double get volume; bool get shuffle; Loop get loop; bool get exclusiveAudio; ReplayGain get replayGain; double get replayGainPreamp; Duration get crossfadeDuration; Duration get position; Duration get duration; bool get playing; bool get buffering; bool get completed; double get audioBitrate; AudioParams get audioParams;
 /// Create a copy of MediaPlayerState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $MediaPlayerStateCopyWith<MediaPlayerState> get copyWith => _$MediaPlayerStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MediaPlayerState&&(identical(other.index, index) || other.index == index)&&const DeepCollectionEquality().equals(other.playables, playables)&&(identical(other.rate, rate) || other.rate == rate)&&(identical(other.pitch, pitch) || other.pitch == pitch)&&(identical(other.volume, volume) || other.volume == volume)&&(identical(other.shuffle, shuffle) || other.shuffle == shuffle)&&(identical(other.loop, loop) || other.loop == loop)&&(identical(other.exclusiveAudio, exclusiveAudio) || other.exclusiveAudio == exclusiveAudio)&&(identical(other.replayGain, replayGain) || other.replayGain == replayGain)&&(identical(other.replayGainPreamp, replayGainPreamp) || other.replayGainPreamp == replayGainPreamp)&&(identical(other.position, position) || other.position == position)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.playing, playing) || other.playing == playing)&&(identical(other.buffering, buffering) || other.buffering == buffering)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.audioBitrate, audioBitrate) || other.audioBitrate == audioBitrate)&&(identical(other.audioParams, audioParams) || other.audioParams == audioParams));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MediaPlayerState&&(identical(other.index, index) || other.index == index)&&const DeepCollectionEquality().equals(other.playables, playables)&&(identical(other.rate, rate) || other.rate == rate)&&(identical(other.pitch, pitch) || other.pitch == pitch)&&(identical(other.volume, volume) || other.volume == volume)&&(identical(other.shuffle, shuffle) || other.shuffle == shuffle)&&(identical(other.loop, loop) || other.loop == loop)&&(identical(other.exclusiveAudio, exclusiveAudio) || other.exclusiveAudio == exclusiveAudio)&&(identical(other.replayGain, replayGain) || other.replayGain == replayGain)&&(identical(other.replayGainPreamp, replayGainPreamp) || other.replayGainPreamp == replayGainPreamp)&&(identical(other.crossfadeDuration, crossfadeDuration) || other.crossfadeDuration == crossfadeDuration)&&(identical(other.position, position) || other.position == position)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.playing, playing) || other.playing == playing)&&(identical(other.buffering, buffering) || other.buffering == buffering)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.audioBitrate, audioBitrate) || other.audioBitrate == audioBitrate)&&(identical(other.audioParams, audioParams) || other.audioParams == audioParams));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,index,const DeepCollectionEquality().hash(playables),rate,pitch,volume,shuffle,loop,exclusiveAudio,replayGain,replayGainPreamp,position,duration,playing,buffering,completed,audioBitrate,audioParams);
+int get hashCode => Object.hash(runtimeType,index,const DeepCollectionEquality().hash(playables),rate,pitch,volume,shuffle,loop,exclusiveAudio,replayGain,replayGainPreamp,crossfadeDuration,position,duration,playing,buffering,completed,audioBitrate,audioParams);
 
 @override
 String toString() {
-  return 'MediaPlayerState(index: $index, playables: $playables, rate: $rate, pitch: $pitch, volume: $volume, shuffle: $shuffle, loop: $loop, exclusiveAudio: $exclusiveAudio, replayGain: $replayGain, replayGainPreamp: $replayGainPreamp, position: $position, duration: $duration, playing: $playing, buffering: $buffering, completed: $completed, audioBitrate: $audioBitrate, audioParams: $audioParams)';
+  return 'MediaPlayerState(index: $index, playables: $playables, rate: $rate, pitch: $pitch, volume: $volume, shuffle: $shuffle, loop: $loop, exclusiveAudio: $exclusiveAudio, replayGain: $replayGain, replayGainPreamp: $replayGainPreamp, crossfadeDuration: $crossfadeDuration, position: $position, duration: $duration, playing: $playing, buffering: $buffering, completed: $completed, audioBitrate: $audioBitrate, audioParams: $audioParams)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $MediaPlayerStateCopyWith<$Res>  {
   factory $MediaPlayerStateCopyWith(MediaPlayerState value, $Res Function(MediaPlayerState) _then) = _$MediaPlayerStateCopyWithImpl;
 @useResult
 $Res call({
- int index, List<Playable> playables, double rate, double pitch, double volume, bool shuffle, Loop loop, bool exclusiveAudio, ReplayGain replayGain, double replayGainPreamp, Duration position, Duration duration, bool playing, bool buffering, bool completed, double audioBitrate, AudioParams audioParams
+ int index, List<Playable> playables, double rate, double pitch, double volume, bool shuffle, Loop loop, bool exclusiveAudio, ReplayGain replayGain, double replayGainPreamp, Duration crossfadeDuration, Duration position, Duration duration, bool playing, bool buffering, bool completed, double audioBitrate, AudioParams audioParams
 });
 
 
@@ -62,7 +62,7 @@ class _$MediaPlayerStateCopyWithImpl<$Res>
 
 /// Create a copy of MediaPlayerState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? index = null,Object? playables = null,Object? rate = null,Object? pitch = null,Object? volume = null,Object? shuffle = null,Object? loop = null,Object? exclusiveAudio = null,Object? replayGain = null,Object? replayGainPreamp = null,Object? position = null,Object? duration = null,Object? playing = null,Object? buffering = null,Object? completed = null,Object? audioBitrate = null,Object? audioParams = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? index = null,Object? playables = null,Object? rate = null,Object? pitch = null,Object? volume = null,Object? shuffle = null,Object? loop = null,Object? exclusiveAudio = null,Object? replayGain = null,Object? replayGainPreamp = null,Object? crossfadeDuration = null,Object? position = null,Object? duration = null,Object? playing = null,Object? buffering = null,Object? completed = null,Object? audioBitrate = null,Object? audioParams = null,}) {
   return _then(_self.copyWith(
 index: null == index ? _self.index : index // ignore: cast_nullable_to_non_nullable
 as int,playables: null == playables ? _self.playables : playables // ignore: cast_nullable_to_non_nullable
@@ -74,7 +74,8 @@ as bool,loop: null == loop ? _self.loop : loop // ignore: cast_nullable_to_non_n
 as Loop,exclusiveAudio: null == exclusiveAudio ? _self.exclusiveAudio : exclusiveAudio // ignore: cast_nullable_to_non_nullable
 as bool,replayGain: null == replayGain ? _self.replayGain : replayGain // ignore: cast_nullable_to_non_nullable
 as ReplayGain,replayGainPreamp: null == replayGainPreamp ? _self.replayGainPreamp : replayGainPreamp // ignore: cast_nullable_to_non_nullable
-as double,position: null == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
+as double,crossfadeDuration: null == crossfadeDuration ? _self.crossfadeDuration : crossfadeDuration // ignore: cast_nullable_to_non_nullable
+as Duration,position: null == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
 as Duration,duration: null == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
 as Duration,playing: null == playing ? _self.playing : playing // ignore: cast_nullable_to_non_nullable
 as bool,buffering: null == buffering ? _self.buffering : buffering // ignore: cast_nullable_to_non_nullable
@@ -166,10 +167,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int index,  List<Playable> playables,  double rate,  double pitch,  double volume,  bool shuffle,  Loop loop,  bool exclusiveAudio,  ReplayGain replayGain,  double replayGainPreamp,  Duration position,  Duration duration,  bool playing,  bool buffering,  bool completed,  double audioBitrate,  AudioParams audioParams)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int index,  List<Playable> playables,  double rate,  double pitch,  double volume,  bool shuffle,  Loop loop,  bool exclusiveAudio,  ReplayGain replayGain,  double replayGainPreamp,  Duration crossfadeDuration,  Duration position,  Duration duration,  bool playing,  bool buffering,  bool completed,  double audioBitrate,  AudioParams audioParams)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MediaPlayerState() when $default != null:
-return $default(_that.index,_that.playables,_that.rate,_that.pitch,_that.volume,_that.shuffle,_that.loop,_that.exclusiveAudio,_that.replayGain,_that.replayGainPreamp,_that.position,_that.duration,_that.playing,_that.buffering,_that.completed,_that.audioBitrate,_that.audioParams);case _:
+return $default(_that.index,_that.playables,_that.rate,_that.pitch,_that.volume,_that.shuffle,_that.loop,_that.exclusiveAudio,_that.replayGain,_that.replayGainPreamp,_that.crossfadeDuration,_that.position,_that.duration,_that.playing,_that.buffering,_that.completed,_that.audioBitrate,_that.audioParams);case _:
   return orElse();
 
 }
@@ -187,10 +188,10 @@ return $default(_that.index,_that.playables,_that.rate,_that.pitch,_that.volume,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int index,  List<Playable> playables,  double rate,  double pitch,  double volume,  bool shuffle,  Loop loop,  bool exclusiveAudio,  ReplayGain replayGain,  double replayGainPreamp,  Duration position,  Duration duration,  bool playing,  bool buffering,  bool completed,  double audioBitrate,  AudioParams audioParams)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int index,  List<Playable> playables,  double rate,  double pitch,  double volume,  bool shuffle,  Loop loop,  bool exclusiveAudio,  ReplayGain replayGain,  double replayGainPreamp,  Duration crossfadeDuration,  Duration position,  Duration duration,  bool playing,  bool buffering,  bool completed,  double audioBitrate,  AudioParams audioParams)  $default,) {final _that = this;
 switch (_that) {
 case _MediaPlayerState():
-return $default(_that.index,_that.playables,_that.rate,_that.pitch,_that.volume,_that.shuffle,_that.loop,_that.exclusiveAudio,_that.replayGain,_that.replayGainPreamp,_that.position,_that.duration,_that.playing,_that.buffering,_that.completed,_that.audioBitrate,_that.audioParams);case _:
+return $default(_that.index,_that.playables,_that.rate,_that.pitch,_that.volume,_that.shuffle,_that.loop,_that.exclusiveAudio,_that.replayGain,_that.replayGainPreamp,_that.crossfadeDuration,_that.position,_that.duration,_that.playing,_that.buffering,_that.completed,_that.audioBitrate,_that.audioParams);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -207,10 +208,10 @@ return $default(_that.index,_that.playables,_that.rate,_that.pitch,_that.volume,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int index,  List<Playable> playables,  double rate,  double pitch,  double volume,  bool shuffle,  Loop loop,  bool exclusiveAudio,  ReplayGain replayGain,  double replayGainPreamp,  Duration position,  Duration duration,  bool playing,  bool buffering,  bool completed,  double audioBitrate,  AudioParams audioParams)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int index,  List<Playable> playables,  double rate,  double pitch,  double volume,  bool shuffle,  Loop loop,  bool exclusiveAudio,  ReplayGain replayGain,  double replayGainPreamp,  Duration crossfadeDuration,  Duration position,  Duration duration,  bool playing,  bool buffering,  bool completed,  double audioBitrate,  AudioParams audioParams)?  $default,) {final _that = this;
 switch (_that) {
 case _MediaPlayerState() when $default != null:
-return $default(_that.index,_that.playables,_that.rate,_that.pitch,_that.volume,_that.shuffle,_that.loop,_that.exclusiveAudio,_that.replayGain,_that.replayGainPreamp,_that.position,_that.duration,_that.playing,_that.buffering,_that.completed,_that.audioBitrate,_that.audioParams);case _:
+return $default(_that.index,_that.playables,_that.rate,_that.pitch,_that.volume,_that.shuffle,_that.loop,_that.exclusiveAudio,_that.replayGain,_that.replayGainPreamp,_that.crossfadeDuration,_that.position,_that.duration,_that.playing,_that.buffering,_that.completed,_that.audioBitrate,_that.audioParams);case _:
   return null;
 
 }
@@ -222,7 +223,7 @@ return $default(_that.index,_that.playables,_that.rate,_that.pitch,_that.volume,
 
 
 class _MediaPlayerState implements MediaPlayerState {
-  const _MediaPlayerState({required this.index, required final  List<Playable> playables, required this.rate, required this.pitch, required this.volume, required this.shuffle, required this.loop, required this.exclusiveAudio, required this.replayGain, required this.replayGainPreamp, required this.position, required this.duration, required this.playing, required this.buffering, required this.completed, required this.audioBitrate, required this.audioParams}): _playables = playables;
+  const _MediaPlayerState({required this.index, required final  List<Playable> playables, required this.rate, required this.pitch, required this.volume, required this.shuffle, required this.loop, required this.exclusiveAudio, required this.replayGain, required this.replayGainPreamp, required this.crossfadeDuration, required this.position, required this.duration, required this.playing, required this.buffering, required this.completed, required this.audioBitrate, required this.audioParams}): _playables = playables;
   
 
 @override final  int index;
@@ -241,6 +242,7 @@ class _MediaPlayerState implements MediaPlayerState {
 @override final  bool exclusiveAudio;
 @override final  ReplayGain replayGain;
 @override final  double replayGainPreamp;
+@override final  Duration crossfadeDuration;
 @override final  Duration position;
 @override final  Duration duration;
 @override final  bool playing;
@@ -259,16 +261,16 @@ _$MediaPlayerStateCopyWith<_MediaPlayerState> get copyWith => __$MediaPlayerStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MediaPlayerState&&(identical(other.index, index) || other.index == index)&&const DeepCollectionEquality().equals(other._playables, _playables)&&(identical(other.rate, rate) || other.rate == rate)&&(identical(other.pitch, pitch) || other.pitch == pitch)&&(identical(other.volume, volume) || other.volume == volume)&&(identical(other.shuffle, shuffle) || other.shuffle == shuffle)&&(identical(other.loop, loop) || other.loop == loop)&&(identical(other.exclusiveAudio, exclusiveAudio) || other.exclusiveAudio == exclusiveAudio)&&(identical(other.replayGain, replayGain) || other.replayGain == replayGain)&&(identical(other.replayGainPreamp, replayGainPreamp) || other.replayGainPreamp == replayGainPreamp)&&(identical(other.position, position) || other.position == position)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.playing, playing) || other.playing == playing)&&(identical(other.buffering, buffering) || other.buffering == buffering)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.audioBitrate, audioBitrate) || other.audioBitrate == audioBitrate)&&(identical(other.audioParams, audioParams) || other.audioParams == audioParams));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MediaPlayerState&&(identical(other.index, index) || other.index == index)&&const DeepCollectionEquality().equals(other._playables, _playables)&&(identical(other.rate, rate) || other.rate == rate)&&(identical(other.pitch, pitch) || other.pitch == pitch)&&(identical(other.volume, volume) || other.volume == volume)&&(identical(other.shuffle, shuffle) || other.shuffle == shuffle)&&(identical(other.loop, loop) || other.loop == loop)&&(identical(other.exclusiveAudio, exclusiveAudio) || other.exclusiveAudio == exclusiveAudio)&&(identical(other.replayGain, replayGain) || other.replayGain == replayGain)&&(identical(other.replayGainPreamp, replayGainPreamp) || other.replayGainPreamp == replayGainPreamp)&&(identical(other.crossfadeDuration, crossfadeDuration) || other.crossfadeDuration == crossfadeDuration)&&(identical(other.position, position) || other.position == position)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.playing, playing) || other.playing == playing)&&(identical(other.buffering, buffering) || other.buffering == buffering)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.audioBitrate, audioBitrate) || other.audioBitrate == audioBitrate)&&(identical(other.audioParams, audioParams) || other.audioParams == audioParams));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,index,const DeepCollectionEquality().hash(_playables),rate,pitch,volume,shuffle,loop,exclusiveAudio,replayGain,replayGainPreamp,position,duration,playing,buffering,completed,audioBitrate,audioParams);
+int get hashCode => Object.hash(runtimeType,index,const DeepCollectionEquality().hash(_playables),rate,pitch,volume,shuffle,loop,exclusiveAudio,replayGain,replayGainPreamp,crossfadeDuration,position,duration,playing,buffering,completed,audioBitrate,audioParams);
 
 @override
 String toString() {
-  return 'MediaPlayerState(index: $index, playables: $playables, rate: $rate, pitch: $pitch, volume: $volume, shuffle: $shuffle, loop: $loop, exclusiveAudio: $exclusiveAudio, replayGain: $replayGain, replayGainPreamp: $replayGainPreamp, position: $position, duration: $duration, playing: $playing, buffering: $buffering, completed: $completed, audioBitrate: $audioBitrate, audioParams: $audioParams)';
+  return 'MediaPlayerState(index: $index, playables: $playables, rate: $rate, pitch: $pitch, volume: $volume, shuffle: $shuffle, loop: $loop, exclusiveAudio: $exclusiveAudio, replayGain: $replayGain, replayGainPreamp: $replayGainPreamp, crossfadeDuration: $crossfadeDuration, position: $position, duration: $duration, playing: $playing, buffering: $buffering, completed: $completed, audioBitrate: $audioBitrate, audioParams: $audioParams)';
 }
 
 
@@ -279,7 +281,7 @@ abstract mixin class _$MediaPlayerStateCopyWith<$Res> implements $MediaPlayerSta
   factory _$MediaPlayerStateCopyWith(_MediaPlayerState value, $Res Function(_MediaPlayerState) _then) = __$MediaPlayerStateCopyWithImpl;
 @override @useResult
 $Res call({
- int index, List<Playable> playables, double rate, double pitch, double volume, bool shuffle, Loop loop, bool exclusiveAudio, ReplayGain replayGain, double replayGainPreamp, Duration position, Duration duration, bool playing, bool buffering, bool completed, double audioBitrate, AudioParams audioParams
+ int index, List<Playable> playables, double rate, double pitch, double volume, bool shuffle, Loop loop, bool exclusiveAudio, ReplayGain replayGain, double replayGainPreamp, Duration crossfadeDuration, Duration position, Duration duration, bool playing, bool buffering, bool completed, double audioBitrate, AudioParams audioParams
 });
 
 
@@ -296,7 +298,7 @@ class __$MediaPlayerStateCopyWithImpl<$Res>
 
 /// Create a copy of MediaPlayerState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? index = null,Object? playables = null,Object? rate = null,Object? pitch = null,Object? volume = null,Object? shuffle = null,Object? loop = null,Object? exclusiveAudio = null,Object? replayGain = null,Object? replayGainPreamp = null,Object? position = null,Object? duration = null,Object? playing = null,Object? buffering = null,Object? completed = null,Object? audioBitrate = null,Object? audioParams = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? index = null,Object? playables = null,Object? rate = null,Object? pitch = null,Object? volume = null,Object? shuffle = null,Object? loop = null,Object? exclusiveAudio = null,Object? replayGain = null,Object? replayGainPreamp = null,Object? crossfadeDuration = null,Object? position = null,Object? duration = null,Object? playing = null,Object? buffering = null,Object? completed = null,Object? audioBitrate = null,Object? audioParams = null,}) {
   return _then(_MediaPlayerState(
 index: null == index ? _self.index : index // ignore: cast_nullable_to_non_nullable
 as int,playables: null == playables ? _self._playables : playables // ignore: cast_nullable_to_non_nullable
@@ -308,7 +310,8 @@ as bool,loop: null == loop ? _self.loop : loop // ignore: cast_nullable_to_non_n
 as Loop,exclusiveAudio: null == exclusiveAudio ? _self.exclusiveAudio : exclusiveAudio // ignore: cast_nullable_to_non_nullable
 as bool,replayGain: null == replayGain ? _self.replayGain : replayGain // ignore: cast_nullable_to_non_nullable
 as ReplayGain,replayGainPreamp: null == replayGainPreamp ? _self.replayGainPreamp : replayGainPreamp // ignore: cast_nullable_to_non_nullable
-as double,position: null == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
+as double,crossfadeDuration: null == crossfadeDuration ? _self.crossfadeDuration : crossfadeDuration // ignore: cast_nullable_to_non_nullable
+as Duration,position: null == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
 as Duration,duration: null == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
 as Duration,playing: null == playing ? _self.playing : playing // ignore: cast_nullable_to_non_nullable
 as bool,buffering: null == buffering ? _self.buffering : buffering // ignore: cast_nullable_to_non_nullable

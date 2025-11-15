@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:identity/identity.dart';
 
+import 'package:harmonoid/localization/localization.dart';
+
 class LoginNotifier extends ChangeNotifier {
   LoginNotifier({required this.userNotifier, this.onSuccess});
 
@@ -36,7 +38,7 @@ class LoginNotifier extends ChangeNotifier {
       await userNotifier.authenticate(emailController.text.trim());
       otpSent = true;
       loading = false;
-      message = 'OTP Sent. Please check your email.';
+      message = Localization.instance.OTP_SEND_SUCCESS;
       notifyListeners();
     } on AuthException catch (exception) {
       loading = false;
@@ -44,7 +46,7 @@ class LoginNotifier extends ChangeNotifier {
       notifyListeners();
     } catch (exception) {
       loading = false;
-      error = 'Couldn\'t send OTP.';
+      error = Localization.instance.OTP_SEND_FAILURE;
       notifyListeners();
     }
   }
@@ -60,7 +62,7 @@ class LoginNotifier extends ChangeNotifier {
     try {
       await userNotifier.verify(emailController.text.trim(), otpController.text.trim());
       loading = false;
-      message = 'OTP Verified.';
+      message = Localization.instance.OTP_VERIFY_SUCCESS;
       notifyListeners();
       onSuccess?.call();
     } on AuthException catch (exception) {
@@ -69,7 +71,7 @@ class LoginNotifier extends ChangeNotifier {
       notifyListeners();
     } catch (exception) {
       loading = false;
-      error = 'Couldn\'t verify OTP.';
+      error = Localization.instance.OTP_VERIFY_FAILURE;
       notifyListeners();
     }
   }

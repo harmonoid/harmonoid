@@ -31,6 +31,7 @@ class ConfigurationBase {
   Set<AlbumGroupingParameter> get mediaLibraryAlbumGroupingParameters => _mediaLibraryAlbumGroupingParameters!;
   bool get mediaLibraryAlbumSortAscending => _mediaLibraryAlbumSortAscending!;
   AlbumSortType get mediaLibraryAlbumSortType => _mediaLibraryAlbumSortType!;
+  bool get mediaLibraryArtistImages => _mediaLibraryArtistImages!;
   bool get mediaLibraryArtistSortAscending => _mediaLibraryArtistSortAscending!;
   ArtistSortType get mediaLibraryArtistSortType => _mediaLibraryArtistSortType!;
   bool get mediaLibraryCoverFallback => _mediaLibraryCoverFallback!;
@@ -81,6 +82,7 @@ class ConfigurationBase {
     Set<AlbumGroupingParameter>? mediaLibraryAlbumGroupingParameters,
     bool? mediaLibraryAlbumSortAscending,
     AlbumSortType? mediaLibraryAlbumSortType,
+    bool? mediaLibraryArtistImages,
     bool? mediaLibraryArtistSortAscending,
     ArtistSortType? mediaLibraryArtistSortType,
     bool? mediaLibraryCoverFallback,
@@ -186,6 +188,10 @@ class ConfigurationBase {
     if (mediaLibraryAlbumSortType != null) {
       _mediaLibraryAlbumSortType = mediaLibraryAlbumSortType;
       await db.setValue(kKeyMediaLibraryAlbumSortType, kTypeInteger, integerValue: mediaLibraryAlbumSortType.index);
+    }
+    if (mediaLibraryArtistImages != null) {
+      _mediaLibraryArtistImages = mediaLibraryArtistImages;
+      await db.setValue(kKeyMediaLibraryArtistImages, kTypeBoolean, booleanValue: mediaLibraryArtistImages);
     }
     if (mediaLibraryArtistSortAscending != null) {
       _mediaLibraryArtistSortAscending = mediaLibraryArtistSortAscending;
@@ -326,6 +332,7 @@ class ConfigurationBase {
       /* Json    */ kKeyMediaLibraryAlbumGroupingParameters: [AlbumGroupingParameter.album.index],
       /* Boolean */ kKeyMediaLibraryAlbumSortAscending: true,
       /* Integer */ kKeyMediaLibraryAlbumSortType: AlbumSortType.album.index,
+      /* Boolean */ kKeyMediaLibraryArtistImages: false,
       /* Boolean */ kKeyMediaLibraryArtistSortAscending: true,
       /* Integer */ kKeyMediaLibraryArtistSortType: ArtistSortType.artist.index,
       /* Boolean */ kKeyMediaLibraryCoverFallback: false,
@@ -377,6 +384,7 @@ class ConfigurationBase {
   Set<AlbumGroupingParameter>? _mediaLibraryAlbumGroupingParameters;
   bool? _mediaLibraryAlbumSortAscending;
   AlbumSortType? _mediaLibraryAlbumSortType;
+  bool? _mediaLibraryArtistImages;
   bool? _mediaLibraryArtistSortAscending;
   ArtistSortType? _mediaLibraryArtistSortType;
   bool? _mediaLibraryCoverFallback;
@@ -429,6 +437,7 @@ const kKeyMediaLibraryAddPlaylistToNowPlaying = 'MEDIA_LIBRARY_ADD_PLAYLIST_TO_N
 const kKeyMediaLibraryAlbumGroupingParameters = 'MEDIA_LIBRARY_ALBUM_GROUPING_PARAMETERS';
 const kKeyMediaLibraryAlbumSortAscending = 'MEDIA_LIBRARY_ALBUM_SORT_ASCENDING';
 const kKeyMediaLibraryAlbumSortType = 'MEDIA_LIBRARY_ALBUM_SORT_TYPE';
+const kKeyMediaLibraryArtistImages = 'MEDIA_LIBRARY_ARTIST_IMAGES';
 const kKeyMediaLibraryArtistSortAscending = 'MEDIA_LIBRARY_ARTIST_SORT_ASCENDING';
 const kKeyMediaLibraryArtistSortType = 'MEDIA_LIBRARY_ARTIST_SORT_TYPE';
 const kKeyMediaLibraryCoverFallback = 'MEDIA_LIBRARY_COVER_FALLBACK';

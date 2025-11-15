@@ -2,6 +2,8 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:m3_expressive_shapes/rounded_polygon_border.dart';
+import 'package:m3_expressive_shapes/shapes/material_shapes.dart';
 import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 
@@ -151,7 +153,7 @@ class DesktopNowPlayingBarState extends State<DesktopNowPlayingBar> {
                                                         const TextSpan(
                                                           text: ', ',
                                                         ),
-                                                      ]
+                                                      ],
                                                     ]..removeLast(),
                                                   ),
                                                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: nowPlayingColors.backgroundText),
@@ -245,7 +247,7 @@ class Controls extends StatelessWidget {
   const Controls({super.key});
 
   static double? get floatingActionButtonElevation => isMaterial3 ? 0.0 : null;
-  static double? get floatingActionButtonDimension => isMaterial3 ? null : 48.0;
+  static double? get floatingActionButtonDimension => isMaterial3 ? 56.0 : 48.0;
 
   @override
   Widget build(BuildContext context) {
@@ -282,25 +284,52 @@ class Controls extends StatelessWidget {
                   tooltip: Localization.instance.PREVIOUS,
                 ),
                 const SizedBox(width: 8.0),
-                SizedBox.square(
-                  dimension: floatingActionButtonDimension,
-                  child: FloatingActionButton(
-                    heroTag: '***',
-                    elevation: floatingActionButtonElevation,
-                    focusElevation: floatingActionButtonElevation,
-                    hoverElevation: floatingActionButtonElevation,
-                    highlightElevation: floatingActionButtonElevation,
-                    onPressed: mediaPlayer.playOrPause,
-                    backgroundColor: nowPlayingColors.foreground,
-                    foregroundColor: nowPlayingColors.foregroundIcon,
-                    tooltip: mediaPlayer.state.playing ? Localization.instance.PAUSE : Localization.instance.PLAY,
-                    child: StatefulAnimatedIcon(
-                      dismissed: mediaPlayer.state.playing,
-                      icon: AnimatedIcons.play_pause,
-                      size: Theme.of(context).iconTheme.size! * 1.4,
+                if (isMaterial3)
+                  AnimatedContainer(
+                    width: floatingActionButtonDimension,
+                    height: floatingActionButtonDimension,
+                    curve: const ElasticOutCurve(0.85),
+                    duration: const Duration(milliseconds: 500),
+                    decoration: ShapeDecoration(
+                      color: nowPlayingColors.foreground,
+                      shape: RoundedPolygonBorder(polygon: mediaPlayer.state.playing ? MaterialShapes.sunny : MaterialShapes.square),
+                    ),
+                    child: Tooltip(
+                      message: mediaPlayer.state.playing ? Localization.instance.PAUSE : Localization.instance.PLAY,
+                      child: InkWell(
+                        onTap: mediaPlayer.playOrPause,
+                        child: Center(
+                          child: StatefulAnimatedIcon(
+                            dismissed: mediaPlayer.state.playing,
+                            icon: AnimatedIcons.play_pause,
+                            size: Theme.of(context).iconTheme.size! * 1.5,
+                            color: nowPlayingColors.foregroundIcon,
+                            duration: const Duration(milliseconds: 500),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  SizedBox.square(
+                    dimension: floatingActionButtonDimension,
+                    child: FloatingActionButton(
+                      heroTag: '***',
+                      elevation: floatingActionButtonElevation,
+                      focusElevation: floatingActionButtonElevation,
+                      hoverElevation: floatingActionButtonElevation,
+                      highlightElevation: floatingActionButtonElevation,
+                      onPressed: mediaPlayer.playOrPause,
+                      backgroundColor: nowPlayingColors.foreground,
+                      foregroundColor: nowPlayingColors.foregroundIcon,
+                      tooltip: mediaPlayer.state.playing ? Localization.instance.PAUSE : Localization.instance.PLAY,
+                      child: StatefulAnimatedIcon(
+                        dismissed: mediaPlayer.state.playing,
+                        icon: AnimatedIcons.play_pause,
+                        size: Theme.of(context).iconTheme.size! * 1.4,
+                      ),
                     ),
                   ),
-                ),
                 const SizedBox(width: 8.0),
                 IconButton(
                   onPressed: mediaPlayer.next,

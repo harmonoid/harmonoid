@@ -18,6 +18,7 @@
   {"key": "MEDIA_LIBRARY_ALBUM_GROUPING_PARAMETERS", "serializedType": "Json", "dartType": "Set<AlbumGroupingParameter>", "default": "[AlbumGroupingParameter.album.index]"},
   {"key": "MEDIA_LIBRARY_ALBUM_SORT_ASCENDING", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
   {"key": "MEDIA_LIBRARY_ALBUM_SORT_TYPE", "serializedType": "Integer", "dartType": "AlbumSortType", "default": "AlbumSortType.album.index"},
+  {"key": "MEDIA_LIBRARY_ARTIST_IMAGES", "serializedType": "Boolean", "dartType": "bool", "default": "false"},
   {"key": "MEDIA_LIBRARY_ARTIST_SORT_ASCENDING", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
   {"key": "MEDIA_LIBRARY_ARTIST_SORT_TYPE", "serializedType": "Integer", "dartType": "ArtistSortType", "default": "ArtistSortType.artist.index"},
   {"key": "MEDIA_LIBRARY_COVER_FALLBACK", "serializedType": "Boolean", "dartType": "bool", "default": "false"},

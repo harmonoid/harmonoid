@@ -603,7 +603,7 @@ class Controls extends StatelessWidget {
                   AnimatedContainer(
                     width: 72.0,
                     height: 72.0,
-                    curve: ElasticOutCurve(0.85),
+                    curve: const ElasticOutCurve(0.85),
                     duration: const Duration(milliseconds: 500),
                     decoration: ShapeDecoration(
                       color: nowPlayingColors.foreground,
