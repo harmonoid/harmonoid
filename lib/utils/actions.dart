@@ -93,7 +93,7 @@ void mediaPlayerSetCrossfadeDurationPlayerReset() {
     }
   }
   if (isMobile) {
-    NowPlayingMobileNotifier.instance.hideNowPlayingBar();
+    NowPlayingMobileNotifier.instance.closeSlidingUpPanel();
   }
 }
 
