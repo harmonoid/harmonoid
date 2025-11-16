@@ -29,7 +29,10 @@ jobs:
             --dart-define=API_KEY=${{ secrets.API_KEY }} \
             --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }} \
             --dart-define=LASTFM_API_KEY=${{ secrets.LASTFM_API_KEY }} \
-            --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }}
+            --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }} \
+            --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }} \
+            --dart-define=SUPABASE_PUBLISHABLE_KEY=${{ secrets.SUPABASE_PUBLISHABLE_KEY }} \
+            --dart-define=REVENUECAT_API_KEY=${{ secrets.REVENUECAT_API_KEY }}
       - name: Install create-dmg
         run: |
           brew install create-dmg
@@ -101,7 +104,10 @@ jobs:
             --dart-define=API_KEY=${{ secrets.API_KEY }} `
             --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }} `
             --dart-define=LASTFM_API_KEY=${{ secrets.LASTFM_API_KEY }} `
-            --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }}
+            --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }} `
+            --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }} `
+            --dart-define=SUPABASE_PUBLISHABLE_KEY=${{ secrets.SUPABASE_PUBLISHABLE_KEY }} `
+            --dart-define=REVENUECAT_API_KEY=${{ secrets.REVENUECAT_API_KEY }}
       - name: Create PFX
         id: create_pfx
         uses: timheuer/base64-to-file@v1
@@ -184,7 +190,10 @@ jobs:
             --dart-define=API_KEY=${{ secrets.API_KEY }} \
             --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }} \
             --dart-define=LASTFM_API_KEY=${{ secrets.LASTFM_API_KEY }} \
-            --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }}
+            --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }} \
+            --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }} \
+            --dart-define=SUPABASE_PUBLISHABLE_KEY=${{ secrets.SUPABASE_PUBLISHABLE_KEY }} \
+            --dart-define=REVENUECAT_API_KEY=${{ secrets.REVENUECAT_API_KEY }}
       - name: Bundle RPM
         run: |
           cp -fr build/linux/x64/release/bundle linux/debian/usr/share/harmonoid
@@ -281,12 +290,18 @@ jobs:
             --dart-define=API_KEY=${{ secrets.API_KEY }} \
             --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }} \
             --dart-define=LASTFM_API_KEY=${{ secrets.LASTFM_API_KEY }} \
-            --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }}
+            --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }} \
+            --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }} \
+            --dart-define=SUPABASE_PUBLISHABLE_KEY=${{ secrets.SUPABASE_PUBLISHABLE_KEY }} \
+            --dart-define=REVENUECAT_API_KEY=${{ secrets.REVENUECAT_API_KEY }}
           flutter build appbundle --verbose \
             --dart-define=API_KEY=${{ secrets.API_KEY }} \
             --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }} \
             --dart-define=LASTFM_API_KEY=${{ secrets.LASTFM_API_KEY }} \
-            --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }}
+            --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }} \
+            --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }} \
+            --dart-define=SUPABASE_PUBLISHABLE_KEY=${{ secrets.SUPABASE_PUBLISHABLE_KEY }} \
+            --dart-define=REVENUECAT_API_KEY=${{ secrets.REVENUECAT_API_KEY }}
           cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk harmonoid-android-arm64-v8a-release.apk
           cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk harmonoid-android-armeabi-v7a-release.apk
           cp build/app/outputs/flutter-apk/app-x86_64-release.apk harmonoid-android-x86_64-release.apk
