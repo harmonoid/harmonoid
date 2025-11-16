@@ -37,21 +37,20 @@ Future<void> navigateToArtist(BuildContext context, ArtistLookupKey key) async {
   if (artist != null) {
     final tracks = await MediaLibrary.instance.tracksFromArtist(artist);
 
-    // NOTE: Palette is not used for artists.
-    // List<Color>? palette;
-    // if (isMaterial2) {
-    //   final result = await PaletteGenerator.fromImageProvider(cover(item: artist, cacheWidth: 20));
-    //   palette = result.colors?.toList();
-    // }
+    List<Color>? palette;
+    if (isMaterial2) {
+      final result = await PaletteGenerator.fromImageProvider(cover(item: artist, cacheWidth: 20));
+      palette = result.colors?.toList();
+    }
 
-    // await precacheImage(cover(item: artist), context);
+    await precacheImage(cover(item: artist), context);
 
     _handle(context).push(
       '/$kMediaLibraryPath/$kArtistPath',
       extra: ArtistPathExtra(
         artist: artist,
         tracks: tracks,
-        palette: null,
+        palette: palette,
       ),
     );
   }

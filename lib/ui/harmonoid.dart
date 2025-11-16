@@ -17,6 +17,7 @@ import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
 import 'package:harmonoid/state/update_notifier.dart';
+import 'package:harmonoid/ui/media_library/artists/state/artist_image_notifier.dart';
 import 'package:harmonoid/ui/media_library/media_library_flags.dart';
 import 'package:harmonoid/ui/media_library/media_library_inaccessible_directories_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
@@ -103,8 +104,8 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
         ),
         ChangeNotifierProvider(
           lazy: false,
-          create: (ctx) => SubscriptionNotifierFactory.create(
-            userNotifier: ctx.read<UserNotifier>(),
+          create: (context) => SubscriptionNotifierFactory.create(
+            userNotifier: context.read(),
             functions: SubscriptionFunctions(
               updateAvailable: () => UpdateNotifier.instance.updateAvailable,
               showUpdate: () => UpdateNotifier.instance.check(),
@@ -121,6 +122,7 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
             ),
           ),
         ),
+        ChangeNotifierProvider(create: (_) => ArtistImageNotifier()),
       ],
       builder: (context, _) => Consumer<ThemeNotifier>(
         builder: (context, themeNotifier, _) => MacOSMenuBar(

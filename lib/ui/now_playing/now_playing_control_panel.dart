@@ -67,7 +67,12 @@ class NowPlayingControlPanel extends StatefulWidget {
 }
 
 class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
-  EdgeInsets get _contentPadding => isDesktop ? const EdgeInsets.only(left: 4.0, top: 12.0, bottom: 18.0) : const EdgeInsets.only(left: 4.0);
+  // WHAT THE FUCK
+  EdgeInsets get _contentPadding => switch ((isDesktop, isMaterial2)) {
+    (true, true) => const EdgeInsets.only(left: 4.0, bottom: 20.0),
+    (true, false) => const EdgeInsets.only(left: 4.0, bottom: 18.0),
+    (false, _) => const EdgeInsets.only(left: 4.0),
+  };
 
   final rate = (focusNode: FocusNode(), textEditingController: TextEditingController(text: MediaPlayer.instance.state.rate.toStringAsFixed(2)));
   final pitch = (focusNode: FocusNode(), textEditingController: TextEditingController(text: MediaPlayer.instance.state.pitch.toStringAsFixed(2)));

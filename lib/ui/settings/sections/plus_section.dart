@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:identity/identity.dart';
 import 'package:provider/provider.dart';
 
+import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/duration.dart';
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/ui/media_library/artists/state/artist_image_notifier.dart';
 import 'package:harmonoid/ui/settings/settings_section.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
@@ -90,11 +92,19 @@ class _PlusSectionState extends State<PlusSection> {
             ),
             ListItem(
               trailing: Switch(
-                value: true,
-                onChanged: (value) {},
+                value: Configuration.instance.mediaLibraryArtistImages,
+                onChanged: (value) async {
+                  await Configuration.instance.set(mediaLibraryArtistImages: value);
+                  context.read<ArtistImageNotifier>().clearCache();
+                  setState(() {});
+                },
               ),
               title: Localization.instance.DISPLAY_ARTIST_IMAGES,
-              onTap: () {},
+              onTap: () async {
+                await Configuration.instance.set(mediaLibraryArtistImages: !Configuration.instance.mediaLibraryArtistImages);
+                context.read<ArtistImageNotifier>().clearCache();
+                setState(() {});
+              },
             ),
           ],
           childrenBuilder: (child) => SubscriptionReveal(child: child),

@@ -22,12 +22,12 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - purchases_flutter (9.9.3):
+  - purchases_flutter (9.9.6):
     - FlutterMacOS
-    - PurchasesHybridCommon (= 17.15.1)
-  - PurchasesHybridCommon (17.15.1):
-    - RevenueCat (= 5.46.0)
-  - RevenueCat (5.46.0)
+    - PurchasesHybridCommon (= 17.17.0)
+  - PurchasesHybridCommon (17.17.0):
+    - RevenueCat (= 5.47.0)
+  - RevenueCat (5.47.0)
   - share_plus (0.0.1):
     - FlutterMacOS
   - shared_preferences_foundation (0.0.1):
@@ -142,9 +142,9 @@ SPEC CHECKSUMS:
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
   media_kit_libs_macos_audio: 06f3cf88d6d89c7c3c87eae57689d1c6adb335b2
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
-  purchases_flutter: 57c50cbb3c716d8a820fcf09cfcec9c94f99ef1b
-  PurchasesHybridCommon: b1313c42e226555618514daa35c3ff1f582cb10d
-  RevenueCat: 0423a85e1f2ef06f1002b18cae53fe856f60ea53
+  purchases_flutter: de534c1a48f4e70cc72a1e906f58f5025dbde5fe
+  PurchasesHybridCommon: fc38c0596d63ad06a3acab2937496fbf77f8af07
+  RevenueCat: e9024be15991ff39bf6bd887def57693115ec8c5
   share_plus: 510bf0af1a42cd602274b4629920c9649c52f4cc
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
   sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0

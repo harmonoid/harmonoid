@@ -6,11 +6,13 @@ import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
+import 'package:harmonoid/ui/media_library/artists/artist_image.dart';
 import 'package:harmonoid/ui/media_library/artists/artist_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_flags.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/open_container.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
@@ -29,6 +31,16 @@ class ArtistItem extends StatelessWidget {
 
   Future<void> navigate() async {
     final tracks = await MediaLibrary.instance.tracksFromArtist(artist);
+
+    List<Color>? palette;
+    if (isMaterial2) {
+      final result = await PaletteGenerator.fromImageProvider(cover(item: artist, cacheWidth: 20));
+      palette = result.colors?.toList();
+    }
+
+    try {
+      await precacheImage(cover(item: artist), rootNavigatorKey.currentContext!);
+    } catch (_) {}
 
     await rootNavigatorKey.currentContext!.push(
       '/$kMediaLibraryPath/$kArtistPath',
@@ -65,9 +77,9 @@ class ArtistItem extends StatelessWidget {
                         child: SizedBox(
                           width: width,
                           height: width,
-                          child: Icon(
-                            Icons.person_outline,
-                            size: width * 0.32,
+                          child: ArtistImage(
+                            artist: artist,
+                            cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
                           ),
                         ),
                       ),
@@ -120,7 +132,10 @@ class ArtistItem extends StatelessWidget {
                     height: height - 1.0,
                     alignment: Alignment.center,
                     color: Theme.of(context).cardTheme.color,
-                    child: const Icon(Icons.person),
+                    child: ArtistImage(
+                      artist: artist,
+                      cacheWidth: (height - 1.0 * MediaQuery.of(context).devicePixelRatio).toInt(),
+                    ),
                   ),
                   const SizedBox(width: 16.0),
                   Expanded(

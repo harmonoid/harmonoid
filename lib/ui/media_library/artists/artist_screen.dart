@@ -2,11 +2,14 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
+import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
+import 'package:harmonoid/ui/media_library/artists/artist_image.dart';
+import 'package:harmonoid/ui/media_library/artists/state/artist_image_notifier.dart';
 import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -27,41 +30,53 @@ class _ArtistScreenState extends State<ArtistScreen> {
   String get _title => widget.artist.artist.isEmpty ? kDefaultArtist : widget.artist.artist;
   String get _subtitle => _tracks.length == 1 ? Localization.instance.ONE_TRACK : Localization.instance.N_TRACKS.replaceAll('"N"', _tracks.length.toString());
 
+  Future<void> _editImage() async {
+    final file = await pickFile(extensions: kSupportedImageFormats);
+    if (file != null) {
+      await context.read<ArtistImageNotifier>().setFile(widget.artist, file);
+    }
+  }
+
+  Future<void> _removeImage() async {
+    await context.read<ArtistImageNotifier>().removeFile(widget.artist);
+  }
+
   @override
   Widget build(BuildContext context) {
     return HeroListItemsScreen(
       palette: widget.palette,
       heroBuilder: (context) {
         if (isDesktop) {
-          return Stack(
-            alignment: Alignment.center,
-            children: [
-              Hero(
-                tag: widget.artist,
-                child: Card(
-                  margin: EdgeInsets.zero,
-                  shape: const CircleBorder(),
-                  elevation: Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
-                  child: Container(
-                    width: 400.0,
-                    height: 400.0,
-                    padding: const EdgeInsets.all(8.0),
-                    child: const Icon(
-                      Icons.person_outline,
-                      size: 400.0 * 0.32,
+          return Center(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Hero(
+                  tag: widget.artist,
+                  child: AspectRatio(
+                    aspectRatio: 1.0,
+                    child: Card(
+                      margin: EdgeInsets.zero,
+                      shape: const CircleBorder(),
+                      elevation: Theme.of(context).cardTheme.elevation ?? kDefaultCardElevation,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ClipOval(child: ArtistImage(artist: widget.artist)),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+                _buildActions(context),
+              ],
+            ),
           );
         }
         if (isMobile) {
-          return SizedBox(
-            child: Icon(
-              Icons.person_outline,
-              size: MediaQuery.sizeOf(context).width * 0.32,
-            ),
+          return Stack(
+            children: [
+              ArtistImage(artist: widget.artist),
+              _buildActions(context),
+            ],
           );
         }
         throw UnimplementedError();
@@ -155,6 +170,37 @@ class _ArtistScreenState extends State<ArtistScreen> {
         Icons.shuffle: Localization.instance.SHUFFLE,
         Icons.playlist_add: Localization.instance.ADD_TO_NOW_PLAYING,
       },
+    );
+  }
+
+  Widget _buildActions(BuildContext context) {
+    return Positioned(
+      right: 0.0,
+      bottom: 0.0,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          InkWell(
+            onTap: _editImage,
+            borderRadius: BorderRadius.circular(32.0),
+            child: Container(
+              padding: const EdgeInsets.all(4.0),
+              decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.black26),
+              child: const Icon(Icons.edit, size: 16.0, color: Colors.white),
+            ),
+          ),
+          const SizedBox(width: 8.0),
+          InkWell(
+            onTap: _removeImage,
+            borderRadius: BorderRadius.circular(32.0),
+            child: Container(
+              padding: const EdgeInsets.all(4.0),
+              decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.black26),
+              child: const Icon(Icons.close, size: 16.0, color: Colors.white),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

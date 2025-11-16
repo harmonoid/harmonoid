@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
-import 'package:uuid/uuid.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 
@@ -42,32 +41,6 @@ class NowPlayingVisualsNotifier {
   /// External now playing visuals.
   final List<String> external = <String>[];
 
-  /// Adds an external visual specified by [path].
-  Future<void> add(String path) async {
-    final path = join(directory.path, const Uuid().v4());
-    await File(path).copy_(path);
-    external.add(path);
-  }
-
-  /// Removes an external visual specified by [path].
-  Future<void> remove(String path) async {
-    await File(path).delete_();
-    external.remove(path);
-  }
-
   /// Count of bundled now playing visuals.
   static const kBundledVisualsCount = 2;
-
-  /// Supported image formats.
-  static const kSupportedImageFormats = [
-    'JPG',
-    'JPEG',
-    'PNG',
-    'WEBP',
-    'GIF',
-    'BMP',
-    'TIF',
-    'TIFF',
-    'TGA',
-  ];
 }

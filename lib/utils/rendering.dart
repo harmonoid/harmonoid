@@ -25,6 +25,7 @@ import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
+import 'package:harmonoid/ui/media_library/artists/state/artist_image_notifier.dart';
 import 'package:harmonoid/ui/media_library/media_library_flags.dart';
 import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
@@ -167,7 +168,9 @@ ImageProvider cover({
     final mediaLibrary = MediaLibrary.instance;
     final fallback = Configuration.instance.mediaLibraryCoverFallback;
 
-    if (item != null) {
+    if (item is Artist) {
+      return homeNavigatorKey.currentContext!.read<ArtistImageNotifier>().getFile(item);
+    } else if (item != null) {
       return mediaLibrary.coverFileForMediaLibraryItem(item, fallback: fallback);
     }
 
@@ -217,6 +220,12 @@ ImageProvider cover({
       key,
       file,
       () async {
+        // Save default artist image, if it does not exist.
+        // HACK: [MediaLibrary] singleton will be removed in the future.
+        //       Add [BuildContext] as an argument to this function at that time.
+        if (item is Artist) {
+          return homeNavigatorKey.currentContext!.read<ArtistImageNotifier>().getDefaultFile();
+        }
         // Save default cover, if it does not exist.
         final cover = File(join(MediaLibrary.instance.covers.path, kCoverDefaultFileName));
         if (!await cover.exists_()) {

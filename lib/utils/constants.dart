@@ -32,11 +32,26 @@ const double kDesktopCenteredLayoutWidth = 832.0;
 const String kCoverDefaultAssetKey = 'assets/images/cover_default.png';
 const String kCoverDefaultFileName = 'Default.PNG';
 
+const String kArtistImageDefaultAssetKey = 'assets/images/artist_default.png';
+const String kArtistImageDefaultFileName = 'Default.PNG';
+
 const int kDefaultTrackNumber = 1;
 const String kDefaultAlbum = 'Unknown Album';
 const String kDefaultArtist = 'Unknown Artist';
 const String kDefaultGenre = 'Unknown Genre';
 const String kDefaultYear = 'Unknown Year';
+
+const Set<String> kSupportedImageFormats = {
+  'JPG',
+  'JPEG',
+  'PNG',
+  'WEBP',
+  'GIF',
+  'BMP',
+  'TIF',
+  'TIFF',
+  'TGA',
+};
 
 const String kApplication = 'com.alexmercerind.harmonoid';
 const String kAuthor = 'Hitesh Kumar Saini';
