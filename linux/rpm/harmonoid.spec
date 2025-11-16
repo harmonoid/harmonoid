@@ -1,5 +1,5 @@
 Name:       harmonoid
-Version:    0.3.11
+Version:    0.3.12
 Release:    1
 Summary:    Plays & manages your music library. Looks beautiful & juicy.
 License:    EULA
