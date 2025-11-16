@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:provider/provider.dart';
 
+import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/localization/localization.dart';
@@ -66,7 +67,11 @@ class _ArtistScreenState extends State<ArtistScreen> {
                     ),
                   ),
                 ),
-                _buildActions(context),
+                Positioned(
+                  right: 0.0,
+                  bottom: 0.0,
+                  child: _buildActions(context),
+                ),
               ],
             ),
           );
@@ -74,8 +79,12 @@ class _ArtistScreenState extends State<ArtistScreen> {
         if (isMobile) {
           return Stack(
             children: [
-              ArtistImage(artist: widget.artist),
-              _buildActions(context),
+              Positioned.fill(child: ArtistImage(artist: widget.artist)),
+              Positioned(
+                left: 20.0,
+                bottom: 20.0,
+                child: _buildActions(context),
+              ),
             ],
           );
         }
@@ -174,33 +183,32 @@ class _ArtistScreenState extends State<ArtistScreen> {
   }
 
   Widget _buildActions(BuildContext context) {
-    return Positioned(
-      right: 0.0,
-      bottom: 0.0,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          InkWell(
-            onTap: _editImage,
-            borderRadius: BorderRadius.circular(32.0),
-            child: Container(
-              padding: const EdgeInsets.all(4.0),
-              decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.black26),
-              child: const Icon(Icons.edit, size: 16.0, color: Colors.white),
-            ),
+    if (!Configuration.instance.mediaLibraryArtistImages) {
+      return const SizedBox.shrink();
+    }
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        InkWell(
+          onTap: _editImage,
+          borderRadius: BorderRadius.circular(32.0),
+          child: Container(
+            padding: const EdgeInsets.all(4.0),
+            decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.black26),
+            child: const Icon(Icons.edit, size: 16.0, color: Colors.white),
           ),
-          const SizedBox(width: 8.0),
-          InkWell(
-            onTap: _removeImage,
-            borderRadius: BorderRadius.circular(32.0),
-            child: Container(
-              padding: const EdgeInsets.all(4.0),
-              decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.black26),
-              child: const Icon(Icons.close, size: 16.0, color: Colors.white),
-            ),
+        ),
+        const SizedBox(width: 8.0),
+        InkWell(
+          onTap: _removeImage,
+          borderRadius: BorderRadius.circular(32.0),
+          child: Container(
+            padding: const EdgeInsets.all(4.0),
+            decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.black26),
+            child: const Icon(Icons.close, size: 16.0, color: Colors.white),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

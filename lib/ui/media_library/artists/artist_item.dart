@@ -134,7 +134,7 @@ class ArtistItem extends StatelessWidget {
                     color: Theme.of(context).cardTheme.color,
                     child: ArtistImage(
                       artist: artist,
-                      cacheWidth: (height - 1.0 * MediaQuery.of(context).devicePixelRatio).toInt(),
+                      cacheWidth: ((height - 1.0) * MediaQuery.of(context).devicePixelRatio).toInt(),
                     ),
                   ),
                   const SizedBox(width: 16.0),
@@ -181,9 +181,9 @@ class ArtistItem extends StatelessWidget {
                   SizedBox(
                     width: width,
                     height: width,
-                    child: Icon(
-                      Icons.person_outline,
-                      size: width * 0.32,
+                    child: ArtistImage(
+                      artist: artist,
+                      cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
                     ),
                   ),
                   Positioned.fill(
@@ -195,6 +195,11 @@ class ArtistItem extends StatelessWidget {
                           if (transitionDuration == Duration.zero) {
                             navigate();
                             return;
+                          }
+
+                          if (isMaterial2) {
+                            final result = await PaletteGenerator.fromImageProvider(cover(item: artist, cacheWidth: 20));
+                            palette = result.colors?.toList();
                           }
 
                           tracks = await MediaLibrary.instance.tracksFromArtist(artist);
