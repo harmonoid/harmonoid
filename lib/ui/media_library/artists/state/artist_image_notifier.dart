@@ -20,7 +20,7 @@ class ArtistImageNotifier extends ChangeNotifier {
 
   Key get key => ValueKey(_notifyListenersTimestamp);
 
-  Directory get directory => Directory(join(Configuration.instance.directory.path, 'ArtistImages'));
+  Directory get directory => _directory;
 
   Future<File?> getFile(Artist artist) async {
     if (!Configuration.instance.mediaLibraryArtistImages || artist.artist == kDefaultArtist) {

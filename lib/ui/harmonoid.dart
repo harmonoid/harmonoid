@@ -104,11 +104,11 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
         ),
         ChangeNotifierProvider(
           lazy: false,
-          create: (context) => SubscriptionNotifierFactory.create(
-            userNotifier: context.read(),
+          create: (ctx) => SubscriptionNotifierFactory.create(
+            userNotifier: ctx.read(),
             functions: SubscriptionFunctions(
               updateAvailable: () => UpdateNotifier.instance.updateAvailable,
-              showUpdate: () => UpdateNotifier.instance.check(),
+              showUpdate: () => UpdateNotifier.instance.check(true),
               showLogin: () => showLogin(context),
               onSubscriptionUpdate: subscriptionNotifierOnSubscriptionUpdate,
               onSubscriptionError: (state) {

@@ -35,7 +35,7 @@ class UpdateNotifier extends ChangeNotifier {
     updateVersion = latestVersion ?? kVersion;
     notifyListeners();
 
-    if ((force || Configuration.instance.updateCheckVersion != updateVersion) && updateAvailable) {
+    if (force || (Configuration.instance.updateCheckVersion != updateVersion && updateAvailable)) {
       if (await onShowUpdate(updateVersion)) {
         _download();
       } else {

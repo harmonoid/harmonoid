@@ -5,14 +5,16 @@ import 'package:harmonoid/models/playback_state.dart';
 extension PlaybackStateMappers on PlaybackState {
   /// Converts to [MediaPlayerState].
   MediaPlayerState toMediaPlayerState() => MediaPlayerState.defaults().copyWith(
-        index: index,
-        playables: playables,
-        rate: rate,
-        pitch: pitch,
-        volume: volume,
-        shuffle: shuffle,
-        loop: loop,
-        exclusiveAudio: exclusiveAudio,
-        replayGain: replayGain,
-      );
+    index: index,
+    playables: playables,
+    rate: rate,
+    pitch: pitch,
+    volume: volume,
+    shuffle: shuffle,
+    loop: loop,
+    exclusiveAudio: exclusiveAudio,
+    replayGain: replayGain,
+    replayGainPreamp: replayGainPreamp,
+    crossfadeDuration: crossfadeDuration,
+  );
 }
