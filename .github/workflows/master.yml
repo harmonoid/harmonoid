@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - vnext
 
 jobs:
   build_macos:
