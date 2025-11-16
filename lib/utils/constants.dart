@@ -29,11 +29,11 @@ const double kMobileSliverTileSpacerHeight = 16.0;
 
 const double kDesktopCenteredLayoutWidth = 832.0;
 
-const String kCoverDefaultAssetKey = 'assets/images/cover_default.png';
-const String kCoverDefaultFileName = 'Default.PNG';
+const String kCoverDefaultAssetKey = 'assets/images/default_album.jpg';
+const String kCoverDefaultFileName = 'Album.JPG';
 
-const String kArtistImageDefaultAssetKey = 'assets/images/artist_default.png';
-const String kArtistImageDefaultFileName = 'Default.PNG';
+const String kArtistImageDefaultAssetKey = 'assets/images/default_artist.jpg';
+const String kArtistImageDefaultFileName = 'Artist.JPG';
 
 const int kDefaultTrackNumber = 1;
 const String kDefaultAlbum = 'Unknown Album';
