@@ -198,6 +198,8 @@ jobs:
                 clang cmake ninja-build pkg-config libgtk-3-dev \
                 mpv libmpv-dev dpkg-dev rpm tree
 
+              curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
               # Install Flutter
               cd /opt
               wget -q https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.32.8-stable.tar.xz
