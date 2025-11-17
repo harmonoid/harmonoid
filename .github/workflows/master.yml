@@ -172,49 +172,74 @@ jobs:
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           submodules: recursive
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: "stable"
-          flutter-version: "3.32.8"
-      - name: Install Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev mpv libmpv-dev dpkg-dev rpm tree
       - name: Build
         run: |
-          rm -r "assets/icons"
-          mkdir "assets/icons"
-          flutter pub get
-          flutter build linux --verbose \
-            --dart-define=API_KEY=${{ secrets.API_KEY }} \
-            --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }} \
-            --dart-define=LASTFM_API_KEY=${{ secrets.LASTFM_API_KEY }} \
-            --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }} \
-            --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }} \
-            --dart-define=SUPABASE_PUBLISHABLE_KEY=${{ secrets.SUPABASE_PUBLISHABLE_KEY }} \
-            --dart-define=REVENUECAT_API_KEY=${{ secrets.REVENUECAT_API_KEY }}
-      - name: Bundle RPM
-        run: |
-          cp -fr build/linux/x64/release/bundle linux/debian/usr/share/harmonoid
-          mkdir linux/debian/usr/bin
-          ln -sr linux/debian/usr/share/harmonoid/harmonoid linux/debian/usr/bin/harmonoid
-          sed -i "s:cp -rf :cp -rf $(pwd)/:" linux/rpm/harmonoid.spec
-          cd linux/debian
-          sed -i "s:FILES_HERE:$(find usr \( -type l -o -type f \) -follow -print | awk '{printf "/%s\\n", $0}'):" ../rpm/harmonoid.spec
-          cd ../../
-          rpmbuild -bb linux/rpm/harmonoid.spec -D "_topdir $(pwd)/rpmbuild"
-          cp rpmbuild/RPMS/x86_64/*.rpm harmonoid-linux-x86_64.rpm
-      - name: Bundle DEB
-        run: |
-          dpkg-deb --build --root-owner-group linux/debian
-          cp linux/*.deb harmonoid-linux-x86_64.deb
-      - name: Build Tarball
-        run: |
-          mkdir -p AppDir/
-          cp -r linux/debian/usr AppDir/
-          ln -sr AppDir/usr/bin/harmonoid AppDir/harmonoid
-          tar czf harmonoid-linux-x86_64.tar.gz -C AppDir/ .
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            -e API_KEY="${{ secrets.API_KEY }}" \
+            -e API_BASE_URL="${{ secrets.API_BASE_URL }}" \
+            -e LASTFM_API_KEY="${{ secrets.LASTFM_API_KEY }}" \
+            -e LASTFM_SHARED_SECRET="${{ secrets.LASTFM_SHARED_SECRET }}" \
+            -e SUPABASE_URL="${{ secrets.SUPABASE_URL }}" \
+            -e SUPABASE_PUBLISHABLE_KEY="${{ secrets.SUPABASE_PUBLISHABLE_KEY }}" \
+            -e REVENUECAT_API_KEY="${{ secrets.REVENUECAT_API_KEY }}" \
+            ubuntu:18.04 \
+            bash -c '
+              set -e
+
+              # Update and install dependencies
+              apt-get update
+              apt-get install -y software-properties-common
+              add-apt-repository -y ppa:git-core/ppa
+              apt-get update
+              apt-get install -y \
+                git curl wget unzip xz-utils zip libglu1-mesa file \
+                clang cmake ninja-build pkg-config libgtk-3-dev \
+                mpv libmpv-dev dpkg-dev rpm tree
+
+              # Install Flutter
+              cd /opt
+              wget -q https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.32.8-stable.tar.xz
+              tar xf flutter_linux_3.32.8-stable.tar.xz
+              export PATH="/opt/flutter/bin:$PATH"
+              flutter --version
+
+              # Build application
+              cd /workspace
+              rm -r "assets/icons" || true
+              mkdir "assets/icons"
+              flutter pub get
+              flutter build linux --verbose \
+                --dart-define=API_KEY=$API_KEY \
+                --dart-define=API_BASE_URL=$API_BASE_URL \
+                --dart-define=LASTFM_API_KEY=$LASTFM_API_KEY \
+                --dart-define=LASTFM_SHARED_SECRET=$LASTFM_SHARED_SECRET \
+                --dart-define=SUPABASE_URL=$SUPABASE_URL \
+                --dart-define=SUPABASE_PUBLISHABLE_KEY=$SUPABASE_PUBLISHABLE_KEY \
+                --dart-define=REVENUECAT_API_KEY=$REVENUECAT_API_KEY
+
+              # Bundle RPM
+              cp -fr build/linux/x64/release/bundle linux/debian/usr/share/harmonoid
+              mkdir -p linux/debian/usr/bin
+              ln -sr linux/debian/usr/share/harmonoid/harmonoid linux/debian/usr/bin/harmonoid
+              sed -i "s:cp -rf :cp -rf $(pwd)/:" linux/rpm/harmonoid.spec
+              cd linux/debian
+              sed -i "s:FILES_HERE:$(find usr \( -type l -o -type f \) -follow -print | awk '"'"'{printf "/%s\\n", $0}'"'"'):" ../rpm/harmonoid.spec
+              cd ../../
+              rpmbuild -bb linux/rpm/harmonoid.spec -D "_topdir $(pwd)/rpmbuild"
+              cp rpmbuild/RPMS/x86_64/*.rpm harmonoid-linux-x86_64.rpm
+
+              # Bundle DEB
+              dpkg-deb --build --root-owner-group linux/debian
+              cp linux/*.deb harmonoid-linux-x86_64.deb
+
+              # Build Tarball
+              mkdir -p AppDir/
+              cp -r linux/debian/usr AppDir/
+              ln -sr AppDir/usr/bin/harmonoid AppDir/harmonoid
+              tar czf harmonoid-linux-x86_64.tar.gz -C AppDir/ .
+            '
       - name: Upload Release
         uses: softprops/action-gh-release@v1
         env:
