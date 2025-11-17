@@ -21,6 +21,8 @@ import 'package:harmonoid/extensions/playable.dart';
 import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/extensions/track.dart';
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/mappers/media_library_item.dart';
+import 'package:harmonoid/mappers/playlist_entry.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
@@ -158,42 +160,56 @@ ImageProvider cover({
   if (cacheHeight != null) cacheHeight *= 2;
 
   final key = switch ((item, playlistEntry, uri)) {
-    (MediaLibraryItem e, _, _) => '${e.runtimeType}-${e.hashCode}',
-    (_, PlaylistEntry e, _) => '${e.runtimeType}-${e.uri}-${e.hash}',
+    (MediaLibraryItem e, _, _) => e.toImageKey(),
+    (_, PlaylistEntry e, _) => e.toImageKey(),
     (_, _, String e) => e,
     _ => throw ArgumentError(),
   };
 
-  Future<File?> file() async {
+  Future<File?> getFile() async {
     final mediaLibrary = MediaLibrary.instance;
-    final fallback = Configuration.instance.mediaLibraryCoverFallback;
+    final mediaLibraryCoverFallback = Configuration.instance.mediaLibraryCoverFallback;
 
     if (item is Artist) {
       return homeNavigatorKey.currentContext!.read<ArtistImageNotifier>().getFile(item);
     } else if (item != null) {
-      return mediaLibrary.coverFileForMediaLibraryItem(item, fallback: fallback);
+      return mediaLibrary.coverFileForMediaLibraryItem(item, fallback: mediaLibraryCoverFallback);
     }
 
     if (playlistEntry != null) {
       if (playlistEntry.uri != null) {
-        return mediaLibrary.coverFileForUri(playlistEntry.uri!, fallback: fallback);
+        return mediaLibrary.coverFileForUri(playlistEntry.uri!, fallback: mediaLibraryCoverFallback);
       }
       if (playlistEntry.hash != null) {
         final track = await mediaLibrary.db.selectTrackByHash(playlistEntry.hash!);
-        return mediaLibrary.coverFileForMediaLibraryItem(track!, fallback: fallback);
+        return mediaLibrary.coverFileForMediaLibraryItem(track!, fallback: mediaLibraryCoverFallback);
       }
     }
 
     if (uri != null) {
-      return mediaLibrary.coverFileForUri(uri, fallback: fallback);
+      return mediaLibrary.coverFileForUri(uri, fallback: mediaLibraryCoverFallback);
     }
 
     throw ArgumentError();
   }
 
-  AsyncFileImage.attemptToResolveIfDefault(
+  Future<File> getFallbackFile() async {
+    // Save default artist image, if it does not exist.
+    if (item is Artist) {
+      return homeNavigatorKey.currentContext!.read<ArtistImageNotifier>().getDefaultFile();
+    }
+    // Save default album image, if it does not exist.
+    final cover = File(join(MediaLibrary.instance.covers.path, kCoverDefaultFileName));
+    if (!await cover.exists_()) {
+      final data = await rootBundle.load(kCoverDefaultAssetKey);
+      await cover.write_(data.buffer.asUint8List());
+    }
+    return cover;
+  }
+
+  AsyncFileImage.attemptToResolveIfFallback(
     key,
-    file,
+    getFile,
     onResolve: () async {
       // Allow few things to update to the just resolved cover.
       String? result;
@@ -213,31 +229,7 @@ ImageProvider cover({
 
   final result = AsyncFileImage.getFileImage(key);
 
-  final ImageProvider image;
-
-  if (result == null) {
-    image = AsyncFileImage(
-      key,
-      file,
-      () async {
-        // Save default artist image, if it does not exist.
-        // HACK: [MediaLibrary] singleton will be removed in the future.
-        //       Add [BuildContext] as an argument to this function at that time.
-        if (item is Artist) {
-          return homeNavigatorKey.currentContext!.read<ArtistImageNotifier>().getDefaultFile();
-        }
-        // Save default cover, if it does not exist.
-        final cover = File(join(MediaLibrary.instance.covers.path, kCoverDefaultFileName));
-        if (!await cover.exists_()) {
-          final data = await rootBundle.load(kCoverDefaultAssetKey);
-          await cover.write_(data.buffer.asUint8List());
-        }
-        return cover;
-      },
-    );
-  } else {
-    image = result;
-  }
+  final ImageProvider image = result ?? AsyncFileImage(key, getFile, getFallbackFile);
 
   if (cacheWidth != null || cacheHeight != null) {
     return ResizeImage.resizeIfNeeded(cacheWidth, cacheHeight, image);

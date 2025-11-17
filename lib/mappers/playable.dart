@@ -19,7 +19,7 @@ extension PlayableMappers on Playable {
   Future<MPRISMetadata> toMPRISMetadata(MediaPlayerState state) async {
     final image = cover(uri: uri);
     final artUrl = switch (image) {
-      AsyncFileImage() => (await image.file)?.uri,
+      AsyncFileImage() => (await image.getFile())?.uri,
       FileImage() => image.file.uri,
       NetworkImage() => Uri.parse(image.url),
       _ => null,

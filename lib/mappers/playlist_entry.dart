@@ -5,6 +5,9 @@ import 'package:harmonoid/models/playable.dart';
 
 /// Mappers for [PlaylistEntry].
 extension PlaylistEntryMappers on PlaylistEntry {
+  /// Converts to [AsyncFileImage] key.
+  String toImageKey() => '$runtimeType-$uri-$hash';
+
   /// Converts to [Playable].
   Future<Playable?> toPlayable(MediaLibrary mediaLibrary) async {
     if (hash != null) {

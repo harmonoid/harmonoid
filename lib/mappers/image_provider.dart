@@ -7,7 +7,7 @@ extension ImageProviderMappers on ImageProvider {
   Future<dynamic> toResource() async {
     final instance = this;
     return switch (instance) {
-      AsyncFileImage() => await instance.file,
+      AsyncFileImage() => await instance.getFile(),
       FileImage() => instance.file,
       NetworkImage() => instance.url,
       _ => null,
@@ -18,7 +18,7 @@ extension ImageProviderMappers on ImageProvider {
   Future<Uri?> toUri() async {
     final instance = this;
     return switch (instance) {
-      AsyncFileImage() => (await instance.file)?.uri,
+      AsyncFileImage() => (await instance.getFile())?.uri,
       FileImage() => instance.file.uri,
       NetworkImage() => Uri.parse(instance.url),
       _ => null,

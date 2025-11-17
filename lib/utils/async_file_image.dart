@@ -13,27 +13,25 @@ import 'package:synchronized/synchronized.dart';
 ///
 /// AsyncFileImage
 /// --------------
-/// Implementation to load [FutureOr<File>] images.
+/// Implementation to load [Future<File?>] images.
 ///
 /// {@endtemplate}
 @immutable
 class AsyncFileImage extends ImageProvider<AsyncFileImage> {
   /// {@macro async_file_image}
   const AsyncFileImage(
-    this._key,
-    this._file,
-    this._default,
+    this.key,
+    this.getFile,
+    this.getFallbackFile,
   );
 
-  final String _key;
+  final String key;
 
-  final Future<File?> Function() _file;
+  final Future<File?> Function() getFile;
 
-  final Future<File> Function() _default;
+  final Future<File> Function() getFallbackFile;
 
   final double scale = 1.0;
-
-  Future<File?> get file => _file();
 
   @override
   Future<AsyncFileImage> obtainKey(ImageConfiguration configuration) {
@@ -45,7 +43,7 @@ class AsyncFileImage extends ImageProvider<AsyncFileImage> {
     return MultiFrameImageStreamCompleter(
       codec: _loadAsync(key, decode: decode),
       scale: key.scale,
-      debugLabel: _key,
+      debugLabel: this.key,
     );
   }
 
@@ -55,42 +53,30 @@ class AsyncFileImage extends ImageProvider<AsyncFileImage> {
     return MultiFrameImageStreamCompleter(
       codec: _loadAsync(key, decode: decode),
       scale: key.scale,
-      debugLabel: _key,
+      debugLabel: this.key,
     );
   }
 
-  Future<ui.Codec> _loadAsync(
-    AsyncFileImage key, {
-    required _SimpleDecoderCallback decode,
-  }) async {
+  Future<ui.Codec> _loadAsync(AsyncFileImage key, {required _SimpleDecoderCallback decode}) async {
     assert(key == this);
 
-    fileResolveLocks.putIfAbsent(_key, () => Lock());
+    fileLocks.putIfAbsent(key.key, () => Lock());
 
-    final instance = await fileResolveLocks[_key]!.synchronized(() async {
+    final instance = await fileLocks[key.key]!.synchronized(() async {
       // There's a chance that the file got resolved in another call, return that instead of attempting to resolve again.
-      final fileImage = getFileImage(_key);
-      if (fileImage != null) {
-        return fileImage.file;
-      }
+      final fileImage = getFileImage(key.key);
+      if (fileImage != null) fileImage.file;
 
-      final result = await _resolve(_file());
+      final result = await _resolve(getFile());
 
       if (result != null) {
-        // --------------------------------------------------
-        fileImages[_key] ??= FileImage(result, scale: scale);
-        defaults[_key] ??= false;
-        // --------------------------------------------------
-
+        fallbacks[key.key] ??= false;
+        fileImages[key.key] ??= FileImage(result, scale: scale);
         return result;
       } else {
-        final file = await _default();
-
-        // --------------------------------------------------
-        fileImages[_key] ??= FileImage(file, scale: scale);
-        defaults[_key] ??= true;
-        // --------------------------------------------------
-
+        final file = await getFallbackFile();
+        fallbacks[key.key] ??= true;
+        fileImages[key.key] ??= FileImage(file, scale: scale);
         return file;
       }
     });
@@ -99,7 +85,7 @@ class AsyncFileImage extends ImageProvider<AsyncFileImage> {
     if (lengthInBytes == 0) {
       // The file may become available later.
       PaintingBinding.instance.imageCache.evict(key);
-      throw StateError('$_key is empty and cannot be loaded as an image.');
+      throw StateError('$this.key is empty and cannot be loaded as an image.');
     }
     return decode(await ui.ImmutableBuffer.fromFilePath(instance.path));
   }
@@ -114,46 +100,56 @@ class AsyncFileImage extends ImageProvider<AsyncFileImage> {
     }
   }
 
-  static final HashMap<String, bool> defaults = HashMap<String, bool>();
+  static final HashMap<String, bool> fallbacks = HashMap<String, bool>();
 
   static final HashMap<String, FileImage> fileImages = HashMap<String, FileImage>();
 
-  static final HashMap<String, Lock> fileResolveLocks = HashMap<String, Lock>();
+  static final HashMap<String, Lock> fileLocks = HashMap<String, Lock>();
 
-  static final HashMap<String, int> attemptToResolveIfDefaultCounts = HashMap<String, int>();
+  static final HashMap<String, int> attemptToResolveIfFallbackCounts = HashMap<String, int>();
 
-  static final HashMap<String, DateTime> attemptToResolveIfDefaultTimestamps = HashMap<String, DateTime>();
+  static final HashMap<String, DateTime> attemptToResolveIfFallbackTimestamps = HashMap<String, DateTime>();
 
   static FileImage? getFileImage(String key) => fileImages[key];
 
-  static bool isDefault(String key) => defaults[key] ?? false;
+  static bool isFallback(String key) => fallbacks[key] ?? false;
 
-  static void reset(String key) {
-    defaults.remove(key);
-    fileImages.remove(key);
-    fileResolveLocks.remove(key);
+  static void clear() {
+    fallbacks.clear();
+    fileImages.clear();
+    fileLocks.clear();
     // DO NOT RESET THE COUNT; PREVENT ENDLESS ATTEMPTS.
-    // attemptToResolveIfDefaultCounts.remove(key);
-    attemptToResolveIfDefaultTimestamps.remove(key);
+    // attemptToResolveIfFallbackCounts.clear();
+    attemptToResolveIfFallbackTimestamps.clear();
+    PaintingBinding.instance.imageCache.clear();
   }
 
-  static void attemptToResolveIfDefault(String key, Future<File?> Function() file, {VoidCallback? onResolve}) async {
+  static void reset(String key) {
+    fallbacks.remove(key);
+    fileImages.remove(key);
+    fileLocks.remove(key);
+    // DO NOT RESET THE COUNT; PREVENT ENDLESS ATTEMPTS.
+    // attemptToResolveIfFallbackCounts.remove(key);
+    attemptToResolveIfFallbackTimestamps.remove(key);
+  }
+
+  static void attemptToResolveIfFallback(String key, Future<File?> Function() file, {VoidCallback? onResolve}) async {
     // Try to resolve the actual cover file in background, if the current one is default.
     // There is a possibility that actual cover file was loaded sometime in the future.
-    if (isDefault(key)) {
+    if (isFallback(key)) {
       // Return if an attempt was recently made or if the limit is reached.
-      attemptToResolveIfDefaultCounts[key] ??= 0;
-      attemptToResolveIfDefaultTimestamps[key] ??= DateTime.now();
-      if (attemptToResolveIfDefaultCounts[key]! > 3 || DateTime.now().difference(attemptToResolveIfDefaultTimestamps[key]!) < const Duration(seconds: 1)) {
+      attemptToResolveIfFallbackCounts[key] ??= 0;
+      attemptToResolveIfFallbackTimestamps[key] ??= DateTime.now();
+      if (attemptToResolveIfFallbackCounts[key]! > 3 || DateTime.now().difference(attemptToResolveIfFallbackTimestamps[key]!) < const Duration(seconds: 1)) {
         return;
       }
-      attemptToResolveIfDefaultCounts[key] = attemptToResolveIfDefaultCounts[key]! + 1;
-      attemptToResolveIfDefaultTimestamps[key] = DateTime.now();
+      attemptToResolveIfFallbackCounts[key] = attemptToResolveIfFallbackCounts[key]! + 1;
+      attemptToResolveIfFallbackTimestamps[key] = DateTime.now();
 
       if (await file() != null) {
         // A file could be resolved, evict the incorrect cache.
         fileImages.remove(key);
-        defaults.remove(key);
+        fallbacks.remove(key);
         onResolve?.call();
       }
     }

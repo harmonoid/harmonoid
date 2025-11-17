@@ -48,6 +48,8 @@ mixin DiscordRpcMixin implements BaseMediaPlayer {
   }
 
   void _listenerDiscordRpc() {
+    if (_instanceDiscordRpc?.isConnected != true) return;
+
     _lockDiscordRpc.synchronized(() async {
       bool notify = false;
 
@@ -59,7 +61,7 @@ mixin DiscordRpcMixin implements BaseMediaPlayer {
           final deviceId = Configuration.instance.identifier;
           final image = cover(uri: current.uri);
           _largeImageDiscordRpc = switch (image) {
-            AsyncFileImage() => await activitySet(deviceId, current, await image.file),
+            AsyncFileImage() => await activitySet(deviceId, current, await image.getFile()),
             FileImage() => await activitySet(deviceId, current, image.file),
             NetworkImage() => image.url,
             _ => null,

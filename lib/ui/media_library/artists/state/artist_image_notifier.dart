@@ -11,6 +11,7 @@ import 'package:safe_local_storage/file_system.dart';
 
 import 'package:harmonoid/api/artist_image_get.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
+import 'package:harmonoid/mappers/media_library_item.dart';
 import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/debouncer.dart';
@@ -42,7 +43,7 @@ class ArtistImageNotifier extends ChangeNotifier {
     await file.delete_();
     await blacklistFile.delete_();
     await value.copy_(file.path);
-    AsyncFileImage.reset('${artist.runtimeType}-${artist.hashCode}');
+    AsyncFileImage.reset(artist.toImageKey());
     notifyListeners();
   }
 
@@ -52,7 +53,7 @@ class ArtistImageNotifier extends ChangeNotifier {
     final blacklistFile = _queryToBlacklistFile(query);
     await file.delete_();
     await blacklistFile.create_();
-    AsyncFileImage.reset('${artist.runtimeType}-${artist.hashCode}');
+    AsyncFileImage.reset(artist.toImageKey());
     notifyListeners();
   }
 
@@ -63,18 +64,6 @@ class ArtistImageNotifier extends ChangeNotifier {
       await cover.write_(data.buffer.asUint8List());
     }
     return cover;
-  }
-
-  // HACK:
-  void clearCache() {
-    final keys = [...AsyncFileImage.fileImages.keys];
-    final runtimeType = Artist(id: '', artist: '', timestamp: DateTime.now()).runtimeType;
-    for (final key in keys) {
-      if (key.startsWith('$runtimeType-')) {
-        AsyncFileImage.reset(key);
-      }
-    }
-    notifyListeners();
   }
 
   @override

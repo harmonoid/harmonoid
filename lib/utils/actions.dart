@@ -1,7 +1,6 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:identity/identity.dart';
-import 'package:provider/provider.dart';
 import 'package:synchronized/synchronized.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
@@ -10,7 +9,6 @@ import 'package:harmonoid/extensions/go_router.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
-import 'package:harmonoid/ui/media_library/artists/state/artist_image_notifier.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -64,7 +62,7 @@ void mediaPlayerOpenOnOpen() async {
 }
 
 void mediaPlayerUpdateCurrentOnUpdateCurrent(String uri) {
-  if (AsyncFileImage.isDefault(uri)) {
+  if (AsyncFileImage.isFallback(uri)) {
     AsyncFileImage.reset(uri);
     MediaPlayer.instance
       ..resetFlagsAudioService()
@@ -128,8 +126,8 @@ Future<void> subscriptionNotifierOnSubscriptionUpdate(SubscriptionState state) {
       await MediaPlayer.instance.setCrossfadeDuration(Duration.zero);
     }
     if (Configuration.instance.mediaLibraryArtistImages) {
-      router.routerDelegate.navigatorKey.currentContext!.read<ArtistImageNotifier>().clearCache();
-      await Configuration.instance.set(mediaLibraryArtistImages: false);
+      Configuration.instance.set(mediaLibraryArtistImages: false);
+      AsyncFileImage.clear();
     }
   });
 }
