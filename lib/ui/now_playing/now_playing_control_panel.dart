@@ -224,7 +224,7 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                       const Spacer(),
                       Switch(
                         value: mediaPlayer.state.crossfadeDuration != Duration.zero,
-                        onChanged: (value) => mediaPlayer.setCrossfadeDuration(value ? Duration.zero : MediaPlayer.kDefaultCrossfadeDuration),
+                        onChanged: (value) => mediaPlayer.setCrossfadeDuration(value ? const Duration(seconds: 5) : Duration.zero),
                       ),
                     ],
                   ),
