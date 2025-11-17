@@ -184,7 +184,7 @@ jobs:
             -e SUPABASE_URL="${{ secrets.SUPABASE_URL }}" \
             -e SUPABASE_PUBLISHABLE_KEY="${{ secrets.SUPABASE_PUBLISHABLE_KEY }}" \
             -e REVENUECAT_API_KEY="${{ secrets.REVENUECAT_API_KEY }}" \
-            ubuntu:18.04 \
+            ubuntu:20.04 \
             bash -c '
               set -e
 
