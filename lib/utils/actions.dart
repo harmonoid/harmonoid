@@ -118,16 +118,18 @@ Future<bool> updateNotifierCheckOnShowUpdate(String version) async {
   );
 }
 
-Future<void> subscriptionNotifierOnSubscriptionUpdate(SubscriptionState state) {
-  return _lock.synchronized(() async {
-    if (state is SubscriptionValid) return;
-    if (MediaPlayer.instance.state.crossfadeDuration > Duration.zero) {
-      await MediaPlayer.instance.setExclusiveAudio(false);
-      await MediaPlayer.instance.setCrossfadeDuration(Duration.zero);
-    }
-    if (Configuration.instance.mediaLibraryArtistImages) {
-      Configuration.instance.set(mediaLibraryArtistImages: false);
-      AsyncFileImage.clear();
-    }
+void subscriptionNotifierOnSubscriptionUpdate(SubscriptionState state) {
+  Future.delayed(const Duration(seconds: 5), () {
+    _lock.synchronized(() async {
+      if (state is SubscriptionValid) return;
+      if (MediaPlayer.instance.state.crossfadeDuration != Duration.zero) {
+        await MediaPlayer.instance.setExclusiveAudio(false);
+        await MediaPlayer.instance.setCrossfadeDuration(Duration.zero);
+      }
+      if (Configuration.instance.mediaLibraryArtistImages) {
+        Configuration.instance.set(mediaLibraryArtistImages: false);
+        AsyncFileImage.clear();
+      }
+    });
   });
 }
