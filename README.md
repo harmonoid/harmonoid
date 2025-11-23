@@ -59,15 +59,20 @@
 - Speed adjustment.
 - Pitch adjustment.
 - Volume boost.
-- Portable.
+- Crossfade.
+- ReplayGain.
+- Exclusive audio.
+- Last.fm integration.
 - Discord RPC integration.
 - mpv backend.
 - Lyrics (LRC, tags & online).
+- Artist images.
 - Playlists.
 - Multiple artist & genre support.
 - Fallback cover support. e.g. cover.jpg, Folder.jpg etc.
 - Small installer (≈ 35 MB) & low RAM usage (≈ 150 MB).
 - Excellent backward compatibility. Android 5.0 or higher. macOS 10.15 or higher. Windows 10 or higher.
+- Portable.
 - Cross-platform (macOS, Windows, GNU/Linux & Android).
 - Notification.MediaStyle for Android.
 - D-Bus MPRIS controls for GNU/Linux.
@@ -79,12 +84,6 @@
 It's really hard to find software with good design & animations on desktop. It's almost like desktop app developers don't have faith in adding animations to their UI. Other music players, which look kind-of good don't work properly, refuse to support an audio format, read tags incorrectly, don't have my favorite feature or simply use electron.js.
 
 Harmonoid very strictly implements Material Design to be a consistent, cohesive & modern music player for all platforms. There are no inconsistent paddings, spacings or weird alignments to make me feel uncomfortable. It's built with care & proper time is given to everything.
-
-## Support
-
-- [GitHub Sponsors](https://github.com/sponsors/alexmercerind)
-- [Patreon](https://patreon.com/harmonoid)
-- [PayPal](https://paypal.me/alexmercerind)
 
 ## Localizations
 
