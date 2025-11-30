@@ -16,35 +16,56 @@ import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
-class AlbumItem extends StatelessWidget {
+class AlbumItem extends StatefulWidget {
   final Album album;
   final double width;
   final double height;
+  final bool outlined;
 
   const AlbumItem({
     super.key,
     required this.album,
     required this.width,
     required this.height,
+    this.outlined = false,
   });
 
+  @override
+  State<AlbumItem> createState() => _AlbumItemState();
+
+  static List<Track>? tracks;
+  static List<Color>? palette;
+}
+
+class _AlbumItemState extends State<AlbumItem> {
+  // ------------------------------
+  Color? get color => widget.outlined ? Theme.of(context).colorScheme.surfaceContainerLow : Theme.of(context).cardTheme.color;
+  double? get elevation => widget.outlined ? 0.0 : Theme.of(context).cardTheme.elevation;
+  ShapeBorder? get shape => widget.outlined
+      ? RoundedRectangleBorder(
+          side: BorderSide(color: Theme.of(context).colorScheme.outline, width: 1.0),
+          borderRadius: BorderRadius.circular(4.0),
+        )
+      : Theme.of(context).cardTheme.shape;
+  // ------------------------------
+
   Future<void> navigate() async {
-    final tracks = await MediaLibrary.instance.tracksFromAlbum(album);
+    final tracks = await MediaLibrary.instance.tracksFromAlbum(widget.album);
 
     List<Color>? palette;
     if (isMaterial2) {
-      final result = await PaletteGenerator.fromImageProvider(cover(item: album, cacheWidth: 20));
+      final result = await PaletteGenerator.fromImageProvider(cover(item: widget.album, cacheWidth: 20));
       palette = result.colors?.toList();
     }
 
     try {
-      await precacheImage(cover(item: album), rootNavigatorKey.currentContext!);
+      await precacheImage(cover(item: widget.album), rootNavigatorKey.currentContext!);
     } catch (_) {}
 
     await rootNavigatorKey.currentContext!.push(
       '/$kMediaLibraryPath/$kAlbumPath',
       extra: AlbumPathExtra(
-        album: album,
+        album: widget.album,
         tracks: tracks,
         palette: palette,
       ),
@@ -52,8 +73,8 @@ class AlbumItem extends StatelessWidget {
   }
 
   Future<void> onSecondaryPress(BuildContext context, {RelativeRect? position}) async {
-    final result = await showMenuItems(context, albumPopupMenuItems(context, album), position: position);
-    await albumPopupMenuHandle(context, album, result);
+    final result = await showMenuItems(context, albumPopupMenuItems(context, widget.album), position: position);
+    await albumPopupMenuHandle(context, widget.album, result);
   }
 
   Widget _buildDesktopLayout(BuildContext context) {
@@ -63,27 +84,30 @@ class AlbumItem extends StatelessWidget {
       },
       child: Card(
         margin: EdgeInsets.zero,
+        color: color,
+        elevation: elevation,
+        shape: shape,
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: navigate,
           child: SizedBox(
-            width: width,
-            height: height,
+            width: widget.width,
+            height: widget.height,
             child: Column(
               children: [
                 Hero(
-                  tag: album,
+                  tag: widget.album,
                   child: SizedBox(
-                    width: width,
-                    height: width,
+                    width: widget.width,
+                    height: widget.width,
                     child: ScaleOnHover(
                       child: Image(
-                        width: width,
-                        height: width,
+                        width: widget.width,
+                        height: widget.width,
                         fit: BoxFit.cover,
                         image: cover(
-                          item: album,
-                          cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
+                          item: widget.album,
+                          cacheWidth: (widget.width * MediaQuery.of(context).devicePixelRatio).toInt(),
                         ),
                       ),
                     ),
@@ -91,7 +115,7 @@ class AlbumItem extends StatelessWidget {
                 ),
                 Expanded(
                   child: Container(
-                    width: width,
+                    width: widget.width,
                     alignment: Alignment.centerLeft,
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Column(
@@ -100,14 +124,14 @@ class AlbumItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          album.displayTitle,
+                          widget.album.displayTitle,
                           style: Theme.of(context).textTheme.titleSmall,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        if (album.displaySubtitle.isNotEmpty)
+                        if (widget.album.displaySubtitle.isNotEmpty)
                           Text(
-                            album.displaySubtitle,
+                            widget.album.displaySubtitle,
                             style: Theme.of(context).textTheme.bodySmall,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -133,9 +157,9 @@ class AlbumItem extends StatelessWidget {
       onSecondaryPress(context);
     }
 
-    if (width >= height) {
+    if (widget.width >= widget.height) {
       return SizedBox(
-        height: height,
+        height: widget.height,
         child: InkWell(
           onTap: navigate,
           onLongPress: onLongPress,
@@ -151,10 +175,10 @@ class AlbumItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Image(
-                    width: height - 1.0,
-                    height: height - 1.0,
+                    width: widget.height - 1.0,
+                    height: widget.height - 1.0,
                     image: cover(
-                      item: album,
+                      item: widget.album,
                       cacheWidth: (kMobileHeaderHeight * MediaQuery.of(context).devicePixelRatio).toInt(),
                     ),
                     fit: BoxFit.cover,
@@ -167,14 +191,14 @@ class AlbumItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          album.displayTitle,
+                          widget.album.displayTitle,
                           style: Theme.of(context).textTheme.titleMedium,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        if (album.displaySubtitle.isNotEmpty)
+                        if (widget.album.displaySubtitle.isNotEmpty)
                           Text(
-                            album.displaySubtitle,
+                            widget.album.displaySubtitle,
                             style: Theme.of(context).textTheme.bodyMedium,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -203,12 +227,12 @@ class AlbumItem extends StatelessWidget {
     return OpenContainer(
       navigatorKey: homeNavigatorKey,
       transitionDuration: transitionDuration,
-      closedColor: Theme.of(context).cardTheme.color ?? Colors.transparent,
-      closedShape: Theme.of(context).cardTheme.shape ?? const RoundedRectangleBorder(),
-      closedElevation: Theme.of(context).cardTheme.elevation ?? 0.0,
+      closedColor: color ?? Colors.transparent,
+      closedShape: shape ?? const RoundedRectangleBorder(),
+      closedElevation: elevation ?? 0.0,
       openColor: Theme.of(context).scaffoldBackgroundColor,
-      openShape: const RoundedRectangleBorder(),
-      openElevation: Theme.of(context).cardTheme.elevation ?? 0.0,
+      openShape: shape ?? const RoundedRectangleBorder(),
+      openElevation: elevation ?? 0.0,
       tappable: false,
       onClosed: (data) {
         NowPlayingMobileNotifier.instance.showBottomNavigationBar();
@@ -223,40 +247,40 @@ class AlbumItem extends StatelessWidget {
               return;
             }
 
-            tracks = await MediaLibrary.instance.tracksFromAlbum(album);
+            tracks = await MediaLibrary.instance.tracksFromAlbum(widget.album);
 
             if (isMaterial2) {
-              final result = await PaletteGenerator.fromImageProvider(cover(item: album, cacheWidth: 20));
+              final result = await PaletteGenerator.fromImageProvider(cover(item: widget.album, cacheWidth: 20));
               palette = result.colors?.toList();
             }
 
-            await precacheImage(cover(item: album), context);
+            await precacheImage(cover(item: widget.album), context);
 
             action();
             context.read<NowPlayingMobileNotifier>().hideBottomNavigationBar();
           },
           onLongPress: onLongPress,
           child: SizedBox(
-            width: width,
-            height: height,
+            width: widget.width,
+            height: widget.height,
             child: Column(
               children: [
                 SizedBox(
-                  width: width,
-                  height: width,
+                  width: widget.width,
+                  height: widget.width,
                   child: Ink.image(
-                    width: width,
-                    height: width,
+                    width: widget.width,
+                    height: widget.width,
                     fit: BoxFit.cover,
                     image: cover(
-                      item: album,
-                      cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
+                      item: widget.album,
+                      cacheWidth: (widget.width * MediaQuery.of(context).devicePixelRatio).toInt(),
                     ),
                   ),
                 ),
                 Expanded(
                   child: Container(
-                    width: width,
+                    width: widget.width,
                     alignment: Alignment.centerLeft,
                     padding: const EdgeInsets.symmetric(horizontal: 12.0),
                     child: Column(
@@ -264,23 +288,23 @@ class AlbumItem extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (height - width >= 56.0) ...[
+                        if (widget.height - widget.width >= 56.0) ...[
                           Text(
-                            album.displayTitle,
+                            widget.album.displayTitle,
                             style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          if (album.displaySubtitle.isNotEmpty)
+                          if (widget.album.displaySubtitle.isNotEmpty)
                             Text(
-                              album.displaySubtitle,
+                              widget.album.displaySubtitle,
                               style: Theme.of(context).textTheme.bodyMedium,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                        ] else if (height - width >= 32.0) ...[
+                        ] else if (widget.height - widget.width >= 32.0) ...[
                           Text(
-                            album.displayTitle,
+                            widget.album.displayTitle,
                             style: Theme.of(context).textTheme.bodyLarge,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -298,9 +322,9 @@ class AlbumItem extends StatelessWidget {
       openBuilder: (context, _) {
         mediaLibraryAlbumOpenContainerBuildContext = context;
         return AlbumScreen(
-          album: album,
-          tracks: tracks!,
-          palette: palette,
+          album: widget.album,
+          tracks: AlbumItem.tracks!,
+          palette: AlbumItem.palette,
         );
       },
     );

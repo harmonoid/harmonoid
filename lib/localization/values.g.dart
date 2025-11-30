@@ -130,7 +130,7 @@ class Values {
   late String MODIFY_BACKGROUND_IMAGES;
   late String MORE;
   late String MUTE;
-  late String M_TRACKS_AND_N_ALBUMS;
+  late String M_ALBUMS_AND_N_TRACKS;
   late String NEXT;
   late String NO;
   late String NOTHING_IN_QUEUE;
@@ -139,6 +139,7 @@ class Values {
   late String NO_FOLDERS_ADDED;
   late String NO_PLAYLISTS_FOUND;
   late String N_ALBUMS;
+  late String N_ALBUMS_ONE_TRACK;
   late String N_ARTISTS;
   late String N_ENTRIES;
   late String N_GENRES;
@@ -146,6 +147,8 @@ class Values {
   late String OFF;
   late String OK;
   late String ONE_ALBUM;
+  late String ONE_ALBUM_N_TRACKS;
+  late String ONE_ALBUM_ONE_TRACK;
   late String ONE_ARTIST;
   late String ONE_GENRE;
   late String ONE_TRACK;

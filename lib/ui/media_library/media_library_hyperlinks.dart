@@ -36,6 +36,7 @@ Future<void> navigateToArtist(BuildContext context, ArtistLookupKey key) async {
   final artist = MediaLibrary.instance.lookupArtist(key);
   if (artist != null) {
     final tracks = await MediaLibrary.instance.tracksFromArtist(artist);
+    final albums = await MediaLibrary.instance.albumsFromArtist(artist);
 
     List<Color>? palette;
     if (isMaterial2) {
@@ -50,6 +51,7 @@ Future<void> navigateToArtist(BuildContext context, ArtistLookupKey key) async {
       extra: ArtistPathExtra(
         artist: artist,
         tracks: tracks,
+        albums: albums,
         palette: palette,
       ),
     );

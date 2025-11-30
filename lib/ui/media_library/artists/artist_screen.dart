@@ -6,18 +6,28 @@ import 'package:provider/provider.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/extensions/album.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
+import 'package:harmonoid/ui/media_library/albums/album_item.dart';
 import 'package:harmonoid/ui/media_library/artists/artist_image.dart';
 import 'package:harmonoid/ui/media_library/artists/state/artist_image_notifier.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/scroll_view_builder_helper.dart';
 
 class ArtistScreen extends StatefulWidget {
   final Artist artist;
   final List<Track> tracks;
+  final List<Album> albums;
   final List<Color>? palette;
-  const ArtistScreen({super.key, required this.artist, required this.tracks, this.palette});
+  const ArtistScreen({
+    super.key,
+    required this.artist,
+    required this.tracks,
+    required this.albums,
+    this.palette,
+  });
 
   @override
   State<ArtistScreen> createState() => _ArtistScreenState();
@@ -25,8 +35,14 @@ class ArtistScreen extends StatefulWidget {
 
 class _ArtistScreenState extends State<ArtistScreen> {
   late final _tracks = widget.tracks;
+  late final _albums = widget.albums;
   String get _title => widget.artist.artist.isEmpty ? kDefaultArtist : widget.artist.artist;
-  String get _subtitle => _tracks.length == 1 ? Localization.instance.ONE_TRACK : Localization.instance.N_TRACKS.replaceAll('"N"', _tracks.length.toString());
+  String get _subtitle => switch ((_tracks.length, _albums.length)) {
+    (1, 1) => Localization.instance.ONE_ALBUM_ONE_TRACK,
+    (1, _) => Localization.instance.ONE_ALBUM_N_TRACKS.replaceAll('"N"', _albums.length.toString()),
+    (_, 1) => Localization.instance.N_ALBUMS_ONE_TRACK.replaceAll('"N"', _tracks.length.toString()),
+    (_, _) => Localization.instance.M_ALBUMS_AND_N_TRACKS.replaceAll('"M"', _albums.length.toString()).replaceAll('"N"', _tracks.length.toString()),
+  };
 
   Future<void> _editImage() async {
     final file = await pickFile(extensions: kSupportedImageFormats);
@@ -105,8 +121,29 @@ class _ArtistScreenState extends State<ArtistScreen> {
         Icons.shuffle: Localization.instance.SHUFFLE,
         Icons.playlist_add: Localization.instance.ADD_TO_NOW_PLAYING,
       },
-      tabs: [''],
+      tabs: [Localization.instance.ALBUMS, Localization.instance.TRACKS],
       content: [
+        ScrollViewBuilder(
+          margin: margin,
+          span: null,
+          headerCount: 1,
+          headerBuilder: (context, i, h) => const SizedBox.shrink(key: ValueKey('')),
+          headerHeight: 0.0,
+          itemCounts: [_albums.length],
+          itemBuilder: (context, i, j, w, h) {
+            return AlbumItem(
+              key: _albums[j].scrollViewBuilderKey,
+              album: _albums[j],
+              width: w,
+              height: h,
+              outlined: true,
+            );
+          },
+          itemWidth: ScrollViewBuilderHelper.instance.album.itemWidth,
+          itemHeight: ScrollViewBuilderHelper.instance.album.itemHeight,
+          padding: EdgeInsets.only(top: margin),
+          displayHeaders: false,
+        ),
         ListItemTable(
           columns: [Localization.instance.TRACK, Localization.instance.ALBUM],
           itemCount: _tracks.length,

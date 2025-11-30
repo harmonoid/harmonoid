@@ -31,6 +31,7 @@ class ArtistItem extends StatelessWidget {
 
   Future<void> navigate() async {
     final tracks = await MediaLibrary.instance.tracksFromArtist(artist);
+    final albums = await MediaLibrary.instance.albumsFromArtist(artist);
 
     List<Color>? palette;
     if (isMaterial2) {
@@ -47,6 +48,7 @@ class ArtistItem extends StatelessWidget {
       extra: ArtistPathExtra(
         artist: artist,
         tracks: tracks,
+        albums: albums,
         palette: palette,
       ),
     );
@@ -218,6 +220,7 @@ class ArtistItem extends StatelessWidget {
               return ArtistScreen(
                 artist: artist,
                 tracks: tracks!,
+                albums: albums!,
                 palette: palette,
               );
             },
@@ -254,5 +257,6 @@ class ArtistItem extends StatelessWidget {
   }
 
   static List<Track>? tracks;
+  static List<Album>? albums;
   static List<Color>? palette;
 }
