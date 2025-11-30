@@ -57,6 +57,15 @@ class ArtistImageNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> refreshFile(Artist artist) async {
+    final query = _artistToQuery(artist);
+    final file = _queryToFile(query);
+    final blacklistFile = _queryToBlacklistFile(query);
+    await file.delete_();
+    await blacklistFile.delete_();
+    await _download(artist);
+  }
+
   Future<File> getDefaultFile() async {
     final cover = File(join(_directory.path, kArtistImageDefaultFileName));
     if (!await cover.exists_()) {

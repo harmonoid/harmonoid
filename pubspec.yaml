@@ -61,7 +61,6 @@ dependencies:
   share_plus: ^12.0.1
   sqlite3: ^2.9.4
   sqlite3_flutter_libs: ^0.5.40
-  syncfusion_flutter_datagrid: 24.2.7
   syncfusion_flutter_sliders: 24.2.7
   synchronized: ^3.0.0+2
   system_fonts: ^1.0.1
@@ -87,6 +86,12 @@ dev_dependencies:
 
 dependency_overrides:
   vector_math: 2.2.0
+  permission_handler_windows:
+    # https://github.com/Baseflow/flutter-permission-handler/issues/983
+    # https://github.com/Baseflow/flutter-permission-handler/issues/1034
+    git:
+      url: https://github.com/localsend/permission_handler_windows_noop.git
+      ref: 2dadd8afbf81e0e3e4791d7144e689555e58f649
 
 flutter:
   uses-material-design: true

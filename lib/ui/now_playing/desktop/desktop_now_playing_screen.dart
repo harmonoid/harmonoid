@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:adaptive_layouts/adaptive_layouts.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +9,9 @@ import 'package:provider/provider.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/duration.dart';
+import 'package:harmonoid/extensions/list.dart';
 import 'package:harmonoid/extensions/media_player_state.dart';
+import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/models/loop.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
@@ -239,24 +240,16 @@ class Controls extends StatelessWidget {
                                   const SizedBox(height: 4.0),
                                   Row(
                                     children: [
-                                      HyperLink(
-                                        text: TextSpan(
-                                          children: [
-                                            for (final artist in mediaPlayer.current.subtitle.isEmpty ? {''} : mediaPlayer.current.subtitle) ...[
-                                              TextSpan(
-                                                text: artist.isEmpty ? kDefaultArtist : artist,
-                                                recognizer: TapGestureRecognizer()
-                                                  ..onTap = () {
-                                                    navigateToArtist(context, ArtistLookupKey(artist: artist));
-                                                  },
+                                      TappableText(
+                                        text: (mediaPlayer.current.subtitle.ifEmpty(['']))
+                                            .map(
+                                              (e) => TappableTextData(
+                                                text: e.nullIfBlank() ?? kDefaultArtist,
+                                                onTap: () => navigateToArtist(context, ArtistLookupKey(artist: e)),
                                               ),
-                                              const TextSpan(
-                                                text: ', ',
-                                              ),
-                                            ]
-                                          ]..removeLast(),
-                                        ),
-                                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: nowPlayingColors.backgroundText),
+                                            )
+                                            .toList(),
+                                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: nowPlayingColors.backgroundText),
                                       ),
                                       if (mediaPlayer.current.description.isNotEmpty) ...[
                                         Text(

@@ -142,12 +142,17 @@ class MediaPlayer extends ChangeNotifier
 
   @override
   Future<void> open(
-    List<Playable> playables, {
+    Iterable<Playable> playables, {
     int index = 0,
     bool play = true,
+    bool shuffle = false,
     void Function()? onOpen = mediaPlayerOpenOnOpen,
   }) async {
-    await _player.open(Playlist(playables.map((playable) => playable.toMedia()).toList(), index: index), play: play);
+    final medias = playables.map((playable) => playable.toMedia()).toList();
+    if (shuffle) {
+      medias.shuffle();
+    }
+    await _player.open(Playlist(medias, index: index), play: play);
     onOpen?.call();
   }
 
@@ -158,7 +163,7 @@ class MediaPlayer extends ChangeNotifier
   Future<void> remove(int index) => _player.remove(index);
 
   @override
-  Future<void> add(List<Playable> playables) async {
+  Future<void> add(Iterable<Playable> playables) async {
     for (final playable in playables) {
       await _player.add(playable.toMedia());
     }

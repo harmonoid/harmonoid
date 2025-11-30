@@ -1,17 +1,14 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
-import 'package:harmonoid/extensions/track.dart';
+import 'package:harmonoid/extensions/shape_border.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
-import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/widgets.dart';
 
 class AlbumScreen extends StatefulWidget {
   final Album album;
@@ -42,7 +39,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return HeroListItemsScreen(
+    return HeroContentScreen(
+      mergeHeroAndContent: true,
       palette: widget.palette,
       heroBuilder: (context) {
         if (isDesktop) {
@@ -59,13 +57,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: ClipRRect(
                       clipBehavior: Clip.antiAlias,
-                      borderRadius: Theme.of(context).cardTheme.shape is! RoundedRectangleBorder
-                          ? BorderRadius.zero
-                          : (Theme.of(context).cardTheme.shape as RoundedRectangleBorder).borderRadius.subtract(
-                                const BorderRadius.all(
-                                  Radius.circular(8.0),
-                                ),
-                              ),
+                      borderRadius: Theme.of(context).cardTheme.shape?.subtractBorderRadius(BorderRadius.circular(8.0)) ?? BorderRadius.zero,
                       child: Image(
                         image: cover(item: widget.album),
                         fit: BoxFit.cover,
@@ -88,88 +80,11 @@ class _AlbumScreenState extends State<AlbumScreen> {
       caption: kCaption,
       title: _title,
       subtitle: _subtitle,
-      listItemCount: _tracks.length,
-      listItemDisplayIndex: true,
-      listItemHeaders: [
-        Text(Localization.instance.TRACK),
-        Text(Localization.instance.ARTISTS),
-      ],
-      listItemIndexBuilder: (context, i) => _tracks[i].trackNumber == 0 ? kDefaultTrackNumber : _tracks[i].trackNumber,
-      listItemBuilder: (context, i) {
-        if (isDesktop) {
-          return [
-            IgnorePointer(
-              child: Text(
-                _tracks[i].displayTitle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            HyperLink(
-              text: TextSpan(
-                children: [
-                  for (final artist in (_tracks[i].artists.isEmpty ? {''} : _tracks[i].artists)) ...[
-                    TextSpan(
-                      text: artist.isEmpty ? kDefaultArtist : artist,
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          navigateToArtist(context, ArtistLookupKey(artist: artist));
-                        },
-                    ),
-                    const TextSpan(
-                      text: ', ',
-                    ),
-                  ]
-                ]..removeLast(),
-              ),
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-          ];
-        }
-        if (isMobile) {
-          return [
-            Text(
-              widget.tracks[i].displayTitle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            if (widget.tracks[i].artists.isNotEmpty)
-              Text(
-                widget.tracks[i].artists.join(', '),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-          ];
-        }
-        throw UnimplementedError();
-      },
-      listItemPopupMenuBuilder: (context, i) => trackPopupMenuItems(context, _tracks[i]),
-      onListItemPressed: (context, i) => MediaPlayer.instance.open(_tracks.map((e) => e.toPlayable()).toList(), index: i),
-      onListItemPopupMenuItemSelected: (context, i, result) async {
-        await trackPopupMenuHandle(
-          context,
-          _tracks[i],
-          result,
-          recursivelyPopNavigatorOnDeleteIf: () => MediaLibrary.instance.tracksFromAlbum(widget.album).then((value) => value.isEmpty),
-        );
-        // NOTE: The track could've been deleted, so we need to check & update the list.
-        final tracks = await MediaLibrary.instance.tracksFromAlbum(widget.album);
-        if (tracks.length != _tracks.length) {
-          setState(() {
-            _tracks
-              ..clear()
-              ..addAll(tracks);
-          });
-        }
-      },
-      mergeHeroAndListItems: true,
       actions: {
-        Icons.play_arrow: (_) => MediaPlayer.instance.open(_tracks.map((e) => e.toPlayable()).toList()),
-        Icons.shuffle: (_) => MediaPlayer.instance.open([..._tracks..shuffle()].map((e) => e.toPlayable()).toList()),
-        Icons.playlist_add: (_) => MediaPlayer.instance.add(_tracks.map((e) => e.toPlayable()).toList()),
-        Icons.delete: (_) {
-          albumPopupMenuHandle(context, widget.album, 2);
-        },
+        Icons.play_arrow: (_, _) => MediaPlayer.instance.open(_tracks.map((e) => e.toPlayable())),
+        Icons.shuffle: (_, _) => MediaPlayer.instance.open(_tracks.map((e) => e.toPlayable()), shuffle: true),
+        Icons.playlist_add: (_, _) => MediaPlayer.instance.add(_tracks.map((e) => e.toPlayable())),
+        Icons.delete: (_, _) => albumPopupMenuHandle(context, widget.album, 2),
       },
       labels: {
         Icons.play_arrow: Localization.instance.PLAY_NOW,
@@ -177,6 +92,40 @@ class _AlbumScreenState extends State<AlbumScreen> {
         Icons.playlist_add: Localization.instance.ADD_TO_NOW_PLAYING,
         Icons.delete: Localization.instance.DELETE,
       },
+      tabs: [''],
+      content: [
+        ListItemTable(
+          columns: [Localization.instance.TRACK, Localization.instance.ARTISTS],
+          itemCount: _tracks.length,
+          itemBuilder: (context, i) => ListItemData(
+            key: ValueKey(i.toString()),
+            children: [
+              _tracks[i].toTitleTappableText(),
+              _tracks[i].toArtistsTappableText(context),
+            ],
+          ),
+          leadingBuilder: (context, i) => _tracks[i].trackNumber == 0 ? kDefaultTrackNumber : _tracks[i].trackNumber,
+          popupMenuBuilder: (context, i) => trackPopupMenuItems(context, _tracks[i]),
+          onItemPressed: (context, i) => MediaPlayer.instance.open(_tracks.map((e) => e.toPlayable()), index: i),
+          onPopupMenuItemSelected: (context, i, result) async {
+            await trackPopupMenuHandle(
+              context,
+              _tracks[i],
+              result,
+              recursivelyPopNavigatorOnDeleteIf: () => MediaLibrary.instance.tracksFromAlbum(widget.album).then((value) => value.isEmpty),
+            );
+            // NOTE: The track could've been deleted, so we need to check & update the list.
+            final tracks = await MediaLibrary.instance.tracksFromAlbum(widget.album);
+            if (tracks.length != _tracks.length) {
+              setState(() {
+                _tracks
+                  ..clear()
+                  ..addAll(tracks);
+              });
+            }
+          },
+        ),
+      ],
     );
   }
 }

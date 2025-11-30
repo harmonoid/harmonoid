@@ -104,7 +104,7 @@ class _MediaLibraryInaccessibleDirectoriesScreenState extends State<MediaLibrary
 
   @override
   Widget build(BuildContext context) {
-    return HeaderListItemsScreen(
+    return HeroContentScreen(
       palette: [Colors.red.shade800],
       caption: kCaption,
       title: Localization.instance.MEDIA_LIBRARY_INACCESSIBLE_FOLDERS_TITLE,
@@ -118,41 +118,30 @@ class _MediaLibraryInaccessibleDirectoriesScreenState extends State<MediaLibrary
         iconSize: 24.0,
         splashRadius: 20.0,
       ),
-      listItemCount: directories.length,
-      listItemDisplayIndex: false,
-      listItemHeaders: [Text(Localization.instance.FOLDER)],
-      listItemBuilder: (context, i) => [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Icon(FluentIcons.folder_32_regular, size: 32.0),
-            const SizedBox(width: 8.0),
-            Expanded(
-              child: Text(
-                directories[i].path,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            ),
-            const SizedBox(width: 8.0),
-            TextButton(
-              onPressed: () => remove(directories[i]),
-              child: Text(label(Localization.instance.REMOVE)),
-            ),
-          ],
-        ),
-      ],
       actions: {
-        Icons.refresh: (context) => refresh(),
-        Icons.settings: (context) => context.push('/$kSettingsPath'),
+        Icons.refresh: (context, _) => refresh(),
+        Icons.settings: (context, _) => context.push('/$kSettingsPath'),
       },
       labels: {
         Icons.refresh: Localization.instance.REFRESH,
         Icons.settings: Localization.instance.SETTINGS,
       },
+      tabs: [''],
+      content: [
+        ListItemTable(
+          columns: [Localization.instance.FOLDER, ''],
+          itemCount: directories.length,
+          itemBuilder: (context, i) => ListItemData(
+            key: ValueKey(i.toString()),
+            children: [
+              TappableText(text: [TappableTextData(text: directories[i].path)]),
+              TextButton(onPressed: () => remove(directories[i]), child: Text(label(Localization.instance.REMOVE))),
+            ],
+          ),
+          leadingBuilder: (context, i) => const Icon(FluentIcons.folder_32_regular, size: 32.0),
+          desktopColumnRatios: [0.8, 0.2],
+        ),
+      ],
     );
   }
 }

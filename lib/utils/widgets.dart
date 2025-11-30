@@ -1,11 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
-import 'dart:ui' as ui;
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide CarouselView, CarouselController, ReorderableDragStartListener, Intent;
 import 'package:flutter/rendering.dart';
@@ -59,7 +56,7 @@ class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
           child: InkWell(
             borderRadius: BorderRadius.circular(4.0),
             onTap: () {
-              MediaPlayer.instance.open(MediaLibrary.instance.tracks.map((e) => e.toPlayable()).toList());
+              MediaPlayer.instance.open(MediaLibrary.instance.tracks.map((e) => e.toPlayable()));
             },
             child: Container(
               height: 44.0,
@@ -87,7 +84,7 @@ class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
           child: InkWell(
             borderRadius: BorderRadius.circular(4.0),
             onTap: () {
-              MediaPlayer.instance.open([...MediaLibrary.instance.tracks.map((e) => e.toPlayable())]..shuffle());
+              MediaPlayer.instance.open(MediaLibrary.instance.tracks.map((e) => e.toPlayable()), shuffle: true);
             },
             child: Container(
               height: 44.0,
@@ -704,12 +701,12 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
             value: e,
             padding: EdgeInsets.zero,
             child: Text(
-              {
-                AlbumSortType.album: Localization.instance.A_TO_Z,
-                AlbumSortType.timestamp: Localization.instance.DATE_ADDED,
-                AlbumSortType.year: Localization.instance.YEAR,
-                AlbumSortType.albumArtist: Localization.instance.ALBUM_ARTIST,
-              }[e]!,
+              switch (e) {
+                AlbumSortType.album => Localization.instance.A_TO_Z,
+                AlbumSortType.timestamp => Localization.instance.DATE_ADDED,
+                AlbumSortType.year => Localization.instance.YEAR,
+                AlbumSortType.albumArtist => Localization.instance.ALBUM_ARTIST,
+              },
               style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
             ),
           ),
@@ -723,11 +720,11 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
             value: e,
             padding: EdgeInsets.zero,
             child: Text(
-              {
-                TrackSortType.title: Localization.instance.A_TO_Z,
-                TrackSortType.timestamp: Localization.instance.DATE_ADDED,
-                TrackSortType.year: Localization.instance.YEAR,
-              }[e]!,
+              switch (e) {
+                TrackSortType.title => Localization.instance.A_TO_Z,
+                TrackSortType.timestamp => Localization.instance.DATE_ADDED,
+                TrackSortType.year => Localization.instance.YEAR,
+              },
               style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
             ),
           ),
@@ -741,10 +738,10 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
             value: e,
             padding: EdgeInsets.zero,
             child: Text(
-              {
-                ArtistSortType.artist: Localization.instance.A_TO_Z,
-                ArtistSortType.timestamp: Localization.instance.DATE_ADDED,
-              }[e]!,
+              switch (e) {
+                ArtistSortType.artist => Localization.instance.A_TO_Z,
+                ArtistSortType.timestamp => Localization.instance.DATE_ADDED,
+              },
               style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
             ),
           ),
@@ -758,10 +755,10 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
             value: e,
             padding: EdgeInsets.zero,
             child: Text(
-              {
-                GenreSortType.genre: Localization.instance.A_TO_Z,
-                GenreSortType.timestamp: Localization.instance.DATE_ADDED,
-              }[e]!,
+              switch (e) {
+                GenreSortType.genre => Localization.instance.A_TO_Z,
+                GenreSortType.timestamp => Localization.instance.DATE_ADDED,
+              },
               style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
             ),
           ),
@@ -772,12 +769,13 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
   List<MobileMediaLibrarySortButtonPopupMenuItem> get order => [
     MobileMediaLibrarySortButtonPopupMenuItem(
       onTap: () => handle(true),
-      checked: {
-        kAlbumsPath: MediaLibrary.instance.albumSortAscending,
-        kTracksPath: MediaLibrary.instance.trackSortAscending,
-        kArtistsPath: MediaLibrary.instance.artistSortAscending,
-        kGenresPath: MediaLibrary.instance.genreSortAscending,
-      }[widget.path]!,
+      checked: switch (widget.path) {
+        kAlbumsPath => MediaLibrary.instance.albumSortAscending,
+        kTracksPath => MediaLibrary.instance.trackSortAscending,
+        kArtistsPath => MediaLibrary.instance.artistSortAscending,
+        kGenresPath => MediaLibrary.instance.genreSortAscending,
+        _ => false,
+      },
       value: true,
       padding: EdgeInsets.zero,
       child: Text(
@@ -787,12 +785,13 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
     ),
     MobileMediaLibrarySortButtonPopupMenuItem(
       onTap: () => handle(false),
-      checked: {
-        kAlbumsPath: !MediaLibrary.instance.albumSortAscending,
-        kTracksPath: !MediaLibrary.instance.trackSortAscending,
-        kArtistsPath: !MediaLibrary.instance.artistSortAscending,
-        kGenresPath: !MediaLibrary.instance.genreSortAscending,
-      }[widget.path]!,
+      checked: switch (widget.path) {
+        kAlbumsPath => !MediaLibrary.instance.albumSortAscending,
+        kTracksPath => !MediaLibrary.instance.trackSortAscending,
+        kArtistsPath => !MediaLibrary.instance.artistSortAscending,
+        kGenresPath => !MediaLibrary.instance.genreSortAscending,
+        _ => false,
+      },
       value: false,
       padding: EdgeInsets.zero,
       child: Text(
@@ -951,46 +950,6 @@ class ScaleOnHoverState extends State<ScaleOnHover> {
 
 // --------------------------------------------------
 
-class ContextMenuListener extends StatefulWidget {
-  final Widget child;
-  final void Function(RelativeRect position) onSecondaryPress;
-
-  const ContextMenuListener({super.key, required this.child, required this.onSecondaryPress});
-
-  @override
-  State<ContextMenuListener> createState() => ContextMenuListenerState();
-}
-
-class ContextMenuListenerState extends State<ContextMenuListener> {
-  bool _reactToSecondaryPress = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Listener(
-      onPointerDown: (e) {
-        _reactToSecondaryPress = e.kind == PointerDeviceKind.mouse && e.buttons == kSecondaryMouseButton;
-      },
-      onPointerUp: (e) async {
-        if (!_reactToSecondaryPress) {
-          return;
-        }
-        final path = context.location.split('/').last;
-        widget.onSecondaryPress(
-          RelativeRect.fromLTRB(
-            e.position.dx,
-            e.position.dy - (![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath, kSearchPath].contains(path) ? 0.0 : captionHeight + kDesktopAppBarHeight),
-            MediaQuery.of(context).size.width,
-            MediaQuery.of(context).size.height,
-          ),
-        );
-      },
-      child: widget.child,
-    );
-  }
-}
-
-// --------------------------------------------------
-
 class SubHeader extends StatelessWidget {
   final String text;
   final EdgeInsets? padding;
@@ -1084,64 +1043,6 @@ class MediaLibraryCreatePlaylistButton extends StatelessWidget {
           }
         },
         child: const Icon(Icons.edit),
-      ),
-    );
-  }
-}
-
-// --------------------------------------------------
-
-class HyperLink extends StatefulWidget {
-  final TextSpan text;
-  final TextStyle? style;
-
-  const HyperLink({
-    super.key,
-    required this.text,
-    required this.style,
-  });
-
-  @override
-  State<HyperLink> createState() => HyperLinkState();
-}
-
-class HyperLinkState extends State<HyperLink> {
-  String hover = '';
-
-  @override
-  Widget build(BuildContext context) {
-    return RichText(
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      text: TextSpan(
-        style: widget.style,
-        children: widget.text.children!
-            .map(
-              (e) => TextSpan(
-                text: (e as TextSpan).text,
-                style: e.recognizer != null
-                    ? widget.style?.copyWith(
-                        decoration: hover == e.text! ? TextDecoration.underline : null,
-                      )
-                    : null,
-                recognizer: e.recognizer,
-                onEnter: (_) {
-                  if (mounted) {
-                    setState(() {
-                      hover = e.text!;
-                    });
-                  }
-                },
-                onExit: (_) {
-                  if (mounted) {
-                    setState(() {
-                      hover = '';
-                    });
-                  }
-                },
-              ),
-            )
-            .toList(),
       ),
     );
   }
@@ -1465,8 +1366,8 @@ class DefaultTextFormField extends StatelessWidget {
   final UndoHistoryController? undoController;
   final AppPrivateCommandCallback? onAppPrivateCommand;
   final bool? cursorOpacityAnimates;
-  final ui.BoxHeightStyle selectionHeightStyle;
-  final ui.BoxWidthStyle selectionWidthStyle;
+  final BoxHeightStyle selectionHeightStyle;
+  final BoxWidthStyle selectionWidthStyle;
   final DragStartBehavior dragStartBehavior;
   final ContentInsertionConfiguration? contentInsertionConfiguration;
   final Clip clipBehavior;
@@ -1539,8 +1440,8 @@ class DefaultTextFormField extends StatelessWidget {
     this.undoController,
     this.onAppPrivateCommand,
     this.cursorOpacityAnimates,
-    this.selectionHeightStyle = ui.BoxHeightStyle.tight,
-    this.selectionWidthStyle = ui.BoxWidthStyle.tight,
+    this.selectionHeightStyle = BoxHeightStyle.tight,
+    this.selectionWidthStyle = BoxWidthStyle.tight,
     this.dragStartBehavior = DragStartBehavior.start,
     this.contentInsertionConfiguration,
     this.clipBehavior = Clip.hardEdge,
@@ -1678,29 +1579,6 @@ class PlayFileOrURLButton extends StatelessWidget {
 
 // --------------------------------------------------
 
-class ReadFileOrURLMetadataButton extends StatelessWidget {
-  const ReadFileOrURLMetadataButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      tooltip: Localization.instance.READ_METADATA,
-      icon: const Icon(Icons.code),
-      iconSize: 20.0,
-      splashRadius: 18.0,
-      color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
-      onPressed: () async {
-        final result = await pickResource(context, Localization.instance.READ_METADATA);
-        if (result != null) {
-          context.push(Uri(path: '/$kFileInfoPath', queryParameters: {kFileInfoArgResource: result}).toString());
-        }
-      },
-    );
-  }
-}
-
-// --------------------------------------------------
-
 class MobileGridSpanButton extends StatelessWidget {
   const MobileGridSpanButton({super.key});
 
@@ -1824,17 +1702,6 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                   completer.complete(3);
                   Navigator.of(context).maybePop();
                 },
-                leading: const Icon(Icons.code),
-                title: Text(
-                  Localization.instance.READ_METADATA,
-                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                ),
-              ),
-              ListTile(
-                onTap: () {
-                  completer.complete(4);
-                  Navigator.of(context).maybePop();
-                },
                 leading: const Icon(Icons.settings),
                 title: Text(
                   Localization.instance.SETTINGS,
@@ -1850,12 +1717,12 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
           switch (value) {
             case 0:
               {
-                await MediaPlayer.instance.open(MediaLibrary.instance.tracks.map((e) => e.toPlayable()).toList());
+                await MediaPlayer.instance.open(MediaLibrary.instance.tracks.map((e) => e.toPlayable()));
                 break;
               }
             case 1:
               {
-                MediaPlayer.instance.open([...MediaLibrary.instance.tracks.map((e) => e.toPlayable())]..shuffle());
+                MediaPlayer.instance.open(MediaLibrary.instance.tracks.map((e) => e.toPlayable()), shuffle: true);
                 break;
               }
             case 2:
@@ -1868,14 +1735,6 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
               }
             case 3:
               {
-                final result = await pickResource(context, Localization.instance.READ_METADATA);
-                if (result != null) {
-                  context.push(Uri(path: '/$kFileInfoPath', queryParameters: {kFileInfoArgResource: result}).toString());
-                }
-                break;
-              }
-            case 4:
-              {
                 await context.push('/$kSettingsPath');
                 break;
               }
@@ -1883,133 +1742,6 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
         });
       },
     );
-  }
-}
-
-// --------------------------------------------------
-
-class StillGIF extends StatefulWidget {
-  final ImageProvider image;
-  final double width;
-  final double height;
-
-  const StillGIF({
-    super.key,
-    required this.image,
-    required this.width,
-    required this.height,
-  });
-
-  factory StillGIF.asset(
-    String image, {
-    Key? key,
-    required double width,
-    required double height,
-  }) => StillGIF(
-    key: key,
-    image: AssetImage(image),
-    width: width,
-    height: height,
-  );
-
-  factory StillGIF.file(
-    String image, {
-    Key? key,
-    required double width,
-    required double height,
-  }) => StillGIF(
-    key: key,
-    image: FileImage(File(image)),
-    width: width,
-    height: height,
-  );
-
-  factory StillGIF.network(
-    String image, {
-    Key? key,
-    required double width,
-    required double height,
-  }) => StillGIF(
-    key: key,
-    image: NetworkImage(image),
-    width: width,
-    height: height,
-  );
-
-  @override
-  State<StillGIF> createState() => StillGIFState();
-}
-
-class StillGIFState extends State<StillGIF> {
-  RawImage? _image;
-
-  @override
-  void initState() {
-    super.initState();
-    draw();
-  }
-
-  Future<void> draw() async {
-    await widget.image.evict();
-    if (widget.image is NetworkImage) {
-      final resolved = Uri.base.resolve((widget.image as NetworkImage).url);
-      final request = await HttpClient().getUrl(resolved);
-      final HttpClientResponse response = await request.close();
-      final data = await consolidateHttpClientResponseBytes(response);
-      final buffer = await ImmutableBuffer.fromUint8List(data);
-      final codec = await PaintingBinding.instance.instantiateImageCodecWithSize(buffer);
-      final frame = await codec.getNextFrame();
-      setState(() {
-        _image = RawImage(
-          image: frame.image.clone(),
-          height: widget.height,
-          width: widget.width,
-          fit: BoxFit.cover,
-        );
-      });
-    } else if (widget.image is AssetImage) {
-      final buffer = await ImmutableBuffer.fromAsset(
-        (widget.image as AssetImage).assetName,
-      );
-      final codec = await PaintingBinding.instance.instantiateImageCodecWithSize(buffer);
-      final frame = await codec.getNextFrame();
-      setState(() {
-        _image = RawImage(
-          image: frame.image.clone(),
-          height: widget.height,
-          width: widget.width,
-          fit: BoxFit.cover,
-        );
-      });
-    } else if (widget.image is FileImage) {
-      final data = await (widget.image as FileImage).file.readAsBytes();
-      final buffer = await ImmutableBuffer.fromUint8List(data);
-      final codec = await PaintingBinding.instance.instantiateImageCodecWithSize(buffer);
-      final frame = await codec.getNextFrame();
-      setState(() {
-        _image = RawImage(
-          image: frame.image.clone(),
-          height: widget.height,
-          width: widget.width,
-          fit: BoxFit.cover,
-        );
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    widget.image.evict();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _image ??
-        SizedBox(
-          width: widget.width,
-          height: widget.height,
-        );
   }
 }
 

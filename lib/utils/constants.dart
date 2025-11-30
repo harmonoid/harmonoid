@@ -1,3 +1,5 @@
+import 'package:adaptive_layouts/adaptive_layouts.dart';
+
 const double kDesktopHeaderHeight = 52.0;
 const double kMobileHeaderHeight = 56.0;
 
@@ -19,8 +21,8 @@ const double kArtistTileHeight = 142.0 + 36.0;
 const double kGenreTileWidth = 142.0;
 const double kGenreTileHeight = 142.0;
 
-const double kDesktopLinearTileHeight = 36.0;
-const double kMobileLinearTileHeight = 72.0;
+const double kDesktopLinearTileHeight = ListItemTableState.kDesktopRowHeight;
+const double kMobileLinearTileHeight = ListItemTableState.kMobileRowHeight;
 
 const double kMobileSearchBarHeight = 56.0;
 

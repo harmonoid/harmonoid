@@ -80,6 +80,7 @@ class Configuration extends ConfigurationBase {
     }
 
     _apiBaseUrl = await _read<String, String>(kKeyApiBaseUrl, defaults);
+    _desktopMediaLibraryTracksScreenColumnWidths = await _read<dynamic, List<double>>(kKeyDesktopMediaLibraryTracksScreenColumnWidths, defaults, (value) => List<double>.from(value));
     _desktopNowPlayingBarColorPalette = await _read<bool, bool>(kKeyDesktopNowPlayingBarColorPalette, defaults);
     _desktopNowPlayingCarousel = await _read<int, int>(kKeyDesktopNowPlayingCarousel, defaults);
     _desktopNowPlayingLyrics = await _read<bool, bool>(kKeyDesktopNowPlayingLyrics, defaults);
@@ -102,7 +103,6 @@ class Configuration extends ConfigurationBase {
     _mediaLibraryArtistSortAscending = await _read<bool, bool>(kKeyMediaLibraryArtistSortAscending, defaults);
     _mediaLibraryArtistSortType = await _read<int, ArtistSortType>(kKeyMediaLibraryArtistSortType, defaults, (value) => ArtistSortType.values[value]);
     _mediaLibraryCoverFallback = await _read<bool, bool>(kKeyMediaLibraryCoverFallback, defaults);
-    _mediaLibraryDesktopTracksScreenColumnWidths = await _read<dynamic, Map<String, double>>(kKeyMediaLibraryDesktopTracksScreenColumnWidths, defaults, (value) => Map<String, double>.from(value));
     _mediaLibraryDirectories = await _read<dynamic, Set<Directory>>(kKeyMediaLibraryDirectories, defaults, (value) => value.map<Directory>((e) => Directory(e)).toSet());
     _mediaLibraryGenreSortAscending = await _read<bool, bool>(kKeyMediaLibraryGenreSortAscending, defaults);
     _mediaLibraryGenreSortType = await _read<int, GenreSortType>(kKeyMediaLibraryGenreSortType, defaults, (value) => GenreSortType.values[value]);

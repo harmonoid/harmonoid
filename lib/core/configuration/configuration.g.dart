@@ -13,6 +13,7 @@ class ConfigurationBase {
   ConfigurationBase({required this.directory, required this.db});
 
   String get apiBaseUrl => _apiBaseUrl!;
+  List<double> get desktopMediaLibraryTracksScreenColumnWidths => _desktopMediaLibraryTracksScreenColumnWidths!;
   bool get desktopNowPlayingBarColorPalette => _desktopNowPlayingBarColorPalette!;
   int get desktopNowPlayingCarousel => _desktopNowPlayingCarousel!;
   bool get desktopNowPlayingLyrics => _desktopNowPlayingLyrics!;
@@ -35,7 +36,6 @@ class ConfigurationBase {
   bool get mediaLibraryArtistSortAscending => _mediaLibraryArtistSortAscending!;
   ArtistSortType get mediaLibraryArtistSortType => _mediaLibraryArtistSortType!;
   bool get mediaLibraryCoverFallback => _mediaLibraryCoverFallback!;
-  Map<String, double> get mediaLibraryDesktopTracksScreenColumnWidths => _mediaLibraryDesktopTracksScreenColumnWidths!;
   Set<Directory> get mediaLibraryDirectories => _mediaLibraryDirectories!;
   bool get mediaLibraryGenreSortAscending => _mediaLibraryGenreSortAscending!;
   GenreSortType get mediaLibraryGenreSortType => _mediaLibraryGenreSortType!;
@@ -64,6 +64,7 @@ class ConfigurationBase {
 
   Future<void> set({
     String? apiBaseUrl,
+    List<double>? desktopMediaLibraryTracksScreenColumnWidths,
     bool? desktopNowPlayingBarColorPalette,
     int? desktopNowPlayingCarousel,
     bool? desktopNowPlayingLyrics,
@@ -86,7 +87,6 @@ class ConfigurationBase {
     bool? mediaLibraryArtistSortAscending,
     ArtistSortType? mediaLibraryArtistSortType,
     bool? mediaLibraryCoverFallback,
-    Map<String, double>? mediaLibraryDesktopTracksScreenColumnWidths,
     Set<Directory>? mediaLibraryDirectories,
     bool? mediaLibraryGenreSortAscending,
     GenreSortType? mediaLibraryGenreSortType,
@@ -116,6 +116,10 @@ class ConfigurationBase {
     if (apiBaseUrl != null) {
       _apiBaseUrl = apiBaseUrl;
       await db.setValue(kKeyApiBaseUrl, kTypeString, stringValue: apiBaseUrl);
+    }
+    if (desktopMediaLibraryTracksScreenColumnWidths != null) {
+      _desktopMediaLibraryTracksScreenColumnWidths = desktopMediaLibraryTracksScreenColumnWidths;
+      await db.setValue(kKeyDesktopMediaLibraryTracksScreenColumnWidths, kTypeJson, jsonValue: desktopMediaLibraryTracksScreenColumnWidths);
     }
     if (desktopNowPlayingBarColorPalette != null) {
       _desktopNowPlayingBarColorPalette = desktopNowPlayingBarColorPalette;
@@ -204,10 +208,6 @@ class ConfigurationBase {
     if (mediaLibraryCoverFallback != null) {
       _mediaLibraryCoverFallback = mediaLibraryCoverFallback;
       await db.setValue(kKeyMediaLibraryCoverFallback, kTypeBoolean, booleanValue: mediaLibraryCoverFallback);
-    }
-    if (mediaLibraryDesktopTracksScreenColumnWidths != null) {
-      _mediaLibraryDesktopTracksScreenColumnWidths = mediaLibraryDesktopTracksScreenColumnWidths;
-      await db.setValue(kKeyMediaLibraryDesktopTracksScreenColumnWidths, kTypeJson, jsonValue: mediaLibraryDesktopTracksScreenColumnWidths);
     }
     if (mediaLibraryDirectories != null) {
       _mediaLibraryDirectories = mediaLibraryDirectories;
@@ -314,6 +314,7 @@ class ConfigurationBase {
   Future<Map<String, dynamic>> getDefaults() async {
     return {
       /* String  */ kKeyApiBaseUrl: '',
+      /* Json    */ kKeyDesktopMediaLibraryTracksScreenColumnWidths: <double>[],
       /* Boolean */ kKeyDesktopNowPlayingBarColorPalette: true,
       /* Integer */ kKeyDesktopNowPlayingCarousel: 0,
       /* Boolean */ kKeyDesktopNowPlayingLyrics: true,
@@ -336,7 +337,6 @@ class ConfigurationBase {
       /* Boolean */ kKeyMediaLibraryArtistSortAscending: true,
       /* Integer */ kKeyMediaLibraryArtistSortType: ArtistSortType.artist.index,
       /* Boolean */ kKeyMediaLibraryCoverFallback: false,
-      /* Json    */ kKeyMediaLibraryDesktopTracksScreenColumnWidths: <String, double>{},
       /* Json    */ kKeyMediaLibraryDirectories: await getDefaultMediaLibraryDirectories(),
       /* Boolean */ kKeyMediaLibraryGenreSortAscending: true,
       /* Integer */ kKeyMediaLibraryGenreSortType: GenreSortType.genre.index,
@@ -366,6 +366,7 @@ class ConfigurationBase {
   }
 
   String? _apiBaseUrl;
+  List<double>? _desktopMediaLibraryTracksScreenColumnWidths;
   bool? _desktopNowPlayingBarColorPalette;
   int? _desktopNowPlayingCarousel;
   bool? _desktopNowPlayingLyrics;
@@ -388,7 +389,6 @@ class ConfigurationBase {
   bool? _mediaLibraryArtistSortAscending;
   ArtistSortType? _mediaLibraryArtistSortType;
   bool? _mediaLibraryCoverFallback;
-  Map<String, double>? _mediaLibraryDesktopTracksScreenColumnWidths;
   Set<Directory>? _mediaLibraryDirectories;
   bool? _mediaLibraryGenreSortAscending;
   GenreSortType? _mediaLibraryGenreSortType;
@@ -419,6 +419,7 @@ class ConfigurationBase {
 // ----- Keys -----
 
 const kKeyApiBaseUrl = 'API_BASE_URL';
+const kKeyDesktopMediaLibraryTracksScreenColumnWidths = 'DESKTOP_MEDIA_LIBRARY_TRACKS_SCREEN_COLUMN_WIDTHS';
 const kKeyDesktopNowPlayingBarColorPalette = 'DESKTOP_NOW_PLAYING_BAR_COLOR_PALETTE';
 const kKeyDesktopNowPlayingCarousel = 'DESKTOP_NOW_PLAYING_CAROUSEL';
 const kKeyDesktopNowPlayingLyrics = 'DESKTOP_NOW_PLAYING_LYRICS';
@@ -441,7 +442,6 @@ const kKeyMediaLibraryArtistImages = 'MEDIA_LIBRARY_ARTIST_IMAGES';
 const kKeyMediaLibraryArtistSortAscending = 'MEDIA_LIBRARY_ARTIST_SORT_ASCENDING';
 const kKeyMediaLibraryArtistSortType = 'MEDIA_LIBRARY_ARTIST_SORT_TYPE';
 const kKeyMediaLibraryCoverFallback = 'MEDIA_LIBRARY_COVER_FALLBACK';
-const kKeyMediaLibraryDesktopTracksScreenColumnWidths = 'MEDIA_LIBRARY_DESKTOP_TRACKS_SCREEN_COLUMN_WIDTHS';
 const kKeyMediaLibraryDirectories = 'MEDIA_LIBRARY_DIRECTORIES';
 const kKeyMediaLibraryGenreSortAscending = 'MEDIA_LIBRARY_GENRE_SORT_ASCENDING';
 const kKeyMediaLibraryGenreSortType = 'MEDIA_LIBRARY_GENRE_SORT_TYPE';

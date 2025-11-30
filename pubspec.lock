@@ -767,6 +767,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.11.1"
+  material_table_view:
+    dependency: transitive
+    description:
+      name: material_table_view
+      sha256: b23e769996483f127b9f2941ea55b290cd9e7a218fe58fcb33e675bef3f0256a
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.5.1"
   measure_size:
     dependency: "direct main"
     description:
@@ -975,13 +983,14 @@ packages:
     source: hosted
     version: "4.3.0"
   permission_handler_windows:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: permission_handler_windows
-      sha256: "1a790728016f79a41216d88672dbc5df30e686e811ad4e698bfc51f76ad91f1e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.1"
+      path: "."
+      ref: "2dadd8afbf81e0e3e4791d7144e689555e58f649"
+      resolved-ref: "2dadd8afbf81e0e3e4791d7144e689555e58f649"
+      url: "https://github.com/localsend/permission_handler_windows_noop.git"
+    source: git
+    version: "0.1.2"
   petitparser:
     dependency: transitive
     description:
@@ -1203,6 +1212,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  sliver_passthrough:
+    dependency: transitive
+    description:
+      name: sliver_passthrough
+      sha256: "8a69cacacf3558f7cf586e6078e5bf745d7830aa6162891b4876f7d910205437"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   source_gen:
     dependency: transitive
     description:
@@ -1363,14 +1380,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "24.2.9"
-  syncfusion_flutter_datagrid:
-    dependency: "direct main"
-    description:
-      name: syncfusion_flutter_datagrid
-      sha256: f5b806f59426ffe3fffc8969bce969351082461b6b53e16ddbf0db2759f147df
-      url: "https://pub.dev"
-    source: hosted
-    version: "24.2.7"
   syncfusion_flutter_sliders:
     dependency: "direct main"
     description:

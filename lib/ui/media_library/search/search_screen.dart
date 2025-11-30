@@ -4,16 +4,14 @@ import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/media_library.dart';
-import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/localization/localization.dart';
-import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/ui/media_library/albums/album_item.dart';
 import 'package:harmonoid/ui/media_library/artists/artist_item.dart';
 import 'package:harmonoid/ui/media_library/genres/genre_item.dart';
 import 'package:harmonoid/ui/media_library/media_library_flags.dart';
 import 'package:harmonoid/ui/media_library/search/search_banner.dart';
 import 'package:harmonoid/ui/media_library/search/search_no_items_banner.dart';
-import 'package:harmonoid/ui/media_library/tracks/track_item.dart';
+import 'package:harmonoid/ui/media_library/tracks/tracks_table.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -227,19 +225,14 @@ class SearchScreenState extends State<SearchScreen> {
                 SizedBox(width: margin),
               ],
             ),
-            for (int i = 0; i < _tracks.length.clamp(0, _kLimit); i++) ...[
-              TrackItem(
-                track: _tracks[i],
-                width: double.infinity,
-                height: linearTileHeight,
-                onTap: () {
-                  MediaPlayer.instance.open(
-                    _tracks.map((e) => e.toPlayable()).toList(),
-                    index: i,
-                  );
-                },
+            SizedBox(
+              height: (_tracks.length.clamp(0, _kLimit) + 1) * linearTileHeight,
+              child: TracksTable(
+                tracks: _tracks.take(_kLimit).toList(),
+                physics: const NeverScrollableScrollPhysics(),
+                mobileSliverList: false,
               ),
-            ],
+            ),
           ],
         ],
       ),

@@ -1,11 +1,13 @@
+import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/extensions/list.dart';
 import 'package:harmonoid/extensions/playable.dart';
+import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -87,23 +89,15 @@ class NowPlayingPlaylistItem extends StatelessWidget {
                             alignment: Alignment.centerLeft,
                             width: height,
                             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: HyperLink(
-                              text: TextSpan(
-                                children: [
-                                  for (final artist in (playable.subtitle.isEmpty ? {''} : playable.subtitle)) ...[
-                                    TextSpan(
-                                      text: artist.isEmpty ? kDefaultArtist : artist,
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          navigateToArtist(context, ArtistLookupKey(artist: artist));
-                                        },
+                            child: TappableText(
+                              text: (mediaPlayer.current.subtitle.ifEmpty(['']))
+                                  .map(
+                                    (e) => TappableTextData(
+                                      text: e.nullIfBlank() ?? kDefaultArtist,
+                                      onTap: () => navigateToArtist(context, ArtistLookupKey(artist: e)),
                                     ),
-                                    const TextSpan(
-                                      text: ', ',
-                                    ),
-                                  ]
-                                ]..removeLast(),
-                              ),
+                                  )
+                                  .toList(),
                               style: Theme.of(context).textTheme.bodyLarge,
                             ),
                           ),

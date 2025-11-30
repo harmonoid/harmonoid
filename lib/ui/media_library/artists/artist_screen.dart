@@ -1,5 +1,4 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:provider/provider.dart';
@@ -11,10 +10,8 @@ import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/ui/media_library/artists/artist_image.dart';
 import 'package:harmonoid/ui/media_library/artists/state/artist_image_notifier.dart';
-import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/widgets.dart';
 
 class ArtistScreen extends StatefulWidget {
   final Artist artist;
@@ -42,9 +39,14 @@ class _ArtistScreenState extends State<ArtistScreen> {
     await context.read<ArtistImageNotifier>().removeFile(widget.artist);
   }
 
+  Future<void> _refreshImage() async {
+    await context.read<ArtistImageNotifier>().refreshFile(widget.artist);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return HeroListItemsScreen(
+    return HeroContentScreen(
+      mergeHeroAndContent: false,
       palette: widget.palette,
       heroBuilder: (context) {
         if (isDesktop) {
@@ -93,92 +95,50 @@ class _ArtistScreenState extends State<ArtistScreen> {
       caption: kCaption,
       title: _title,
       subtitle: _subtitle,
-      listItemCount: _tracks.length,
-      listItemDisplayIndex: true,
-      listItemHeaders: [
-        Text(Localization.instance.TRACK),
-        Text(Localization.instance.ALBUM),
-      ],
-      listItemIndexBuilder: (context, i) => _tracks[i].trackNumber == 0 ? kDefaultTrackNumber : _tracks[i].trackNumber,
-      listItemBuilder: (context, i) {
-        if (isDesktop) {
-          return [
-            IgnorePointer(
-              child: Text(
-                _tracks[i].title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            HyperLink(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: _tracks[i].album.isEmpty ? kDefaultAlbum : _tracks[i].album,
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        navigateToAlbum(
-                          context,
-                          AlbumLookupKey(
-                            album: _tracks[i].album,
-                            albumArtist: _tracks[i].albumArtist,
-                            year: _tracks[i].year,
-                          ),
-                        );
-                      },
-                  ),
-                ],
-              ),
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-          ];
-        }
-        if (isMobile) {
-          return [
-            Text(
-              _tracks[i].title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            Text(
-              _tracks[i].album.isEmpty ? kDefaultAlbum : _tracks[i].album,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ];
-        }
-        throw UnimplementedError();
-      },
-      listItemPopupMenuBuilder: (context, i) => trackPopupMenuItems(context, _tracks[i]),
-      onListItemPressed: (context, i) => MediaPlayer.instance.open(_tracks.map((e) => e.toPlayable()).toList(), index: i),
-      onListItemPopupMenuItemSelected: (context, i, result) async {
-        await trackPopupMenuHandle(
-          context,
-          _tracks[i],
-          result,
-          recursivelyPopNavigatorOnDeleteIf: () => MediaLibrary.instance.tracksFromArtist(widget.artist).then((value) => value.isEmpty),
-        );
-        // NOTE: The track could've been deleted, so we need to check & update the list.
-        final tracks = await MediaLibrary.instance.tracksFromArtist(widget.artist);
-        if (tracks.length != _tracks.length) {
-          setState(() {
-            _tracks
-              ..clear()
-              ..addAll(tracks);
-          });
-        }
-      },
-      mergeHeroAndListItems: false,
       actions: {
-        Icons.play_arrow: (_) => MediaPlayer.instance.open(_tracks.map((e) => e.toPlayable()).toList()),
-        Icons.shuffle: (_) => MediaPlayer.instance.open([..._tracks..shuffle()].map((e) => e.toPlayable()).toList()),
-        Icons.playlist_add: (_) => MediaPlayer.instance.add(_tracks.map((e) => e.toPlayable()).toList()),
+        Icons.play_arrow: (_, _) => MediaPlayer.instance.open(_tracks.map((e) => e.toPlayable())),
+        Icons.shuffle: (_, _) => MediaPlayer.instance.open(_tracks.map((e) => e.toPlayable()), shuffle: true),
+        Icons.playlist_add: (_, _) => MediaPlayer.instance.add(_tracks.map((e) => e.toPlayable())),
       },
       labels: {
         Icons.play_arrow: Localization.instance.PLAY_NOW,
         Icons.shuffle: Localization.instance.SHUFFLE,
         Icons.playlist_add: Localization.instance.ADD_TO_NOW_PLAYING,
       },
+      tabs: [''],
+      content: [
+        ListItemTable(
+          columns: [Localization.instance.TRACK, Localization.instance.ALBUM],
+          itemCount: _tracks.length,
+          itemBuilder: (context, i) => ListItemData(
+            key: ValueKey(i.toString()),
+            children: [
+              _tracks[i].toTitleTappableText(),
+              _tracks[i].toAlbumTappableText(context),
+            ],
+          ),
+          leadingBuilder: (context, i) => _tracks[i].trackNumber == 0 ? kDefaultTrackNumber : _tracks[i].trackNumber,
+          popupMenuBuilder: (context, i) => trackPopupMenuItems(context, _tracks[i]),
+          onItemPressed: (context, i) => MediaPlayer.instance.open(_tracks.map((e) => e.toPlayable()), index: i),
+          onPopupMenuItemSelected: (context, i, result) async {
+            await trackPopupMenuHandle(
+              context,
+              _tracks[i],
+              result,
+              recursivelyPopNavigatorOnDeleteIf: () => MediaLibrary.instance.tracksFromArtist(widget.artist).then((value) => value.isEmpty),
+            );
+            // NOTE: The track could've been deleted, so we need to check & update the list.
+            final tracks = await MediaLibrary.instance.tracksFromArtist(widget.artist);
+            if (tracks.length != _tracks.length) {
+              setState(() {
+                _tracks
+                  ..clear()
+                  ..addAll(tracks);
+              });
+            }
+          },
+        ),
+      ],
     );
   }
 
@@ -187,6 +147,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
       return const SizedBox.shrink();
     }
     return Row(
+      spacing: 8.0,
       mainAxisSize: MainAxisSize.min,
       children: [
         InkWell(
@@ -198,7 +159,6 @@ class _ArtistScreenState extends State<ArtistScreen> {
             child: const Icon(Icons.edit, size: 16.0, color: Colors.white),
           ),
         ),
-        const SizedBox(width: 8.0),
         InkWell(
           onTap: _removeImage,
           borderRadius: BorderRadius.circular(32.0),
@@ -206,6 +166,15 @@ class _ArtistScreenState extends State<ArtistScreen> {
             padding: const EdgeInsets.all(4.0),
             decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.black26),
             child: const Icon(Icons.close, size: 16.0, color: Colors.white),
+          ),
+        ),
+        InkWell(
+          onTap: _refreshImage,
+          borderRadius: BorderRadius.circular(32.0),
+          child: Container(
+            padding: const EdgeInsets.all(4.0),
+            decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.black26),
+            child: const Icon(Icons.refresh, size: 16.0, color: Colors.white),
           ),
         ),
       ],

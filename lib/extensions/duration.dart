@@ -1,5 +1,5 @@
 /// Extensions for [Duration].
-extension DurationExtension on Duration {
+extension DurationExtensions on Duration {
   /// Format [Duration] as `DDD:HH:MM:SS`, `HH:MM:SS` or `MM:SS`.
   String get label {
     final days = inDays.toString().padLeft(3, '0');

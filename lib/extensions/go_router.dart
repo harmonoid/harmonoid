@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
 
 /// Extensions for [GoRouter].
-extension GoRouterExtension on GoRouter {
+extension GoRouterExtensions on GoRouter {
   /// Location.
   String get location {
     final RouteMatch lastMatch = routerDelegate.currentConfiguration.last;

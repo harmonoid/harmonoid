@@ -8,23 +8,13 @@ import 'package:harmonoid/utils/constants.dart';
 
 /// Extensions for [Track].
 extension TrackExtensions on Track {
-  /// Display title.
-  String get displayTitle => title;
-
-  /// Display subtitle.
-  String get displaySubtitle => [
-        if (artists.isNotEmpty) artists.join(', '),
-        if (album.isNotEmpty) album,
-        if (year != 0) year.toString(),
-      ].where((e) => e.isNotEmpty).join(' • ');
-
   /// Share subject.
   String get shareSubject => [
-        title,
-        artists.join(', '),
-        if (album.isNotEmpty) album,
-        if (year != 0) year.toString(),
-      ].where((e) => e.isNotEmpty).join(' • ');
+    title,
+    artists.join(', '),
+    if (album.isNotEmpty) album,
+    if (year != 0) year.toString(),
+  ].where((e) => e.isNotEmpty).join(' • ');
 
   /// [ValueKey] for [ScrollViewBuilder].
   ValueKey<String> get scrollViewBuilderKey {

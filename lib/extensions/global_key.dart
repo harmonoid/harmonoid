@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 /// Extensions for [GlobalKey].
-extension GlobalKeyExtension on GlobalKey {
+extension GlobalKeyExtensions on GlobalKey {
   /// Global paint bounds.
   Rect? get globalPaintBounds {
     final renderObject = currentContext?.findRenderObject();

@@ -18,7 +18,7 @@ class ThemeNotifier extends ChangeNotifier {
   static final ColorScheme kDefaultLightColorSchemeM3 = ColorScheme.fromSeed(seedColor: const Color(0xFF6750A4), brightness: Brightness.light);
   static final ColorScheme kDefaultDarkColorSchemeM3 = ColorScheme.fromSeed(seedColor: const Color(0xFF6750A4), brightness: Brightness.dark);
   static const Color kDefaultLightPrimaryColorM2 = Color(0xFF651FFF);
-  static const Color kDefaultDarkPrimaryColorM2 = Color(0xFF7C4DFF);
+  static const Color kDefaultDarkPrimaryColorM2 = Color(0xFF8A5CFF);
 
   /// Singleton instance.
   static late final ThemeNotifier instance;
@@ -141,38 +141,38 @@ class ThemeNotifier extends ChangeNotifier {
   }
 
   ThemeData get theme => switch (materialStandard) {
-        3 => createM3Theme(
-            context: context!,
-            lightColorScheme: _lightColorScheme,
-            darkColorScheme: _darkColorScheme,
-            mode: ThemeMode.light,
-            animationDuration: animationDuration,
-          ),
-        2 => createM2Theme(
-            context: context!,
-            color: _lightColor,
-            mode: ThemeMode.light,
-            animationDuration: animationDuration,
-          ),
-        _ => throw UnimplementedError(),
-      };
+    3 => createM3Theme(
+      context: context!,
+      lightColorScheme: _lightColorScheme,
+      darkColorScheme: _darkColorScheme,
+      mode: ThemeMode.light,
+      animationDuration: animationDuration,
+    ),
+    2 => createM2Theme(
+      context: context!,
+      color: _lightColor,
+      mode: ThemeMode.light,
+      animationDuration: animationDuration,
+    ),
+    _ => throw UnimplementedError(),
+  };
 
   ThemeData get darkTheme => switch (materialStandard) {
-        3 => createM3Theme(
-            context: context!,
-            lightColorScheme: _lightColorScheme,
-            darkColorScheme: _darkColorScheme,
-            mode: ThemeMode.dark,
-            animationDuration: animationDuration,
-          ),
-        2 => createM2Theme(
-            context: context!,
-            color: _darkColor,
-            mode: ThemeMode.dark,
-            animationDuration: animationDuration,
-          ),
-        _ => throw UnimplementedError(),
-      };
+    3 => createM3Theme(
+      context: context!,
+      lightColorScheme: _lightColorScheme,
+      darkColorScheme: _darkColorScheme,
+      mode: ThemeMode.dark,
+      animationDuration: animationDuration,
+    ),
+    2 => createM2Theme(
+      context: context!,
+      color: _darkColor,
+      mode: ThemeMode.dark,
+      animationDuration: animationDuration,
+    ),
+    _ => throw UnimplementedError(),
+  };
 
   ThemeMode themeMode;
   int materialStandard;
