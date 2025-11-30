@@ -953,13 +953,13 @@ class ScaleOnHoverState extends State<ScaleOnHover> {
 class SubHeader extends StatelessWidget {
   final String text;
   final EdgeInsets? padding;
-  final double height;
+  final Widget? trailing;
 
   const SubHeader(
     this.text, {
     super.key,
     this.padding,
-    this.height = 56.0,
+    this.trailing,
   });
 
   @override
@@ -984,11 +984,19 @@ class SubHeader extends StatelessWidget {
     }
     return Container(
       alignment: Alignment.centerLeft,
-      height: height,
+      height: 56.0,
       padding: padding ?? EdgeInsets.symmetric(horizontal: horizontal),
-      child: Text(
-        text,
-        style: style,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(text, style: style),
+          if (trailing != null) ...[
+            const SizedBox(width: 8.0),
+            trailing!,
+          ],
+        ],
       ),
     );
   }
@@ -1006,6 +1014,7 @@ class MediaLibraryRefreshButton extends StatelessWidget {
           ? const SizedBox.shrink()
           : FloatingActionButton(
               heroTag: 'MediaLibraryRefreshButton',
+              tooltip: Localization.instance.REFRESH,
               onPressed: mediaLibrary.refresh,
               child: const Icon(Icons.refresh),
             ),
@@ -1020,30 +1029,11 @@ class MediaLibraryCreatePlaylistButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MediaLibrary>(
-      builder: (context, mediaLibrary, _) => FloatingActionButton(
-        heroTag: 'MediaLibraryCreatePlaylistButton',
-        onPressed: () async {
-          final result = await showInput(
-            context,
-            Localization.instance.CREATE_NEW_PLAYLIST,
-            Localization.instance.PLAYLIST_CREATE_DIALOG_SUBTITLE,
-            Localization.instance.CREATE,
-            (value) {
-              if (value?.isEmpty ?? true) {
-                return '';
-              }
-              return null;
-            },
-            keyboardType: TextInputType.name,
-            textCapitalization: TextCapitalization.words,
-          );
-          if (result.isNotEmpty) {
-            await mediaLibrary.playlists.create(result);
-          }
-        },
-        child: const Icon(Icons.edit),
-      ),
+    return FloatingActionButton(
+      heroTag: 'MediaLibraryCreatePlaylistButton',
+      tooltip: Localization.instance.CREATE_NEW_PLAYLIST,
+      onPressed: () => showCreatePlaylistDialog(context),
+      child: const Icon(Icons.edit),
     );
   }
 }

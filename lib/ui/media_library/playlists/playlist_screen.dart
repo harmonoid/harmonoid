@@ -7,6 +7,7 @@ import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/playlist_entry.dart';
 import 'package:harmonoid/models/playable.dart';
+import 'package:harmonoid/ui/media_library/media_library_menus.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_image.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -80,12 +81,19 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
       actions: {
         Icons.play_arrow: (_, _) async => MediaPlayer.instance.open(await _playables),
         Icons.shuffle: (_, _) async => MediaPlayer.instance.open(await _playables, shuffle: true),
-        Icons.playlist_add: (_, _) async => MediaPlayer.instance.add(await _playables),
+        Icons.playlist_play: (_, _) async {
+          final playables = await _playables;
+          for (final entry in playables.reversed) {
+            await MediaPlayer.instance.insert(MediaPlayer.instance.state.index, entry);
+          }
+        },
+        Icons.playlist_add_check: (_, _) async => MediaPlayer.instance.add(await _playables),
       },
       labels: {
         Icons.play_arrow: Localization.instance.PLAY_NOW,
         Icons.shuffle: Localization.instance.SHUFFLE,
-        Icons.playlist_add: Localization.instance.ADD_TO_NOW_PLAYING,
+        Icons.playlist_play: Localization.instance.PLAY_NEXT,
+        Icons.playlist_add_check: Localization.instance.ADD_TO_NOW_PLAYING,
       },
       tabs: [''],
       content: [
@@ -99,15 +107,10 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
             ],
           ),
           leadingBuilder: (context, i) => (i + 1).toString(),
-          popupMenuBuilder: (context, i) => playlistEntryPopupMenuItems(context, _entries[i]),
+          popupMenuBuilder: (context, i) => PlaylistEntryMenuProvider(context, widget.playlist, _entries[i]).getPopupMenuItems(),
           onItemPressed: (context, i) async => MediaPlayer.instance.open(await _playables, index: i),
           onPopupMenuItemSelected: (context, i, result) async {
-            await playlistEntryPopupMenuHandle(
-              context,
-              widget.playlist,
-              _entries[i],
-              result,
-            );
+            await PlaylistEntryMenuProvider(context, widget.playlist, _entries[i]).handlePopupMenuAction(result);
             // NOTE: The track could've been deleted, so we need to check & update the list.
             final entries = await MediaLibrary.instance.playlists.playlistEntries(widget.playlist);
             if (entries.length != _entries.length) {

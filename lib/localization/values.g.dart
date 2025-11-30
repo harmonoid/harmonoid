@@ -22,7 +22,6 @@ class Values {
   late String ALBUMS;
   late String ALBUM_ARTIST;
   late String ALBUM_ARTISTS;
-  late String ALBUM_DELETE_DIALOG_SUBTITLE;
   late String ALL_FILES;
   late String ANIMATION_SPEED;
   late String ARTIST;
@@ -246,6 +245,8 @@ class Values {
   late String SET_LRC_FILE;
   late String SHARE;
   late String SHOW_ALBUM;
+  late String SHOW_ARTIST;
+  late String SHOW_ARTISTS;
   late String SHOW_IN_FILE_MANAGER;
   late String SHOW_LYRICS;
   late String SHOW_NOW_PLAYING_SCREEN;
@@ -263,6 +264,7 @@ class Values {
   late String TITLE;
   late String TRACK;
   late String TRACKS;
+  late String TRACKS_DELETE_DIALOG_SUBTITLE;
   late String TRACK_DELETE_DIALOG_SUBTITLE;
   late String TRACK_NUMBER;
   late String TYPE;

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -10,30 +9,21 @@ import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:uri_parser/uri_parser.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
-import 'package:harmonoid/extensions/go_router.dart';
 import 'package:harmonoid/extensions/playable.dart';
 import 'package:harmonoid/extensions/string.dart';
-import 'package:harmonoid/extensions/track.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/media_library_item.dart';
 import 'package:harmonoid/mappers/playlist_entry.dart';
-import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/models/playable.dart';
-import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/ui/media_library/artists/state/artist_image_notifier.dart';
-import 'package:harmonoid/ui/media_library/media_library_flags.dart';
-import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
-import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_item.dart';
 import 'package:harmonoid/ui/router.dart';
-import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/android_utils.dart';
 import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/constants.dart';
@@ -434,7 +424,15 @@ Future<bool> showConfirmation(
   return result;
 }
 
-Future<T?> showSelection<T>(BuildContext context, String title, List<T> values, T? selected, String Function(T) text, {bool actions = true}) async {
+Future<T?> showSelection<T>(
+  BuildContext context,
+  String title,
+  List<T> values,
+  T? selected,
+  String Function(T) text, {
+  bool actions = true,
+  bool radio = true,
+}) async {
   T? result;
 
   await showDialog(
@@ -444,6 +442,9 @@ Future<T?> showSelection<T>(BuildContext context, String title, List<T> values, 
         void set(T? value) {
           if (value != null) {
             setState(() => result = value);
+          }
+          if (!actions) {
+            context.pop();
           }
         }
 
@@ -468,11 +469,13 @@ Future<T?> showSelection<T>(BuildContext context, String title, List<T> values, 
                       children: values
                           .map(
                             (value) => ListItem(
-                              leading: Radio(
-                                value: value,
-                                groupValue: result ?? selected,
-                                onChanged: set,
-                              ),
+                              leading: radio
+                                  ? Radio(
+                                      value: value,
+                                      groupValue: result ?? selected,
+                                      onChanged: set,
+                                    )
+                                  : null,
                               onTap: () => set(value),
                               title: text(value),
                             ),
@@ -522,432 +525,6 @@ Future<void> showMessage(BuildContext context, String title, String subtitle) as
       ],
     ),
   );
-}
-
-List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context, Track track) => [
-  PopupMenuItem<int>(
-    value: 0,
-    child: ListTile(
-      leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_16_regular : Icons.delete),
-      title: Text(
-        Localization.instance.DELETE,
-        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-      ),
-    ),
-  ),
-  PopupMenuItem<int>(
-    value: 1,
-    child: ListTile(
-      leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.list_16_regular : Icons.playlist_play),
-      title: Text(
-        Localization.instance.PLAY_NEXT,
-        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-      ),
-    ),
-  ),
-  if (Platform.isAndroid || Platform.isIOS)
-    PopupMenuItem<int>(
-      value: 2,
-      child: ListTile(
-        leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.share_16_regular : Icons.share),
-        title: Text(
-          Localization.instance.SHARE,
-          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-        ),
-      ),
-    ),
-  PopupMenuItem<int>(
-    value: 3,
-    child: ListTile(
-      leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.list_16_regular : Icons.playlist_add),
-      title: Text(
-        Localization.instance.ADD_TO_PLAYLIST,
-        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-      ),
-    ),
-  ),
-  PopupMenuItem<int>(
-    value: 4,
-    child: ListTile(
-      leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.music_note_2_16_regular : Icons.music_note),
-      title: Text(
-        Localization.instance.ADD_TO_NOW_PLAYING,
-        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-      ),
-    ),
-  ),
-  PopupMenuItem<int>(
-    value: 5,
-    child: ListTile(
-      leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.album_24_regular : Icons.album),
-      title: Text(
-        Localization.instance.SHOW_ALBUM,
-        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-      ),
-    ),
-  ),
-  if (Platform.isLinux || Platform.isMacOS || Platform.isWindows)
-    PopupMenuItem<int>(
-      value: 6,
-      child: ListTile(
-        leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.folder_24_regular : Icons.folder),
-        title: Text(
-          Localization.instance.SHOW_IN_FILE_MANAGER,
-          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-        ),
-      ),
-    ),
-  PopupMenuItem<int>(
-    value: 7,
-    child: ListTile(
-      leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.arrow_sync_24_regular : Icons.refresh),
-      title: Text(
-        Localization.instance.REFRESH,
-        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-      ),
-    ),
-  ),
-  PopupMenuItem<int>(
-    value: 8,
-    child: ListTile(
-      leading: Icon(Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.info_24_regular : Icons.info),
-      title: Text(
-        Localization.instance.FILE_INFORMATION,
-        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-      ),
-    ),
-  ),
-  if (!LyricsNotifier.instance.contains(track.toPlayable()))
-    PopupMenuItem<int>(
-      value: 9,
-      child: ListTile(
-        leading: Icon(
-          Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.text_font_24_regular : Icons.abc,
-        ),
-        title: Text(
-          Localization.instance.SET_LRC_FILE,
-          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-        ),
-      ),
-    )
-  else
-    PopupMenuItem<int>(
-      value: 10,
-      child: ListTile(
-        leading: Icon(
-          Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.clear_formatting_24_regular : Icons.clear,
-        ),
-        title: Text(
-          Localization.instance.CLEAR_LRC_FILE,
-          style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-        ),
-      ),
-    ),
-];
-
-List<PopupMenuItem<int>> albumPopupMenuItems(BuildContext context, Album album) => [
-  PopupMenuItem<int>(
-    value: 0,
-    child: ListTile(
-      leading: Icon(
-        Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.play_24_regular : Icons.play_circle,
-      ),
-      title: Text(
-        Localization.instance.PLAY,
-        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-      ),
-    ),
-  ),
-  PopupMenuItem<int>(
-    value: 1,
-    child: ListTile(
-      leading: Icon(
-        Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.arrow_shuffle_24_regular : Icons.shuffle,
-      ),
-      title: Text(
-        Localization.instance.SHUFFLE,
-        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-      ),
-    ),
-  ),
-  PopupMenuItem<int>(
-    value: 2,
-    child: ListTile(
-      leading: Icon(
-        Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_16_regular : Icons.delete,
-      ),
-      title: Text(
-        Localization.instance.DELETE,
-        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-      ),
-    ),
-  ),
-  PopupMenuItem<int>(
-    value: 3,
-    child: ListTile(
-      leading: Icon(
-        Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.music_note_2_16_regular : Icons.queue_music,
-      ),
-      title: Text(
-        Localization.instance.ADD_TO_NOW_PLAYING,
-        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-      ),
-    ),
-  ),
-];
-
-List<PopupMenuItem<int>> playlistPopupMenuItems(BuildContext context, Playlist playlist) => [
-  PopupMenuItem<int>(
-    value: 0,
-    child: ListTile(
-      leading: Icon(
-        Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_24_regular : Icons.delete,
-      ),
-      title: Text(
-        Localization.instance.DELETE,
-        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-      ),
-    ),
-  ),
-  PopupMenuItem<int>(
-    value: 1,
-    child: ListTile(
-      leading: Icon(
-        Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.rename_24_filled : Icons.drive_file_rename_outline,
-      ),
-      title: Text(
-        Localization.instance.RENAME,
-        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-      ),
-    ),
-  ),
-];
-
-List<PopupMenuItem<int>> playlistEntryPopupMenuItems(BuildContext context, PlaylistEntry entry) => [
-  PopupMenuItem<int>(
-    value: 0,
-    child: ListTile(
-      leading: Icon(
-        Theme.of(context).platform == TargetPlatform.windows ? FluentIcons.delete_24_regular : Icons.delete,
-      ),
-      title: Text(
-        Localization.instance.REMOVE,
-        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-      ),
-    ),
-  ),
-];
-
-Future<void> trackPopupMenuHandle(BuildContext context, Track track, int? result, {Future<bool> Function()? recursivelyPopNavigatorOnDeleteIf}) async {
-  if (result == null) return;
-
-  Future<void> recursivelyPopNavigatorIfRequired() async {
-    if (await recursivelyPopNavigatorOnDeleteIf?.call() ?? false) {
-      await recursivelyPopNavigator();
-    }
-  }
-
-  final mediaPlayer = context.read<MediaPlayer>();
-
-  switch (result) {
-    case 0:
-      if (Platform.isAndroid) {
-        final sdk = AndroidStorageController.instance.version;
-        if (sdk >= 30) {
-          // No [AlertDialog] required for confirmation.
-          // Android 11 or higher (API level 30) will ask for permissions from the user before deletion.
-          await MediaLibrary.instance.remove([track]);
-          await recursivelyPopNavigatorIfRequired();
-          return;
-        }
-      }
-      final result = await showConfirmation(
-        context,
-        Localization.instance.DELETE,
-        Localization.instance.TRACK_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', track.title),
-      );
-      if (result) {
-        await MediaLibrary.instance.remove([track]);
-        await recursivelyPopNavigatorIfRequired();
-      }
-      break;
-    case 1:
-      await mediaPlayer.insert(mediaPlayer.state.index, track.toPlayable());
-      break;
-    case 2:
-      await Share.shareXFiles(
-        [XFile(track.uri)],
-        subject: track.shareSubject,
-      );
-      break;
-    case 3:
-      await showAddToPlaylistDialog(context, track: track);
-      break;
-    case 4:
-      await mediaPlayer.add([track.toPlayable()]);
-      break;
-    case 5:
-      await navigateToAlbum(
-        context,
-        AlbumLookupKey(
-          album: track.album,
-          albumArtist: track.albumArtist,
-          year: track.year,
-        ),
-      );
-      break;
-    case 6:
-      File(track.uri).explore_();
-      break;
-    case 7:
-      await MediaLibrary.instance.remove([track], delete: false);
-      await recursivelyPopNavigatorIfRequired();
-
-      await MediaLibrary.instance.add(File(track.uri));
-      await MediaLibrary.instance.populate();
-      break;
-    case 8:
-      context.push(Uri(path: '/$kFileInfoPath', queryParameters: {kFileInfoArgResource: track.uri.toString()}).toString());
-      break;
-    case 9:
-      final file = await pickFile(
-        // Compatibility issues with Android 5.0: SDK 21.
-        extensions: Platform.isAndroid ? null : {'LRC'},
-      );
-      if (file != null) {
-        final result = await LyricsNotifier.instance.add(track.toPlayable(), file);
-        if (!result) {
-          await showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              backgroundColor: Theme.of(context).cardTheme.color,
-              title: Text(Localization.instance.ERROR),
-              content: Text(Localization.instance.CORRUPT_LRC_FILE),
-              actions: [
-                TextButton(
-                  onPressed: Navigator.of(context).pop,
-                  child: Text(label(Localization.instance.OK)),
-                ),
-              ],
-            ),
-          );
-        }
-      }
-      break;
-    case 10:
-      LyricsNotifier.instance.remove(track.toPlayable());
-      break;
-  }
-}
-
-Future<void> albumPopupMenuHandle(BuildContext context, Album album, int? result) async {
-  if (result == null) return;
-
-  Future<void> recursivelyPopNavigatorIfRequired() async {
-    bool result = false;
-    try {
-      final tracks = await MediaLibrary.instance.tracksFromAlbum(album);
-      result = tracks.isEmpty;
-    } catch (exception, stacktrace) {
-      debugPrint(exception.toString());
-      debugPrint(stacktrace.toString());
-      result = true;
-    }
-    if (result) {
-      await recursivelyPopNavigator();
-    }
-  }
-
-  final mediaPlayer = context.read<MediaPlayer>();
-
-  final tracks = await MediaLibrary.instance.tracksFromAlbum(album);
-  switch (result) {
-    case 0:
-      await mediaPlayer.open(tracks.map((e) => e.toPlayable()).toList());
-      break;
-    case 1:
-      tracks.shuffle();
-      await mediaPlayer.open(tracks.map((e) => e.toPlayable()).toList());
-      break;
-    case 2:
-      if (Platform.isAndroid) {
-        final sdk = AndroidStorageController.instance.version;
-        if (sdk >= 30) {
-          // No [AlertDialog] required for confirmation.
-          // Android 11 or higher (API level 30) will ask for permissions from the user before deletion.
-          await MediaLibrary.instance.remove(tracks);
-          await recursivelyPopNavigatorIfRequired();
-          return;
-        }
-      }
-      final result = await showConfirmation(
-        context,
-        Localization.instance.DELETE,
-        Localization.instance.ALBUM_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', album.album),
-      );
-      if (result) {
-        await MediaLibrary.instance.remove(tracks);
-        await recursivelyPopNavigatorIfRequired();
-      }
-      break;
-    case 3:
-      await mediaPlayer.add(tracks.map((e) => e.toPlayable()).toList());
-      break;
-  }
-}
-
-Future<void> playlistPopupMenuHandle(BuildContext context, Playlist playlist, int? result) async {
-  if (result == null) return;
-  if (playlist == MediaLibrary.instance.playlists.likedPlaylist || playlist == MediaLibrary.instance.playlists.historyPlaylist) return;
-  switch (result) {
-    case 0:
-      final result = await showConfirmation(
-        context,
-        Localization.instance.DELETE,
-        Localization.instance.PLAYLIST_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', playlist.name),
-      );
-      if (result) {
-        await MediaLibrary.instance.playlists.delete(playlist);
-      }
-      break;
-    case 1:
-      final name = await showInput(
-        context,
-        Localization.instance.RENAME,
-        Localization.instance.PLAYLIST_RENAME_DIALOG_SUBTITLE.replaceAll('"NAME"', playlist.name),
-        Localization.instance.OK,
-        (value) {
-          if (value?.isEmpty ?? true) {
-            return '';
-          }
-          return null;
-        },
-      );
-      if (name.isNotEmpty) {
-        await MediaLibrary.instance.playlists.rename(playlist, name);
-      }
-      break;
-    default:
-      break;
-  }
-}
-
-Future<void> playlistEntryPopupMenuHandle(BuildContext context, Playlist playlist, PlaylistEntry entry, int? result) async {
-  if (result == null) return;
-  switch (result) {
-    case 0:
-      final result = await showConfirmation(
-        context,
-        Localization.instance.REMOVE,
-        Localization.instance.PLAYLIST_ENTRY_REMOVE_DIALOG_SUBTITLE.replaceAll('"ENTRY"', entry.title).replaceAll('"PLAYLIST"', playlist.name),
-      );
-      if (result) {
-        await MediaLibrary.instance.playlists.deleteEntry(entry);
-      }
-      break;
-    default:
-      break;
-  }
 }
 
 Future<File?> pickFile({Set<String>? extensions}) async {
@@ -1051,79 +628,132 @@ Future<String?> pickResource(BuildContext context, String title) async {
   return result;
 }
 
+Future<String?> showCreatePlaylistDialog(BuildContext context) async {
+  final name = await showInput(
+    context,
+    Localization.instance.CREATE_NEW_PLAYLIST,
+    Localization.instance.PLAYLIST_CREATE_DIALOG_SUBTITLE,
+    Localization.instance.CREATE,
+    (value) {
+      if (value?.isEmpty ?? true) {
+        return '';
+      }
+      return null;
+    },
+    keyboardType: TextInputType.name,
+    textCapitalization: TextCapitalization.words,
+  );
+
+  if (name.isNotEmpty) {
+    final mediaLibrary = context.read<MediaLibrary>();
+    await mediaLibrary.playlists.create(name);
+    return name;
+  }
+  return null;
+}
+
 Future<void> showAddToPlaylistDialog(
   BuildContext context, {
   Track? track,
+  List<Track>? tracks,
   Playable? playable,
 }) {
-  assert(track != null || playable != null);
-  final playlists = MediaLibrary.instance.playlists.playlists;
+  assert(track != null || playable != null || tracks != null);
 
-  void onTap(int i) async {
+  void onTap(MediaLibrary mediaLibrary, Playlist playlist) async {
     context.pop();
 
-    if (track == null && playable != null) {
-      track = await MediaLibrary.instance.db.selectTrackByUri(playable.uri);
+    if (track != null) {
+      await mediaLibrary.playlists.createEntry(
+        playlist,
+        track: track,
+      );
     }
-    await MediaLibrary.instance.playlists.createEntry(
-      playlists[i],
-      track: track,
-      uri: playable?.uri,
-      title: playable?.playlistEntryTitle,
-    );
+    if (playable != null) {
+      await mediaLibrary.playlists.createEntry(
+        playlist,
+        uri: playable.uri,
+        title: playable.playlistEntryTitle,
+      );
+    }
+    if (tracks != null) {
+      for (final track in tracks) {
+        await mediaLibrary.playlists.createEntry(
+          playlist,
+          track: track,
+        );
+      }
+    }
 
     if (Platform.isAndroid) {
       final entry = track?.title ?? playable?.playlistEntryTitle ?? '';
-      final playlist = playlists[i].name;
-      AndroidUtils.instance.showToast(Localization.instance.ADDED_ENTRY_TO_PLAYLIST.replaceAll('"ENTRY"', entry).replaceAll('"PLAYLIST"', playlist));
+      final playlistName = playlist.name;
+      AndroidUtils.instance.showToast(Localization.instance.ADDED_ENTRY_TO_PLAYLIST.replaceAll('"ENTRY"', entry).replaceAll('"PLAYLIST"', playlistName));
     }
   }
 
   if (isDesktop) {
     return showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        contentPadding: const EdgeInsets.only(top: 20.0),
-        title: Text(Localization.instance.PLAYLIST_ADD_DIALOG_TITLE),
-        content: SizedBox(
-          width: 640.0,
-          child: Material(
-            color: Colors.transparent,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Divider(height: 1.0),
-                Flexible(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        for (int i = 0; i < playlists.length; i++) ...[
-                          PlaylistItem(
-                            playlist: playlists[i],
-                            onTap: () => onTap(i),
-                          ),
-                          if (i < playlists.length - 1) const Divider(height: 1.0),
-                        ],
-                      ],
+      builder: (ctx) => Consumer<MediaLibrary>(
+        builder: (context, mediaLibrary, _) {
+          final playlists = mediaLibrary.playlists.playlists;
+          return AlertDialog(
+            contentPadding: const EdgeInsets.only(top: 20.0),
+            title: Text(Localization.instance.PLAYLIST_ADD_DIALOG_TITLE),
+            content: SizedBox(
+              width: 640.0,
+              child: Material(
+                color: Colors.transparent,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Divider(height: 1.0),
+                    Flexible(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ListItem(
+                              leading: Container(
+                                width: 56.0,
+                                height: 56.0,
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: const CircleAvatar(child: Icon(Icons.add)),
+                              ),
+                              title: Localization.instance.CREATE_NEW_PLAYLIST,
+                              onTap: () => showCreatePlaylistDialog(context),
+                            ),
+                            const Divider(height: 1.0),
+                            for (int i = 0; i < playlists.length; i++) ...[
+                              PlaylistItem(
+                                playlist: playlists[i],
+                                onTap: () => onTap(mediaLibrary, playlists[i]),
+                              ),
+                              if (i < playlists.length - 1) const Divider(height: 1.0),
+                            ],
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
+                    const Divider(height: 1.0),
+                  ],
                 ),
-                const Divider(height: 1.0),
-              ],
+              ),
             ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: context.pop,
-            child: Text(label(Localization.instance.CANCEL)),
-          ),
-        ],
+            actions: [
+              TextButton(
+                onPressed: context.pop,
+                child: Text(label(Localization.instance.CANCEL)),
+              ),
+            ],
+          );
+        },
       ),
     );
   } else {
@@ -1136,36 +766,30 @@ Future<void> showAddToPlaylistDialog(
         initialChildSize: 0.6,
         maxChildSize: 0.8,
         expand: false,
-        builder: (context, controller) => ListView.builder(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
-          controller: controller,
-          shrinkWrap: true,
-          itemCount: playlists.length,
-          itemBuilder: (context, i) {
-            return PlaylistItem(
-              playlist: playlists[i],
-              onTap: () => onTap(i),
+        builder: (context, controller) => Consumer<MediaLibrary>(
+          builder: (context, mediaLibrary, _) {
+            final playlists = mediaLibrary.playlists.playlists;
+            return ListView(
+              padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+              controller: controller,
+              shrinkWrap: true,
+              children: [
+                ListItem(
+                  leading: const Icon(Icons.add),
+                  title: Localization.instance.CREATE_NEW_PLAYLIST,
+                  onTap: () => showCreatePlaylistDialog(context),
+                ),
+                const Divider(height: 1.0),
+                for (int i = 0; i < playlists.length; i++)
+                  PlaylistItem(
+                    playlist: playlists[i],
+                    onTap: () => onTap(mediaLibrary, playlists[i]),
+                  ),
+              ],
             );
           },
         ),
       ),
     );
-  }
-}
-
-Future<void> recursivelyPopNavigator() async {
-  mediaLibraryAlbumOpenContainerBuildContext?.pop();
-  mediaLibraryArtistOpenContainerBuildContext?.pop();
-  mediaLibraryGenreOpenContainerBuildContext?.pop();
-
-  if (mediaLibrarySearchController.isAttached && mediaLibrarySearchController.isOpen) {
-    mediaLibrarySearchController.closeView('');
-  }
-
-  while (router.canPop()) {
-    if ([kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath, kSearchPath].contains(router.location.split('/').last)) {
-      break;
-    }
-    router.pop();
   }
 }

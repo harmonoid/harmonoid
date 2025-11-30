@@ -10,64 +10,82 @@ import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/media_library/genres/constants.dart';
 import 'package:harmonoid/ui/media_library/genres/genre_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_flags.dart';
+import 'package:harmonoid/ui/media_library/media_library_menus.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/open_container.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
-class GenreItem extends StatelessWidget {
+class GenreItem extends StatefulWidget {
   final Genre genre;
   final double width;
   final double height;
 
-  GenreItem({
+  const GenreItem({
     super.key,
     required this.genre,
     required this.width,
     required this.height,
   });
 
-  late final title = genre.genre.isNotEmpty ? genre.genre : kDefaultGenre;
-  late final color = kGenreColors[genre.genre.hashCode % kGenreColors.length];
+  @override
+  State<GenreItem> createState() => _GenreItemState();
+}
+
+class _GenreItemState extends State<GenreItem> {
+  late final title = widget.genre.genre.isNotEmpty ? widget.genre.genre : kDefaultGenre;
+  late final color = kGenreColors[widget.genre.genre.hashCode % kGenreColors.length];
 
   Future<void> navigate() async {
-    final tracks = await MediaLibrary.instance.tracksFromGenre(genre);
+    final tracks = await MediaLibrary.instance.tracksFromGenre(widget.genre);
 
     try {
-      await precacheImage(cover(item: genre), rootNavigatorKey.currentContext!);
+      await precacheImage(cover(item: widget.genre), rootNavigatorKey.currentContext!);
     } catch (_) {}
 
     await rootNavigatorKey.currentContext!.push(
       '/$kMediaLibraryPath/$kGenrePath',
       extra: GenrePathExtra(
-        genre: genre,
+        genre: widget.genre,
         tracks: tracks,
         palette: palette,
       ),
     );
   }
 
+  Future<void> onSecondaryPress(BuildContext context, {RelativeRect? position}) async {
+    tracks = await MediaLibrary.instance.tracksFromGenre(widget.genre);
+    final tracksMenuProvider = TracksMenuProvider(context, tracks!);
+    final result = await showMenuItems(context, tracksMenuProvider.getPopupMenuItems(), position: position);
+    await tracksMenuProvider.handlePopupMenuAction(result);
+  }
+
   Widget _buildDesktopLayout(BuildContext context) {
-    return Hero(
-      tag: genre,
-      child: Card(
-        margin: EdgeInsets.zero,
-        color: color,
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: navigate,
-          child: Container(
-            width: width,
-            height: height,
-            alignment: Alignment.center,
-            padding: const EdgeInsets.all(8.0),
-            child: AutoSizeText(
-              title,
-              maxLines: 3,
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: color.computeLuminance() > 0.5 ? Colors.black : Colors.white),
-              wrapWords: false,
+    return ContextMenuListener(
+      onSecondaryPress: (position) {
+        onSecondaryPress(context, position: position);
+      },
+      child: Hero(
+        tag: widget.genre,
+        child: Card(
+          margin: EdgeInsets.zero,
+          color: color,
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: navigate,
+            child: Container(
+              width: widget.width,
+              height: widget.height,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(8.0),
+              child: AutoSizeText(
+                title,
+                maxLines: 3,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(color: color.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+                wrapWords: false,
+              ),
             ),
           ),
         ),
@@ -80,11 +98,16 @@ class GenreItem extends StatelessWidget {
   }
 
   Widget _buildMobileLayout(BuildContext context) {
-    if (width > height) {
+    void onLongPress() {
+      onSecondaryPress(context);
+    }
+
+    if (widget.width > widget.height) {
       return SizedBox(
-        height: height,
+        height: widget.height,
         child: InkWell(
           onTap: navigate,
+          onLongPress: onLongPress,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -98,8 +121,8 @@ class GenreItem extends StatelessWidget {
                 children: [
                   Container(
                     color: color,
-                    width: height - 1.0,
-                    height: height - 1.0,
+                    width: widget.height - 1.0,
+                    height: widget.height - 1.0,
                     alignment: Alignment.center,
                     child: Text(
                       title[0],
@@ -115,7 +138,14 @@ class GenreItem extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  const SizedBox(width: 16.0),
+                  const SizedBox(width: 8.0),
+                  IconButton(
+                    onPressed: onLongPress,
+                    splashRadius: 20.0,
+                    icon: const Icon(Icons.more_vert),
+                    color: Theme.of(context).iconTheme.color,
+                  ),
+                  const SizedBox(width: 8.0),
                 ],
               ),
             ],
@@ -127,7 +157,7 @@ class GenreItem extends StatelessWidget {
     final transitionDuration = Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero;
 
     return Hero(
-      tag: genre,
+      tag: widget.genre,
       child: OpenContainer(
         navigatorKey: homeNavigatorKey,
         transitionDuration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
@@ -140,49 +170,52 @@ class GenreItem extends StatelessWidget {
         onClosed: (data) {
           NowPlayingMobileNotifier.instance.showBottomNavigationBar();
         },
-        closedBuilder: (context, action) => InkWell(
-          onTap: () async {
-            if (transitionDuration == Duration.zero) {
-              navigate();
-              return;
-            }
+        closedBuilder: (context, action) => GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onLongPress: onLongPress,
+          child: InkWell(
+            onTap: () async {
+              if (transitionDuration == Duration.zero) {
+                navigate();
+                return;
+              }
 
-            tracks = await MediaLibrary.instance.tracksFromGenre(genre);
+              tracks = await MediaLibrary.instance.tracksFromGenre(widget.genre);
 
-            await precacheImage(cover(item: genre), context);
+              await precacheImage(cover(item: widget.genre), context);
 
-            action();
-            context.read<NowPlayingMobileNotifier>().hideBottomNavigationBar();
-            mediaLibraryGenreOpenContainerBuildContext = null;
-          },
-          child: Container(
-            width: width,
-            height: height,
-            alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: AutoSizeText(
-              title,
-              maxLines: 3,
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              wrapWords: false,
-              style: (() {
-                if (width > 128.0) {
-                  return Theme.of(context).textTheme.titleLarge;
-                }
-                if (width > 84.0) {
-                  return Theme.of(context).textTheme.titleMedium;
-                }
-                return Theme.of(context).textTheme.titleSmall;
-              }())
-                  ?.copyWith(color: color.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+              action();
+              context.read<NowPlayingMobileNotifier>().hideBottomNavigationBar();
+              mediaLibraryGenreOpenContainerBuildContext = null;
+            },
+            child: Container(
+              width: widget.width,
+              height: widget.height,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: AutoSizeText(
+                title,
+                maxLines: 3,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                wrapWords: false,
+                style: (() {
+                  if (widget.width > 128.0) {
+                    return Theme.of(context).textTheme.titleLarge;
+                  }
+                  if (widget.width > 84.0) {
+                    return Theme.of(context).textTheme.titleMedium;
+                  }
+                  return Theme.of(context).textTheme.titleSmall;
+                }())?.copyWith(color: color.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+              ),
             ),
           ),
         ),
         openBuilder: (context, action) {
           mediaLibraryGenreOpenContainerBuildContext = context;
           return GenreScreen(
-            genre: genre,
+            genre: widget.genre,
             tracks: tracks!,
             palette: palette,
           );

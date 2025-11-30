@@ -53,7 +53,7 @@ class NowPlayingPlaylistItem extends StatelessWidget {
                       children: [
                         Container(
                           alignment: Alignment.center,
-                          width: height * 2.0,
+                          width: height * 1.5,
                           child: index == mediaPlayer.state.index
                               ? MusicAnimation(
                                   width: height / 2.0,
@@ -133,8 +133,6 @@ class NowPlayingPlaylistItem extends StatelessWidget {
                             child: const Icon(Icons.remove),
                           ),
                         ),
-                        const VerticalDivider(width: 1.0),
-                        const SizedBox(width: 8.0),
                       ],
                     ),
                   ),

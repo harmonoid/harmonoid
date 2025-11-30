@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/ui/media_library/media_library_menus.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_icon.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
@@ -17,8 +18,9 @@ class PlaylistItem extends StatelessWidget {
   const PlaylistItem({super.key, required this.playlist, this.onTap});
 
   Future<void> onSecondaryPress(BuildContext context, {RelativeRect? position}) async {
-    final result = await showMenuItems(context, playlistPopupMenuItems(context, playlist), position: position);
-    playlistPopupMenuHandle(context, playlist, result);
+    final playlistMenuProvider = PlaylistMenuProvider(context, playlist);
+    final result = await showMenuItems(context, playlistMenuProvider.getPopupMenuItems(), position: position);
+    await playlistMenuProvider.handlePopupMenuAction(result);
   }
 
   @override

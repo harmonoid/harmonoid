@@ -9,6 +9,7 @@ import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/media_library/artists/artist_image.dart';
 import 'package:harmonoid/ui/media_library/artists/artist_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_flags.dart';
+import 'package:harmonoid/ui/media_library/media_library_menus.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/open_container.dart';
@@ -16,37 +17,42 @@ import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
-class ArtistItem extends StatelessWidget {
+class ArtistItem extends StatefulWidget {
   final Artist artist;
   final double width;
   final double height;
-  ArtistItem({
+  const ArtistItem({
     super.key,
     required this.artist,
     required this.width,
     required this.height,
   });
 
-  late final title = artist.artist.isNotEmpty ? artist.artist : kDefaultArtist;
+  @override
+  State<ArtistItem> createState() => _ArtistItemState();
+}
+
+class _ArtistItemState extends State<ArtistItem> {
+  late final title = widget.artist.artist.isNotEmpty ? widget.artist.artist : kDefaultArtist;
 
   Future<void> navigate() async {
-    final tracks = await MediaLibrary.instance.tracksFromArtist(artist);
-    final albums = await MediaLibrary.instance.albumsFromArtist(artist);
+    final tracks = await MediaLibrary.instance.tracksFromArtist(widget.artist);
+    final albums = await MediaLibrary.instance.albumsFromArtist(widget.artist);
 
     List<Color>? palette;
     if (isMaterial2) {
-      final result = await PaletteGenerator.fromImageProvider(cover(item: artist, cacheWidth: 20));
+      final result = await PaletteGenerator.fromImageProvider(cover(item: widget.artist, cacheWidth: 20));
       palette = result.colors?.toList();
     }
 
     try {
-      await precacheImage(cover(item: artist), rootNavigatorKey.currentContext!);
+      await precacheImage(cover(item: widget.artist), rootNavigatorKey.currentContext!);
     } catch (_) {}
 
     await rootNavigatorKey.currentContext!.push(
       '/$kMediaLibraryPath/$kArtistPath',
       extra: ArtistPathExtra(
-        artist: artist,
+        artist: widget.artist,
         tracks: tracks,
         albums: albums,
         palette: palette,
@@ -54,34 +60,46 @@ class ArtistItem extends StatelessWidget {
     );
   }
 
+  Future<void> onSecondaryPress(BuildContext context, {RelativeRect? position}) async {
+    tracks = await MediaLibrary.instance.tracksFromArtist(widget.artist);
+    final tracksMenuProvider = TracksMenuProvider(context, tracks!);
+    final result = await showMenuItems(context, tracksMenuProvider.getPopupMenuItems(), position: position);
+    await tracksMenuProvider.handlePopupMenuAction(result);
+  }
+
   Widget _buildDesktopLayout(BuildContext context) {
-    return SizedBox(
-      width: width,
-      height: height,
-      child: Column(
-        children: [
-          Hero(
-            tag: artist,
-            child: Card(
-              margin: EdgeInsets.zero,
-              clipBehavior: Clip.antiAlias,
-              shape: const CircleBorder(),
-              child: Container(
-                width: width,
-                height: width,
-                padding: const EdgeInsets.all(4.0),
-                child: ClipOval(
-                  child: Material(
-                    color: Theme.of(context).cardTheme.color,
-                    child: InkWell(
-                      onTap: navigate,
-                      child: ScaleOnHover(
-                        child: SizedBox(
-                          width: width,
-                          height: width,
-                          child: ArtistImage(
-                            artist: artist,
-                            cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
+    return ContextMenuListener(
+      onSecondaryPress: (position) {
+        onSecondaryPress(context, position: position);
+      },
+      child: SizedBox(
+        width: widget.width,
+        height: widget.height,
+        child: Column(
+          children: [
+            Hero(
+              tag: widget.artist,
+              child: Card(
+                margin: EdgeInsets.zero,
+                clipBehavior: Clip.antiAlias,
+                shape: const CircleBorder(),
+                child: Container(
+                  width: widget.width,
+                  height: widget.width,
+                  padding: const EdgeInsets.all(4.0),
+                  child: ClipOval(
+                    child: Material(
+                      color: Theme.of(context).cardTheme.color,
+                      child: InkWell(
+                        onTap: navigate,
+                        child: ScaleOnHover(
+                          child: SizedBox(
+                            width: widget.width,
+                            height: widget.width,
+                            child: ArtistImage(
+                              artist: widget.artist,
+                              cacheWidth: (widget.width * MediaQuery.of(context).devicePixelRatio).toInt(),
+                            ),
                           ),
                         ),
                       ),
@@ -90,20 +108,20 @@ class ArtistItem extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-          Expanded(
-            child: Container(
-              width: width,
-              alignment: Alignment.center,
-              child: Text(
-                title,
-                style: Theme.of(context).textTheme.titleSmall,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+            Expanded(
+              child: Container(
+                width: widget.width,
+                alignment: Alignment.center,
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleSmall,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -113,11 +131,16 @@ class ArtistItem extends StatelessWidget {
   }
 
   Widget _buildMobileLayout(BuildContext context) {
-    if (width > height) {
+    void onLongPress() {
+      onSecondaryPress(context);
+    }
+
+    if (widget.width > widget.height) {
       return SizedBox(
-        height: height,
+        height: widget.height,
         child: InkWell(
           onTap: navigate,
+          onLongPress: onLongPress,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -130,13 +153,13 @@ class ArtistItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    width: height - 1.0,
-                    height: height - 1.0,
+                    width: widget.height - 1.0,
+                    height: widget.height - 1.0,
                     alignment: Alignment.center,
                     color: Theme.of(context).cardTheme.color,
                     child: ArtistImage(
-                      artist: artist,
-                      cacheWidth: ((height - 1.0) * MediaQuery.of(context).devicePixelRatio).toInt(),
+                      artist: widget.artist,
+                      cacheWidth: ((widget.height - 1.0) * MediaQuery.of(context).devicePixelRatio).toInt(),
                     ),
                   ),
                   const SizedBox(width: 16.0),
@@ -148,7 +171,14 @@ class ArtistItem extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  const SizedBox(width: 16.0),
+                  const SizedBox(width: 8.0),
+                  IconButton(
+                    onPressed: onLongPress,
+                    splashRadius: 20.0,
+                    icon: const Icon(Icons.more_vert),
+                    color: Theme.of(context).iconTheme.color,
+                  ),
+                  const SizedBox(width: 8.0),
                 ],
               ),
             ],
@@ -160,8 +190,8 @@ class ArtistItem extends StatelessWidget {
     final transitionDuration = Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero;
 
     return SizedBox(
-      width: width,
-      height: height,
+      width: widget.width,
+      height: widget.height,
       child: Column(
         children: [
           OpenContainer(
@@ -178,48 +208,52 @@ class ArtistItem extends StatelessWidget {
               mediaLibraryArtistOpenContainerBuildContext = null;
             },
             closedBuilder: (context, action) {
-              return Stack(
-                children: [
-                  SizedBox(
-                    width: width,
-                    height: width,
-                    child: ArtistImage(
-                      artist: artist,
-                      cacheWidth: (width * MediaQuery.of(context).devicePixelRatio).toInt(),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: Material(
-                      color: Colors.transparent,
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () async {
-                          if (transitionDuration == Duration.zero) {
-                            navigate();
-                            return;
-                          }
-
-                          if (isMaterial2) {
-                            final result = await PaletteGenerator.fromImageProvider(cover(item: artist, cacheWidth: 20));
-                            palette = result.colors?.toList();
-                          }
-
-                          tracks = await MediaLibrary.instance.tracksFromArtist(artist);
-                          albums = await MediaLibrary.instance.albumsFromArtist(artist);
-
-                          action();
-                          context.read<NowPlayingMobileNotifier>().hideBottomNavigationBar();
-                        },
+              return GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onLongPress: onLongPress,
+                child: Stack(
+                  children: [
+                    SizedBox(
+                      width: widget.width,
+                      height: widget.width,
+                      child: ArtistImage(
+                        artist: widget.artist,
+                        cacheWidth: (widget.width * MediaQuery.of(context).devicePixelRatio).toInt(),
                       ),
                     ),
-                  ),
-                ],
+                    Positioned.fill(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () async {
+                            if (transitionDuration == Duration.zero) {
+                              navigate();
+                              return;
+                            }
+
+                            if (isMaterial2) {
+                              final result = await PaletteGenerator.fromImageProvider(cover(item: widget.artist, cacheWidth: 20));
+                              palette = result.colors?.toList();
+                            }
+
+                            tracks = await MediaLibrary.instance.tracksFromArtist(widget.artist);
+                            albums = await MediaLibrary.instance.albumsFromArtist(widget.artist);
+
+                            action();
+                            context.read<NowPlayingMobileNotifier>().hideBottomNavigationBar();
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               );
             },
             openBuilder: (context, _) {
               mediaLibraryArtistOpenContainerBuildContext = context;
               return ArtistScreen(
-                artist: artist,
+                artist: widget.artist,
                 tracks: tracks!,
                 albums: albums!,
                 palette: palette,
@@ -228,11 +262,11 @@ class ArtistItem extends StatelessWidget {
           ),
           Expanded(
             child: Container(
-              width: width,
+              width: widget.width,
               alignment: Alignment.center,
               child: Text(
                 title,
-                style: height - width > 24.0 ? Theme.of(context).textTheme.titleSmall : Theme.of(context).textTheme.bodyLarge,
+                style: widget.height - widget.width > 24.0 ? Theme.of(context).textTheme.titleSmall : Theme.of(context).textTheme.bodyLarge,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

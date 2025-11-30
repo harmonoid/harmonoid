@@ -1,9 +1,12 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/album.dart';
+import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/ui/media_library/albums/album_item.dart';
 import 'package:harmonoid/ui/media_library/albums/albums_screen.dart';
 import 'package:harmonoid/utils/constants.dart';
@@ -116,12 +119,24 @@ class DesktopAlbumsArtistsScreenState extends State<DesktopAlbumsArtistsScreen> 
                             return const DesktopMediaLibraryHeader(key: ValueKey(''));
                           } else {
                             return SubHeader(
-                              key: ValueKey(albumArtists[i - 1].key.isEmpty ? kDefaultArtist[0] : albumArtists[i - 1].key[0]),
                               albumArtists[i - 1].key.isEmpty ? kDefaultArtist : albumArtists[i - 1].key,
+                              key: ValueKey(albumArtists[i - 1].key.isEmpty ? kDefaultArtist[0] : albumArtists[i - 1].key[0]),
                               padding: EdgeInsets.only(
                                 left: margin,
                                 right: margin,
                                 bottom: margin,
+                              ),
+                              trailing: MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    final futures = albumArtists[i - 1].value.map((e) => mediaLibrary.tracksFromAlbum(e));
+                                    final trackss = await Future.wait(futures);
+                                    final tracks = trackss.flattened;
+                                    MediaPlayer.instance.open(tracks.map((e) => e.toPlayable()));
+                                  },
+                                  child: const Icon(Icons.play_arrow, size: 20.0),
+                                ),
                               ),
                             );
                           }

@@ -8,6 +8,7 @@ import 'package:harmonoid/extensions/shape_border.dart';
 import 'package:harmonoid/extensions/track.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
+import 'package:harmonoid/ui/media_library/media_library_menus.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/scroll_view_builder_helper.dart';
@@ -109,7 +110,7 @@ class _TracksTableState extends State<TracksTable> {
           fit: BoxFit.cover,
         ),
       ),
-      popupMenuBuilder: (context, i) => trackPopupMenuItems(context, widget.tracks[i]),
+      popupMenuBuilder: (context, i) => TrackMenuProvider(context, widget.tracks[i]).getPopupMenuItems(),
       onItemPressed: (context, i) {
         if (Configuration.instance.mediaLibraryAddPlaylistToNowPlaying) {
           MediaPlayer.instance.open(widget.tracks.map((e) => e.toPlayable()), index: i);
@@ -117,7 +118,9 @@ class _TracksTableState extends State<TracksTable> {
           MediaPlayer.instance.open([widget.tracks[i].toPlayable()]);
         }
       },
-      onPopupMenuItemSelected: (context, i, j) => trackPopupMenuHandle(context, widget.tracks[i], j),
+      onPopupMenuItemSelected: (context, i, result) async {
+        await TrackMenuProvider(context, widget.tracks[i]).handlePopupMenuAction(result);
+      },
       physics: widget.physics,
       desktopBorders: true,
       desktopLeadingColumn: const Icon(Icons.album),

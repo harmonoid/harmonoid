@@ -12,6 +12,7 @@ import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/ui/media_library/albums/album_item.dart';
 import 'package:harmonoid/ui/media_library/artists/artist_image.dart';
 import 'package:harmonoid/ui/media_library/artists/state/artist_image_notifier.dart';
+import 'package:harmonoid/ui/media_library/media_library_menus.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/scroll_view_builder_helper.dart';
@@ -36,6 +37,7 @@ class ArtistScreen extends StatefulWidget {
 class _ArtistScreenState extends State<ArtistScreen> {
   late final _tracks = widget.tracks;
   late final _albums = widget.albums;
+  TracksMenuProvider get _tracksMenuProvider => TracksMenuProvider(context, _tracks);
   String get _title => widget.artist.artist.isEmpty ? kDefaultArtist : widget.artist.artist;
   String get _subtitle => switch ((_tracks.length, _albums.length)) {
     (1, 1) => Localization.instance.ONE_ALBUM_ONE_TRACK,
@@ -112,14 +114,16 @@ class _ArtistScreenState extends State<ArtistScreen> {
       title: _title,
       subtitle: _subtitle,
       actions: {
-        Icons.play_arrow: (_, _) => MediaPlayer.instance.open(_tracks.map((e) => e.toPlayable())),
-        Icons.shuffle: (_, _) => MediaPlayer.instance.open(_tracks.map((e) => e.toPlayable()), shuffle: true),
-        Icons.playlist_add: (_, _) => MediaPlayer.instance.add(_tracks.map((e) => e.toPlayable())),
+        Icons.play_arrow: (_, _) => _tracksMenuProvider.play(),
+        Icons.shuffle: (_, _) => _tracksMenuProvider.shuffle(),
+        Icons.playlist_play: (_, _) => _tracksMenuProvider.playNext(),
+        Icons.playlist_add_check: (_, _) => _tracksMenuProvider.addToNowPlaying(),
       },
       labels: {
         Icons.play_arrow: Localization.instance.PLAY_NOW,
         Icons.shuffle: Localization.instance.SHUFFLE,
-        Icons.playlist_add: Localization.instance.ADD_TO_NOW_PLAYING,
+        Icons.playlist_play: Localization.instance.PLAY_NEXT,
+        Icons.playlist_add_check: Localization.instance.ADD_TO_NOW_PLAYING,
       },
       tabs: [Localization.instance.ALBUMS, Localization.instance.TRACKS],
       content: [
@@ -157,12 +161,10 @@ class _ArtistScreenState extends State<ArtistScreen> {
             ],
           ),
           leadingBuilder: (context, i) => _tracks[i].trackNumber == 0 ? kDefaultTrackNumber : _tracks[i].trackNumber,
-          popupMenuBuilder: (context, i) => trackPopupMenuItems(context, _tracks[i]),
+          popupMenuBuilder: (context, i) => TrackMenuProvider(context, _tracks[i]).getPopupMenuItems(),
           onItemPressed: (context, i) => MediaPlayer.instance.open(_tracks.map((e) => e.toPlayable()), index: i),
           onPopupMenuItemSelected: (context, i, result) async {
-            await trackPopupMenuHandle(
-              context,
-              _tracks[i],
+            await TrackMenuProvider(context, _tracks[i]).handlePopupMenuAction(
               result,
               recursivelyPopNavigatorOnDeleteIf: () => MediaLibrary.instance.tracksFromArtist(widget.artist).then((value) => value.isEmpty),
             );

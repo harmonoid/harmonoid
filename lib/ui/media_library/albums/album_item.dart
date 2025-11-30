@@ -9,6 +9,7 @@ import 'package:harmonoid/extensions/album.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/media_library/albums/album_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_flags.dart';
+import 'package:harmonoid/ui/media_library/media_library_menus.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/open_container.dart';
@@ -66,8 +67,10 @@ class _AlbumItemState extends State<AlbumItem> {
   }
 
   Future<void> onSecondaryPress(BuildContext context, {RelativeRect? position}) async {
-    final result = await showMenuItems(context, albumPopupMenuItems(context, widget.album), position: position);
-    await albumPopupMenuHandle(context, widget.album, result);
+    tracks = await MediaLibrary.instance.tracksFromAlbum(widget.album);
+    final tracksMenuProvider = TracksMenuProvider(context, tracks!);
+    final result = await showMenuItems(context, tracksMenuProvider.getPopupMenuItems(), position: position);
+    await tracksMenuProvider.handlePopupMenuAction(result);
   }
 
   Widget _buildDesktopLayout(BuildContext context) {

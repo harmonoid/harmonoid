@@ -21,7 +21,7 @@ Future<void> navigateToAlbum(BuildContext context, AlbumLookupKey key) async {
 
     await precacheImage(cover(item: album), context);
 
-    _handle(context).push(
+    _sanitizeContext(context).push(
       '/$kMediaLibraryPath/$kAlbumPath',
       extra: AlbumPathExtra(
         album: album,
@@ -46,7 +46,7 @@ Future<void> navigateToArtist(BuildContext context, ArtistLookupKey key) async {
 
     await precacheImage(cover(item: artist), context);
 
-    _handle(context).push(
+    _sanitizeContext(context).push(
       '/$kMediaLibraryPath/$kArtistPath',
       extra: ArtistPathExtra(
         artist: artist,
@@ -72,7 +72,7 @@ Future<void> navigateToGenre(BuildContext context, GenreLookupKey key) async {
 
     await precacheImage(cover(item: genre), context);
 
-    _handle(context).push(
+    _sanitizeContext(context).push(
       '/$kMediaLibraryPath/$kGenrePath',
       extra: GenrePathExtra(
         genre: genre,
@@ -83,7 +83,7 @@ Future<void> navigateToGenre(BuildContext context, GenreLookupKey key) async {
   }
 }
 
-BuildContext _handle(BuildContext context) {
+BuildContext _sanitizeContext(BuildContext context) {
   bool shouldPop() {
     try {
       return !router.location.startsWith('/$kMediaLibraryPath');
