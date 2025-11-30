@@ -125,7 +125,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
       content: [
         ScrollViewBuilder(
           margin: margin,
-          span: null,
+          span: ScrollViewBuilderHelper.instance.album.span,
           headerCount: 1,
           headerBuilder: (context, i, h) => const SizedBox.shrink(key: ValueKey('')),
           headerHeight: 0.0,
@@ -143,6 +143,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
           itemHeight: ScrollViewBuilderHelper.instance.album.itemHeight,
           padding: EdgeInsets.only(top: margin),
           displayHeaders: false,
+          shrinkWrap: true,
         ),
         ListItemTable(
           columns: [Localization.instance.TRACK, Localization.instance.ALBUM],

@@ -205,6 +205,7 @@ class ArtistItem extends StatelessWidget {
                           }
 
                           tracks = await MediaLibrary.instance.tracksFromArtist(artist);
+                          albums = await MediaLibrary.instance.albumsFromArtist(artist);
 
                           action();
                           context.read<NowPlayingMobileNotifier>().hideBottomNavigationBar();
