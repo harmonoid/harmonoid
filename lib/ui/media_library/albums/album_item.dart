@@ -32,9 +32,6 @@ class AlbumItem extends StatefulWidget {
 
   @override
   State<AlbumItem> createState() => _AlbumItemState();
-
-  static List<Track>? tracks;
-  static List<Color>? palette;
 }
 
 class _AlbumItemState extends State<AlbumItem> {
@@ -323,8 +320,8 @@ class _AlbumItemState extends State<AlbumItem> {
         mediaLibraryAlbumOpenContainerBuildContext = context;
         return AlbumScreen(
           album: widget.album,
-          tracks: AlbumItem.tracks!,
-          palette: AlbumItem.palette,
+          tracks: tracks!,
+          palette: palette,
         );
       },
     );
