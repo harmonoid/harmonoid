@@ -16,7 +16,6 @@ import 'package:harmonoid/utils/widgets.dart';
 class TracksTable extends StatefulWidget {
   final List<Track> tracks;
   final WidgetBuilder? headerBuilder;
-  final WidgetBuilder? footerBuilder;
   final ScrollPhysics? physics;
   final DesktopOnColumnResize? desktopOnColumnResize;
   final bool mobileSliverList;
@@ -25,7 +24,6 @@ class TracksTable extends StatefulWidget {
     super.key,
     required this.tracks,
     this.headerBuilder,
-    this.footerBuilder,
     this.physics,
     this.desktopOnColumnResize,
     this.mobileSliverList = false,
@@ -38,6 +36,15 @@ class TracksTable extends StatefulWidget {
 
 class _TracksTableState extends State<TracksTable> {
   List<double> _desktopColumnWidths = Configuration.instance.desktopMediaLibraryTracksScreenColumnWidths;
+
+  WidgetBuilder? get _buildFooter => isDesktop
+      ? null
+      : (BuildContext context) {
+          return const SizedBox(
+            key: ValueKey(''),
+            height: kMobileNowPlayingBarHeight,
+          );
+        };
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +65,7 @@ class _TracksTableState extends State<TracksTable> {
 
     return ListItemTable(
       headerBuilder: widget.headerBuilder,
-      footerBuilder: widget.footerBuilder,
+      footerBuilder: _buildFooter,
       columns: columns,
       itemCount: widget.tracks.length,
       itemBuilder: (context, i) => ListItemData(

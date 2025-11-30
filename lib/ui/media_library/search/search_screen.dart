@@ -226,9 +226,9 @@ class SearchScreenState extends State<SearchScreen> {
               ],
             ),
             SizedBox(
-              height: (_tracks.length.clamp(0, _kLimit) + 1) * linearTileHeight,
+              height: (_tracks.length + 1) * linearTileHeight,
               child: TracksTable(
-                tracks: _tracks.take(_kLimit).toList(),
+                tracks: _tracks,
                 physics: const NeverScrollableScrollPhysics(),
                 mobileSliverList: false,
               ),
