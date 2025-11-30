@@ -16,6 +16,7 @@ import 'package:harmonoid/utils/widgets.dart';
 class TracksTable extends StatefulWidget {
   final List<Track> tracks;
   final WidgetBuilder? headerBuilder;
+  final WidgetBuilder? footerBuilder;
   final ScrollPhysics? physics;
   final DesktopOnColumnResize? desktopOnColumnResize;
   final bool mobileSliverList;
@@ -24,6 +25,7 @@ class TracksTable extends StatefulWidget {
     super.key,
     required this.tracks,
     this.headerBuilder,
+    this.footerBuilder,
     this.physics,
     this.desktopOnColumnResize,
     this.mobileSliverList = false,
@@ -56,6 +58,7 @@ class _TracksTableState extends State<TracksTable> {
 
     return ListItemTable(
       headerBuilder: widget.headerBuilder,
+      footerBuilder: widget.footerBuilder,
       columns: columns,
       itemCount: widget.tracks.length,
       itemBuilder: (context, i) => ListItemData(

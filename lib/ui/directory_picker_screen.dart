@@ -222,68 +222,58 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
   }
 
   Widget _buildStorageDirectories() {
-    return ListView.builder(
+    return ListView.separated(
       padding: EdgeInsets.zero,
-      itemCount: ((_storageDirectories?.length ?? 0) * 2 - 1).clamp(0, 1 << 32),
-      itemBuilder: (context, i) {
-        if (i % 2 != 0) {
-          return const Divider(height: 1.0, thickness: 1.0);
-        } else {
-          i = i ~/ 2;
-          return ListTile(
-            leading: Icon(
-              switch (i) {
-                0 => Icons.phone_android,
-                1 => Icons.sd_storage,
-                _ => Icons.folder,
-              },
-            ),
-            title: Text(
-              switch (i) {
-                0 => Localization.instance.PHONE,
-                1 => Localization.instance.SD_CARD,
-                _ => '',
-              },
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            onTap: () => _navigateTo(_storageDirectories![i].path),
-          );
-        }
-      },
+      itemCount: _storageDirectories?.length ?? 0,
+      itemBuilder: (context, i) => ListTile(
+        leading: Icon(
+          switch (i) {
+            0 => Icons.phone_android,
+            1 => Icons.sd_storage,
+            _ => Icons.folder,
+          },
+        ),
+        title: Text(
+          switch (i) {
+            0 => Localization.instance.PHONE,
+            1 => Localization.instance.SD_CARD,
+            _ => '',
+          },
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        onTap: () => _navigateTo(_storageDirectories![i].path),
+      ),
+      separatorBuilder: (context, i) => const Divider(height: 1.0, thickness: 1.0),
     );
   }
 
   Widget _buildDirectoryChildren(List<DirectoryEntity> directoryPath) {
     final directoryChildren = directoryPath.last.children ?? [];
-    return ListView.builder(
+    return ListView.separated(
       key: _getPageStorageKey(),
       padding: EdgeInsets.zero,
-      itemCount: (directoryChildren.length * 2 - 1).clamp(0, 1 << 32),
+      itemCount: directoryChildren.length,
       itemBuilder: (context, i) {
-        if (i % 2 != 0) {
-          return const Divider(height: 1.0, thickness: 1.0);
-        } else {
-          final fileSystemEntity = directoryChildren[i ~/ 2];
-          final fileSystemEntityName = path.basename(fileSystemEntity.path);
-          return ListTile(
-            leading: Icon(
-              switch (fileSystemEntity) {
-                Directory() => Icons.folder,
-                File() when kDefaultSupportedFileTypes.contains(fileSystemEntity.extension) => Icons.audiotrack,
-                _ => Icons.insert_drive_file,
-              },
-            ),
-            title: Text(
-              fileSystemEntityName,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            onTap: fileSystemEntity is! Directory ? null : () => _navigateTo(fileSystemEntityName),
-          );
-        }
+        final fileSystemEntity = directoryChildren[i];
+        final fileSystemEntityName = path.basename(fileSystemEntity.path);
+        return ListTile(
+          leading: Icon(
+            switch (fileSystemEntity) {
+              Directory() => Icons.folder,
+              File() when kDefaultSupportedFileTypes.contains(fileSystemEntity.extension) => Icons.audiotrack,
+              _ => Icons.insert_drive_file,
+            },
+          ),
+          title: Text(
+            fileSystemEntityName,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          onTap: fileSystemEntity is! Directory ? null : () => _navigateTo(fileSystemEntityName),
+        );
       },
-      itemExtentBuilder: (i, _) => i % 2 != 0 ? 1.0 : 56.0,
+      separatorBuilder: (context, i) => const Divider(height: 1.0, thickness: 1.0),
     );
   }
 }

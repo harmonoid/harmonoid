@@ -46,7 +46,7 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await Intent.instance.notify(playbackState: Configuration.instance.mediaPlayerPlaybackState);
-      // HACK:
+      // HACK: It is very difficult to pass the entry point arguments to main like other platforms.
       if (Platform.isMacOS) {
         await const MethodChannel('com.alexmercerind/window_plus').invokeMethod('notifyUrls');
       }

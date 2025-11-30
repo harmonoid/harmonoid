@@ -114,7 +114,10 @@ EdgeInsets get mediaLibraryScrollViewBuilderPadding {
   } else if (isTablet) {
     throw UnimplementedError();
   } else if (isMobile) {
-    return EdgeInsets.only(top: MediaQuery.of(rootNavigatorKey.currentContext!).padding.top + margin + kMobileSearchBarHeight);
+    return EdgeInsets.only(
+      top: MediaQuery.of(rootNavigatorKey.currentContext!).padding.top + margin + kMobileSearchBarHeight,
+      bottom: kMobileNowPlayingBarHeight,
+    );
   }
   throw UnimplementedError();
 }

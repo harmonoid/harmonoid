@@ -36,12 +36,21 @@ class TracksScreenState extends State<TracksScreen> {
     if (isMobile) {
       return Container(
         height: kMobileHeaderHeight,
-        margin: mediaLibraryScrollViewBuilderPadding,
+        margin: mediaLibraryScrollViewBuilderPadding.copyWith(bottom: 0.0),
         child: const MobileMediaLibraryHeader(key: ValueKey('')),
       );
     }
     throw UnimplementedError();
   }
+
+  WidgetBuilder? get _buildFooter => isDesktop
+      ? null
+      : (BuildContext context) {
+          return const SizedBox(
+            key: ValueKey(''),
+            height: kMobileNowPlayingBarHeight,
+          );
+        };
 
   @override
   Widget build(BuildContext context) {
@@ -49,15 +58,20 @@ class TracksScreenState extends State<TracksScreen> {
       resizeToAvoidBottomInset: true,
       body: Consumer<MediaLibrary>(
         builder: (context, mediaLibrary, _) {
-          return TracksTable(
-            tracks: mediaLibrary.tracks,
-            headerBuilder: _buildHeader,
-            desktopOnColumnResize: (widths) {
-              _desktopColumnWidthsDebouncer.run(() {
-                Configuration.instance.set(desktopMediaLibraryTracksScreenColumnWidths: widths);
-              });
-            },
-            mobileDisplayLabel: true,
+          return KeyedSubtree(
+            key: ValueKey((mediaLibrary.albumSortType, mediaLibrary.albumSortAscending)),
+            child: TracksTable(
+              key: const PageStorageKey(TracksScreen),
+              tracks: mediaLibrary.tracks,
+              headerBuilder: _buildHeader,
+              footerBuilder: _buildFooter,
+              desktopOnColumnResize: (widths) {
+                _desktopColumnWidthsDebouncer.run(() {
+                  Configuration.instance.set(desktopMediaLibraryTracksScreenColumnWidths: widths);
+                });
+              },
+              mobileDisplayLabel: true,
+            ),
           );
         },
       ),

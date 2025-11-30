@@ -62,6 +62,7 @@ void mediaPlayerOpenOnOpen() async {
 }
 
 void mediaPlayerUpdateCurrentOnUpdateCurrent(String uri) {
+  debugPrint('actions.dart: mediaPlayerUpdateCurrentOnUpdateCurrent: $uri');
   if (AsyncFileImage.isFallback(uri)) {
     AsyncFileImage.reset(uri);
     MediaPlayer.instance
@@ -74,6 +75,7 @@ void mediaPlayerUpdateCurrentOnUpdateCurrent(String uri) {
 }
 
 void mediaPlayerSetExclusiveAudioOnError() {
+  debugPrint('actions.dart: mediaPlayerSetExclusiveAudioOnError');
   showMessage(
     router.routerDelegate.navigatorKey.currentContext!,
     Localization.instance.ERROR,
@@ -82,6 +84,7 @@ void mediaPlayerSetExclusiveAudioOnError() {
 }
 
 void mediaPlayerSetCrossfadeDurationOnError() {
+  debugPrint('actions.dart: mediaPlayerSetCrossfadeDurationOnError');
   showMessage(
     router.routerDelegate.navigatorKey.currentContext!,
     Localization.instance.ERROR,
@@ -90,6 +93,7 @@ void mediaPlayerSetCrossfadeDurationOnError() {
 }
 
 void mediaPlayerSetCrossfadeDurationPlayerReset() {
+  debugPrint('actions.dart: mediaPlayerSetCrossfadeDurationPlayerReset');
   NowPlayingColorPaletteNotifier.instance.clear();
   if (isDesktop) {
     if (router.location.startsWith('/$kNowPlayingPath')) {
@@ -109,6 +113,7 @@ void mediaPlayerSetCrossfadeDurationPlayerReset() {
 }
 
 Future<bool> updateNotifierCheckOnShowUpdate(String version) async {
+  debugPrint('actions.dart: updateNotifierCheckOnShowUpdate: $version');
   return showConfirmation(
     router.routerDelegate.navigatorKey.currentContext!,
     Localization.instance.UPDATE_AVAILABLE,
@@ -118,18 +123,18 @@ Future<bool> updateNotifierCheckOnShowUpdate(String version) async {
   );
 }
 
-void subscriptionNotifierOnSubscriptionUpdate(SubscriptionState state) {
-  Future.delayed(const Duration(seconds: 5), () {
-    _lock.synchronized(() async {
-      if (state is SubscriptionValid) return;
-      if (MediaPlayer.instance.state.crossfadeDuration != Duration.zero) {
-        await MediaPlayer.instance.setExclusiveAudio(false);
-        await MediaPlayer.instance.setCrossfadeDuration(Duration.zero);
-      }
-      if (Configuration.instance.mediaLibraryArtistImages) {
-        Configuration.instance.set(mediaLibraryArtistImages: false);
-        AsyncFileImage.clear();
-      }
-    });
+void subscriptionNotifierOnSubscriptionUpdate(SubscriptionState state) async {
+  debugPrint('actions.dart: subscriptionNotifierOnSubscriptionUpdate: $state');
+  await Future.delayed(const Duration(seconds: 5));
+  _lock.synchronized(() async {
+    if (state is SubscriptionValid) return;
+    if (MediaPlayer.instance.state.crossfadeDuration != Duration.zero) {
+      await MediaPlayer.instance.setExclusiveAudio(false);
+      await MediaPlayer.instance.setCrossfadeDuration(Duration.zero);
+    }
+    if (Configuration.instance.mediaLibraryArtistImages) {
+      Configuration.instance.set(mediaLibraryArtistImages: false);
+      AsyncFileImage.clear();
+    }
   });
 }
