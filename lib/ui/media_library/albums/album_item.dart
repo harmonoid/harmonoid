@@ -36,14 +36,10 @@ class AlbumItem extends StatefulWidget {
 
 class _AlbumItemState extends State<AlbumItem> {
   // ------------------------------
-  Color? get color => widget.outlined ? Theme.of(context).colorScheme.surfaceContainerLow : Theme.of(context).cardTheme.color;
+  Color? get color => widget.outlined ? Theme.of(context).colorScheme.surfaceContainerLow : null;
   double? get elevation => widget.outlined ? 0.0 : Theme.of(context).cardTheme.elevation;
-  ShapeBorder? get shape => widget.outlined
-      ? RoundedRectangleBorder(
-          side: BorderSide(color: Theme.of(context).colorScheme.outline, width: 1.0),
-          borderRadius: BorderRadius.circular(4.0),
-        )
-      : Theme.of(context).cardTheme.shape;
+  ShapeBorder? get shape =>
+      widget.outlined ? (Theme.of(context).cardTheme.shape as RoundedRectangleBorder).copyWith(side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant, width: 1.0)) : null;
   // ------------------------------
 
   Future<void> navigate() async {
