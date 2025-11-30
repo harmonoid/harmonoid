@@ -144,6 +144,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
           padding: EdgeInsets.only(top: margin),
           displayHeaders: false,
           shrinkWrap: true,
+          crossAxisAlignment: CrossAxisAlignment.start,
         ),
         ListItemTable(
           columns: [Localization.instance.TRACK, Localization.instance.ALBUM],
