@@ -11,6 +11,7 @@ import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/duration.dart';
+import 'package:harmonoid/extensions/list.dart';
 import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/build_context.dart';
@@ -186,20 +187,9 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
                                                       overflow: TextOverflow.ellipsis,
                                                       style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                                                     ),
-                                                    RichText(
-                                                      text: TextSpan(
-                                                        children: [
-                                                          for (final artist in mediaPlayer.current.subtitle.isEmpty ? {''} : mediaPlayer.current.subtitle) ...[
-                                                            TextSpan(
-                                                              text: artist.isEmpty ? kDefaultArtist : artist,
-                                                            ),
-                                                            const TextSpan(text: ', '),
-                                                          ],
-                                                        ]..removeLast(),
-                                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
-                                                      ),
-                                                      maxLines: 1,
-                                                      overflow: TextOverflow.ellipsis,
+                                                    TappableText(
+                                                      text: mediaPlayer.current.subtitle.ifEmpty(['']).map((e) => TappableTextData(text: e.isEmpty ? kDefaultArtist : e)).toList(),
+                                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
                                                     ),
                                                   ],
                                                 ),
@@ -414,21 +404,9 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface).copyWith(height: 1.0),
               strutStyle: StrutStyle.fromTextStyle(Theme.of(context).textTheme.headlineMedium!.copyWith(height: 1.5)),
             ),
-            RichText(
-              text: TextSpan(
-                children: [
-                  for (final artist in mediaPlayer.current.subtitle.isEmpty ? {''} : mediaPlayer.current.subtitle) ...[
-                    TextSpan(
-                      text: artist.isEmpty ? kDefaultArtist : artist,
-                    ),
-                    const TextSpan(text: ', '),
-                  ],
-                ]..removeLast(),
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant).copyWith(height: 1.0),
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              strutStyle: StrutStyle.fromTextStyle(Theme.of(context).textTheme.bodyLarge!.copyWith(height: 1.5)),
+            TappableText(
+              text: mediaPlayer.current.subtitle.ifEmpty(['']).map((e) => TappableTextData(text: e.isEmpty ? kDefaultArtist : e)).toList(),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant).copyWith(height: 1.0),
             ),
             if (Configuration.instance.nowPlayingAudioFormat)
               Text(
