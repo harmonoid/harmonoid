@@ -29,6 +29,7 @@ class KeyboardShortcuts {
     const SingleActivator(LogicalKeyboardKey.mediaPlayPause): MediaPlayer.instance.playOrPause,
     const SingleActivator(LogicalKeyboardKey.mediaTrackNext): MediaPlayer.instance.next,
     const SingleActivator(LogicalKeyboardKey.mediaTrackPrevious): MediaPlayer.instance.previous,
+    SingleActivator(LogicalKeyboardKey.keyF, control: control, meta: !control): MediaLibraryScreenState.desktopQueryTextFieldFocusNode.requestFocus,
     SingleActivator(LogicalKeyboardKey.keyS, control: control, meta: !control): MediaLibraryScreenState.desktopQueryTextFieldFocusNode.requestFocus,
     SingleActivator(LogicalKeyboardKey.keyQ, control: control, meta: !control): SystemNavigator.pop,
     SingleActivator(LogicalKeyboardKey.keyR, control: control, meta: !control): MediaLibrary.instance.refresh,
