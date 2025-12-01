@@ -149,7 +149,6 @@ class DesktopMediaLibraryFloatingSortButtonState extends State<DesktopMediaLibra
           elevation: 4.0,
           margin: EdgeInsets.zero,
           clipBehavior: Clip.antiAlias,
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
           child: child,
         ),

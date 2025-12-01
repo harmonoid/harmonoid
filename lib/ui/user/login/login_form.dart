@@ -27,7 +27,6 @@ class LoginForm extends StatelessWidget {
                   controller: notifier.emailController,
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
-                  inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'[^a-zA-Z0-9@.]'))],
                   enabled: !notifier.otpSent,
                   autofocus: true,
                   autocorrect: false,
