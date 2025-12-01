@@ -149,7 +149,7 @@ class DesktopMediaLibraryFloatingSortButtonState extends State<DesktopMediaLibra
           elevation: 4.0,
           margin: EdgeInsets.zero,
           clipBehavior: Clip.antiAlias,
-          color: Theme.of(context).colorScheme.surfaceContainer,
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
           child: child,
         ),
@@ -521,68 +521,6 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
           ),
         ],
       ),
-    );
-  }
-}
-
-// --------------------------------------------------
-
-class DesktopMediaLibraryRefreshIndicator extends StatelessWidget {
-  const DesktopMediaLibraryRefreshIndicator({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<MediaLibrary>(
-      builder: (context, mediaLibrary, _) {
-        if (!mediaLibrary.refreshing) {
-          return const SizedBox.shrink();
-        }
-        return Card(
-          elevation: kDefaultCardElevation,
-          clipBehavior: Clip.antiAlias,
-          margin: EdgeInsets.zero,
-          child: Container(
-            width: 328.0,
-            height: 56.0,
-            color: Theme.of(context).cardTheme.color,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                LinearProgressIndicator(
-                  value: mediaLibrary.current == null ? null : (mediaLibrary.current ?? 0) / (mediaLibrary.total == 0 ? 1 : mediaLibrary.total),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const SizedBox(width: 16.0),
-                        const Icon(Icons.library_music),
-                        const SizedBox(width: 16.0),
-                        Text(
-                          mediaLibrary.current == null
-                              ? Localization.instance.DISCOVERING_FILES
-                              : Localization.instance.ADDED_M_OF_N_FILES
-                                    .replaceAll('"M"', (mediaLibrary.current ?? 0).toString())
-                                    .replaceAll('"N"', (mediaLibrary.total == 0 ? 1 : mediaLibrary.total).toString()),
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                        const SizedBox(width: 16.0),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }

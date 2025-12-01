@@ -12,6 +12,7 @@ import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/ui/media_library/albums/album_item.dart';
 import 'package:harmonoid/ui/media_library/artists/artist_image.dart';
 import 'package:harmonoid/ui/media_library/artists/state/artist_image_notifier.dart';
+import 'package:harmonoid/ui/media_library/media_library_flags.dart';
 import 'package:harmonoid/ui/media_library/media_library_menus.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -178,6 +179,16 @@ class _ArtistScreenState extends State<ArtistScreen> {
               });
             }
           },
+          showItemSelection: isDesktop || mediaLibrarySelectedTracks.value.isNotEmpty,
+          isItemSelected: (i) => mediaLibrarySelectedTracks.value.contains(_tracks[i]),
+          onItemSelected: (context, i, value) {
+            if (value) {
+              mediaLibrarySelectedTracks.value = {...mediaLibrarySelectedTracks.value, _tracks[i]};
+            } else {
+              mediaLibrarySelectedTracks.value = mediaLibrarySelectedTracks.value.difference({_tracks[i]});
+            }
+          },
+          itemSelectionChangeNotifier: mediaLibrarySelectedTracks,
         ),
       ],
     );

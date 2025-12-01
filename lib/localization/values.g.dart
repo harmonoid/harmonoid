@@ -29,11 +29,13 @@ class Values {
   late String ASCENDING;
   late String AVAILABLE_STORAGES;
   late String A_TO_Z;
+  late String BACK;
   late String BETA;
   late String BUFFERING;
   late String CANCEL;
   late String CENTER;
   late String CLEAR_LRC_FILE;
+  late String CLEAR_SELECTION;
   late String COMING_UP;
   late String CONNECT;
   late String CONNECTED;
@@ -142,6 +144,7 @@ class Values {
   late String N_ARTISTS;
   late String N_ENTRIES;
   late String N_GENRES;
+  late String N_ITEMS_SELECTED;
   late String N_TRACKS;
   late String OFF;
   late String OK;
@@ -224,6 +227,7 @@ class Values {
   late String SEARCH_BANNER_TITLE;
   late String SEARCH_HINT;
   late String SEE_ALL;
+  late String SELECT;
   late String SETTINGS;
   late String SETTINGS_SECTION_DISPLAY_SUBTITLE;
   late String SETTINGS_SECTION_DISPLAY_TITLE;
@@ -269,6 +273,7 @@ class Values {
   late String TRACK_NUMBER;
   late String TYPE;
   late String UNMUTE;
+  late String UNSELECT;
   late String UPDATE_AVAILABLE;
   late String URL;
   late String USE_COLOR_PALETTE;

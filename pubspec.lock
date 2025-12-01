@@ -336,6 +336,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.3"
+  draggable_float_widget:
+    dependency: "direct main"
+    description:
+      name: draggable_float_widget
+      sha256: "075675c56f6b2bfc9f972a3937dc1b59838489a312f75fe7e90ba6844a84dce4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   draggable_scrollbar:
     dependency: transitive
     description:

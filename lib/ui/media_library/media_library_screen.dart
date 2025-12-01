@@ -17,6 +17,7 @@ import 'package:harmonoid/mappers/build_context.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/media_library/media_library_no_items_banner.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
+import 'package:harmonoid/ui/media_library/refresh_indicator/desktop/desktop_refresh_indicator.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -118,7 +119,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                   const Positioned(
                     left: 16.0,
                     bottom: 16.0,
-                    child: DesktopMediaLibraryRefreshIndicator(),
+                    child: DesktopRefreshIndicator(),
                   ),
                   Positioned(
                     right: 16.0,

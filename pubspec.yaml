@@ -17,6 +17,7 @@ dependencies:
   auto_size_text: ^3.0.0
   collection: ^1.18.0
   crypto: ^3.0.3
+  draggable_float_widget: ^0.1.0
   drift: ^2.29.0
   dynamic_color: ^1.6.9
   ffi: ^2.1.2

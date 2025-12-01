@@ -4,15 +4,14 @@ import 'package:media_library/media_library.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
-import 'package:harmonoid/extensions/shape_border.dart';
 import 'package:harmonoid/extensions/track.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
+import 'package:harmonoid/ui/media_library/media_library_flags.dart';
 import 'package:harmonoid/ui/media_library/media_library_menus.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/scroll_view_builder_helper.dart';
-import 'package:harmonoid/utils/widgets.dart';
 
 class TracksTable extends StatefulWidget {
   final List<Track> tracks;
@@ -82,33 +81,14 @@ class _TracksTableState extends State<TracksTable> {
             widget.tracks[i].toSubtitleTappableText(),
         ],
       ),
-      leadingBuilder: (context, i) => HoverOverlay(
-        overlayBuilder: (context) => IgnorePointer(
-          child: Card(
-            margin: EdgeInsets.zero,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ClipRRect(
-                clipBehavior: Clip.antiAlias,
-                borderRadius: Theme.of(context).cardTheme.shape!.subtractBorderRadius(BorderRadius.circular(8.0)),
-                child: Image(
-                  fit: BoxFit.cover,
-                  image: cover(item: widget.tracks[i]),
-                ),
-              ),
-            ),
-          ),
+      leadingBuilder: (context, i) => Image(
+        width: linearTileHeight,
+        height: linearTileHeight,
+        image: cover(
+          item: widget.tracks[i],
+          cacheHeight: linearTileHeight.toInt(),
         ),
-        overlaySize: const Size.square(256.0),
-        child: Image(
-          width: linearTileHeight,
-          height: linearTileHeight,
-          image: cover(
-            item: widget.tracks[i],
-            cacheHeight: linearTileHeight.toInt(),
-          ),
-          fit: BoxFit.cover,
-        ),
+        fit: BoxFit.cover,
       ),
       popupMenuBuilder: (context, i) => TrackMenuProvider(context, widget.tracks[i]).getPopupMenuItems(),
       onItemPressed: (context, i) {
@@ -130,6 +110,16 @@ class _TracksTableState extends State<TracksTable> {
       mobileSliverList: widget.mobileSliverList,
       mobileDisplayLabel: widget.mobileDisplayLabel,
       mobileLabelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
+      showItemSelection: isDesktop || mediaLibrarySelectedTracks.value.isNotEmpty,
+      isItemSelected: (i) => mediaLibrarySelectedTracks.value.contains(widget.tracks[i]),
+      onItemSelected: (context, i, value) {
+        if (value) {
+          mediaLibrarySelectedTracks.value = {...mediaLibrarySelectedTracks.value, widget.tracks[i]};
+        } else {
+          mediaLibrarySelectedTracks.value = mediaLibrarySelectedTracks.value.difference({widget.tracks[i]});
+        }
+      },
+      itemSelectionChangeNotifier: mediaLibrarySelectedTracks,
     );
   }
 }

@@ -34,11 +34,13 @@ class LocalizationBase extends Values {
     ASCENDING = map['ASCENDING']!;
     AVAILABLE_STORAGES = map['AVAILABLE_STORAGES']!;
     A_TO_Z = map['A_TO_Z']!;
+    BACK = map['BACK']!;
     BETA = map['BETA']!;
     BUFFERING = map['BUFFERING']!;
     CANCEL = map['CANCEL']!;
     CENTER = map['CENTER']!;
     CLEAR_LRC_FILE = map['CLEAR_LRC_FILE']!;
+    CLEAR_SELECTION = map['CLEAR_SELECTION']!;
     COMING_UP = map['COMING_UP']!;
     CONNECT = map['CONNECT']!;
     CONNECTED = map['CONNECTED']!;
@@ -147,6 +149,7 @@ class LocalizationBase extends Values {
     N_ARTISTS = map['N_ARTISTS']!;
     N_ENTRIES = map['N_ENTRIES']!;
     N_GENRES = map['N_GENRES']!;
+    N_ITEMS_SELECTED = map['N_ITEMS_SELECTED']!;
     N_TRACKS = map['N_TRACKS']!;
     OFF = map['OFF']!;
     OK = map['OK']!;
@@ -229,6 +232,7 @@ class LocalizationBase extends Values {
     SEARCH_BANNER_TITLE = map['SEARCH_BANNER_TITLE']!;
     SEARCH_HINT = map['SEARCH_HINT']!;
     SEE_ALL = map['SEE_ALL']!;
+    SELECT = map['SELECT']!;
     SETTINGS = map['SETTINGS']!;
     SETTINGS_SECTION_DISPLAY_SUBTITLE = map['SETTINGS_SECTION_DISPLAY_SUBTITLE']!;
     SETTINGS_SECTION_DISPLAY_TITLE = map['SETTINGS_SECTION_DISPLAY_TITLE']!;
@@ -274,6 +278,7 @@ class LocalizationBase extends Values {
     TRACK_NUMBER = map['TRACK_NUMBER']!;
     TYPE = map['TYPE']!;
     UNMUTE = map['UNMUTE']!;
+    UNSELECT = map['UNSELECT']!;
     UPDATE_AVAILABLE = map['UPDATE_AVAILABLE']!;
     URL = map['URL']!;
     USE_COLOR_PALETTE = map['USE_COLOR_PALETTE']!;

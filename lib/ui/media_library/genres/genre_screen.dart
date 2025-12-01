@@ -7,6 +7,7 @@ import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/ui/media_library/genres/constants.dart';
+import 'package:harmonoid/ui/media_library/media_library_flags.dart';
 import 'package:harmonoid/ui/media_library/media_library_menus.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -136,6 +137,16 @@ class _GenreScreenState extends State<GenreScreen> {
               });
             }
           },
+          showItemSelection: isDesktop || mediaLibrarySelectedTracks.value.isNotEmpty,
+          isItemSelected: (i) => mediaLibrarySelectedTracks.value.contains(_tracks[i]),
+          onItemSelected: (context, i, value) {
+            if (value) {
+              mediaLibrarySelectedTracks.value = {...mediaLibrarySelectedTracks.value, _tracks[i]};
+            } else {
+              mediaLibrarySelectedTracks.value = mediaLibrarySelectedTracks.value.difference({_tracks[i]});
+            }
+          },
+          itemSelectionChangeNotifier: mediaLibrarySelectedTracks,
         ),
       ],
     );

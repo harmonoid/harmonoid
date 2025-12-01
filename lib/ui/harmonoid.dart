@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
+import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
@@ -88,52 +89,58 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext _) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => MediaLibrary.instance),
-        ChangeNotifierProvider(create: (_) => MediaPlayer.instance),
-        ChangeNotifierProvider(create: (_) => Localization.instance),
-        ChangeNotifierProvider(create: (context) => ThemeNotifier.instance..update(context: context)),
-        ChangeNotifierProvider(create: (_) => UpdateNotifier.instance),
-        ChangeNotifierProvider(create: (_) => LyricsNotifier.instance),
-        ChangeNotifierProvider(create: (_) => NowPlayingColorPaletteNotifier.instance),
-        Provider(create: (_) => NowPlayingMobileNotifier.instance),
-        ChangeNotifierProvider(
-          lazy: false,
-          create: (_) => UserNotifierFactory.create(),
-        ),
-        ChangeNotifierProvider(
-          lazy: false,
-          create: (ctx) => SubscriptionNotifierFactory.create(
-            userNotifier: ctx.read(),
-            functions: SubscriptionFunctions(
-              updateAvailable: () => UpdateNotifier.instance.updateAvailable,
-              showUpdate: () => UpdateNotifier.instance.check(true),
-              showLogin: () => showLogin(context),
-              onSubscriptionUpdate: subscriptionNotifierOnSubscriptionUpdate,
-              onSubscriptionError: (state) {
-                showMessage(
-                  context,
-                  Localization.instance.SUBSCRIPTION_EXPIRED_TITLE,
-                  Localization.instance.SUBSCRIPTION_EXPIRED_SUBTITLE,
-                );
-                subscriptionNotifierOnSubscriptionUpdate(state);
-              },
+    return AdaptiveLayoutsLocalizations(
+      back: Localization.instance.BACK,
+      more: Localization.instance.MORE,
+      select: Localization.instance.SELECT,
+      unselect: Localization.instance.UNSELECT,
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => MediaLibrary.instance),
+          ChangeNotifierProvider(create: (_) => MediaPlayer.instance),
+          ChangeNotifierProvider(create: (_) => Localization.instance),
+          ChangeNotifierProvider(create: (context) => ThemeNotifier.instance..update(context: context)),
+          ChangeNotifierProvider(create: (_) => UpdateNotifier.instance),
+          ChangeNotifierProvider(create: (_) => LyricsNotifier.instance),
+          ChangeNotifierProvider(create: (_) => NowPlayingColorPaletteNotifier.instance),
+          Provider(create: (_) => NowPlayingMobileNotifier.instance),
+          ChangeNotifierProvider(
+            lazy: false,
+            create: (_) => UserNotifierFactory.create(),
+          ),
+          ChangeNotifierProvider(
+            lazy: false,
+            create: (ctx) => SubscriptionNotifierFactory.create(
+              userNotifier: ctx.read(),
+              functions: SubscriptionFunctions(
+                updateAvailable: () => UpdateNotifier.instance.updateAvailable,
+                showUpdate: () => UpdateNotifier.instance.check(true),
+                showLogin: () => showLogin(context),
+                onSubscriptionUpdate: subscriptionNotifierOnSubscriptionUpdate,
+                onSubscriptionError: (state) {
+                  showMessage(
+                    context,
+                    Localization.instance.SUBSCRIPTION_EXPIRED_TITLE,
+                    Localization.instance.SUBSCRIPTION_EXPIRED_SUBTITLE,
+                  );
+                  subscriptionNotifierOnSubscriptionUpdate(state);
+                },
+              ),
             ),
           ),
-        ),
-        ChangeNotifierProvider(create: (_) => ArtistImageNotifier()),
-      ],
-      builder: (context, _) => Consumer<ThemeNotifier>(
-        builder: (context, themeNotifier, _) => MacOSMenuBar(
-          child: KeyboardShortcutsListener(
-            child: MaterialApp.router(
-              scrollBehavior: const DefaultScrollBehavior(),
-              debugShowCheckedModeBanner: false,
-              theme: themeNotifier.theme,
-              darkTheme: themeNotifier.darkTheme,
-              themeMode: themeNotifier.themeMode,
-              routerConfig: router,
+          ChangeNotifierProvider(create: (_) => ArtistImageNotifier()),
+        ],
+        builder: (context, _) => Consumer<ThemeNotifier>(
+          builder: (context, themeNotifier, _) => MacOSMenuBar(
+            child: KeyboardShortcutsListener(
+              child: MaterialApp.router(
+                scrollBehavior: const DefaultScrollBehavior(),
+                debugShowCheckedModeBanner: false,
+                theme: themeNotifier.theme,
+                darkTheme: themeNotifier.darkTheme,
+                themeMode: themeNotifier.themeMode,
+                routerConfig: router,
+              ),
             ),
           ),
         ),

@@ -37,10 +37,11 @@ class AlbumItem extends StatefulWidget {
 
 class _AlbumItemState extends State<AlbumItem> {
   // ------------------------------
-  Color? get color => widget.outlined ? Theme.of(context).colorScheme.surfaceContainerLow : null;
+  Color? get color => widget.outlined ? Colors.transparent : Theme.of(context).cardTheme.color;
   double? get elevation => widget.outlined ? 0.0 : Theme.of(context).cardTheme.elevation;
-  ShapeBorder? get shape =>
-      widget.outlined ? (Theme.of(context).cardTheme.shape as RoundedRectangleBorder).copyWith(side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant, width: 1.0)) : null;
+  ShapeBorder? get shape => widget.outlined
+      ? (Theme.of(context).cardTheme.shape as RoundedRectangleBorder).copyWith(side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant, width: 1.0))
+      : Theme.of(context).cardTheme.shape;
   // ------------------------------
 
   Future<void> navigate() async {
@@ -227,7 +228,7 @@ class _AlbumItemState extends State<AlbumItem> {
       closedShape: shape ?? const RoundedRectangleBorder(),
       closedElevation: elevation ?? 0.0,
       openColor: Theme.of(context).scaffoldBackgroundColor,
-      openShape: shape ?? const RoundedRectangleBorder(),
+      openShape: const RoundedRectangleBorder(),
       openElevation: elevation ?? 0.0,
       tappable: false,
       onClosed: (data) {

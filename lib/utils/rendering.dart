@@ -230,46 +230,6 @@ ImageProvider cover({
   return image;
 }
 
-Future<int?> showMenuItems(BuildContext context, List<PopupMenuItem<int>> items, {RelativeRect? position}) async {
-  if (isDesktop) {
-    return showMaterialMenu(
-      context: context,
-      constraints: const BoxConstraints(
-        maxWidth: double.infinity,
-      ),
-      position: position!,
-      items: items,
-    );
-  } else {
-    int? result;
-    await showModalBottomSheet(
-      context: context,
-      useRootNavigator: true,
-      isScrollControlled: true,
-      elevation: kDefaultHeavyElevation,
-      showDragHandle: isMaterial3OrGreater,
-      builder: (context) => Padding(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (int i = 0; i < items.length; i++) ...[
-              InkWell(
-                onTap: () {
-                  result = items[i].value;
-                  Navigator.of(context).maybePop();
-                },
-                child: items[i].child,
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-    return result;
-  }
-}
-
 Future<String> showInput(
   BuildContext context,
   String title,
@@ -305,7 +265,7 @@ Future<String> showInput(
                     input = value;
                     if (formKey.currentState!.validate()) {
                       done = true;
-                      Navigator.of(ctx).maybePop();
+                      ctx.pop();
                     }
                   },
                   style: Theme.of(ctx).textTheme.bodyLarge,
@@ -320,13 +280,13 @@ Future<String> showInput(
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 done = true;
-                Navigator.of(ctx).maybePop();
+                ctx.pop();
               }
             },
             child: Text(label(action)),
           ),
           TextButton(
-            onPressed: Navigator.of(ctx).maybePop,
+            onPressed: ctx.pop,
             child: Text(label(Localization.instance.CANCEL)),
           ),
         ],
@@ -363,7 +323,7 @@ Future<String> showInput(
                       input = value;
                       if (formKey.currentState!.validate()) {
                         done = true;
-                        Navigator.of(ctx).maybePop();
+                        ctx.pop();
                       }
                     },
                     style: Theme.of(ctx).textTheme.bodyLarge?.copyWith(fontSize: 16.0),
@@ -375,7 +335,7 @@ Future<String> showInput(
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
                       done = true;
-                      Navigator.of(ctx).maybePop();
+                      ctx.pop();
                     }
                   },
                   child: Text(label(action)),
@@ -410,12 +370,12 @@ Future<bool> showConfirmation(
         TextButton(
           onPressed: () {
             result = true;
-            Navigator.of(ctx).maybePop();
+            ctx.pop();
           },
           child: Text(label(positiveAction ?? Localization.instance.YES)),
         ),
         TextButton(
-          onPressed: Navigator.of(ctx).pop,
+          onPressed: ctx.pop,
           child: Text(label(negativeAction ?? Localization.instance.NO)),
         ),
       ],
@@ -492,13 +452,13 @@ Future<T?> showSelection<T>(
           actions: actions
               ? [
                   TextButton(
-                    onPressed: Navigator.of(ctx).maybePop,
+                    onPressed: ctx.pop,
                     child: Text(label(Localization.instance.OK)),
                   ),
                   TextButton(
                     onPressed: () {
                       result = null;
-                      Navigator.of(ctx).maybePop();
+                      ctx.pop();
                     },
                     child: Text(label(Localization.instance.CANCEL)),
                   ),
@@ -574,7 +534,7 @@ Future<String?> pickResource(BuildContext context, String title) async {
             );
             if (file != null) {
               result = file.path;
-              await Navigator.of(ctx).maybePop();
+              ctx.pop();
             }
           },
           leading: CircleAvatar(
@@ -589,7 +549,7 @@ Future<String?> pickResource(BuildContext context, String title) async {
         ),
         ListTile(
           onTap: () async {
-            await Navigator.of(ctx).maybePop();
+            ctx.pop();
             final resultValue = await showInput(
               context,
               title,
@@ -608,7 +568,7 @@ Future<String?> pickResource(BuildContext context, String title) async {
 
             if (resultValue.isNotEmpty) {
               result = resultValue;
-              await Navigator.of(ctx).maybePop();
+              ctx.pop();
             }
           },
           leading: CircleAvatar(

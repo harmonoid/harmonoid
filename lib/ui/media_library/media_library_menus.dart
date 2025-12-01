@@ -42,14 +42,14 @@ class TrackMenuProvider {
 
   List<PopupMenuItem<int>> getPopupMenuItems() {
     return TrackMenuAction.values
-        .where((action) => _getVisible(action))
+        .where((action) => getVisible(action))
         .map(
           (action) => PopupMenuItem<int>(
             value: action.index,
             child: ListTile(
-              leading: Icon(_getIcon(action)),
+              leading: Icon(getIcon(action)),
               title: Text(
-                _getLabel(action),
+                getLabel(action),
                 style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
               ),
             ),
@@ -183,7 +183,7 @@ class TrackMenuProvider {
     }
   }
 
-  bool _getVisible(TrackMenuAction action) {
+  bool getVisible(TrackMenuAction action) {
     return switch (action) {
       TrackMenuAction.share => Platform.isAndroid || Platform.isIOS,
       TrackMenuAction.showInFileManager => Platform.isLinux || Platform.isMacOS || Platform.isWindows,
@@ -191,7 +191,7 @@ class TrackMenuProvider {
     };
   }
 
-  IconData _getIcon(TrackMenuAction action) {
+  IconData getIcon(TrackMenuAction action) {
     return switch (action) {
       TrackMenuAction.playNext => Icons.playlist_play,
       TrackMenuAction.addToNowPlaying => Icons.playlist_add_check,
@@ -207,7 +207,7 @@ class TrackMenuProvider {
     };
   }
 
-  String _getLabel(TrackMenuAction action) {
+  String getLabel(TrackMenuAction action) {
     return switch (action) {
       TrackMenuAction.playNext => Localization.instance.PLAY_NEXT,
       TrackMenuAction.addToNowPlaying => Localization.instance.ADD_TO_NOW_PLAYING,
@@ -245,14 +245,14 @@ class TracksMenuProvider {
 
   List<PopupMenuItem<int>> getPopupMenuItems() {
     return TracksMenuAction.values
-        .where((action) => _getVisible(action))
+        .where((action) => getVisible(action))
         .map(
           (action) => PopupMenuItem<int>(
             value: action.index,
             child: ListTile(
-              leading: Icon(_getIcon(action)),
+              leading: Icon(getIcon(action)),
               title: Text(
-                _getLabel(action),
+                getLabel(action),
                 style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
               ),
             ),
@@ -314,7 +314,9 @@ class TracksMenuProvider {
     final result = await showConfirmation(
       context,
       Localization.instance.DELETE,
-      Localization.instance.TRACKS_DELETE_DIALOG_SUBTITLE.replaceAll('"N"', tracks.length.toString()),
+      tracks.length > 1
+          ? Localization.instance.TRACKS_DELETE_DIALOG_SUBTITLE.replaceAll('"N"', tracks.length.toString())
+          : Localization.instance.TRACK_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', tracks.firstOrNull?.title ?? ''),
     );
     if (result) {
       await _mediaLibrary.remove(tracks);
@@ -324,7 +326,7 @@ class TracksMenuProvider {
     }
   }
 
-  bool _getVisible(TracksMenuAction action) {
+  bool getVisible(TracksMenuAction action) {
     return switch (action) {
       // SDK 29 cannot delete multiple files at once.
       TracksMenuAction.delete => !Platform.isAndroid || AndroidStorageController.instance.version != 29,
@@ -332,7 +334,7 @@ class TracksMenuProvider {
     };
   }
 
-  IconData _getIcon(TracksMenuAction action) {
+  IconData getIcon(TracksMenuAction action) {
     return switch (action) {
       TracksMenuAction.playAll => Icons.play_arrow,
       TracksMenuAction.shuffle => Icons.shuffle,
@@ -343,7 +345,7 @@ class TracksMenuProvider {
     };
   }
 
-  String _getLabel(TracksMenuAction action) {
+  String getLabel(TracksMenuAction action) {
     return switch (action) {
       TracksMenuAction.playAll => Localization.instance.PLAY_ALL,
       TracksMenuAction.shuffle => Localization.instance.SHUFFLE,
@@ -376,14 +378,14 @@ class PlaylistMenuProvider {
     }
 
     return PlaylistMenuAction.values
-        .where((action) => _getVisible(action))
+        .where((action) => getVisible(action))
         .map(
           (action) => PopupMenuItem<int>(
             value: action.index,
             child: ListTile(
-              leading: Icon(_getIcon(action)),
+              leading: Icon(getIcon(action)),
               title: Text(
-                _getLabel(action),
+                getLabel(action),
                 style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
               ),
             ),
@@ -432,18 +434,18 @@ class PlaylistMenuProvider {
     }
   }
 
-  bool _getVisible(PlaylistMenuAction action) {
+  bool getVisible(PlaylistMenuAction action) {
     return true;
   }
 
-  IconData _getIcon(PlaylistMenuAction action) {
+  IconData getIcon(PlaylistMenuAction action) {
     return switch (action) {
       PlaylistMenuAction.rename => Icons.drive_file_rename_outline,
       PlaylistMenuAction.delete => Icons.delete,
     };
   }
 
-  String _getLabel(PlaylistMenuAction action) {
+  String getLabel(PlaylistMenuAction action) {
     return switch (action) {
       PlaylistMenuAction.rename => Localization.instance.RENAME,
       PlaylistMenuAction.delete => Localization.instance.DELETE,
@@ -466,14 +468,14 @@ class PlaylistEntryMenuProvider {
 
   List<PopupMenuItem<int>> getPopupMenuItems() {
     return PlaylistEntryMenuAction.values
-        .where((action) => _getVisible(action))
+        .where((action) => getVisible(action))
         .map(
           (action) => PopupMenuItem<int>(
             value: action.index,
             child: ListTile(
-              leading: Icon(_getIcon(action)),
+              leading: Icon(getIcon(action)),
               title: Text(
-                _getLabel(action),
+                getLabel(action),
                 style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
               ),
             ),
@@ -503,17 +505,17 @@ class PlaylistEntryMenuProvider {
     }
   }
 
-  bool _getVisible(PlaylistEntryMenuAction action) {
+  bool getVisible(PlaylistEntryMenuAction action) {
     return true;
   }
 
-  IconData _getIcon(PlaylistEntryMenuAction action) {
+  IconData getIcon(PlaylistEntryMenuAction action) {
     return switch (action) {
       PlaylistEntryMenuAction.remove => Icons.delete,
     };
   }
 
-  String _getLabel(PlaylistEntryMenuAction action) {
+  String getLabel(PlaylistEntryMenuAction action) {
     return switch (action) {
       PlaylistEntryMenuAction.remove => Localization.instance.REMOVE,
     };

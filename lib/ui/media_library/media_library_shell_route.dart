@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'package:harmonoid/extensions/build_context.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
+import 'package:harmonoid/ui/media_library/selection_toolbar/selection_toolbar.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -89,15 +90,17 @@ class MediaLibraryShellRouteState extends State<MediaLibraryShellRoute> with Tic
   }
 
   Widget _buildDesktopLayout(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        Positioned.fill(
-          bottom: NowPlayingBar.height,
-          child: widget.child,
-        ),
-        NowPlayingBar(key: ValueKey(Theme.of(context).extension<MaterialStandard>()?.value)),
-      ],
+    return SelectionToolbar(
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Positioned.fill(
+            bottom: NowPlayingBar.height,
+            child: widget.child,
+          ),
+          NowPlayingBar(key: ValueKey(Theme.of(context).extension<MaterialStandard>()?.value)),
+        ],
+      ),
     );
   }
 
@@ -108,72 +111,74 @@ class MediaLibraryShellRouteState extends State<MediaLibraryShellRoute> with Tic
   Widget _buildMobileLayout(BuildContext context) {
     final viewInsets = MediaQuery.viewInsetsOf(context).bottom;
 
-    return Scaffold(
-      body: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          MobileNowPlayingBarScrollNotifier(child: widget.child),
-          AnimatedBuilder(
-            animation: _mobileNowPlayingBarController,
-            builder: (context, child) {
-              final nowPlayingBarVisibility = _mobileNowPlayingBarController.value;
-              if (nowPlayingBarVisibility == 1.0) {
-                return const SizedBox.shrink();
-              }
-              if (viewInsets > 0.0 && !context.read<NowPlayingMobileNotifier>().maximized) {
-                return const SizedBox.shrink();
-              }
-              return Transform.translate(
-                offset: Offset(0.0, NowPlayingBar.height * nowPlayingBarVisibility),
-                child: child,
-              );
-            },
-            child: NowPlayingBar(key: ValueKey(Theme.of(context).extension<MaterialStandard>()?.value)),
-          ),
-        ],
-      ),
-      bottomNavigationBar: AnimatedBuilder(
-        animation: _mobileBottomNavigationBarController,
-        builder: (context, child) {
-          final bottomNavigationBarHeight = _mobileBottomNavigationBarHeight;
-          final bottomNavigationBarVisibility = _mobileBottomNavigationBarController.value;
-          final path = context.location.split('/').last;
-          final visible = [kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(path);
+    return SelectionToolbar(
+      child: Scaffold(
+        body: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            MobileNowPlayingBarScrollNotifier(child: widget.child),
+            AnimatedBuilder(
+              animation: _mobileNowPlayingBarController,
+              builder: (context, child) {
+                final nowPlayingBarVisibility = _mobileNowPlayingBarController.value;
+                if (nowPlayingBarVisibility == 1.0) {
+                  return const SizedBox.shrink();
+                }
+                if (viewInsets > 0.0 && !context.read<NowPlayingMobileNotifier>().maximized) {
+                  return const SizedBox.shrink();
+                }
+                return Transform.translate(
+                  offset: Offset(0.0, NowPlayingBar.height * nowPlayingBarVisibility),
+                  child: child,
+                );
+              },
+              child: NowPlayingBar(key: ValueKey(Theme.of(context).extension<MaterialStandard>()?.value)),
+            ),
+          ],
+        ),
+        bottomNavigationBar: AnimatedBuilder(
+          animation: _mobileBottomNavigationBarController,
+          builder: (context, child) {
+            final bottomNavigationBarHeight = _mobileBottomNavigationBarHeight;
+            final bottomNavigationBarVisibility = _mobileBottomNavigationBarController.value;
+            final path = context.location.split('/').last;
+            final visible = [kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(path);
 
-          if (bottomNavigationBarVisibility == 0.0) {
-            return const SizedBox.shrink();
-          }
-          if (!visible) {
-            return Container(
-              height: MediaQuery.paddingOf(context).bottom,
-              color: Theme.of(context).navigationBarTheme.backgroundColor,
-            );
-          }
-          return SizedBox(
-            height: bottomNavigationBarHeight * bottomNavigationBarVisibility,
-            child: Stack(
-              children: [
-                child!,
-                Positioned.fill(
-                  child: IgnorePointer(
-                    child: AnimatedOpacity(
-                      curve: _kCurve,
-                      opacity: _mobileBottomNavigationBarFlag ? 1.0 : 0.0,
-                      duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
-                      child: Container(color: Theme.of(context).bottomNavigationBarTheme.backgroundColor ?? Theme.of(context).navigationBarTheme.backgroundColor),
+            if (bottomNavigationBarVisibility == 0.0) {
+              return const SizedBox.shrink();
+            }
+            if (!visible) {
+              return Container(
+                height: MediaQuery.paddingOf(context).bottom,
+                color: Theme.of(context).navigationBarTheme.backgroundColor,
+              );
+            }
+            return SizedBox(
+              height: bottomNavigationBarHeight * bottomNavigationBarVisibility,
+              child: Stack(
+                children: [
+                  child!,
+                  Positioned.fill(
+                    child: IgnorePointer(
+                      child: AnimatedOpacity(
+                        curve: _kCurve,
+                        opacity: _mobileBottomNavigationBarFlag ? 1.0 : 0.0,
+                        duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+                        child: Container(color: Theme.of(context).bottomNavigationBarTheme.backgroundColor ?? Theme.of(context).navigationBarTheme.backgroundColor),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
+            );
+          },
+          child: SingleChildScrollView(
+            padding: EdgeInsets.zero,
+            physics: const NeverScrollableScrollPhysics(),
+            child: MeasureSize(
+              onChange: (size) => setState(() => _mobileBottomNavigationBarHeight = size.height),
+              child: const MobileNavigationBar(),
             ),
-          );
-        },
-        child: SingleChildScrollView(
-          padding: EdgeInsets.zero,
-          physics: const NeverScrollableScrollPhysics(),
-          child: MeasureSize(
-            onChange: (size) => setState(() => _mobileBottomNavigationBarHeight = size.height),
-            child: const MobileNavigationBar(),
           ),
         ),
       ),
