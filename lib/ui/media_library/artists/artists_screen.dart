@@ -55,7 +55,11 @@ class ArtistsScreenState extends State<ArtistsScreen> {
               final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.artist;
 
               return KeyedSubtree(
-                key: ValueKey((mediaLibrary.artistSortType, mediaLibrary.artistSortAscending)),
+                key: ValueKey((
+                  mediaLibrary.artistSortType,
+                  mediaLibrary.artistSortAscending,
+                  mediaLibrary.artists.length,
+                )),
                 child: ScrollViewBuilder(
                   key: const PageStorageKey(ArtistsScreen),
                   margin: margin,

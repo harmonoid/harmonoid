@@ -129,6 +129,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
       tabs: [Localization.instance.ALBUMS, Localization.instance.TRACKS],
       content: [
         ScrollViewBuilder(
+          key: ValueKey(_albums.length),
           margin: margin,
           span: ScrollViewBuilderHelper.instance.album.span,
           headerCount: 1,

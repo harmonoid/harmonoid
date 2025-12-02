@@ -55,7 +55,11 @@ class GenresScreenState extends State<GenresScreen> {
               final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.genre;
 
               return KeyedSubtree(
-                key: ValueKey((mediaLibrary.genreSortType, mediaLibrary.genreSortAscending)),
+                key: ValueKey((
+                  mediaLibrary.genreSortType,
+                  mediaLibrary.genreSortAscending,
+                  mediaLibrary.genres.length,
+                )),
                 child: ScrollViewBuilder(
                   key: const PageStorageKey(GenresScreen),
                   margin: margin,

@@ -68,38 +68,41 @@ class DesktopAlbumsArtistsScreenState extends State<DesktopAlbumsArtistsScreen> 
                       width: 172.0,
                       child: NotificationListener<ScrollNotification>(
                         onNotification: (_) => true,
-                        child: ScrollViewBuilder(
-                          key: const PageStorageKey(AlbumsScreen),
-                          margin: 0.0,
-                          span: 1,
-                          displayHeaders: false,
-                          headerCount: albumArtists.length,
-                          headerBuilder: (context, i, h) => const SizedBox.shrink(),
-                          headerHeight: 0.0,
-                          itemCounts: albumArtists.map((_) => 1).toList(),
-                          itemBuilder: (context, i, j, w, h) {
-                            return InkWell(
-                              key: const ValueKey(''),
-                              onTap: () {
-                                _key.currentState?.animateToHeader(
-                                  i + 1,
-                                  difference: -8.0,
-                                );
-                              },
-                              child: Container(
-                                alignment: Alignment.centerLeft,
-                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Text(
-                                  albumArtists[i].key.isEmpty ? kDefaultArtist : albumArtists[i].key,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+                        child: KeyedSubtree(
+                          key: ValueKey((albumArtists.length)),
+                          child: ScrollViewBuilder(
+                            key: const PageStorageKey(AlbumsScreen),
+                            margin: 0.0,
+                            span: 1,
+                            displayHeaders: false,
+                            headerCount: albumArtists.length,
+                            headerBuilder: (context, i, h) => const SizedBox.shrink(),
+                            headerHeight: 0.0,
+                            itemCounts: albumArtists.map((_) => 1).toList(),
+                            itemBuilder: (context, i, j, w, h) {
+                              return InkWell(
+                                key: const ValueKey(''),
+                                onTap: () {
+                                  _key.currentState?.animateToHeader(
+                                    i + 1,
+                                    difference: -8.0,
+                                  );
+                                },
+                                child: Container(
+                                  alignment: Alignment.centerLeft,
+                                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Text(
+                                    albumArtists[i].key.isEmpty ? kDefaultArtist : albumArtists[i].key,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                          itemWidth: double.infinity,
-                          itemHeight: 28.0,
-                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                              );
+                            },
+                            itemWidth: double.infinity,
+                            itemHeight: 28.0,
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                          ),
                         ),
                       ),
                     ),

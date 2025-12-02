@@ -61,7 +61,11 @@ class AlbumsScreenState extends State<AlbumsScreen> {
               final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.album;
 
               return KeyedSubtree(
-                key: ValueKey((mediaLibrary.albumSortType, mediaLibrary.albumSortAscending)),
+                key: ValueKey((
+                  mediaLibrary.albumSortType,
+                  mediaLibrary.albumSortAscending,
+                  mediaLibrary.albums.length,
+                )),
                 child: ScrollViewBuilder(
                   key: const PageStorageKey(AlbumsScreen),
                   margin: margin,
