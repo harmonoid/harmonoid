@@ -16,7 +16,7 @@ class DesktopRefreshIndicator extends StatefulWidget {
 class _DesktopRefreshIndicatorState extends State<DesktopRefreshIndicator> {
   // https://m3.material.io/components/toolbars/specs
 
-  static const double kHeight = 56.0;
+  static const double kHeight = 64.0;
 
   Color get _backgroundColor {
     if (isMaterial3) {
@@ -73,7 +73,7 @@ class _DesktopRefreshIndicatorState extends State<DesktopRefreshIndicator> {
                     width: kHeight,
                     height: kHeight,
                     alignment: Alignment.center,
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(20.0),
                     child: CircularProgressIndicator(
                       value: mediaLibrary.current == null ? null : (mediaLibrary.current ?? 0) / (mediaLibrary.total == 0 ? 1 : mediaLibrary.total),
                       color: _progressColor,
@@ -88,7 +88,7 @@ class _DesktopRefreshIndicatorState extends State<DesktopRefreshIndicator> {
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: _foregroundColor),
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(width: 16.0),
+                  const SizedBox(width: 20.0),
                 ],
               ),
             ),

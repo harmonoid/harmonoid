@@ -1,3 +1,4 @@
+import 'package:harmonoid/localization/localization.dart';
 import 'package:path/path.dart';
 
 import 'package:harmonoid/models/loop.dart';
@@ -43,7 +44,11 @@ extension MediaPlayerStateExtensions on MediaPlayerState {
     } catch (_) {}
     try {
       if (audioParams.channelCount != null) {
-        channelCountValue = {1: 'Mono', 2: 'Stereo'}[audioParams.channelCount!] ?? '${audioParams.channelCount} channels';
+        channelCountValue = switch (audioParams.channelCount!) {
+          1 => Localization.instance.MONO,
+          2 => Localization.instance.STEREO,
+          _ => Localization.instance.N_CHANNELS.replaceAll('"N"', audioParams.channelCount.toString()),
+        };
       }
     } catch (_) {}
 

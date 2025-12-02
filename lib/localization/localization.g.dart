@@ -134,6 +134,7 @@ class LocalizationBase extends Values {
     MOBILE_ARTIST_GRID_SIZE = map['MOBILE_ARTIST_GRID_SIZE']!;
     MOBILE_GENRE_GRID_SIZE = map['MOBILE_GENRE_GRID_SIZE']!;
     MODIFY_BACKGROUND_IMAGES = map['MODIFY_BACKGROUND_IMAGES']!;
+    MONO = map['MONO']!;
     MORE = map['MORE']!;
     MUTE = map['MUTE']!;
     M_ALBUMS_AND_N_TRACKS = map['M_ALBUMS_AND_N_TRACKS']!;
@@ -147,6 +148,7 @@ class LocalizationBase extends Values {
     N_ALBUMS = map['N_ALBUMS']!;
     N_ALBUMS_ONE_TRACK = map['N_ALBUMS_ONE_TRACK']!;
     N_ARTISTS = map['N_ARTISTS']!;
+    N_CHANNELS = map['N_CHANNELS']!;
     N_ENTRIES = map['N_ENTRIES']!;
     N_GENRES = map['N_GENRES']!;
     N_ITEMS_SELECTED = map['N_ITEMS_SELECTED']!;
@@ -264,6 +266,7 @@ class LocalizationBase extends Values {
     SORT_BY = map['SORT_BY']!;
     SPEED = map['SPEED']!;
     START = map['START']!;
+    STEREO = map['STEREO']!;
     SUBSCRIPTION_EXPIRED_SUBTITLE = map['SUBSCRIPTION_EXPIRED_SUBTITLE']!;
     SUBSCRIPTION_EXPIRED_TITLE = map['SUBSCRIPTION_EXPIRED_TITLE']!;
     THEME = map['THEME']!;

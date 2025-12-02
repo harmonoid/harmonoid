@@ -2,6 +2,7 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
+import 'package:media_library/playlists/src/utils/constants.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/media_library.dart';
@@ -74,7 +75,11 @@ class PlaylistItem extends StatelessWidget {
                   ),
                 ),
                 title: Text(
-                  playlist.name,
+                  switch (playlist.name) {
+                    kLikedPlaylistName => Localization.instance.LIKED_SONGS,
+                    kHistoryPlaylistName => Localization.instance.HISTORY,
+                    _ => playlist.name,
+                  },
                   style: Theme.of(context).textTheme.titleMedium,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,

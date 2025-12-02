@@ -11,6 +11,7 @@ import 'package:harmonoid/ui/media_library/media_library_menus.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_image.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:media_library/playlists/src/utils/constants.dart';
 
 class PlaylistScreen extends StatefulWidget {
   final Playlist playlist;
@@ -24,8 +25,12 @@ class PlaylistScreen extends StatefulWidget {
 
 class _PlaylistScreenState extends State<PlaylistScreen> {
   late final _entries = widget.entries;
-  String get _title => widget.playlist.name;
-  String get _subtitle => Localization.instance.N_TRACKS.replaceAll('"N"', _entries.length.toString());
+  String get _title => switch (widget.playlist.name) {
+    kLikedPlaylistName => Localization.instance.LIKED_SONGS,
+    kHistoryPlaylistName => Localization.instance.HISTORY,
+    _ => widget.playlist.name,
+  };
+  String get _subtitle => _entries.length == 1 ? Localization.instance.ONE_TRACK : Localization.instance.N_TRACKS.replaceAll('"N"', _entries.length.toString());
 
   Future<List<Playable>> get _playables async {
     final result = await Future.wait(_entries.map((e) => e.toPlayable(MediaLibrary.instance)));

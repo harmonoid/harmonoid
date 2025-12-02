@@ -148,6 +148,8 @@ class MediaPlayer extends ChangeNotifier
     bool shuffle = false,
     void Function()? onOpen = mediaPlayerOpenOnOpen,
   }) async {
+    state = state.copyWith(shuffle: false);
+
     final medias = playables.map((playable) => playable.toMedia()).toList();
     if (shuffle) {
       medias.shuffle();
@@ -246,7 +248,6 @@ class MediaPlayer extends ChangeNotifier
     }
 
     await setVolume(state.volume);
-    await setShuffle(state.shuffle);
     await setLoop(state.loop);
     await setExclusiveAudio(state.exclusiveAudio);
     await setReplayGain(state.replayGain);
@@ -262,6 +263,9 @@ class MediaPlayer extends ChangeNotifier
         // --------------------------------------------------
       );
     }
+
+    // Must be done after calling open.
+    await setShuffle(playbackState.shuffle);
   }
 
   Future<void> mapPlayerToState() async {

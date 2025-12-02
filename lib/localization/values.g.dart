@@ -129,6 +129,7 @@ class Values {
   late String MOBILE_ARTIST_GRID_SIZE;
   late String MOBILE_GENRE_GRID_SIZE;
   late String MODIFY_BACKGROUND_IMAGES;
+  late String MONO;
   late String MORE;
   late String MUTE;
   late String M_ALBUMS_AND_N_TRACKS;
@@ -142,6 +143,7 @@ class Values {
   late String N_ALBUMS;
   late String N_ALBUMS_ONE_TRACK;
   late String N_ARTISTS;
+  late String N_CHANNELS;
   late String N_ENTRIES;
   late String N_GENRES;
   late String N_ITEMS_SELECTED;
@@ -259,6 +261,7 @@ class Values {
   late String SORT_BY;
   late String SPEED;
   late String START;
+  late String STEREO;
   late String SUBSCRIPTION_EXPIRED_SUBTITLE;
   late String SUBSCRIPTION_EXPIRED_TITLE;
   late String THEME;
