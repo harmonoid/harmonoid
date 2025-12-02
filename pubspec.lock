@@ -795,10 +795,10 @@ packages:
     dependency: "direct main"
     description:
       name: media_kit
-      sha256: dfd5ab85d49a1806b1314a0b81f3d14da48f0db0a657336b2d77c5f17db28944
+      sha256: "2a207ea7baf1a2ea2ff2016d512e572ca6fc02a937769effb5c27b4d682b4a53"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.2"
+    version: "1.2.3"
   media_kit_libs_android_audio:
     dependency: "direct main"
     description:
