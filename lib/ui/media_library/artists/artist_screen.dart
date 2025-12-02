@@ -42,8 +42,8 @@ class _ArtistScreenState extends State<ArtistScreen> {
   String get _title => widget.artist.artist.isEmpty ? kDefaultArtist : widget.artist.artist;
   String get _subtitle => switch ((_tracks.length, _albums.length)) {
     (1, 1) => Localization.instance.ONE_ALBUM_ONE_TRACK,
-    (1, _) => Localization.instance.ONE_ALBUM_N_TRACKS.replaceAll('"N"', _albums.length.toString()),
-    (_, 1) => Localization.instance.N_ALBUMS_ONE_TRACK.replaceAll('"N"', _tracks.length.toString()),
+    (_, 1) => Localization.instance.ONE_ALBUM_N_TRACKS.replaceAll('"N"', _tracks.length.toString()),
+    (1, _) => Localization.instance.N_ALBUMS_ONE_TRACK.replaceAll('"N"', _albums.length.toString()),
     (_, _) => Localization.instance.M_ALBUMS_AND_N_TRACKS.replaceAll('"M"', _albums.length.toString()).replaceAll('"N"', _tracks.length.toString()),
   };
 

@@ -282,7 +282,7 @@ class Controls extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.only(bottom: 16.0),
                               child: FloatingActionButton(
-                                heroTag: 'desktop_now_playing_screen_playlist_$i',
+                                heroTag: 'desktop-now-playing-screen-playlist-$i',
                                 mini: true,
                                 backgroundColor: nowPlayingColors.foreground,
                                 foregroundColor: nowPlayingColors.foregroundIcon,

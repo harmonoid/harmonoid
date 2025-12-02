@@ -127,6 +127,7 @@ class _SelectionToolbarState extends State<SelectionToolbar> {
                   ),
                   const SizedBox(width: 8.0),
                   FloatingActionButton.small(
+                    heroTag: 'media-library-selection-toolbar-clear-selection',
                     onPressed: () => mediaLibrarySelectedTracks.value = {},
                     backgroundColor: _fabBackgroundColor,
                     foregroundColor: _fabForegroundColor,

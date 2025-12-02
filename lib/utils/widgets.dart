@@ -950,7 +950,7 @@ class MediaLibraryRefreshButton extends StatelessWidget {
       builder: (context, mediaLibrary, _) => mediaLibrary.refreshing
           ? const SizedBox.shrink()
           : FloatingActionButton(
-              heroTag: 'MediaLibraryRefreshButton',
+              heroTag: 'media-library-refresh-button',
               tooltip: Localization.instance.REFRESH,
               onPressed: mediaLibrary.refresh,
               child: const Icon(Icons.refresh),
@@ -967,7 +967,7 @@ class MediaLibraryCreatePlaylistButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      heroTag: 'MediaLibraryCreatePlaylistButton',
+      heroTag: 'media-library-create-playlist-button',
       tooltip: Localization.instance.CREATE_NEW_PLAYLIST,
       onPressed: () => showCreatePlaylistDialog(context),
       child: const Icon(Icons.edit),
