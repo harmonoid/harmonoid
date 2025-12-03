@@ -1,7 +1,13 @@
+// ignore_for_file: implementation_imports
+
+import 'dart:async';
 import 'dart:io';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
+import 'package:flutter/rendering.dart';
+import 'package:image/image.dart' as img;
+import 'package:safe_local_storage/file_system.dart';
 import 'package:synchronized/synchronized.dart';
+import 'package:media_kit/src/player/native/utils/temp_file.dart';
 
 import 'package:harmonoid/api/activity_set.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
@@ -57,12 +63,10 @@ mixin DiscordRpcMixin implements BaseMediaPlayer {
         _flagPlayableDiscordRpc = current;
         notify = true;
         try {
-          final activitySet = ActivitySet();
-          final deviceId = Configuration.instance.identifier;
           final image = cover(uri: current.uri);
           _largeImageDiscordRpc = switch (image) {
-            AsyncFileImage() => await activitySet(deviceId, current, await image.getFile()),
-            FileImage() => await activitySet(deviceId, current, image.file),
+            AsyncFileImage() => await _getFileUrl(current, image.getFile()),
+            FileImage() => await _getFileUrl(current, image.file),
             NetworkImage() => image.url,
             _ => null,
           }!;
@@ -107,6 +111,30 @@ mixin DiscordRpcMixin implements BaseMediaPlayer {
         );
       }
     });
+  }
+
+  Future<String?> _getFileUrl(Playable playable, FutureOr<File?> inputFuture) async {
+    final input = await inputFuture;
+    final output = await TempFile.create();
+
+    if (input == null) return null;
+
+    try {
+      final deviceId = Configuration.instance.identifier;
+      final activitySet = ActivitySet();
+
+      final cmd = img.Command()
+        ..decodeImageFile(input.path)
+        ..copyResize(width: 120)
+        ..encodeJpg(quality: 85)
+        ..writeToFile(output.path);
+
+      await cmd.executeThread();
+
+      return await activitySet(deviceId, playable, output);
+    } finally {
+      await output.delete_();
+    }
   }
 
   FlutterDiscordRPC? _instanceDiscordRpc;
