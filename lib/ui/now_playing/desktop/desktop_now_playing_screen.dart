@@ -241,7 +241,8 @@ class Controls extends StatelessWidget {
                                   Row(
                                     children: [
                                       TappableText(
-                                        text: (mediaPlayer.current.subtitle.ifEmpty(['']))
+                                        text: mediaPlayer.current.subtitle
+                                            .ifEmpty([''])
                                             .map(
                                               (e) => TappableTextData(
                                                 text: e.nullIfBlank() ?? kDefaultArtist,

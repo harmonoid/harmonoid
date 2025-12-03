@@ -165,7 +165,7 @@ class _SelectionToolbarState extends State<SelectionToolbar> {
     final floatingWidgetWidth =
         /* Horizontal padding */ 2 * 8.0 +
         /* Icons width */ (limit + 1) * 48.0 +
-        /* Icons spacing */ limit * 8.0 +
+        /* Icons spacing */ limit * 4.0 +
         /* Spacing */ 8.0 +
         /* Close button width */ 56.0 +
         /* Spacing */ 16.0;

@@ -189,10 +189,10 @@ class _AudioServiceImpl extends BaseAudioHandler with QueueHandler, SeekHandler 
   _AudioServiceImpl(this._instance);
 
   @override
-  Future<void> play() => _instance.playOrPause().then((_) => playbackState.add(playbackState.value.copyWith(processingState: AudioProcessingState.ready, playing: true)));
+  Future<void> play() => _instance.play().then((_) => playbackState.add(playbackState.value.copyWith(processingState: AudioProcessingState.ready, playing: true)));
 
   @override
-  Future<void> pause() => _instance.playOrPause().then((_) => playbackState.add(playbackState.value.copyWith(processingState: AudioProcessingState.ready, playing: false)));
+  Future<void> pause() => _instance.pause().then((_) => playbackState.add(playbackState.value.copyWith(processingState: AudioProcessingState.ready, playing: false)));
 
   @override
   Future<void> stop() => _instance.pause();
@@ -211,18 +211,18 @@ class _AudioServiceImpl extends BaseAudioHandler with QueueHandler, SeekHandler 
 
   @override
   Future<void> setShuffleMode(AudioServiceShuffleMode shuffleMode) => _instance.setShuffle(switch (shuffleMode) {
-        AudioServiceShuffleMode.none => false,
-        AudioServiceShuffleMode.all => true,
-        AudioServiceShuffleMode.group => true,
-      });
+    AudioServiceShuffleMode.none => false,
+    AudioServiceShuffleMode.all => true,
+    AudioServiceShuffleMode.group => true,
+  });
 
   @override
   Future<void> setRepeatMode(AudioServiceRepeatMode repeatMode) => _instance.setLoop(switch (repeatMode) {
-        AudioServiceRepeatMode.none => Loop.off,
-        AudioServiceRepeatMode.one => Loop.one,
-        AudioServiceRepeatMode.all => Loop.all,
-        AudioServiceRepeatMode.group => Loop.all,
-      });
+    AudioServiceRepeatMode.none => Loop.off,
+    AudioServiceRepeatMode.one => Loop.one,
+    AudioServiceRepeatMode.all => Loop.all,
+    AudioServiceRepeatMode.group => Loop.all,
+  });
 
   @override
   Future<void> onTaskRemoved() async {

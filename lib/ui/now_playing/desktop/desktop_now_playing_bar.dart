@@ -141,7 +141,8 @@ class DesktopNowPlayingBarState extends State<DesktopNowPlayingBar> {
                                               ),
                                               if (mediaPlayer.current.subtitle.isNotEmpty)
                                                 TappableText(
-                                                  text: (mediaPlayer.current.subtitle.ifEmpty(['']))
+                                                  text: mediaPlayer.current.subtitle
+                                                      .ifEmpty([''])
                                                       .map(
                                                         (e) => TappableTextData(
                                                           text: e.nullIfBlank() ?? kDefaultArtist,

@@ -61,6 +61,15 @@ void mediaPlayerOpenOnOpen() async {
   }
 }
 
+void mediaPlayerOnError(String error) {
+  debugPrint('actions.dart: mediaPlayerOnError: $error');
+  showMessage(
+    router.routerDelegate.navigatorKey.currentContext!,
+    Localization.instance.ERROR,
+    error,
+  );
+}
+
 void mediaPlayerUpdateCurrentOnUpdateCurrent(String uri) {
   debugPrint('actions.dart: mediaPlayerUpdateCurrentOnUpdateCurrent: $uri');
   if (AsyncFileImage.isFallback(uri)) {

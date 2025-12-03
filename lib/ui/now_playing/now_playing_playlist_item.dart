@@ -90,7 +90,8 @@ class NowPlayingPlaylistItem extends StatelessWidget {
                             width: height,
                             padding: const EdgeInsets.symmetric(horizontal: 8.0),
                             child: TappableText(
-                              text: (mediaPlayer.current.subtitle.ifEmpty(['']))
+                              text: playable.subtitle
+                                  .ifEmpty([''])
                                   .map(
                                     (e) => TappableTextData(
                                       text: e.nullIfBlank() ?? kDefaultArtist,
