@@ -125,7 +125,7 @@ mixin DiscordRpcMixin implements BaseMediaPlayer {
 
       final cmd = img.Command()
         ..decodeImageFile(input.path)
-        ..copyResize(width: 120)
+        ..copyResize(width: 256)
         ..encodeJpg(quality: 85)
         ..writeToFile(output.path);
 
