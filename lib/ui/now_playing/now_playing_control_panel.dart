@@ -120,7 +120,7 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
       clipBehavior: Clip.antiAlias,
       elevation: kDefaultHeavyElevation,
       child: Container(
-        width: 256.0,
+        width: 300.0,
         padding: const EdgeInsets.only(top: 20.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -274,11 +274,15 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
             padding: const EdgeInsets.only(left: 20.0, right: 16.0),
             child: Row(
               children: [
-                Text(
-                  Localization.instance.EXCLUSIVE_AUDIO,
-                  style: Theme.of(context).textTheme.bodyLarge,
+                Expanded(
+                  child: Text(
+                    Localization.instance.EXCLUSIVE_AUDIO,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
                 ),
-                const Spacer(),
+                const SizedBox(width: 8.0),
                 Switch(
                   value: mediaPlayer.state.exclusiveAudio,
                   onChanged: (value) => mediaPlayer.setExclusiveAudio(value),
@@ -298,11 +302,15 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
           children: [
             Row(
               children: [
-                Text(
-                  Localization.instance.REPLAYGAIN,
-                  style: Theme.of(context).textTheme.bodyLarge,
+                Expanded(
+                  child: Text(
+                    Localization.instance.REPLAYGAIN,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
                 ),
-                const Spacer(),
+                const SizedBox(width: 8.0),
                 ActionChip(
                   elevation: 0.0,
                   pressElevation: 0.0,
@@ -314,11 +322,15 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
             const SizedBox(height: 8.0),
             Row(
               children: [
-                Text(
-                  Localization.instance.PREAMP_GAIN,
-                  style: Theme.of(context).textTheme.bodyLarge,
+                Expanded(
+                  child: Text(
+                    Localization.instance.PREAMP_GAIN,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
                 ),
-                const Spacer(),
+                const SizedBox(width: 8.0),
                 SizedBox(
                   height: 32.0,
                   width: 48.0,

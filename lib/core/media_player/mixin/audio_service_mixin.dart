@@ -4,7 +4,6 @@ import 'package:synchronized/synchronized.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player/base_media_player.dart';
-import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/mappers/image_provider.dart';
 import 'package:harmonoid/mappers/media_player_state.dart';
 import 'package:harmonoid/models/loop.dart';
@@ -189,10 +188,34 @@ class _AudioServiceImpl extends BaseAudioHandler with QueueHandler, SeekHandler 
   _AudioServiceImpl(this._instance);
 
   @override
-  Future<void> play() => _instance.play().then((_) => playbackState.add(playbackState.value.copyWith(processingState: AudioProcessingState.ready, playing: true)));
+  Future<void> play() => _instance.play().then(
+    (_) => playbackState.add(
+      playbackState.value.copyWith(
+        processingState: AudioProcessingState.ready,
+        playing: true,
+        controls: [
+          MediaControl.skipToPrevious,
+          MediaControl.pause,
+          MediaControl.skipToNext,
+        ],
+      ),
+    ),
+  );
 
   @override
-  Future<void> pause() => _instance.pause().then((_) => playbackState.add(playbackState.value.copyWith(processingState: AudioProcessingState.ready, playing: false)));
+  Future<void> pause() => _instance.pause().then(
+    (_) => playbackState.add(
+      playbackState.value.copyWith(
+        processingState: AudioProcessingState.ready,
+        playing: false,
+        controls: [
+          MediaControl.skipToPrevious,
+          MediaControl.play,
+          MediaControl.skipToNext,
+        ],
+      ),
+    ),
+  );
 
   @override
   Future<void> stop() => _instance.pause();
@@ -227,7 +250,7 @@ class _AudioServiceImpl extends BaseAudioHandler with QueueHandler, SeekHandler 
   @override
   Future<void> onTaskRemoved() async {
     await stop();
-    await Configuration.instance.set(mediaPlayerPlaybackState: MediaPlayer.instance.state.toPlaybackState());
+    await Configuration.instance.set(mediaPlayerPlaybackState: _instance.state.toPlaybackState());
     playbackState.add(PlaybackState());
   }
 }

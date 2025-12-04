@@ -238,31 +238,22 @@ class Controls extends StatelessWidget {
                                 ),
                                 if (subtitle.isNotEmpty) ...[
                                   const SizedBox(height: 4.0),
-                                  Row(
-                                    children: [
-                                      TappableText(
-                                        text: mediaPlayer.current.subtitle
-                                            .ifEmpty([''])
-                                            .map(
-                                              (e) => TappableTextData(
-                                                text: e.nullIfBlank() ?? kDefaultArtist,
-                                                onTap: () => navigateToArtist(context, ArtistLookupKey(artist: e)),
-                                              ),
-                                            )
-                                            .toList(),
-                                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: nowPlayingColors.backgroundText),
-                                      ),
+                                  TappableText(
+                                    text: [
+                                      ...mediaPlayer.current.subtitle
+                                          .ifEmpty([''])
+                                          .map(
+                                            (e) => TappableTextData(
+                                              text: e.nullIfBlank() ?? kDefaultArtist,
+                                              onTap: () => navigateToArtist(context, ArtistLookupKey(artist: e)),
+                                            ),
+                                          ),
                                       if (mediaPlayer.current.description.isNotEmpty) ...[
-                                        Text(
-                                          ' • ',
-                                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: nowPlayingColors.backgroundText),
-                                        ),
-                                        Text(
-                                          mediaPlayer.current.description.join(' • '),
-                                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: nowPlayingColors.backgroundText),
-                                        ),
+                                        const TappableTextData(text: ' • '),
+                                        ...mediaPlayer.current.description.map((e) => TappableTextData(text: e)),
                                       ],
                                     ],
+                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: nowPlayingColors.backgroundText),
                                   ),
                                 ],
                                 if (Configuration.instance.nowPlayingAudioFormat) ...[
