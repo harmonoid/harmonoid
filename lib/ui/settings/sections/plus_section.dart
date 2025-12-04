@@ -38,7 +38,7 @@ class _PlusSectionState extends State<PlusSection> {
                     child: Icon(Icons.star),
                   ),
                   title: Localization.instance.LINKED_AS_X.replaceAll('"X"', notifier.subscription?.email ?? '~'),
-                  subtitle: '${subscription.type.toLabel()} (${subscription.source.toLabel()})',
+                  subtitle: subscription.toLabel(),
                 );
               },
             ),
