@@ -4,7 +4,6 @@ import 'package:harmonoid/models/loop.dart';
 import 'package:harmonoid/models/media_player_state.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/models/replaygain.dart';
-import 'package:harmonoid/utils/actions.dart';
 
 /// {@template base_media_player}
 ///
@@ -50,7 +49,7 @@ abstract interface class BaseMediaPlayer with ChangeNotifier {
     List<Playable> playables, {
     int index = 0,
     bool play = true,
-    void Function()? onOpen = mediaPlayerOpenOnOpen,
+    void Function()? onOpen,
   });
 
   Future<void> move(int from, int to);

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:adaptive_layouts/adaptive_layouts.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
@@ -243,16 +244,22 @@ class Controls extends StatelessWidget {
                                       ...mediaPlayer.current.subtitle
                                           .ifEmpty([''])
                                           .map(
-                                            (e) => TappableTextData(
-                                              text: e.nullIfBlank() ?? kDefaultArtist,
-                                              onTap: () => navigateToArtist(context, ArtistLookupKey(artist: e)),
-                                            ),
-                                          ),
+                                            (e) => [
+                                              TappableTextData(
+                                                text: e.nullIfBlank() ?? kDefaultArtist,
+                                                onTap: () => navigateToArtist(context, ArtistLookupKey(artist: e)),
+                                              ),
+                                              const TappableTextData(text: ', '),
+                                            ],
+                                          )
+                                          .flattened
+                                          .toList()
+                                        ..removeLast(),
                                       if (mediaPlayer.current.description.isNotEmpty) ...[
-                                        const TappableTextData(text: ' • '),
-                                        ...mediaPlayer.current.description.map((e) => TappableTextData(text: e)),
+                                        ...mediaPlayer.current.description.map((e) => [const TappableTextData(text: ' • '), TappableTextData(text: e)]).flattened,
                                       ],
                                     ],
+                                    separator: null,
                                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: nowPlayingColors.backgroundText),
                                   ),
                                 ],

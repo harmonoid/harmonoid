@@ -23,7 +23,7 @@ class MediaLibraryShellRoute extends StatefulWidget {
 class MediaLibraryShellRouteState extends State<MediaLibraryShellRoute> with TickerProviderStateMixin {
   static const Curve _kCurve = Curves.easeInOut;
 
-  bool _mobileNowPlayingBarFlag = false;
+  bool _mobileNowPlayingBarFlag = true;
   bool _mobileBottomNavigationBarFlag = false;
   double _mobileBottomNavigationBarHeight = 0.0;
   late final AnimationController _mobileNowPlayingBarController;
@@ -33,10 +33,10 @@ class MediaLibraryShellRouteState extends State<MediaLibraryShellRoute> with Tic
   void initState() {
     super.initState();
     const duration = MaterialRoute.kDefaultTransitionDuration;
-    _mobileNowPlayingBarController = AnimationController(vsync: this, duration: duration, reverseDuration: duration);
-    _mobileBottomNavigationBarController = AnimationController(vsync: this, duration: duration, reverseDuration: duration);
-    _mobileBottomNavigationBarController.value = 1.0;
-
+    // Hidden by default
+    _mobileNowPlayingBarController = AnimationController(vsync: this, duration: duration, reverseDuration: duration)..value = 1.0;
+    // Hidden by default
+    _mobileBottomNavigationBarController = AnimationController(vsync: this, duration: duration, reverseDuration: duration)..value = 1.0;
     WidgetsBinding.instance.addPostFrameCallback((_) => context.read<NowPlayingMobileNotifier>().setMediaLibraryShellRouteStateRef(this));
   }
 

@@ -23,7 +23,10 @@ void intentNotifyOnPlaybackStateRestore() async {
     // NO/OP
   }
   if (isMobile) {
-    NowPlayingMobileNotifier.instance.showNowPlayingBar();
+    Future.delayed(
+      MaterialRoute.kDefaultTransitionDuration,
+      NowPlayingMobileNotifier.instance.showNowPlayingBar,
+    );
   }
 }
 
@@ -37,7 +40,10 @@ void intentPlayOnMediaPlayerOpen() async {
     }
   }
   if (isMobile) {
-    NowPlayingMobileNotifier.instance.showNowPlayingBar();
+    Future.delayed(
+      MaterialRoute.kDefaultTransitionDuration,
+      NowPlayingMobileNotifier.instance.showNowPlayingBar,
+    );
   }
 }
 

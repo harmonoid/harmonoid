@@ -41,9 +41,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
   final ValueNotifier<bool> _desktopAppBarElevatedNotifier = ValueNotifier<bool>(false);
   final TextEditingController _desktopSearchTextEditingController = TextEditingController();
   final ValueNotifier<double> _mobileMediaLibrarySearchBarOffsetNotifier = ValueNotifier<double>(0.0);
-  final ValueNotifier<double> _mobileMediaLibraryRefreshButtonOffsetNotifier = ValueNotifier<double>(
-    Configuration.instance.mediaPlayerPlaybackState.playables.isEmpty ? 0.0 : kMobileNowPlayingBarHeight,
-  );
+  final ValueNotifier<double> _mobileMediaLibraryRefreshButtonOffsetNotifier = ValueNotifier<double>(0.0);
 
   String? _current;
 
