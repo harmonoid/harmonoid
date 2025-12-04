@@ -283,7 +283,7 @@ class MediaPlayer extends ChangeNotifier
     _player.stream.audioParams.listen((e) => state = state.copyWith(audioParams: e));
     _player.stream.error.listen((e) {
       debugPrint(e);
-      mediaPlayerOnError(e);
+      // mediaPlayerOnError(e);
     });
   }
 
