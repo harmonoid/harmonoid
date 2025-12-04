@@ -1127,6 +1127,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  scroll_animator:
+    dependency: transitive
+    description:
+      name: scroll_animator
+      sha256: "6b8b0f03b7eb47cd014a8aecf69e1504257da3af2f4b408fe3cbba4513814e5c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0"
   share_plus:
     dependency: "direct main"
     description:

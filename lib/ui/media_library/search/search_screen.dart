@@ -1,3 +1,4 @@
+import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary;
@@ -26,9 +27,10 @@ class SearchScreen extends StatefulWidget {
   State<SearchScreen> createState() => SearchScreenState();
 }
 
-class SearchScreenState extends State<SearchScreen> {
+class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
   static const int _kLimit = 20;
 
+  late final ScrollController _scrollController = getScrollController('search-screen');
   final List<Album> _albums = <Album>[];
   final List<Artist> _artists = <Artist>[];
   final List<Genre> _genres = <Genre>[];
@@ -79,6 +81,7 @@ class SearchScreenState extends State<SearchScreen> {
     }
     return Scaffold(
       body: ListView(
+        controller: _scrollController,
         shrinkWrap: true,
         padding: EdgeInsets.zero,
         children: [

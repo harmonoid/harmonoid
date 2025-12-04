@@ -1,3 +1,4 @@
+import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,9 +30,10 @@ class DesktopNowPlayingPlaylist extends StatefulWidget {
   State<DesktopNowPlayingPlaylist> createState() => _DesktopNowPlayingPlaylistState();
 }
 
-class _DesktopNowPlayingPlaylistState extends State<DesktopNowPlayingPlaylist> {
+class _DesktopNowPlayingPlaylistState extends State<DesktopNowPlayingPlaylist> with ScrollControllerMixin {
   final _scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.track;
-  late final ScrollController _scrollController = ScrollController(
+  late final ScrollController _scrollController = getScrollController(
+    'desktop-now-playing-playlist',
     initialScrollOffset: MediaPlayer.instance.state.index * _scrollViewBuilderHelperData.itemHeight,
   );
 
