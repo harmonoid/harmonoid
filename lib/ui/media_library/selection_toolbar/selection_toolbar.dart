@@ -22,7 +22,7 @@ class SelectionToolbar extends StatefulWidget {
 class _SelectionToolbarState extends State<SelectionToolbar> {
   // https://m3.material.io/components/toolbars/specs
 
-  static const double kHeight = 64.0;
+  static const double kHeight = 56.0;
 
   double get _bottomPadding => NowPlayingBar.height + 16.0;
 
@@ -126,7 +126,7 @@ class _SelectionToolbarState extends State<SelectionToolbar> {
                     ),
                   ),
                   const SizedBox(width: 8.0),
-                  FloatingActionButton(
+                  FloatingActionButton.small(
                     heroTag: 'media-library-selection-toolbar-clear-selection',
                     onPressed: () => mediaLibrarySelectedTracks.value = {},
                     backgroundColor: _fabBackgroundColor,
@@ -167,7 +167,7 @@ class _SelectionToolbarState extends State<SelectionToolbar> {
         /* Icons width */ (limit + 1) * 48.0 +
         /* Icons spacing */ limit * 4.0 +
         /* Spacing */ 8.0 +
-        /* Close button width */ 56.0 +
+        /* Close button width */ 48.0 +
         /* Spacing */ 16.0;
     return Stack(
       children: [
