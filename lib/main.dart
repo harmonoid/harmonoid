@@ -9,7 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/configuration/database/constants.dart';
 import 'package:harmonoid/core/intent.dart';
-import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
@@ -73,7 +73,7 @@ Future<void> main(List<String> args) async {
 
     MediaKit.ensureInitialized(libmpv: Configuration.instance.mpvPath.nullIfBlank());
     await Localization.ensureInitialized(localization: Configuration.instance.localization);
-    await MediaLibrary.ensureInitialized(
+    await FileSystemMediaLibrary.ensureInitialized(
       cache: Configuration.instance.directory,
       directories: Configuration.instance.mediaLibraryDirectories,
       albumSortType: Configuration.instance.mediaLibraryAlbumSortType,

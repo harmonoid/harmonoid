@@ -1,11 +1,10 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:media_library/media_library.dart' hide MediaLibrary;
+import 'package:media_library/media_library.dart';
 import 'package:media_library/playlists/src/utils/constants.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/media_library/media_library_menus.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_icon.dart';
@@ -29,7 +28,7 @@ class PlaylistItem extends StatelessWidget {
     return Consumer<MediaLibrary>(
       builder: (context, mediaLibrary, _) {
         return FutureBuilder<List<PlaylistEntry>>(
-          future: mediaLibrary.playlists.playlistEntries(playlist),
+          future: context.read<MediaLibrary>().playlists.playlistEntries(playlist),
           builder: (context, snapshot) {
             final entries = snapshot.data;
             return ContextMenuListener(

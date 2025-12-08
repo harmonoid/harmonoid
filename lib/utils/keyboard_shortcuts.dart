@@ -2,11 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
+import 'package:media_library/media_library.dart';
 
-import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/ui/media_library/media_library_screen.dart';
 import 'package:harmonoid/ui/router.dart';
+import 'package:provider/provider.dart';
 
 /// {@template keyboard_shortcuts}
 ///
@@ -16,11 +17,10 @@ import 'package:harmonoid/ui/router.dart';
 ///
 /// {@endtemplate}
 class KeyboardShortcuts {
-  /// Singleton instance.
-  static final KeyboardShortcuts instance = KeyboardShortcuts._();
-
   /// {@macro keyboard_shortcuts}
-  KeyboardShortcuts._();
+  KeyboardShortcuts({required this.mediaLibrary});
+
+  final MediaLibrary mediaLibrary;
 
   final bool control = !Platform.isMacOS;
 
@@ -32,7 +32,7 @@ class KeyboardShortcuts {
     SingleActivator(LogicalKeyboardKey.keyF, control: control, meta: !control): MediaLibraryScreenState.desktopQueryTextFieldFocusNode.requestFocus,
     SingleActivator(LogicalKeyboardKey.keyS, control: control, meta: !control): MediaLibraryScreenState.desktopQueryTextFieldFocusNode.requestFocus,
     SingleActivator(LogicalKeyboardKey.keyQ, control: control, meta: !control): SystemNavigator.pop,
-    SingleActivator(LogicalKeyboardKey.keyR, control: control, meta: !control): MediaLibrary.instance.refresh,
+    SingleActivator(LogicalKeyboardKey.keyR, control: control, meta: !control): mediaLibrary.refresh,
     SingleActivator(LogicalKeyboardKey.arrowLeft, control: control, meta: !control): router.pop,
     SingleActivator(LogicalKeyboardKey.digit1, control: control, meta: !control): () => router.go('/$kMediaLibraryPath/$kAlbumsPath'),
     SingleActivator(LogicalKeyboardKey.digit2, control: control, meta: !control): () => router.go('/$kMediaLibraryPath/$kTracksPath'),
@@ -58,7 +58,7 @@ class KeyboardShortcutsListener extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CallbackShortcuts(
-      bindings: KeyboardShortcuts.instance.bindings,
+      bindings: KeyboardShortcuts(mediaLibrary: context.read()).bindings,
       child: Focus(
         autofocus: true,
         child: child,
@@ -83,7 +83,7 @@ class KeyboardShortcutsInterceptor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shortcuts(
-      shortcuts: KeyboardShortcuts.instance.bindings.map(
+      shortcuts: KeyboardShortcuts(mediaLibrary: context.read()).bindings.map(
         (key, _) => MapEntry(key, const DoNothingAndStopPropagationTextIntent()),
       ),
       child: child,

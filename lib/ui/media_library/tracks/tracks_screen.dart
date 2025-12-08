@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
-import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/ui/media_library/tracks/tracks_table.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/debouncer.dart';

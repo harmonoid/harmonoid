@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:media_library/media_library.dart' hide MediaLibrary;
+import 'package:media_library/media_library.dart' hide FileSystemMediaLibrary;
 import 'package:provider/provider.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:share_plus/share_plus.dart';
 
-import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/go_router.dart';
 import 'package:harmonoid/extensions/track.dart';
@@ -149,12 +149,12 @@ class TrackMenuProvider {
   }
 
   Future<void> refresh({Future<bool> Function()? recursivelyPopNavigatorOnDeleteIf}) async {
-    await _mediaLibrary.remove([track], delete: false);
+    await _fileSystemMediaLibrary?.remove([track], delete: false);
     if (await recursivelyPopNavigatorOnDeleteIf?.call() ?? false) {
       await recursivelyPopNavigator();
     }
-    await _mediaLibrary.add(File(track.uri));
-    await _mediaLibrary.populate();
+    await _fileSystemMediaLibrary?.add(File(track.uri));
+    await _fileSystemMediaLibrary?.populate();
   }
 
   Future<void> delete({Future<bool> Function()? recursivelyPopNavigatorOnDeleteIf}) async {
@@ -162,7 +162,7 @@ class TrackMenuProvider {
       final sdk = AndroidStorageController.instance.version;
       if (sdk >= 30) {
         // SDK 30 or higher will ask for permissions from the user before deletion.
-        await _mediaLibrary.remove([track]);
+        await _fileSystemMediaLibrary?.remove([track]);
         if (await recursivelyPopNavigatorOnDeleteIf?.call() ?? false) {
           await recursivelyPopNavigator();
         }
@@ -176,7 +176,7 @@ class TrackMenuProvider {
       Localization.instance.TRACK_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', track.title),
     );
     if (result) {
-      await _mediaLibrary.remove([track]);
+      await _fileSystemMediaLibrary?.remove([track]);
       if (await recursivelyPopNavigatorOnDeleteIf?.call() ?? false) {
         await recursivelyPopNavigator();
       }
@@ -185,8 +185,11 @@ class TrackMenuProvider {
 
   bool getVisible(TrackMenuAction action) {
     return switch (action) {
-      TrackMenuAction.share => Platform.isAndroid || Platform.isIOS,
-      TrackMenuAction.showInFileManager => Platform.isLinux || Platform.isMacOS || Platform.isWindows,
+      TrackMenuAction.share => _fileSystemMediaLibrary != null && (Platform.isAndroid || Platform.isIOS),
+      TrackMenuAction.showInFileManager => _fileSystemMediaLibrary != null && (Platform.isLinux || Platform.isMacOS || Platform.isWindows),
+      TrackMenuAction.fileInformation => _fileSystemMediaLibrary != null,
+      TrackMenuAction.refresh => _fileSystemMediaLibrary != null,
+      TrackMenuAction.delete => _fileSystemMediaLibrary != null,
       _ => true,
     };
   }
@@ -226,6 +229,13 @@ class TrackMenuProvider {
   MediaPlayer get _mediaPlayer => context.read<MediaPlayer>();
   MediaLibrary get _mediaLibrary => context.read<MediaLibrary>();
   LyricsNotifier get _lyricsNotifier => context.read<LyricsNotifier>();
+
+  FileSystemMediaLibrary? get _fileSystemMediaLibrary {
+    if (_mediaLibrary is FileSystemMediaLibrary) {
+      return _mediaLibrary as FileSystemMediaLibrary;
+    }
+    return null;
+  }
 }
 
 enum TracksMenuAction {
@@ -303,7 +313,7 @@ class TracksMenuProvider {
       final sdk = AndroidStorageController.instance.version;
       if (sdk >= 30) {
         // SDK 30 or higher will ask for permissions from the user before deletion.
-        await _mediaLibrary.remove(tracks);
+        await _fileSystemMediaLibrary?.remove(tracks);
         if (await recursivelyPopNavigatorOnDeleteIf?.call() ?? false) {
           await recursivelyPopNavigator();
         }
@@ -319,7 +329,7 @@ class TracksMenuProvider {
           : Localization.instance.TRACK_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', tracks.firstOrNull?.title ?? ''),
     );
     if (result) {
-      await _mediaLibrary.remove(tracks);
+      await _fileSystemMediaLibrary?.remove(tracks);
       if (await recursivelyPopNavigatorOnDeleteIf?.call() ?? false) {
         await recursivelyPopNavigator();
       }
@@ -329,7 +339,7 @@ class TracksMenuProvider {
   bool getVisible(TracksMenuAction action) {
     return switch (action) {
       // SDK 29 cannot delete multiple files at once.
-      TracksMenuAction.delete => !Platform.isAndroid || AndroidStorageController.instance.version != 29,
+      TracksMenuAction.delete => _fileSystemMediaLibrary != null && (!Platform.isAndroid || AndroidStorageController.instance.version != 29),
       _ => true,
     };
   }
@@ -358,6 +368,13 @@ class TracksMenuProvider {
 
   MediaPlayer get _mediaPlayer => context.read<MediaPlayer>();
   MediaLibrary get _mediaLibrary => context.read<MediaLibrary>();
+
+  FileSystemMediaLibrary? get _fileSystemMediaLibrary {
+    if (_mediaLibrary is FileSystemMediaLibrary) {
+      return _mediaLibrary as FileSystemMediaLibrary;
+    }
+    return null;
+  }
 }
 
 enum PlaylistMenuAction {

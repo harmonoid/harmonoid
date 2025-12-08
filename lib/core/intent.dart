@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:media_library/media_library.dart';
 import 'package:path/path.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:uri_parser/uri_parser.dart';
 
-import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/models/playback_state.dart';
@@ -149,7 +149,7 @@ class Intent {
             }
           case URIType.directory:
             {
-              final contents = await parser.directory!.list_(predicate: (e) => MediaLibrary.instance.supportedFileTypes.contains(e.extension));
+              final contents = await parser.directory!.list_(predicate: (e) => kDefaultSupportedFileTypes.contains(e.extension));
               for (int i = 0; i < contents.length; i++) {
                 // Return prematurely if the method has been invoked again.
                 if (_playInvoked) return;

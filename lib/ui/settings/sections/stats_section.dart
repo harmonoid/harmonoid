@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/settings/settings_section.dart';
 import 'package:harmonoid/utils/rendering.dart';

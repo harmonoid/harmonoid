@@ -1,10 +1,9 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:draggable_float_widget/draggable_float_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:media_library/media_library.dart' hide MediaLibrary;
+import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/media_library/media_library_flags.dart';
 import 'package:harmonoid/ui/media_library/media_library_menus.dart';

@@ -1,10 +1,9 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
-import 'package:media_library/media_library.dart' hide MediaLibrary;
+import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
-import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/album.dart';
 import 'package:harmonoid/localization/localization.dart';
@@ -168,10 +167,10 @@ class _ArtistScreenState extends State<ArtistScreen> {
           onPopupMenuItemSelected: (context, i, result) async {
             await TrackMenuProvider(context, _tracks[i]).handlePopupMenuAction(
               result,
-              recursivelyPopNavigatorOnDeleteIf: () => MediaLibrary.instance.tracksFromArtist(widget.artist).then((value) => value.isEmpty),
+              recursivelyPopNavigatorOnDeleteIf: () => context.read<MediaLibrary>().tracksFromArtist(widget.artist).then((value) => value.isEmpty),
             );
             // NOTE: The track could've been deleted, so we need to check & update the list.
-            final tracks = await MediaLibrary.instance.tracksFromArtist(widget.artist);
+            final tracks = await context.read<MediaLibrary>().tracksFromArtist(widget.artist);
             if (tracks.length != _tracks.length) {
               setState(() {
                 _tracks

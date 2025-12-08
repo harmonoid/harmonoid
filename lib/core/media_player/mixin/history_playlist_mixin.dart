@@ -1,6 +1,6 @@
 import 'package:synchronized/synchronized.dart';
 
-import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/core/media_player/base_media_player.dart';
 import 'package:harmonoid/extensions/playable.dart';
 import 'package:harmonoid/models/playable.dart';
@@ -34,12 +34,13 @@ mixin HistoryPlaylistMixin implements BaseMediaPlayer {
     _lockHistoryPlaylist.synchronized(() async {
       if (_flagPlayableHistoryPlaylist != current) {
         _flagPlayableHistoryPlaylist = current;
-        if (await MediaLibrary.instance.db.contains(current.uri)) {
+        // TODO: Add support for HTTP URIs.
+        if (await FileSystemMediaLibrary.instance.db.contains(current.uri)) {
           // Save as track i.e. hash + title.
-          await MediaLibrary.instance.playlists.addToHistory(track: await MediaLibrary.instance.db.selectTrackByUri(current.uri));
+          await FileSystemMediaLibrary.instance.playlists.addToHistory(track: await FileSystemMediaLibrary.instance.db.selectTrackByUri(current.uri));
         } else {
           // Save as uri + title.
-          await MediaLibrary.instance.playlists.addToHistory(uri: current.uri, title: current.playlistEntryTitle);
+          await FileSystemMediaLibrary.instance.playlists.addToHistory(uri: current.uri, title: current.playlistEntryTitle);
         }
       }
     });

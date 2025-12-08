@@ -2,10 +2,9 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:media_library/media_library.dart' hide MediaLibrary;
+import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/media_library/genres/constants.dart';
 import 'package:harmonoid/ui/media_library/genres/genre_screen.dart';
@@ -37,7 +36,7 @@ class _GenreItemState extends State<GenreItem> {
   late final color = kGenreColors[widget.genre.genre.hashCode % kGenreColors.length];
 
   Future<void> navigate() async {
-    final tracks = await MediaLibrary.instance.tracksFromGenre(widget.genre);
+    final tracks = await context.read<MediaLibrary>().tracksFromGenre(widget.genre);
 
     try {
       await precacheImage(cover(item: widget.genre), rootNavigatorKey.currentContext!);
@@ -54,7 +53,7 @@ class _GenreItemState extends State<GenreItem> {
   }
 
   Future<void> onSecondaryPress(BuildContext context, {RelativeRect? position}) async {
-    tracks = await MediaLibrary.instance.tracksFromGenre(widget.genre);
+    tracks = await context.read<MediaLibrary>().tracksFromGenre(widget.genre);
     final tracksMenuProvider = TracksMenuProvider(context, tracks!);
     final result = await showMenuItems(context, tracksMenuProvider.getPopupMenuItems(), position: position);
     await tracksMenuProvider.handlePopupMenuAction(result);
@@ -180,7 +179,7 @@ class _GenreItemState extends State<GenreItem> {
                 return;
               }
 
-              tracks = await MediaLibrary.instance.tracksFromGenre(widget.genre);
+              tracks = await context.read<MediaLibrary>().tracksFromGenre(widget.genre);
 
               await precacheImage(cover(item: widget.genre), context);
 

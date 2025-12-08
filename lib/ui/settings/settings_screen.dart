@@ -1,9 +1,9 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/ui/settings/sections/display_section.dart';

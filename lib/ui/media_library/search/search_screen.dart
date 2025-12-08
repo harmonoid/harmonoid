@@ -1,10 +1,9 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:media_library/media_library.dart' hide MediaLibrary;
+import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/media_library/albums/album_item.dart';
 import 'package:harmonoid/ui/media_library/artists/artist_item.dart';
@@ -36,8 +35,14 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
   final List<Genre> _genres = <Genre>[];
   final List<Track> _tracks = <Track>[];
 
-  void update(String query) {
-    final result = context.read<MediaLibrary>().search(query, limit: _kLimit);
+  String? _currentQuery;
+
+  void update(String query) async {
+    _currentQuery = query;
+    final result = await context.read<MediaLibrary>().search(query, limit: _kLimit);
+    if (_currentQuery != query) {
+      return;
+    }
     if (context.mounted) {
       setState(() {
         _albums
@@ -59,6 +64,7 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
   @override
   void initState() {
     super.initState();
+    _currentQuery = widget.query;
     update(widget.query);
   }
 
@@ -66,6 +72,7 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
   void didUpdateWidget(covariant SearchScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.query != widget.query) {
+      _currentQuery = widget.query;
       update(widget.query);
     }
   }
@@ -92,12 +99,12 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
                 const Spacer(),
                 if (_albums.length > _kLimit)
                   ShowAllButton(
-                    onPressed: () {
+                    onPressed: () async {
                       context.push(
                         '/$kMediaLibraryPath/$kSearchItemsPath',
                         extra: SearchItemsPathExtra(
                           query: widget.query,
-                          items: context.read<MediaLibrary>().search(widget.query).whereType<Album>().toList(),
+                          items: (await context.read<MediaLibrary>().search(widget.query)).whereType<Album>().toList(),
                         ),
                       );
                     },
@@ -133,12 +140,12 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
                 const Spacer(),
                 if (_artists.length > _kLimit)
                   ShowAllButton(
-                    onPressed: () {
+                    onPressed: () async {
                       context.push(
                         '/$kMediaLibraryPath/$kSearchItemsPath',
                         extra: SearchItemsPathExtra(
                           query: widget.query,
-                          items: context.read<MediaLibrary>().search(widget.query).whereType<Artist>().toList(),
+                          items: (await context.read<MediaLibrary>().search(widget.query)).whereType<Artist>().toList(),
                         ),
                       );
                     },
@@ -174,12 +181,12 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
                 const Spacer(),
                 if (_genres.length > _kLimit)
                   ShowAllButton(
-                    onPressed: () {
+                    onPressed: () async {
                       context.push(
                         '/$kMediaLibraryPath/$kSearchItemsPath',
                         extra: SearchItemsPathExtra(
                           query: widget.query,
-                          items: context.read<MediaLibrary>().search(widget.query).whereType<Genre>().toList(),
+                          items: (await context.read<MediaLibrary>().search(widget.query)).whereType<Genre>().toList(),
                         ),
                       );
                     },
@@ -215,12 +222,12 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
                 const Spacer(),
                 if (_tracks.length > _kLimit)
                   ShowAllButton(
-                    onPressed: () {
+                    onPressed: () async {
                       context.push(
                         '/$kMediaLibraryPath/$kSearchItemsPath',
                         extra: SearchItemsPathExtra(
                           query: widget.query,
-                          items: context.read<MediaLibrary>().search(widget.query).whereType<Track>().toList(),
+                          items: (await context.read<MediaLibrary>().search(widget.query)).whereType<Track>().toList(),
                         ),
                       );
                     },

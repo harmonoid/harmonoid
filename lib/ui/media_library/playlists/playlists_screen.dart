@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:media_library/media_library.dart' hide FileSystemMediaLibrary;
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_item.dart';
 import 'package:harmonoid/utils/rendering.dart';
 

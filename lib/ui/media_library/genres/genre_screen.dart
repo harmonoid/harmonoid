@@ -1,8 +1,8 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
-import 'package:media_library/media_library.dart' hide MediaLibrary;
+import 'package:media_library/media_library.dart';
+import 'package:provider/provider.dart';
 
-import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
@@ -125,10 +125,10 @@ class _GenreScreenState extends State<GenreScreen> {
           onPopupMenuItemSelected: (context, i, result) async {
             await TrackMenuProvider(context, _tracks[i]).handlePopupMenuAction(
               result,
-              recursivelyPopNavigatorOnDeleteIf: () => MediaLibrary.instance.tracksFromGenre(widget.genre).then((value) => value.isEmpty),
+              recursivelyPopNavigatorOnDeleteIf: () => context.read<MediaLibrary>().tracksFromGenre(widget.genre).then((value) => value.isEmpty),
             );
             // NOTE: The track could've been deleted, so we need to check & update the list.
-            final tracks = await MediaLibrary.instance.tracksFromGenre(widget.genre);
+            final tracks = await context.read<MediaLibrary>().tracksFromGenre(widget.genre);
             if (tracks.length != _tracks.length) {
               setState(() {
                 _tracks

@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages, invalid_use_of_protected_member
+
 import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
@@ -8,15 +10,13 @@ import 'package:flutter/material.dart' hide CarouselView, CarouselController, Re
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:media_library/media_library.dart' hide MediaLibrary;
+import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
-// ignore: depend_on_referenced_packages
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
-import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/build_context.dart';
 import 'package:harmonoid/localization/localization.dart';
@@ -56,7 +56,7 @@ class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
           child: InkWell(
             borderRadius: BorderRadius.circular(4.0),
             onTap: () {
-              MediaPlayer.instance.open(MediaLibrary.instance.tracks.map((e) => e.toPlayable()));
+              MediaPlayer.instance.open(context.read<MediaLibrary>().tracks.map((e) => e.toPlayable()));
             },
             child: Container(
               height: 44.0,
@@ -84,7 +84,7 @@ class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
           child: InkWell(
             borderRadius: BorderRadius.circular(4.0),
             onTap: () {
-              MediaPlayer.instance.open(MediaLibrary.instance.tracks.map((e) => e.toPlayable()), shuffle: true);
+              MediaPlayer.instance.open(context.read<MediaLibrary>().tracks.map((e) => e.toPlayable()), shuffle: true);
             },
             child: Container(
               height: 44.0,
@@ -571,55 +571,57 @@ class MobileMediaLibrarySortButton extends StatefulWidget {
 }
 
 class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButton> {
+  MediaLibrary get _mediaLibrary => context.read<MediaLibrary>();
+
   Future<void> handle(dynamic value) async {
     if (value is AlbumSortType) {
-      MediaLibrary.instance.populate(albumSortType: value);
+      _mediaLibrary.populate(albumSortType: value);
       Configuration.instance.set(mediaLibraryAlbumSortType: value);
     } else if (value is TrackSortType) {
-      MediaLibrary.instance.populate(trackSortType: value);
+      _mediaLibrary.populate(trackSortType: value);
       Configuration.instance.set(mediaLibraryTrackSortType: value);
     } else if (value is ArtistSortType) {
-      MediaLibrary.instance.populate(artistSortType: value);
+      _mediaLibrary.populate(artistSortType: value);
       Configuration.instance.set(mediaLibraryArtistSortType: value);
     } else if (value is GenreSortType) {
-      MediaLibrary.instance.populate(genreSortType: value);
+      _mediaLibrary.populate(genreSortType: value);
       Configuration.instance.set(mediaLibraryGenreSortType: value);
     }
     if (value == true) {
       switch (widget.path) {
         case kAlbumsPath:
-          await MediaLibrary.instance.populate(albumSortAscending: true);
+          await _mediaLibrary.populate(albumSortAscending: true);
           await Configuration.instance.set(mediaLibraryAlbumSortAscending: true);
           break;
         case kTracksPath:
-          await MediaLibrary.instance.populate(trackSortAscending: true);
+          await _mediaLibrary.populate(trackSortAscending: true);
           await Configuration.instance.set(mediaLibraryTrackSortAscending: true);
           break;
         case kArtistsPath:
-          await MediaLibrary.instance.populate(artistSortAscending: true);
+          await _mediaLibrary.populate(artistSortAscending: true);
           await Configuration.instance.set(mediaLibraryArtistSortAscending: true);
           break;
         case kGenresPath:
-          await MediaLibrary.instance.populate(genreSortAscending: true);
+          await _mediaLibrary.populate(genreSortAscending: true);
           await Configuration.instance.set(mediaLibraryGenreSortAscending: true);
           break;
       }
     } else if (value == false) {
       switch (widget.path) {
         case kAlbumsPath:
-          await MediaLibrary.instance.populate(albumSortAscending: false);
+          await _mediaLibrary.populate(albumSortAscending: false);
           await Configuration.instance.set(mediaLibraryAlbumSortAscending: false);
           break;
         case kTracksPath:
-          await MediaLibrary.instance.populate(trackSortAscending: false);
+          await _mediaLibrary.populate(trackSortAscending: false);
           await Configuration.instance.set(mediaLibraryTrackSortAscending: false);
           break;
         case kArtistsPath:
-          await MediaLibrary.instance.populate(artistSortAscending: false);
+          await _mediaLibrary.populate(artistSortAscending: false);
           await Configuration.instance.set(mediaLibraryArtistSortAscending: false);
           break;
         case kGenresPath:
-          await MediaLibrary.instance.populate(genreSortAscending: false);
+          await _mediaLibrary.populate(genreSortAscending: false);
           await Configuration.instance.set(mediaLibraryGenreSortAscending: false);
           break;
       }
@@ -634,7 +636,7 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
         .map(
           (e) => MobileMediaLibrarySortButtonPopupMenuItem(
             onTap: () => handle(e),
-            checked: MediaLibrary.instance.albumSortType == e,
+            checked: _mediaLibrary.albumSortType == e,
             value: e,
             padding: EdgeInsets.zero,
             child: Text(
@@ -653,7 +655,7 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
         .map(
           (e) => MobileMediaLibrarySortButtonPopupMenuItem(
             onTap: () => handle(e),
-            checked: MediaLibrary.instance.trackSortType == e,
+            checked: _mediaLibrary.trackSortType == e,
             value: e,
             padding: EdgeInsets.zero,
             child: Text(
@@ -671,7 +673,7 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
         .map(
           (e) => MobileMediaLibrarySortButtonPopupMenuItem(
             onTap: () => handle(e),
-            checked: MediaLibrary.instance.artistSortType == e,
+            checked: _mediaLibrary.artistSortType == e,
             value: e,
             padding: EdgeInsets.zero,
             child: Text(
@@ -688,7 +690,7 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
         .map(
           (e) => MobileMediaLibrarySortButtonPopupMenuItem(
             onTap: () => handle(e),
-            checked: MediaLibrary.instance.genreSortType == e,
+            checked: _mediaLibrary.genreSortType == e,
             value: e,
             padding: EdgeInsets.zero,
             child: Text(
@@ -707,10 +709,10 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
     MobileMediaLibrarySortButtonPopupMenuItem(
       onTap: () => handle(true),
       checked: switch (widget.path) {
-        kAlbumsPath => MediaLibrary.instance.albumSortAscending,
-        kTracksPath => MediaLibrary.instance.trackSortAscending,
-        kArtistsPath => MediaLibrary.instance.artistSortAscending,
-        kGenresPath => MediaLibrary.instance.genreSortAscending,
+        kAlbumsPath => _mediaLibrary.albumSortAscending,
+        kTracksPath => _mediaLibrary.trackSortAscending,
+        kArtistsPath => _mediaLibrary.artistSortAscending,
+        kGenresPath => _mediaLibrary.genreSortAscending,
         _ => false,
       },
       value: true,
@@ -723,10 +725,10 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
     MobileMediaLibrarySortButtonPopupMenuItem(
       onTap: () => handle(false),
       checked: switch (widget.path) {
-        kAlbumsPath => !MediaLibrary.instance.albumSortAscending,
-        kTracksPath => !MediaLibrary.instance.trackSortAscending,
-        kArtistsPath => !MediaLibrary.instance.artistSortAscending,
-        kGenresPath => !MediaLibrary.instance.genreSortAscending,
+        kAlbumsPath => !_mediaLibrary.albumSortAscending,
+        kTracksPath => !_mediaLibrary.trackSortAscending,
+        kArtistsPath => !_mediaLibrary.artistSortAscending,
+        kGenresPath => !_mediaLibrary.genreSortAscending,
         _ => false,
       },
       value: false,
@@ -1551,7 +1553,8 @@ class MobileGridSpanButton extends StatelessWidget {
                   value: i,
                   groupValue: groupValue,
                   onChanged: (value) {
-                    onChanged(value).then((_) => Navigator.of(context).pop()).then((_) => MediaLibrary.instance.notify());
+                    final mediaLibrary = context.read<MediaLibrary>();
+                    onChanged(value).then((_) => Navigator.of(context).pop()).then((_) => mediaLibrary.notify());
                   },
                   title: Text(
                     i == 0 ? '#' : i.toString(),
@@ -1581,6 +1584,7 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
     return IconButton(
       icon: const Icon(Icons.more_vert),
       onPressed: () async {
+        final mediaLibrary = context.read<MediaLibrary>();
         Completer<int> completer = Completer<int>();
         await showModalBottomSheet(
           context: context,
@@ -1644,12 +1648,12 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
           switch (value) {
             case 0:
               {
-                await MediaPlayer.instance.open(MediaLibrary.instance.tracks.map((e) => e.toPlayable()));
+                await MediaPlayer.instance.open(mediaLibrary.tracks.map((e) => e.toPlayable()));
                 break;
               }
             case 1:
               {
-                MediaPlayer.instance.open(MediaLibrary.instance.tracks.map((e) => e.toPlayable()), shuffle: true);
+                MediaPlayer.instance.open(mediaLibrary.tracks.map((e) => e.toPlayable()), shuffle: true);
                 break;
               }
             case 2:

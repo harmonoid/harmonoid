@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:media_library/media_library.dart' hide MediaLibrary;
+import 'package:media_library/media_library.dart';
+import 'package:provider/provider.dart';
 
-import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/extensions/go_router.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 Future<void> navigateToAlbum(BuildContext context, AlbumLookupKey key) async {
-  final album = MediaLibrary.instance.lookupAlbum(key);
+  final album = context.read<MediaLibrary>().lookupAlbum(key);
   if (album != null) {
-    final tracks = await MediaLibrary.instance.tracksFromAlbum(album);
+    final tracks = await context.read<MediaLibrary>().tracksFromAlbum(album);
 
     List<Color>? palette;
     if (isMaterial2) {
@@ -33,10 +33,12 @@ Future<void> navigateToAlbum(BuildContext context, AlbumLookupKey key) async {
 }
 
 Future<void> navigateToArtist(BuildContext context, ArtistLookupKey key) async {
-  final artist = MediaLibrary.instance.lookupArtist(key);
+  final artist = context.read<MediaLibrary>().lookupArtist(key);
   if (artist != null) {
-    final tracks = await MediaLibrary.instance.tracksFromArtist(artist);
-    final albums = await MediaLibrary.instance.albumsFromArtist(artist);
+    final [tracks, albums] = await Future.wait([
+      context.read<MediaLibrary>().tracksFromArtist(artist),
+      context.read<MediaLibrary>().albumsFromArtist(artist),
+    ]);
 
     List<Color>? palette;
     if (isMaterial2) {
@@ -50,8 +52,8 @@ Future<void> navigateToArtist(BuildContext context, ArtistLookupKey key) async {
       '/$kMediaLibraryPath/$kArtistPath',
       extra: ArtistPathExtra(
         artist: artist,
-        tracks: tracks,
-        albums: albums,
+        tracks: tracks as List<Track>,
+        albums: albums as List<Album>,
         palette: palette,
       ),
     );
@@ -59,9 +61,9 @@ Future<void> navigateToArtist(BuildContext context, ArtistLookupKey key) async {
 }
 
 Future<void> navigateToGenre(BuildContext context, GenreLookupKey key) async {
-  final genre = MediaLibrary.instance.lookupGenre(key);
+  final genre = context.read<MediaLibrary>().lookupGenre(key);
   if (genre != null) {
-    final tracks = await MediaLibrary.instance.tracksFromGenre(genre);
+    final tracks = await context.read<MediaLibrary>().tracksFromGenre(genre);
 
     // NOTE: Palette is not used for genres.
     // List<Color>? palette;

@@ -1,12 +1,13 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:media_kit/media_kit.dart' hide Playable;
+import 'package:media_library/media_library.dart' hide Playlist, FileSystemMediaLibrary;
 import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:tag_reader/tag_reader.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
-import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/core/media_player/base_media_player.dart';
 import 'package:harmonoid/core/media_player/mixin/audio_service_mixin.dart';
 import 'package:harmonoid/core/media_player/mixin/discord_rpc_mixin.dart';
@@ -298,7 +299,7 @@ class MediaPlayer extends ChangeNotifier
         _current = null;
         notifyListeners();
 
-        File? cover = MediaLibrary.instance.uriToCoverFile(uri);
+        File? cover = MediaLibrary.trackUriToCoverFile(FileSystemMediaLibrary.instance.covers, uri);
         if (await cover.exists_() && await cover.length_() > 0) {
           cover = null;
         }

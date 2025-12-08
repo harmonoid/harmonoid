@@ -14,7 +14,7 @@ import 'package:synchronized/synchronized.dart';
 
 import 'package:harmonoid/api/lyrics_get.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
-import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/playable.dart';
 import 'package:harmonoid/localization/localization.dart';
@@ -149,7 +149,7 @@ class LyricsNotifier extends ChangeNotifier {
 
     debugPrint('LyricsNotifier: retrieve: Tags: ${playable.uri}');
     try {
-      final track = await MediaLibrary.instance.db.selectTrackByUri(playable.uri);
+      final track = await FileSystemMediaLibrary.instance.db.selectTrackByUri(playable.uri);
       if (track != null && Lrc.isValid(track.lyrics)) {
         final result = Lrc.parse(track.lyrics).lyrics;
         lyrics.addAll(result.map((e) => Lyric(timestamp: e.timestamp.inMilliseconds, text: e.lyrics)).toList());

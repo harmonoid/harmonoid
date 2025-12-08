@@ -3,16 +3,13 @@ import 'dart:io';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:media_library/media_library.dart' hide MediaLibrary;
-import 'package:path/path.dart';
+import 'package:media_library/media_library.dart' hide FileSystemMediaLibrary;
 import 'package:provider/provider.dart';
-import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:uri_parser/uri_parser.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
-import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/playable.dart';
 import 'package:harmonoid/extensions/string.dart';
@@ -149,6 +146,8 @@ ImageProvider cover({
   int? cacheWidth,
   int? cacheHeight,
 }) {
+  final context = rootNavigatorKey.currentContext!;
+
   if (cacheWidth != null) cacheWidth *= 2;
   if (cacheHeight != null) cacheHeight *= 2;
 
@@ -159,28 +158,41 @@ ImageProvider cover({
     _ => throw ArgumentError(),
   };
 
+  // TODO: Add support for HTTP URIs.
   Future<File?> getFile() async {
-    final mediaLibrary = MediaLibrary.instance;
+    final mediaLibrary = context.read<MediaLibrary>();
     final mediaLibraryCoverFallback = Configuration.instance.mediaLibraryCoverFallback;
 
     if (item is Artist) {
-      return homeNavigatorKey.currentContext!.read<ArtistImageNotifier>().getFile(item);
+      return context.read<ArtistImageNotifier>().getFile(item);
     } else if (item != null) {
-      return mediaLibrary.coverFileForMediaLibraryItem(item, fallback: mediaLibraryCoverFallback);
+      return mediaLibrary.cover(item, fallback: mediaLibraryCoverFallback).then((value) {
+        if (value == null) return null;
+        return File(value.toFilePath());
+      });
     }
 
     if (playlistEntry != null) {
       if (playlistEntry.uri != null) {
-        return mediaLibrary.coverFileForUri(playlistEntry.uri!, fallback: mediaLibraryCoverFallback);
+        return mediaLibrary.coverForUri(playlistEntry.uri!).then((value) {
+          if (value == null) return null;
+          return File(value.toFilePath());
+        });
       }
       if (playlistEntry.hash != null) {
-        final track = await mediaLibrary.db.selectTrackByHash(playlistEntry.hash!);
-        return mediaLibrary.coverFileForMediaLibraryItem(track!, fallback: mediaLibraryCoverFallback);
+        final track = await FileSystemMediaLibrary.instance.db.selectTrackByHash(playlistEntry.hash!);
+        return mediaLibrary.cover(track!, fallback: mediaLibraryCoverFallback).then((value) {
+          if (value == null) return null;
+          return File(value.toFilePath());
+        });
       }
     }
 
     if (uri != null) {
-      return mediaLibrary.coverFileForUri(uri, fallback: mediaLibraryCoverFallback);
+      return mediaLibrary.coverForUri(uri).then((value) {
+        if (value == null) return null;
+        return File(value.toFilePath());
+      });
     }
 
     throw ArgumentError();
@@ -189,15 +201,10 @@ ImageProvider cover({
   Future<File> getFallbackFile() async {
     // Save default artist image, if it does not exist.
     if (item is Artist) {
-      return homeNavigatorKey.currentContext!.read<ArtistImageNotifier>().getDefaultFile();
+      return context.read<ArtistImageNotifier>().getDefaultFile();
     }
     // Save default album image, if it does not exist.
-    final cover = File(join(MediaLibrary.instance.covers.path, kCoverDefaultFileName));
-    if (!await cover.exists_()) {
-      final data = await rootBundle.load(kCoverDefaultAssetKey);
-      await cover.write_(data.buffer.asUint8List());
-    }
-    return cover;
+    return context.read<FileSystemMediaLibrary>().getDefaultCoverFile();
   }
 
   AsyncFileImage.attemptToResolveIfFallback(
@@ -529,9 +536,7 @@ Future<String?> pickResource(BuildContext context, String title) async {
       children: [
         ListTile(
           onTap: () async {
-            final file = await pickFile(
-              extensions: MediaLibrary.instance.supportedFileTypes,
-            );
+            final file = await pickFile(extensions: kDefaultSupportedFileTypes);
             if (file != null) {
               result = file.path;
               ctx.pop();

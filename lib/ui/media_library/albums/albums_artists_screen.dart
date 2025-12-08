@@ -1,9 +1,9 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/album.dart';
 import 'package:harmonoid/mappers/track.dart';

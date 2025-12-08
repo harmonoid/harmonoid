@@ -1,8 +1,8 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
+import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/extensions/genre.dart';
 import 'package:harmonoid/ui/media_library/genres/genre_item.dart';
 import 'package:harmonoid/utils/constants.dart';

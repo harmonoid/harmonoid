@@ -1,10 +1,9 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:media_library/media_library.dart' hide MediaLibrary;
+import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/media_library/artists/artist_image.dart';
 import 'package:harmonoid/ui/media_library/artists/artist_screen.dart';
@@ -36,8 +35,8 @@ class _ArtistItemState extends State<ArtistItem> {
   late final title = widget.artist.artist.isNotEmpty ? widget.artist.artist : kDefaultArtist;
 
   Future<void> navigate() async {
-    final tracks = await MediaLibrary.instance.tracksFromArtist(widget.artist);
-    final albums = await MediaLibrary.instance.albumsFromArtist(widget.artist);
+    final tracks = await context.read<MediaLibrary>().tracksFromArtist(widget.artist);
+    final albums = await context.read<MediaLibrary>().albumsFromArtist(widget.artist);
 
     List<Color>? palette;
     if (isMaterial2) {
@@ -61,7 +60,7 @@ class _ArtistItemState extends State<ArtistItem> {
   }
 
   Future<void> onSecondaryPress(BuildContext context, {RelativeRect? position}) async {
-    tracks = await MediaLibrary.instance.tracksFromArtist(widget.artist);
+    tracks = await context.read<MediaLibrary>().tracksFromArtist(widget.artist);
     final tracksMenuProvider = TracksMenuProvider(context, tracks!);
     final result = await showMenuItems(context, tracksMenuProvider.getPopupMenuItems(), position: position);
     await tracksMenuProvider.handlePopupMenuAction(result);
@@ -237,8 +236,8 @@ class _ArtistItemState extends State<ArtistItem> {
                               palette = result.colors?.toList();
                             }
 
-                            tracks = await MediaLibrary.instance.tracksFromArtist(widget.artist);
-                            albums = await MediaLibrary.instance.albumsFromArtist(widget.artist);
+                            tracks = await context.read<MediaLibrary>().tracksFromArtist(widget.artist);
+                            albums = await context.read<MediaLibrary>().albumsFromArtist(widget.artist);
 
                             action();
                             context.read<NowPlayingMobileNotifier>().hideBottomNavigationBar();

@@ -1,5 +1,6 @@
-import 'package:media_library/media_library.dart';
+import 'package:media_library/media_library.dart' hide FileSystemMediaLibrary;
 
+import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/models/playable.dart';
 
@@ -9,9 +10,9 @@ extension PlaylistEntryMappers on PlaylistEntry {
   String toImageKey() => '$runtimeType-$uri-$hash';
 
   /// Converts to [Playable].
-  Future<Playable?> toPlayable(MediaLibrary mediaLibrary) async {
+  Future<Playable?> toPlayable() async {
     if (hash != null) {
-      final track = await mediaLibrary.db.selectTrackByHash(hash!);
+      final track = await FileSystemMediaLibrary.instance.db.selectTrackByHash(hash!);
       return track?.toPlayable();
     }
     if (uri != null) {

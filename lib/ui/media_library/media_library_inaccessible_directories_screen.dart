@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
-import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/extensions/configuration.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/router.dart';
@@ -21,7 +21,7 @@ class MediaLibraryInaccessibleDirectoriesScreen extends StatefulWidget {
 
   static Future<bool> showIfRequired(BuildContext context) async {
     final directories = <Directory>[];
-    for (final directory in MediaLibrary.instance.directories) {
+    for (final directory in FileSystemMediaLibrary.instance.directories) {
       if (Platform.isMacOS) {
         try {
           // NOTE: Not using package:safe_local_storage API.
@@ -64,7 +64,7 @@ class _MediaLibraryInaccessibleDirectoriesScreenState extends State<MediaLibrary
     refreshing = true;
     try {
       directories.clear();
-      for (final directory in MediaLibrary.instance.directories) {
+      for (final directory in FileSystemMediaLibrary.instance.directories) {
         if (Platform.isMacOS) {
           try {
             // NOTE: Not using package:safe_local_storage API.
@@ -93,7 +93,7 @@ class _MediaLibraryInaccessibleDirectoriesScreenState extends State<MediaLibrary
     removing = true;
     try {
       await Configuration.instance.removeMediaLibraryDirectory(directory);
-      await MediaLibrary.instance.removeDirectories({directory});
+      await FileSystemMediaLibrary.instance.removeDirectories({directory});
 
       await refresh();
 

@@ -6,11 +6,12 @@ import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:identity/identity.dart';
+import 'package:media_library/media_library.dart' hide FileSystemMediaLibrary;
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
-import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
@@ -53,7 +54,7 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
       }
       final inaccessibleDirectories = await MediaLibraryInaccessibleDirectoriesScreen.showIfRequired(context);
       if (!inaccessibleDirectories && Configuration.instance.mediaLibraryRefreshUponStart) {
-        MediaLibrary.instance.refresh();
+        FileSystemMediaLibrary.instance.refresh();
       }
 
       unawaited(UpdateNotifier.instance.check());
@@ -96,7 +97,8 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
       unselect: Localization.instance.UNSELECT,
       child: MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => MediaLibrary.instance),
+          MediaLibraryProvider(),
+          ChangeNotifierProvider<FileSystemMediaLibrary>(create: (_) => FileSystemMediaLibrary.instance),
           ChangeNotifierProvider(create: (_) => MediaPlayer.instance),
           ChangeNotifierProvider(create: (_) => Localization.instance),
           ChangeNotifierProvider(create: (context) => ThemeNotifier.instance..update(context: context)),
@@ -273,4 +275,21 @@ class DefaultScrollPhysics extends ScrollPhysics {
       ratio: 1.3,
     );
   }
+}
+
+class MediaLibraryProvider extends InheritedProvider<MediaLibrary> {
+  MediaLibraryProvider({
+    super.key,
+    super.dispose,
+    super.lazy,
+    super.builder,
+    super.child,
+  }) : super(
+         create: (_) => FileSystemMediaLibrary.instance,
+         startListening: (e, value) {
+           final notifier = value as ChangeNotifier;
+           notifier.addListener(e.markNeedsNotifyDependents);
+           return () => notifier.removeListener(e.markNeedsNotifyDependents);
+         },
+       );
 }

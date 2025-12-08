@@ -3,7 +3,7 @@ import 'package:flutter/material.dart' hide Intent;
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
-import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/media_player_state.dart';
@@ -46,7 +46,7 @@ class WindowLifecycle {
   /// Invoked when window is about to close.
   static Future<bool> windowCloseHandler({bool force = false}) async {
     try {
-      if (!MediaLibrary.instance.refreshing || force) {
+      if (!FileSystemMediaLibrary.instance.refreshing || force) {
         await Configuration.instance.set(mediaPlayerPlaybackState: MediaPlayer.instance.state.toPlaybackState());
         await Future.delayed(const Duration(seconds: 1));
         return true;

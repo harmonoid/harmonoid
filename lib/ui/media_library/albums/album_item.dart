@@ -1,10 +1,9 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:media_library/media_library.dart' hide MediaLibrary;
+import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/extensions/album.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/media_library/albums/album_screen.dart';
@@ -45,7 +44,7 @@ class _AlbumItemState extends State<AlbumItem> {
   // ------------------------------
 
   Future<void> navigate() async {
-    final tracks = await MediaLibrary.instance.tracksFromAlbum(widget.album);
+    final tracks = await context.read<MediaLibrary>().tracksFromAlbum(widget.album);
 
     List<Color>? palette;
     if (isMaterial2) {
@@ -68,7 +67,7 @@ class _AlbumItemState extends State<AlbumItem> {
   }
 
   Future<void> onSecondaryPress(BuildContext context, {RelativeRect? position}) async {
-    tracks = await MediaLibrary.instance.tracksFromAlbum(widget.album);
+    tracks = await context.read<MediaLibrary>().tracksFromAlbum(widget.album);
     final tracksMenuProvider = TracksMenuProvider(context, tracks!);
     final result = await showMenuItems(context, tracksMenuProvider.getPopupMenuItems(), position: position);
     await tracksMenuProvider.handlePopupMenuAction(result);
@@ -244,7 +243,7 @@ class _AlbumItemState extends State<AlbumItem> {
               return;
             }
 
-            tracks = await MediaLibrary.instance.tracksFromAlbum(widget.album);
+            tracks = await context.read<MediaLibrary>().tracksFromAlbum(widget.album);
 
             if (isMaterial2) {
               final result = await PaletteGenerator.fromImageProvider(cover(item: widget.album, cacheWidth: 20));

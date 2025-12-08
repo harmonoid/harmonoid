@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:media_library/media_library.dart' hide MediaLibrary;
+import 'package:media_library/media_library.dart' hide MediaLibrary, FileSystemMediaLibrary;
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
-import 'package:harmonoid/core/media_library.dart';
+import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/extensions/configuration.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/settings/settings_section.dart';
@@ -45,7 +45,7 @@ class MediaLibrarySection extends StatelessWidget {
 
   // --------------------------------------------------
 
-  static Widget buildRefreshIndicator(BuildContext context, MediaLibrary mediaLibrary) {
+  static Widget buildRefreshIndicator(BuildContext context, FileSystemMediaLibrary mediaLibrary) {
     if (!mediaLibrary.refreshing) {
       return const SizedBox.shrink();
     }
@@ -74,7 +74,7 @@ class MediaLibrarySection extends StatelessWidget {
 
   // --------------------------------------------------
 
-  static Future<void> ensureNotRefreshing(BuildContext context, MediaLibrary mediaLibrary, Future<void> Function() callback) async {
+  static Future<void> ensureNotRefreshing(BuildContext context, FileSystemMediaLibrary mediaLibrary, Future<void> Function() callback) async {
     if (mediaLibrary.refreshing) {
       await showMessage(
         context,
@@ -86,7 +86,7 @@ class MediaLibrarySection extends StatelessWidget {
     return callback();
   }
 
-  static Future<void> removeFolder(BuildContext context, MediaLibrary mediaLibrary, Directory directory) {
+  static Future<void> removeFolder(BuildContext context, FileSystemMediaLibrary mediaLibrary, Directory directory) {
     return ensureNotRefreshing(context, mediaLibrary, () async {
       if (mediaLibrary.directories.length <= 1) {
         await showMessage(
@@ -102,7 +102,7 @@ class MediaLibrarySection extends StatelessWidget {
     });
   }
 
-  static Future<void> addFolder(BuildContext context, MediaLibrary mediaLibrary) {
+  static Future<void> addFolder(BuildContext context, FileSystemMediaLibrary mediaLibrary) {
     return ensureNotRefreshing(context, mediaLibrary, () async {
       final directory = await pickDirectory();
       if (directory == null) return;
@@ -111,7 +111,7 @@ class MediaLibrarySection extends StatelessWidget {
     });
   }
 
-  static Future<void> refresh(BuildContext context, MediaLibrary mediaLibrary) {
+  static Future<void> refresh(BuildContext context, FileSystemMediaLibrary mediaLibrary) {
     return ensureNotRefreshing(
       context,
       mediaLibrary,
@@ -119,7 +119,7 @@ class MediaLibrarySection extends StatelessWidget {
     );
   }
 
-  static Future<void> reindex(BuildContext context, MediaLibrary mediaLibrary) {
+  static Future<void> reindex(BuildContext context, FileSystemMediaLibrary mediaLibrary) {
     return ensureNotRefreshing(
       context,
       mediaLibrary,
@@ -138,7 +138,7 @@ class MediaLibrarySection extends StatelessWidget {
     );
   }
 
-  static Future<void> editAlbumParameters(BuildContext context, MediaLibrary mediaLibrary) {
+  static Future<void> editAlbumParameters(BuildContext context, FileSystemMediaLibrary mediaLibrary) {
     return ensureNotRefreshing(context, mediaLibrary, () async {
       final result = {
         ...mediaLibrary.albumGroupingParameters.isNotEmpty ? mediaLibrary.albumGroupingParameters : AlbumGroupingParameter.values.toSet(),
@@ -235,7 +235,7 @@ class MediaLibrarySection extends StatelessWidget {
     });
   }
 
-  static Future<void> editMinimumFileSize(BuildContext context, MediaLibrary mediaLibrary) {
+  static Future<void> editMinimumFileSize(BuildContext context, FileSystemMediaLibrary mediaLibrary) {
     return ensureNotRefreshing(context, mediaLibrary, () async {
       final result = await showSelection(
         context,
@@ -286,7 +286,7 @@ class DesktopMediaLibrarySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MediaLibrary>(
+    return Consumer<FileSystemMediaLibrary>(
       builder: (context, mediaLibrary, _) {
         return SettingsSection(
           title: Localization.instance.SETTINGS_SECTION_MEDIA_LIBRARY_TITLE,
@@ -340,7 +340,7 @@ class DesktopMediaLibrarySection extends StatelessWidget {
     );
   }
 
-  Widget _buildAddedFolders(BuildContext context, MediaLibrary mediaLibrary) {
+  Widget _buildAddedFolders(BuildContext context, FileSystemMediaLibrary mediaLibrary) {
     if (mediaLibrary.directories.isEmpty) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -423,7 +423,7 @@ class _MobileMediaLibrarySectionState extends State<MobileMediaLibrarySection> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MediaLibrary>(
+    return Consumer<FileSystemMediaLibrary>(
       builder: (context, mediaLibrary, _) {
         return SettingsSection(
           title: Localization.instance.SETTINGS_SECTION_MEDIA_LIBRARY_TITLE,
@@ -474,7 +474,7 @@ class _MobileMediaLibrarySectionState extends State<MobileMediaLibrarySection> {
     );
   }
 
-  Widget _buildAddedFolders(BuildContext context, MediaLibrary mediaLibrary) {
+  Widget _buildAddedFolders(BuildContext context, FileSystemMediaLibrary mediaLibrary) {
     if (mediaLibrary.directories.isEmpty) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0),

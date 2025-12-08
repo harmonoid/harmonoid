@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/core/media_library.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/media_library/search/search_screen.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -49,10 +49,10 @@ class MediaLibrarySearchBar extends StatelessWidget {
                       hintText: !mediaLibrary.refreshing
                           ? Localization.instance.SEARCH_HINT
                           : mediaLibrary.current == null
-                              ? Localization.instance.DISCOVERING_FILES
-                              : Localization.instance.ADDED_M_OF_N_FILES
-                                  .replaceAll('"M"', (mediaLibrary.current ?? 0).toString())
-                                  .replaceAll('"N"', (mediaLibrary.total == 0 ? 1 : mediaLibrary.total).toString()),
+                          ? Localization.instance.DISCOVERING_FILES
+                          : Localization.instance.ADDED_M_OF_N_FILES
+                                .replaceAll('"M"', (mediaLibrary.current ?? 0).toString())
+                                .replaceAll('"N"', (mediaLibrary.total == 0 ? 1 : mediaLibrary.total).toString()),
                     ),
                   ),
                   if (mediaLibrary.refreshing)

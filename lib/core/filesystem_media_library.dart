@@ -1,21 +1,24 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:media_library/media_library.dart' as media_library;
 import 'package:media_library/media_library.dart' hide MediaLibrary;
+import 'package:path/path.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:tag_reader/tag_reader.dart';
 
 import 'package:harmonoid/mappers/tags.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
+import 'package:harmonoid/utils/constants.dart';
 
-/// {@template media_library}
+/// {@template filesystem_media_library}
 ///
-/// MediaLibrary
-/// ------------
+/// FileSystemMediaLibrary
+/// ----------------------
 /// Implementation to cache, index, manage & retrieve album artists, albums, artists, genres, tracks & playlists.
 ///
 /// {@endtemplate}
-class MediaLibrary extends media_library.MediaLibrary with ChangeNotifier {
+class FileSystemMediaLibrary extends media_library.FileSystemMediaLibrary with ChangeNotifier {
   /// Pool size for [PooledTagReader].
   static final int kPooledTagReaderSize = () {
     try {
@@ -26,13 +29,13 @@ class MediaLibrary extends media_library.MediaLibrary with ChangeNotifier {
   }();
 
   /// Singleton instance.
-  static late final MediaLibrary instance;
+  static late final FileSystemMediaLibrary instance;
 
   /// Whether the [instance] is initialized.
   static bool initialized = false;
 
   /// {@macro media_library}
-  MediaLibrary._({
+  FileSystemMediaLibrary._({
     required super.cache,
     required super.directories,
     required super.albumSortType,
@@ -70,7 +73,7 @@ class MediaLibrary extends media_library.MediaLibrary with ChangeNotifier {
       await cache.create_();
     }
 
-    instance = MediaLibrary._(
+    instance = FileSystemMediaLibrary._(
       cache: cache,
       directories: directories,
       albumSortType: albumSortType,
@@ -144,6 +147,16 @@ class MediaLibrary extends media_library.MediaLibrary with ChangeNotifier {
     debugPrint('MediaLibrary: parse: Tags: $tags');
     debugPrint('MediaLibrary: parse: Result: $result');
     return result;
+  }
+
+  /// Returns the default cover file.
+  Future<File> getDefaultCoverFile() async {
+    final cover = File(join(covers.path, kCoverDefaultFileName));
+    if (!await cover.exists_()) {
+      final data = await rootBundle.load(kArtistImageDefaultAssetKey);
+      await cover.write_(data.buffer.asUint8List());
+    }
+    return cover;
   }
 
   /// Disposes the [instance]. Releases allocated resources back to the system.
