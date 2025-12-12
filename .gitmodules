@@ -19,3 +19,6 @@
 [submodule "external/identity"]
 	path = external/identity
 	url = https://github.com/harmonoid/identity.git
+[submodule "external/tag_writer"]
+	path = external/tag_writer
+	url = https://github.com/harmonoid/tag_writer.git

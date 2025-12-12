@@ -30,6 +30,7 @@ enum TrackMenuAction {
   share,
   showInFileManager,
   fileInformation,
+  editTags,
   refresh,
   delete,
 }
@@ -73,6 +74,7 @@ class TrackMenuProvider {
       TrackMenuAction.share => share(),
       TrackMenuAction.showInFileManager => showInFileManager(),
       TrackMenuAction.fileInformation => fileInformation(),
+      TrackMenuAction.editTags => editTags(),
       TrackMenuAction.refresh => refresh(recursivelyPopNavigatorOnDeleteIf: recursivelyPopNavigatorOnDeleteIf),
       TrackMenuAction.delete => delete(recursivelyPopNavigatorOnDeleteIf: recursivelyPopNavigatorOnDeleteIf),
     };
@@ -148,6 +150,10 @@ class TrackMenuProvider {
     context.push(Uri(path: '/$kFileInfoPath', queryParameters: {kFileInfoArgResource: track.uri.toString()}).toString());
   }
 
+  Future<void> editTags() async {
+    context.push(Uri(path: '/$kTagEditorPath', queryParameters: {kTagEditorArgResource: track.uri.toString()}).toString());
+  }
+
   Future<void> refresh({Future<bool> Function()? recursivelyPopNavigatorOnDeleteIf}) async {
     await _fileSystemMediaLibrary?.remove([track], delete: false);
     if (await recursivelyPopNavigatorOnDeleteIf?.call() ?? false) {
@@ -205,6 +211,7 @@ class TrackMenuProvider {
       TrackMenuAction.share => Icons.share,
       TrackMenuAction.showInFileManager => Icons.folder,
       TrackMenuAction.fileInformation => Icons.info,
+      TrackMenuAction.editTags => Icons.label,
       TrackMenuAction.refresh => Icons.refresh,
       TrackMenuAction.delete => Icons.delete,
     };
@@ -221,6 +228,7 @@ class TrackMenuProvider {
       TrackMenuAction.share => Localization.instance.SHARE,
       TrackMenuAction.showInFileManager => Localization.instance.SHOW_IN_FILE_MANAGER,
       TrackMenuAction.fileInformation => Localization.instance.FILE_INFORMATION,
+      TrackMenuAction.editTags => Localization.instance.EDIT_TAGS,
       TrackMenuAction.refresh => Localization.instance.REFRESH,
       TrackMenuAction.delete => Localization.instance.DELETE,
     };

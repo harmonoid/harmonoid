@@ -68,6 +68,7 @@ class Values {
   late String EDIT_ALBUM_PARAMETERS_TITLE;
   late String EDIT_DETAILS;
   late String EDIT_MINIMUM_FILE_SIZE;
+  late String EDIT_TAGS;
   late String EMAIL;
   late String ENABLE_ANIMATION_EFFECTS;
   late String ENABLE_DISCORD_RPC;
