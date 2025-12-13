@@ -32,7 +32,7 @@ class ArtistItem extends StatefulWidget {
 }
 
 class _ArtistItemState extends State<ArtistItem> {
-  late final title = widget.artist.artist.isNotEmpty ? widget.artist.artist : kDefaultArtist;
+  String get _title => widget.artist.artist.isNotEmpty ? widget.artist.artist : kDefaultArtist;
 
   Future<void> navigate() async {
     final tracks = await context.read<MediaLibrary>().tracksFromArtist(widget.artist);
@@ -112,7 +112,7 @@ class _ArtistItemState extends State<ArtistItem> {
                 width: widget.width,
                 alignment: Alignment.center,
                 child: Text(
-                  title,
+                  _title,
                   style: Theme.of(context).textTheme.titleSmall,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -164,7 +164,7 @@ class _ArtistItemState extends State<ArtistItem> {
                   const SizedBox(width: 16.0),
                   Expanded(
                     child: Text(
-                      title,
+                      _title,
                       style: Theme.of(context).textTheme.titleMedium,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -264,7 +264,7 @@ class _ArtistItemState extends State<ArtistItem> {
               width: widget.width,
               alignment: Alignment.center,
               child: Text(
-                title,
+                _title,
                 style: widget.height - widget.width > 24.0 ? Theme.of(context).textTheme.titleSmall : Theme.of(context).textTheme.bodyLarge,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

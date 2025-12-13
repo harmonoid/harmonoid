@@ -32,8 +32,8 @@ class GenreItem extends StatefulWidget {
 }
 
 class _GenreItemState extends State<GenreItem> {
-  late final title = widget.genre.genre.isNotEmpty ? widget.genre.genre : kDefaultGenre;
-  late final color = kGenreColors[widget.genre.genre.hashCode % kGenreColors.length];
+  String get _title => widget.genre.genre.isNotEmpty ? widget.genre.genre : kDefaultGenre;
+  Color get _color => kGenreColors[widget.genre.genre.hashCode % kGenreColors.length];
 
   Future<void> navigate() async {
     final tracks = await context.read<MediaLibrary>().tracksFromGenre(widget.genre);
@@ -68,7 +68,7 @@ class _GenreItemState extends State<GenreItem> {
         tag: widget.genre,
         child: Card(
           margin: EdgeInsets.zero,
-          color: color,
+          color: _color,
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: navigate,
@@ -78,11 +78,11 @@ class _GenreItemState extends State<GenreItem> {
               alignment: Alignment.center,
               padding: const EdgeInsets.all(8.0),
               child: AutoSizeText(
-                title,
+                _title,
                 maxLines: 3,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(color: color.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(color: _color.computeLuminance() > 0.5 ? Colors.black : Colors.white),
                 wrapWords: false,
               ),
             ),
@@ -119,19 +119,19 @@ class _GenreItemState extends State<GenreItem> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    color: color,
+                    color: _color,
                     width: widget.height - 1.0,
                     height: widget.height - 1.0,
                     alignment: Alignment.center,
                     child: Text(
-                      title[0],
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(color: color.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+                      _title[0],
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(color: _color.computeLuminance() > 0.5 ? Colors.black : Colors.white),
                     ),
                   ),
                   const SizedBox(width: 16.0),
                   Expanded(
                     child: Text(
-                      title,
+                      _title,
                       style: Theme.of(context).textTheme.titleMedium,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -160,10 +160,10 @@ class _GenreItemState extends State<GenreItem> {
       child: OpenContainer(
         navigatorKey: homeNavigatorKey,
         transitionDuration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
-        closedColor: color,
+        closedColor: _color,
         closedShape: Theme.of(context).cardTheme.shape ?? const RoundedRectangleBorder(),
         closedElevation: Theme.of(context).cardTheme.elevation ?? 0.0,
-        openColor: color,
+        openColor: _color,
         openElevation: Theme.of(context).cardTheme.elevation ?? 0.0,
         clipBehavior: Clip.antiAlias,
         onClosed: (data) {
@@ -193,7 +193,7 @@ class _GenreItemState extends State<GenreItem> {
               alignment: Alignment.center,
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: AutoSizeText(
-                title,
+                _title,
                 maxLines: 3,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
@@ -206,7 +206,7 @@ class _GenreItemState extends State<GenreItem> {
                     return Theme.of(context).textTheme.titleMedium;
                   }
                   return Theme.of(context).textTheme.titleSmall;
-                }())?.copyWith(color: color.computeLuminance() > 0.5 ? Colors.black : Colors.white),
+                }())?.copyWith(color: _color.computeLuminance() > 0.5 ? Colors.black : Colors.white),
               ),
             ),
           ),

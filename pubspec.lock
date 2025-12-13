@@ -795,10 +795,10 @@ packages:
     dependency: "direct main"
     description:
       name: media_kit
-      sha256: bed6d1572b61c875a6927db24874e68f8cf27b4f898d985018fc15078ebf38ac
+      sha256: ae9e79597500c7ad6083a3c7b7b7544ddabfceacce7ae5c9709b0ec16a5d6643
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.5"
+    version: "1.2.6"
   media_kit_libs_android_audio:
     dependency: "direct main"
     description:
@@ -1485,10 +1485,10 @@ packages:
     dependency: "direct main"
     description:
       name: uri_parser
-      sha256: ff4d2c720aca3f4f7d5445e23b11b2d15ef8af5ddce5164643f38ff962dcb270
+      sha256: "380c6c96c52a8de82c84c627d0a79cfb2e1697c3fe3eda78fbb9b87af0dcee08"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.1"
   url_launcher:
     dependency: "direct main"
     description:

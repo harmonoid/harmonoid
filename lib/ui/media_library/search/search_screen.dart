@@ -39,7 +39,10 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
 
   void update(String query) async {
     _currentQuery = query;
-    final result = await context.read<MediaLibrary>().search(query, limit: _kLimit);
+    final result = await context.read<MediaLibrary>().search(
+      query,
+      limit: _kLimit,
+    );
     if (_currentQuery != query) {
       return;
     }
@@ -89,7 +92,7 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
     return Scaffold(
       body: ListView(
         controller: _scrollController,
-        shrinkWrap: true,
+
         padding: EdgeInsets.zero,
         children: [
           if (_albums.isNotEmpty) ...[
@@ -104,7 +107,9 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
                         '/$kMediaLibraryPath/$kSearchItemsPath',
                         extra: SearchItemsPathExtra(
                           query: widget.query,
-                          items: (await context.read<MediaLibrary>().search(widget.query)).whereType<Album>().toList(),
+                          items: (await context.read<MediaLibrary>().search(
+                            widget.query,
+                          )).whereType<Album>().toList(),
                         ),
                       );
                     },
@@ -116,7 +121,6 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
               alignment: Alignment.centerLeft,
               height: albumTileHeight + margin,
               child: ListView.separated(
-                shrinkWrap: true,
                 itemCount: _albums.length.clamp(0, _kLimit),
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.only(
@@ -145,7 +149,9 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
                         '/$kMediaLibraryPath/$kSearchItemsPath',
                         extra: SearchItemsPathExtra(
                           query: widget.query,
-                          items: (await context.read<MediaLibrary>().search(widget.query)).whereType<Artist>().toList(),
+                          items: (await context.read<MediaLibrary>().search(
+                            widget.query,
+                          )).whereType<Artist>().toList(),
                         ),
                       );
                     },
@@ -157,7 +163,6 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
               alignment: Alignment.centerLeft,
               height: kArtistTileHeight + margin,
               child: ListView.separated(
-                shrinkWrap: true,
                 itemCount: _artists.length.clamp(0, _kLimit),
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.only(
@@ -186,7 +191,9 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
                         '/$kMediaLibraryPath/$kSearchItemsPath',
                         extra: SearchItemsPathExtra(
                           query: widget.query,
-                          items: (await context.read<MediaLibrary>().search(widget.query)).whereType<Genre>().toList(),
+                          items: (await context.read<MediaLibrary>().search(
+                            widget.query,
+                          )).whereType<Genre>().toList(),
                         ),
                       );
                     },
@@ -198,7 +205,6 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
               alignment: Alignment.centerLeft,
               height: kGenreTileHeight + margin,
               child: ListView.separated(
-                shrinkWrap: true,
                 itemCount: _genres.length.clamp(0, _kLimit),
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.only(
@@ -227,7 +233,9 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
                         '/$kMediaLibraryPath/$kSearchItemsPath',
                         extra: SearchItemsPathExtra(
                           query: widget.query,
-                          items: (await context.read<MediaLibrary>().search(widget.query)).whereType<Track>().toList(),
+                          items: (await context.read<MediaLibrary>().search(
+                            widget.query,
+                          )).whereType<Track>().toList(),
                         ),
                       );
                     },
