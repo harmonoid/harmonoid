@@ -1,0 +1,44 @@
+diff --git a/lib/src/theme/theme.dart b/lib/src/theme/theme.dart
+index 8f9ac34..2df4390 100644
+--- a/lib/src/theme/theme.dart
++++ b/lib/src/theme/theme.dart
+@@ -293,7 +293,7 @@ ThemeData createM3Theme({
+         size: 24.0,
+       ),
+     ),
+-    bottomAppBarTheme: BottomAppBarTheme(
++    bottomAppBarTheme: BottomAppBarThemeData(
+       elevation: 0.0,
+       shadowColor: Colors.transparent,
+       color: bottomAppBarColor,
+@@ -942,7 +942,7 @@ ThemeData createM2Theme({
+         size: 24.0,
+       ),
+     ),
+-    bottomAppBarTheme: BottomAppBarTheme(
++    bottomAppBarTheme: BottomAppBarThemeData(
+       // Keep the Material Design 2 shadow.
+       shadowColor: Colors.black,
+       color: isDesktopPlatform
+diff --git a/pubspec.yaml b/pubspec.yaml
+index 0001be5..680ccde 100644
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -8,7 +8,7 @@ repository: https://github.com/harmonoid/adaptive_layouts.git
+ 
+ environment:
+   sdk: ">=3.3.0 <4.0.0"
+-  flutter: ">=2.10.0"
++  flutter: ">=3.38.5"
+ 
+ dependencies:
+   flutter:
+@@ -19,7 +19,7 @@ dependencies:
+     git:
+       url: https://github.com/nc-photos/flutter-draggable-scrollbar.git
+       ref: master-nc-photos
+-  material_table_view: ^5.5.1
++  material_table_view: ^5.5.2
+   scroll_animator: ^0.3.0
+   window_plus:
+     git:

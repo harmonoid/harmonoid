@@ -22,7 +22,7 @@ jobs:
           flutter-version: "3.32.8"
       - name: Build
         run: |
-          rm -r "assets/icons"
+          rm -rf "assets/icons"
           mkdir "assets/icons"
           flutter pub get
           flutter build macos --verbose \
@@ -80,8 +80,8 @@ jobs:
           name: macos
           path: build/macos/Build/Products/Release/Harmonoid.app
 
-  build_windows:
-    name: Windows
+  build_windows_x64:
+    name: Windows x64
     runs-on: windows-latest
     steps:
       - name: Checkout Repository
@@ -97,6 +97,15 @@ jobs:
         with:
           channel: "stable"
           flutter-version: "3.32.8"
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+      - name: Build SMTC DLL
+        run: |
+          cd external/smtc-win32
+          nuget restore smtc-win32.sln
+          msbuild smtc-win32.sln /p:Configuration=Release /p:Platform=x64
+          cd ../../
+          copy external/smtc-win32/x64/Release/smtc-win32.dll windows/bin/x64/
       - name: Build
         run: |
           flutter pub get
@@ -120,15 +129,15 @@ jobs:
         shell: cmd
       - name: Bundle Executable
         run: |
-          cp -r build/windows/x64/runner/Release harmonoid-windows-exe
-          tar.exe -a -c -f harmonoid-windows-exe.zip harmonoid-windows-exe
+          cp -r build/windows/x64/runner/Release harmonoid-windows-x64-exe
+          tar.exe -a -c -f harmonoid-windows-x64-exe.zip harmonoid-windows-x64-exe
       - name: Bundle Installer
         run: |
-          "%programfiles(x86)%\Inno Setup 6\iscc.exe" "Harmonoid_InnoSetup.iss"
+          "%programfiles(x86)%\Inno Setup 6\iscc.exe" "Harmonoid_InnoSetup_x64.iss"
         shell: cmd
       - name: Sign Installer
         run: |
-          "%programfiles(x86)%\Windows Kits\10\App Certification Kit\signtool.exe" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /f "${{ steps.create_pfx.outputs.filePath }}" /p ${{ secrets.PASSWORD }} "Output/harmonoid-windows-setup.exe"
+          "%programfiles(x86)%\Windows Kits\10\App Certification Kit\signtool.exe" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /f "${{ steps.create_pfx.outputs.filePath }}" /p ${{ secrets.PASSWORD }} "Output/harmonoid-windows-x64-setup.exe"
         shell: cmd
       - name: Upload Release
         uses: softprops/action-gh-release@v1
@@ -140,8 +149,8 @@ jobs:
           prerelease: false
           tag_name: "vnext"
           files: |
-            Output/harmonoid-windows-setup.exe
-            harmonoid-windows-exe.zip
+            Output/harmonoid-windows-x64-setup.exe
+            harmonoid-windows-x64-exe.zip
           token: ${{ secrets.ACCESS_TOKEN_2 }}
       - name: Upload Release (Snapshot)
         uses: softprops/action-gh-release@v1
@@ -154,17 +163,118 @@ jobs:
           body: ${{ github.sha }}
           tag_name: snapshot
           files: |
-            Output/harmonoid-windows-setup.exe
-            harmonoid-windows-exe.zip
+            Output/harmonoid-windows-x64-setup.exe
+            harmonoid-windows-x64-exe.zip
           token: ${{ secrets.ACCESS_TOKEN_2 }}
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: windows
+          name: windows-x64
           path: build/windows/x64/runner/Release
 
-  build_linux:
-    name: Linux
+  build_windows_arm64:
+    name: Windows ARM64
+    runs-on: windows-11-arm
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          submodules: recursive
+      - name: Enable Long Paths
+        run: |
+          git config --system core.longpaths true
+      # https://github.com/subosito/flutter-action/issues/345#issuecomment-2638225681
+      - name: Clone Flutter
+        run: |
+          git clone --depth 1 https://github.com/flutter/flutter.git $env:RUNNER_TEMP\flutter
+          Add-Content $env:GITHUB_PATH "$env:RUNNER_TEMP\flutter\bin"
+      - name: Install Flutter
+        run: flutter doctor
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+      - name: Apply Patches
+        run: |
+          git config --global core.autocrlf false
+          git apply --whitespace=fix patches/remove_discord_rpc.patch
+          cd external/adaptive_layouts
+          git apply --whitespace=fix --ignore-whitespace ../../patches/flutter_3_38_5_adaptive_layouts.patch
+          cd ../../
+      - name: Build SMTC DLL
+        run: |
+          cd external/smtc-win32
+          nuget restore smtc-win32.sln
+          msbuild smtc-win32.sln /p:Configuration=Release /p:Platform=ARM64
+          cd ../../
+          copy external/smtc-win32/ARM64/Release/smtc-win32.dll windows/bin/arm64/
+      - name: Build
+        run: |
+          flutter pub get
+          flutter build windows --verbose `
+            --dart-define=API_KEY=${{ secrets.API_KEY }} `
+            --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }} `
+            --dart-define=LASTFM_API_KEY=${{ secrets.LASTFM_API_KEY }} `
+            --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }} `
+            --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }} `
+            --dart-define=SUPABASE_PUBLISHABLE_KEY=${{ secrets.SUPABASE_PUBLISHABLE_KEY }} `
+            --dart-define=REVENUECAT_API_KEY=${{ secrets.REVENUECAT_API_KEY }}
+      - name: Create PFX
+        id: create_pfx
+        uses: timheuer/base64-to-file@v1
+        with:
+          fileName: "certificate.pfx"
+          encodedString: ${{ secrets.CERTIFICATE }}
+      - name: Sign Executable
+        run: |
+          "%programfiles(x86)%\Windows Kits\10\App Certification Kit\signtool.exe" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /f "${{ steps.create_pfx.outputs.filePath }}" /p ${{ secrets.PASSWORD }} "build/windows/arm64/runner/Release/harmonoid.exe"
+        shell: cmd
+      - name: Bundle Executable
+        run: |
+          cp -r build/windows/arm64/runner/Release harmonoid-windows-arm64-exe
+          tar.exe -a -c -f harmonoid-windows-arm64-exe.zip harmonoid-windows-arm64-exe
+      - name: Bundle Installer
+        run: |
+          "%programfiles(x86)%\Inno Setup 6\iscc.exe" "Harmonoid_InnoSetup_arm64.iss"
+        shell: cmd
+      - name: Sign Installer
+        run: |
+          "%programfiles(x86)%\Windows Kits\10\App Certification Kit\signtool.exe" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /f "${{ steps.create_pfx.outputs.filePath }}" /p ${{ secrets.PASSWORD }} "Output/harmonoid-windows-arm64-setup.exe"
+        shell: cmd
+      - name: Upload Release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_REPOSITORY: ${{ secrets.REPOSITORY_2 }}
+        with:
+          repository: ${{ secrets.REPOSITORY_2 }}
+          draft: true
+          prerelease: false
+          tag_name: "vnext"
+          files: |
+            Output/harmonoid-windows-arm64-setup.exe
+            harmonoid-windows-arm64-exe.zip
+          token: ${{ secrets.ACCESS_TOKEN_2 }}
+      - name: Upload Release (Snapshot)
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_REPOSITORY: harmonoid/snapshots
+        with:
+          repository: harmonoid/snapshots
+          draft: false
+          prerelease: true
+          body: ${{ github.sha }}
+          tag_name: snapshot
+          files: |
+            Output/harmonoid-windows-arm64-setup.exe
+            harmonoid-windows-arm64-exe.zip
+          token: ${{ secrets.ACCESS_TOKEN_2 }}
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-arm64
+          path: build/windows/arm64/runner/Release
+
+  build_linux_x64:
+    name: Linux x64
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -210,7 +320,7 @@ jobs:
 
               # Build application
               cd /workspace
-              rm -r "assets/icons" || true
+              rm -rf "assets/icons" || true
               mkdir "assets/icons"
               flutter pub get
               flutter build linux --verbose \
@@ -269,8 +379,123 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: linux
+          name: linux-x64
           path: build/linux/x64/release/bundle
+
+  build_linux_arm64:
+    name: Linux ARM64
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          submodules: recursive
+      - name: Apply Patches
+        run: |
+          git config --global core.autocrlf false
+          git apply --whitespace=fix patches/remove_discord_rpc.patch
+          cd external/adaptive_layouts
+          git apply --whitespace=fix --ignore-whitespace ../../patches/flutter_3_38_5_adaptive_layouts.patch
+          cd ../../
+      - name: Build
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            -e API_KEY="${{ secrets.API_KEY }}" \
+            -e API_BASE_URL="${{ secrets.API_BASE_URL }}" \
+            -e LASTFM_API_KEY="${{ secrets.LASTFM_API_KEY }}" \
+            -e LASTFM_SHARED_SECRET="${{ secrets.LASTFM_SHARED_SECRET }}" \
+            -e SUPABASE_URL="${{ secrets.SUPABASE_URL }}" \
+            -e SUPABASE_PUBLISHABLE_KEY="${{ secrets.SUPABASE_PUBLISHABLE_KEY }}" \
+            -e REVENUECAT_API_KEY="${{ secrets.REVENUECAT_API_KEY }}" \
+            ubuntu:20.04 \
+            bash -c '
+              set -e
+
+              # Update and install dependencies
+              apt-get update
+              apt-get install -y software-properties-common
+              add-apt-repository -y ppa:git-core/ppa
+              apt-get update
+              apt-get install -y \
+                git curl wget unzip xz-utils zip libglu1-mesa file \
+                clang cmake ninja-build pkg-config libgtk-3-dev \
+                mpv libmpv-dev dpkg-dev rpm tree
+
+              curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+              # Clone Flutter (master channel for ARM64 support)
+              cd /opt
+              git clone --depth 1 https://github.com/flutter/flutter.git
+              git config --global --add safe.directory /opt/flutter
+              export PATH="/opt/flutter/bin:$PATH"
+              flutter doctor
+
+              # Build application
+              cd /workspace
+              rm -rf "assets/icons" || true
+              mkdir "assets/icons"
+              flutter pub get
+              flutter build linux --verbose \
+                --dart-define=API_KEY=$API_KEY \
+                --dart-define=API_BASE_URL=$API_BASE_URL \
+                --dart-define=LASTFM_API_KEY=$LASTFM_API_KEY \
+                --dart-define=LASTFM_SHARED_SECRET=$LASTFM_SHARED_SECRET \
+                --dart-define=SUPABASE_URL=$SUPABASE_URL \
+                --dart-define=SUPABASE_PUBLISHABLE_KEY=$SUPABASE_PUBLISHABLE_KEY \
+                --dart-define=REVENUECAT_API_KEY=$REVENUECAT_API_KEY
+
+              # Bundle RPM
+              cp -fr build/linux/arm64/release/bundle linux/debian/usr/share/harmonoid
+              mkdir -p linux/debian/usr/bin
+              ln -sr linux/debian/usr/share/harmonoid/harmonoid linux/debian/usr/bin/harmonoid
+              sed -i "s:cp -rf :cp -rf $(pwd)/:" linux/rpm/harmonoid.spec
+              cd linux/debian
+              sed -i "s:FILES_HERE:$(find usr \( -type l -o -type f \) -follow -print | awk '"'"'{printf "/%s\\n", $0}'"'"'):" ../rpm/harmonoid.spec
+              cd ../../
+              rpmbuild -bb linux/rpm/harmonoid.spec -D "_topdir $(pwd)/rpmbuild"
+              cp rpmbuild/RPMS/aarch64/*.rpm harmonoid-linux-aarch64.rpm
+
+              # Bundle DEB
+              dpkg-deb --build --root-owner-group linux/debian
+              cp linux/*.deb harmonoid-linux-aarch64.deb
+
+              # Build Tarball
+              mkdir -p AppDir/
+              cp -r linux/debian/usr AppDir/
+              ln -sr AppDir/usr/bin/harmonoid AppDir/harmonoid
+              tar czf harmonoid-linux-aarch64.tar.gz -C AppDir/ .
+            '
+      - name: Upload Release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_REPOSITORY: ${{ secrets.REPOSITORY_2 }}
+        with:
+          repository: ${{ secrets.REPOSITORY_2 }}
+          draft: true
+          prerelease: false
+          tag_name: "vnext"
+          files: harmonoid-linux-aarch64*
+          token: ${{ secrets.ACCESS_TOKEN_2 }}
+      - name: Upload Release (Snapshot)
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_REPOSITORY: harmonoid/snapshots
+        with:
+          repository: harmonoid/snapshots
+          draft: false
+          prerelease: true
+          body: ${{ github.sha }}
+          tag_name: snapshot
+          files: harmonoid-linux-aarch64*
+          token: ${{ secrets.ACCESS_TOKEN_2 }}
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-arm64
+          path: build/linux/arm64/release/bundle
 
   build_android:
     name: Android
@@ -307,9 +532,9 @@ jobs:
           encodedString: ${{ secrets.KEY_PROPERTIES }}
       - name: Build
         run: |
-          rm -r "assets/icons"
+          rm -rf "assets/icons"
           mkdir "assets/icons"
-          rm -r "assets/visuals"
+          rm -rf "assets/visuals"
           mkdir "assets/visuals"
           cp "${{ steps.create_key_store.outputs.filePath }}" android/app/keystore.jks
           cp "${{ steps.create_key_properties.outputs.filePath }}" android/key.properties

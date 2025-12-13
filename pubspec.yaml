@@ -41,11 +41,26 @@ dependencies:
       ref: e023ce817dc087247b59e10660b2eaf3e00ffc38
   measure_size: ^4.0.0
   media_kit: ^1.2.6
-  media_kit_libs_android_audio: ^1.3.8
-  media_kit_libs_linux: ^1.2.1
+  media_kit_libs_android_audio:
+    git:
+      url: https://github.com/media-kit/media-kit.git
+      ref: 46c08485
+      path: libs/android/media_kit_libs_android_audio
+  media_kit_libs_linux:
+    git:
+      url: https://github.com/media-kit/media-kit.git
+      ref: 46c08485
+      path: libs/linux/media_kit_libs_linux
   media_kit_libs_macos_audio:
-    path: ./libs/macos
-  media_kit_libs_windows_audio: ^1.0.9
+    git:
+      url: https://github.com/media-kit/media-kit.git
+      ref: 46c08485
+      path: libs/macos/media_kit_libs_macos_audio
+  media_kit_libs_windows_audio:
+    git:
+      url: https://github.com/media-kit/media-kit.git
+      ref: 46c08485
+      path: libs/windows/media_kit_libs_windows_audio
   media_library:
     path: external/media_library
   mesh_gradient: ^1.3.7

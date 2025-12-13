@@ -20,7 +20,14 @@ target_link_libraries(
 target_include_directories(${BINARY_NAME} PRIVATE "${CMAKE_SOURCE_DIR}")
 add_dependencies(${BINARY_NAME} flutter_assemble)
 
-add_custom_command(
-  TARGET ${BINARY_NAME} PRE_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/../bin/" "$<TARGET_FILE_DIR:${BINARY_NAME}>"
-)
+if(${FLUTTER_TARGET_PLATFORM} STREQUAL "windows-x64")
+  add_custom_command(
+    TARGET ${BINARY_NAME} PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/../bin/x64" "$<TARGET_FILE_DIR:${BINARY_NAME}>"
+  )
+else()
+  add_custom_command(
+    TARGET ${BINARY_NAME} PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/../bin/arm64" "$<TARGET_FILE_DIR:${BINARY_NAME}>"
+  )
+endif()
