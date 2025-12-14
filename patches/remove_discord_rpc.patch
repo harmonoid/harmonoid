@@ -1,5 +1,11 @@
+diff --git a/external/tag_writer b/external/tag_writer
+--- a/external/tag_writer
++++ b/external/tag_writer
+@@ -1 +1 @@
+-Subproject commit edd36709f0607356c1ef3f9c4406aa3cbfb1a4f6
++Subproject commit edd36709f0607356c1ef3f9c4406aa3cbfb1a4f6-dirty
 diff --git a/lib/core/media_player/media_player.dart b/lib/core/media_player/media_player.dart
-index 66716ae6..5135e760 100644
+index 1c3fd1e2..59f7ebf2 100644
 --- a/lib/core/media_player/media_player.dart
 +++ b/lib/core/media_player/media_player.dart
 @@ -10,7 +10,6 @@ import 'package:harmonoid/core/configuration/configuration.dart';
@@ -10,7 +16,7 @@ index 66716ae6..5135e760 100644
  import 'package:harmonoid/core/media_player/mixin/history_playlist_mixin.dart';
  import 'package:harmonoid/core/media_player/mixin/lastfm_mixin.dart';
  import 'package:harmonoid/core/media_player/mixin/mpris_mixin.dart';
-@@ -39,9 +38,7 @@ import 'package:harmonoid/utils/constants.dart';
+@@ -40,9 +39,7 @@ import 'package:harmonoid/utils/constants.dart';
  /// Implementation to handle the media playback & other related functionalities.
  ///
  /// {@endtemplate}
@@ -21,7 +27,7 @@ index 66716ae6..5135e760 100644
    static const Duration kDefaultCrossfadeDuration = Duration(seconds: 5);
    static const Duration kMinCrossfadeDuration = Duration(seconds: 2);
    static const Duration kMaxCrossfadeDuration = Duration(seconds: 30);
-@@ -65,7 +62,6 @@ class MediaPlayer extends ChangeNotifier
+@@ -66,7 +63,6 @@ class MediaPlayer extends ChangeNotifier
      await Future.wait(
        [
          ensureInitializedAudioService(),
@@ -29,7 +35,7 @@ index 66716ae6..5135e760 100644
          ensureInitializedHistoryPlaylist(),
          ensureInitializedLastFm(),
          ensureInitializedMpris(),
-@@ -363,7 +359,6 @@ class MediaPlayer extends ChangeNotifier
+@@ -438,7 +434,6 @@ class MediaPlayer extends ChangeNotifier
      _player.dispose();
      _tagReader.dispose();
      disposeAudioService();
@@ -192,10 +198,10 @@ index ea6d830d..00000000
 -  String? _largeImageDiscordRpc;
 -}
 diff --git a/lib/utils/actions.dart b/lib/utils/actions.dart
-index 6d686dff..24bc24fa 100644
+index 694aaa20..cb4a99f0 100644
 --- a/lib/utils/actions.dart
 +++ b/lib/utils/actions.dart
-@@ -82,7 +82,6 @@ void mediaPlayerUpdateCurrentOnUpdateCurrent(String uri) {
+@@ -87,7 +87,6 @@ void mediaPlayerUpdateCurrentOnUpdateCurrent(String uri) {
      AsyncFileImage.reset(uri);
      MediaPlayer.instance
        ..resetFlagsAudioService()
@@ -216,7 +222,7 @@ index e8a76ccc..0b42061d 100644
            ..resetFlagsSystemMediaTransportControls();
          NowPlayingColorPaletteNotifier.instance.resetCurrent();
 diff --git a/pubspec.yaml b/pubspec.yaml
-index eeb73881..8df9549d 100644
+index fb5392ab..ea26dc18 100644
 --- a/pubspec.yaml
 +++ b/pubspec.yaml
 @@ -23,7 +23,6 @@ dependencies:
@@ -225,5 +231,5 @@ index eeb73881..8df9549d 100644
    fluentui_system_icons: ^1.1.136
 -  flutter_discord_rpc: 1.0.0
    flutter_local_notifications: ^19.0.0
+   flutter_markdown_plus: ^1.0.5
    flutter_svg: ^2.2.1
-   freezed_annotation: ^3.1.0
