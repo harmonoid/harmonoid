@@ -22,7 +22,6 @@ import 'package:harmonoid/extensions/build_context.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
-import 'package:harmonoid/state/update_notifier.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
@@ -1465,31 +1464,6 @@ class DefaultTextFormField extends StatelessWidget {
         stylusHandwritingEnabled: stylusHandwritingEnabled,
         canRequestFocus: canRequestFocus,
       ),
-    );
-  }
-}
-
-// --------------------------------------------------
-
-class UpdateButton extends StatelessWidget {
-  const UpdateButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<UpdateNotifier>(
-      builder: (context, updateNotifier, _) {
-        if (!updateNotifier.updateAvailable) {
-          return const SizedBox.shrink();
-        }
-        return IconButton(
-          tooltip: Localization.instance.UPDATE_AVAILABLE,
-          icon: const Icon(Icons.download),
-          iconSize: 20.0,
-          splashRadius: 18.0,
-          color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
-          onPressed: () => UpdateNotifier.instance.check(true),
-        );
-      },
     );
   }
 }

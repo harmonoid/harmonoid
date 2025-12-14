@@ -19,6 +19,7 @@ import 'package:harmonoid/ui/media_library/media_library_no_items_banner.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
 import 'package:harmonoid/ui/media_library/refresh_indicator/desktop/desktop_refresh_indicator.dart';
 import 'package:harmonoid/ui/router.dart';
+import 'package:harmonoid/ui/update/update_button.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -271,7 +272,6 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                     ),
                                   ),
                                   const SizedBox(width: 8.0),
-                                  const UpdateButton(),
                                   const PlayFileOrURLButton(),
                                   IconButton(
                                     onPressed: () {
@@ -283,6 +283,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                     splashRadius: 18.0,
                                     color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
                                   ),
+                                  const UpdateButton(),
                                 ],
                           ),
                         ),

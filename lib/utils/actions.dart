@@ -132,17 +132,6 @@ void mediaPlayerSetCrossfadeDurationPlayerReset() {
   }
 }
 
-Future<bool> updateNotifierCheckOnShowUpdate(String version) async {
-  debugPrint('actions.dart: updateNotifierCheckOnShowUpdate: $version');
-  return showConfirmation(
-    router.routerDelegate.navigatorKey.currentContext!,
-    Localization.instance.UPDATE_AVAILABLE,
-    version,
-    positiveAction: Localization.instance.OK,
-    negativeAction: Localization.instance.CANCEL,
-  );
-}
-
 void subscriptionNotifierOnSubscriptionUpdate(SubscriptionState state) async {
   debugPrint('actions.dart: subscriptionNotifierOnSubscriptionUpdate: $state');
   await Future.delayed(const Duration(seconds: 5));

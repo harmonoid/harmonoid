@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/media_library/search/search_screen.dart';
+import 'package:harmonoid/ui/update/update_button.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 

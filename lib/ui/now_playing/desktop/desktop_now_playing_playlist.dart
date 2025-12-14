@@ -17,8 +17,6 @@ class DesktopNowPlayingPlaylist extends StatefulWidget {
     await showDialog(
       context: context,
       useRootNavigator: true,
-      // NOTE: The default barrier color. I have no fucking idea why this isn't available in Flutter's [ThemeData].
-      barrierColor: Colors.black54,
       builder: (ctx) => const SlideOnEnter(
         child: Center(
           child: DesktopNowPlayingPlaylist(),
@@ -59,7 +57,7 @@ class _DesktopNowPlayingPlaylistState extends State<DesktopNowPlayingPlaylist> w
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
+                  padding: const EdgeInsets.all(24.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -75,7 +73,6 @@ class _DesktopNowPlayingPlaylistState extends State<DesktopNowPlayingPlaylist> w
                     ],
                   ),
                 ),
-                const SizedBox(height: 24.0),
                 const Divider(height: 1.0),
                 Expanded(
                   child: Material(

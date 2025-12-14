@@ -25,6 +25,7 @@ dependencies:
   fluentui_system_icons: ^1.1.136
   flutter_discord_rpc: 1.0.0
   flutter_local_notifications: ^19.0.0
+  flutter_markdown_plus: ^1.0.5
   flutter_svg: ^2.2.1
   freezed_annotation: ^3.1.0
   go_router: ^16.3.0

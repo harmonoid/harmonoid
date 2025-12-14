@@ -1,10 +1,12 @@
+import 'dart:async';
+import 'dart:io';
 import 'dart:math';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import 'package:harmonoid/api/latest_version_get.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
-import 'package:harmonoid/utils/actions.dart';
+import 'package:harmonoid/ui/update/api/latest_release_get.dart';
+import 'package:harmonoid/ui/update/models/github_release.dart';
 import 'package:harmonoid/utils/constants.dart';
 
 /// {@template update_notifier}
@@ -15,37 +17,46 @@ import 'package:harmonoid/utils/constants.dart';
 ///
 /// {@endtemplate}
 class UpdateNotifier extends ChangeNotifier {
-  static const String kDownloadUrl = 'https://harmonoid.com/downloads';
+  static const String kDesktopDownloadUrl = 'https://harmonoid.com/downloads';
+  static const String kAndroidDownloadUrl = 'https://play.google.com/store/apps/details?id=com.alexmercerind.harmonoid';
 
-  /// Singleton instance.
-  static final UpdateNotifier instance = UpdateNotifier._();
+  UpdateNotifier({required this.showUpdate}) {
+    unawaited(check(false));
+  }
 
-  /// {@macro update_manager}
-  UpdateNotifier._();
+  final Future<bool> Function() showUpdate;
 
+  GithubRelease? latestRelease;
   bool updateAvailable = false;
-  String updateVersion = kVersion;
 
-  Future<void> check([bool force = false, Future<bool> Function(String) onShowUpdate = updateNotifierCheckOnShowUpdate]) async {
-    final latestVersionGet = LatestVersionGet();
-    final latestVersion = await latestVersionGet();
+  Future<void> check([bool force = true]) async {
+    final latestReleaseGet = LatestReleaseGet();
+    final release = await latestReleaseGet();
+
+    if (release == null) return;
+
+    final latestVersion = release.tagName;
     const currentVersion = kVersion;
 
+    latestRelease = release;
     updateAvailable = _compareVersions(latestVersion, currentVersion);
-    updateVersion = latestVersion ?? kVersion;
     notifyListeners();
 
-    if (force || (Configuration.instance.updateCheckVersion != updateVersion && updateAvailable)) {
-      if (await onShowUpdate(updateVersion)) {
+    if (force || (Configuration.instance.updateCheckVersion != latestVersion && updateAvailable)) {
+      final result = await showUpdate();
+      if (result) {
         _download();
       } else {
-        Configuration.instance.set(updateCheckVersion: updateVersion);
+        await Configuration.instance.set(updateCheckVersion: latestVersion);
       }
     }
   }
 
   Future<void> _download() {
-    return launchUrlString(kDownloadUrl, mode: LaunchMode.externalApplication);
+    return launchUrlString(
+      Platform.isAndroid ? kAndroidDownloadUrl : kDesktopDownloadUrl,
+      mode: LaunchMode.externalApplication,
+    );
   }
 
   bool _compareVersions(String? latestVersion, String currentVersion) {

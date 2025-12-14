@@ -10,20 +10,21 @@ import 'package:media_library/media_library.dart' hide FileSystemMediaLibrary;
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
-import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/filesystem_media_library.dart';
+import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
-import 'package:harmonoid/state/update_notifier.dart';
 import 'package:harmonoid/ui/media_library/artists/state/artist_image_notifier.dart';
 import 'package:harmonoid/ui/media_library/media_library_flags.dart';
 import 'package:harmonoid/ui/media_library/media_library_inaccessible_directories_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
 import 'package:harmonoid/ui/router.dart';
+import 'package:harmonoid/ui/update/state/update_notifier.dart';
+import 'package:harmonoid/ui/update/update.dart';
 import 'package:harmonoid/ui/user/login/login.dart';
 import 'package:harmonoid/utils/actions.dart';
 import 'package:harmonoid/utils/android_utils.dart';
@@ -56,8 +57,6 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
       if (!inaccessibleDirectories && Configuration.instance.mediaLibraryRefreshUponStart) {
         FileSystemMediaLibrary.instance.refresh();
       }
-
-      unawaited(UpdateNotifier.instance.check());
     });
   }
 
@@ -102,10 +101,10 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
           ChangeNotifierProvider(create: (_) => MediaPlayer.instance),
           ChangeNotifierProvider(create: (_) => Localization.instance),
           ChangeNotifierProvider(create: (context) => ThemeNotifier.instance..update(context: context)),
-          ChangeNotifierProvider(create: (_) => UpdateNotifier.instance),
           ChangeNotifierProvider(create: (_) => LyricsNotifier.instance),
           ChangeNotifierProvider(create: (_) => NowPlayingColorPaletteNotifier.instance),
           Provider(create: (_) => NowPlayingMobileNotifier.instance),
+          ChangeNotifierProvider(create: (_) => UpdateNotifier(showUpdate: () => showUpdate(context))),
           ChangeNotifierProvider(
             lazy: false,
             create: (_) => UserNotifierFactory.create(),
@@ -115,8 +114,8 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
             create: (ctx) => SubscriptionNotifierFactory.create(
               userNotifier: ctx.read(),
               functions: SubscriptionFunctions(
-                updateAvailable: () => UpdateNotifier.instance.updateAvailable,
-                showUpdate: () => UpdateNotifier.instance.check(true),
+                updateAvailable: () => context.read<UpdateNotifier>().updateAvailable,
+                showUpdate: () => context.read<UpdateNotifier>().check(),
                 showLogin: () => showLogin(context),
                 onSubscriptionUpdate: subscriptionNotifierOnSubscriptionUpdate,
                 onSubscriptionError: (state) {
