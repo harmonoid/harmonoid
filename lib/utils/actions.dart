@@ -47,6 +47,11 @@ void intentPlayOnMediaPlayerOpen() async {
   }
 }
 
+void mediaPlayerSetMixOnMix(bool mix) async {
+  debugPrint('actions.dart: mediaPlayerSetMixOnMix: $mix');
+  Configuration.instance.set(nowPlayingStartMixAfterEnding: mix);
+}
+
 void mediaPlayerOpenOnOpen() async {
   debugPrint('actions.dart: mediaPlayerOpenOnOpen');
   await Future.delayed(const Duration(seconds: 1));

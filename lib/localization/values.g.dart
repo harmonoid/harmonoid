@@ -126,6 +126,7 @@ class Values {
   late String MEDIA_LIBRARY_NO_ITEMS_TITLE;
   late String MEDIA_LIBRARY_REFRESHING_DIALOG_SUBTITLE;
   late String MENU;
+  late String MIX;
   late String MOBILE_ALBUM_GRID_SIZE;
   late String MOBILE_ARTIST_GRID_SIZE;
   late String MOBILE_GENRE_GRID_SIZE;
@@ -262,6 +263,7 @@ class Values {
   late String SORT_BY;
   late String SPEED;
   late String START;
+  late String START_MIX_AFTER_ENDING;
   late String STEREO;
   late String SUBSCRIPTION_EXPIRED_SUBTITLE;
   late String SUBSCRIPTION_EXPIRED_TITLE;

@@ -492,36 +492,79 @@ class M2MobileNowPlayingBarState extends State<M2MobileNowPlayingBar> {
           ),
           const Divider(height: 1.0, thickness: 1.0),
           Expanded(
-            child: ReorderableListView.builder(
-              onReorderStart: (_) => _panelController.scrollingEnabledAllowed = false,
-              onReorderEnd: (_) => _panelController.scrollingEnabledAllowed = true,
-              onReorder: (from, to) {
-                from = (from / 2).round() + diff;
-                to = (to / 2).round() + diff;
-                if (from != to) {
-                  mediaPlayer.move(from, to);
-                }
-              },
-              physics: physics,
-              scrollController: controller,
-              padding: EdgeInsets.zero,
-              itemBuilder: (context, i) {
-                if (i % 2 != 0) {
-                  return Divider(
-                    key: ValueKey((i ~/ 2, false)),
-                    height: 1.0,
-                    thickness: 1.0,
-                  );
-                }
-                return NowPlayingPlaylistItem(
-                  key: ValueKey(((i ~/ 2) + diff, mediaPlayer.state.playables[(i ~/ 2) + diff])),
-                  index: (i ~/ 2) + diff,
-                  width: double.infinity,
-                  height: kMobileLinearTileHeight,
+            child: Builder(
+              builder: (context) {
+                final mixOffset = mediaPlayer.state.mixOffset;
+                final adjustedMixOffset = mixOffset != null && mixOffset >= diff ? mixOffset - diff : null;
+
+                return ReorderableListView.builder(
+                  onReorderStart: (_) => _panelController.scrollingEnabledAllowed = false,
+                  onReorderEnd: (_) => _panelController.scrollingEnabledAllowed = true,
+                  onReorder: (from, to) {
+                    int fromPlayable = from + diff;
+                    int toPlayable = to + diff;
+
+                    if (fromPlayable != toPlayable) {
+                      if (mixOffset != null) {
+                        if (fromPlayable == mixOffset) return;
+                        if (fromPlayable > mixOffset) fromPlayable--;
+                        if (toPlayable > mixOffset) toPlayable--;
+                      }
+                      mediaPlayer.move(fromPlayable, toPlayable);
+                    }
+                  },
+                  physics: physics,
+                  scrollController: controller,
+                  padding: EdgeInsets.zero,
+                  itemExtent: kMobileLinearTileHeight + 1.0,
+                  itemCount: (mediaPlayer.state.playables.length - diff) + 1,
+                  itemBuilder: (context, listIndex) {
+                    if ((adjustedMixOffset == null && listIndex == mediaPlayer.state.playables.length - diff) || (adjustedMixOffset != null && listIndex == adjustedMixOffset)) {
+                      return Column(
+                        key: const ValueKey('Mix'),
+                        children: [
+                          SubHeader(
+                            Localization.instance.MIX,
+                            height: kMobileLinearTileHeight,
+                            leading: const Icon(Icons.shuffle),
+                            trailing: Expanded(
+                              child: Align(
+                                alignment: Alignment.centerRight,
+                                child: Switch(
+                                  value: mediaPlayer.state.mixOffset != null,
+                                  onChanged: (value) => mediaPlayer.mixOrUnmix(),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const Divider(height: 1.0, thickness: 1.0),
+                        ],
+                      );
+                    }
+                    if (adjustedMixOffset != null) {
+                      if (listIndex > adjustedMixOffset) {
+                        final playableIndex = listIndex + diff - 1;
+                        return NowPlayingPlaylistItem(
+                          key: ValueKey((playableIndex, mediaPlayer.state.playables[playableIndex])),
+                          listIndex: listIndex + diff,
+                          playableIndex: playableIndex,
+                          width: double.infinity,
+                          height: kMobileLinearTileHeight,
+                        );
+                      }
+                    }
+
+                    final playableIndex = listIndex + diff;
+                    return NowPlayingPlaylistItem(
+                      key: ValueKey((playableIndex, mediaPlayer.state.playables[playableIndex])),
+                      listIndex: playableIndex,
+                      playableIndex: playableIndex,
+                      width: double.infinity,
+                      height: kMobileLinearTileHeight,
+                    );
+                  },
                 );
               },
-              itemExtentBuilder: (i, _) => i % 2 != 0 ? 1.0 : kMobileLinearTileHeight,
-              itemCount: (2 * (mediaPlayer.state.playables.length - diff) - 1).clamp(0, 1 << 32),
             ),
           ),
         ],

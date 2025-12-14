@@ -891,13 +891,17 @@ class ScaleOnHoverState extends State<ScaleOnHover> {
 
 class SubHeader extends StatelessWidget {
   final String text;
+  final double? height;
   final EdgeInsets? padding;
+  final Widget? leading;
   final Widget? trailing;
 
   const SubHeader(
     this.text, {
     super.key,
+    this.height,
     this.padding,
+    this.leading,
     this.trailing,
   });
 
@@ -923,13 +927,20 @@ class SubHeader extends StatelessWidget {
     }
     return Container(
       alignment: Alignment.centerLeft,
-      height: 56.0,
+      height: height ?? 56.0,
       padding: padding ?? EdgeInsets.symmetric(horizontal: horizontal),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          if (leading != null) ...[
+            IconTheme(
+              data: IconTheme.of(context).copyWith(color: style?.color),
+              child: leading!,
+            ),
+            const SizedBox(width: 8.0),
+          ],
           Text(text, style: style),
           if (trailing != null) ...[
             const SizedBox(width: 8.0),

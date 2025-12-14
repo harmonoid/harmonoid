@@ -2,8 +2,10 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/extensions/string.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
+import 'package:system_fonts/system_fonts.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/text_align.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
@@ -11,7 +13,6 @@ import 'package:harmonoid/state/now_playing_visuals_notifier.dart';
 import 'package:harmonoid/ui/settings/settings_section.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:system_fonts/system_fonts.dart';
 
 class NowPlayingScreenSection extends StatefulWidget {
   const NowPlayingScreenSection({super.key});
@@ -67,7 +68,7 @@ class _NowPlayingScreenSectionState extends State<NowPlayingScreenSection> {
           ),
         ),
         const SizedBox(height: 16.0),
-        if (/* ONLY DESKTOP */ isDesktop)
+        if ( /* ONLY DESKTOP */ isDesktop)
           Padding(
             padding: EdgeInsets.only(
               left: 16.0 - textButtonPadding,
@@ -105,7 +106,7 @@ class _NowPlayingScreenSectionState extends State<NowPlayingScreenSection> {
             setState(() {});
           },
         ),
-        if (/* ONLY DESKTOP */ isDesktop)
+        if ( /* ONLY DESKTOP */ isDesktop)
           ListItem(
             leading: const CircleAvatar(child: Icon(Icons.font_download)),
             title: Localization.instance.LYRICS_FONT_FAMILY,
@@ -155,7 +156,21 @@ class _NowPlayingScreenSectionState extends State<NowPlayingScreenSection> {
             setState(() {});
           },
         ),
-        if (/* DESKTOP & MATERIAL 2 */ isDesktop)
+        ListItem(
+          trailing: Switch(
+            value: Configuration.instance.nowPlayingStartMixAfterEnding,
+            onChanged: (value) async {
+              await MediaPlayer.instance.setMix(value);
+              setState(() {});
+            },
+          ),
+          title: Localization.instance.START_MIX_AFTER_ENDING,
+          onTap: () async {
+            await MediaPlayer.instance.mixOrUnmix();
+            setState(() {});
+          },
+        ),
+        if ( /* DESKTOP & MATERIAL 2 */ isDesktop)
           ListItem(
             trailing: Switch(
               value: Configuration.instance.desktopNowPlayingBarColorPalette,
@@ -176,7 +191,7 @@ class _NowPlayingScreenSectionState extends State<NowPlayingScreenSection> {
                     setState(() {});
                   },
           ),
-        if (/* MOBILE & MATERIAL 2 */ isMobile)
+        if ( /* MOBILE & MATERIAL 2 */ isMobile)
           ListItem(
             trailing: Switch(
               value: Configuration.instance.mobileNowPlayingRipple,

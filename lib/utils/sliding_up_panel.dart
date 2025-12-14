@@ -175,7 +175,7 @@ class SlidingUpPanel extends StatefulWidget {
       BoxShadow(
         blurRadius: 8.0,
         color: Color.fromRGBO(0, 0, 0, 0.25),
-      )
+      ),
     ],
     this.color = Colors.white,
     this.padding,
@@ -197,9 +197,9 @@ class SlidingUpPanel extends StatefulWidget {
     this.defaultPanelState = PanelState.CLOSED,
     this.header,
     this.footer,
-  })  : assert(panel != null || panelBuilder != null),
-        assert(0 <= backdropOpacity && backdropOpacity <= 1.0),
-        assert(snapPoint == null || 0 < snapPoint && snapPoint < 1.0);
+  }) : assert(panel != null || panelBuilder != null),
+       assert(0 <= backdropOpacity && backdropOpacity <= 1.0),
+       assert(snapPoint == null || 0 < snapPoint && snapPoint < 1.0);
 
   @override
   SlidingUpPanelState createState() => SlidingUpPanelState();
@@ -228,31 +228,36 @@ class SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvide
   void initState() {
     super.initState();
 
-    _ac = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-      value: widget.defaultPanelState == PanelState.CLOSED ? 0.0 : 1.0,
-    )..addListener(() {
-        if (widget.onPanelSlide != null) widget.onPanelSlide!(_ac.value);
+    _ac =
+        AnimationController(
+          vsync: this,
+          duration: const Duration(milliseconds: 300),
+          value: widget.defaultPanelState == PanelState.CLOSED ? 0.0 : 1.0,
+        )..addListener(() {
+          if (widget.onPanelSlide != null) widget.onPanelSlide!(_ac.value);
 
-        if (widget.onPanelOpened != null && _ac.value == 1.0) widget.onPanelOpened!();
+          if (widget.onPanelOpened != null && _ac.value == 1.0) widget.onPanelOpened!();
 
-        if (widget.onPanelClosed != null && _ac.value == 0.0) widget.onPanelClosed!();
+          if (widget.onPanelClosed != null && _ac.value == 0.0) widget.onPanelClosed!();
 
-        // --------------------------------------------------
-        if (_ac.value == 0.0) {
-          _restored = false;
-        } else if (_ac.value != 1.0) {
-          _scrollingEnabled = false;
-        } else if (_ac.value == 1.0 && !_restored) {
-          _restored = true;
-          _sc.jumpTo((MediaPlayer.instance.state.index + 1) * (kMobileLinearTileHeight + 1.0));
-          _scrollingEnabled = true;
-        } else {
-          _scrollingEnabled = true;
-        }
-        // --------------------------------------------------
-      });
+          // --------------------------------------------------
+          if (_ac.value == 0.0) {
+            _restored = false;
+          } else if (_ac.value != 1.0) {
+            _scrollingEnabled = false;
+          } else if (_ac.value == 1.0 && !_restored) {
+            _restored = true;
+            int index = MediaPlayer.instance.state.index;
+            if (MediaPlayer.instance.state.mixOffset != null && index >= MediaPlayer.instance.state.mixOffset!) {
+              index++;
+            }
+            _sc.jumpTo((index + 1) * (kMobileLinearTileHeight + 1.0));
+            _scrollingEnabled = true;
+          } else {
+            _scrollingEnabled = true;
+          }
+          // --------------------------------------------------
+        });
 
     _sc = ScrollController();
     _sc.addListener(() {
@@ -294,14 +299,15 @@ class SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvide
                     : null,
                 onTap: widget.backdropTapClosesPanel ? () => _close() : null,
                 child: AnimatedBuilder(
-                    animation: _ac,
-                    builder: (context, _) {
-                      return Container(
-                        height: MediaQuery.of(context).size.height,
-                        width: MediaQuery.of(context).size.width,
-                        color: _ac.value == 0.0 ? null : widget.backdropColor.withValues(alpha: widget.backdropOpacity * _ac.value),
-                      );
-                    }),
+                  animation: _ac,
+                  builder: (context, _) {
+                    return Container(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      color: _ac.value == 0.0 ? null : widget.backdropColor.withValues(alpha: widget.backdropOpacity * _ac.value),
+                    );
+                  },
+                ),
               ),
         Positioned(
           top: MediaQuery.paddingOf(context).top + 16.0,
@@ -346,13 +352,14 @@ class SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvide
                   child: Stack(
                     children: <Widget>[
                       Positioned(
-                          top: widget.slideDirection == SlideDirection.UP ? 0.0 : null,
-                          bottom: widget.slideDirection == SlideDirection.DOWN ? 0.0 : null,
-                          width: MediaQuery.of(context).size.width - (widget.margin != null ? widget.margin!.horizontal : 0) - (widget.padding != null ? widget.padding!.horizontal : 0),
-                          child: SizedBox(
-                            height: widget.maxHeight,
-                            child: widget.panel ?? widget.panelBuilder!(_sc),
-                          )),
+                        top: widget.slideDirection == SlideDirection.UP ? 0.0 : null,
+                        bottom: widget.slideDirection == SlideDirection.DOWN ? 0.0 : null,
+                        width: MediaQuery.of(context).size.width - (widget.margin != null ? widget.margin!.horizontal : 0) - (widget.padding != null ? widget.padding!.horizontal : 0),
+                        child: SizedBox(
+                          height: widget.maxHeight,
+                          child: widget.panel ?? widget.panelBuilder!(_sc),
+                        ),
+                      ),
                       widget.header != null
                           ? Positioned(
                               top: widget.slideDirection == SlideDirection.UP ? 0.0 : null,
@@ -392,7 +399,9 @@ class SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvide
           bottom: 0.0,
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onPanDown: (_) {/* NO/OP */},
+            onPanDown: (_) {
+              /* NO/OP */
+            },
             child: Container(
               color: Colors.transparent,
               width: MediaQuery.sizeOf(context).width,

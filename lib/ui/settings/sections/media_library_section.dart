@@ -498,7 +498,7 @@ class _MobileMediaLibrarySectionState extends State<MobileMediaLibrarySection> {
       );
     }
     return Opacity(
-      opacity: _storageDirectories == null ? 0.0 : 1.0,
+      opacity: _storageDirectories == null && Platform.isAndroid ? 0.0 : 1.0,
       child: Padding(
         padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
         child: Column(

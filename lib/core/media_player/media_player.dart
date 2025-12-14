@@ -29,6 +29,7 @@ import 'package:harmonoid/models/media_player_state.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/models/playback_state.dart';
 import 'package:harmonoid/models/replaygain.dart';
+import 'package:harmonoid/ui/harmonoid.dart';
 import 'package:harmonoid/utils/actions.dart';
 import 'package:harmonoid/utils/constants.dart';
 
@@ -134,12 +135,35 @@ class MediaPlayer extends ChangeNotifier
   }
 
   @override
+  Future<void> muteOrUnmute() => setMute(state.volume != 0.0);
+
+  @override
   Future<void> setShuffle(bool shuffle) => _player.setShuffle(shuffle).then((_) => state = state.copyWith(shuffle: shuffle));
 
   @override
-  Future<void> muteOrUnmute() => setMute(state.volume != 0.0);
-
   Future<void> shuffleOrUnshuffle() => _player.setShuffle(!state.shuffle).then((_) => state = state.copyWith(shuffle: !state.shuffle));
+
+  @override
+  Future<void> setMix(bool mix, {void Function(bool)? onMix = mediaPlayerSetMixOnMix}) async {
+    if (_mixLock.locked) return;
+    return _mixLock.synchronized(() async {
+      final mixOffset = state.mixOffset;
+      if (mix && mixOffset == null) {
+        await open(state.playables, index: state.index, mix: true);
+      } else if (!mix && mixOffset != null) {
+        if (state.index < mixOffset) {
+          await open(state.playables.sublist(0, mixOffset), index: state.index, mix: false);
+        } else {
+          state = state.copyWith(mixOffset: null);
+        }
+      }
+
+      onMix?.call(mix);
+    });
+  }
+
+  @override
+  Future<void> mixOrUnmix() => setMix(state.mixOffset == null);
 
   @override
   Future<void> open(
@@ -147,35 +171,86 @@ class MediaPlayer extends ChangeNotifier
     int index = 0,
     bool play = true,
     bool shuffle = false,
+    bool? mix,
     void Function()? onOpen = mediaPlayerOpenOnOpen,
   }) async {
-    state = state.copyWith(shuffle: false);
-
     final medias = playables.map((playable) => playable.toMedia()).toList();
+
     if (shuffle) {
       medias.shuffle();
     }
+
+    // UPDATE MIX OFFSET
+    int? mixOffset;
+    if ((mix ?? Configuration.instance.nowPlayingStartMixAfterEnding) && playables.isNotEmpty) {
+      mixOffset = medias.length;
+      medias.addAll(MediaLibraryProvider.instance.tracks.map((track) => track.toPlayable().toMedia()).toList()..shuffle());
+    }
+
+    state = state.copyWith(shuffle: false, mixOffset: mixOffset);
+
     await _player.open(Playlist(medias, index: index), play: play);
     onOpen?.call();
   }
 
   @override
-  Future<void> move(int from, int to) => _player.move(from, to);
+  Future<void> move(int from, int to) async {
+    await _player.move(from, to);
+
+    // UPDATE MIX OFFSET
+    final mixOffset = state.mixOffset;
+    if (mixOffset != null) {
+      final fromBeforeMix = from < mixOffset;
+      final toBeforeMix = to < mixOffset;
+      if (fromBeforeMix && !toBeforeMix) {
+        state = state.copyWith(mixOffset: mixOffset - 1);
+      } else if (!fromBeforeMix && toBeforeMix) {
+        state = state.copyWith(mixOffset: mixOffset + 1);
+      }
+    }
+  }
 
   @override
-  Future<void> remove(int index) => _player.remove(index);
+  Future<void> remove(int index) async {
+    await _player.remove(index);
+
+    // UPDATE MIX OFFSET
+    final mixOffset = state.mixOffset;
+    if (mixOffset != null && index < mixOffset) {
+      state = state.copyWith(mixOffset: mixOffset - 1);
+    }
+  }
 
   @override
   Future<void> add(Iterable<Playable> playables) async {
-    for (final playable in playables) {
-      await _player.add(playable.toMedia());
+    final mixOffset = state.mixOffset;
+    if (mixOffset != null) {
+      // CASE: MIX ENABLED
+      int insertIndex = mixOffset;
+      for (final playable in playables) {
+        await _player.add(playable.toMedia());
+        await _player.move(state.playables.length - 1, insertIndex);
+        insertIndex++;
+      }
+      state = state.copyWith(mixOffset: mixOffset + playables.length);
+    } else {
+      // CASE: MIX DISABLED
+      for (final playable in playables) {
+        await _player.add(playable.toMedia());
+      }
     }
   }
 
   @override
   Future<void> insert(int index, Playable playable) async {
-    await add([playable]);
+    await _player.add(playable.toMedia());
     await _player.move(state.playables.length - 1, index + 1);
+
+    // UPDATE MIX OFFSET
+    final mixOffset = state.mixOffset;
+    if (mixOffset != null && index + 1 <= mixOffset) {
+      state = state.copyWith(mixOffset: mixOffset + 1);
+    }
   }
 
   @override
@@ -371,11 +446,24 @@ class MediaPlayer extends ChangeNotifier
     disposeWindowsTaskbar();
   }
 
-  late Player _player;
-  final TagReader _tagReader = TagReader();
+  // updateCurrent
+
   Playable? _current;
-  MediaPlayerState _state = MediaPlayerState.defaults();
-  double _setMuteVolume = 100.0;
   String? _updateCurrentFlagUri;
   final Lock _updateCurrentLock = Lock();
+
+  // setMute; muteOrUnmute
+
+  double _setMuteVolume = 100.0;
+
+  // setMix; mixOrUnmix
+
+  final Lock _mixLock = Lock();
+
+  // -----
+
+  MediaPlayerState _state = MediaPlayerState.defaults();
+
+  late Player _player;
+  final TagReader _tagReader = TagReader();
 }

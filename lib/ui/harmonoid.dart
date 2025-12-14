@@ -278,6 +278,8 @@ class DefaultScrollPhysics extends ScrollPhysics {
 }
 
 class MediaLibraryProvider extends InheritedProvider<MediaLibrary> {
+  static late MediaLibrary instance;
+
   MediaLibraryProvider({
     super.key,
     super.dispose,
@@ -285,7 +287,10 @@ class MediaLibraryProvider extends InheritedProvider<MediaLibrary> {
     super.builder,
     super.child,
   }) : super(
-         create: (_) => FileSystemMediaLibrary.instance,
+         create: (_) {
+           instance = FileSystemMediaLibrary.instance;
+           return instance;
+         },
          startListening: (e, value) {
            final notifier = value as ChangeNotifier;
            notifier.addListener(e.markNeedsNotifyDependents);

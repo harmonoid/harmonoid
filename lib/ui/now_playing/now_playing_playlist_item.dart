@@ -14,13 +14,15 @@ import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
 class NowPlayingPlaylistItem extends StatelessWidget {
-  final int index;
+  final int listIndex;
+  final int playableIndex;
   final double width;
   final double height;
 
   const NowPlayingPlaylistItem({
     super.key,
-    required this.index,
+    required this.listIndex,
+    required this.playableIndex,
     required this.width,
     required this.height,
   });
@@ -28,8 +30,8 @@ class NowPlayingPlaylistItem extends StatelessWidget {
   Widget _buildDesktopLayout(BuildContext context) {
     return Consumer<MediaPlayer>(
       builder: (context, mediaPlayer, _) {
-        final i = index - mediaPlayer.state.index;
-        final playable = mediaPlayer.state.playables[index];
+        final i = playableIndex - mediaPlayer.state.index;
+        final playable = mediaPlayer.state.playables[playableIndex];
         return SizedBox(
           height: height,
           width: double.infinity,
@@ -37,7 +39,7 @@ class NowPlayingPlaylistItem extends StatelessWidget {
             children: [
               Positioned.fill(
                 child: InkWell(
-                  onTap: () => mediaPlayer.jump(index),
+                  onTap: () => mediaPlayer.jump(playableIndex),
                 ),
               ),
               Column(
@@ -54,7 +56,7 @@ class NowPlayingPlaylistItem extends StatelessWidget {
                         Container(
                           alignment: Alignment.center,
                           width: height * 1.5,
-                          child: index == mediaPlayer.state.index
+                          child: playableIndex == mediaPlayer.state.index
                               ? MusicAnimation(
                                   width: height / 2.0,
                                   height: height / 2.0,
@@ -105,7 +107,7 @@ class NowPlayingPlaylistItem extends StatelessWidget {
                         ),
                         const VerticalDivider(width: 1.0),
                         ReorderableDragStartListener(
-                          index: index,
+                          index: listIndex,
                           child: MouseRegion(
                             cursor: SystemMouseCursors.resizeUpDown,
                             child: Container(
@@ -122,7 +124,7 @@ class NowPlayingPlaylistItem extends StatelessWidget {
                           onTap: mediaPlayer.state.playables.length > 1
                               ? () {
                                   if (mediaPlayer.state.playables.length > 1) {
-                                    mediaPlayer.remove(index);
+                                    mediaPlayer.remove(playableIndex);
                                   }
                                 }
                               : null,
@@ -154,71 +156,76 @@ class NowPlayingPlaylistItem extends StatelessWidget {
   Widget _buildMobileLayout(BuildContext context) {
     return Consumer<MediaPlayer>(
       builder: (context, mediaPlayer, _) {
-        final i = index - mediaPlayer.state.index;
-        final playable = mediaPlayer.state.playables[index];
+        final i = playableIndex - mediaPlayer.state.index;
+        final playable = mediaPlayer.state.playables[playableIndex];
         return Material(
           color: Colors.transparent,
-          child: InkWell(
-            onTap: () => mediaPlayer.jump(index),
-            child: SizedBox(
-              height: height,
-              width: double.infinity,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(width: 8.0),
-                  Container(
-                    width: height - 16.0,
-                    height: height,
-                    alignment: Alignment.center,
-                    child: index == mediaPlayer.state.index
-                        ? const MusicAnimation(width: 20.0, height: 20.0)
-                        : AutoSizeText(
-                            '${i > 0 ? '+' : ''}$i',
-                            maxLines: 1,
-                            minFontSize: 1.0,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 18.0),
-                          ),
-                  ),
-                  const SizedBox(width: 8.0),
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          playable.displayTitle,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.titleMedium,
+          child: Column(
+            children: [
+              InkWell(
+                onTap: () => mediaPlayer.jump(playableIndex),
+                child: SizedBox(
+                  height: height,
+                  width: double.infinity,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(width: 8.0),
+                      Container(
+                        width: height - 16.0,
+                        height: height,
+                        alignment: Alignment.center,
+                        child: playableIndex == mediaPlayer.state.index
+                            ? const MusicAnimation(width: 20.0, height: 20.0)
+                            : AutoSizeText(
+                                '${i > 0 ? '+' : ''}$i',
+                                maxLines: 1,
+                                minFontSize: 1.0,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 18.0),
+                              ),
+                      ),
+                      const SizedBox(width: 8.0),
+                      Expanded(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              playable.displayTitle,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            if (playable.displaySubtitle.isNotEmpty)
+                              Text(
+                                playable.displaySubtitle,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                          ],
                         ),
-                        if (playable.displaySubtitle.isNotEmpty)
-                          Text(
-                            playable.displaySubtitle,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(width: 16.0),
+                      IconButton(
+                        onPressed: mediaPlayer.state.playables.length > 1
+                            ? () {
+                                if (mediaPlayer.state.playables.length > 1) {
+                                  mediaPlayer.remove(playableIndex);
+                                }
+                              }
+                            : null,
+                        icon: const Icon(Icons.remove),
+                      ),
+                      const SizedBox(width: 8.0),
+                    ],
                   ),
-                  const SizedBox(width: 16.0),
-                  IconButton(
-                    onPressed: mediaPlayer.state.playables.length > 1
-                        ? () {
-                            if (mediaPlayer.state.playables.length > 1) {
-                              mediaPlayer.remove(index);
-                            }
-                          }
-                        : null,
-                    icon: const Icon(Icons.remove),
-                  ),
-                  const SizedBox(width: 8.0),
-                ],
+                ),
               ),
-            ),
+              const Divider(height: 1.0),
+            ],
           ),
         );
       },

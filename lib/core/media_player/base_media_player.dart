@@ -41,9 +41,15 @@ abstract interface class BaseMediaPlayer with ChangeNotifier {
 
   Future<void> setMute(bool mute);
 
+  Future<void> muteOrUnmute();
+
   Future<void> setShuffle(bool shuffle);
 
-  Future<void> muteOrUnmute();
+  Future<void> shuffleOrUnshuffle();
+
+  Future<void> setMix(bool mix);
+
+  Future<void> mixOrUnmix();
 
   Future<void> open(
     List<Playable> playables, {

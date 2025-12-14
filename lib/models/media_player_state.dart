@@ -28,6 +28,7 @@ abstract class MediaPlayerState with _$MediaPlayerState {
     required bool completed,
     required double audioBitrate,
     required AudioParams audioParams,
+    required int? mixOffset,
   }) = _MediaPlayerState;
 
   factory MediaPlayerState.defaults() => const MediaPlayerState(
@@ -49,5 +50,6 @@ abstract class MediaPlayerState with _$MediaPlayerState {
     completed: false,
     audioBitrate: 0.0,
     audioParams: AudioParams(),
+    mixOffset: null,
   );
 }
