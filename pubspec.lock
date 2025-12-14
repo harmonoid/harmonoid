@@ -1506,10 +1506,10 @@ packages:
     dependency: "direct main"
     description:
       name: uri_parser
-      sha256: "380c6c96c52a8de82c84c627d0a79cfb2e1697c3fe3eda78fbb9b87af0dcee08"
+      sha256: "051c62e5f693de98ca9f130ee707f8916e2266945565926be3ff20659f7853ce"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.1"
+    version: "3.0.2"
   url_launcher:
     dependency: "direct main"
     description:
