@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:identity/identity.dart';
 import 'package:media_library/media_library.dart' hide FileSystemMediaLibrary;
 import 'package:provider/provider.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
@@ -151,7 +152,10 @@ class TrackMenuProvider {
   }
 
   Future<void> editTags() async {
-    context.push(Uri(path: '/$kTagEditorPath', queryParameters: {kTagEditorArgResource: track.uri.toString()}).toString());
+    _subscriptionNotifier.accessSubscriptionFeature(
+      context,
+      () => context.push(Uri(path: '/$kTagEditorPath', queryParameters: {kTagEditorArgResource: track.uri.toString()}).toString()),
+    );
   }
 
   Future<void> refresh({Future<bool> Function()? recursivelyPopNavigatorOnDeleteIf}) async {
@@ -237,6 +241,7 @@ class TrackMenuProvider {
   MediaPlayer get _mediaPlayer => context.read<MediaPlayer>();
   MediaLibrary get _mediaLibrary => context.read<MediaLibrary>();
   LyricsNotifier get _lyricsNotifier => context.read<LyricsNotifier>();
+  SubscriptionNotifier get _subscriptionNotifier => context.read<SubscriptionNotifier>();
 
   FileSystemMediaLibrary? get _fileSystemMediaLibrary {
     if (_mediaLibrary is FileSystemMediaLibrary) {

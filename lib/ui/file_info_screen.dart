@@ -136,7 +136,7 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
                         rows: _metadata!.entries.map((entry) {
                           return DataRow(
                             cells: [
-                              DataCell(Padding(padding: const EdgeInsets.symmetric(vertical: 12.0), child: Text(entry.key))),
+                              DataCell(Padding(padding: const EdgeInsets.symmetric(vertical: 12.0), child: Text(entry.key.toUpperCase()))),
                               DataCell(Padding(padding: const EdgeInsets.symmetric(vertical: 12.0), child: Text(entry.value))),
                               DataCell(
                                 Container(
