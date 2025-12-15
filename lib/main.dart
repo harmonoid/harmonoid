@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:identity/identity.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -35,6 +36,13 @@ Future<void> main(List<String> args) async {
   }
   try {
     if (Platform.isAndroid) {
+      try {
+        await FlutterDisplayMode.setHighRefreshRate();
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+
       await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: SystemUiOverlay.values);
       await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
       await AndroidStorageController.ensureInitialized();
