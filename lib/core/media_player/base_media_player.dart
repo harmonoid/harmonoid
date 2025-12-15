@@ -51,12 +51,7 @@ abstract interface class BaseMediaPlayer with ChangeNotifier {
 
   Future<void> mixOrUnmix();
 
-  Future<void> open(
-    List<Playable> playables, {
-    int index = 0,
-    bool play = true,
-    void Function()? onOpen,
-  });
+  Future<void> open(List<Playable> playables);
 
   Future<void> move(int from, int to);
 
