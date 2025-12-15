@@ -36,12 +36,17 @@ mixin DiscordRpcMixin implements BaseMediaPlayer {
   Future<void> ensureInitializedDiscordRpc() async {
     if (!supported) return;
 
-    await FlutterDiscordRPC.initialize(kApplicationId);
-    final instance = FlutterDiscordRPC.instance..connect();
+    try {
+      await FlutterDiscordRPC.initialize(kApplicationId);
+      final instance = FlutterDiscordRPC.instance..connect();
 
-    _instanceDiscordRpc = instance;
+      _instanceDiscordRpc = instance;
 
-    addListener(_listenerDiscordRpc);
+      addListener(_listenerDiscordRpc);
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
   }
 
   Future<void> disposeDiscordRpc() async {

@@ -22,7 +22,7 @@ class FileSystemMediaLibrary extends media_library.FileSystemMediaLibrary with C
   /// Pool size for [PooledTagReader].
   static final int kPooledTagReaderSize = () {
     try {
-      return Platform.numberOfProcessors.round().clamp(1, 4) ~/ 2;
+      return Platform.numberOfProcessors.round().clamp(1, 8) ~/ 2;
     } catch (_) {
       return 2;
     }

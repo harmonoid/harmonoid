@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:synchronized/synchronized.dart';
 
 import 'package:harmonoid/core/filesystem_media_library.dart';
@@ -18,7 +19,12 @@ mixin HistoryPlaylistMixin implements BaseMediaPlayer {
   Future<void> ensureInitializedHistoryPlaylist() async {
     if (!supported) return;
     // NO/OP
-    addListener(_listenerHistoryPlaylist);
+    try {
+      addListener(_listenerHistoryPlaylist);
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
   }
 
   Future<void> disposeHistoryPlaylist() async {

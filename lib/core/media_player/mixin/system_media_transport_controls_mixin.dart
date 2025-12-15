@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 import 'package:harmonoid/core/media_player/base_media_player.dart';
 import 'package:harmonoid/mappers/image_provider.dart';
@@ -20,26 +21,31 @@ mixin SystemMediaTransportControlsMixin implements BaseMediaPlayer {
   Future<void> ensureInitializedSystemMediaTransportControls() async {
     if (!supported) return;
 
-    SystemMediaTransportControls.ensureInitialized();
-    final instance = SystemMediaTransportControls.instance
-      ..create((event) {
-        switch (event) {
-          case SMTCEvent.play:
-            play();
-          case SMTCEvent.pause:
-            pause();
-          case SMTCEvent.next:
-            next();
-          case SMTCEvent.previous:
-            previous();
-          default:
-            break;
-        }
-      });
+    try {
+      SystemMediaTransportControls.ensureInitialized();
+      final instance = SystemMediaTransportControls.instance
+        ..create((event) {
+          switch (event) {
+            case SMTCEvent.play:
+              play();
+            case SMTCEvent.pause:
+              pause();
+            case SMTCEvent.next:
+              next();
+            case SMTCEvent.previous:
+              previous();
+            default:
+              break;
+          }
+        });
 
-    _instanceSystemMediaTransportControls = instance;
+      _instanceSystemMediaTransportControls = instance;
 
-    addListener(_listenerSystemMediaTransportControls);
+      addListener(_listenerSystemMediaTransportControls);
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
   }
 
   Future<void> disposeSystemMediaTransportControls() async {

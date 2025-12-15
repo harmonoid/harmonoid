@@ -29,12 +29,12 @@ mixin LastFmMixin implements BaseMediaPlayer {
       if (connected) {
         _instanceLastFm.setSession(session);
       }
+
+      addListener(_listenerLastFm);
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
     }
-
-    addListener(_listenerLastFm);
   }
 
   LastFm get lastFm => _instanceLastFm;

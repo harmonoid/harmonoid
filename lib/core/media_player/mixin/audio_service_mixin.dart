@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:audio_service/audio_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:synchronized/synchronized.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
@@ -27,20 +28,25 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
   Future<void> ensureInitializedAudioService() async {
     if (!supported) return;
 
-    final instance = await AudioService.init(
-      builder: () => _AudioServiceImpl(this),
-      config: const AudioServiceConfig(
-        androidNotificationChannelId: kAndroidNotificationChannelId,
-        androidNotificationChannelName: kAndroidNotificationChannelName,
-        androidNotificationIcon: kAndroidNotificationIcon,
-        androidNotificationClickStartsActivity: true,
-        androidStopForegroundOnPause: false,
-      ),
-    );
+    try {
+      final instance = await AudioService.init(
+        builder: () => _AudioServiceImpl(this),
+        config: const AudioServiceConfig(
+          androidNotificationChannelId: kAndroidNotificationChannelId,
+          androidNotificationChannelName: kAndroidNotificationChannelName,
+          androidNotificationIcon: kAndroidNotificationIcon,
+          androidNotificationClickStartsActivity: true,
+          androidStopForegroundOnPause: false,
+        ),
+      );
 
-    _instanceAudioService = instance;
+      _instanceAudioService = instance;
 
-    addListener(_listenerAudioService);
+      addListener(_listenerAudioService);
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
   }
 
   Future<void> disposeAudioService() async {

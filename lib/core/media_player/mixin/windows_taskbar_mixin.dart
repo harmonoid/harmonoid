@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:synchronized/synchronized.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
@@ -20,7 +21,12 @@ mixin WindowsTaskbarMixin implements BaseMediaPlayer {
   Future<void> ensureInitializedWindowsTaskbar() async {
     if (!supported) return;
     // NO/OP
-    addListener(_listenerWindowsTaskbar);
+    try {
+      addListener(_listenerWindowsTaskbar);
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
   }
 
   Future<void> disposeWindowsTaskbar() async {
@@ -66,7 +72,7 @@ mixin WindowsTaskbarMixin implements BaseMediaPlayer {
         );
       }
       if (Configuration.instance.windowsTaskbarProgress) {
-        const total = 1 << 16;
+        const total = 1 << 8;
         final completed = (state.position.inSeconds / state.duration.inSeconds * total).round();
         WindowsTaskbar.setProgress(completed, total);
       }

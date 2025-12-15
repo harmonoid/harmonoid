@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:synchronized/synchronized.dart';
 
@@ -26,39 +27,45 @@ mixin MprisMixin implements BaseMediaPlayer {
   Future<void> ensureInitializedMpris() async {
     if (!supported) return;
 
-    final instance = await MPRIS.create(
-      busName: kBusName,
-      identity: kIdentity,
-      desktopEntry: kDesktopEntry,
-    )
-      ..minimumRate = 0.5
-      ..maximumRate = 2.0
-      ..setEventHandler(
-        MPRISEventHandler(
-          next: () => next(),
-          previous: () => previous(),
-          pause: () => pause(),
-          playPause: () => playOrPause(),
-          play: () => play(),
-          seek: (value) => seek(value),
-          setPosition: (_, value) => seek(Duration(microseconds: value)),
-          openUri: (value) => Intent.instance.play(value.toString()),
-          loopStatus: (value) => setLoop(
-            switch (value) {
-              MPRISLoopStatus.none => Loop.off,
-              MPRISLoopStatus.track => Loop.one,
-              MPRISLoopStatus.playlist => Loop.all,
-            },
-          ),
-          rate: (value) => setRate(value),
-          shuffle: (value) => setShuffle(value),
-          volume: (value) => setVolume(value * 100.0),
-        ),
-      );
+    try {
+      final instance =
+          await MPRIS.create(
+              busName: kBusName,
+              identity: kIdentity,
+              desktopEntry: kDesktopEntry,
+            )
+            ..minimumRate = 0.5
+            ..maximumRate = 2.0
+            ..setEventHandler(
+              MPRISEventHandler(
+                next: () => next(),
+                previous: () => previous(),
+                pause: () => pause(),
+                playPause: () => playOrPause(),
+                play: () => play(),
+                seek: (value) => seek(value),
+                setPosition: (_, value) => seek(Duration(microseconds: value)),
+                openUri: (value) => Intent.instance.play(value.toString()),
+                loopStatus: (value) => setLoop(
+                  switch (value) {
+                    MPRISLoopStatus.none => Loop.off,
+                    MPRISLoopStatus.track => Loop.one,
+                    MPRISLoopStatus.playlist => Loop.all,
+                  },
+                ),
+                rate: (value) => setRate(value),
+                shuffle: (value) => setShuffle(value),
+                volume: (value) => setVolume(value * 100.0),
+              ),
+            );
 
-    _instanceMpris = instance;
+      _instanceMpris = instance;
 
-    addListener(_listenerMpris);
+      addListener(_listenerMpris);
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
   }
 
   Future<void> disposeMpris() async {

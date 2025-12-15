@@ -427,6 +427,9 @@ class MediaPlayer extends ChangeNotifier
       await platform.setProperty('ao', 'wasapi');
     }
     await platform.setProperty('audio-stream-silence', 'yes');
+    // https://github.com/harmonoid/harmonoid/issues/527
+    // https://discord.com/channels/935994617663483916/936215125772341289/1450093460127219743
+    await platform.setProperty('sub-auto', 'no');
     for (final MapEntry(key: property, value: value) in Configuration.instance.mpvOptions.entries) {
       await platform.setProperty(property, value);
     }
