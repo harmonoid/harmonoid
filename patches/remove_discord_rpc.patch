@@ -1,9 +1,3 @@
-diff --git a/external/tag_writer b/external/tag_writer
---- a/external/tag_writer
-+++ b/external/tag_writer
-@@ -1 +1 @@
--Subproject commit edd36709f0607356c1ef3f9c4406aa3cbfb1a4f6
-+Subproject commit edd36709f0607356c1ef3f9c4406aa3cbfb1a4f6-dirty
 diff --git a/lib/core/media_player/media_player.dart b/lib/core/media_player/media_player.dart
 index 1c3fd1e2..59f7ebf2 100644
 --- a/lib/core/media_player/media_player.dart
