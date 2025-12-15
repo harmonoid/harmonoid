@@ -740,7 +740,13 @@ Future<void> showAddToPlaylistDialog(
               shrinkWrap: true,
               children: [
                 ListItem(
-                  leading: const Icon(Icons.add),
+                  leading: Container(
+                    width: 56.0,
+                    height: 56.0,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: const CircleAvatar(child: Icon(Icons.add)),
+                  ),
                   title: Localization.instance.CREATE_NEW_PLAYLIST,
                   onTap: () => showCreatePlaylistDialog(context),
                 ),
