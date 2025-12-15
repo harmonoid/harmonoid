@@ -61,8 +61,8 @@ class LyricsNotifier extends ChangeNotifier {
           notifyListeners();
 
           // --------------------------------------------------
-          _notificationVisible = true;
-          dismissNotification();
+          await FlutterLocalNotificationsPlugin().cancel(_kNotificationId);
+          await Configuration.instance.set(mobileNotificationLyricsHidden: false);
           // --------------------------------------------------
 
           _current = current;
@@ -82,7 +82,7 @@ class LyricsNotifier extends ChangeNotifier {
 
           // --------------------------------------------------
           if ((nextIndex - index).abs() > 1 || state.completed) {
-            dismissNotification();
+            await FlutterLocalNotificationsPlugin().cancel(_kNotificationId);
           }
           // --------------------------------------------------
 
@@ -266,7 +266,6 @@ class LyricsNotifier extends ChangeNotifier {
 
   /// Displays the notification.
   void displayNotification(int index) {
-    if (!_notificationVisible) return;
     const diff = 2;
     final from = max(0, index - diff);
     final to = min(lyrics.length - 1, index + diff);
@@ -303,7 +302,6 @@ class LyricsNotifier extends ChangeNotifier {
               AndroidNotificationAction(
                 _kNotificationHideActionId,
                 Localization.instance.HIDE,
-                showsUserInterface: true,
                 cancelNotification: true,
               ),
             ],
@@ -313,35 +311,32 @@ class LyricsNotifier extends ChangeNotifier {
     });
   }
 
-  /// Dismisses the notification.
-  void dismissNotification() {
-    ensureNotification(() {
-      FlutterLocalNotificationsPlugin().cancel(_kNotificationId);
-    });
-  }
-
   /// Invokes the [callback] if the notification can be handled.
   Future<void> ensureNotification(void Function() callback) async {
     if (!Platform.isAndroid) return;
     if (!(AndroidStorageController.instance.version < 33 || await Permission.notification.isGranted)) return;
     if (!Configuration.instance.notificationLyrics) return;
     if (!_initializeNotificationInvoked) return;
-    if (!_notificationVisible) return;
+    if (await isNotificationHidden()) return;
     callback.call();
   }
 
-  @pragma('vm:entry-point')
-  static void _onDidReceiveNotificationResponse(NotificationResponse notificationResponse) {
-    if (notificationResponse.actionId == _kNotificationHideActionId) {
-      instance._notificationVisible = false;
-      instance.dismissNotification();
-    }
+  Future<bool> isNotificationHidden() {
+    return Configuration.instance.read<bool, bool>(kKeyMobileNotificationLyricsHidden, {kKeyMobileNotificationLyricsHidden: false});
   }
 
   Playable? _current;
   Duration? _currentDuration;
-  bool _notificationVisible = true;
   bool _initializeNotificationInvoked = false;
   final SplayTreeMap<int, int> _timestampsAndIndexes = SplayTreeMap<int, int>();
   final Lock _lock = Lock();
+}
+
+@pragma('vm:entry-point')
+void _onDidReceiveNotificationResponse(NotificationResponse notificationResponse) async {
+  if (notificationResponse.actionId == LyricsNotifier._kNotificationHideActionId) {
+    await AndroidStorageController.ensureInitialized();
+    await Configuration.ensureInitialized();
+    await Configuration.instance.set(mobileNotificationLyricsHidden: true);
+  }
 }

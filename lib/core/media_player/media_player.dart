@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:media_kit/media_kit.dart' hide Playable;
+import 'package:media_kit/media_kit.dart' hide Playable, Track;
 import 'package:media_library/media_library.dart' hide Playlist, FileSystemMediaLibrary;
 import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:synchronized/synchronized.dart';
@@ -184,7 +184,8 @@ class MediaPlayer extends ChangeNotifier
     int? mixOffset;
     if ((mix ?? Configuration.instance.nowPlayingStartMixAfterEnding) && playables.isNotEmpty) {
       mixOffset = medias.length;
-      medias.addAll(MediaLibraryProvider.instance.tracks.map((track) => track.toPlayable().toMedia()).toList()..shuffle());
+
+      medias.addAll(await compute(_processTracksForMix, MediaLibraryProvider.instance.tracks));
     }
 
     state = state.copyWith(shuffle: false, mixOffset: mixOffset);
@@ -469,4 +470,8 @@ class MediaPlayer extends ChangeNotifier
 
   late Player _player;
   final TagReader _tagReader = TagReader();
+}
+
+List<Media> _processTracksForMix(List<Track> tracks) {
+  return tracks.map((track) => track.toPlayable().toMedia()).toList()..shuffle();
 }

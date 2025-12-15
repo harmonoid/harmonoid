@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin
 import com.ryanheise.audioservice.AudioServiceActivity
 import com.ryanheise.audioservice.AudioServicePlugin
 import io.flutter.Log
@@ -14,6 +15,7 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import java.io.File
 import java.io.FileOutputStream
+import java.util.function.Consumer
 import kotlin.io.path.Path
 
 class MainActivity : AudioServiceActivity() {
@@ -41,8 +43,7 @@ class MainActivity : AudioServiceActivity() {
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-        Log.d(TAG, storageDirectories.toString())
-
+        super.configureFlutterEngine(flutterEngine)
         intentControllerMethodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, INTENT_CONTROLLER_CHANNEL_NAME).apply {
             setMethodCallHandler { _, result -> result.success(uri) }
         }
@@ -52,6 +53,7 @@ class MainActivity : AudioServiceActivity() {
         utilsMethodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, UTILS_CHANNEL_NAME).apply {
             setMethodCallHandler(UtilsMethodCallHandler(this@MainActivity))
         }
+        Log.d(TAG, storageDirectories.toString())
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -68,6 +70,7 @@ class MainActivity : AudioServiceActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FlutterLocalNotificationsPlugin.configureFlutterEngine = Consumer { configureFlutterEngine(it) }
         installSplashScreen()
         handleIntent(intent)
     }

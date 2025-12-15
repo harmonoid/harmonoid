@@ -35,6 +35,7 @@
   {"key": "MOBILE_MEDIA_LIBRARY_ALBUM_GRID_SPAN", "serializedType": "Integer", "dartType": "int", "default": "2"},
   {"key": "MOBILE_MEDIA_LIBRARY_ARTIST_GRID_SPAN", "serializedType": "Integer", "dartType": "int", "default": "3"},
   {"key": "MOBILE_MEDIA_LIBRARY_GENRE_GRID_SPAN", "serializedType": "Integer", "dartType": "int", "default": "3"},
+  {"key": "MOBILE_NOTIFICATION_LYRICS_HIDDEN", "serializedType": "Boolean", "dartType": "bool", "default": "false"},
   {"key": "MOBILE_NOW_PLAYING_RIPPLE", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
   {"key": "MOBILE_NOW_PLAYING_VOLUME_SLIDER", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
   {"key": "MPV_OPTIONS", "serializedType": "Json", "dartType": "Map<String, String>", "default": "<String, String>{}"},

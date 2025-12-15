@@ -48,6 +48,7 @@ class ConfigurationBase {
   int get mobileMediaLibraryAlbumGridSpan => _mobileMediaLibraryAlbumGridSpan!;
   int get mobileMediaLibraryArtistGridSpan => _mobileMediaLibraryArtistGridSpan!;
   int get mobileMediaLibraryGenreGridSpan => _mobileMediaLibraryGenreGridSpan!;
+  bool get mobileNotificationLyricsHidden => _mobileNotificationLyricsHidden!;
   bool get mobileNowPlayingRipple => _mobileNowPlayingRipple!;
   bool get mobileNowPlayingVolumeSlider => _mobileNowPlayingVolumeSlider!;
   Map<String, String> get mpvOptions => _mpvOptions!;
@@ -100,6 +101,7 @@ class ConfigurationBase {
     int? mobileMediaLibraryAlbumGridSpan,
     int? mobileMediaLibraryArtistGridSpan,
     int? mobileMediaLibraryGenreGridSpan,
+    bool? mobileNotificationLyricsHidden,
     bool? mobileNowPlayingRipple,
     bool? mobileNowPlayingVolumeSlider,
     Map<String, String>? mpvOptions,
@@ -259,6 +261,10 @@ class ConfigurationBase {
       _mobileMediaLibraryGenreGridSpan = mobileMediaLibraryGenreGridSpan;
       await db.setValue(kKeyMobileMediaLibraryGenreGridSpan, kTypeInteger, integerValue: mobileMediaLibraryGenreGridSpan);
     }
+    if (mobileNotificationLyricsHidden != null) {
+      _mobileNotificationLyricsHidden = mobileNotificationLyricsHidden;
+      await db.setValue(kKeyMobileNotificationLyricsHidden, kTypeBoolean, booleanValue: mobileNotificationLyricsHidden);
+    }
     if (mobileNowPlayingRipple != null) {
       _mobileNowPlayingRipple = mobileNowPlayingRipple;
       await db.setValue(kKeyMobileNowPlayingRipple, kTypeBoolean, booleanValue: mobileNowPlayingRipple);
@@ -355,6 +361,7 @@ class ConfigurationBase {
       /* Integer */ kKeyMobileMediaLibraryAlbumGridSpan: 2,
       /* Integer */ kKeyMobileMediaLibraryArtistGridSpan: 3,
       /* Integer */ kKeyMobileMediaLibraryGenreGridSpan: 3,
+      /* Boolean */ kKeyMobileNotificationLyricsHidden: false,
       /* Boolean */ kKeyMobileNowPlayingRipple: true,
       /* Boolean */ kKeyMobileNowPlayingVolumeSlider: true,
       /* Json    */ kKeyMpvOptions: <String, String>{},
@@ -408,6 +415,7 @@ class ConfigurationBase {
   int? _mobileMediaLibraryAlbumGridSpan;
   int? _mobileMediaLibraryArtistGridSpan;
   int? _mobileMediaLibraryGenreGridSpan;
+  bool? _mobileNotificationLyricsHidden;
   bool? _mobileNowPlayingRipple;
   bool? _mobileNowPlayingVolumeSlider;
   Map<String, String>? _mpvOptions;
@@ -462,6 +470,7 @@ const kKeyMediaPlayerPlaybackState = 'MEDIA_PLAYER_PLAYBACK_STATE';
 const kKeyMobileMediaLibraryAlbumGridSpan = 'MOBILE_MEDIA_LIBRARY_ALBUM_GRID_SPAN';
 const kKeyMobileMediaLibraryArtistGridSpan = 'MOBILE_MEDIA_LIBRARY_ARTIST_GRID_SPAN';
 const kKeyMobileMediaLibraryGenreGridSpan = 'MOBILE_MEDIA_LIBRARY_GENRE_GRID_SPAN';
+const kKeyMobileNotificationLyricsHidden = 'MOBILE_NOTIFICATION_LYRICS_HIDDEN';
 const kKeyMobileNowPlayingRipple = 'MOBILE_NOW_PLAYING_RIPPLE';
 const kKeyMobileNowPlayingVolumeSlider = 'MOBILE_NOW_PLAYING_VOLUME_SLIDER';
 const kKeyMpvOptions = 'MPV_OPTIONS';
