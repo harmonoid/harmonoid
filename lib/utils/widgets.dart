@@ -570,21 +570,22 @@ class MobileMediaLibrarySortButton extends StatefulWidget {
 }
 
 class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButton> {
-  MediaLibrary get _mediaLibrary => context.read<MediaLibrary>();
+  void Function(void Function())? _setStateCallback;
+  late final MediaLibrary _mediaLibrary = context.read<MediaLibrary>();
 
-  Future<void> handle(dynamic value) async {
+  Future<void> _handle(dynamic value) async {
     if (value is AlbumSortType) {
-      _mediaLibrary.populate(albumSortType: value);
-      Configuration.instance.set(mediaLibraryAlbumSortType: value);
+      await _mediaLibrary.populate(albumSortType: value);
+      await Configuration.instance.set(mediaLibraryAlbumSortType: value);
     } else if (value is TrackSortType) {
-      _mediaLibrary.populate(trackSortType: value);
-      Configuration.instance.set(mediaLibraryTrackSortType: value);
+      await _mediaLibrary.populate(trackSortType: value);
+      await Configuration.instance.set(mediaLibraryTrackSortType: value);
     } else if (value is ArtistSortType) {
-      _mediaLibrary.populate(artistSortType: value);
-      Configuration.instance.set(mediaLibraryArtistSortType: value);
+      await _mediaLibrary.populate(artistSortType: value);
+      await Configuration.instance.set(mediaLibraryArtistSortType: value);
     } else if (value is GenreSortType) {
-      _mediaLibrary.populate(genreSortType: value);
-      Configuration.instance.set(mediaLibraryGenreSortType: value);
+      await _mediaLibrary.populate(genreSortType: value);
+      await Configuration.instance.set(mediaLibraryGenreSortType: value);
     }
     if (value == true) {
       switch (widget.path) {
@@ -625,16 +626,14 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
           break;
       }
     }
-    setStateCallback?.call(() {});
+    _setStateCallback?.call(() {});
   }
 
-  void Function(void Function())? setStateCallback;
-
-  List<MobileMediaLibrarySortButtonPopupMenuItem> get sort => {
+  List<MobileMediaLibrarySortButtonPopupMenuItem> get _sort => {
     kAlbumsPath: [AlbumSortType.album, AlbumSortType.timestamp, AlbumSortType.year]
         .map(
           (e) => MobileMediaLibrarySortButtonPopupMenuItem(
-            onTap: () => handle(e),
+            onTap: () => _handle(e),
             checked: _mediaLibrary.albumSortType == e,
             value: e,
             padding: EdgeInsets.zero,
@@ -653,7 +652,7 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
     kTracksPath: TrackSortType.values
         .map(
           (e) => MobileMediaLibrarySortButtonPopupMenuItem(
-            onTap: () => handle(e),
+            onTap: () => _handle(e),
             checked: _mediaLibrary.trackSortType == e,
             value: e,
             padding: EdgeInsets.zero,
@@ -671,7 +670,7 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
     kArtistsPath: ArtistSortType.values
         .map(
           (e) => MobileMediaLibrarySortButtonPopupMenuItem(
-            onTap: () => handle(e),
+            onTap: () => _handle(e),
             checked: _mediaLibrary.artistSortType == e,
             value: e,
             padding: EdgeInsets.zero,
@@ -688,7 +687,7 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
     kGenresPath: GenreSortType.values
         .map(
           (e) => MobileMediaLibrarySortButtonPopupMenuItem(
-            onTap: () => handle(e),
+            onTap: () => _handle(e),
             checked: _mediaLibrary.genreSortType == e,
             value: e,
             padding: EdgeInsets.zero,
@@ -704,9 +703,9 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
         .toList(),
   }[widget.path]!;
 
-  List<MobileMediaLibrarySortButtonPopupMenuItem> get order => [
+  List<MobileMediaLibrarySortButtonPopupMenuItem> get _order => [
     MobileMediaLibrarySortButtonPopupMenuItem(
-      onTap: () => handle(true),
+      onTap: () => _handle(true),
       checked: switch (widget.path) {
         kAlbumsPath => _mediaLibrary.albumSortAscending,
         kTracksPath => _mediaLibrary.trackSortAscending,
@@ -722,7 +721,7 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
       ),
     ),
     MobileMediaLibrarySortButtonPopupMenuItem(
-      onTap: () => handle(false),
+      onTap: () => _handle(false),
       checked: switch (widget.path) {
         kAlbumsPath => !_mediaLibrary.albumSortAscending,
         kTracksPath => !_mediaLibrary.trackSortAscending,
@@ -752,15 +751,15 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
           elevation: kDefaultHeavyElevation,
           builder: (context) => StatefulBuilder(
             builder: (context, setState) {
-              setStateCallback = setState;
+              _setStateCallback = setState;
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ...sort,
+                  ..._sort,
                   const PopupMenuDivider(),
-                  ...order,
+                  ..._order,
                   SizedBox(height: MediaQuery.of(context).padding.bottom),
                 ],
               );
@@ -773,7 +772,7 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
         child: Row(
           children: [
             Text(
-              String.fromCharCode(order.firstWhere((e) => e.checked).value ? Icons.arrow_upward.codePoint : Icons.arrow_downward.codePoint),
+              String.fromCharCode(_order.firstWhere((e) => e.checked).value ? Icons.arrow_upward.codePoint : Icons.arrow_downward.codePoint),
               style: TextStyle(
                 inherit: false,
                 fontSize: 18.0,
@@ -785,7 +784,7 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
             ),
             const SizedBox(width: 10.0),
             Text(
-              label((sort.firstWhere((e) => e.checked).child as Text).data.toString()),
+              label((_sort.firstWhere((e) => e.checked).child as Text).data.toString()),
               style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
             ),
             const SizedBox(width: 4.0),
@@ -1796,6 +1795,12 @@ class StatefulAnimatedIconState extends State<StatefulAnimatedIcon> with SingleT
         _controller.reverse();
       }
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
   }
 
   @override

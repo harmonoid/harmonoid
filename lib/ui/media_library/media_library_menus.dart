@@ -240,14 +240,14 @@ class TrackMenuProvider {
     };
   }
 
-  MediaPlayer get _mediaPlayer => context.read<MediaPlayer>();
-  MediaLibrary get _mediaLibrary => context.read<MediaLibrary>();
-  LyricsNotifier get _lyricsNotifier => context.read<LyricsNotifier>();
-  SubscriptionNotifier get _subscriptionNotifier => context.read<SubscriptionNotifier>();
+  late final MediaPlayer _mediaPlayer = context.read<MediaPlayer>();
+  late final MediaLibrary _mediaLibrary = context.read<MediaLibrary>();
+  late final LyricsNotifier _lyricsNotifier = context.read<LyricsNotifier>();
+  late final SubscriptionNotifier _subscriptionNotifier = context.read<SubscriptionNotifier>();
 
   FileSystemMediaLibrary? get _fileSystemMediaLibrary {
     if (_mediaLibrary is FileSystemMediaLibrary) {
-      return _mediaLibrary as FileSystemMediaLibrary;
+      return _mediaLibrary;
     }
     return null;
   }
@@ -381,12 +381,12 @@ class TracksMenuProvider {
     };
   }
 
-  MediaPlayer get _mediaPlayer => context.read<MediaPlayer>();
-  MediaLibrary get _mediaLibrary => context.read<MediaLibrary>();
+  late final MediaPlayer _mediaPlayer = context.read<MediaPlayer>();
+  late final MediaLibrary _mediaLibrary = context.read<MediaLibrary>();
 
   FileSystemMediaLibrary? get _fileSystemMediaLibrary {
     if (_mediaLibrary is FileSystemMediaLibrary) {
-      return _mediaLibrary as FileSystemMediaLibrary;
+      return _mediaLibrary;
     }
     return null;
   }
@@ -484,7 +484,7 @@ class PlaylistMenuProvider {
     };
   }
 
-  MediaLibrary get _mediaLibrary => context.read<MediaLibrary>();
+  late final MediaLibrary _mediaLibrary = context.read<MediaLibrary>();
 }
 
 enum PlaylistEntryMenuAction {
@@ -553,7 +553,7 @@ class PlaylistEntryMenuProvider {
     };
   }
 
-  MediaLibrary get _mediaLibrary => context.read<MediaLibrary>();
+  late final MediaLibrary _mediaLibrary = context.read<MediaLibrary>();
 }
 
 Future<void> recursivelyPopNavigator() async {
