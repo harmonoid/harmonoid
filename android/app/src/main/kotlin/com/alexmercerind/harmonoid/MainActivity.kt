@@ -16,7 +16,6 @@ import io.flutter.plugin.common.MethodChannel
 import java.io.File
 import java.io.FileOutputStream
 import java.util.function.Consumer
-import kotlin.io.path.Path
 
 class MainActivity : AudioServiceActivity() {
     companion object {
@@ -98,7 +97,7 @@ class MainActivity : AudioServiceActivity() {
                     val packageName = resolveInfo.activityInfo.packageName
                     context.grantUriPermission(packageName, intent.data, Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 }
-                File(Path(cacheDirectory, "IntentController", intent.data.toString().md5).toString()).run {
+                File(cacheDirectory, "IntentController/${intent.data.toString().md5}").run {
                     if (length() == 0L) {
                         parentFile?.run { deleteRecursively(); mkdirs() }
                         contentResolver.openInputStream(intent.data!!).use { it?.copyTo(FileOutputStream(this)) }

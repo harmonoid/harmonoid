@@ -18,7 +18,6 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.io.File
 import java.io.FileOutputStream
-import kotlin.io.path.Path
 
 class StorageControllerMethodCallHandler(private val activity: Activity, private val channel: MethodChannel) : MethodChannel.MethodCallHandler {
     companion object {
@@ -83,7 +82,7 @@ class StorageControllerMethodCallHandler(private val activity: Activity, private
                         runCatching {
                             val path = call.argument<String>(GET_COVER_FILE_ARG_PATH)!!
                             val contentUri = path.toCoverContentUri()!!
-                            File(Path(activity.cacheDirectory, "StorageController", path.md5).toString()).run {
+                            File(activity.cacheDirectory, "StorageController/${path.md5}").run {
                                 if (length() == 0L) {
                                     parentFile?.run { mkdirs() }
                                     activity.contentResolver.openInputStream(contentUri).use { it?.copyTo(FileOutputStream(this)) }
