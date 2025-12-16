@@ -125,22 +125,39 @@ class Intent {
       () async {
         _playInvoked = false;
         final parser = URIParser(uri);
+
+        // HACK: Use I/O to determine the correct type.
+        if (parser.type == URIType.file || parser.type == URIType.directory) {
+          final path = parser.file?.path ?? parser.directory?.path;
+          if (path != null) {
+            switch (await FS.type_(path)) {
+              case FileSystemEntityType.file:
+                parser.type = URIType.file;
+                parser.file = File(path);
+                parser.directory = null;
+                break;
+              case FileSystemEntityType.directory:
+                parser.type = URIType.directory;
+                parser.file = null;
+                parser.directory = Directory(path);
+                break;
+              default:
+                break;
+            }
+          }
+        }
+
         switch (parser.type) {
           case URIType.file:
             {
               final playable = Playable(
-                uri: uri,
-                title: basename(uri),
+                uri: parser.file!.path,
+                title: basename(parser.file!.path),
                 subtitle: [],
                 description: [],
               );
               try {
-                await MediaPlayer.instance.open(
-                  [
-                    playable,
-                  ],
-                  onOpen: onMediaPlayerOpen,
-                );
+                await MediaPlayer.instance.open([playable], onOpen: onMediaPlayerOpen);
               } catch (exception, stacktrace) {
                 debugPrint(exception.toString());
                 debugPrint(stacktrace.toString());
@@ -162,18 +179,9 @@ class Intent {
                 );
                 try {
                   if (i == 0) {
-                    await MediaPlayer.instance.open(
-                      [
-                        playable,
-                      ],
-                      onOpen: onMediaPlayerOpen,
-                    );
+                    await MediaPlayer.instance.open([playable], onOpen: onMediaPlayerOpen);
                   } else {
-                    await MediaPlayer.instance.add(
-                      [
-                        playable,
-                      ],
-                    );
+                    await MediaPlayer.instance.add([playable]);
                   }
                 } catch (exception, stacktrace) {
                   debugPrint(exception.toString());
