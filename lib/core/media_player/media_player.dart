@@ -184,8 +184,7 @@ class MediaPlayer extends ChangeNotifier
     int? mixOffset;
     if ((mix ?? Configuration.instance.nowPlayingStartMixAfterEnding) && playables.isNotEmpty) {
       mixOffset = medias.length;
-
-      medias.addAll(await compute(_processTracksForMix, MediaLibraryProvider.instance.tracks));
+      medias.addAll(MediaLibraryProvider.instance.tracks.map((track) => track.toPlayable().toMedia()).toList()..shuffle());
     }
 
     state = state.copyWith(shuffle: false, mixOffset: mixOffset);
@@ -470,8 +469,4 @@ class MediaPlayer extends ChangeNotifier
 
   late Player _player;
   final TagReader _tagReader = TagReader();
-}
-
-List<Media> _processTracksForMix(List<Track> tracks) {
-  return tracks.map((track) => track.toPlayable().toMedia()).toList()..shuffle();
 }
