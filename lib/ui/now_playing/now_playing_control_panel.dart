@@ -211,7 +211,7 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
           return Column(
             children: [
               InkWell(
-                onTap: () => mediaPlayer.setCrossfadeDuration(mediaPlayer.state.crossfadeDuration == Duration.zero ? MediaPlayer.kDefaultCrossfadeDuration : Duration.zero),
+                onTap: () => mediaPlayer.setCrossfadeDuration(mediaPlayer.state.crossfadeDuration == Duration.zero ? MediaPlayer.kCrossfadeDefaultDuration : Duration.zero),
                 child: Container(
                   height: 48.0,
                   padding: isDesktop ? const EdgeInsets.only(left: 20.0, right: 16.0) : EdgeInsets.zero,
@@ -233,26 +233,26 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
               Padding(
                 padding: isDesktop ? const EdgeInsets.symmetric(horizontal: 12.0) : EdgeInsets.zero,
                 child: ScrollableSlider(
-                  min: MediaPlayer.kMinCrossfadeDuration.inSeconds.toDouble(),
-                  max: MediaPlayer.kMaxCrossfadeDuration.inSeconds.toDouble(),
+                  min: MediaPlayer.kCrossfadeMinDuration.inSeconds.toDouble(),
+                  max: MediaPlayer.kCrossfadeMaxDuration.inSeconds.toDouble(),
                   interval: 1.0,
                   stepSize: 1.0,
                   showLabels: true,
                   labelFormatterCallback: (value, _) {
-                    if (value == MediaPlayer.kMinCrossfadeDuration.inSeconds) {
-                      return '${MediaPlayer.kMinCrossfadeDuration.inSeconds}s';
-                    } else if (value == MediaPlayer.kMaxCrossfadeDuration.inSeconds) {
-                      return '${MediaPlayer.kMaxCrossfadeDuration.inSeconds}s';
+                    if (value == MediaPlayer.kCrossfadeMinDuration.inSeconds) {
+                      return '${MediaPlayer.kCrossfadeMinDuration.inSeconds}s';
+                    } else if (value == MediaPlayer.kCrossfadeMaxDuration.inSeconds) {
+                      return '${MediaPlayer.kCrossfadeMaxDuration.inSeconds}s';
                     }
                     return '';
                   },
-                  value: mediaPlayer.state.crossfadeDuration.inSeconds.clamp(MediaPlayer.kMinCrossfadeDuration.inSeconds.toDouble(), MediaPlayer.kMaxCrossfadeDuration.inSeconds.toDouble()).toDouble(),
+                  value: mediaPlayer.state.crossfadeDuration.inSeconds.clamp(MediaPlayer.kCrossfadeMinDuration.inSeconds.toDouble(), MediaPlayer.kCrossfadeMaxDuration.inSeconds.toDouble()).toDouble(),
                   onChanged: mediaPlayer.state.crossfadeDuration != Duration.zero ? (value) => mediaPlayer.setCrossfadeDuration(Duration(seconds: value.round())) : null,
                   onScrolledUp: () => mediaPlayer.setCrossfadeDuration(
-                    (mediaPlayer.state.crossfadeDuration + const Duration(seconds: 1)).clamp(MediaPlayer.kMinCrossfadeDuration, MediaPlayer.kMaxCrossfadeDuration),
+                    (mediaPlayer.state.crossfadeDuration + const Duration(seconds: 1)).clamp(MediaPlayer.kCrossfadeMinDuration, MediaPlayer.kCrossfadeMaxDuration),
                   ),
                   onScrolledDown: () => mediaPlayer.setCrossfadeDuration(
-                    (mediaPlayer.state.crossfadeDuration - const Duration(seconds: 1)).clamp(MediaPlayer.kMinCrossfadeDuration, MediaPlayer.kMaxCrossfadeDuration),
+                    (mediaPlayer.state.crossfadeDuration - const Duration(seconds: 1)).clamp(MediaPlayer.kCrossfadeMinDuration, MediaPlayer.kCrossfadeMaxDuration),
                   ),
                 ),
               ),

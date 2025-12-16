@@ -62,22 +62,22 @@ class _PlusSectionState extends State<PlusSection> {
                 stepSize: 1.0,
                 showLabels: true,
                 labelFormatterCallback: (value, _) {
-                  if (value == MediaPlayer.kDefaultCrossfadeDuration.inSeconds) {
-                    return '${MediaPlayer.kDefaultCrossfadeDuration.inSeconds}s';
-                  } else if (value == MediaPlayer.kMinCrossfadeDuration.inSeconds) {
-                    return '${MediaPlayer.kMinCrossfadeDuration.inSeconds}s';
-                  } else if (value == MediaPlayer.kMaxCrossfadeDuration.inSeconds) {
-                    return '${MediaPlayer.kMaxCrossfadeDuration.inSeconds}s';
+                  if (value == MediaPlayer.kCrossfadeDefaultDuration.inSeconds) {
+                    return '${MediaPlayer.kCrossfadeDefaultDuration.inSeconds}s';
+                  } else if (value == MediaPlayer.kCrossfadeMinDuration.inSeconds) {
+                    return '${MediaPlayer.kCrossfadeMinDuration.inSeconds}s';
+                  } else if (value == MediaPlayer.kCrossfadeMaxDuration.inSeconds) {
+                    return '${MediaPlayer.kCrossfadeMaxDuration.inSeconds}s';
                   }
                   return '';
                 },
                 value: mediaPlayer.state.crossfadeDuration.inSeconds.clamp(2.0, 30.0).toDouble(),
                 onChanged: mediaPlayer.state.crossfadeDuration != Duration.zero ? (value) => mediaPlayer.setCrossfadeDuration(Duration(seconds: value.round())) : null,
                 onScrolledUp: () => mediaPlayer.setCrossfadeDuration(
-                  (mediaPlayer.state.crossfadeDuration + const Duration(seconds: 1)).clamp(MediaPlayer.kMinCrossfadeDuration, MediaPlayer.kMaxCrossfadeDuration),
+                  (mediaPlayer.state.crossfadeDuration + const Duration(seconds: 1)).clamp(MediaPlayer.kCrossfadeMinDuration, MediaPlayer.kCrossfadeMaxDuration),
                 ),
                 onScrolledDown: () => mediaPlayer.setCrossfadeDuration(
-                  (mediaPlayer.state.crossfadeDuration - const Duration(seconds: 1)).clamp(MediaPlayer.kMinCrossfadeDuration, MediaPlayer.kMaxCrossfadeDuration),
+                  (mediaPlayer.state.crossfadeDuration - const Duration(seconds: 1)).clamp(MediaPlayer.kCrossfadeMinDuration, MediaPlayer.kCrossfadeMaxDuration),
                 ),
               ),
             ),

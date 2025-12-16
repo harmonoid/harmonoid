@@ -43,9 +43,10 @@ import 'package:harmonoid/utils/constants.dart';
 class MediaPlayer extends ChangeNotifier
     with AudioServiceMixin, DiscordRpcMixin, HistoryPlaylistMixin, LastFmMixin, MprisMixin, SystemMediaTransportControlsMixin, WindowsTaskbarMixin
     implements BaseMediaPlayer {
-  static const Duration kDefaultCrossfadeDuration = Duration(seconds: 5);
-  static const Duration kMinCrossfadeDuration = Duration(seconds: 2);
-  static const Duration kMaxCrossfadeDuration = Duration(seconds: 30);
+  static const Duration kCrossfadeDefaultDuration = Duration(seconds: 5);
+  static const Duration kCrossfadeMinDuration = Duration(seconds: 2);
+  static const Duration kCrossfadeMaxDuration = Duration(seconds: 30);
+  static const int kMixThreshold = 100;
 
   /// Singleton instance.
   static final MediaPlayer instance = MediaPlayer._();
@@ -182,7 +183,7 @@ class MediaPlayer extends ChangeNotifier
 
     // UPDATE MIX OFFSET
     int? mixOffset;
-    if ((mix ?? Configuration.instance.nowPlayingStartMixAfterEnding) && playables.isNotEmpty) {
+    if ((mix ?? Configuration.instance.nowPlayingStartMixAfterEnding) && playables.length < kMixThreshold) {
       mixOffset = medias.length;
       medias.addAll(MediaLibraryProvider.instance.tracks.map((track) => track.toPlayable().toMedia()).toList()..shuffle());
     }
