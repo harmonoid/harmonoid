@@ -43,11 +43,10 @@ class AndroidStorageController {
     //
     // Personally, I have never experienced a [MissingPluginException], but few users have sent us report. So, for now I have decided to do polling on Dart side until the [MethodChannel] correctly responds with the value instead of throwing a [MissingPluginException].
     // This hopefully will avoid any errors before Flutter engine starts, even though with a busy-waiting (if it ever takes place in any rare situation).
-    int attempts = 0;
+    DateTime start = DateTime.now();
     int? result;
-    while (attempts < 69 && result == null) {
+    while (DateTime.now().difference(start).inSeconds < 5 && result == null) {
       try {
-        attempts++;
         result = await instance.getVersion();
         await Future.delayed(const Duration(milliseconds: 200));
       } catch (exception, stacktrace) {
