@@ -53,7 +53,6 @@ class MainActivity : AudioServiceActivity() {
         utilsMethodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, UTILS_CHANNEL_NAME).apply {
             setMethodCallHandler(UtilsMethodCallHandler(this@MainActivity))
         }
-        Log.d(TAG, storageDirectories.toString())
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

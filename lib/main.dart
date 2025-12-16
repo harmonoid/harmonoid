@@ -45,12 +45,12 @@ Future<void> main(List<String> args) async {
 
       await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: SystemUiOverlay.values);
       await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-      await AndroidStorageController.ensureInitialized();
       if (AndroidStorageController.instance.version >= 33) {
         if (await Permission.audio.isDenied || await Permission.audio.isPermanentlyDenied) {
           final state = await Permission.audio.request();
           if (!state.isGranted) {
             await SystemNavigator.pop();
+            return;
           }
         }
       } else {
@@ -58,9 +58,11 @@ Future<void> main(List<String> args) async {
           final state = await Permission.storage.request();
           if (!state.isGranted) {
             await SystemNavigator.pop();
+            return;
           }
         }
       }
+      await AndroidStorageController.ensureInitialized();
     }
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
       await WindowPlus.ensureInitialized(
