@@ -153,7 +153,7 @@ class FileSystemMediaLibrary extends media_library.FileSystemMediaLibrary with C
   Future<File> getDefaultCoverFile() async {
     final cover = File(join(covers.path, kCoverDefaultFileName));
     if (!await cover.exists_()) {
-      final data = await rootBundle.load(kArtistImageDefaultAssetKey);
+      final data = await rootBundle.load(kCoverDefaultAssetKey);
       await cover.write_(data.buffer.asUint8List());
     }
     return cover;
