@@ -3,7 +3,8 @@ Version:    0.3.19
 Release:    1
 Summary:    Plays & manages your music library. Looks beautiful & juicy.
 License:    EULA
-Requires:   mpv, mpv-libs-devel
+Requires:   mpv, mpv-libs-devel, xdg-desktop-portal
+Recommends: xdg-desktop-portal-gtk
 AutoReqProv: no
 
 %define __os_install_post %{nil}

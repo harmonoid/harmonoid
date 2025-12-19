@@ -4,7 +4,8 @@ Section: base
 Priority: optional
 Homepage: https://github.com/harmonoid/harmonoid
 Architecture: amd64
-Depends: mpv, libmpv-dev
+Depends: mpv, libmpv-dev, xdg-desktop-portal
+Recommends: xdg-desktop-portal-gtk
 Maintainer: Hitesh Kumar Saini <saini123hitesh@gmail.com>
 Description: Harmonoid
   Plays & manages your music library. Looks beautiful & juicy.
