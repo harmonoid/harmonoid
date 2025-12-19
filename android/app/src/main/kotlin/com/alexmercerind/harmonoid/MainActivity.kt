@@ -68,7 +68,7 @@ class MainActivity : AudioServiceActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        FlutterLocalNotificationsPlugin.configureFlutterEngine = Consumer { configureFlutterEngine(it) }
+        FlutterLocalNotificationsPlugin.setConfigureFlutterEngineCallback { configureFlutterEngine(it) }
         installSplashScreen()
         handleIntent(intent)
     }

@@ -482,8 +482,8 @@ packages:
     dependency: "direct main"
     description:
       path: flutter_local_notifications
-      ref: e8763a2
-      resolved-ref: e8763a2d9a41ea0faebd1fe57e1864a9734138a0
+      ref: "7f18146"
+      resolved-ref: "7f181464afd5ccd1691be9eaa3811ec1ae438085"
       url: "https://github.com/alexmercerind/flutter_local_notifications.git"
     source: git
     version: "20.0.0-dev.2"

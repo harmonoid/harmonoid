@@ -28,7 +28,7 @@ dependencies:
   flutter_local_notifications:
     git:
       url: https://github.com/alexmercerind/flutter_local_notifications.git
-      ref: e8763a2
+      ref: 7f18146
       path: flutter_local_notifications
   flutter_markdown_plus: ^1.0.5
   flutter_svg: ^2.2.1
