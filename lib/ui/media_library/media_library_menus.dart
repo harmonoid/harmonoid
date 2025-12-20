@@ -198,8 +198,7 @@ class TrackMenuProvider {
       TrackMenuAction.share => _fileSystemMediaLibrary != null && (Platform.isAndroid || Platform.isIOS),
       TrackMenuAction.showInFileManager => _fileSystemMediaLibrary != null && (Platform.isLinux || Platform.isMacOS || Platform.isWindows),
       TrackMenuAction.fileInformation => _fileSystemMediaLibrary != null,
-      // TODO: Missing implementation.
-      TrackMenuAction.editTags => false,
+      TrackMenuAction.editTags => _fileSystemMediaLibrary != null,
       TrackMenuAction.refresh => _fileSystemMediaLibrary != null,
       TrackMenuAction.delete => _fileSystemMediaLibrary != null,
       _ => true,

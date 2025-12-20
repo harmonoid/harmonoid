@@ -10,6 +10,9 @@ import 'package:flutter/material.dart' hide CarouselView, CarouselController, Re
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:identity/identity.dart';
+import 'package:m3_expressive_shapes/rounded_polygon_border.dart';
+import 'package:m3_expressive_shapes/shapes/material_shapes.dart';
 import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
@@ -887,6 +890,98 @@ class ScaleOnHoverState extends State<ScaleOnHover> {
 
 // --------------------------------------------------
 
+final class HoverActionsData {
+  final String label;
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const HoverActionsData({
+    required this.label,
+    required this.icon,
+    required this.onTap,
+  });
+}
+
+class HoverActions extends StatefulWidget {
+  final Widget child;
+  final List<HoverActionsData> actions;
+  const HoverActions({
+    super.key,
+    required this.child,
+    required this.actions,
+  });
+
+  @override
+  State<HoverActions> createState() => HoverActionsState();
+}
+
+class HoverActionsState extends State<HoverActions> {
+  bool _hovered = isMobile;
+  int? _hoveredAction;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: isMobile ? null : (e) => setState(() => _hovered = true),
+      onExit: isMobile ? null : (e) => setState(() => _hovered = false),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          widget.child,
+          AnimatedOpacity(
+            opacity: _hovered ? 1.0 : 0.0,
+            duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              spacing: 8.0,
+              children: widget.actions
+                  .mapIndexed(
+                    (i, e) => isMaterial2
+                        ? FloatingActionButton.small(
+                            onPressed: e.onTap,
+                            tooltip: e.label,
+                            child: Icon(e.icon),
+                          )
+                        : MouseRegion(
+                            onEnter: (e) => setState(() => _hoveredAction = i),
+                            onExit: (e) => setState(() => _hoveredAction = null),
+                            child: AnimatedContainer(
+                              curve: const ElasticOutCurve(0.85),
+                              width: 48.0,
+                              height: 48.0,
+                              duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+                              decoration: ShapeDecoration(
+                                color: Theme.of(context).colorScheme.primaryContainer,
+                                shape: RoundedPolygonBorder(polygon: _hoveredAction == i ? MaterialShapes.sunny : MaterialShapes.circle),
+                              ),
+                              child: Tooltip(
+                                message: e.label,
+                                child: InkWell(
+                                  onTap: e.onTap,
+                                  child: Center(
+                                    child: Icon(
+                                      e.icon,
+                                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                  )
+                  .toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// --------------------------------------------------
+
 class SubHeader extends StatelessWidget {
   final String text;
   final double? height;
@@ -1492,6 +1587,31 @@ class PlayFileOrURLButton extends StatelessWidget {
 
 // --------------------------------------------------
 
+class EditTagsButton extends StatelessWidget {
+  const EditTagsButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      tooltip: Localization.instance.EDIT_TAGS,
+      icon: const Icon(Icons.label),
+      iconSize: 20.0,
+      splashRadius: 18.0,
+      color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
+      onPressed: () async {
+        context.read<SubscriptionNotifier>().accessSubscriptionFeature(context, () async {
+          final result = await pickFile(extensions: kDefaultSupportedFileTypes);
+          if (result != null) {
+            await context.push(Uri(path: '/$kTagEditorPath', queryParameters: {kTagEditorArgResource: result.path}).toString());
+          }
+        });
+      },
+    );
+  }
+}
+
+// --------------------------------------------------
+
 class MobileGridSpanButton extends StatelessWidget {
   const MobileGridSpanButton({super.key});
 
@@ -1617,6 +1737,17 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                   completer.complete(3);
                   Navigator.of(context).maybePop();
                 },
+                leading: const Icon(Icons.label),
+                title: Text(
+                  Localization.instance.EDIT_TAGS,
+                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                ),
+              ),
+              ListTile(
+                onTap: () {
+                  completer.complete(4);
+                  Navigator.of(context).maybePop();
+                },
                 leading: const Icon(Icons.settings),
                 title: Text(
                   Localization.instance.SETTINGS,
@@ -1649,6 +1780,16 @@ class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> 
                 break;
               }
             case 3:
+              {
+                context.read<SubscriptionNotifier>().accessSubscriptionFeature(context, () async {
+                  final result = await pickFile(extensions: kDefaultSupportedFileTypes);
+                  if (result != null) {
+                    await context.push(Uri(path: '/$kTagEditorPath', queryParameters: {kTagEditorArgResource: result.path}).toString());
+                  }
+                });
+                break;
+              }
+            case 4:
               {
                 await context.push('/$kSettingsPath');
                 break;

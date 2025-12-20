@@ -280,10 +280,10 @@ class Controls extends StatelessWidget {
                 const SizedBox(width: 8.0),
                 if (isMaterial3)
                   AnimatedContainer(
+                    curve: const ElasticOutCurve(0.85),
                     width: floatingActionButtonDimension,
                     height: floatingActionButtonDimension,
-                    curve: const ElasticOutCurve(0.85),
-                    duration: const Duration(milliseconds: 500),
+                    duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
                     decoration: ShapeDecoration(
                       color: nowPlayingColors.foreground,
                       shape: RoundedPolygonBorder(polygon: mediaPlayer.state.playing ? MaterialShapes.sunny : MaterialShapes.square),

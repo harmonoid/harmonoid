@@ -32,7 +32,7 @@ class SearchItemsScreenState extends State<SearchItemsScreen> {
   Widget build(BuildContext context) {
     final Widget content;
 
-    if (widget.items[0] is Album) {
+    if (widget.items.firstOrNull is Album) {
       final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.album;
       content = ScrollViewBuilder(
         margin: margin,
@@ -55,7 +55,7 @@ class SearchItemsScreenState extends State<SearchItemsScreen> {
         padding: EdgeInsets.only(top: margin),
         displayHeaders: false,
       );
-    } else if (widget.items[0] is Artist) {
+    } else if (widget.items.firstOrNull is Artist) {
       final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.artist;
       content = ScrollViewBuilder(
         margin: margin,
@@ -78,7 +78,7 @@ class SearchItemsScreenState extends State<SearchItemsScreen> {
         padding: EdgeInsets.only(top: margin),
         displayHeaders: false,
       );
-    } else if (widget.items[0] is Genre) {
+    } else if (widget.items.firstOrNull is Genre) {
       final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.genre;
       content = ScrollViewBuilder(
         margin: margin,
@@ -101,10 +101,10 @@ class SearchItemsScreenState extends State<SearchItemsScreen> {
         padding: EdgeInsets.only(top: margin),
         displayHeaders: false,
       );
-    } else if (widget.items[0] is Track) {
+    } else if (widget.items.firstOrNull is Track) {
       content = TracksTable(tracks: widget.items.cast());
     } else {
-      throw UnsupportedError('SearchItemsScreenState: build: Unsupported type: ${widget.items[0].runtimeType}');
+      content = const SizedBox.shrink();
     }
 
     return ContentScreen(

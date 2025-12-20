@@ -1,3 +1,4 @@
+import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +8,7 @@ import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/settings/settings_section.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LanguageSection extends StatelessWidget {
   const LanguageSection({super.key});
@@ -42,6 +44,30 @@ class LanguageSection extends StatelessWidget {
               },
             );
           },
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16.0,
+            vertical: 8.0,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.info, size: 16.0),
+              const SizedBox(width: 8.0),
+              Expanded(
+                child: TappableText(
+                  text: [
+                    TappableTextData(
+                      onTap: () => launchUrl(Uri.parse('https://github.com/harmonoid/localizations')),
+                      text: Localization.instance.SETTINGS_SECTION_LANGUAGE_INFO,
+                    ),
+                  ],
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );

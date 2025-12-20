@@ -417,7 +417,7 @@ Future<T?> showSelection<T>(
 
         return AlertDialog(
           clipBehavior: Clip.antiAlias,
-          titlePadding: actions ? const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 24.0) : const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 8.0),
+          titlePadding: (actions || values.length > 10) ? const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 24.0) : const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 8.0),
           contentPadding: EdgeInsets.zero,
           title: Text(title),
           content: Material(
@@ -427,7 +427,7 @@ Future<T?> showSelection<T>(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (actions) const Divider(height: 1.0),
+                if (actions || values.length > 10) const Divider(height: 1.0),
                 Flexible(
                   child: SingleChildScrollView(
                     child: Column(

@@ -16,9 +16,10 @@ class UserButton extends StatelessWidget {
         final email = userNotifier.session?.user.email;
 
         return ActionChip(
+          onPressed: () => email == null ? showLogin(context) : showLogout(context),
           padding: const EdgeInsets.all(4.0),
           label: email == null ? Text(Localization.instance.LOGIN) : Text(Localization.instance.LOGOUT),
-          onPressed: () => email == null ? showLogin(context) : showLogout(context),
+          labelStyle: Theme.of(context).textTheme.bodySmall,
         );
       },
     );

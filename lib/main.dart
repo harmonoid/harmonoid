@@ -28,6 +28,8 @@ import 'package:harmonoid/utils/window_lifecycle.dart';
 
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
+  PaintingBinding.instance.imageCache.maximumSize = 1000;
+  PaintingBinding.instance.imageCache.maximumSizeBytes = 200 * 1024 * 1024;
   try {
     HttpOverrides.global = _HttpOverrides();
   } catch (exception, stacktrace) {

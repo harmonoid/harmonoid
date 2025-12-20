@@ -273,6 +273,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                   ),
                                   const SizedBox(width: 8.0),
                                   const PlayFileOrURLButton(),
+                                  const EditTagsButton(),
                                   IconButton(
                                     onPressed: () {
                                       context.push('/$kSettingsPath');

@@ -1,0 +1,283 @@
+import 'package:adaptive_layouts/adaptive_layouts.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tag_writer/tag_writer.dart';
+
+import 'package:harmonoid/core/filesystem_media_library.dart';
+import 'package:harmonoid/extensions/shape_border.dart';
+import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/ui/media_library/media_library_menus.dart';
+import 'package:harmonoid/ui/media_library/tag_editor/search/search_dialog.dart';
+import 'package:harmonoid/ui/media_library/tag_editor/state/tag_editor_notifier.dart';
+import 'package:harmonoid/ui/media_library/tag_editor/tag_editor_no_tags_banner.dart';
+import 'package:harmonoid/utils/async_file_image.dart';
+import 'package:harmonoid/utils/constants.dart';
+import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/widgets.dart';
+
+class TagEditorScreen extends StatefulWidget {
+  final String resource;
+  const TagEditorScreen({super.key, required this.resource});
+
+  @override
+  State<TagEditorScreen> createState() => _TagEditorScreenState();
+}
+
+class _TagEditorScreenState extends State<TagEditorScreen> {
+  void _onPopInvokedWithResult(BuildContext context, bool didPop, Object? result) {
+    if (didPop) return;
+    if (context.read<TagEditorNotifier>().saveInvoked) {
+      recursivelyPopNavigator();
+    } else {
+      Navigator.of(context).pop();
+    }
+  }
+
+  Widget _buildCover(BuildContext context) {
+    return Consumer<TagEditorNotifier>(
+      builder: (context, notifier, _) {
+        final data = notifier.cover?.data;
+        return Card(
+          margin: const EdgeInsets.all(16.0),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ClipRRect(
+              borderRadius: Theme.of(context).cardTheme.shape?.subtractBorderRadius(BorderRadius.circular(8.0)) ?? BorderRadius.zero,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  IgnorePointer(
+                    ignoring: notifier.coverLoading,
+                    child: HoverActions(
+                      actions: [
+                        HoverActionsData(
+                          label: Localization.instance.TAG_EDITOR_SET_COVER,
+                          icon: Icons.edit,
+                          onTap: notifier.setCover,
+                        ),
+                        HoverActionsData(
+                          label: Localization.instance.TAG_EDITOR_REMOVE_COVER,
+                          icon: Icons.delete,
+                          onTap: notifier.removeCover,
+                        ),
+                      ],
+                      child: Image(
+                        width: double.infinity,
+                        image: data == null
+                            ? AsyncFileImage(
+                                'unknown-cover',
+                                FileSystemMediaLibrary.instance.getDefaultCoverFile,
+                                FileSystemMediaLibrary.instance.getDefaultCoverFile,
+                              )
+                            : MemoryImage(data),
+                      ),
+                    ),
+                  ),
+                  if (notifier.coverLoading) const Center(child: CircularProgressIndicator()),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildProperties(BuildContext context) {
+    return Consumer<TagEditorNotifier>(
+      builder: (context, notifier, _) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: 16.0,
+            children: [
+              if (notifier.properties.isEmpty)
+                const TagEditorNoTagsBanner()
+              else
+                ...notifier.properties.entries.map(
+                  (e) => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              Localization.instance.TAG_EDITOR_KEY.replaceAll('"KEY"', e.key),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ),
+                          MouseRegion(
+                            cursor: SystemMouseCursors.click,
+                            child: Tooltip(
+                              message: Localization.instance.TAG_EDITOR_REMOVE_PROPERTY,
+                              child: GestureDetector(
+                                onTap: () => notifier.removeProperty(e.key),
+                                child: const Icon(
+                                  Icons.close,
+                                  size: 16.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8.0),
+                      DefaultTextFormField(
+                        controller: e.value,
+                        maxLines: null,
+                      ),
+                    ],
+                  ),
+                ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.info, size: 16.0),
+                  const SizedBox(width: 8.0),
+                  Expanded(
+                    child: Text(
+                      Localization.instance.TAG_EDITOR_SEPARATORS_INFO,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ),
+                ],
+              ),
+              TextButton(
+                onPressed: () async {
+                  final property = await showSelection<String>(
+                    context,
+                    Localization.instance.TAG_EDITOR_ADD_PROPERTY,
+                    TagWriter.kProperties,
+                    null,
+                    (key) => key,
+                    actions: false,
+                    radio: false,
+                  );
+                  if (property != null) {
+                    notifier.addProperty(property);
+                  }
+                },
+                child: Text(label(Localization.instance.TAG_EDITOR_ADD_PROPERTY)),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildTrailing(BuildContext context) {
+    return ActionChip(
+      onPressed: () async {
+        final result = await showDialog(
+          context: context,
+          builder: (context) => const SearchDialog(),
+        );
+        if (result != null) {
+          context.read<TagEditorNotifier>().setFromTrackSearchResult(result);
+        }
+      },
+      padding: const EdgeInsets.all(4.0),
+      label: Text(Localization.instance.TAG_EDITOR_FILL_FROM_INTERNET),
+      labelStyle: Theme.of(context).textTheme.bodySmall,
+    );
+  }
+
+  Widget _buildSaveFloatingActionButton(BuildContext context) {
+    return Consumer<TagEditorNotifier>(
+      builder: (context, notifier, _) => notifier.loading
+          ? const SizedBox.shrink()
+          : FloatingActionButton(
+              onPressed: notifier.save,
+              tooltip: Localization.instance.SAVE,
+              child: const Icon(Icons.save),
+            ),
+    );
+  }
+
+  Widget _buildDesktopLayout(BuildContext context) {
+    return Consumer<TagEditorNotifier>(
+      builder: (context, notifier, _) {
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) => _onPopInvokedWithResult(context, didPop, result),
+          child: SliverContentScreen(
+            caption: kCaption,
+            title: Localization.instance.EDIT_TAGS,
+            slivers: [
+              if (notifier.loading)
+                const SliverFillRemaining(child: Center(child: CircularProgressIndicator()))
+              else
+                SliverToBoxAdapter(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Flexible(
+                        child: SizedBox(
+                          width: 360.0,
+                          child: _buildCover(context),
+                        ),
+                      ),
+                      const VerticalDivider(width: 1.0, thickness: 1.0),
+                      Flexible(
+                        child: SizedBox(
+                          width: kDesktopCenteredLayoutWidth,
+                          child: _buildProperties(context),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+            trailing: _buildTrailing(context),
+            floatingActionButton: _buildSaveFloatingActionButton(context),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildTabletLayout(BuildContext context) {
+    throw UnimplementedError();
+  }
+
+  Widget _buildMobileLayout(BuildContext context) {
+    throw UnimplementedError();
+  }
+
+  Widget _build(BuildContext context) {
+    if (isDesktop) {
+      return _buildDesktopLayout(context);
+    }
+    if (isTablet) {
+      return _buildTabletLayout(context);
+    }
+    if (isMobile) {
+      return _buildMobileLayout(context);
+    }
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => TagEditorNotifier(
+        resource: widget.resource,
+        onError: (error) => showMessage(
+          context,
+          Localization.instance.ERROR,
+          error,
+        ),
+      ),
+      child: Consumer<TagEditorNotifier>(
+        builder: (context, notifier, _) => _build(context),
+      ),
+    );
+  }
+}

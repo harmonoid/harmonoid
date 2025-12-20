@@ -28,7 +28,7 @@ import 'package:harmonoid/ui/media_library/tracks/tracks_screen.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_lyrics_screen.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_screen.dart';
 import 'package:harmonoid/ui/settings/settings_screen.dart';
-import 'package:harmonoid/ui/tag_editor_screen.dart';
+import 'package:harmonoid/ui/media_library/tag_editor/tag_editor_screen.dart';
 import 'package:harmonoid/ui/user/login/login_screen.dart';
 import 'package:harmonoid/ui/user/login/state/login_notifier.dart';
 import 'package:harmonoid/utils/material_transition_page.dart';
