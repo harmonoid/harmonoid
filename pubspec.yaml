@@ -40,10 +40,11 @@ dependencies:
   http: ^1.2.1
   identity:
     path: external/identity
-  json_annotation: ^4.9.0
+  json_annotation: ^4.9.0 
   lastfm:
     path: external/lastfm
-  lrc: ^1.0.1
+  lrc:
+    git: https://github.com/alexmercerind/dart_lrc.git
   m3_expressive_shapes:
     git:
       url: https://github.com/kekland/m3_expressive_shapes.git

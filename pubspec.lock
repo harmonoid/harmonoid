@@ -626,6 +626,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  html_unescape:
+    dependency: transitive
+    description:
+      name: html_unescape
+      sha256: "15362d7a18f19d7b742ef8dcb811f5fd2a2df98db9f80ea393c075189e0b61e3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   http:
     dependency: "direct main"
     description:
@@ -763,11 +771,12 @@ packages:
   lrc:
     dependency: "direct main"
     description:
-      name: lrc
-      sha256: "5100362b5c8e97f4d3f03ff87efeb40e73a6dd780eca2cbde9312e0d44b8e5ba"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.2"
+      path: "."
+      ref: HEAD
+      resolved-ref: "212a400118e55a1c395acbba8f77c878f9dc6ebf"
+      url: "https://github.com/alexmercerind/dart_lrc.git"
+    source: git
+    version: "1.6.0"
   m3_expressive_shapes:
     dependency: "direct main"
     description:

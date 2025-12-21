@@ -131,8 +131,8 @@ class LyricsNotifier extends ChangeNotifier {
       final file = uriToLRCFile(playable.uri);
       if (await file.exists_()) {
         final contents = await file.readAsString_();
-        if (contents != null && Lrc.isValid(contents)) {
-          final result = Lrc.parse(contents).lyrics;
+        if (contents != null && LrcParser.isValid(contents)) {
+          final result = LrcParser.parse(contents).lyrics;
           lyrics.addAll(result.map((e) => Lyric(timestamp: e.timestamp.inMilliseconds, text: e.lyrics)).toList());
           notifyListeners();
           return;
@@ -150,8 +150,8 @@ class LyricsNotifier extends ChangeNotifier {
     debugPrint('LyricsNotifier: retrieve: Tags: ${playable.uri}');
     try {
       final track = await FileSystemMediaLibrary.instance.db.selectTrackByUri(playable.uri);
-      if (track != null && Lrc.isValid(track.lyrics)) {
-        final result = Lrc.parse(track.lyrics).lyrics;
+      if (track != null && LrcParser.isValid(track.lyrics)) {
+        final result = LrcParser.parse(track.lyrics).lyrics;
         lyrics.addAll(result.map((e) => Lyric(timestamp: e.timestamp.inMilliseconds, text: e.lyrics)).toList());
         notifyListeners();
         return;
@@ -176,8 +176,8 @@ class LyricsNotifier extends ChangeNotifier {
         ];
         for (final file in files) {
           final contents = await file.readAsString_();
-          if (contents != null && Lrc.isValid(contents)) {
-            final result = Lrc.parse(contents).lyrics;
+          if (contents != null && LrcParser.isValid(contents)) {
+            final result = LrcParser.parse(contents).lyrics;
             lyrics.addAll(result.map((e) => Lyric(timestamp: e.timestamp.inMilliseconds, text: e.lyrics)).toList());
             notifyListeners();
             return;
@@ -226,7 +226,7 @@ class LyricsNotifier extends ChangeNotifier {
   Future<bool> add(Playable playable, File file) async {
     try {
       final contents = await file.readAsString_();
-      if (contents != null && Lrc.isValid(contents)) {
+      if (contents != null && LrcParser.isValid(contents)) {
         final destination = uriToLRCFile(playable.uri);
         await file.copy_(destination.path);
         return true;
