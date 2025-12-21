@@ -944,22 +944,24 @@ class HoverActionsState extends State<HoverActions> {
                             tooltip: e.label,
                             child: Icon(e.icon),
                           )
-                        : MouseRegion(
-                            onEnter: (e) => setState(() => _hoveredAction = i),
-                            onExit: (e) => setState(() => _hoveredAction = null),
-                            child: AnimatedContainer(
-                              curve: const ElasticOutCurve(0.85),
-                              width: 48.0,
-                              height: 48.0,
-                              duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
-                              decoration: ShapeDecoration(
-                                color: Theme.of(context).colorScheme.primaryContainer,
-                                shape: RoundedPolygonBorder(polygon: _hoveredAction == i ? MaterialShapes.sunny : MaterialShapes.circle),
-                              ),
-                              child: Tooltip(
-                                message: e.label,
-                                child: InkWell(
-                                  onTap: e.onTap,
+                        : GestureDetector(
+                            onTap: e.onTap,
+                            onPanStart: (e) => setState(() => _hoveredAction = i),
+                            onPanEnd: (e) => setState(() => _hoveredAction = null),
+                            child: MouseRegion(
+                              onEnter: (e) => setState(() => _hoveredAction = i),
+                              onExit: (e) => setState(() => _hoveredAction = null),
+                              child: AnimatedContainer(
+                                curve: const ElasticOutCurve(0.85),
+                                width: 48.0,
+                                height: 48.0,
+                                duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+                                decoration: ShapeDecoration(
+                                  color: Theme.of(context).colorScheme.primaryContainer,
+                                  shape: RoundedPolygonBorder(polygon: _hoveredAction == i ? MaterialShapes.sunny : MaterialShapes.circle),
+                                ),
+                                child: Tooltip(
+                                  message: e.label,
                                   child: Center(
                                     child: Icon(
                                       e.icon,

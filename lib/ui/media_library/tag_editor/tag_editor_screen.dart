@@ -228,66 +228,56 @@ class _TagEditorScreenState extends State<TagEditorScreen> {
     );
   }
 
-  Widget _buildDesktopLayout(BuildContext context) {
-    return Consumer<TagEditorNotifier>(
-      builder: (context, notifier, _) {
-        return PopScope(
-          canPop: false,
-          onPopInvokedWithResult: (didPop, result) => _onPopInvokedWithResult(context, didPop, result),
-          child: SliverContentScreen(
-            caption: kCaption,
-            title: Localization.instance.EDIT_TAGS,
-            slivers: [
-              if (notifier.propertiesLoading)
-                const SliverFillRemaining(child: Center(child: CircularProgressIndicator()))
-              else
-                SliverToBoxAdapter(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Flexible(
-                        child: SizedBox(
-                          width: 360.0,
-                          child: _buildCover(context),
-                        ),
-                      ),
-                      const VerticalDivider(width: 1.0, thickness: 1.0),
-                      Flexible(
-                        child: SizedBox(
-                          width: kDesktopCenteredLayoutWidth,
-                          child: _buildProperties(context),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-            ],
-            trailing: _buildTrailing(context),
-            floatingActionButton: _buildSaveFloatingActionButton(context),
-          ),
-        );
-      },
-    );
+  List<Widget> _buildDesktopSlivers(BuildContext context) {
+    return [
+      SliverToBoxAdapter(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Flexible(
+              child: SizedBox(
+                width: 360.0,
+                child: _buildCover(context),
+              ),
+            ),
+            const VerticalDivider(width: 1.0, thickness: 1.0),
+            Flexible(
+              child: SizedBox(
+                width: kDesktopCenteredLayoutWidth,
+                child: _buildProperties(context),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ];
   }
 
-  Widget _buildTabletLayout(BuildContext context) {
+  List<Widget> _buildTabletSlivers(BuildContext context) {
     throw UnimplementedError();
   }
 
-  Widget _buildMobileLayout(BuildContext context) {
-    throw UnimplementedError();
+  List<Widget> _buildMobileSlivers(BuildContext context) {
+    return [
+      SliverList.list(
+        children: [
+          _buildCover(context),
+          _buildProperties(context),
+        ],
+      ),
+    ];
   }
 
-  Widget _build(BuildContext context) {
+  List<Widget> _buildSlivers(BuildContext context) {
     if (isDesktop) {
-      return _buildDesktopLayout(context);
+      return _buildDesktopSlivers(context);
     }
     if (isTablet) {
-      return _buildTabletLayout(context);
+      return _buildTabletSlivers(context);
     }
     if (isMobile) {
-      return _buildMobileLayout(context);
+      return _buildMobileSlivers(context);
     }
     throw UnimplementedError();
   }
@@ -304,7 +294,21 @@ class _TagEditorScreenState extends State<TagEditorScreen> {
         ),
       ),
       child: Consumer<TagEditorNotifier>(
-        builder: (context, notifier, _) => _build(context),
+        builder: (context, notifier, _) => Consumer<TagEditorNotifier>(
+          builder: (context, notifier, _) {
+            return PopScope(
+              canPop: false,
+              onPopInvokedWithResult: (didPop, result) => _onPopInvokedWithResult(context, didPop, result),
+              child: SliverContentScreen(
+                caption: kCaption,
+                title: Localization.instance.EDIT_TAGS,
+                slivers: notifier.propertiesLoading ? [const SliverFillRemaining(child: Center(child: CircularProgressIndicator()))] : _buildSlivers(context),
+                trailing: _buildTrailing(context),
+                floatingActionButton: _buildSaveFloatingActionButton(context),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

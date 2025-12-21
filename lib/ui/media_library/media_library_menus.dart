@@ -154,7 +154,16 @@ class TrackMenuProvider {
   Future<void> editTags() async {
     _subscriptionNotifier.accessSubscriptionFeature(
       context,
-      () => context.push(Uri(path: '/$kTagEditorPath', queryParameters: {kTagEditorArgResource: track.uri.toString()}).toString()),
+      () async {
+        final bool canWrite;
+        if (Platform.isAndroid) {
+          canWrite = await AndroidStorageController.instance.write([File(track.uri)]);
+        } else {
+          canWrite = true;
+        }
+        if (!canWrite) return;
+        context.push(Uri(path: '/$kTagEditorPath', queryParameters: {kTagEditorArgResource: track.uri.toString()}).toString());
+      },
     );
   }
 
@@ -556,9 +565,21 @@ class PlaylistEntryMenuProvider {
 }
 
 Future<void> recursivelyPopNavigator() async {
-  mediaLibraryAlbumOpenContainerBuildContext?.pop();
-  mediaLibraryArtistOpenContainerBuildContext?.pop();
-  mediaLibraryGenreOpenContainerBuildContext?.pop();
+  try {
+    mediaLibraryAlbumOpenContainerBuildContext?.pop();
+  } catch (e) {
+    // Ignore.
+  }
+  try {
+    mediaLibraryArtistOpenContainerBuildContext?.pop();
+  } catch (e) {
+    // Ignore.
+  }
+  try {
+    mediaLibraryGenreOpenContainerBuildContext?.pop();
+  } catch (e) {
+    // Ignore.
+  }
   mediaLibraryAlbumOpenContainerBuildContext = null;
   mediaLibraryArtistOpenContainerBuildContext = null;
   mediaLibraryGenreOpenContainerBuildContext = null;

@@ -18,6 +18,11 @@ class SearchDialog extends StatefulWidget {
 }
 
 class _SearchDialogState extends State<SearchDialog> {
+  static final double? _kDialogWidth = isDesktop ? kDesktopCenteredLayoutWidth : null;
+  static const double _kSearchBarHeight = 48.0;
+  static final double _kListItemHeight = linearTileHeight;
+  static final int _kListItemCountDelta = isDesktop ? 1 : 0;
+
   final Debouncer _debouncer = Debouncer(timeout: const Duration(milliseconds: 300));
   final TrackSearch _trackSearch = TrackSearch();
   List<TrackSearchResult>? _results = [];
@@ -58,8 +63,8 @@ class _SearchDialogState extends State<SearchDialog> {
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
       child: SizedBox(
-        width: kDesktopCenteredLayoutWidth,
-        height: 48.0 + (results != null && results.isNotEmpty ? (results.length + 1) * linearTileHeight : 0.0),
+        width: _kDialogWidth,
+        height: _kSearchBarHeight + (results != null && results.isNotEmpty ? (results.length + _kListItemCountDelta) * _kListItemHeight : 0.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -81,7 +86,7 @@ class _SearchDialogState extends State<SearchDialog> {
             ),
             if (results != null && results.isNotEmpty)
               SizedBox(
-                height: (results.length + 1) * linearTileHeight,
+                height: (results.length + _kListItemCountDelta) * _kListItemHeight,
                 child: ListItemTable(
                   columns: [Localization.instance.TITLE, Localization.instance.ARTISTS],
                   itemCount: results.length,
@@ -94,14 +99,14 @@ class _SearchDialogState extends State<SearchDialog> {
                   ),
                   leadingBuilder: (context, i) => Image.network(
                     results[i].cover,
-                    width: linearTileHeight,
-                    height: linearTileHeight,
-                    cacheWidth: linearTileHeight.toInt() * 2,
+                    width: _kListItemHeight,
+                    height: _kListItemHeight,
+                    cacheWidth: _kListItemHeight.toInt() * 2,
                     fit: BoxFit.cover,
                   ),
                   onItemPressed: (context, i) => _onItemPressed(results[i]),
                   physics: const NeverScrollableScrollPhysics(),
-                  mobileSliverList: true,
+                  mobileSliverList: false,
                 ),
               ),
           ],
