@@ -26,13 +26,17 @@ class StorageControllerMethodCallHandler(private val activity: Activity, private
         private const val GET_DEFAULT_MEDIA_LIBRARY_DIRECTORY_METHOD_NAME = "getDefaultMediaLibraryDirectory";
         private const val GET_VERSION_METHOD_NAME = "getVersion"
         private const val DELETE_METHOD_NAME = "delete"
+        private const val WRITE_METHOD_NAME = "write"
         /* private */ const val NOTIFY_DELETE_METHOD_NAME = "notifyDelete"
+        /* private */ const val NOTIFY_WRITE_METHOD_NAME = "notifyWrite"
         const val GET_COVER_FILE_METHOD_NAME = "getCoverFile"
 
         private const val DELETE_ARG_PATHS = "paths"
+        private const val WRITE_ARG_PATHS = "paths"
         private const val GET_COVER_FILE_ARG_PATH = "path"
 
         /* private */ const val DELETE_REQUEST_CODE = 1
+        /* private */ const val WRITE_REQUEST_CODE = 2
     }
 
     private val scope = CoroutineScope(Dispatchers.IO)
@@ -69,8 +73,18 @@ class StorageControllerMethodCallHandler(private val activity: Activity, private
                 if (!paths.isNullOrEmpty()) {
                     when {
                         Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> deleteAPILevel30(paths)
-                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> deleteAPILevel29(paths)
                         else -> deleteAPILevel28(paths)
+                    }
+                }
+                result.success(null)
+            }
+
+            WRITE_METHOD_NAME -> {
+                val paths = call.argument<List<String>>(WRITE_ARG_PATHS)
+                if (!paths.isNullOrEmpty()) {
+                    when {
+                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> writeAPILevel30(paths)
+                        else -> writeAPILevel28(paths)
                     }
                 }
                 result.success(null)
@@ -121,45 +135,25 @@ class StorageControllerMethodCallHandler(private val activity: Activity, private
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
-    private fun deleteAPILevel29(paths: List<String>) {
-        if (tryAndDelete(paths)) {
-            channel.invokeMethod(NOTIFY_DELETE_METHOD_NAME, true)
-            return
-        }
-
-        if (paths.size == 1) {
-            try {
-                val response = activity.contentResolver.delete(paths.first().toContentUri()!!, null, null)
-                channel.invokeMethod(NOTIFY_DELETE_METHOD_NAME, response > 0)
-            } catch (e: SecurityException) {
-                e.printStackTrace()
-                try {
-                    val recoverableSecurityException = e as? RecoverableSecurityException
-                    val intentSender = recoverableSecurityException?.userAction?.actionIntent?.intentSender
-                    if (intentSender != null) {
-                        activity.startIntentSenderForResult(
-                            intentSender, DELETE_REQUEST_CODE, Intent(paths.first().toContentUri().toString()), 0, 0, 0, null
-                        )
-                        // Refer MainActivity.onActivityResult for result handling.
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    channel.invokeMethod(NOTIFY_DELETE_METHOD_NAME, false)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                channel.invokeMethod(NOTIFY_DELETE_METHOD_NAME, false)
-            }
-        } else {
-            // API 29 can't delete multiple files at once.
-            channel.invokeMethod(NOTIFY_DELETE_METHOD_NAME, false)
-        }
-    }
-
     private fun deleteAPILevel28(paths: List<String>) {
         val result = tryAndDelete(paths)
         channel.invokeMethod(NOTIFY_DELETE_METHOD_NAME, result)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun writeAPILevel30(paths: List<String>) {
+        runCatching {
+            val pendingIntent = MediaStore.createWriteRequest(activity.contentResolver, paths.map { path -> path.toContentUri()!! })
+            activity.startIntentSenderForResult(pendingIntent.intentSender, WRITE_REQUEST_CODE, null, 0, 0, 0, null)
+            // Refer MainActivity.onActivityResult for result handling.
+        }.onFailure {
+            it.printStackTrace()
+            channel.invokeMethod(NOTIFY_WRITE_METHOD_NAME, false)
+        }
+    }
+
+    private fun writeAPILevel28(paths: List<String>) {
+        channel.invokeMethod(NOTIFY_WRITE_METHOD_NAME, true)
     }
 
     private fun tryAndDelete(paths: List<String>): Boolean {

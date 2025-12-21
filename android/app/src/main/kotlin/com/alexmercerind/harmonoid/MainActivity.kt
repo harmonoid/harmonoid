@@ -3,8 +3,6 @@ package com.alexmercerind.harmonoid
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin
@@ -15,7 +13,6 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import java.io.File
 import java.io.FileOutputStream
-import java.util.function.Consumer
 
 class MainActivity : AudioServiceActivity() {
     companion object {
@@ -58,10 +55,11 @@ class MainActivity : AudioServiceActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             StorageControllerMethodCallHandler.DELETE_REQUEST_CODE -> {
-                if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q && resultCode == RESULT_OK && data != null) {
-                    runCatching { context.contentResolver.delete(Uri.parse(data.action), null, null) }
-                }
                 storageControllerMethodChannel?.invokeMethod(StorageControllerMethodCallHandler.NOTIFY_DELETE_METHOD_NAME, resultCode == RESULT_OK)
+            }
+
+            StorageControllerMethodCallHandler.WRITE_REQUEST_CODE -> {
+                storageControllerMethodChannel?.invokeMethod(StorageControllerMethodCallHandler.NOTIFY_WRITE_METHOD_NAME, resultCode == RESULT_OK)
             }
         }
     }

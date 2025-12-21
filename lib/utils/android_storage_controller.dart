@@ -18,10 +18,13 @@ class AndroidStorageController {
   static const String kGetDefaultMediaLibraryDirectoryMethodName = 'getDefaultMediaLibraryDirectory';
   static const String kGetVersion = 'getVersion';
   static const String kDelete = 'delete';
+  static const String kWrite = 'write';
   static const String kNotifyDeleteMethodName = 'notifyDelete';
+  static const String kNotifyWriteMethodName = 'notifyWrite';
   static const String kGetCoverFileMethodName = 'getCoverFile';
 
   static const String kDeletePathsArg = 'paths';
+  static const String kWritePathsArg = 'paths';
   static const String kGetCoverFilePathArg = 'path';
 
   /// Singleton instance.
@@ -69,6 +72,11 @@ class AndroidStorageController {
               _deleteCompleter.complete(call.arguments);
               break;
             }
+          case kNotifyWriteMethodName:
+            {
+              _writeCompleter.complete(call.arguments);
+              break;
+            }
         }
       },
     );
@@ -108,6 +116,18 @@ class AndroidStorageController {
     return result;
   }
 
+  Future<bool> write(Iterable<File> files) async {
+    _writeCompleter = Completer();
+    await _channel.invokeMethod(
+      kWrite,
+      {
+        kWritePathsArg: files.map((e) => path.normalize(e.path)).toList(),
+      },
+    );
+    final result = await _writeCompleter.future;
+    return result;
+  }
+
   Future<File?> getCoverFile(File file) async {
     final result = await _channel.invokeMethod(
       kGetCoverFileMethodName,
@@ -122,6 +142,7 @@ class AndroidStorageController {
   }
 
   Completer<bool> _deleteCompleter = Completer<bool>();
+  Completer<bool> _writeCompleter = Completer<bool>();
 
   final MethodChannel _channel = const MethodChannel(kMethodChannelName);
 }
