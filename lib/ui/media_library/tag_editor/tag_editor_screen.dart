@@ -1,5 +1,6 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tag_writer/tag_writer.dart';
 
@@ -24,12 +25,25 @@ class TagEditorScreen extends StatefulWidget {
 }
 
 class _TagEditorScreenState extends State<TagEditorScreen> {
-  void _onPopInvokedWithResult(BuildContext context, bool didPop, Object? result) {
+  void _onPopInvokedWithResult(BuildContext context, bool didPop, Object? result) async {
     if (didPop) return;
+
+    if (context.read<TagEditorNotifier>().propertiesChanged || context.read<TagEditorNotifier>().coverChanged) {
+      final result = await showConfirmation(
+        context,
+        Localization.instance.WARNING,
+        Localization.instance.TAG_EDITOR_UNSAVED_CHANGES_DIALOG_SUBTITLE,
+      );
+      if (!result) {
+        recursivelyPopNavigator();
+      }
+      return;
+    }
+
     if (context.read<TagEditorNotifier>().saveInvoked) {
       recursivelyPopNavigator();
     } else {
-      Navigator.of(context).pop();
+      context.pop();
     }
   }
 
@@ -55,21 +69,37 @@ class _TagEditorScreenState extends State<TagEditorScreen> {
                           icon: Icons.edit,
                           onTap: notifier.setCover,
                         ),
+                        if (notifier.cover == null && notifier.oldCover != null)
+                          HoverActionsData(
+                            label: Localization.instance.TAG_EDITOR_REVERT_COVER,
+                            icon: Icons.undo,
+                            onTap: notifier.revertCover,
+                          )
+                        else
+                          HoverActionsData(
+                            label: Localization.instance.TAG_EDITOR_REMOVE_COVER,
+                            icon: Icons.delete,
+                            onTap: notifier.removeCover,
+                          ),
                         HoverActionsData(
-                          label: Localization.instance.TAG_EDITOR_REMOVE_COVER,
-                          icon: Icons.delete,
-                          onTap: notifier.removeCover,
+                          label: Localization.instance.TAG_EDITOR_EXPORT_COVER,
+                          icon: Icons.file_download,
+                          onTap: notifier.exportCover,
                         ),
                       ],
-                      child: Image(
-                        width: double.infinity,
-                        image: data == null
-                            ? AsyncFileImage(
-                                'unknown-cover',
-                                FileSystemMediaLibrary.instance.getDefaultCoverFile,
-                                FileSystemMediaLibrary.instance.getDefaultCoverFile,
-                              )
-                            : MemoryImage(data),
+                      child: AspectRatio(
+                        aspectRatio: 1.0,
+                        child: Image(
+                          image: data == null
+                              ? AsyncFileImage(
+                                  'unknown-cover',
+                                  FileSystemMediaLibrary.instance.getDefaultCoverFile,
+                                  FileSystemMediaLibrary.instance.getDefaultCoverFile,
+                                )
+                              : MemoryImage(data),
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
@@ -190,7 +220,7 @@ class _TagEditorScreenState extends State<TagEditorScreen> {
 
   Widget _buildSaveFloatingActionButton(BuildContext context) {
     return Consumer<TagEditorNotifier>(
-      builder: (context, notifier, _) => notifier.loading
+      builder: (context, notifier, _) => notifier.saveInvoked || (notifier.propertiesLoading || notifier.coverLoading) || !(notifier.propertiesChanged || notifier.coverChanged)
           ? const SizedBox.shrink()
           : FloatingActionButton(
               onPressed: notifier.save,
@@ -210,7 +240,7 @@ class _TagEditorScreenState extends State<TagEditorScreen> {
             caption: kCaption,
             title: Localization.instance.EDIT_TAGS,
             slivers: [
-              if (notifier.loading)
+              if (notifier.propertiesLoading)
                 const SliverFillRemaining(child: Center(child: CircularProgressIndicator()))
               else
                 SliverToBoxAdapter(

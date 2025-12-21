@@ -1,34 +1,41 @@
 import 'dart:io';
+import 'package:collection/collection.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:media_library/media_library.dart' hide FileSystemMediaLibrary;
-import 'package:path/path.dart';
 import 'package:safe_local_storage/file_system.dart';
 import 'package:tag_reader/tag_reader.dart';
 import 'package:tag_writer/tag_writer.dart';
 import 'package:uuid/uuid.dart';
 
-import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/mappers/media_library_item.dart';
 import 'package:harmonoid/mappers/tags.dart';
 import 'package:harmonoid/ui/media_library/tag_editor/search/models/track_search_result.dart';
+import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 class TagEditorNotifier extends ChangeNotifier {
-  static const kSupportedImageFormats = {'JPG', 'JPEG', 'PNG'};
+  static const Set<String> kSupportedImageFormats = {'JPG', 'JPEG', 'PNG'};
 
   TagEditorNotifier({required this.resource, this.onError}) {
     _initialize();
   }
 
-  String resource;
-  void Function(String)? onError;
-  bool loading = false;
-  bool coverLoading = false;
+  final String resource;
+  final void Function(String)? onError;
   bool saveInvoked = false;
+  bool propertiesLoading = false;
+  bool coverLoading = false;
+  bool propertiesChanged = false;
+  bool coverChanged = false;
   Map<String, TextEditingController> properties = {};
   CoverData? cover;
+
+  Map<String, String> get propertiesMap => properties.whereNotEmpty((entry) => entry.value.text);
+  CoverData? get oldCover => _oldCover;
 
   @override
   void dispose() {
@@ -36,23 +43,28 @@ class TagEditorNotifier extends ChangeNotifier {
     _reader.dispose();
     _writer.dispose();
     for (final v in properties.values) {
-      v.dispose();
+      _disposeTextEditingController(v);
     }
   }
 
-  void addProperty(String key) {
-    if (properties.containsKey(key)) return;
-    properties[key] = TextEditingController();
+  void addProperty(String key, [String? value]) {
+    if (!properties.containsKey(key)) {
+      properties[key] = _createTextEditingController();
+    }
+    if (value != null) {
+      properties[key]?.text = value;
+    }
     notifyListeners();
   }
 
   void removeProperty(String key) {
-    properties.remove(key)?.dispose();
+    _disposeTextEditingController(properties.remove(key));
     notifyListeners();
   }
 
   Future<void> setCover([CoverData? coverData]) async {
     coverLoading = true;
+    coverChanged = true;
     notifyListeners();
 
     try {
@@ -99,6 +111,7 @@ class TagEditorNotifier extends ChangeNotifier {
 
   Future<void> removeCover() async {
     coverLoading = true;
+    coverChanged = true;
     notifyListeners();
 
     try {
@@ -117,8 +130,26 @@ class TagEditorNotifier extends ChangeNotifier {
     }
   }
 
+  Future<void> revertCover() async {
+    if (cover != null || _oldCover == null) return;
+    await setCover(_oldCover);
+  }
+
+  Future<void> exportCover() async {
+    if (cover == null) return;
+    await FilePicker.platform.saveFile(
+      fileName: '${const Uuid().v4()}.${cover!.mimeType.split('/').last}',
+      type: FileType.custom,
+      allowedExtensions: [cover!.mimeType.split('/').last],
+      bytes: cover!.data,
+    );
+  }
+
   Future<void> setFromTrackSearchResult(TrackSearchResult result) async {
-    loading = true;
+    propertiesLoading = true;
+    coverLoading = true;
+    propertiesChanged = true;
+    coverChanged = true;
     notifyListeners();
 
     try {
@@ -134,14 +165,15 @@ class TagEditorNotifier extends ChangeNotifier {
 
       for (final MapEntry(:key, :value) in json.entries) {
         if (value.isEmpty) continue;
-        addProperty(key);
-        properties[key]?.text = value;
+        addProperty(key, value);
       }
 
-      loading = false;
+      propertiesLoading = false;
+      coverLoading = false;
       notifyListeners();
     } catch (exception, stacktrace) {
-      loading = false;
+      propertiesLoading = false;
+      coverLoading = false;
       notifyListeners();
 
       debugPrint(exception.toString());
@@ -150,22 +182,24 @@ class TagEditorNotifier extends ChangeNotifier {
   }
 
   Future<void> save() async {
+    if (!propertiesChanged && !coverChanged) return;
+
     saveInvoked = true;
-    loading = true;
+    propertiesLoading = true;
     notifyListeners();
 
     try {
-      final oldProperties = _oldProperties;
-      final newProperties = properties.map((key, value) => MapEntry(key, value.text.trim()));
+      final oldPropertiesMap = _oldPropertiesMap;
+      final newPropertiesMap = propertiesMap;
 
-      for (final key in oldProperties.keys) {
-        if (!newProperties.containsKey(key)) {
+      for (final key in oldPropertiesMap.keys) {
+        if (!newPropertiesMap.containsKey(key)) {
           _writer.removeProperty(key);
           debugPrint('TagEditorNotifier: save: Remove property: $key');
         }
       }
-      for (final MapEntry(:key, :value) in newProperties.entries) {
-        if (oldProperties[key] == value) continue;
+      for (final MapEntry(:key, :value) in newPropertiesMap.entries) {
+        if (oldPropertiesMap[key] == value) continue;
         if (value.isEmpty) {
           _writer.removeProperty(key);
           debugPrint('TagEditorNotifier: save: Remove property: $key');
@@ -180,16 +214,18 @@ class TagEditorNotifier extends ChangeNotifier {
       _refreshProperties();
       _refreshCover();
 
-      // Update old tags & properties.
-      _oldTags = await _getTags();
-      _oldProperties = properties.map((key, value) => MapEntry(key, value.text.trim()));
-
       await _postProcessResource();
 
-      loading = false;
+      _oldTags = await _getTags();
+      _oldPropertiesMap = propertiesMap;
+      _oldCover = _writer.getCover();
+      propertiesChanged = false;
+      coverChanged = false;
+
+      propertiesLoading = false;
       notifyListeners();
     } catch (exception, stacktrace) {
-      loading = false;
+      propertiesLoading = false;
       notifyListeners();
 
       onError?.call(Localization.instance.TAG_EDITOR_ERROR_SAVE);
@@ -199,19 +235,51 @@ class TagEditorNotifier extends ChangeNotifier {
     }
   }
 
+  TextEditingController _createTextEditingController([String? value]) {
+    return TextEditingController(text: value)..addListener(_listenerTextEditingController);
+  }
+
+  void _disposeTextEditingController(TextEditingController? controller) {
+    controller
+      ?..removeListener(_listenerTextEditingController)
+      ..dispose();
+    _listenerTextEditingController();
+  }
+
+  void _listenerTextEditingController() {
+    final oldPropertiesMap = _oldPropertiesMap;
+    final newPropertiesMap = propertiesMap;
+    if (const MapEquality().equals(oldPropertiesMap, newPropertiesMap)) {
+      if (propertiesChanged) {
+        propertiesChanged = false;
+        notifyListeners();
+      }
+    } else {
+      if (!propertiesChanged) {
+        propertiesChanged = true;
+        notifyListeners();
+      }
+    }
+  }
+
   void _refreshProperties() {
     for (final value in properties.values) {
-      value.dispose();
+      _disposeTextEditingController(value);
     }
-    properties = _writer.getProperties().map((key, value) => MapEntry(key, TextEditingController(text: value.firstOrNull ?? '')));
+    properties = _writer.getProperties().whereNotEmpty((entry) => entry.value.firstOrNull ?? '').map((key, value) => MapEntry(key, _createTextEditingController(value)));
   }
 
   void _refreshCover() {
     cover = _writer.getCover();
   }
 
+  Future<Tags> _getTags() async {
+    final tags = await _reader.parse(resource);
+    return tags;
+  }
+
   Future<void> _initialize() async {
-    loading = true;
+    propertiesLoading = true;
     coverLoading = true;
     notifyListeners();
     try {
@@ -219,7 +287,7 @@ class TagEditorNotifier extends ChangeNotifier {
       await _initializeTagReader();
       await _initializeTagWriter();
 
-      loading = false;
+      propertiesLoading = false;
       coverLoading = false;
       notifyListeners();
     } catch (exception, stacktrace) {
@@ -230,33 +298,22 @@ class TagEditorNotifier extends ChangeNotifier {
     }
   }
 
-  Future<void> _preProcessResource() async {
-    // On Android, we must copy the file locally where we can write it.
-
-    if (Platform.isAndroid) {
-      await _directory.delete_();
-      await _directory.create_();
-
-      final from = resource;
-      final to = join(_directory.path, const Uuid().v4());
-
-      await File(from).copy_(to);
-
-      resource = to;
-    }
-  }
+  Future<void> _preProcessResource() async {}
 
   Future<void> _postProcessResource() async {
     // Refresh the media library.
 
     final track = await _fileSystemMediaLibrary.db.selectTrackByUri(resource);
     if (track != null) {
+      AsyncFileImage.reset(track.toImageKey());
+      await MediaLibrary.trackUriToCoverFile(_fileSystemMediaLibrary.covers, resource).delete_();
+
       await _fileSystemMediaLibrary.remove([track], delete: false);
       await _fileSystemMediaLibrary.add(File(resource));
       await _fileSystemMediaLibrary.populate();
     }
 
-    // Update hash in the media library playlist entries.
+    // Refresh the playlists.
 
     final oldTags = _oldTags;
     final oldHash = HashEncoder.trackToHash(oldTags.toTrack());
@@ -265,10 +322,6 @@ class TagEditorNotifier extends ChangeNotifier {
     final newHash = HashEncoder.trackToHash(newTags.toTrack());
 
     await _fileSystemMediaLibrary.playlists.replaceHash(oldHash, newHash);
-
-    // On Android, we must copy the file back to the original location.
-
-    // TODO: Missing implementation.
   }
 
   Future<void> _initializeTagReader() async {
@@ -283,21 +336,23 @@ class TagEditorNotifier extends ChangeNotifier {
 
     _writer = TagWriter(resource, fileFormat: _oldTags.fileFormat, audioCodec: _oldTags.audioCodec);
 
-    _oldProperties = _writer.getProperties().map((key, value) => MapEntry(key, value.firstOrNull ?? ''));
+    _oldPropertiesMap = _writer.getProperties().whereNotEmpty((entry) => entry.value.firstOrNull ?? '');
+    _oldCover = _writer.getCover();
 
     _refreshProperties();
     _refreshCover();
   }
 
-  Future<Tags> _getTags() async {
-    final tags = await _reader.parse(resource);
-    return tags;
-  }
-
   late final TagReader _reader;
   late final TagWriter _writer;
   late Tags _oldTags;
-  late Map<String, String> _oldProperties;
+  late Map<String, String> _oldPropertiesMap;
+  late CoverData? _oldCover;
   final FileSystemMediaLibrary _fileSystemMediaLibrary = FileSystemMediaLibrary.instance;
-  final Directory _directory = Directory(join(Configuration.instance.directory.path, 'TagEditor'));
+}
+
+extension MapStringStringExtensions<K, V> on Map<K, V> {
+  Map<K, String> whereNotEmpty(String Function(MapEntry<K, V>) getValue) {
+    return Map.fromEntries(entries.where((entry) => getValue(entry).trim().isNotEmpty).map((entry) => MapEntry(entry.key, getValue(entry).trim())));
+  }
 }
