@@ -366,10 +366,12 @@ Future<bool> showConfirmation(
   String subtitle, {
   String? positiveAction,
   String? negativeAction,
+  bool barrierDismissible = true,
 }) async {
   bool result = false;
   await showDialog(
     context: context,
+    barrierDismissible: barrierDismissible,
     builder: (ctx) => AlertDialog(
       title: Text(title),
       content: Text(subtitle),

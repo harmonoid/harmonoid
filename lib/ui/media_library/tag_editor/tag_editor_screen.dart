@@ -33,11 +33,9 @@ class _TagEditorScreenState extends State<TagEditorScreen> {
         context,
         Localization.instance.WARNING,
         Localization.instance.TAG_EDITOR_UNSAVED_CHANGES_DIALOG_SUBTITLE,
+        barrierDismissible: false,
       );
-      if (!result) {
-        recursivelyPopNavigator();
-      }
-      return;
+      if (result) return;
     }
 
     if (context.read<TagEditorNotifier>().saveInvoked) {

@@ -59,7 +59,7 @@ class _SearchDialogState extends State<SearchDialog> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
       child: SizedBox(
         width: kDesktopCenteredLayoutWidth,
-        height: 48.0 + ((results?.length ?? 0) + 1) * linearTileHeight,
+        height: 48.0 + (results != null && results.isNotEmpty ? (results.length + 1) * linearTileHeight : 0.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -73,13 +73,13 @@ class _SearchDialogState extends State<SearchDialog> {
                 suffix: _results != null
                     ? null
                     : const SizedBox(
-                        width: 16.0,
-                        height: 16.0,
-                        child: CircularProgressIndicator(),
+                        width: 12.0,
+                        height: 12.0,
+                        child: CircularProgressIndicator(strokeWidth: 2.0),
                       ),
               ),
             ),
-            if (results != null)
+            if (results != null && results.isNotEmpty)
               SizedBox(
                 height: (results.length + 1) * linearTileHeight,
                 child: ListItemTable(

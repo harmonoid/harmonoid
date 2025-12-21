@@ -64,12 +64,12 @@ class TagEditorNotifier extends ChangeNotifier {
 
   Future<void> setCover([CoverData? coverData]) async {
     coverLoading = true;
-    coverChanged = true;
     notifyListeners();
 
     try {
       if (coverData != null) {
         _writer.setCover(coverData);
+        coverChanged = true;
       } else {
         final file = await pickFile(extensions: kSupportedImageFormats);
         final data = await file?.readAsBytes_();
@@ -88,6 +88,7 @@ class TagEditorNotifier extends ChangeNotifier {
         if (data == null || mimeType == null) throw const FormatException();
 
         _writer.setCover(CoverData(data: data, mimeType: mimeType));
+        coverChanged = true;
       }
 
       _refreshCover();
@@ -111,11 +112,11 @@ class TagEditorNotifier extends ChangeNotifier {
 
   Future<void> removeCover() async {
     coverLoading = true;
-    coverChanged = true;
     notifyListeners();
 
     try {
       _writer.removeCover();
+      coverChanged = true;
 
       _refreshCover();
 
