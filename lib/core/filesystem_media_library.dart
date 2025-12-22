@@ -110,7 +110,7 @@ class FileSystemMediaLibrary extends media_library.FileSystemMediaLibrary with C
   /// * ContentResolver.delete & RecoverableSecurityException on API 29.
   /// * File.delete on API 28 or lower... Good old days.
   ///
-  /// This method is internally invoked by [delete].
+  /// This method is internally invoked by [remove].
   ///
   /// If the result is true i.e. user approval is granted i.e. underlying [File](s) was deleted.
   @override

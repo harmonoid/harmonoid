@@ -19,7 +19,7 @@ class SearchDialog extends StatefulWidget {
 
 class _SearchDialogState extends State<SearchDialog> {
   static final double? _kDialogWidth = isDesktop ? kDesktopCenteredLayoutWidth : null;
-  static const double _kSearchBarHeight = 48.0;
+  static const double _kSearchBarHeight = 48.0 + 1.0;
   static final double _kListItemHeight = linearTileHeight;
   static final int _kListItemCountDelta = isDesktop ? 1 : 0;
 
@@ -82,9 +82,13 @@ class _SearchDialogState extends State<SearchDialog> {
                         height: 12.0,
                         child: CircularProgressIndicator(strokeWidth: 2.0),
                       ),
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
               ),
             ),
-            if (results != null && results.isNotEmpty)
+            if (results != null && results.isNotEmpty) ...[
+              const Divider(height: 1.0, thickness: 1.0),
               SizedBox(
                 height: (results.length + _kListItemCountDelta) * _kListItemHeight,
                 child: ListItemTable(
@@ -109,6 +113,7 @@ class _SearchDialogState extends State<SearchDialog> {
                   mobileSliverList: false,
                 ),
               ),
+            ],
           ],
         ),
       ),
