@@ -218,7 +218,7 @@ class _TagEditorScreenState extends State<TagEditorScreen> {
 
   Widget _buildSaveFloatingActionButton(BuildContext context) {
     return Consumer<TagEditorNotifier>(
-      builder: (context, notifier, _) => notifier.saveInvoked || (notifier.propertiesLoading || notifier.coverLoading) || !(notifier.propertiesChanged || notifier.coverChanged)
+      builder: (context, notifier, _) => (notifier.propertiesLoading || notifier.coverLoading) || !(notifier.propertiesChanged || notifier.coverChanged)
           ? const SizedBox.shrink()
           : FloatingActionButton(
               onPressed: notifier.save,
