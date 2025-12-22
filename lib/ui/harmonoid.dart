@@ -89,50 +89,50 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext _) {
-    return AdaptiveLayoutsLocalizations(
-      back: Localization.instance.BACK,
-      more: Localization.instance.MORE,
-      select: Localization.instance.SELECT,
-      unselect: Localization.instance.UNSELECT,
-      child: MultiProvider(
-        providers: [
-          MediaLibraryProvider(),
-          ChangeNotifierProvider<FileSystemMediaLibrary>(create: (_) => FileSystemMediaLibrary.instance),
-          ChangeNotifierProvider(create: (_) => MediaPlayer.instance),
-          ChangeNotifierProvider(create: (_) => Localization.instance),
-          ChangeNotifierProvider(create: (context) => ThemeNotifier.instance..update(context: context)),
-          ChangeNotifierProvider(create: (_) => LyricsNotifier.instance),
-          ChangeNotifierProvider(create: (_) => NowPlayingColorPaletteNotifier.instance),
-          Provider(create: (_) => NowPlayingMobileNotifier.instance),
-          ChangeNotifierProvider(create: (_) => UpdateNotifier(showUpdate: () => showUpdate(context))),
-          ChangeNotifierProvider(
-            lazy: false,
-            create: (_) => UserNotifierFactory.create(),
-          ),
-          ChangeNotifierProvider(
-            lazy: false,
-            create: (ctx) => SubscriptionNotifierFactory.create(
-              userNotifier: ctx.read(),
-              functions: SubscriptionFunctions(
-                updateAvailable: () => context.read<UpdateNotifier>().updateAvailable,
-                showUpdate: () => context.read<UpdateNotifier>().check(),
-                showLogin: () => showLogin(context),
-                onSubscriptionUpdate: subscriptionNotifierOnSubscriptionUpdate,
-                onSubscriptionError: (state) {
-                  showMessage(
-                    context,
-                    Localization.instance.SUBSCRIPTION_EXPIRED_TITLE,
-                    Localization.instance.SUBSCRIPTION_EXPIRED_SUBTITLE,
-                  );
-                  subscriptionNotifierOnSubscriptionUpdate(state);
-                },
-              ),
+    return MultiProvider(
+      providers: [
+        MediaLibraryProvider(),
+        ChangeNotifierProvider<FileSystemMediaLibrary>(create: (_) => FileSystemMediaLibrary.instance),
+        ChangeNotifierProvider(create: (_) => MediaPlayer.instance),
+        ChangeNotifierProvider(create: (_) => Localization.instance),
+        ChangeNotifierProvider(create: (context) => ThemeNotifier.instance..update(context: context)),
+        ChangeNotifierProvider(create: (_) => LyricsNotifier.instance),
+        ChangeNotifierProvider(create: (_) => NowPlayingColorPaletteNotifier.instance),
+        Provider(create: (_) => NowPlayingMobileNotifier.instance),
+        ChangeNotifierProvider(create: (_) => UpdateNotifier(showUpdate: () => showUpdate(context))),
+        ChangeNotifierProvider(
+          lazy: false,
+          create: (_) => UserNotifierFactory.create(),
+        ),
+        ChangeNotifierProvider(
+          lazy: false,
+          create: (ctx) => SubscriptionNotifierFactory.create(
+            userNotifier: ctx.read(),
+            functions: SubscriptionFunctions(
+              updateAvailable: () => context.read<UpdateNotifier>().updateAvailable,
+              showUpdate: () => context.read<UpdateNotifier>().check(),
+              showLogin: () => showLogin(context),
+              onSubscriptionUpdate: subscriptionNotifierOnSubscriptionUpdate,
+              onSubscriptionError: (state) {
+                showMessage(
+                  context,
+                  Localization.instance.SUBSCRIPTION_EXPIRED_TITLE,
+                  Localization.instance.SUBSCRIPTION_EXPIRED_SUBTITLE,
+                );
+                subscriptionNotifierOnSubscriptionUpdate(state);
+              },
             ),
           ),
-          ChangeNotifierProvider(create: (_) => ArtistImageNotifier()),
-        ],
-        builder: (context, _) => Consumer<ThemeNotifier>(
-          builder: (context, themeNotifier, _) => MacOSMenuBar(
+        ),
+        ChangeNotifierProvider(create: (_) => ArtistImageNotifier()),
+      ],
+      builder: (context, _) => Consumer2<ThemeNotifier, Localization>(
+        builder: (context, themeNotifier, localization, _) => AdaptiveLayoutsLocalizations(
+          back: Localization.instance.BACK,
+          more: Localization.instance.MORE,
+          select: Localization.instance.SELECT,
+          unselect: Localization.instance.UNSELECT,
+          child: MacOSMenuBar(
             child: KeyboardShortcutsListener(
               child: MaterialApp.router(
                 scrollBehavior: const DefaultScrollBehavior(),
