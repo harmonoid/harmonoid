@@ -73,7 +73,7 @@ mixin WindowsTaskbarMixin implements BaseMediaPlayer {
       }
       if (Configuration.instance.windowsTaskbarProgress) {
         const total = 1 << 8;
-        final completed = (state.position.inSeconds / state.duration.inSeconds * total).round();
+        final completed = state.position.inSeconds == 0 ? 0 : (state.position.inSeconds / state.duration.inSeconds * total).round();
         WindowsTaskbar.setProgress(completed, total);
       }
     });

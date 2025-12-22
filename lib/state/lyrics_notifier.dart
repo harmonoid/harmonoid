@@ -61,7 +61,7 @@ class LyricsNotifier extends ChangeNotifier {
           notifyListeners();
 
           // --------------------------------------------------
-          await FlutterLocalNotificationsPlugin().cancel(_kNotificationId);
+          await cancelNotification();
           await Configuration.instance.set(mobileNotificationLyricsHidden: false);
           // --------------------------------------------------
 
@@ -82,7 +82,7 @@ class LyricsNotifier extends ChangeNotifier {
 
           // --------------------------------------------------
           if ((nextIndex - index).abs() > 1 || state.completed) {
-            await FlutterLocalNotificationsPlugin().cancel(_kNotificationId);
+            await cancelNotification();
           }
           // --------------------------------------------------
 
@@ -90,7 +90,7 @@ class LyricsNotifier extends ChangeNotifier {
             index = nextIndex;
             notifyListeners();
             // --------------------------------------------------
-            displayNotification(index);
+            await displayNotification(index);
             // --------------------------------------------------
           }
         }
@@ -265,11 +265,11 @@ class LyricsNotifier extends ChangeNotifier {
   }
 
   /// Displays the notification.
-  void displayNotification(int index) {
+  Future<void> displayNotification(int index) async {
     const diff = 2;
     final from = max(0, index - diff);
     final to = min(lyrics.length - 1, index + diff);
-    ensureNotification(() {
+    return ensureNotification(() {
       FlutterLocalNotificationsPlugin().show(
         _kNotificationId,
         _current?.title,
@@ -311,12 +311,19 @@ class LyricsNotifier extends ChangeNotifier {
     });
   }
 
+  /// Cancels the notification.
+  Future<void> cancelNotification() async {
+    return ensureNotification(() {
+      FlutterLocalNotificationsPlugin().cancel(_kNotificationId);
+    });
+  }
+
   /// Invokes the [callback] if the notification can be handled.
   Future<void> ensureNotification(void Function() callback) async {
     if (!Platform.isAndroid) return;
     if (!(AndroidStorageController.instance.version < 33 || await Permission.notification.isGranted)) return;
-    if (!Configuration.instance.notificationLyrics) return;
     if (!_initializeNotificationInvoked) return;
+    if (!Configuration.instance.notificationLyrics) return;
     if (await isNotificationHidden()) return;
     callback.call();
   }
