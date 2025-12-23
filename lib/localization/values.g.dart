@@ -88,6 +88,7 @@ class Values {
   late String FILE_PATH_OR_URL;
   late String FIND;
   late String FOLDER;
+  late String FOLDERS;
   late String FOLDER_NOT_FOUND;
   late String FOLLOW_ON_X;
   late String FULLSCREEN;
@@ -206,7 +207,6 @@ class Values {
   late String RECOMMENDED_HINT;
   late String REFRESH;
   late String REFRESH_MEDIA_LIBRARY_UPON_START;
-  late String REFRESH_MEDIA_LIBRARY_UPON_START_WARNING;
   late String REFRESH_SUBTITLE;
   late String REINDEX;
   late String REINDEX_SUBTITLE;
@@ -268,6 +268,7 @@ class Values {
   late String STEREO;
   late String SUBSCRIPTION_EXPIRED_SUBTITLE;
   late String SUBSCRIPTION_EXPIRED_TITLE;
+  late String TAG_EDITOR;
   late String TAG_EDITOR_ADD_PROPERTY;
   late String TAG_EDITOR_ERROR_SAVE;
   late String TAG_EDITOR_ERROR_SET_COVER;

@@ -333,7 +333,7 @@ class ConfigurationBase {
       /* Boolean */ kKeyDiscordRpc: true,
       /* String  */ kKeyIdentifier: const Uuid().v4(),
       /* Json    */ kKeyLastfmSession: const Session(name: '', key: ''),
-      /* Json    */ kKeyLocalization: const LocalizationData(code: 'en_US', name: 'English', country: 'United States'),
+      /* Json    */ kKeyLocalization: await getDefaultLocalization(),
       /* Boolean */ kKeyLrcFromDirectory: false,
       /* Double  */ kKeyLyricsViewFocusedFontSize: isDesktop ? 64.0: 48.0,
       /* Double  */ kKeyLyricsViewFocusedLineHeight: 1.2,

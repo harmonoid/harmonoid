@@ -1,7 +1,9 @@
 import 'dart:ffi';
 import 'dart:io';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
+import 'package:collection/collection.dart';
 import 'package:ffi/ffi.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lastfm/lastfm.dart';
 import 'package:media_library/media_library.dart';
@@ -14,6 +16,7 @@ import 'package:win32/win32.dart';
 import 'package:harmonoid/core/configuration/database/constants.dart';
 import 'package:harmonoid/core/configuration/database/database.dart';
 import 'package:harmonoid/localization/localization_data.dart';
+import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/media_player_state.dart';
 import 'package:harmonoid/models/media_player_state.dart';
 import 'package:harmonoid/models/playback_state.dart';
@@ -96,7 +99,11 @@ class Configuration extends ConfigurationBase {
     _lyricsViewUnfocusedFontSize = await read<double, double>(kKeyLyricsViewUnfocusedFontSize, defaults);
     _lyricsViewUnfocusedLineHeight = await read<double, double>(kKeyLyricsViewUnfocusedLineHeight, defaults);
     _mediaLibraryAddPlaylistToNowPlaying = await read<bool, bool>(kKeyMediaLibraryAddPlaylistToNowPlaying, defaults);
-    _mediaLibraryAlbumGroupingParameters = await read<dynamic, Set<AlbumGroupingParameter>>(kKeyMediaLibraryAlbumGroupingParameters, defaults, (value) => value.map<AlbumGroupingParameter>((e) => AlbumGroupingParameter.values[e]).toSet());
+    _mediaLibraryAlbumGroupingParameters = await read<dynamic, Set<AlbumGroupingParameter>>(
+      kKeyMediaLibraryAlbumGroupingParameters,
+      defaults,
+      (value) => value.map<AlbumGroupingParameter>((e) => AlbumGroupingParameter.values[e]).toSet(),
+    );
     _mediaLibraryAlbumSortAscending = await read<bool, bool>(kKeyMediaLibraryAlbumSortAscending, defaults);
     _mediaLibraryAlbumSortType = await read<int, AlbumSortType>(kKeyMediaLibraryAlbumSortType, defaults, (value) => AlbumSortType.values[value]);
     _mediaLibraryArtistImages = await read<bool, bool>(kKeyMediaLibraryArtistImages, defaults);
@@ -152,6 +159,28 @@ class Configuration extends ConfigurationBase {
       debugPrint(stacktrace.toString());
       return defaults[key];
     }
+  }
+}
+
+/// Returns the default localization.
+Future<LocalizationData> getDefaultLocalization() async {
+  try {
+    final values = await Localization.instance.values;
+
+    final locale = PlatformDispatcher.instance.locale;
+    final languageCode = locale.languageCode.toLowerCase();
+    final countryCode = locale.countryCode?.toUpperCase();
+
+    LocalizationData? match;
+
+    match ??= values.firstWhereOrNull((e) => e.code == '${languageCode}_$countryCode');
+    match ??= values.firstWhereOrNull((e) => e.code.split('_').first == languageCode);
+
+    return match!;
+  } catch (exception, stacktrace) {
+    debugPrint(exception.toString());
+    debugPrint(stacktrace.toString());
+    return const LocalizationData(code: 'en_US', name: 'English', country: 'United States');
   }
 }
 
