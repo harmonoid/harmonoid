@@ -281,9 +281,14 @@ class MediaLibrarySection extends StatelessWidget {
   }
 }
 
-class DesktopMediaLibrarySection extends StatelessWidget {
+class DesktopMediaLibrarySection extends StatefulWidget {
   const DesktopMediaLibrarySection({super.key});
 
+  @override
+  State<DesktopMediaLibrarySection> createState() => _DesktopMediaLibrarySectionState();
+}
+
+class _DesktopMediaLibrarySectionState extends State<DesktopMediaLibrarySection> {
   @override
   Widget build(BuildContext context) {
     return Consumer<FileSystemMediaLibrary>(
@@ -291,48 +296,88 @@ class DesktopMediaLibrarySection extends StatelessWidget {
         return SettingsSection(
           title: Localization.instance.SETTINGS_SECTION_MEDIA_LIBRARY_TITLE,
           subtitle: Localization.instance.SETTINGS_SECTION_MEDIA_LIBRARY_SUBTITLE,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 64.0 - 16.0),
           children: [
-            Transform.translate(
-              offset: Offset(-textButtonPadding, 0.0),
-              child: TextButton(
-                onPressed: () => MediaLibrarySection.addFolder(context, mediaLibrary),
-                child: Text(label(Localization.instance.ADD_NEW_FOLDER)),
-              ),
-            ),
-            const SizedBox(height: 8.0),
-            Text(Localization.instance.ADDED_FOLDERS),
-            _buildAddedFolders(context, mediaLibrary),
-            MediaLibrarySection.buildRefreshIndicator(context, mediaLibrary),
-            Transform.translate(
-              offset: Offset(-textButtonPadding, 0.0),
-              child: Row(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextButton(
-                    onPressed: () => MediaLibrarySection.refresh(context, mediaLibrary),
-                    child: Text(label(Localization.instance.REFRESH)),
+                  Transform.translate(
+                    offset: Offset(-textButtonPadding, 0.0),
+                    child: TextButton(
+                      onPressed: () => MediaLibrarySection.addFolder(context, mediaLibrary),
+                      child: Text(label(Localization.instance.ADD_NEW_FOLDER)),
+                    ),
                   ),
-                  TextButton(
-                    onPressed: () => MediaLibrarySection.reindex(context, mediaLibrary),
-                    child: Text(label(Localization.instance.REINDEX)),
+                  const SizedBox(height: 8.0),
+                  Text(Localization.instance.ADDED_FOLDERS),
+                  _buildAddedFolders(context, mediaLibrary),
+                  MediaLibrarySection.buildRefreshIndicator(context, mediaLibrary),
+                  Transform.translate(
+                    offset: Offset(-textButtonPadding, 0.0),
+                    child: Row(
+                      children: [
+                        TextButton(
+                          onPressed: () => MediaLibrarySection.refresh(context, mediaLibrary),
+                          child: Text(label(Localization.instance.REFRESH)),
+                        ),
+                        TextButton(
+                          onPressed: () => MediaLibrarySection.reindex(context, mediaLibrary),
+                          child: Text(label(Localization.instance.REINDEX)),
+                        ),
+                      ],
+                    ),
                   ),
+                  const SizedBox(height: 8.0),
+                  Transform.translate(
+                    offset: Offset(-textButtonPadding, 0.0),
+                    child: TextButton(
+                      onPressed: () => MediaLibrarySection.editAlbumParameters(context, mediaLibrary),
+                      child: Text(label(Localization.instance.EDIT_ALBUM_PARAMETERS_TITLE)),
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  Transform.translate(
+                    offset: Offset(-textButtonPadding, 0.0),
+                    child: TextButton(
+                      onPressed: () => MediaLibrarySection.editMinimumFileSize(context, mediaLibrary),
+                      child: Text(label(Localization.instance.EDIT_MINIMUM_FILE_SIZE)),
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
                 ],
               ),
             ),
-            const SizedBox(height: 8.0),
-            Transform.translate(
-              offset: Offset(-textButtonPadding, 0.0),
-              child: TextButton(
-                onPressed: () => MediaLibrarySection.editAlbumParameters(context, mediaLibrary),
-                child: Text(label(Localization.instance.EDIT_ALBUM_PARAMETERS_TITLE)),
+            ListItem(
+              trailing: Switch(
+                value: Configuration.instance.mediaLibraryRefreshUponStart,
+                onChanged: (value) async {
+                  await Configuration.instance.set(mediaLibraryRefreshUponStart: value);
+                  setState(() {});
+                },
               ),
+              title: Localization.instance.REFRESH_MEDIA_LIBRARY_UPON_START,
+              onTap: () async {
+                await Configuration.instance.set(mediaLibraryRefreshUponStart: !Configuration.instance.mediaLibraryRefreshUponStart);
+                setState(() {});
+              },
             ),
-            const SizedBox(height: 8.0),
-            Transform.translate(
-              offset: Offset(-textButtonPadding, 0.0),
-              child: TextButton(
-                onPressed: () => MediaLibrarySection.editMinimumFileSize(context, mediaLibrary),
-                child: Text(label(Localization.instance.EDIT_MINIMUM_FILE_SIZE)),
+            ListItem(
+              trailing: Switch(
+                value: Configuration.instance.mediaLibraryCoverFallback,
+                onChanged: (value) async {
+                  await Configuration.instance.set(mediaLibraryCoverFallback: value);
+                  setState(() {});
+                },
               ),
+              title: Localization.instance.LOOKUP_FOR_FALLBACK_COVERS,
+              onTap: () async {
+                await Configuration.instance.set(mediaLibraryCoverFallback: !Configuration.instance.mediaLibraryCoverFallback);
+                setState(() {});
+              },
             ),
           ],
         );
@@ -467,6 +512,34 @@ class _MobileMediaLibrarySectionState extends State<MobileMediaLibrarySection> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: _buildAddedFolders(context, mediaLibrary),
+            ),
+            ListItem(
+              trailing: Switch(
+                value: Configuration.instance.mediaLibraryRefreshUponStart,
+                onChanged: (value) async {
+                  await Configuration.instance.set(mediaLibraryRefreshUponStart: value);
+                  setState(() {});
+                },
+              ),
+              title: Localization.instance.REFRESH_MEDIA_LIBRARY_UPON_START,
+              onTap: () async {
+                await Configuration.instance.set(mediaLibraryRefreshUponStart: !Configuration.instance.mediaLibraryRefreshUponStart);
+                setState(() {});
+              },
+            ),
+            ListItem(
+              trailing: Switch(
+                value: Configuration.instance.mediaLibraryCoverFallback,
+                onChanged: (value) async {
+                  await Configuration.instance.set(mediaLibraryCoverFallback: value);
+                  setState(() {});
+                },
+              ),
+              title: Localization.instance.LOOKUP_FOR_FALLBACK_COVERS,
+              onTap: () async {
+                await Configuration.instance.set(mediaLibraryCoverFallback: !Configuration.instance.mediaLibraryCoverFallback);
+                setState(() {});
+              },
             ),
           ],
         );

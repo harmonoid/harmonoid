@@ -22,57 +22,22 @@ class _MiscellaneousSectionState extends State<MiscellaneousSection> {
       subtitle: Localization.instance.SETTINGS_SECTION_MISCELLANEOUS_SUBTITLE,
       contentPadding: const EdgeInsets.symmetric(horizontal: 64.0 - 16.0),
       children: [
-        ListItem(
-          trailing: Switch(
-            value: Configuration.instance.mediaLibraryAddPlaylistToNowPlaying,
-            onChanged: (value) async {
-              await Configuration.instance.set(mediaLibraryAddPlaylistToNowPlaying: value);
+        if ( /* MOBILE */ isMobile)
+          ListItem(
+            trailing: Switch(
+              value: Configuration.instance.notificationLyrics,
+              onChanged: (value) async {
+                await Configuration.instance.set(notificationLyrics: value);
+                setState(() {});
+              },
+            ),
+            title: Localization.instance.ENABLE_NOTIFICATION_LYRICS,
+            onTap: () async {
+              await Configuration.instance.set(notificationLyrics: !Configuration.instance.notificationLyrics);
               setState(() {});
             },
           ),
-          title: Localization.instance.ADD_PLAYLIST_TO_NOW_PLAYING,
-          onTap: () async {
-            await Configuration.instance.set(mediaLibraryAddPlaylistToNowPlaying: !Configuration.instance.mediaLibraryAddPlaylistToNowPlaying);
-            setState(() {});
-          },
-        ),
-        ListItem(
-          trailing: Switch(
-            value: Configuration.instance.mediaLibraryRefreshUponStart,
-            onChanged: (value) async {
-              await Configuration.instance.set(mediaLibraryRefreshUponStart: value);
-              setState(() {});
-            },
-          ),
-          title: Localization.instance.REFRESH_MEDIA_LIBRARY_UPON_START,
-          onTap: () async {
-            await Configuration.instance.set(mediaLibraryRefreshUponStart: !Configuration.instance.mediaLibraryRefreshUponStart);
-            setState(() {});
-
-            if (Configuration.instance.mediaLibraryRefreshUponStart) {
-              await showMessage(
-                context,
-                Localization.instance.WARNING,
-                Localization.instance.REFRESH_MEDIA_LIBRARY_UPON_START_WARNING,
-              );
-            }
-          },
-        ),
-        ListItem(
-          trailing: Switch(
-            value: Configuration.instance.mediaLibraryCoverFallback,
-            onChanged: (value) async {
-              await Configuration.instance.set(mediaLibraryCoverFallback: value);
-              setState(() {});
-            },
-          ),
-          title: Localization.instance.LOOKUP_FOR_FALLBACK_COVERS,
-          onTap: () async {
-            await Configuration.instance.set(mediaLibraryCoverFallback: !Configuration.instance.mediaLibraryCoverFallback);
-            setState(() {});
-          },
-        ),
-        if (/* DESKTOP */ isDesktop)
+        if ( /* DESKTOP */ isDesktop)
           ListItem(
             trailing: Switch(
               value: Configuration.instance.lrcFromDirectory,
@@ -87,22 +52,7 @@ class _MiscellaneousSectionState extends State<MiscellaneousSection> {
               setState(() {});
             },
           ),
-        if (/* DESKTOP */ isDesktop)
-          ListItem(
-            trailing: Switch(
-              value: Configuration.instance.discordRpc,
-              onChanged: (value) async {
-                await Configuration.instance.set(discordRpc: value);
-                setState(() {});
-              },
-            ),
-            title: Localization.instance.ENABLE_DISCORD_RPC,
-            onTap: () async {
-              await Configuration.instance.set(discordRpc: !Configuration.instance.discordRpc);
-              setState(() {});
-            },
-          ),
-        if (/* WINDOWS */ Platform.isWindows)
+        if ( /* WINDOWS */ Platform.isWindows)
           ListItem(
             trailing: Switch(
               value: Configuration.instance.windowsTaskbarProgress,
@@ -117,18 +67,18 @@ class _MiscellaneousSectionState extends State<MiscellaneousSection> {
               setState(() {});
             },
           ),
-        if (/* MOBILE */ isMobile)
+        if ( /* DESKTOP */ isDesktop)
           ListItem(
             trailing: Switch(
-              value: Configuration.instance.notificationLyrics,
+              value: Configuration.instance.discordRpc,
               onChanged: (value) async {
-                await Configuration.instance.set(notificationLyrics: value);
+                await Configuration.instance.set(discordRpc: value);
                 setState(() {});
               },
             ),
-            title: Localization.instance.ENABLE_NOTIFICATION_LYRICS,
+            title: Localization.instance.ENABLE_DISCORD_RPC,
             onTap: () async {
-              await Configuration.instance.set(notificationLyrics: !Configuration.instance.notificationLyrics);
+              await Configuration.instance.set(discordRpc: !Configuration.instance.discordRpc);
               setState(() {});
             },
           ),

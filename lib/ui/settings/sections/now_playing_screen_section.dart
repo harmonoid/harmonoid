@@ -126,6 +126,48 @@ class _NowPlayingScreenSectionState extends State<NowPlayingScreenSection> {
               setState(() {});
             },
           ),
+        if ( /* DESKTOP & MATERIAL 2 */ isDesktop)
+          ListItem(
+            trailing: Switch(
+              value: Configuration.instance.desktopNowPlayingBarColorPalette,
+              onChanged: !isMaterial2
+                  ? null
+                  : (value) async {
+                      await Configuration.instance.set(desktopNowPlayingBarColorPalette: value);
+                      NowPlayingColorPaletteNotifier.instance.clear();
+                      setState(() {});
+                    },
+            ),
+            title: Localization.instance.USE_COLOR_PALETTE,
+            onTap: !isMaterial2
+                ? null
+                : () async {
+                    await Configuration.instance.set(desktopNowPlayingBarColorPalette: !Configuration.instance.desktopNowPlayingBarColorPalette);
+                    NowPlayingColorPaletteNotifier.instance.clear();
+                    setState(() {});
+                  },
+          ),
+        if ( /* MOBILE & MATERIAL 2 */ isMobile)
+          ListItem(
+            trailing: Switch(
+              value: Configuration.instance.mobileNowPlayingRipple,
+              onChanged: !isMaterial2
+                  ? null
+                  : (value) async {
+                      await Configuration.instance.set(mobileNowPlayingRipple: value);
+                      NowPlayingColorPaletteNotifier.instance.resetCurrent();
+                      setState(() {});
+                    },
+            ),
+            title: Localization.instance.USE_COLOR_PALETTE,
+            onTap: !isMaterial2
+                ? null
+                : () async {
+                    await Configuration.instance.set(mobileNowPlayingRipple: !Configuration.instance.mobileNowPlayingRipple);
+                    NowPlayingColorPaletteNotifier.instance.resetCurrent();
+                    setState(() {});
+                  },
+          ),
         ListItem(
           trailing: Switch(
             value: Configuration.instance.nowPlayingDisplayUponPlay,
@@ -170,63 +212,20 @@ class _NowPlayingScreenSectionState extends State<NowPlayingScreenSection> {
             setState(() {});
           },
         ),
-        if ( /* DESKTOP & MATERIAL 2 */ isDesktop)
-          ListItem(
-            trailing: Switch(
-              value: Configuration.instance.desktopNowPlayingBarColorPalette,
-              onChanged: !isMaterial2
-                  ? null
-                  : (value) async {
-                      await Configuration.instance.set(desktopNowPlayingBarColorPalette: value);
-                      NowPlayingColorPaletteNotifier.instance.clear();
-                      setState(() {});
-                    },
-            ),
-            title: Localization.instance.USE_COLOR_PALETTE,
-            onTap: !isMaterial2
-                ? null
-                : () async {
-                    await Configuration.instance.set(desktopNowPlayingBarColorPalette: !Configuration.instance.desktopNowPlayingBarColorPalette);
-                    NowPlayingColorPaletteNotifier.instance.clear();
-                    setState(() {});
-                  },
+        ListItem(
+          trailing: Switch(
+            value: Configuration.instance.mediaLibraryAddPlaylistToNowPlaying,
+            onChanged: (value) async {
+              await Configuration.instance.set(mediaLibraryAddPlaylistToNowPlaying: value);
+              setState(() {});
+            },
           ),
-        if ( /* MOBILE & MATERIAL 2 */ isMobile)
-          ListItem(
-            trailing: Switch(
-              value: Configuration.instance.mobileNowPlayingRipple,
-              onChanged: !isMaterial2
-                  ? null
-                  : (value) async {
-                      await Configuration.instance.set(mobileNowPlayingRipple: value);
-                      NowPlayingColorPaletteNotifier.instance.resetCurrent();
-                      setState(() {});
-                    },
-            ),
-            title: Localization.instance.USE_COLOR_PALETTE,
-            onTap: !isMaterial2
-                ? null
-                : () async {
-                    await Configuration.instance.set(mobileNowPlayingRipple: !Configuration.instance.mobileNowPlayingRipple);
-                    NowPlayingColorPaletteNotifier.instance.resetCurrent();
-                    setState(() {});
-                  },
-          ),
-        // if (/* MOBILE */ isMobile)
-        //   ListItem(
-        //     trailing: Switch(
-        //       value: Configuration.instance.mobileNowPlayingVolumeSlider,
-        //       onChanged: (value) async {
-        //         await Configuration.instance.set(mobileNowPlayingVolumeSlider: value);
-        //         setState(() {});
-        //       },
-        //     ),
-        //     title: Localization.instance.DISPLAY_VOLUME_SLIDER,
-        //     onTap: () async {
-        //       await Configuration.instance.set(mobileNowPlayingVolumeSlider: !Configuration.instance.mobileNowPlayingVolumeSlider);
-        //       setState(() {});
-        //     },
-        //   ),
+          title: Localization.instance.ADD_PLAYLIST_TO_NOW_PLAYING,
+          onTap: () async {
+            await Configuration.instance.set(mediaLibraryAddPlaylistToNowPlaying: !Configuration.instance.mediaLibraryAddPlaylistToNowPlaying);
+            setState(() {});
+          },
+        ),
       ],
     );
   }
