@@ -7,6 +7,7 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:lrc/lrc.dart';
+import 'package:media_library/media_library.dart' hide FileSystemMediaLibrary;
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
@@ -149,7 +150,7 @@ class LyricsNotifier extends ChangeNotifier {
 
     debugPrint('LyricsNotifier: retrieve: Tags: ${playable.uri}');
     try {
-      final track = await FileSystemMediaLibrary.instance.db.selectTrackByUri(playable.uri);
+      final track = FileSystemMediaLibrary.instance.lookupTrack(TrackLookupKey(uri: playable.uri));
       if (track != null && LrcParser.isValid(track.lyrics)) {
         final result = LrcParser.parse(track.lyrics).lyrics;
         lyrics.addAll(result.map((e) => Lyric(timestamp: e.timestamp.inMilliseconds, text: e.lyrics)).toList());

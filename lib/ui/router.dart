@@ -15,6 +15,7 @@ import 'package:harmonoid/ui/media_library/albums/album_screen.dart';
 import 'package:harmonoid/ui/media_library/albums/albums_screen.dart';
 import 'package:harmonoid/ui/media_library/artists/artist_screen.dart';
 import 'package:harmonoid/ui/media_library/artists/artists_screen.dart';
+import 'package:harmonoid/ui/media_library/folders/folders_screen.dart';
 import 'package:harmonoid/ui/media_library/genres/genre_screen.dart';
 import 'package:harmonoid/ui/media_library/genres/genres_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_inaccessible_directories_screen.dart';
@@ -24,11 +25,11 @@ import 'package:harmonoid/ui/media_library/playlists/playlist_screen.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlists_screen.dart';
 import 'package:harmonoid/ui/media_library/search/search_items_screen.dart';
 import 'package:harmonoid/ui/media_library/search/search_screen.dart';
+import 'package:harmonoid/ui/media_library/tag_editor/tag_editor_screen.dart';
 import 'package:harmonoid/ui/media_library/tracks/tracks_screen.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_lyrics_screen.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_screen.dart';
 import 'package:harmonoid/ui/settings/settings_screen.dart';
-import 'package:harmonoid/ui/media_library/tag_editor/tag_editor_screen.dart';
 import 'package:harmonoid/ui/user/login/login_screen.dart';
 import 'package:harmonoid/ui/user/login/state/login_notifier.dart';
 import 'package:harmonoid/utils/material_transition_page.dart';
@@ -43,9 +44,12 @@ const String kArtistsPath = 'artists';
 
 const String kGenresPath = 'genres';
 
+const String kFoldersPath = 'folders';
+
 const String kPlaylistsPath = 'playlists';
 
 const String kSearchPath = 'search';
+
 const String kSearchArgQuery = 'query';
 
 const String kSearchItemsPath = 'search-items';
@@ -213,6 +217,16 @@ final router = GoRouter(
                       context: context,
                       state: state,
                       child: const GenresScreen(),
+                    );
+                  },
+                ),
+                GoRoute(
+                  path: kFoldersPath,
+                  pageBuilder: (context, state) {
+                    return buildPageWithSharedAxisTransition(
+                      context: context,
+                      state: state,
+                      child: const FoldersScreen(),
                     );
                   },
                 ),

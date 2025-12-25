@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:media_library/media_library.dart' hide FileSystemMediaLibrary;
 import 'package:synchronized/synchronized.dart';
 
 import 'package:harmonoid/core/filesystem_media_library.dart';
@@ -43,7 +44,7 @@ mixin HistoryPlaylistMixin implements BaseMediaPlayer {
         // TODO: Add support for HTTP URIs.
         if (await FileSystemMediaLibrary.instance.db.contains(current.uri)) {
           // Save as track i.e. hash + title.
-          await FileSystemMediaLibrary.instance.playlists.addToHistory(track: await FileSystemMediaLibrary.instance.db.selectTrackByUri(current.uri));
+          await FileSystemMediaLibrary.instance.playlists.addToHistory(track: FileSystemMediaLibrary.instance.lookupTrack(TrackLookupKey(uri: current.uri)));
         } else {
           // Save as uri + title.
           await FileSystemMediaLibrary.instance.playlists.addToHistory(uri: current.uri, title: current.playlistEntryTitle);

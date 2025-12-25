@@ -304,7 +304,7 @@ class TagEditorNotifier extends ChangeNotifier {
   Future<void> _postProcessResource() async {
     // Refresh the media library.
 
-    final track = await _fileSystemMediaLibrary.db.selectTrackByUri(resource);
+    final track = _fileSystemMediaLibrary.lookupTrack(TrackLookupKey(uri: resource));
     if (track != null) {
       AsyncFileImage.reset(track.toImageKey());
       await MediaLibrary.trackUriToCoverFile(_fileSystemMediaLibrary.covers, resource).delete_();

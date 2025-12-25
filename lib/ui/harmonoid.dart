@@ -127,13 +127,14 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
         ChangeNotifierProvider(create: (_) => ArtistImageNotifier()),
       ],
       builder: (context, _) => Consumer2<ThemeNotifier, Localization>(
-        builder: (context, themeNotifier, localization, _) => SubscriptionLocalizations.fromLocaleCode(
-          localeCode: localization.current.code,
-          child: AdaptiveLayoutsLocalizations(
-            back: Localization.instance.BACK,
-            more: Localization.instance.MORE,
-            select: Localization.instance.SELECT,
-            unselect: Localization.instance.UNSELECT,
+        builder: (context, themeNotifier, localization, _) => AdaptiveLayoutsLocalizations(
+          code: localization.current.code,
+          back: Localization.instance.BACK,
+          more: Localization.instance.MORE,
+          select: Localization.instance.SELECT,
+          unselect: Localization.instance.UNSELECT,
+          child: SubscriptionLocalizations.fromCode(
+            code: localization.current.code,
             child: MacOSMenuBar(
               child: KeyboardShortcutsListener(
                 child: MaterialApp.router(

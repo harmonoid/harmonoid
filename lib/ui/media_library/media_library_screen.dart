@@ -180,6 +180,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                   kTracksPath: Localization.instance.TRACKS,
                                   kArtistsPath: Localization.instance.ARTISTS,
                                   kGenresPath: Localization.instance.GENRES,
+                                  kFoldersPath: Localization.instance.FOLDERS,
                                   kPlaylistsPath: Localization.instance.PLAYLISTS,
                                 }.entries.map<Widget>(
                                   (e) {

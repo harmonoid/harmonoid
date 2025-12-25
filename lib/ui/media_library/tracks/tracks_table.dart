@@ -51,7 +51,7 @@ class _TracksTableState extends State<TracksTable> {
     final scrollViewBuilderHelperData = ScrollViewBuilderHelper.instance.track;
 
     final columns = [
-      Localization.instance.TRACK,
+      Localization.instance.TITLE,
       Localization.instance.ARTISTS,
       Localization.instance.ALBUM,
       Localization.instance.GENRES,
