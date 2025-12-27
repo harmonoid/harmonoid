@@ -25,7 +25,7 @@
   {"key": "MEDIA_LIBRARY_ARTIST_SORT_TYPE", "serializedType": "Integer", "dartType": "ArtistSortType", "default": "ArtistSortType.artist.index"},
   {"key": "MEDIA_LIBRARY_COVER_FALLBACK", "serializedType": "Boolean", "dartType": "bool", "default": "false"},
   {"key": "MEDIA_LIBRARY_DIRECTORIES", "serializedType": "Json", "dartType": "Set<Directory>", "default": "await getDefaultMediaLibraryDirectories()"},
-  {"key": "MEDIA_LIBRARY_FOLDER_FILE_EXPLORER_VIEW_TYPE", "serializedType": "Integer", "dartType": "FileExplorerViewType", "default": "FileExplorerViewType.list.index"},
+  {"key": "MEDIA_LIBRARY_FOLDER_FILE_EXPLORER_VIEW_TYPE", "serializedType": "Integer", "dartType": "FileExplorerViewType", "default": "FileExplorerViewType.grid.index"},
   {"key": "MEDIA_LIBRARY_FOLDER_FILE_EXPLORER_SORT_TYPE", "serializedType": "Integer", "dartType": "FileExplorerSortType", "default": "FileExplorerSortType.name.index"},
   {"key": "MEDIA_LIBRARY_FOLDER_FILE_EXPLORER_SORT_ASCENDING", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
   {"key": "MEDIA_LIBRARY_FOLDER_FILE_EXPLORER_SHOW_HIDDEN_FILES", "serializedType": "Boolean", "dartType": "bool", "default": "false"},

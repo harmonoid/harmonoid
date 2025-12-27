@@ -381,7 +381,7 @@ class ConfigurationBase {
       /* Integer */ kKeyMediaLibraryArtistSortType: ArtistSortType.artist.index,
       /* Boolean */ kKeyMediaLibraryCoverFallback: false,
       /* Json    */ kKeyMediaLibraryDirectories: await getDefaultMediaLibraryDirectories(),
-      /* Integer */ kKeyMediaLibraryFolderFileExplorerViewType: FileExplorerViewType.list.index,
+      /* Integer */ kKeyMediaLibraryFolderFileExplorerViewType: FileExplorerViewType.grid.index,
       /* Integer */ kKeyMediaLibraryFolderFileExplorerSortType: FileExplorerSortType.name.index,
       /* Boolean */ kKeyMediaLibraryFolderFileExplorerSortAscending: true,
       /* Boolean */ kKeyMediaLibraryFolderFileExplorerShowHiddenFiles: false,
