@@ -1,5 +1,6 @@
 [
   {"key": "API_BASE_URL", "serializedType": "String", "dartType": "String", "default": "''"},
+  {"key": "DESKTOP_MEDIA_LIBRARY_FOLDERS_SCREEN_COLUMN_WIDTHS", "serializedType": "Json", "dartType": "List<double>", "default": "<double>[]"},
   {"key": "DESKTOP_MEDIA_LIBRARY_TRACKS_SCREEN_COLUMN_WIDTHS", "serializedType": "Json", "dartType": "List<double>", "default": "<double>[]"},
   {"key": "DESKTOP_NOW_PLAYING_BAR_COLOR_PALETTE", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
   {"key": "DESKTOP_NOW_PLAYING_CAROUSEL", "serializedType": "Integer", "dartType": "int", "default": "0"},
@@ -24,6 +25,10 @@
   {"key": "MEDIA_LIBRARY_ARTIST_SORT_TYPE", "serializedType": "Integer", "dartType": "ArtistSortType", "default": "ArtistSortType.artist.index"},
   {"key": "MEDIA_LIBRARY_COVER_FALLBACK", "serializedType": "Boolean", "dartType": "bool", "default": "false"},
   {"key": "MEDIA_LIBRARY_DIRECTORIES", "serializedType": "Json", "dartType": "Set<Directory>", "default": "await getDefaultMediaLibraryDirectories()"},
+  {"key": "MEDIA_LIBRARY_FOLDER_FILE_EXPLORER_VIEW_TYPE", "serializedType": "Integer", "dartType": "FileExplorerViewType", "default": "FileExplorerViewType.list.index"},
+  {"key": "MEDIA_LIBRARY_FOLDER_FILE_EXPLORER_SORT_TYPE", "serializedType": "Integer", "dartType": "FileExplorerSortType", "default": "FileExplorerSortType.name.index"},
+  {"key": "MEDIA_LIBRARY_FOLDER_FILE_EXPLORER_SORT_ASCENDING", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
+  {"key": "MEDIA_LIBRARY_FOLDER_FILE_EXPLORER_SHOW_HIDDEN_FILES", "serializedType": "Boolean", "dartType": "bool", "default": "false"},
   {"key": "MEDIA_LIBRARY_GENRE_SORT_ASCENDING", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
   {"key": "MEDIA_LIBRARY_GENRE_SORT_TYPE", "serializedType": "Integer", "dartType": "GenreSortType", "default": "GenreSortType.genre.index"},
   {"key": "MEDIA_LIBRARY_MINIMUM_FILE_SIZE", "serializedType": "Integer", "dartType": "int", "default": "0"},

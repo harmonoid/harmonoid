@@ -83,6 +83,7 @@ class Configuration extends ConfigurationBase {
     }
 
     _apiBaseUrl = await read<String, String>(kKeyApiBaseUrl, defaults);
+    _desktopMediaLibraryFoldersScreenColumnWidths = await read<dynamic, List<double>>(kKeyDesktopMediaLibraryFoldersScreenColumnWidths, defaults, (value) => List<double>.from(value));
     _desktopMediaLibraryTracksScreenColumnWidths = await read<dynamic, List<double>>(kKeyDesktopMediaLibraryTracksScreenColumnWidths, defaults, (value) => List<double>.from(value));
     _desktopNowPlayingBarColorPalette = await read<bool, bool>(kKeyDesktopNowPlayingBarColorPalette, defaults);
     _desktopNowPlayingCarousel = await read<int, int>(kKeyDesktopNowPlayingCarousel, defaults);
@@ -111,6 +112,10 @@ class Configuration extends ConfigurationBase {
     _mediaLibraryArtistSortType = await read<int, ArtistSortType>(kKeyMediaLibraryArtistSortType, defaults, (value) => ArtistSortType.values[value]);
     _mediaLibraryCoverFallback = await read<bool, bool>(kKeyMediaLibraryCoverFallback, defaults);
     _mediaLibraryDirectories = await read<dynamic, Set<Directory>>(kKeyMediaLibraryDirectories, defaults, (value) => value.map<Directory>((e) => Directory(e)).toSet());
+    _mediaLibraryFolderFileExplorerViewType = await read<int, FileExplorerViewType>(kKeyMediaLibraryFolderFileExplorerViewType, defaults, (value) => FileExplorerViewType.values[value]);
+    _mediaLibraryFolderFileExplorerSortType = await read<int, FileExplorerSortType>(kKeyMediaLibraryFolderFileExplorerSortType, defaults, (value) => FileExplorerSortType.values[value]);
+    _mediaLibraryFolderFileExplorerSortAscending = await read<bool, bool>(kKeyMediaLibraryFolderFileExplorerSortAscending, defaults);
+    _mediaLibraryFolderFileExplorerShowHiddenFiles = await read<bool, bool>(kKeyMediaLibraryFolderFileExplorerShowHiddenFiles, defaults);
     _mediaLibraryGenreSortAscending = await read<bool, bool>(kKeyMediaLibraryGenreSortAscending, defaults);
     _mediaLibraryGenreSortType = await read<int, GenreSortType>(kKeyMediaLibraryGenreSortType, defaults, (value) => GenreSortType.values[value]);
     _mediaLibraryMinimumFileSize = await read<int, int>(kKeyMediaLibraryMinimumFileSize, defaults);

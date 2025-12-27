@@ -13,6 +13,7 @@ class ConfigurationBase {
   ConfigurationBase({required this.directory, required this.db});
 
   String get apiBaseUrl => _apiBaseUrl!;
+  List<double> get desktopMediaLibraryFoldersScreenColumnWidths => _desktopMediaLibraryFoldersScreenColumnWidths!;
   List<double> get desktopMediaLibraryTracksScreenColumnWidths => _desktopMediaLibraryTracksScreenColumnWidths!;
   bool get desktopNowPlayingBarColorPalette => _desktopNowPlayingBarColorPalette!;
   int get desktopNowPlayingCarousel => _desktopNowPlayingCarousel!;
@@ -37,6 +38,10 @@ class ConfigurationBase {
   ArtistSortType get mediaLibraryArtistSortType => _mediaLibraryArtistSortType!;
   bool get mediaLibraryCoverFallback => _mediaLibraryCoverFallback!;
   Set<Directory> get mediaLibraryDirectories => _mediaLibraryDirectories!;
+  FileExplorerViewType get mediaLibraryFolderFileExplorerViewType => _mediaLibraryFolderFileExplorerViewType!;
+  FileExplorerSortType get mediaLibraryFolderFileExplorerSortType => _mediaLibraryFolderFileExplorerSortType!;
+  bool get mediaLibraryFolderFileExplorerSortAscending => _mediaLibraryFolderFileExplorerSortAscending!;
+  bool get mediaLibraryFolderFileExplorerShowHiddenFiles => _mediaLibraryFolderFileExplorerShowHiddenFiles!;
   bool get mediaLibraryGenreSortAscending => _mediaLibraryGenreSortAscending!;
   GenreSortType get mediaLibraryGenreSortType => _mediaLibraryGenreSortType!;
   int get mediaLibraryMinimumFileSize => _mediaLibraryMinimumFileSize!;
@@ -66,6 +71,7 @@ class ConfigurationBase {
 
   Future<void> set({
     String? apiBaseUrl,
+    List<double>? desktopMediaLibraryFoldersScreenColumnWidths,
     List<double>? desktopMediaLibraryTracksScreenColumnWidths,
     bool? desktopNowPlayingBarColorPalette,
     int? desktopNowPlayingCarousel,
@@ -90,6 +96,10 @@ class ConfigurationBase {
     ArtistSortType? mediaLibraryArtistSortType,
     bool? mediaLibraryCoverFallback,
     Set<Directory>? mediaLibraryDirectories,
+    FileExplorerViewType? mediaLibraryFolderFileExplorerViewType,
+    FileExplorerSortType? mediaLibraryFolderFileExplorerSortType,
+    bool? mediaLibraryFolderFileExplorerSortAscending,
+    bool? mediaLibraryFolderFileExplorerShowHiddenFiles,
     bool? mediaLibraryGenreSortAscending,
     GenreSortType? mediaLibraryGenreSortType,
     int? mediaLibraryMinimumFileSize,
@@ -120,6 +130,10 @@ class ConfigurationBase {
     if (apiBaseUrl != null) {
       _apiBaseUrl = apiBaseUrl;
       await db.setValue(kKeyApiBaseUrl, kTypeString, stringValue: apiBaseUrl);
+    }
+    if (desktopMediaLibraryFoldersScreenColumnWidths != null) {
+      _desktopMediaLibraryFoldersScreenColumnWidths = desktopMediaLibraryFoldersScreenColumnWidths;
+      await db.setValue(kKeyDesktopMediaLibraryFoldersScreenColumnWidths, kTypeJson, jsonValue: desktopMediaLibraryFoldersScreenColumnWidths);
     }
     if (desktopMediaLibraryTracksScreenColumnWidths != null) {
       _desktopMediaLibraryTracksScreenColumnWidths = desktopMediaLibraryTracksScreenColumnWidths;
@@ -216,6 +230,22 @@ class ConfigurationBase {
     if (mediaLibraryDirectories != null) {
       _mediaLibraryDirectories = mediaLibraryDirectories;
       await db.setValue(kKeyMediaLibraryDirectories, kTypeJson, jsonValue: mediaLibraryDirectories.toJson());
+    }
+    if (mediaLibraryFolderFileExplorerViewType != null) {
+      _mediaLibraryFolderFileExplorerViewType = mediaLibraryFolderFileExplorerViewType;
+      await db.setValue(kKeyMediaLibraryFolderFileExplorerViewType, kTypeInteger, integerValue: mediaLibraryFolderFileExplorerViewType.index);
+    }
+    if (mediaLibraryFolderFileExplorerSortType != null) {
+      _mediaLibraryFolderFileExplorerSortType = mediaLibraryFolderFileExplorerSortType;
+      await db.setValue(kKeyMediaLibraryFolderFileExplorerSortType, kTypeInteger, integerValue: mediaLibraryFolderFileExplorerSortType.index);
+    }
+    if (mediaLibraryFolderFileExplorerSortAscending != null) {
+      _mediaLibraryFolderFileExplorerSortAscending = mediaLibraryFolderFileExplorerSortAscending;
+      await db.setValue(kKeyMediaLibraryFolderFileExplorerSortAscending, kTypeBoolean, booleanValue: mediaLibraryFolderFileExplorerSortAscending);
+    }
+    if (mediaLibraryFolderFileExplorerShowHiddenFiles != null) {
+      _mediaLibraryFolderFileExplorerShowHiddenFiles = mediaLibraryFolderFileExplorerShowHiddenFiles;
+      await db.setValue(kKeyMediaLibraryFolderFileExplorerShowHiddenFiles, kTypeBoolean, booleanValue: mediaLibraryFolderFileExplorerShowHiddenFiles);
     }
     if (mediaLibraryGenreSortAscending != null) {
       _mediaLibraryGenreSortAscending = mediaLibraryGenreSortAscending;
@@ -326,6 +356,7 @@ class ConfigurationBase {
   Future<Map<String, dynamic>> getDefaults() async {
     return {
       /* String  */ kKeyApiBaseUrl: '',
+      /* Json    */ kKeyDesktopMediaLibraryFoldersScreenColumnWidths: <double>[],
       /* Json    */ kKeyDesktopMediaLibraryTracksScreenColumnWidths: <double>[],
       /* Boolean */ kKeyDesktopNowPlayingBarColorPalette: true,
       /* Integer */ kKeyDesktopNowPlayingCarousel: 0,
@@ -350,6 +381,10 @@ class ConfigurationBase {
       /* Integer */ kKeyMediaLibraryArtistSortType: ArtistSortType.artist.index,
       /* Boolean */ kKeyMediaLibraryCoverFallback: false,
       /* Json    */ kKeyMediaLibraryDirectories: await getDefaultMediaLibraryDirectories(),
+      /* Integer */ kKeyMediaLibraryFolderFileExplorerViewType: FileExplorerViewType.list.index,
+      /* Integer */ kKeyMediaLibraryFolderFileExplorerSortType: FileExplorerSortType.name.index,
+      /* Boolean */ kKeyMediaLibraryFolderFileExplorerSortAscending: true,
+      /* Boolean */ kKeyMediaLibraryFolderFileExplorerShowHiddenFiles: false,
       /* Boolean */ kKeyMediaLibraryGenreSortAscending: true,
       /* Integer */ kKeyMediaLibraryGenreSortType: GenreSortType.genre.index,
       /* Integer */ kKeyMediaLibraryMinimumFileSize: 0,
@@ -380,6 +415,7 @@ class ConfigurationBase {
   }
 
   String? _apiBaseUrl;
+  List<double>? _desktopMediaLibraryFoldersScreenColumnWidths;
   List<double>? _desktopMediaLibraryTracksScreenColumnWidths;
   bool? _desktopNowPlayingBarColorPalette;
   int? _desktopNowPlayingCarousel;
@@ -404,6 +440,10 @@ class ConfigurationBase {
   ArtistSortType? _mediaLibraryArtistSortType;
   bool? _mediaLibraryCoverFallback;
   Set<Directory>? _mediaLibraryDirectories;
+  FileExplorerViewType? _mediaLibraryFolderFileExplorerViewType;
+  FileExplorerSortType? _mediaLibraryFolderFileExplorerSortType;
+  bool? _mediaLibraryFolderFileExplorerSortAscending;
+  bool? _mediaLibraryFolderFileExplorerShowHiddenFiles;
   bool? _mediaLibraryGenreSortAscending;
   GenreSortType? _mediaLibraryGenreSortType;
   int? _mediaLibraryMinimumFileSize;
@@ -435,6 +475,7 @@ class ConfigurationBase {
 // ----- Keys -----
 
 const kKeyApiBaseUrl = 'API_BASE_URL';
+const kKeyDesktopMediaLibraryFoldersScreenColumnWidths = 'DESKTOP_MEDIA_LIBRARY_FOLDERS_SCREEN_COLUMN_WIDTHS';
 const kKeyDesktopMediaLibraryTracksScreenColumnWidths = 'DESKTOP_MEDIA_LIBRARY_TRACKS_SCREEN_COLUMN_WIDTHS';
 const kKeyDesktopNowPlayingBarColorPalette = 'DESKTOP_NOW_PLAYING_BAR_COLOR_PALETTE';
 const kKeyDesktopNowPlayingCarousel = 'DESKTOP_NOW_PLAYING_CAROUSEL';
@@ -459,6 +500,10 @@ const kKeyMediaLibraryArtistSortAscending = 'MEDIA_LIBRARY_ARTIST_SORT_ASCENDING
 const kKeyMediaLibraryArtistSortType = 'MEDIA_LIBRARY_ARTIST_SORT_TYPE';
 const kKeyMediaLibraryCoverFallback = 'MEDIA_LIBRARY_COVER_FALLBACK';
 const kKeyMediaLibraryDirectories = 'MEDIA_LIBRARY_DIRECTORIES';
+const kKeyMediaLibraryFolderFileExplorerViewType = 'MEDIA_LIBRARY_FOLDER_FILE_EXPLORER_VIEW_TYPE';
+const kKeyMediaLibraryFolderFileExplorerSortType = 'MEDIA_LIBRARY_FOLDER_FILE_EXPLORER_SORT_TYPE';
+const kKeyMediaLibraryFolderFileExplorerSortAscending = 'MEDIA_LIBRARY_FOLDER_FILE_EXPLORER_SORT_ASCENDING';
+const kKeyMediaLibraryFolderFileExplorerShowHiddenFiles = 'MEDIA_LIBRARY_FOLDER_FILE_EXPLORER_SHOW_HIDDEN_FILES';
 const kKeyMediaLibraryGenreSortAscending = 'MEDIA_LIBRARY_GENRE_SORT_ASCENDING';
 const kKeyMediaLibraryGenreSortType = 'MEDIA_LIBRARY_GENRE_SORT_TYPE';
 const kKeyMediaLibraryMinimumFileSize = 'MEDIA_LIBRARY_MINIMUM_FILE_SIZE';
