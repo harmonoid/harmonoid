@@ -44,10 +44,10 @@ packages:
     dependency: "direct main"
     description:
       name: animations
-      sha256: a8031b276f0a7986ac907195f10ca7cd04ecf2a8a566bd6dbe03018a9b02b427
+      sha256: "18938cefd7dcc04e1ecac0db78973761a01e4bc2d6bfae0cfa596bfeac9e96ab"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.1"
   app_links:
     dependency: transitive
     description:
@@ -813,11 +813,12 @@ packages:
   material_table_view:
     dependency: transitive
     description:
-      name: material_table_view
-      sha256: b23e769996483f127b9f2941ea55b290cd9e7a218fe58fcb33e675bef3f0256a
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.5.1"
+      path: "."
+      ref: "feat/expose-key-for-scrollable"
+      resolved-ref: "89df21739b41e4eeea9fba3eaeb4adecfe26b71e"
+      url: "https://github.com/alexmercerind/material_table_view.git"
+    source: git
+    version: "5.5.3"
   measure_size:
     dependency: "direct main"
     description:
@@ -829,10 +830,11 @@ packages:
   media_kit:
     dependency: "direct main"
     description:
-      name: media_kit
-      sha256: ae9e79597500c7ad6083a3c7b7b7544ddabfceacce7ae5c9709b0ec16a5d6643
-      url: "https://pub.dev"
-    source: hosted
+      path: media_kit
+      ref: "7ff27650"
+      resolved-ref: "7ff27650989a806c17de16048aa21e4bfb3e1803"
+      url: "https://github.com/media-kit/media-kit.git"
+    source: git
     version: "1.2.6"
   media_kit_libs_android_audio:
     dependency: "direct main"
