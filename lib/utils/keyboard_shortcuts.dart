@@ -38,7 +38,8 @@ class KeyboardShortcuts {
     SingleActivator(LogicalKeyboardKey.digit2, control: control, meta: !control): () => router.go('/$kMediaLibraryPath/$kTracksPath'),
     SingleActivator(LogicalKeyboardKey.digit3, control: control, meta: !control): () => router.go('/$kMediaLibraryPath/$kArtistsPath'),
     SingleActivator(LogicalKeyboardKey.digit4, control: control, meta: !control): () => router.go('/$kMediaLibraryPath/$kGenresPath'),
-    SingleActivator(LogicalKeyboardKey.digit5, control: control, meta: !control): () => router.go('/$kMediaLibraryPath/$kPlaylistsPath'),
+    SingleActivator(LogicalKeyboardKey.digit5, control: control, meta: !control): () => router.go('/$kMediaLibraryPath/$kFoldersPath'),
+    SingleActivator(LogicalKeyboardKey.digit6, control: control, meta: !control): () => router.go('/$kMediaLibraryPath/$kPlaylistsPath'),
   };
 }
 

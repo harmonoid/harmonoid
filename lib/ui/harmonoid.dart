@@ -19,6 +19,7 @@ import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
 import 'package:harmonoid/ui/media_library/artists/state/artist_image_notifier.dart';
+import 'package:harmonoid/ui/media_library/folders/state/file_explorer_notifier.dart';
 import 'package:harmonoid/ui/media_library/media_library_flags.dart';
 import 'package:harmonoid/ui/media_library/media_library_inaccessible_directories_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
@@ -125,31 +126,34 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
           ),
         ),
         ChangeNotifierProvider(create: (_) => ArtistImageNotifier()),
+        ChangeNotifierProvider(create: (_) => FileExplorerNotifier()),
       ],
       builder: (context, _) => Consumer2<ThemeNotifier, Localization>(
-        builder: (context, themeNotifier, localization, _) => AdaptiveLayoutsLocalizations(
-          code: localization.current.code,
-          back: Localization.instance.BACK,
-          more: Localization.instance.MORE,
-          select: Localization.instance.SELECT,
-          unselect: Localization.instance.UNSELECT,
-          child: SubscriptionLocalizations.fromCode(
-            code: localization.current.code,
-            child: MacOSMenuBar(
-              child: KeyboardShortcutsListener(
-                child: MaterialApp.router(
-                  scrollBehavior: const DefaultScrollBehavior(),
-                  debugShowCheckedModeBanner: false,
-                  theme: themeNotifier.theme,
-                  darkTheme: themeNotifier.darkTheme,
-                  themeMode: themeNotifier.themeMode,
-                  routerConfig: router,
+        builder: (context, themeNotifier, localization, _) =>
+            // AdaptiveLayoutsLocalizations(
+            //   code: localization.current.code,
+            //   back: Localization.instance.BACK,
+            //   more: Localization.instance.MORE,
+            //   select: Localization.instance.SELECT,
+            //   unselect: Localization.instance.UNSELECT,
+            //   child:
+            SubscriptionLocalizations.fromCode(
+              code: localization.current.code,
+              child: MacOSMenuBar(
+                child: KeyboardShortcutsListener(
+                  child: MaterialApp.router(
+                    scrollBehavior: const DefaultScrollBehavior(),
+                    debugShowCheckedModeBanner: false,
+                    theme: themeNotifier.theme,
+                    darkTheme: themeNotifier.darkTheme,
+                    themeMode: themeNotifier.themeMode,
+                    routerConfig: router,
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
       ),
+      // ),
     );
   }
 }

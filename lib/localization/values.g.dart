@@ -89,6 +89,8 @@ class Values {
   late String FIND;
   late String FOLDER;
   late String FOLDERS;
+  late String FOLDERS_NO_ITEMS_SUBTITLE;
+  late String FOLDERS_NO_ITEMS_TITLE;
   late String FOLDER_NOT_FOUND;
   late String FOLLOW_ON_X;
   late String FULLSCREEN;

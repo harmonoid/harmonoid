@@ -17,7 +17,7 @@ class TracksScreen extends StatefulWidget {
 }
 
 class TracksScreenState extends State<TracksScreen> {
-  final _desktopColumnWidthsDebouncer = Debouncer();
+  final Debouncer _desktopColumnWidthsDebouncer = Debouncer();
 
   @override
   void dispose() {

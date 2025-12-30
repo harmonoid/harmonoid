@@ -142,7 +142,7 @@ class MediaLibraryShellRouteState extends State<MediaLibraryShellRoute> with Tic
             final bottomNavigationBarHeight = _mobileBottomNavigationBarHeight;
             final bottomNavigationBarVisibility = _mobileBottomNavigationBarController.value;
             final path = context.location.split('/').last;
-            final visible = [kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kPlaylistsPath].contains(path);
+            final visible = [kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kFoldersPath, kPlaylistsPath].contains(path);
 
             if (bottomNavigationBarVisibility == 0.0) {
               return const SizedBox.shrink();

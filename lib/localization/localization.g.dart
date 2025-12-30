@@ -94,6 +94,8 @@ class LocalizationBase extends Values {
     FIND = map['FIND']!;
     FOLDER = map['FOLDER']!;
     FOLDERS = map['FOLDERS']!;
+    FOLDERS_NO_ITEMS_SUBTITLE = map['FOLDERS_NO_ITEMS_SUBTITLE']!;
+    FOLDERS_NO_ITEMS_TITLE = map['FOLDERS_NO_ITEMS_TITLE']!;
     FOLDER_NOT_FOUND = map['FOLDER_NOT_FOUND']!;
     FOLLOW_ON_X = map['FOLLOW_ON_X']!;
     FULLSCREEN = map['FULLSCREEN']!;

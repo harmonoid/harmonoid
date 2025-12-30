@@ -70,4 +70,27 @@ extension TrackMappers on Track {
 
   /// Converts to year [TappableText].
   TappableText toYearTappableText() => TappableText(text: [TappableTextData(text: year == 0 ? kDefaultYear : year.toString())]);
+
+  /// Converts to [FileExplorer] grid subtitle 0 [TappableText].
+  TappableText toFileExplorerGridSubtitle0TappableText(BuildContext context) => TappableText(
+    text: artists.map(
+      (e) => TappableTextData(
+        text: e.nullIfBlank() ?? kDefaultArtist,
+        onTap: () => navigateToArtist(context, ArtistLookupKey(artist: e)),
+      ),
+    ),
+  );
+
+  /// Converts to [FileExplorer] grid subtitle 1 [TappableText].
+  TappableText toFileExplorerGridSubtitle1TappableText(BuildContext context) => TappableText(
+    text: [
+      if (album.isNotEmpty)
+        TappableTextData(
+          text: album,
+          onTap: () => navigateToAlbum(context, AlbumLookupKey(album: album, albumArtist: albumArtist, year: year)),
+        ),
+      if (year != 0) TappableTextData(text: year.toString()),
+    ],
+    separator: ' • ',
+  );
 }

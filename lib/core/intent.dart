@@ -2,12 +2,12 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:media_library/media_library.dart';
-import 'package:path/path.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:uri_parser/uri_parser.dart';
 
 import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/mappers/file.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/models/playback_state.dart';
 import 'package:harmonoid/utils/actions.dart';
@@ -150,12 +150,7 @@ class Intent {
         switch (parser.type) {
           case URIType.file:
             {
-              final playable = Playable(
-                uri: parser.file!.path,
-                title: basename(parser.file!.path),
-                subtitle: [],
-                description: [],
-              );
+              final playable = parser.file!.toPlayable();
               try {
                 await MediaPlayer.instance.open([playable], onOpen: onMediaPlayerOpen);
               } catch (exception, stacktrace) {
@@ -170,13 +165,7 @@ class Intent {
               for (int i = 0; i < contents.length; i++) {
                 // Return prematurely if the method has been invoked again.
                 if (_playInvoked) return;
-                final file = contents[i];
-                final playable = Playable(
-                  uri: file.path,
-                  title: basename(file.path),
-                  subtitle: [],
-                  description: [],
-                );
+                final playable = contents[i].toPlayable();
                 try {
                   if (i == 0) {
                     await MediaPlayer.instance.open([playable], onOpen: onMediaPlayerOpen);

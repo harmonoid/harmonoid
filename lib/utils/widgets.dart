@@ -25,6 +25,7 @@ import 'package:harmonoid/extensions/build_context.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
+import 'package:harmonoid/ui/media_library/folders/state/file_explorer_notifier.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
@@ -43,7 +44,7 @@ class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
   Widget build(BuildContext context) {
     final path = context.location.split('/').last;
 
-    if (![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath].contains(path)) {
+    if (![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kFoldersPath].contains(path)) {
       return const SizedBox.shrink();
     }
 
@@ -217,8 +218,8 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
   @override
   Widget build(BuildContext context) {
     final path = context.location.split('/').last;
-    return Consumer<MediaLibrary>(
-      builder: (context, mediaLibrary, _) => Row(
+    return Consumer2<MediaLibrary, FileExplorerNotifier>(
+      builder: (context, mediaLibrary, fileExplorerNotifier, _) => Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -311,6 +312,23 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
                         ),
                       )
                       .toList(),
+                kFoldersPath =>
+                  FileExplorerSortType.values
+                      .map(
+                        (e) => MenuItemButton(
+                          onPressed: () => fileExplorerNotifier.setSortType(e),
+                          style: _menuItemStyle,
+                          leadingIcon: _buildLeadingIcon(fileExplorerNotifier.sortType == e),
+                          child: Text(
+                            switch (e) {
+                              FileExplorerSortType.name => Localization.instance.A_TO_Z,
+                              FileExplorerSortType.timestamp => Localization.instance.DATE_ADDED,
+                            },
+                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+                          ),
+                        ),
+                      )
+                      .toList(),
                 _ => [],
               },
               child: Padding(
@@ -362,6 +380,10 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
                                     GenreSortType.genre => Localization.instance.A_TO_Z,
                                     GenreSortType.timestamp => Localization.instance.DATE_ADDED,
                                   },
+                                  kFoldersPath => switch (fileExplorerNotifier.sortType) {
+                                    FileExplorerSortType.name => Localization.instance.A_TO_Z,
+                                    FileExplorerSortType.timestamp => Localization.instance.DATE_ADDED,
+                                  },
                                   _ => '',
                                 },
                                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
@@ -391,6 +413,11 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
                 _buildDirectionalityLtr(
                   MenuItemButton(
                     onPressed: () async {
+                      if (path == kFoldersPath) {
+                        fileExplorerNotifier.setSortAscending(true);
+                        return;
+                      }
+
                       final albumSortAscending = path == kAlbumsPath ? true : null;
                       final trackSortAscending = path == kTracksPath ? true : null;
                       final artistSortAscending = path == kArtistsPath ? true : null;
@@ -415,6 +442,7 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
                         kTracksPath => mediaLibrary.trackSortAscending,
                         kArtistsPath => mediaLibrary.artistSortAscending,
                         kGenresPath => mediaLibrary.genreSortAscending,
+                        kFoldersPath => fileExplorerNotifier.sortAscending,
                         _ => false,
                       },
                     ),
@@ -427,6 +455,11 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
                 _buildDirectionalityLtr(
                   MenuItemButton(
                     onPressed: () async {
+                      if (path == kFoldersPath) {
+                        fileExplorerNotifier.setSortAscending(false);
+                        return;
+                      }
+
                       final albumSortAscending = path == kAlbumsPath ? false : null;
                       final trackSortAscending = path == kTracksPath ? false : null;
                       final artistSortAscending = path == kArtistsPath ? false : null;
@@ -451,6 +484,7 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
                         kTracksPath => mediaLibrary.trackSortAscending,
                         kArtistsPath => mediaLibrary.artistSortAscending,
                         kGenresPath => mediaLibrary.genreSortAscending,
+                        kFoldersPath => fileExplorerNotifier.sortAscending,
                         _ => false,
                       },
                     ),
@@ -497,6 +531,7 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
                                         kTracksPath => mediaLibrary.trackSortAscending,
                                         kArtistsPath => mediaLibrary.artistSortAscending,
                                         kGenresPath => mediaLibrary.genreSortAscending,
+                                        kFoldersPath => fileExplorerNotifier.sortAscending,
                                         _ => false,
                                       }
                                       ? Localization.instance.ASCENDING
@@ -575,6 +610,7 @@ class MobileMediaLibrarySortButton extends StatefulWidget {
 class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButton> {
   void Function(void Function())? _setStateCallback;
   late final MediaLibrary _mediaLibrary = context.read<MediaLibrary>();
+  late final FileExplorerNotifier _fileExplorerNotifier = context.read<FileExplorerNotifier>();
 
   Future<void> _handle(dynamic value) async {
     if (value is AlbumSortType) {
@@ -589,6 +625,8 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
     } else if (value is GenreSortType) {
       await _mediaLibrary.populate(genreSortType: value);
       await Configuration.instance.set(mediaLibraryGenreSortType: value);
+    } else if (value is FileExplorerSortType) {
+      _fileExplorerNotifier.setSortType(value);
     }
     if (value == true) {
       switch (widget.path) {
@@ -608,6 +646,9 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
           await _mediaLibrary.populate(genreSortAscending: true);
           await Configuration.instance.set(mediaLibraryGenreSortAscending: true);
           break;
+        case kFoldersPath:
+          _fileExplorerNotifier.setSortAscending(true);
+          break;
       }
     } else if (value == false) {
       switch (widget.path) {
@@ -626,6 +667,9 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
         case kGenresPath:
           await _mediaLibrary.populate(genreSortAscending: false);
           await Configuration.instance.set(mediaLibraryGenreSortAscending: false);
+          break;
+        case kFoldersPath:
+          _fileExplorerNotifier.setSortAscending(false);
           break;
       }
     }
@@ -704,6 +748,23 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
           ),
         )
         .toList(),
+    kFoldersPath: FileExplorerSortType.values
+        .map(
+          (e) => MobileMediaLibrarySortButtonPopupMenuItem(
+            onTap: () => _handle(e),
+            checked: _fileExplorerNotifier.sortType == e,
+            value: e,
+            padding: EdgeInsets.zero,
+            child: Text(
+              switch (e) {
+                FileExplorerSortType.name => Localization.instance.A_TO_Z,
+                FileExplorerSortType.timestamp => Localization.instance.DATE_ADDED,
+              },
+              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+            ),
+          ),
+        )
+        .toList(),
   }[widget.path]!;
 
   List<MobileMediaLibrarySortButtonPopupMenuItem> get _order => [
@@ -714,6 +775,7 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
         kTracksPath => _mediaLibrary.trackSortAscending,
         kArtistsPath => _mediaLibrary.artistSortAscending,
         kGenresPath => _mediaLibrary.genreSortAscending,
+        kFoldersPath => _fileExplorerNotifier.sortAscending,
         _ => false,
       },
       value: true,
@@ -730,6 +792,7 @@ class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButt
         kTracksPath => !_mediaLibrary.trackSortAscending,
         kArtistsPath => !_mediaLibrary.artistSortAscending,
         kGenresPath => !_mediaLibrary.genreSortAscending,
+        kFoldersPath => !_fileExplorerNotifier.sortAscending,
         _ => false,
       },
       value: false,
@@ -1096,6 +1159,7 @@ class MobileNavigationBar extends StatelessWidget {
       kTracksPath,
       kArtistsPath,
       kGenresPath,
+      kFoldersPath,
       kPlaylistsPath,
     ];
     final index = paths.indexOf(path);
@@ -1105,6 +1169,7 @@ class MobileNavigationBar extends StatelessWidget {
           Localization.instance.TRACKS,
           Localization.instance.ARTISTS,
           Localization.instance.GENRES,
+          Localization.instance.FOLDERS,
           Localization.instance.PLAYLISTS,
         }.map((e) => e.length).max <=
         10;
@@ -1134,6 +1199,10 @@ class MobileNavigationBar extends StatelessWidget {
               NavigationDestination(
                 icon: const Icon(Icons.piano),
                 label: Localization.instance.GENRES,
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.folder),
+                label: Localization.instance.FOLDERS,
               ),
               NavigationDestination(
                 icon: const Icon(Icons.playlist_play),
@@ -1175,6 +1244,11 @@ class MobileNavigationBar extends StatelessWidget {
                 BottomNavigationBarItem(
                   icon: const Icon(Icons.piano),
                   label: displayLabels ? Localization.instance.GENRES : null,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.folder),
+                  label: displayLabels ? Localization.instance.FOLDERS : null,
                   backgroundColor: Theme.of(context).colorScheme.primary,
                 ),
                 BottomNavigationBarItem(
