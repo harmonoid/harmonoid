@@ -134,7 +134,7 @@ class LyricsNotifier extends ChangeNotifier {
         final contents = await file.readAsString_();
         if (contents != null && LrcParser.isValid(contents)) {
           final result = LrcParser.parse(contents).lyrics;
-          lyrics.addAll(result.map((e) => Lyric(timestamp: e.timestamp.inMilliseconds, text: e.lyrics)).toList());
+          lyrics.addAll(result.map((e) => Lyric(timestamp: e.timestamp.inMilliseconds, text: e.lyrics.trim())).toList());
           notifyListeners();
           return;
         }
@@ -153,7 +153,7 @@ class LyricsNotifier extends ChangeNotifier {
       final track = FileSystemMediaLibrary.instance.lookupTrack(TrackLookupKey(uri: playable.uri));
       if (track != null && LrcParser.isValid(track.lyrics)) {
         final result = LrcParser.parse(track.lyrics).lyrics;
-        lyrics.addAll(result.map((e) => Lyric(timestamp: e.timestamp.inMilliseconds, text: e.lyrics)).toList());
+        lyrics.addAll(result.map((e) => Lyric(timestamp: e.timestamp.inMilliseconds, text: e.lyrics.trim())).toList());
         notifyListeners();
         return;
       }
@@ -179,7 +179,7 @@ class LyricsNotifier extends ChangeNotifier {
           final contents = await file.readAsString_();
           if (contents != null && LrcParser.isValid(contents)) {
             final result = LrcParser.parse(contents).lyrics;
-            lyrics.addAll(result.map((e) => Lyric(timestamp: e.timestamp.inMilliseconds, text: e.lyrics)).toList());
+            lyrics.addAll(result.map((e) => Lyric(timestamp: e.timestamp.inMilliseconds, text: e.lyrics.trim())).toList());
             notifyListeners();
             return;
           }

@@ -129,31 +129,38 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
         ChangeNotifierProvider(create: (_) => FileExplorerNotifier()),
       ],
       builder: (context, _) => Consumer2<ThemeNotifier, Localization>(
-        builder: (context, themeNotifier, localization, _) =>
-            // AdaptiveLayoutsLocalizations(
-            //   code: localization.current.code,
-            //   back: Localization.instance.BACK,
-            //   more: Localization.instance.MORE,
-            //   select: Localization.instance.SELECT,
-            //   unselect: Localization.instance.UNSELECT,
-            //   child:
-            SubscriptionLocalizations.fromCode(
-              code: localization.current.code,
-              child: MacOSMenuBar(
-                child: KeyboardShortcutsListener(
-                  child: MaterialApp.router(
-                    scrollBehavior: const DefaultScrollBehavior(),
-                    debugShowCheckedModeBanner: false,
-                    theme: themeNotifier.theme,
-                    darkTheme: themeNotifier.darkTheme,
-                    themeMode: themeNotifier.themeMode,
-                    routerConfig: router,
-                  ),
+        builder: (context, themeNotifier, localization, _) => AdaptiveLayoutsLocalizations(
+          code: localization.current.code,
+          aToZ: Localization.instance.A_TO_Z,
+          back: Localization.instance.BACK,
+          dateAdded: Localization.instance.DATE_ADDED,
+          files: Localization.instance.FILES,
+          folders: Localization.instance.FOLDERS,
+          grid: Localization.instance.GRID,
+          hideHiddenFiles: Localization.instance.HIDE_HIDDEN_FILES,
+          list: Localization.instance.LIST,
+          more: Localization.instance.MORE,
+          select: Localization.instance.SELECT,
+          showHiddenFiles: Localization.instance.SHOW_HIDDEN_FILES,
+          type: Localization.instance.TYPE,
+          unselect: Localization.instance.UNSELECT,
+          child: SubscriptionLocalizations.fromCode(
+            code: localization.current.code,
+            child: MacOSMenuBar(
+              child: KeyboardShortcutsListener(
+                child: MaterialApp.router(
+                  scrollBehavior: const DefaultScrollBehavior(),
+                  debugShowCheckedModeBanner: false,
+                  theme: themeNotifier.theme,
+                  darkTheme: themeNotifier.darkTheme,
+                  themeMode: themeNotifier.themeMode,
+                  routerConfig: router,
                 ),
               ),
             ),
+          ),
+        ),
       ),
-      // ),
     );
   }
 }

@@ -42,6 +42,8 @@ class LocalizationBase extends Values {
     CLEAR_LRC_FILE = map['CLEAR_LRC_FILE']!;
     CLEAR_SELECTION = map['CLEAR_SELECTION']!;
     COMING_UP = map['COMING_UP']!;
+    CONFIGURE_VISIBLE_TABS_SUBTITLE = map['CONFIGURE_VISIBLE_TABS_SUBTITLE']!;
+    CONFIGURE_VISIBLE_TABS_TITLE = map['CONFIGURE_VISIBLE_TABS_TITLE']!;
     CONNECT = map['CONNECT']!;
     CONNECTED = map['CONNECTED']!;
     CONTROL_PANEL = map['CONTROL_PANEL']!;
@@ -89,6 +91,7 @@ class LocalizationBase extends Values {
     EXIT_SUBTITLE = map['EXIT_SUBTITLE']!;
     EXIT_TITLE = map['EXIT_TITLE']!;
     FILE = map['FILE']!;
+    FILES = map['FILES']!;
     FILE_INFORMATION = map['FILE_INFORMATION']!;
     FILE_PATH_OR_URL = map['FILE_PATH_OR_URL']!;
     FIND = map['FIND']!;
@@ -103,7 +106,9 @@ class LocalizationBase extends Values {
     GENRES = map['GENRES']!;
     GITHUB = map['GITHUB']!;
     GO_TO_SETTINGS = map['GO_TO_SETTINGS']!;
+    GRID = map['GRID']!;
     HIDE = map['HIDE']!;
+    HIDE_HIDDEN_FILES = map['HIDE_HIDDEN_FILES']!;
     HIDE_LYRICS = map['HIDE_LYRICS']!;
     HISTORY = map['HISTORY']!;
     IMAGES = map['IMAGES']!;
@@ -115,6 +120,7 @@ class LocalizationBase extends Values {
     LIKED_SONGS = map['LIKED_SONGS']!;
     LINKED_AS_X = map['LINKED_AS_X']!;
     LINK_YOUR_ACCOUNT = map['LINK_YOUR_ACCOUNT']!;
+    LIST = map['LIST']!;
     LOGIN = map['LOGIN']!;
     LOGOUT = map['LOGOUT']!;
     LOOKUP_FOR_FALLBACK_COVERS = map['LOOKUP_FOR_FALLBACK_COVERS']!;
@@ -263,6 +269,7 @@ class LocalizationBase extends Values {
     SHOW_ALBUM = map['SHOW_ALBUM']!;
     SHOW_ARTIST = map['SHOW_ARTIST']!;
     SHOW_ARTISTS = map['SHOW_ARTISTS']!;
+    SHOW_HIDDEN_FILES = map['SHOW_HIDDEN_FILES']!;
     SHOW_IN_FILE_MANAGER = map['SHOW_IN_FILE_MANAGER']!;
     SHOW_LYRICS = map['SHOW_LYRICS']!;
     SHOW_NOW_PLAYING_SCREEN = map['SHOW_NOW_PLAYING_SCREEN']!;

@@ -15,6 +15,7 @@ import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/ui/media_library/folders/folders_no_items_banner.dart';
 import 'package:harmonoid/ui/media_library/folders/state/file_explorer_notifier.dart';
 import 'package:harmonoid/ui/media_library/media_library_flags.dart';
+import 'package:harmonoid/ui/media_library/media_library_menus.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/debouncer.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -46,17 +47,15 @@ class _FoldersScreenState extends State<FoldersScreen> {
 
   Widget _buildHeader(BuildContext context) {
     if (isDesktop) {
-      return Container(
+      return const SizedBox(
         height: kDesktopHeaderHeight,
-        margin: mediaLibraryScrollViewBuilderPadding,
-        child: const DesktopMediaLibraryHeader(key: ValueKey('')),
+        child: DesktopMediaLibraryHeader(key: ValueKey('')),
       );
     }
     if (isMobile) {
-      return Container(
+      return const SizedBox(
         height: kMobileHeaderHeight,
-        margin: mediaLibraryScrollViewBuilderPadding.copyWith(bottom: 0.0),
-        child: const MobileMediaLibraryHeader(key: ValueKey('')),
+        child: MobileMediaLibraryHeader(key: ValueKey('')),
       );
     }
     throw UnimplementedError();
@@ -88,7 +87,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
         sortAscending: fileExplorerNotifier.sortAscending,
         showHiddenFiles: fileExplorerNotifier.showHiddenFiles,
         initialLabel: '.',
-        initialChildren: FileSystemMediaLibrary.instance.directories.toList(),
+        initialDirectories: FileSystemMediaLibrary.instance.directories.toList(),
         columns: columns,
         headerBuilder: _buildHeader,
         emptyBuilder: _buildEmpty,
@@ -119,15 +118,25 @@ class _FoldersScreenState extends State<FoldersScreen> {
             fit: BoxFit.cover,
           );
         },
+        popupMenuBuilder: (context, file) {
+          final track = _getTrack(mediaLibrary, file);
+          if (track == null) return [];
+          return TrackMenuProvider(context, track).getPopupMenuItems();
+        },
         onItemPressed: (context, files, index) {
           if (Configuration.instance.mediaLibraryAddPlaylistToNowPlaying) {
             final playables = files.map((e) => e.toPlayable(mediaLibrary));
             MediaPlayer.instance.open(playables, index: index);
           } else {
-            MediaPlayer.instance.open([files[index].toPlayable(mediaLibrary)]);
+            MediaPlayer.instance.open([files.elementAt(index).toPlayable(mediaLibrary)]);
           }
         },
-        showItemSelection: true,
+        onPopupMenuItemSelected: (context, file, result) async {
+          final track = _getTrack(mediaLibrary, file);
+          if (track == null) return;
+          await TrackMenuProvider(context, track).handlePopupMenuAction(result);
+        },
+        showItemSelection: isDesktop || mediaLibrarySelectedTracks.value.isNotEmpty,
         isItemSelectionEnabled: (file) => _getTrack(mediaLibrary, file) != null,
         isItemSelected: (file) => mediaLibrarySelectedTracks.value.contains(_getTrack(mediaLibrary, file)),
         onItemSelected: (context, file, value) {
@@ -142,7 +151,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
         itemSelectionChangeNotifier: mediaLibrarySelectedTracks,
         onViewTypeChanged: fileExplorerNotifier.setViewType,
         onShowHiddenFilesChanged: fileExplorerNotifier.setShowHiddenFiles,
-        sortKey: mediaLibrary.current ?? 0,
+        sortKey: (mediaLibrary.current, mediaLibrary.tracks.length),
         sortCallback: (entity) {
           final track = _getTrack(mediaLibrary, entity);
           if (track == null) return null;
@@ -155,13 +164,14 @@ class _FoldersScreenState extends State<FoldersScreen> {
           if (entity is Directory) return true;
           return _getTrack(mediaLibrary, entity) != null;
         },
+        padding: mediaLibraryScrollViewBuilderPadding,
+        headerHeight: isDesktop ? kDesktopHeaderHeight : kMobileHeaderHeight,
         desktopColumnWidths: _desktopColumnWidths,
         desktopOnColumnResize: (widths) {
           _desktopColumnWidthsDebouncer.run(() {
             Configuration.instance.set(desktopMediaLibraryFoldersScreenColumnWidths: widths);
           });
         },
-        mobileHeaderHeight: mediaLibraryScrollViewBuilderPadding.top + kMobileHeaderHeight,
       ),
     );
   }

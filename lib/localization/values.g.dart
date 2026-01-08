@@ -37,6 +37,8 @@ class Values {
   late String CLEAR_LRC_FILE;
   late String CLEAR_SELECTION;
   late String COMING_UP;
+  late String CONFIGURE_VISIBLE_TABS_SUBTITLE;
+  late String CONFIGURE_VISIBLE_TABS_TITLE;
   late String CONNECT;
   late String CONNECTED;
   late String CONTROL_PANEL;
@@ -84,6 +86,7 @@ class Values {
   late String EXIT_SUBTITLE;
   late String EXIT_TITLE;
   late String FILE;
+  late String FILES;
   late String FILE_INFORMATION;
   late String FILE_PATH_OR_URL;
   late String FIND;
@@ -98,7 +101,9 @@ class Values {
   late String GENRES;
   late String GITHUB;
   late String GO_TO_SETTINGS;
+  late String GRID;
   late String HIDE;
+  late String HIDE_HIDDEN_FILES;
   late String HIDE_LYRICS;
   late String HISTORY;
   late String IMAGES;
@@ -110,6 +115,7 @@ class Values {
   late String LIKED_SONGS;
   late String LINKED_AS_X;
   late String LINK_YOUR_ACCOUNT;
+  late String LIST;
   late String LOGIN;
   late String LOGOUT;
   late String LOOKUP_FOR_FALLBACK_COVERS;
@@ -258,6 +264,7 @@ class Values {
   late String SHOW_ALBUM;
   late String SHOW_ARTIST;
   late String SHOW_ARTISTS;
+  late String SHOW_HIDDEN_FILES;
   late String SHOW_IN_FILE_MANAGER;
   late String SHOW_LYRICS;
   late String SHOW_NOW_PLAYING_SCREEN;
