@@ -11,9 +11,12 @@ import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/build_context.dart';
 import 'package:harmonoid/extensions/media_player_state.dart';
+import 'package:harmonoid/extensions/set.dart';
 import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/build_context.dart';
+import 'package:harmonoid/mappers/media_library_tab.dart';
+import 'package:harmonoid/models/media_library_tab.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/media_library/media_library_no_items_banner.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
@@ -175,14 +178,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children:
-                                {
-                                  kAlbumsPath: Localization.instance.ALBUMS,
-                                  kTracksPath: Localization.instance.TRACKS,
-                                  kArtistsPath: Localization.instance.ARTISTS,
-                                  kGenresPath: Localization.instance.GENRES,
-                                  kFoldersPath: Localization.instance.FOLDERS,
-                                  kPlaylistsPath: Localization.instance.PLAYLISTS,
-                                }.entries.map<Widget>(
+                                Configuration.instance.mediaLibraryVisibleTabs.ifEmpty(MediaLibraryTab.values.toSet()).map<Widget>(
                                   (e) {
                                     const selected = TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600);
                                     const unselected = TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300);
@@ -190,8 +186,8 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                       cursor: SystemMouseCursors.click,
                                       child: GestureDetector(
                                         onTap: () {
-                                          context.go('/$kMediaLibraryPath/${e.key}');
-                                          Configuration.instance.set(mediaLibraryPath: e.key);
+                                          context.go('/$kMediaLibraryPath/${e.toPath()}');
+                                          Configuration.instance.set(mediaLibraryPath: e.toPath());
                                         },
                                         child: Container(
                                           color: Colors.transparent,
@@ -202,26 +198,26 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                             alignment: Alignment.center,
                                             children: [
                                               Text(
-                                                e.value.uppercase(),
+                                                e.toLabel().uppercase(),
                                                 style: selected.copyWith(color: Colors.transparent),
                                               ),
                                               Text(
-                                                e.value.uppercase(),
+                                                e.toLabel().uppercase(),
                                                 style: unselected.copyWith(color: Colors.transparent),
                                               ),
                                               AnimatedSwitcher(
                                                 duration: _duration.fast,
                                                 switchInCurve: Curves.easeInOut,
                                                 switchOutCurve: Curves.easeInOut,
-                                                child: e.key == _path
+                                                child: e.toPath() == _path
                                                     ? Text(
-                                                        e.value.uppercase(),
-                                                        key: ValueKey('${e.key}-w600'),
+                                                        e.toLabel().uppercase(),
+                                                        key: ValueKey('${e.toPath()}-w600'),
                                                         style: selected.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color),
                                                       )
                                                     : Text(
-                                                        e.value.uppercase(),
-                                                        key: ValueKey('${e.key}-w300'),
+                                                        e.toLabel().uppercase(),
+                                                        key: ValueKey('${e.toPath()}-w300'),
                                                         style: unselected.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color),
                                                       ),
                                               ),

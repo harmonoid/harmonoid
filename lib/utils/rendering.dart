@@ -622,8 +622,8 @@ Future<String?> showCreatePlaylistDialog(BuildContext context) async {
 Future<void> showAddToPlaylistDialog(
   BuildContext context, {
   Track? track,
-  List<Track>? tracks,
   Playable? playable,
+  List<Track>? tracks,
 }) {
   assert(track != null || playable != null || tracks != null);
 
@@ -653,9 +653,13 @@ Future<void> showAddToPlaylistDialog(
     }
 
     if (Platform.isAndroid) {
-      final entry = track?.title ?? playable?.playlistEntryTitle ?? '';
+      final entry = track?.title ?? playable?.playlistEntryTitle;
       final playlistName = playlist.name;
-      AndroidUtils.instance.showToast(Localization.instance.ADDED_ENTRY_TO_PLAYLIST.replaceAll('"ENTRY"', entry).replaceAll('"PLAYLIST"', playlistName));
+      if (entry != null) {
+        AndroidUtils.instance.showToast(Localization.instance.ADDED_ENTRY_TO_PLAYLIST.replaceAll('"ENTRY"', entry).replaceAll('"PLAYLIST"', playlistName));
+      } else {
+        AndroidUtils.instance.showToast(Localization.instance.ADDED_N_ENTRIES_TO_PLAYLIST.replaceAll('"N"', tracks?.length.toString() ?? '0').replaceAll('"PLAYLIST"', playlistName));
+      }
     }
   }
 

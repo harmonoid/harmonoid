@@ -3,6 +3,7 @@
 part of 'localization.dart';
 
 class LocalizationBase extends Values {
+
   late LocalizationData current;
 
   Future<void> set({required LocalizationData value}) async {
@@ -15,6 +16,7 @@ class LocalizationBase extends Values {
     ADDED_ENTRY_TO_PLAYLIST = map['ADDED_ENTRY_TO_PLAYLIST']!;
     ADDED_FOLDERS = map['ADDED_FOLDERS']!;
     ADDED_M_OF_N_FILES = map['ADDED_M_OF_N_FILES']!;
+    ADDED_N_ENTRIES_TO_PLAYLIST = map['ADDED_N_ENTRIES_TO_PLAYLIST']!;
     ADDING_YOUR_MUSIC = map['ADDING_YOUR_MUSIC']!;
     ADD_NEW_FOLDER = map['ADD_NEW_FOLDER']!;
     ADD_NEW_FOLDER_SUBTITLE = map['ADD_NEW_FOLDER_SUBTITLE']!;

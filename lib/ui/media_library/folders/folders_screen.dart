@@ -141,6 +141,9 @@ class _FoldersScreenState extends State<FoldersScreen> {
           if (track == null) return [];
           return TrackMenuProvider(context, track).getPopupMenuItems();
         },
+        directoryPopupMenuBuilder: (context, directory) {
+          return DirectoryMenuProvider(context, directory).getPopupMenuItems();
+        },
         onItemPressed: (context, files, index) {
           if (Configuration.instance.mediaLibraryAddPlaylistToNowPlaying) {
             final playables = files.map((e) => e.toPlayable(mediaLibrary));
@@ -153,6 +156,9 @@ class _FoldersScreenState extends State<FoldersScreen> {
           final track = _getTrack(mediaLibrary, file);
           if (track == null) return;
           await TrackMenuProvider(context, track).handlePopupMenuAction(result);
+        },
+        onDirectoryPopupMenuItemSelected: (context, directory, result) async {
+          await DirectoryMenuProvider(context, directory).handlePopupMenuAction(result);
         },
         showItemSelection: isDesktop || mediaLibrarySelectedTracks.value.isNotEmpty,
         isItemSelectionEnabled: (file) => _getTrack(mediaLibrary, file) != null,
@@ -190,6 +196,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
         desktopColumnWidths: _desktopColumnWidths,
         desktopOnColumnResize: (widths) {
           _desktopColumnWidthsDebouncer.run(() {
+            setState(() => _desktopColumnWidths = widths);
             Configuration.instance.set(desktopMediaLibraryFoldersScreenColumnWidths: widths);
           });
         },

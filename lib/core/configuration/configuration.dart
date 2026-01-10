@@ -18,6 +18,7 @@ import 'package:harmonoid/core/configuration/database/database.dart';
 import 'package:harmonoid/localization/localization_data.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/media_player_state.dart';
+import 'package:harmonoid/models/media_library_tab.dart';
 import 'package:harmonoid/models/media_player_state.dart';
 import 'package:harmonoid/models/playback_state.dart';
 import 'package:harmonoid/ui/router.dart';
@@ -123,6 +124,7 @@ class Configuration extends ConfigurationBase {
     _mediaLibraryRefreshUponStart = await read<bool, bool>(kKeyMediaLibraryRefreshUponStart, defaults);
     _mediaLibraryTrackSortAscending = await read<bool, bool>(kKeyMediaLibraryTrackSortAscending, defaults);
     _mediaLibraryTrackSortType = await read<int, TrackSortType>(kKeyMediaLibraryTrackSortType, defaults, (value) => TrackSortType.values[value]);
+    _mediaLibraryVisibleTabs = await read<dynamic, Set<MediaLibraryTab>>(kKeyMediaLibraryVisibleTabs, defaults, (value) => value.map<MediaLibraryTab>((e) => MediaLibraryTab.values[e]).toSet());
     _mediaPlayerPlaybackState = await read<dynamic, PlaybackState>(kKeyMediaPlayerPlaybackState, defaults, (value) => PlaybackState.fromJson(value));
     _mobileMediaLibraryAlbumGridSpan = await read<int, int>(kKeyMobileMediaLibraryAlbumGridSpan, defaults);
     _mobileMediaLibraryArtistGridSpan = await read<int, int>(kKeyMobileMediaLibraryArtistGridSpan, defaults);
@@ -162,7 +164,7 @@ class Configuration extends ConfigurationBase {
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
-      return defaults[key];
+      return map(defaults[key]);
     }
   }
 }
@@ -325,4 +327,8 @@ extension on Set<AlbumGroupingParameter> {
 
 extension on Set<Directory> {
   List<String> toJson() => map((e) => e.path).toList();
+}
+
+extension on Set<MediaLibraryTab> {
+  List<int> toJson() => map((e) => e.index).toList();
 }

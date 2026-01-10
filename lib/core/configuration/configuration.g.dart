@@ -49,6 +49,7 @@ class ConfigurationBase {
   bool get mediaLibraryRefreshUponStart => _mediaLibraryRefreshUponStart!;
   bool get mediaLibraryTrackSortAscending => _mediaLibraryTrackSortAscending!;
   TrackSortType get mediaLibraryTrackSortType => _mediaLibraryTrackSortType!;
+  Set<MediaLibraryTab> get mediaLibraryVisibleTabs => _mediaLibraryVisibleTabs!;
   PlaybackState get mediaPlayerPlaybackState => _mediaPlayerPlaybackState!;
   int get mobileMediaLibraryAlbumGridSpan => _mobileMediaLibraryAlbumGridSpan!;
   int get mobileMediaLibraryArtistGridSpan => _mobileMediaLibraryArtistGridSpan!;
@@ -107,6 +108,7 @@ class ConfigurationBase {
     bool? mediaLibraryRefreshUponStart,
     bool? mediaLibraryTrackSortAscending,
     TrackSortType? mediaLibraryTrackSortType,
+    Set<MediaLibraryTab>? mediaLibraryVisibleTabs,
     PlaybackState? mediaPlayerPlaybackState,
     int? mobileMediaLibraryAlbumGridSpan,
     int? mobileMediaLibraryArtistGridSpan,
@@ -275,6 +277,10 @@ class ConfigurationBase {
       _mediaLibraryTrackSortType = mediaLibraryTrackSortType;
       await db.setValue(kKeyMediaLibraryTrackSortType, kTypeInteger, integerValue: mediaLibraryTrackSortType.index);
     }
+    if (mediaLibraryVisibleTabs != null) {
+      _mediaLibraryVisibleTabs = mediaLibraryVisibleTabs;
+      await db.setValue(kKeyMediaLibraryVisibleTabs, kTypeJson, jsonValue: mediaLibraryVisibleTabs.toJson());
+    }
     if (mediaPlayerPlaybackState != null) {
       _mediaPlayerPlaybackState = mediaPlayerPlaybackState;
       await db.setValue(kKeyMediaPlayerPlaybackState, kTypeJson, jsonValue: mediaPlayerPlaybackState.toJson());
@@ -392,6 +398,7 @@ class ConfigurationBase {
       /* Boolean */ kKeyMediaLibraryRefreshUponStart: false,
       /* Boolean */ kKeyMediaLibraryTrackSortAscending: true,
       /* Integer */ kKeyMediaLibraryTrackSortType: TrackSortType.title.index,
+      /* Json    */ kKeyMediaLibraryVisibleTabs: [MediaLibraryTab.albums.index, MediaLibraryTab.tracks.index, MediaLibraryTab.artists.index, MediaLibraryTab.folders.index, MediaLibraryTab.playlists.index],
       /* Json    */ kKeyMediaPlayerPlaybackState: MediaPlayerState.defaults().toPlaybackState(),
       /* Integer */ kKeyMobileMediaLibraryAlbumGridSpan: 2,
       /* Integer */ kKeyMobileMediaLibraryArtistGridSpan: 3,
@@ -451,6 +458,7 @@ class ConfigurationBase {
   bool? _mediaLibraryRefreshUponStart;
   bool? _mediaLibraryTrackSortAscending;
   TrackSortType? _mediaLibraryTrackSortType;
+  Set<MediaLibraryTab>? _mediaLibraryVisibleTabs;
   PlaybackState? _mediaPlayerPlaybackState;
   int? _mobileMediaLibraryAlbumGridSpan;
   int? _mobileMediaLibraryArtistGridSpan;
@@ -511,6 +519,7 @@ const kKeyMediaLibraryPath = 'MEDIA_LIBRARY_PATH';
 const kKeyMediaLibraryRefreshUponStart = 'MEDIA_LIBRARY_REFRESH_UPON_START';
 const kKeyMediaLibraryTrackSortAscending = 'MEDIA_LIBRARY_TRACK_SORT_ASCENDING';
 const kKeyMediaLibraryTrackSortType = 'MEDIA_LIBRARY_TRACK_SORT_TYPE';
+const kKeyMediaLibraryVisibleTabs = 'MEDIA_LIBRARY_VISIBLE_TABS';
 const kKeyMediaPlayerPlaybackState = 'MEDIA_PLAYER_PLAYBACK_STATE';
 const kKeyMobileMediaLibraryAlbumGridSpan = 'MOBILE_MEDIA_LIBRARY_ALBUM_GRID_SPAN';
 const kKeyMobileMediaLibraryArtistGridSpan = 'MOBILE_MEDIA_LIBRARY_ARTIST_GRID_SPAN';

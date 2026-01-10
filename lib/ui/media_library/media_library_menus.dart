@@ -261,6 +261,72 @@ class TrackMenuProvider {
   }
 }
 
+abstract class _BaseTracksMenuProvider {
+  _BaseTracksMenuProvider(this.context);
+
+  final BuildContext context;
+
+  Future<void> play(List<Track> tracks) async {
+    await _mediaPlayer.open(tracks.map((e) => e.toPlayable()));
+  }
+
+  Future<void> shuffle(List<Track> tracks) async {
+    await _mediaPlayer.open(tracks.map((e) => e.toPlayable()), shuffle: true);
+  }
+
+  Future<void> playNext(List<Track> tracks) async {
+    for (final track in tracks.reversed) {
+      await _mediaPlayer.insert(_mediaPlayer.state.index, track.toPlayable());
+    }
+  }
+
+  Future<void> addToNowPlaying(List<Track> tracks) async {
+    await _mediaPlayer.add(tracks.map((e) => e.toPlayable()));
+  }
+
+  Future<void> addToPlaylist(List<Track> tracks) async {
+    await showAddToPlaylistDialog(context, tracks: tracks);
+  }
+
+  Future<void> delete(List<Track> tracks, {Future<bool> Function()? recursivelyPopNavigatorOnDeleteIf}) async {
+    if (Platform.isAndroid) {
+      final sdk = AndroidStorageController.instance.version;
+      if (sdk >= 30) {
+        // SDK 30 or higher will ask for permissions from the user before deletion.
+        await _fileSystemMediaLibrary?.remove(tracks);
+        if (await recursivelyPopNavigatorOnDeleteIf?.call() ?? false) {
+          await recursivelyPopNavigator();
+        }
+        return;
+      }
+    }
+
+    final result = await showConfirmation(
+      context,
+      Localization.instance.DELETE,
+      tracks.length > 1
+          ? Localization.instance.TRACKS_DELETE_DIALOG_SUBTITLE.replaceAll('"N"', tracks.length.toString())
+          : Localization.instance.TRACK_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', tracks.firstOrNull?.title ?? ''),
+    );
+    if (result) {
+      await _fileSystemMediaLibrary?.remove(tracks);
+      if (await recursivelyPopNavigatorOnDeleteIf?.call() ?? false) {
+        await recursivelyPopNavigator();
+      }
+    }
+  }
+
+  late final MediaPlayer _mediaPlayer = context.read<MediaPlayer>();
+  late final MediaLibrary _mediaLibrary = context.read<MediaLibrary>();
+
+  FileSystemMediaLibrary? get _fileSystemMediaLibrary {
+    if (_mediaLibrary is FileSystemMediaLibrary) {
+      return _mediaLibrary;
+    }
+    return null;
+  }
+}
+
 enum TracksMenuAction {
   playAll,
   shuffle,
@@ -270,10 +336,9 @@ enum TracksMenuAction {
   delete,
 }
 
-class TracksMenuProvider {
-  TracksMenuProvider(this.context, this.tracks);
+class TracksMenuProvider extends _BaseTracksMenuProvider {
+  TracksMenuProvider(super.context, this.tracks);
 
-  final BuildContext context;
   final List<Track> tracks;
 
   List<PopupMenuItem<int>> getPopupMenuItems() {
@@ -300,63 +365,13 @@ class TracksMenuProvider {
     final action = TracksMenuAction.values[result];
 
     return switch (action) {
-      TracksMenuAction.playAll => play(),
-      TracksMenuAction.shuffle => shuffle(),
-      TracksMenuAction.playNext => playNext(),
-      TracksMenuAction.addToNowPlaying => addToNowPlaying(),
-      TracksMenuAction.addToPlaylist => addToPlaylist(),
-      TracksMenuAction.delete => delete(recursivelyPopNavigatorOnDeleteIf: recursivelyPopNavigatorOnDeleteIf),
+      TracksMenuAction.playAll => play(tracks),
+      TracksMenuAction.shuffle => shuffle(tracks),
+      TracksMenuAction.playNext => playNext(tracks),
+      TracksMenuAction.addToNowPlaying => addToNowPlaying(tracks),
+      TracksMenuAction.addToPlaylist => addToPlaylist(tracks),
+      TracksMenuAction.delete => delete(tracks, recursivelyPopNavigatorOnDeleteIf: recursivelyPopNavigatorOnDeleteIf),
     };
-  }
-
-  Future<void> play() async {
-    await _mediaPlayer.open(tracks.map((e) => e.toPlayable()));
-  }
-
-  Future<void> shuffle() async {
-    await _mediaPlayer.open(tracks.map((e) => e.toPlayable()), shuffle: true);
-  }
-
-  Future<void> playNext() async {
-    for (final track in tracks.reversed) {
-      await _mediaPlayer.insert(_mediaPlayer.state.index, track.toPlayable());
-    }
-  }
-
-  Future<void> addToNowPlaying() async {
-    await _mediaPlayer.add(tracks.map((e) => e.toPlayable()));
-  }
-
-  Future<void> addToPlaylist() async {
-    await showAddToPlaylistDialog(context, tracks: tracks);
-  }
-
-  Future<void> delete({Future<bool> Function()? recursivelyPopNavigatorOnDeleteIf}) async {
-    if (Platform.isAndroid) {
-      final sdk = AndroidStorageController.instance.version;
-      if (sdk >= 30) {
-        // SDK 30 or higher will ask for permissions from the user before deletion.
-        await _fileSystemMediaLibrary?.remove(tracks);
-        if (await recursivelyPopNavigatorOnDeleteIf?.call() ?? false) {
-          await recursivelyPopNavigator();
-        }
-        return;
-      }
-    }
-
-    final result = await showConfirmation(
-      context,
-      Localization.instance.DELETE,
-      tracks.length > 1
-          ? Localization.instance.TRACKS_DELETE_DIALOG_SUBTITLE.replaceAll('"N"', tracks.length.toString())
-          : Localization.instance.TRACK_DELETE_DIALOG_SUBTITLE.replaceAll('"NAME"', tracks.firstOrNull?.title ?? ''),
-    );
-    if (result) {
-      await _fileSystemMediaLibrary?.remove(tracks);
-      if (await recursivelyPopNavigatorOnDeleteIf?.call() ?? false) {
-        await recursivelyPopNavigator();
-      }
-    }
   }
 
   bool getVisible(TracksMenuAction action) {
@@ -388,15 +403,88 @@ class TracksMenuProvider {
       TracksMenuAction.delete => Localization.instance.DELETE,
     };
   }
+}
 
-  late final MediaPlayer _mediaPlayer = context.read<MediaPlayer>();
-  late final MediaLibrary _mediaLibrary = context.read<MediaLibrary>();
+enum DirectoryMenuAction {
+  playAll,
+  shuffle,
+  playNext,
+  addToNowPlaying,
+  addToPlaylist,
+}
 
-  FileSystemMediaLibrary? get _fileSystemMediaLibrary {
-    if (_mediaLibrary is FileSystemMediaLibrary) {
-      return _mediaLibrary;
+class DirectoryMenuProvider extends _BaseTracksMenuProvider {
+  DirectoryMenuProvider(super.context, this.directory);
+
+  final Directory directory;
+
+  List<PopupMenuItem<int>> getPopupMenuItems() {
+    return DirectoryMenuAction.values
+        .map(
+          (action) => PopupMenuItem<int>(
+            value: action.index,
+            child: ListTile(
+              leading: Icon(getIcon(action)),
+              title: Text(
+                getLabel(action),
+                style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
+              ),
+            ),
+          ),
+        )
+        .toList();
+  }
+
+  Future<void> handlePopupMenuAction(int? result, {Future<bool> Function()? recursivelyPopNavigatorOnDeleteIf}) async {
+    if (result == null) return;
+
+    final action = DirectoryMenuAction.values[result];
+
+    final files = await directory.list_(predicate: (e) => FileSystemMediaLibrary.instance.supportedFileTypes.contains(e.extension));
+    final tracks = <Track>[];
+    for (final file in files) {
+      final track = _mediaLibrary.lookupTrack(TrackLookupKey(uri: file.path));
+      if (track != null) {
+        tracks.add(track);
+      }
     }
-    return null;
+
+    if (tracks.isEmpty) {
+      await showMessage(
+        context,
+        Localization.instance.FOLDERS_NO_ITEMS_TITLE,
+        Localization.instance.FOLDERS_NO_ITEMS_SUBTITLE,
+      );
+      return;
+    }
+
+    return switch (action) {
+      DirectoryMenuAction.playAll => play(tracks),
+      DirectoryMenuAction.shuffle => shuffle(tracks),
+      DirectoryMenuAction.playNext => playNext(tracks),
+      DirectoryMenuAction.addToNowPlaying => addToNowPlaying(tracks),
+      DirectoryMenuAction.addToPlaylist => addToPlaylist(tracks),
+    };
+  }
+
+  IconData getIcon(DirectoryMenuAction action) {
+    return switch (action) {
+      DirectoryMenuAction.playAll => Icons.play_arrow,
+      DirectoryMenuAction.shuffle => Icons.shuffle,
+      DirectoryMenuAction.playNext => Icons.playlist_play,
+      DirectoryMenuAction.addToNowPlaying => Icons.playlist_add_check,
+      DirectoryMenuAction.addToPlaylist => Icons.playlist_add,
+    };
+  }
+
+  String getLabel(DirectoryMenuAction action) {
+    return switch (action) {
+      DirectoryMenuAction.playAll => Localization.instance.PLAY_ALL,
+      DirectoryMenuAction.shuffle => Localization.instance.SHUFFLE,
+      DirectoryMenuAction.playNext => Localization.instance.PLAY_NEXT,
+      DirectoryMenuAction.addToNowPlaying => Localization.instance.ADD_TO_NOW_PLAYING,
+      DirectoryMenuAction.addToPlaylist => Localization.instance.ADD_TO_PLAYLIST,
+    };
   }
 }
 

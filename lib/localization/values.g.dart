@@ -11,6 +11,7 @@ class Values {
   late String ADDED_ENTRY_TO_PLAYLIST;
   late String ADDED_FOLDERS;
   late String ADDED_M_OF_N_FILES;
+  late String ADDED_N_ENTRIES_TO_PLAYLIST;
   late String ADDING_YOUR_MUSIC;
   late String ADD_NEW_FOLDER;
   late String ADD_NEW_FOLDER_SUBTITLE;

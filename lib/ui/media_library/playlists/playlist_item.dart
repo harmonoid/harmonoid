@@ -12,13 +12,20 @@ import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
-class PlaylistItem extends StatelessWidget {
+class PlaylistItem extends StatefulWidget {
   final Playlist playlist;
   final VoidCallback? onTap;
   const PlaylistItem({super.key, required this.playlist, this.onTap});
 
+  @override
+  State<PlaylistItem> createState() => PlaylistItemState();
+}
+
+class PlaylistItemState extends State<PlaylistItem> {
+  late final Future<List<PlaylistEntry>> _entries = context.read<MediaLibrary>().playlists.playlistEntries(widget.playlist);
+
   Future<void> onSecondaryPress(BuildContext context, {RelativeRect? position}) async {
-    final playlistMenuProvider = PlaylistMenuProvider(context, playlist);
+    final playlistMenuProvider = PlaylistMenuProvider(context, widget.playlist);
     final result = await showMenuItems(context, playlistMenuProvider.getPopupMenuItems(), position: position);
     await playlistMenuProvider.handlePopupMenuAction(result);
   }
@@ -28,7 +35,7 @@ class PlaylistItem extends StatelessWidget {
     return Consumer<MediaLibrary>(
       builder: (context, mediaLibrary, _) {
         return FutureBuilder<List<PlaylistEntry>>(
-          future: context.read<MediaLibrary>().playlists.playlistEntries(playlist),
+          future: _entries,
           builder: (context, snapshot) {
             final entries = snapshot.data;
             return ContextMenuListener(
@@ -37,7 +44,7 @@ class PlaylistItem extends StatelessWidget {
               },
               child: ListTile(
                 onTap:
-                    onTap ??
+                    widget.onTap ??
                     (entries == null
                         ? null
                         : () async {
@@ -54,13 +61,13 @@ class PlaylistItem extends StatelessWidget {
                             await context.push(
                               '/$kMediaLibraryPath/$kPlaylistPath',
                               extra: PlaylistPathExtra(
-                                playlist: playlist,
+                                playlist: widget.playlist,
                                 entries: entries,
                                 palette: palette,
                               ),
                             );
                           }),
-                onLongPress: onTap != null
+                onLongPress: widget.onTap != null
                     ? null
                     : () {
                         onSecondaryPress(context);
@@ -68,16 +75,16 @@ class PlaylistItem extends StatelessWidget {
                 leading: SizedBox.square(
                   dimension: 56.0,
                   child: PlaylistIcon(
-                    playlist: playlist,
+                    playlist: widget.playlist,
                     entries: entries ?? [],
                     small: true,
                   ),
                 ),
                 title: Text(
-                  switch (playlist.name) {
+                  switch (widget.playlist.name) {
                     kLikedPlaylistName => Localization.instance.LIKED_SONGS,
                     kHistoryPlaylistName => Localization.instance.HISTORY,
-                    _ => playlist.name,
+                    _ => widget.playlist.name,
                   },
                   style: Theme.of(context).textTheme.titleMedium,
                   overflow: TextOverflow.ellipsis,

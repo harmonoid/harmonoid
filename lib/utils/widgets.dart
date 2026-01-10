@@ -22,8 +22,11 @@ import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/build_context.dart';
+import 'package:harmonoid/extensions/set.dart';
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/mappers/media_library_tab.dart';
 import 'package:harmonoid/mappers/track.dart';
+import 'package:harmonoid/models/media_library_tab.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/media_library/folders/state/file_explorer_notifier.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
@@ -1157,109 +1160,33 @@ class MobileNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final path = context.location.split('/').last;
-    final paths = [
-      kAlbumsPath,
-      kTracksPath,
-      kArtistsPath,
-      kGenresPath,
-      kFoldersPath,
-      kPlaylistsPath,
-    ];
+    final tabs = Configuration.instance.mediaLibraryVisibleTabs.ifEmpty(MediaLibraryTab.values.toSet());
+    final paths = tabs.map((tab) => tab.toPath()).toList();
+    final labels = tabs.map((tab) => tab.toLabel()).toList();
     final index = paths.indexOf(path);
-    final displayLabels =
-        {
-          Localization.instance.ALBUMS,
-          Localization.instance.TRACKS,
-          Localization.instance.ARTISTS,
-          Localization.instance.GENRES,
-          Localization.instance.FOLDERS,
-          Localization.instance.PLAYLISTS,
-        }.map((e) => e.length).max <=
-        10;
+    final displayLabels = labels.max.length <= 10;
+
+    void onDestinationSelected(int i) {
+      if (index == i) return;
+      context.push('/$kMediaLibraryPath/${paths[i]}');
+      Configuration.instance.set(mediaLibraryPath: paths[i]);
+      NowPlayingMobileNotifier.instance.showNowPlayingBar();
+    }
+
     return isMaterial3
         ? NavigationBar(
             selectedIndex: index,
-            onDestinationSelected: (i) {
-              if (index == i) return;
-              context.push('/$kMediaLibraryPath/${paths[i]}');
-              Configuration.instance.set(mediaLibraryPath: paths[i]);
-              NowPlayingMobileNotifier.instance.showNowPlayingBar();
-            },
+            onDestinationSelected: onDestinationSelected,
             labelBehavior: displayLabels ? NavigationDestinationLabelBehavior.alwaysShow : NavigationDestinationLabelBehavior.alwaysHide,
-            destinations: [
-              NavigationDestination(
-                icon: const Icon(Icons.album),
-                label: Localization.instance.ALBUMS,
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.music_note),
-                label: Localization.instance.TRACKS,
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.person),
-                label: Localization.instance.ARTISTS,
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.piano),
-                label: Localization.instance.GENRES,
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.folder),
-                label: Localization.instance.FOLDERS,
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.playlist_play),
-                label: Localization.instance.PLAYLISTS,
-              ),
-            ],
+            destinations: tabs.map((tab) => NavigationDestination(icon: Icon(tab.toIcon()), label: tab.toLabel())).toList(),
           )
         : Container(
-            decoration: const BoxDecoration(
-              boxShadow: [
-                BoxShadow(color: Colors.black45, blurRadius: 8.0),
-              ],
-            ),
+            decoration: const BoxDecoration(boxShadow: [BoxShadow(color: Colors.black45, blurRadius: 8.0)]),
             child: BottomNavigationBar(
               currentIndex: index,
               type: BottomNavigationBarType.shifting,
-              onTap: (i) {
-                if (index == i) return;
-                context.push('/$kMediaLibraryPath/${paths[i]}');
-                Configuration.instance.set(mediaLibraryPath: paths[i]);
-                NowPlayingMobileNotifier.instance.showNowPlayingBar();
-              },
-              items: [
-                BottomNavigationBarItem(
-                  icon: const Icon(Icons.album),
-                  label: displayLabels ? Localization.instance.ALBUMS : null,
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                ),
-                BottomNavigationBarItem(
-                  icon: const Icon(Icons.music_note),
-                  label: displayLabels ? Localization.instance.TRACKS : null,
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                ),
-                BottomNavigationBarItem(
-                  icon: const Icon(Icons.person),
-                  label: displayLabels ? Localization.instance.ARTISTS : null,
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                ),
-                BottomNavigationBarItem(
-                  icon: const Icon(Icons.piano),
-                  label: displayLabels ? Localization.instance.GENRES : null,
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                ),
-                BottomNavigationBarItem(
-                  icon: const Icon(Icons.folder),
-                  label: displayLabels ? Localization.instance.FOLDERS : null,
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                ),
-                BottomNavigationBarItem(
-                  icon: const Icon(Icons.playlist_play),
-                  label: displayLabels ? Localization.instance.PLAYLISTS : null,
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                ),
-              ],
+              onTap: onDestinationSelected,
+              items: tabs.map((tab) => BottomNavigationBarItem(icon: Icon(tab.toIcon()), label: displayLabels ? tab.toLabel() : null, backgroundColor: Theme.of(context).colorScheme.primary)).toList(),
             ),
           );
   }

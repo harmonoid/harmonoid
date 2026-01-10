@@ -96,10 +96,10 @@ class _GenreScreenState extends State<GenreScreen> {
       title: _title,
       subtitle: _subtitle,
       actions: {
-        Icons.play_arrow: (_, _) => _tracksMenuProvider.play(),
-        Icons.shuffle: (_, _) => _tracksMenuProvider.shuffle(),
-        Icons.playlist_play: (_, _) => _tracksMenuProvider.playNext(),
-        Icons.playlist_add_check: (_, _) => _tracksMenuProvider.addToNowPlaying(),
+        Icons.play_arrow: (_, _) => _tracksMenuProvider.play(_tracks),
+        Icons.shuffle: (_, _) => _tracksMenuProvider.shuffle(_tracks),
+        Icons.playlist_play: (_, _) => _tracksMenuProvider.playNext(_tracks),
+        Icons.playlist_add_check: (_, _) => _tracksMenuProvider.addToNowPlaying(_tracks),
       },
       labels: {
         Icons.play_arrow: Localization.instance.PLAY_NOW,

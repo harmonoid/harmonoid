@@ -2,13 +2,17 @@ import 'dart:io';
 
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary, FileSystemMediaLibrary;
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/extensions/configuration.dart';
+import 'package:harmonoid/extensions/set.dart';
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/mappers/media_library_tab.dart';
+import 'package:harmonoid/models/media_library_tab.dart';
 import 'package:harmonoid/ui/settings/settings_section.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/macos_storage_controller.dart';
@@ -140,9 +144,7 @@ class MediaLibrarySection extends StatelessWidget {
 
   static Future<void> editAlbumParameters(BuildContext context, FileSystemMediaLibrary mediaLibrary) {
     return ensureNotRefreshing(context, mediaLibrary, () async {
-      final result = {
-        ...mediaLibrary.albumGroupingParameters.isNotEmpty ? mediaLibrary.albumGroupingParameters : AlbumGroupingParameter.values.toSet(),
-      };
+      final result = mediaLibrary.albumGroupingParameters.ifEmpty(AlbumGroupingParameter.values.toSet());
 
       await showDialog(
         context: context,
@@ -219,12 +221,12 @@ class MediaLibrarySection extends StatelessWidget {
                   onPressed: () {
                     Configuration.instance.set(mediaLibraryAlbumGroupingParameters: result.isNotEmpty ? result : AlbumGroupingParameter.values.toSet());
                     mediaLibrary.setAlbumGroupingParameters(result.isNotEmpty ? result : AlbumGroupingParameter.values.toSet());
-                    Navigator.of(ctx).pop();
+                    ctx.pop();
                   },
                   child: Text(label(Localization.instance.OK)),
                 ),
                 TextButton(
-                  onPressed: Navigator.of(ctx).pop,
+                  onPressed: ctx.pop,
                   child: Text(label(Localization.instance.CANCEL)),
                 ),
               ],
@@ -250,6 +252,102 @@ class MediaLibrarySection extends StatelessWidget {
         mediaLibrary.setMinimumFileSize(result);
       }
     });
+  }
+
+  static Future<void> configureVisibleTabs(BuildContext context) async {
+    final visible = Configuration.instance.mediaLibraryVisibleTabs.ifEmpty(MediaLibraryTab.values.toSet());
+    final all = [...visible, ...MediaLibraryTab.values.where((tab) => !visible.contains(tab))];
+
+    final visibleSet = visible.toSet();
+
+    await showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setState) {
+          void showOrHide(MediaLibraryTab tab, bool? value) {
+            setState(() {
+              if (value == null) {
+                if (visibleSet.contains(tab)) {
+                  visibleSet.remove(tab);
+                } else {
+                  visibleSet.add(tab);
+                }
+              } else if (value) {
+                visibleSet.add(tab);
+              } else {
+                visibleSet.remove(tab);
+              }
+            });
+          }
+
+          return AlertDialog(
+            titlePadding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 24.0),
+            contentPadding: EdgeInsets.zero,
+            title: Text(Localization.instance.CONFIGURE_VISIBLE_TABS_TITLE),
+            content: Material(
+              color: Colors.transparent,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Divider(height: 1.0),
+                  Flexible(
+                    child: SizedBox(
+                      width: 280.0,
+                      child: ReorderableListView.builder(
+                        shrinkWrap: true,
+                        buildDefaultDragHandles: false,
+                        onReorder: (from, to) {
+                          setState(() {
+                            if (from < to) {
+                              to -= 1;
+                            }
+                            final tab = all.removeAt(from);
+                            all.insert(to, tab);
+                          });
+                        },
+                        itemCount: all.length,
+                        itemBuilder: (context, index) {
+                          final tab = all[index];
+                          final isVisible = visibleSet.contains(tab);
+                          return ListItem(
+                            key: ValueKey(tab),
+                            leading: Checkbox(
+                              value: isVisible,
+                              onChanged: (value) => showOrHide(tab, value),
+                            ),
+                            trailing: ReorderableDragStartListener(
+                              index: index,
+                              child: const Icon(Icons.drag_handle),
+                            ),
+                            title: tab.toLabel(),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  const Divider(height: 1.0),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Configuration.instance.set(mediaLibraryVisibleTabs: all.where((tab) => visibleSet.contains(tab)).toSet());
+                  ctx.pop();
+                },
+                child: Text(label(Localization.instance.OK)),
+              ),
+              TextButton(
+                onPressed: () => ctx.pop(),
+                child: Text(label(Localization.instance.CANCEL)),
+              ),
+            ],
+          );
+        },
+      ),
+    );
   }
 
   // --------------------------------------------------
@@ -345,6 +443,14 @@ class _DesktopMediaLibrarySectionState extends State<DesktopMediaLibrarySection>
                     child: TextButton(
                       onPressed: () => MediaLibrarySection.editMinimumFileSize(context, mediaLibrary),
                       child: Text(label(Localization.instance.EDIT_MINIMUM_FILE_SIZE)),
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  Transform.translate(
+                    offset: Offset(-textButtonPadding, 0.0),
+                    child: TextButton(
+                      onPressed: () => MediaLibrarySection.configureVisibleTabs(context),
+                      child: Text(label(Localization.instance.CONFIGURE_VISIBLE_TABS_TITLE)),
                     ),
                   ),
                   const SizedBox(height: 8.0),
@@ -498,6 +604,11 @@ class _MobileMediaLibrarySectionState extends State<MobileMediaLibrarySection> {
               title: Localization.instance.EDIT_MINIMUM_FILE_SIZE,
               subtitle: MediaLibrarySection.intFileSizeToLabelFileSize(mediaLibrary.minimumFileSize),
               onTap: () => MediaLibrarySection.editMinimumFileSize(context, mediaLibrary),
+            ),
+            ListItem(
+              title: Localization.instance.CONFIGURE_VISIBLE_TABS_TITLE,
+              subtitle: Localization.instance.CONFIGURE_VISIBLE_TABS_SUBTITLE,
+              onTap: () => MediaLibrarySection.configureVisibleTabs(context),
             ),
             const SizedBox(height: 8.0),
             Padding(

@@ -348,9 +348,9 @@ packages:
     dependency: transitive
     description:
       path: "."
-      ref: master-nc-photos
-      resolved-ref: "4fa2ca0f8bbab5c4300b242c63865e0530a173c8"
-      url: "https://github.com/nc-photos/flutter-draggable-scrollbar.git"
+      ref: b021676dd0e44645c512b8cb0d84607ca2b1a02c
+      resolved-ref: b021676dd0e44645c512b8cb0d84607ca2b1a02c
+      url: "https://github.com/alexmercerind/flutter-draggable-scrollbar.git"
     source: git
     version: "0.1.0+7"
   drift:
