@@ -3,7 +3,6 @@
 part of 'localization.dart';
 
 class LocalizationBase extends Values {
-
   late LocalizationData current;
 
   Future<void> set({required LocalizationData value}) async {
@@ -149,6 +148,7 @@ class LocalizationBase extends Values {
     MORE = map['MORE']!;
     MUTE = map['MUTE']!;
     M_ALBUMS_AND_N_TRACKS = map['M_ALBUMS_AND_N_TRACKS']!;
+    M_FOLDERS_AND_N_FILES = map['M_FOLDERS_AND_N_FILES']!;
     NEXT = map['NEXT']!;
     NO = map['NO']!;
     NOTHING_IN_QUEUE = map['NOTHING_IN_QUEUE']!;
@@ -161,6 +161,9 @@ class LocalizationBase extends Values {
     N_ARTISTS = map['N_ARTISTS']!;
     N_CHANNELS = map['N_CHANNELS']!;
     N_ENTRIES = map['N_ENTRIES']!;
+    N_FILES = map['N_FILES']!;
+    N_FOLDERS = map['N_FOLDERS']!;
+    N_FOLDERS_AND_ONE_FILE = map['N_FOLDERS_AND_ONE_FILE']!;
     N_GENRES = map['N_GENRES']!;
     N_ITEMS_SELECTED = map['N_ITEMS_SELECTED']!;
     N_TRACKS = map['N_TRACKS']!;
@@ -170,6 +173,10 @@ class LocalizationBase extends Values {
     ONE_ALBUM_N_TRACKS = map['ONE_ALBUM_N_TRACKS']!;
     ONE_ALBUM_ONE_TRACK = map['ONE_ALBUM_ONE_TRACK']!;
     ONE_ARTIST = map['ONE_ARTIST']!;
+    ONE_FILE = map['ONE_FILE']!;
+    ONE_FOLDER = map['ONE_FOLDER']!;
+    ONE_FOLDER_AND_N_FILES = map['ONE_FOLDER_AND_N_FILES']!;
+    ONE_FOLDER_AND_ONE_FILE = map['ONE_FOLDER_AND_ONE_FILE']!;
     ONE_GENRE = map['ONE_GENRE']!;
     ONE_TRACK = map['ONE_TRACK']!;
     OPEN_FILE_OR_URL = map['OPEN_FILE_OR_URL']!;

@@ -22,7 +22,6 @@ class FoldersNoItemsBanner extends StatelessWidget {
       body: Center(
         child: Container(
           margin: const EdgeInsets.all(16.0),
-          padding: mediaLibraryScrollViewBuilderPadding,
           constraints: const BoxConstraints(maxWidth: 480.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

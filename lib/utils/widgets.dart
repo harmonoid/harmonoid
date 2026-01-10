@@ -564,7 +564,8 @@ class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortBu
 // --------------------------------------------------
 
 class MobileMediaLibraryHeader extends StatelessWidget {
-  const MobileMediaLibraryHeader({super.key});
+  final Widget? leading;
+  const MobileMediaLibraryHeader({super.key, this.leading});
 
   @override
   Widget build(BuildContext context) {
@@ -578,7 +579,9 @@ class MobileMediaLibraryHeader extends StatelessWidget {
           return Row(
             children: [
               const SizedBox(width: 8.0),
-              if (path == kAlbumsPath)
+              if (leading != null)
+                leading!
+              else if (path == kAlbumsPath)
                 Text(mediaLibrary.albums.length == 1 ? Localization.instance.ONE_ALBUM : Localization.instance.N_ALBUMS.replaceAll('"N"', mediaLibrary.albums.length.toString()))
               else if (path == kTracksPath)
                 Text(mediaLibrary.albums.length == 1 ? Localization.instance.ONE_TRACK : Localization.instance.N_TRACKS.replaceAll('"N"', mediaLibrary.tracks.length.toString()))

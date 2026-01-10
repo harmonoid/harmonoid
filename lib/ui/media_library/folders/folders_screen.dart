@@ -29,12 +29,14 @@ class FoldersScreen extends StatefulWidget {
 }
 
 class _FoldersScreenState extends State<FoldersScreen> {
+  final ValueNotifier<OrderResult> _entitiesNotifier = ValueNotifier(const OrderResult());
   final Debouncer _desktopColumnWidthsDebouncer = Debouncer();
   List<double> _desktopColumnWidths = Configuration.instance.desktopMediaLibraryFoldersScreenColumnWidths;
 
   @override
   void dispose() {
     super.dispose();
+    _entitiesNotifier.dispose();
     _desktopColumnWidthsDebouncer.dispose();
   }
 
@@ -53,9 +55,25 @@ class _FoldersScreenState extends State<FoldersScreen> {
       );
     }
     if (isMobile) {
-      return const SizedBox(
+      return SizedBox(
         height: kMobileHeaderHeight,
-        child: MobileMediaLibraryHeader(key: ValueKey('')),
+        child: MobileMediaLibraryHeader(
+          key: const ValueKey(''),
+          leading: ValueListenableBuilder(
+            valueListenable: _entitiesNotifier,
+            builder: (context, data, _) => Text(switch ((data.directories.length, data.files.length)) {
+              (0, 0) => '',
+              (0, 1) => Localization.instance.ONE_FILE,
+              (1, 0) => Localization.instance.ONE_FOLDER,
+              (1, 1) => Localization.instance.ONE_FOLDER_AND_ONE_FILE,
+              (_, 0) => Localization.instance.N_FOLDERS.replaceAll('"N"', data.directories.length.toString()),
+              (0, _) => Localization.instance.N_FILES.replaceAll('"N"', data.files.length.toString()),
+              (1, _) => Localization.instance.ONE_FOLDER_AND_N_FILES.replaceAll('"N"', data.files.length.toString()),
+              (_, 1) => Localization.instance.N_FOLDERS_AND_ONE_FILE.replaceAll('"N"', data.directories.length.toString()),
+              (_, _) => Localization.instance.M_FOLDERS_AND_N_FILES.replaceAll('"M"', data.directories.length.toString()).replaceAll('"N"', data.files.length.toString()),
+            }),
+          ),
+        ),
       );
     }
     throw UnimplementedError();
@@ -149,9 +167,12 @@ class _FoldersScreenState extends State<FoldersScreen> {
           }
         },
         itemSelectionChangeNotifier: mediaLibrarySelectedTracks,
+        onLoaded: (data) {
+          _entitiesNotifier.value = data;
+        },
         onViewTypeChanged: fileExplorerNotifier.setViewType,
         onShowHiddenFilesChanged: fileExplorerNotifier.setShowHiddenFiles,
-        sortKey: (mediaLibrary.current, mediaLibrary.tracks.length),
+        sortKey: mediaLibrary.tracks.length,
         sortCallback: (entity) {
           final track = _getTrack(mediaLibrary, entity);
           if (track == null) return null;

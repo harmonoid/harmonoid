@@ -81,7 +81,7 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
       mediaLibrarySearchController.closeView('');
       return true;
     }
-    if (!router.canPop()) {
+    if (!router.canPop() && !fileExplorerCanPop) {
       AndroidUtils.instance.moveTaskToBack();
       return true;
     }

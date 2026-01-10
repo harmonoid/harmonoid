@@ -144,6 +144,7 @@ class Values {
   late String MORE;
   late String MUTE;
   late String M_ALBUMS_AND_N_TRACKS;
+  late String M_FOLDERS_AND_N_FILES;
   late String NEXT;
   late String NO;
   late String NOTHING_IN_QUEUE;
@@ -156,6 +157,9 @@ class Values {
   late String N_ARTISTS;
   late String N_CHANNELS;
   late String N_ENTRIES;
+  late String N_FILES;
+  late String N_FOLDERS;
+  late String N_FOLDERS_AND_ONE_FILE;
   late String N_GENRES;
   late String N_ITEMS_SELECTED;
   late String N_TRACKS;
@@ -165,6 +169,10 @@ class Values {
   late String ONE_ALBUM_N_TRACKS;
   late String ONE_ALBUM_ONE_TRACK;
   late String ONE_ARTIST;
+  late String ONE_FILE;
+  late String ONE_FOLDER;
+  late String ONE_FOLDER_AND_N_FILES;
+  late String ONE_FOLDER_AND_ONE_FILE;
   late String ONE_GENRE;
   late String ONE_TRACK;
   late String OPEN_FILE_OR_URL;
