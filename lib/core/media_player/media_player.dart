@@ -348,27 +348,29 @@ class MediaPlayer extends ChangeNotifier
   Future<void> mapPlayerToState() async {
     _player.stream.playlist.listen(
       (e) {
-        final previousIndex = state.index;
-        final previousPlayables = state.playables;
-        final previousPlayableAtIndex = previousPlayables.elementAtOrNull(previousIndex);
+        _mapPlayerToStatePlaylistLock.synchronized(() async {
+          final previousIndex = state.index;
+          final previousPlayables = state.playables;
+          final previousPlayableAtIndex = previousPlayables.elementAtOrNull(previousIndex);
 
-        final currentIndex = e.index;
-        final currentPlayables = e.medias.map((e) => e.toPlayable()).toList();
-        final currentPlayableAtIndex = currentPlayables.elementAtOrNull(currentIndex);
+          final currentIndex = e.index;
+          final currentPlayables = await Future.wait(e.medias.map((e) => e.toPlayable()));
+          final currentPlayableAtIndex = currentPlayables.elementAtOrNull(currentIndex);
 
-        if (previousPlayableAtIndex != currentPlayableAtIndex) {
-          // NOTE: Not having this fucks up the lyrics accuracy.
-          state = state.copyWith(
-            position: Duration.zero,
-            index: currentIndex,
-            playables: currentPlayables,
-          );
-        } else {
-          state = state.copyWith(
-            index: currentIndex,
-            playables: currentPlayables,
-          );
-        }
+          if (previousPlayableAtIndex != currentPlayableAtIndex) {
+            // NOTE: Not having this fucks up the lyrics accuracy.
+            state = state.copyWith(
+              position: Duration.zero,
+              index: currentIndex,
+              playables: currentPlayables,
+            );
+          } else {
+            state = state.copyWith(
+              index: currentIndex,
+              playables: currentPlayables,
+            );
+          }
+        });
       },
     );
     _player.stream.rate.listen((e) => state = state.copyWith(rate: e));
@@ -473,6 +475,10 @@ class MediaPlayer extends ChangeNotifier
     disposeSystemMediaTransportControls();
     disposeWindowsTaskbar();
   }
+
+  // mapPlayerToState
+
+  final Lock _mapPlayerToStatePlaylistLock = Lock();
 
   // updateCurrent
 
