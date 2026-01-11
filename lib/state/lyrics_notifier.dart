@@ -56,7 +56,7 @@ class LyricsNotifier extends ChangeNotifier {
         final currentPosition = state.position;
 
         if (current != _current && currentDuration != _currentDuration && currentPosition > Duration.zero) {
-          index = -1;
+          index = 0;
           lyrics.clear();
           _timestampsAndIndexes.clear();
           notifyListeners();
@@ -75,20 +75,18 @@ class LyricsNotifier extends ChangeNotifier {
           }
         }
 
-        int? nextTime = _timestampsAndIndexes.firstKeyAfter(state.position.inMilliseconds);
-        int? nextIndex = _timestampsAndIndexes[nextTime];
+        int? currentTime = _timestampsAndIndexes.lastKeyBefore(state.position.inMilliseconds + 1);
+        int? currentIndex = _timestampsAndIndexes[currentTime];
 
-        if (nextTime != null && nextIndex != null) {
-          if (nextIndex > 0) nextIndex--;
-
+        if (currentIndex != null) {
           // --------------------------------------------------
-          if ((nextIndex - index).abs() > 1 || state.completed) {
+          if ((currentIndex - index).abs() > 1 || state.completed) {
             await cancelNotification();
           }
           // --------------------------------------------------
 
-          if (nextIndex != index) {
-            index = nextIndex;
+          if (currentIndex != index) {
+            index = currentIndex;
             notifyListeners();
             // --------------------------------------------------
             await displayNotification(index);
@@ -112,7 +110,7 @@ class LyricsNotifier extends ChangeNotifier {
   }
 
   /// Index.
-  int index = -1;
+  int index = 0;
 
   /// Lyrics.
   final Lyrics lyrics = <Lyric>[];
