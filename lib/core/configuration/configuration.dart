@@ -164,7 +164,7 @@ class Configuration extends ConfigurationBase {
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
-      return map(defaults[key]);
+      return defaults[key];
     }
   }
 }
