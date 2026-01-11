@@ -186,7 +186,8 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                       cursor: SystemMouseCursors.click,
                                       child: GestureDetector(
                                         onTap: () {
-                                          context.go('/$kMediaLibraryPath/${e.toPath()}');
+                                          if (e.toPath() == _path) return;
+                                          context.push('/$kMediaLibraryPath/${e.toPath()}');
                                           Configuration.instance.set(mediaLibraryPath: e.toPath());
                                         },
                                         child: Container(
@@ -238,7 +239,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                       focusNode: desktopQueryTextFieldFocusNode,
                                       controller: _desktopSearchTextEditingController,
                                       onFieldSubmitted: (value) async {
-                                        context.go(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: value}).toString());
+                                        context.push(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: value}).toString());
                                         await Future.delayed(MaterialRoute.animationDuration?.medium ?? const Duration(milliseconds: 300));
                                         desktopQueryTextFieldFocusNode.requestFocus();
                                       },
@@ -249,7 +250,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                         hintText: Localization.instance.SEARCH_BANNER_SUBTITLE,
                                         suffixIcon: GestureDetector(
                                           onTap: () async {
-                                            context.go(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: _desktopSearchTextEditingController.text}).toString());
+                                            context.push(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: _desktopSearchTextEditingController.text}).toString());
                                             await Future.delayed(MaterialRoute.animationDuration?.medium ?? const Duration(milliseconds: 300));
                                             desktopQueryTextFieldFocusNode.requestFocus();
                                           },

@@ -31,6 +31,7 @@ import 'package:harmonoid/utils/actions.dart';
 import 'package:harmonoid/utils/android_utils.dart';
 import 'package:harmonoid/utils/keyboard_shortcuts.dart';
 import 'package:harmonoid/utils/macos_menu_bar.dart';
+import 'package:harmonoid/utils/mouse_navigation.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 class Harmonoid extends StatefulWidget {
@@ -148,13 +149,15 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
             code: localization.current.code,
             child: MacOSMenuBar(
               child: KeyboardShortcutsListener(
-                child: MaterialApp.router(
-                  scrollBehavior: const DefaultScrollBehavior(),
-                  debugShowCheckedModeBanner: false,
-                  theme: themeNotifier.theme,
-                  darkTheme: themeNotifier.darkTheme,
-                  themeMode: themeNotifier.themeMode,
-                  routerConfig: router,
+                child: MouseNavigationListener(
+                  child: MaterialApp.router(
+                    scrollBehavior: const DefaultScrollBehavior(),
+                    debugShowCheckedModeBanner: false,
+                    theme: themeNotifier.theme,
+                    darkTheme: themeNotifier.darkTheme,
+                    themeMode: themeNotifier.themeMode,
+                    routerConfig: router,
+                  ),
                 ),
               ),
             ),
