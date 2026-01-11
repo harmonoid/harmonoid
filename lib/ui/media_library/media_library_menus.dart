@@ -275,13 +275,17 @@ abstract class _BaseTracksMenuProvider {
   }
 
   Future<void> playNext(List<Track> tracks) async {
+    await _mediaPlayer.disablePlayerPlaylistUpdates();
     for (final track in tracks.reversed) {
       await _mediaPlayer.insert(_mediaPlayer.state.index, track.toPlayable());
     }
+    await _mediaPlayer.enablePlayerPlaylistUpdates();
   }
 
   Future<void> addToNowPlaying(List<Track> tracks) async {
+    await _mediaPlayer.disablePlayerPlaylistUpdates();
     await _mediaPlayer.add(tracks.map((e) => e.toPlayable()));
+    await _mediaPlayer.enablePlayerPlaylistUpdates();
   }
 
   Future<void> addToPlaylist(List<Track> tracks) async {

@@ -169,6 +169,7 @@ class Intent {
                 try {
                   if (i == 0) {
                     await MediaPlayer.instance.open([playable], onOpen: onMediaPlayerOpen);
+                    await Future.delayed(const Duration(seconds: 1), MediaPlayer.instance.disablePlayerPlaylistUpdates);
                   } else {
                     await MediaPlayer.instance.add([playable]);
                   }
@@ -177,6 +178,7 @@ class Intent {
                   debugPrint(stacktrace.toString());
                 }
               }
+              await MediaPlayer.instance.enablePlayerPlaylistUpdates();
               break;
             }
           case URIType.network:

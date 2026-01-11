@@ -346,33 +346,7 @@ class MediaPlayer extends ChangeNotifier
   }
 
   Future<void> mapPlayerToState() async {
-    _player.stream.playlist.listen(
-      (e) {
-        _mapPlayerToStatePlaylistLock.synchronized(() async {
-          final previousIndex = state.index;
-          final previousPlayables = state.playables;
-          final previousPlayableAtIndex = previousPlayables.elementAtOrNull(previousIndex);
-
-          final currentIndex = e.index;
-          final currentPlayables = await Future.wait(e.medias.map((e) => e.toPlayable()));
-          final currentPlayableAtIndex = currentPlayables.elementAtOrNull(currentIndex);
-
-          if (previousPlayableAtIndex != currentPlayableAtIndex) {
-            // NOTE: Not having this fucks up the lyrics accuracy.
-            state = state.copyWith(
-              position: Duration.zero,
-              index: currentIndex,
-              playables: currentPlayables,
-            );
-          } else {
-            state = state.copyWith(
-              index: currentIndex,
-              playables: currentPlayables,
-            );
-          }
-        });
-      },
-    );
+    _player.stream.playlist.listen((e) => _mapPlayerToStatePlaylistLock.synchronized(() => _applyPlayerPlaylistToState(e)));
     _player.stream.rate.listen((e) => state = state.copyWith(rate: e));
     _player.stream.pitch.listen((e) => state = state.copyWith(pitch: e));
     _player.stream.volume.listen((e) => state = state.copyWith(volume: e));
@@ -476,8 +450,60 @@ class MediaPlayer extends ChangeNotifier
     disposeWindowsTaskbar();
   }
 
+  // HACK:
+  Future<void> disablePlayerPlaylistUpdates() async {
+    _disablePlayerPlaylistUpdates = true;
+  }
+
+  // HACK:
+  Future<void> enablePlayerPlaylistUpdates() async {
+    _disablePlayerPlaylistUpdates = false;
+
+    await _applyPlayerPlaylistToState(_player.state.playlist);
+  }
+
+  Future<void> _applyPlayerPlaylistToState(Playlist playlist) async {
+    if (_disablePlayerPlaylistUpdates) return;
+
+    final previousIndex = state.index;
+    final previousPlayables = state.playables;
+    final previousPlayableAtIndex = previousPlayables.elementAtOrNull(previousIndex);
+
+    final currentIndex = playlist.index;
+    final currentMediaAtIndex = playlist.medias.elementAtOrNull(currentIndex);
+
+    // Avoid heavy deserialization.
+    final shouldUpdatePlayables = previousPlayables.length != playlist.medias.length || !_comparePlayableListAndMediaList(previousPlayables, playlist.medias);
+    // Avoid fucking up the lyrics accuracy.
+    final shouldResetPosition = previousPlayableAtIndex?.uri != currentMediaAtIndex?.uri;
+
+    final currentPlayables = shouldUpdatePlayables ? await Future.wait(playlist.medias.map((e) => e.toPlayable())) : previousPlayables;
+
+    if (shouldResetPosition) {
+      state = state.copyWith(
+        position: Duration.zero,
+        index: currentIndex,
+        playables: currentPlayables,
+      );
+    } else {
+      state = state.copyWith(
+        index: currentIndex,
+        playables: currentPlayables,
+      );
+    }
+  }
+
+  bool _comparePlayableListAndMediaList(List<Playable> playables, List<Media> medias) {
+    if (playables.length != medias.length) return false;
+    for (int i = 0; i < playables.length; i++) {
+      if (playables[i].uri != medias[i].uri) return false;
+    }
+    return true;
+  }
+
   // mapPlayerToState
 
+  bool _disablePlayerPlaylistUpdates = false;
   final Lock _mapPlayerToStatePlaylistLock = Lock();
 
   // updateCurrent

@@ -88,11 +88,17 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
         Icons.shuffle: (_, _) async => MediaPlayer.instance.open(await _playables, shuffle: true),
         Icons.playlist_play: (_, _) async {
           final playables = await _playables;
+          await MediaPlayer.instance.disablePlayerPlaylistUpdates();
           for (final entry in playables.reversed) {
             await MediaPlayer.instance.insert(MediaPlayer.instance.state.index, entry);
           }
+          await MediaPlayer.instance.enablePlayerPlaylistUpdates();
         },
-        Icons.playlist_add_check: (_, _) async => MediaPlayer.instance.add(await _playables),
+        Icons.playlist_add_check: (_, _) async {
+          await MediaPlayer.instance.disablePlayerPlaylistUpdates();
+          await MediaPlayer.instance.add(await _playables);
+          await MediaPlayer.instance.enablePlayerPlaylistUpdates();
+        },
       },
       labels: {
         Icons.play_arrow: Localization.instance.PLAY_NOW,
