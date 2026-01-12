@@ -326,7 +326,7 @@ class TagEditorNotifier extends ChangeNotifier {
   }
 
   Future<void> _initializeTagReader() async {
-    _reader = TagReader(configuration: const TagReaderConfiguration(verbose: true));
+    _reader = TagReader(configuration: const TagReaderConfiguration(verbose: true, fallback: false));
 
     _oldTags = await _getTags();
   }
