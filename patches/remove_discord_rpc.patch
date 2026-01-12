@@ -1,11 +1,11 @@
 diff --git a/lib/core/media_player/media_player.dart b/lib/core/media_player/media_player.dart
-index dea59f4a..2bc96321 100644
+index 881fc261..d5bfa477 100644
 --- a/lib/core/media_player/media_player.dart
 +++ b/lib/core/media_player/media_player.dart
-@@ -10,7 +10,6 @@ import 'package:harmonoid/core/configuration/configuration.dart';
- import 'package:harmonoid/core/filesystem_media_library.dart';
+@@ -11,7 +11,6 @@ import 'package:harmonoid/core/filesystem_media_library.dart';
  import 'package:harmonoid/core/media_player/base_media_player.dart';
  import 'package:harmonoid/core/media_player/mixin/audio_service_mixin.dart';
+ import 'package:harmonoid/core/media_player/mixin/audio_session_mixin.dart';
 -import 'package:harmonoid/core/media_player/mixin/discord_rpc_mixin.dart';
  import 'package:harmonoid/core/media_player/mixin/history_playlist_mixin.dart';
  import 'package:harmonoid/core/media_player/mixin/lastfm_mixin.dart';
@@ -15,24 +15,24 @@ index dea59f4a..2bc96321 100644
  ///
  /// {@endtemplate}
 -class MediaPlayer extends ChangeNotifier
--    with AudioServiceMixin, DiscordRpcMixin, HistoryPlaylistMixin, LastFmMixin, MprisMixin, SystemMediaTransportControlsMixin, WindowsTaskbarMixin
+-    with AudioServiceMixin, AudioSessionMixin, DiscordRpcMixin, HistoryPlaylistMixin, LastFmMixin, MprisMixin, SystemMediaTransportControlsMixin, WindowsTaskbarMixin
 -    implements BaseMediaPlayer {
-+class MediaPlayer extends ChangeNotifier with AudioServiceMixin, HistoryPlaylistMixin, LastFmMixin, MprisMixin, SystemMediaTransportControlsMixin, WindowsTaskbarMixin implements BaseMediaPlayer {
++class MediaPlayer extends ChangeNotifier with AudioServiceMixin, AudioSessionMixin, HistoryPlaylistMixin, LastFmMixin, MprisMixin, SystemMediaTransportControlsMixin, WindowsTaskbarMixin implements BaseMediaPlayer {
    static const Duration kCrossfadeDefaultDuration = Duration(seconds: 5);
    static const Duration kCrossfadeMinDuration = Duration(seconds: 2);
    static const Duration kCrossfadeMaxDuration = Duration(seconds: 30);
-@@ -67,7 +64,6 @@ class MediaPlayer extends ChangeNotifier
-     await Future.wait(
+@@ -69,7 +66,6 @@ class MediaPlayer extends ChangeNotifier
        [
          ensureInitializedAudioService(),
+         ensureInitializedAudioSession(),
 -        ensureInitializedDiscordRpc(),
          ensureInitializedHistoryPlaylist(),
          ensureInitializedLastFm(),
          ensureInitializedMpris(),
-@@ -442,7 +438,6 @@ class MediaPlayer extends ChangeNotifier
-     _player.dispose();
+@@ -445,7 +441,6 @@ class MediaPlayer extends ChangeNotifier
      _tagReader.dispose();
      disposeAudioService();
+     disposeAudioSession();
 -    disposeDiscordRpc();
      disposeHistoryPlaylist();
      disposeLastFm();
@@ -209,7 +209,7 @@ index 694aaa20..cb4a99f0 100644
        ..resetFlagsSystemMediaTransportControls();
      NowPlayingColorPaletteNotifier.instance.resetCurrent();
 diff --git a/lib/utils/rendering.dart b/lib/utils/rendering.dart
-index e8a76ccc..0b42061d 100644
+index 4137da72..7b5df3bf 100644
 --- a/lib/utils/rendering.dart
 +++ b/lib/utils/rendering.dart
 @@ -219,7 +219,6 @@ ImageProvider cover({
@@ -221,13 +221,10 @@ index e8a76ccc..0b42061d 100644
            ..resetFlagsSystemMediaTransportControls();
          NowPlayingColorPaletteNotifier.instance.resetCurrent();
 diff --git a/pubspec.yaml b/pubspec.yaml
-index fb5392ab..ea26dc18 100644
+index 77e3b8ee..b3333f19 100644
 --- a/pubspec.yaml
 +++ b/pubspec.yaml
-@@ -23,11 +23,10 @@ dependencies:
-   ffi: ^2.1.2
-   file_picker:
-     git:
+@@ -27,7 +27,6 @@ dependencies:
        url: https://github.com/alexmercerind/flutter_file_picker.git
        ref: patch-2
    fluentui_system_icons: ^1.1.136
@@ -235,6 +232,3 @@ index fb5392ab..ea26dc18 100644
    flutter_displaymode: ^0.7.0
    flutter_local_notifications:
      git:
-       url: https://github.com/alexmercerind/flutter_local_notifications.git
-       ref: 7f18146
-       path: flutter_local_notifications

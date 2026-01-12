@@ -144,6 +144,14 @@ class FileSystemMediaLibrary extends media_library.FileSystemMediaLibrary with C
     return result;
   }
 
+  // HACK:
+
+  @override
+  Set<String> splitTagValue(String? tag) {
+    // ignore: invalid_use_of_protected_member
+    return _tagReader.instances.first.platform!.splitTagValue(tag);
+  }
+
   /// Returns the default cover file.
   Future<File> getDefaultCoverFile() async {
     final cover = File(join(covers.path, kCoverDefaultFileName));
