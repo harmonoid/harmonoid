@@ -1,9 +1,7 @@
 package com.alexmercerind.harmonoid
 
 import android.app.Activity
-import android.app.RecoverableSecurityException
 import android.content.ContentUris
-import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -11,13 +9,7 @@ import androidx.annotation.RequiresApi
 import io.flutter.Log
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import java.io.File
-import java.io.FileOutputStream
 
 class StorageControllerMethodCallHandler(private val activity: Activity, private val channel: MethodChannel) : MethodChannel.MethodCallHandler {
     companion object {
@@ -29,18 +21,13 @@ class StorageControllerMethodCallHandler(private val activity: Activity, private
         private const val WRITE_METHOD_NAME = "write"
         /* private */ const val NOTIFY_DELETE_METHOD_NAME = "notifyDelete"
         /* private */ const val NOTIFY_WRITE_METHOD_NAME = "notifyWrite"
-        const val GET_COVER_FILE_METHOD_NAME = "getCoverFile"
 
         private const val DELETE_ARG_PATHS = "paths"
         private const val WRITE_ARG_PATHS = "paths"
-        private const val GET_COVER_FILE_ARG_PATH = "path"
 
         /* private */ const val DELETE_REQUEST_CODE = 1
         /* private */ const val WRITE_REQUEST_CODE = 2
     }
-
-    private val scope = CoroutineScope(Dispatchers.IO)
-    private val mutex = Mutex()
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
@@ -88,28 +75,6 @@ class StorageControllerMethodCallHandler(private val activity: Activity, private
                     }
                 }
                 result.success(null)
-            }
-
-            GET_COVER_FILE_METHOD_NAME -> {
-                scope.launch {
-                    mutex.withLock {
-                        runCatching {
-                            val path = call.argument<String>(GET_COVER_FILE_ARG_PATH)!!
-                            val contentUri = path.toCoverContentUri()!!
-                            File(activity.cacheDirectory, "StorageController/${path.md5}").run {
-                                if (length() == 0L) {
-                                    parentFile?.run { mkdirs() }
-                                    activity.contentResolver.openInputStream(contentUri).use { it?.copyTo(FileOutputStream(this)) }
-                                }
-                                Log.d(TAG, absolutePath)
-                                result.success(absolutePath)
-                            }
-                        }.onFailure {
-                            it.printStackTrace()
-                            result.success(null)
-                        }
-                    }
-                }
             }
 
             else -> {

@@ -21,11 +21,9 @@ class AndroidStorageController {
   static const String kWrite = 'write';
   static const String kNotifyDeleteMethodName = 'notifyDelete';
   static const String kNotifyWriteMethodName = 'notifyWrite';
-  static const String kGetCoverFileMethodName = 'getCoverFile';
 
   static const String kDeletePathsArg = 'paths';
   static const String kWritePathsArg = 'paths';
-  static const String kGetCoverFilePathArg = 'path';
 
   /// Singleton instance.
   static final AndroidStorageController instance = AndroidStorageController._();
@@ -126,19 +124,6 @@ class AndroidStorageController {
     );
     final result = await _writeCompleter.future;
     return result;
-  }
-
-  Future<File?> getCoverFile(File file) async {
-    final result = await _channel.invokeMethod(
-      kGetCoverFileMethodName,
-      {
-        kGetCoverFilePathArg: file.path,
-      },
-    );
-    if (result != null) {
-      return File(path.normalize(result));
-    }
-    return null;
   }
 
   Completer<bool> _deleteCompleter = Completer<bool>();

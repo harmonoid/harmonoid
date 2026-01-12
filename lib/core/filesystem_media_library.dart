@@ -116,11 +116,6 @@ class FileSystemMediaLibrary extends media_library.FileSystemMediaLibrary with C
   @override
   Future<bool> androidDeleteDelegate(List<Track> tracks) async => AndroidStorageController.instance.delete(tracks.map((track) => File(track.uri)).toList());
 
-  /// Invoked for retrieving the cover for the given [file] on Android.
-  /// This is done by caching content://media/external/audio/albumart URI.
-  @override
-  Future<File?> androidFallbackCoverDelegate(File file) => AndroidStorageController.instance.getCoverFile(file);
-
   /// Removes specified [tracks] from the media library.
   @override
   Future<void> remove(List<Track> tracks, {bool delete = true}) async {
