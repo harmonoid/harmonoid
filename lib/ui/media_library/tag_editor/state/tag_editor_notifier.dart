@@ -68,7 +68,7 @@ class TagEditorNotifier extends ChangeNotifier {
 
     try {
       if (coverData != null) {
-        _writer.setCover(coverData);
+        await _writer.setCover(coverData);
         coverChanged = true;
       } else {
         final file = await pickFile(extensions: kSupportedImageFormats);
@@ -87,11 +87,11 @@ class TagEditorNotifier extends ChangeNotifier {
 
         if (data == null || mimeType == null) throw const FormatException();
 
-        _writer.setCover(CoverData(data: data, mimeType: mimeType));
+        await _writer.setCover(CoverData(data: data, mimeType: mimeType));
         coverChanged = true;
       }
 
-      _refreshCover();
+      await _refreshCover();
 
       coverLoading = false;
       notifyListeners();
@@ -115,10 +115,10 @@ class TagEditorNotifier extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _writer.removeCover();
+      await _writer.removeCover();
       coverChanged = true;
 
-      _refreshCover();
+      await _refreshCover();
 
       coverLoading = false;
       notifyListeners();
@@ -195,31 +195,31 @@ class TagEditorNotifier extends ChangeNotifier {
 
       for (final key in oldPropertiesMap.keys) {
         if (!newPropertiesMap.containsKey(key)) {
-          _writer.removeProperty(key);
+          await _writer.removeProperty(key);
           debugPrint('TagEditorNotifier: save: Remove property: $key');
         }
       }
       for (final MapEntry(:key, :value) in newPropertiesMap.entries) {
         if (oldPropertiesMap[key] == value) continue;
         if (value.isEmpty) {
-          _writer.removeProperty(key);
+          await _writer.removeProperty(key);
           debugPrint('TagEditorNotifier: save: Remove property: $key');
         } else {
-          _writer.setProperty(key, [value]);
+          await _writer.setProperty(key, [value]);
           debugPrint('TagEditorNotifier: save: Set property: $key: $value');
         }
       }
 
-      _writer.save();
+      await _writer.save();
 
-      _refreshProperties();
-      _refreshCover();
+      await _refreshProperties();
+      await _refreshCover();
 
       await _postProcessResource();
 
       _oldTags = await _getTags();
       _oldPropertiesMap = propertiesMap;
-      _oldCover = _writer.getCover();
+      _oldCover = await _writer.getCover();
       propertiesChanged = false;
       coverChanged = false;
 
@@ -263,15 +263,15 @@ class TagEditorNotifier extends ChangeNotifier {
     }
   }
 
-  void _refreshProperties() {
+  Future<void> _refreshProperties() async {
     for (final value in properties.values) {
       _disposeTextEditingController(value);
     }
-    properties = _writer.getProperties().whereNotEmpty((entry) => entry.value.firstOrNull ?? '').map((key, value) => MapEntry(key, _createTextEditingController(value)));
+    properties = (await _writer.getProperties()).whereNotEmpty((entry) => entry.value.firstOrNull ?? '').map((key, value) => MapEntry(key, _createTextEditingController(value)));
   }
 
-  void _refreshCover() {
-    cover = _writer.getCover();
+  Future<void> _refreshCover() async {
+    cover = await _writer.getCover();
   }
 
   Future<Tags> _getTags() async {
@@ -337,11 +337,11 @@ class TagEditorNotifier extends ChangeNotifier {
 
     _writer = TagWriter(resource, fileFormat: _oldTags.fileFormat, audioCodec: _oldTags.audioCodec);
 
-    _oldPropertiesMap = _writer.getProperties().whereNotEmpty((entry) => entry.value.firstOrNull ?? '');
-    _oldCover = _writer.getCover();
+    _oldPropertiesMap = (await _writer.getProperties()).whereNotEmpty((entry) => entry.value.firstOrNull ?? '');
+    _oldCover = await _writer.getCover();
 
-    _refreshProperties();
-    _refreshCover();
+    await _refreshProperties();
+    await _refreshCover();
   }
 
   late final TagReader _reader;

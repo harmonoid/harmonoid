@@ -1,16 +1,16 @@
 import 'dart:io';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
-import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:identity/identity.dart';
-import 'package:media_kit/media_kit.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:tag_reader/tag_reader.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/configuration/database/constants.dart';
-import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/filesystem_media_library.dart';
+import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
@@ -24,6 +24,7 @@ import 'package:harmonoid/ui/splash.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/macos_storage_controller.dart';
+import 'package:harmonoid/utils/tag_reader_fallback.dart';
 import 'package:harmonoid/utils/window_lifecycle.dart';
 
 Future<void> main(List<String> args) async {
@@ -82,6 +83,8 @@ Future<void> main(List<String> args) async {
     if (Platform.isMacOS) {
       await MacOSStorageController.ensureInitialized(directories: Configuration.instance.mediaLibraryDirectories);
     }
+
+    tagReaderParseFallback = tagReaderParseFallbackImpl;
 
     MediaKit.ensureInitialized(libmpv: Configuration.instance.mpvPath.nullIfBlank());
     await Localization.ensureInitialized(localization: Configuration.instance.localization);
