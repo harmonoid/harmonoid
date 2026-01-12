@@ -306,8 +306,8 @@ class TagEditorNotifier extends ChangeNotifier {
 
     final track = _fileSystemMediaLibrary.lookupTrack(TrackLookupKey(uri: resource));
     if (track != null) {
-      AsyncFileImage.reset(track.toImageKey());
       await MediaLibrary.trackUriToCoverFile(_fileSystemMediaLibrary.covers, resource).delete_();
+      AsyncFileImage.reset(track.toImageKey());
 
       await _fileSystemMediaLibrary.remove([track], delete: false);
       await _fileSystemMediaLibrary.add(File(resource));
