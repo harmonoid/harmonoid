@@ -1,0 +1,70 @@
+import 'dart:async';
+import 'dart:io';
+import 'package:audio_session/audio_session.dart';
+import 'package:flutter/foundation.dart';
+
+import 'package:harmonoid/core/media_player/base_media_player.dart';
+import 'package:synchronized/synchronized.dart';
+
+/// {@template audio_session_mixin}
+///
+/// AudioSessionMixin
+/// -----------------
+/// package:audio_session mixin for [BaseMediaPlayer].
+///
+/// {@endtemplate}
+mixin AudioSessionMixin implements BaseMediaPlayer {
+  static bool get supported => Platform.isAndroid || Platform.isIOS;
+
+  Future<void> ensureInitializedAudioSession() async {
+    if (!supported) return;
+
+    try {
+      final session = await AudioSession.instance;
+      await session.configure(const AudioSessionConfiguration.music());
+
+      _interruptionSubscription = session.interruptionEventStream.listen((event) {
+        if (event.begin) {
+          pause();
+        } else {
+          play();
+        }
+      });
+      _becomingNoisySubscription = session.becomingNoisyEventStream.listen((_) {
+        pause();
+      });
+
+      addListener(_listenerAudioSession);
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
+  }
+
+  Future<void> disposeAudioSession() async {
+    if (!supported) return;
+    await _interruptionSubscription?.cancel();
+    await _becomingNoisySubscription?.cancel();
+  }
+
+  void resetFlagsAudioSession() {
+    _flagPlayingAudioSession = null;
+  }
+
+  void _listenerAudioSession() {
+    _lockAudioSession.synchronized(() async {
+      if (_flagPlayingAudioSession != state.playing) {
+        _flagPlayingAudioSession = state.playing;
+        final session = await AudioSession.instance;
+        await session.setActive(state.playing);
+      }
+    });
+  }
+
+  final Lock _lockAudioSession = Lock();
+
+  bool? _flagPlayingAudioSession;
+
+  StreamSubscription<AudioInterruptionEvent>? _interruptionSubscription;
+  StreamSubscription<void>? _becomingNoisySubscription;
+}

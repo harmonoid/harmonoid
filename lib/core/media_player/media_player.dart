@@ -10,6 +10,7 @@ import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/core/media_player/base_media_player.dart';
 import 'package:harmonoid/core/media_player/mixin/audio_service_mixin.dart';
+import 'package:harmonoid/core/media_player/mixin/audio_session_mixin.dart';
 import 'package:harmonoid/core/media_player/mixin/discord_rpc_mixin.dart';
 import 'package:harmonoid/core/media_player/mixin/history_playlist_mixin.dart';
 import 'package:harmonoid/core/media_player/mixin/lastfm_mixin.dart';
@@ -41,7 +42,7 @@ import 'package:harmonoid/utils/constants.dart';
 ///
 /// {@endtemplate}
 class MediaPlayer extends ChangeNotifier
-    with AudioServiceMixin, DiscordRpcMixin, HistoryPlaylistMixin, LastFmMixin, MprisMixin, SystemMediaTransportControlsMixin, WindowsTaskbarMixin
+    with AudioServiceMixin, AudioSessionMixin, DiscordRpcMixin, HistoryPlaylistMixin, LastFmMixin, MprisMixin, SystemMediaTransportControlsMixin, WindowsTaskbarMixin
     implements BaseMediaPlayer {
   static const Duration kCrossfadeDefaultDuration = Duration(seconds: 5);
   static const Duration kCrossfadeMinDuration = Duration(seconds: 2);
@@ -67,6 +68,7 @@ class MediaPlayer extends ChangeNotifier
     await Future.wait(
       [
         ensureInitializedAudioService(),
+        ensureInitializedAudioSession(),
         ensureInitializedDiscordRpc(),
         ensureInitializedHistoryPlaylist(),
         ensureInitializedLastFm(),
@@ -442,6 +444,7 @@ class MediaPlayer extends ChangeNotifier
     _player.dispose();
     _tagReader.dispose();
     disposeAudioService();
+    disposeAudioSession();
     disposeDiscordRpc();
     disposeHistoryPlaylist();
     disposeLastFm();
