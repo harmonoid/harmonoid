@@ -294,7 +294,7 @@ class MediaLibrarySection extends StatelessWidget {
                   const Divider(height: 1.0),
                   Flexible(
                     child: SizedBox(
-                      width: 280.0,
+                      width: 360.0,
                       child: ReorderableListView.builder(
                         shrinkWrap: true,
                         buildDefaultDragHandles: false,
@@ -317,9 +317,12 @@ class MediaLibrarySection extends StatelessWidget {
                               value: isVisible,
                               onChanged: (value) => showOrHide(tab, value),
                             ),
-                            trailing: ReorderableDragStartListener(
-                              index: index,
-                              child: const Icon(Icons.drag_handle),
+                            trailing: MouseRegion(
+                              cursor: SystemMouseCursors.resizeUpDown,
+                              child: ReorderableDragStartListener(
+                                index: index,
+                                child: const Icon(Icons.drag_handle),
+                              ),
                             ),
                             title: tab.toLabel(),
                           );
