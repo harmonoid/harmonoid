@@ -17,7 +17,6 @@ abstract class PlaybackState with _$PlaybackState {
     required double volume,
     required bool shuffle,
     required Loop loop,
-    required bool exclusiveAudio,
     required ReplayGain replayGain,
     required double replayGainPreamp,
     required Duration crossfadeDuration,
