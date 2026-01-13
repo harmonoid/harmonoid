@@ -480,7 +480,7 @@ class MediaPlayer extends ChangeNotifier
     // Avoid fucking up the lyrics accuracy.
     final shouldResetPosition = previousPlayableAtIndex?.uri != currentMediaAtIndex?.uri;
 
-    final currentPlayables = shouldUpdatePlayables ? await Future.wait(playlist.medias.map((e) => e.toPlayable())) : previousPlayables;
+    final currentPlayables = shouldUpdatePlayables ? await compute(_mapMediasToPlayables, playlist.medias) : previousPlayables;
 
     if (shouldResetPosition) {
       state = state.copyWith(
@@ -529,4 +529,8 @@ class MediaPlayer extends ChangeNotifier
 
   late Player _player;
   final TagReader _tagReader = TagReader();
+}
+
+List<Playable> _mapMediasToPlayables(List<Media> medias) {
+  return medias.map((e) => e.toPlayable()).toList();
 }
