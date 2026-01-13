@@ -131,8 +131,9 @@ class LyricsNotifier extends ChangeNotifier {
       if (await file.exists_()) {
         final contents = await file.readAsString_();
         if (contents != null && LrcParser.isValid(contents)) {
-          final result = LrcParser.parse(contents).lyrics;
-          lyrics.addAll(result.map((e) => Lyric(timestamp: e.timestamp.inMilliseconds, text: e.lyrics.trim())).toList());
+          final lrc = LrcParser.parse(contents);
+          final result = lrc.lyrics;
+          lyrics.addAll(result.map((e) => Lyric(timestamp: (lrc.offset ?? 0) + e.timestamp.inMilliseconds, text: e.lyrics.trim())).toList());
           notifyListeners();
           return;
         }
@@ -150,8 +151,9 @@ class LyricsNotifier extends ChangeNotifier {
     try {
       final track = FileSystemMediaLibrary.instance.lookupTrack(TrackLookupKey(uri: playable.uri));
       if (track != null && LrcParser.isValid(track.lyrics)) {
-        final result = LrcParser.parse(track.lyrics).lyrics;
-        lyrics.addAll(result.map((e) => Lyric(timestamp: e.timestamp.inMilliseconds, text: e.lyrics.trim())).toList());
+        final lrc = LrcParser.parse(track.lyrics);
+        final result = lrc.lyrics;
+        lyrics.addAll(result.map((e) => Lyric(timestamp: (lrc.offset ?? 0) + e.timestamp.inMilliseconds, text: e.lyrics.trim())).toList());
         notifyListeners();
         return;
       }
@@ -176,8 +178,9 @@ class LyricsNotifier extends ChangeNotifier {
         for (final file in files) {
           final contents = await file.readAsString_();
           if (contents != null && LrcParser.isValid(contents)) {
-            final result = LrcParser.parse(contents).lyrics;
-            lyrics.addAll(result.map((e) => Lyric(timestamp: e.timestamp.inMilliseconds, text: e.lyrics.trim())).toList());
+            final lrc = LrcParser.parse(contents);
+            final result = lrc.lyrics;
+            lyrics.addAll(result.map((e) => Lyric(timestamp: (lrc.offset ?? 0) + e.timestamp.inMilliseconds, text: e.lyrics.trim())).toList());
             notifyListeners();
             return;
           }
