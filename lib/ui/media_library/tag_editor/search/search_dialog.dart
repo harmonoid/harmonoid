@@ -85,6 +85,8 @@ class _SearchDialogState extends State<SearchDialog> {
                 border: InputBorder.none,
                 focusedBorder: InputBorder.none,
                 enabledBorder: InputBorder.none,
+                // HACK:
+                contentPadding: isMobile ? const EdgeInsets.symmetric(horizontal: 12.0) : null,
               ),
             ),
             if (results != null && results.isNotEmpty) ...[
