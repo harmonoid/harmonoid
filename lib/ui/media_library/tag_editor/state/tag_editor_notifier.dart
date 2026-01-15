@@ -40,8 +40,8 @@ class TagEditorNotifier extends ChangeNotifier {
   @override
   void dispose() {
     super.dispose();
-    _reader.dispose();
     _writer.dispose();
+    _reader.dispose();
     for (final v in properties.values) {
       _disposeTextEditingController(v);
     }
