@@ -399,6 +399,8 @@ Future<T?> showSelection<T>(
   List<T> values,
   T? selected,
   String Function(T) text, {
+  Widget? Function(T)? leading,
+  Widget? Function(T)? trailing,
   bool actions = true,
   bool radio = true,
 }) async {
@@ -438,13 +440,16 @@ Future<T?> showSelection<T>(
                       children: values
                           .map(
                             (value) => ListItem(
-                              leading: radio
-                                  ? Radio(
-                                      value: value,
-                                      groupValue: result ?? selected,
-                                      onChanged: set,
-                                    )
-                                  : null,
+                              leading:
+                                  leading?.call(value) ??
+                                  (radio
+                                      ? Radio(
+                                          value: value,
+                                          groupValue: result ?? selected,
+                                          onChanged: set,
+                                        )
+                                      : null),
+                              trailing: trailing?.call(value),
                               onTap: () => set(value),
                               title: text(value),
                             ),

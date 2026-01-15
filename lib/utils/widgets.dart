@@ -1018,6 +1018,7 @@ class HoverActionsState extends State<HoverActions> {
                             onPanStart: (e) => setState(() => _hoveredAction = i),
                             onPanEnd: (e) => setState(() => _hoveredAction = null),
                             child: MouseRegion(
+                              cursor: SystemMouseCursors.click,
                               onEnter: (e) => setState(() => _hoveredAction = i),
                               onExit: (e) => setState(() => _hoveredAction = null),
                               child: AnimatedContainer(
@@ -1264,7 +1265,7 @@ class ScrollableSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      cursor: onChanged == null ? SystemMouseCursors.none : SystemMouseCursors.click,
+      cursor: onChanged == null ? SystemMouseCursors.forbidden : SystemMouseCursors.click,
       child: Listener(
         onPointerSignal: (event) {
           if (event is PointerScrollEvent) {

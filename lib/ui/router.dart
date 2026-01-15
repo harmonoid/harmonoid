@@ -146,6 +146,8 @@ const String kTagEditorPath = 'tag-editor';
 
 const String kTagEditorArgResource = 'resource';
 
+const String kTagEditorArgDemo = 'demo';
+
 const String kNowPlayingLyricsPath = 'now-playing-lyrics';
 
 const String kDirectoryPickerPath = 'directory-picker';
@@ -391,10 +393,11 @@ final router = GoRouter(
       path: '/$kTagEditorPath',
       pageBuilder: (context, state) {
         final resource = state.uri.queryParameters[kTagEditorArgResource]!;
+        final demo = state.uri.queryParameters[kTagEditorArgDemo] == 'true';
         return buildPageWithDefaultTransition(
           context: context,
           state: state,
-          child: TagEditorScreen(resource: resource),
+          child: TagEditorScreen(resource: resource, demo: demo),
         );
       },
     ),

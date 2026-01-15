@@ -72,7 +72,7 @@ class _PlusSectionState extends State<PlusSection> {
                   return '';
                 },
                 value: mediaPlayer.state.crossfadeDuration.inSeconds.clamp(2.0, 30.0).toDouble(),
-                onChanged: mediaPlayer.state.crossfadeDuration != Duration.zero ? (value) => mediaPlayer.setCrossfadeDuration(Duration(seconds: value.round())) : null,
+                onChanged: (value) => mediaPlayer.setCrossfadeDuration(Duration(seconds: value.round())),
                 onScrolledUp: () => mediaPlayer.setCrossfadeDuration(
                   (mediaPlayer.state.crossfadeDuration + const Duration(seconds: 1)).clamp(MediaPlayer.kCrossfadeMinDuration, MediaPlayer.kCrossfadeMaxDuration),
                 ),

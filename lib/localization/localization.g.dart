@@ -61,6 +61,7 @@ class LocalizationBase extends Values {
     DATE_ADDED = map['DATE_ADDED']!;
     DEFAULT = map['DEFAULT']!;
     DELETE = map['DELETE']!;
+    DEMO_HINT = map['DEMO_HINT']!;
     DESCENDING = map['DESCENDING']!;
     DEVELOPER = map['DEVELOPER']!;
     DISCONNECT = map['DISCONNECT']!;

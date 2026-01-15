@@ -18,7 +18,8 @@ import 'package:harmonoid/utils/widgets.dart';
 
 class TagEditorScreen extends StatefulWidget {
   final String resource;
-  const TagEditorScreen({super.key, required this.resource});
+  final bool demo;
+  const TagEditorScreen({super.key, required this.resource, this.demo = false});
 
   @override
   State<TagEditorScreen> createState() => _TagEditorScreenState();
@@ -183,6 +184,7 @@ class _TagEditorScreenState extends State<TagEditorScreen> {
                     TagWriter.kProperties,
                     null,
                     (key) => key,
+                    trailing: (key) => notifier.properties.containsKey(key) ? Icon(Icons.check_circle, size: 16.0, color: Theme.of(context).colorScheme.primary) : null,
                     actions: false,
                     radio: false,
                   );
@@ -301,7 +303,7 @@ class _TagEditorScreenState extends State<TagEditorScreen> {
               onPopInvokedWithResult: (didPop, result) => _onPopInvokedWithResult(context, didPop, result),
               child: SliverContentScreen(
                 caption: kCaption,
-                title: Localization.instance.EDIT_TAGS,
+                title: Localization.instance.EDIT_TAGS + (widget.demo ? ' ${Localization.instance.DEMO_HINT}' : ''),
                 slivers: notifier.propertiesLoading ? [const SliverFillRemaining(child: Center(child: CircularProgressIndicator()))] : _buildSlivers(context),
                 trailing: _buildTrailing(context),
                 floatingActionButton: _buildSaveFloatingActionButton(context),

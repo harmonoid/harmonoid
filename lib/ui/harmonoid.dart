@@ -23,6 +23,7 @@ import 'package:harmonoid/ui/media_library/folders/state/file_explorer_notifier.
 import 'package:harmonoid/ui/media_library/media_library_flags.dart';
 import 'package:harmonoid/ui/media_library/media_library_inaccessible_directories_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';
+import 'package:harmonoid/ui/media_library/tag_editor/tag_editor_demo.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/ui/update/state/update_notifier.dart';
 import 'package:harmonoid/ui/update/update.dart';
@@ -123,6 +124,7 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
                 );
                 subscriptionNotifierOnSubscriptionUpdate(state);
               },
+              showTagEditorDemo: () => showTagEditorDemo(context),
             ),
           ),
         ),

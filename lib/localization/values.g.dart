@@ -56,6 +56,7 @@ class Values {
   late String DATE_ADDED;
   late String DEFAULT;
   late String DELETE;
+  late String DEMO_HINT;
   late String DESCENDING;
   late String DEVELOPER;
   late String DISCONNECT;
