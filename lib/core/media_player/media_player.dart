@@ -232,7 +232,13 @@ class MediaPlayer extends ChangeNotifier
       int insertIndex = mixOffset;
       for (final playable in playables) {
         await _player.add(playable.toMedia());
-        await _player.move(state.playables.length - 1, insertIndex);
+        await _player.move(
+          // NOTE: Cannot use `state.playables.length - 1` since the operation might be surrounded by (enable|disable)PlayerPlaylistUpdates.
+          // https://github.com/harmonoid/harmonoid/issues/583
+          // state.playables.length - 1,
+          _player.state.playlist.medias.length - 1,
+          insertIndex,
+        );
         insertIndex++;
       }
       state = state.copyWith(mixOffset: mixOffset + playables.length);
@@ -247,7 +253,13 @@ class MediaPlayer extends ChangeNotifier
   @override
   Future<void> insert(int index, Playable playable) async {
     await _player.add(playable.toMedia());
-    await _player.move(state.playables.length - 1, index + 1);
+    await _player.move(
+      // NOTE: Cannot use `state.playables.length - 1` since the operation might be surrounded by (enable|disable)PlayerPlaylistUpdates.
+      // https://github.com/harmonoid/harmonoid/issues/583
+      // state.playables.length - 1,
+      _player.state.playlist.medias.length - 1,
+      index + 1,
+    );
 
     // UPDATE MIX OFFSET
     final mixOffset = state.mixOffset;
