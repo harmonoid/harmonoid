@@ -1165,10 +1165,10 @@ packages:
     dependency: "direct main"
     description:
       name: safe_local_storage
-      sha256: "608354d4cdfdabb29428bdb330c4e54dbc31aab238b09ba59fe73660580553cc"
+      sha256: "287ea1f667c0b93cdc127dccc707158e2d81ee59fba0459c31a0c7da4d09c755"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.2"
+    version: "2.0.3"
   scroll_animator:
     dependency: transitive
     description:
