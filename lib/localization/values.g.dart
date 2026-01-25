@@ -228,6 +228,7 @@ class Values {
   late String REFRESH_MEDIA_LIBRARY_UPON_START;
   late String REFRESH_SUBTITLE;
   late String REINDEX;
+  late String REINDEX_REQUIRED_WARNING;
   late String REINDEX_SUBTITLE;
   late String REINDEX_WARNING;
   late String REMOVE;
