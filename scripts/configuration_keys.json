@@ -34,6 +34,7 @@
   {"key": "MEDIA_LIBRARY_MINIMUM_FILE_SIZE", "serializedType": "Integer", "dartType": "int", "default": "0"},
   {"key": "MEDIA_LIBRARY_PATH", "serializedType": "String", "dartType": "String", "default": "kAlbumsPath"},
   {"key": "MEDIA_LIBRARY_REFRESH_UPON_START", "serializedType": "Boolean", "dartType": "bool", "default": "false"},
+  {"key": "MEDIA_LIBRARY_TAG_READER_FALLBACK", "serializedType": "Boolean", "dartType": "bool", "default": "false"},
   {"key": "MEDIA_LIBRARY_TRACK_SORT_ASCENDING", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
   {"key": "MEDIA_LIBRARY_TRACK_SORT_TYPE", "serializedType": "Integer", "dartType": "TrackSortType", "default": "TrackSortType.title.index"},
   {"key": "MEDIA_LIBRARY_VISIBLE_TABS", "serializedType": "Json", "dartType": "Set<MediaLibraryTab>", "default": "[MediaLibraryTab.albums.index, MediaLibraryTab.tracks.index, MediaLibraryTab.artists.index, MediaLibraryTab.folders.index, MediaLibraryTab.playlists.index]"},

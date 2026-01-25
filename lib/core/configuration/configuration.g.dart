@@ -47,6 +47,7 @@ class ConfigurationBase {
   int get mediaLibraryMinimumFileSize => _mediaLibraryMinimumFileSize!;
   String get mediaLibraryPath => _mediaLibraryPath!;
   bool get mediaLibraryRefreshUponStart => _mediaLibraryRefreshUponStart!;
+  bool get mediaLibraryTagReaderFallback => _mediaLibraryTagReaderFallback!;
   bool get mediaLibraryTrackSortAscending => _mediaLibraryTrackSortAscending!;
   TrackSortType get mediaLibraryTrackSortType => _mediaLibraryTrackSortType!;
   Set<MediaLibraryTab> get mediaLibraryVisibleTabs => _mediaLibraryVisibleTabs!;
@@ -106,6 +107,7 @@ class ConfigurationBase {
     int? mediaLibraryMinimumFileSize,
     String? mediaLibraryPath,
     bool? mediaLibraryRefreshUponStart,
+    bool? mediaLibraryTagReaderFallback,
     bool? mediaLibraryTrackSortAscending,
     TrackSortType? mediaLibraryTrackSortType,
     Set<MediaLibraryTab>? mediaLibraryVisibleTabs,
@@ -269,6 +271,10 @@ class ConfigurationBase {
       _mediaLibraryRefreshUponStart = mediaLibraryRefreshUponStart;
       await db.setValue(kKeyMediaLibraryRefreshUponStart, kTypeBoolean, booleanValue: mediaLibraryRefreshUponStart);
     }
+    if (mediaLibraryTagReaderFallback != null) {
+      _mediaLibraryTagReaderFallback = mediaLibraryTagReaderFallback;
+      await db.setValue(kKeyMediaLibraryTagReaderFallback, kTypeBoolean, booleanValue: mediaLibraryTagReaderFallback);
+    }
     if (mediaLibraryTrackSortAscending != null) {
       _mediaLibraryTrackSortAscending = mediaLibraryTrackSortAscending;
       await db.setValue(kKeyMediaLibraryTrackSortAscending, kTypeBoolean, booleanValue: mediaLibraryTrackSortAscending);
@@ -396,6 +402,7 @@ class ConfigurationBase {
       /* Integer */ kKeyMediaLibraryMinimumFileSize: 0,
       /* String  */ kKeyMediaLibraryPath: kAlbumsPath,
       /* Boolean */ kKeyMediaLibraryRefreshUponStart: false,
+      /* Boolean */ kKeyMediaLibraryTagReaderFallback: false,
       /* Boolean */ kKeyMediaLibraryTrackSortAscending: true,
       /* Integer */ kKeyMediaLibraryTrackSortType: TrackSortType.title.index,
       /* Json    */ kKeyMediaLibraryVisibleTabs: [MediaLibraryTab.albums.index, MediaLibraryTab.tracks.index, MediaLibraryTab.artists.index, MediaLibraryTab.folders.index, MediaLibraryTab.playlists.index],
@@ -456,6 +463,7 @@ class ConfigurationBase {
   int? _mediaLibraryMinimumFileSize;
   String? _mediaLibraryPath;
   bool? _mediaLibraryRefreshUponStart;
+  bool? _mediaLibraryTagReaderFallback;
   bool? _mediaLibraryTrackSortAscending;
   TrackSortType? _mediaLibraryTrackSortType;
   Set<MediaLibraryTab>? _mediaLibraryVisibleTabs;
@@ -517,6 +525,7 @@ const kKeyMediaLibraryGenreSortType = 'MEDIA_LIBRARY_GENRE_SORT_TYPE';
 const kKeyMediaLibraryMinimumFileSize = 'MEDIA_LIBRARY_MINIMUM_FILE_SIZE';
 const kKeyMediaLibraryPath = 'MEDIA_LIBRARY_PATH';
 const kKeyMediaLibraryRefreshUponStart = 'MEDIA_LIBRARY_REFRESH_UPON_START';
+const kKeyMediaLibraryTagReaderFallback = 'MEDIA_LIBRARY_TAG_READER_FALLBACK';
 const kKeyMediaLibraryTrackSortAscending = 'MEDIA_LIBRARY_TRACK_SORT_ASCENDING';
 const kKeyMediaLibraryTrackSortType = 'MEDIA_LIBRARY_TRACK_SORT_TYPE';
 const kKeyMediaLibraryVisibleTabs = 'MEDIA_LIBRARY_VISIBLE_TABS';

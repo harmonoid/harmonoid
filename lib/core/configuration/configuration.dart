@@ -122,6 +122,7 @@ class Configuration extends ConfigurationBase {
     _mediaLibraryMinimumFileSize = await read<int, int>(kKeyMediaLibraryMinimumFileSize, defaults);
     _mediaLibraryPath = await read<String, String>(kKeyMediaLibraryPath, defaults);
     _mediaLibraryRefreshUponStart = await read<bool, bool>(kKeyMediaLibraryRefreshUponStart, defaults);
+    _mediaLibraryTagReaderFallback = await read<bool, bool>(kKeyMediaLibraryTagReaderFallback, defaults);
     _mediaLibraryTrackSortAscending = await read<bool, bool>(kKeyMediaLibraryTrackSortAscending, defaults);
     _mediaLibraryTrackSortType = await read<int, TrackSortType>(kKeyMediaLibraryTrackSortType, defaults, (value) => TrackSortType.values[value]);
     _mediaLibraryVisibleTabs = await read<dynamic, Set<MediaLibraryTab>>(kKeyMediaLibraryVisibleTabs, defaults, (value) => value.map<MediaLibraryTab>((e) => MediaLibraryTab.values[e]).toSet());
