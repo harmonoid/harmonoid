@@ -59,6 +59,7 @@ class ExceptionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverContentScreen(
+      implyBackButton: false,
       caption: kCaption,
       title: kError,
       slivers: [
@@ -68,7 +69,6 @@ class ExceptionScreen extends StatelessWidget {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Container(
-                width: 832.0,
                 padding: padding(context),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,

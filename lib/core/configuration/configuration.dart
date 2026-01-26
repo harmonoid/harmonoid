@@ -50,12 +50,12 @@ class Configuration extends ConfigurationBase {
     if (initialized) return;
     initialized = true;
     final Directory directory;
-    if (Platform.environment['HARMONOID_CACHE_DIR'] == null) {
+    if (Platform.environment['HARMONOID_CACHE_DIRECTORY'] == null) {
       // Default directory.
       directory = Directory(path.join(await getDefaultDirectory(), '.Harmonoid'));
     } else {
-      // HARMONOID_CACHE_DIR
-      directory = Directory(Platform.environment['HARMONOID_CACHE_DIR']!);
+      // HARMONOID_CACHE_DIRECTORY
+      directory = Directory(Platform.environment['HARMONOID_CACHE_DIRECTORY']!);
     }
     if (!await directory.exists_()) {
       await directory.create_();
@@ -198,15 +198,36 @@ Future<String> getDefaultDirectory() async {
     final result = await AndroidStorageController.instance.getCacheDirectory();
     return path.normalize(result.path);
   } else if (Platform.isLinux) {
-    final result = Platform.environment['HOME'];
-    return path.normalize(result!);
+    String? value;
+
+    try {
+      final result = Platform.environment['XDG_CONFIG_HOME'];
+      if (result != null) {
+        value ??= path.normalize(result);
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
+
+    try {
+      final result = Platform.environment['HOME'];
+      if (result != null) {
+        value ??= path.normalize(result);
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
+
+    return value!;
   } else if (Platform.isMacOS) {
     final result = await path.getApplicationSupportDirectory();
     return path.normalize(result.path);
   } else if (Platform.isWindows) {
     String? value;
 
-    final rfid = GUIDFromString(FOLDERID_Profile);
+    final rfid = GUIDFromString(FOLDERID_LocalAppData);
     final result = calloc<PWSTR>();
     try {
       final hr = SHGetKnownFolderPath(
