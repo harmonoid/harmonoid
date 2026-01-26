@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,7 @@ class M2MobileNowPlayingBarState extends State<M2MobileNowPlayingBar> {
   final MiniPlayerController _miniPlayerController = MiniPlayerController();
   final PanelController _panelController = PanelController();
   bool _lyricsVisible = false;
+  Timer? _miniPlayerControllerCallbackTimer;
 
   // FIXED
   late final double _pageViewHeight = MediaQuery.sizeOf(context).width.clamp(0.0, (MediaQuery.sizeOf(context).height - MediaQuery.paddingOf(context).vertical) * 3 / 5);
@@ -119,6 +121,11 @@ class M2MobileNowPlayingBarState extends State<M2MobileNowPlayingBar> {
                             _valueNotifier.value = percentage;
                             context.read<NowPlayingMobileNotifier>().setBottomNavigationBarVisibility((1.0 - percentage * 2.0).clamp(0.0, 1.0));
                           } catch (_) {}
+                        });
+                        // https://discord.com/channels/935994617663483916/1214229474497929216/1465018704478601288
+                        _miniPlayerControllerCallbackTimer?.cancel();
+                        _miniPlayerControllerCallbackTimer = Timer(const Duration(milliseconds: 100), () {
+                          context.read<NowPlayingMobileNotifier>().setBottomNavigationBarVisibility((1.0 - percentage * 2.0).clamp(0.0, 1.0));
                         });
 
                         return Stack(

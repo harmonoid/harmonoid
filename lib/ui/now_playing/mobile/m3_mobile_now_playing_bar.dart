@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart' hide CarouselView;
@@ -43,6 +44,7 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
   final MiniPlayerController _miniPlayerController = MiniPlayerController();
   final PanelController _panelController = PanelController();
   bool _lyricsVisible = false;
+  Timer? _miniPlayerControllerCallbackTimer;
 
   // FIXED
   late final double _carouselHeight = (MediaQuery.sizeOf(context).width * 7 / 9).clamp(0.0, (MediaQuery.sizeOf(context).height - MediaQuery.paddingOf(context).vertical) * 2 / 5);
@@ -117,6 +119,12 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
                             context.read<NowPlayingMobileNotifier>().setBottomNavigationBarVisibility((1.0 - percentage * 2.0).clamp(0.0, 1.0));
                           } catch (_) {}
                         });
+                        // https://discord.com/channels/935994617663483916/1214229474497929216/1465018704478601288
+                        _miniPlayerControllerCallbackTimer?.cancel();
+                        _miniPlayerControllerCallbackTimer = Timer(const Duration(milliseconds: 100), () {
+                          context.read<NowPlayingMobileNotifier>().setBottomNavigationBarVisibility((1.0 - percentage * 2.0).clamp(0.0, 1.0));
+                        });
+
                         return Stack(
                           alignment: Alignment.topCenter,
                           children: [
