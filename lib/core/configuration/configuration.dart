@@ -52,7 +52,10 @@ class Configuration extends ConfigurationBase {
     final Directory directory;
     if (Platform.environment['HARMONOID_CACHE_DIRECTORY'] == null) {
       // Default directory.
-      directory = Directory(path.join(await getDefaultDirectory(), '.Harmonoid'));
+      const directoryName = '.Harmonoid';
+      final defaultDirectory = Directory(path.join(await getDefaultDirectory(), directoryName));
+      final legacyDefaultDirectory = Directory(path.join(await getLegacyDefaultDirectory(), directoryName));
+      directory = await legacyDefaultDirectory.exists_() ? legacyDefaultDirectory : defaultDirectory;
     } else {
       // HARMONOID_CACHE_DIRECTORY
       directory = Directory(Platform.environment['HARMONOID_CACHE_DIRECTORY']!);
@@ -228,6 +231,55 @@ Future<String> getDefaultDirectory() async {
     String? value;
 
     final rfid = GUIDFromString(FOLDERID_LocalAppData);
+    final result = calloc<PWSTR>();
+    try {
+      final hr = SHGetKnownFolderPath(
+        rfid,
+        KF_FLAG_DEFAULT,
+        NULL,
+        result,
+      );
+      if (SUCCEEDED(hr)) {
+        value ??= path.normalize(result.value.toDartString());
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    } finally {
+      calloc.free(rfid);
+      calloc.free(result);
+    }
+
+    try {
+      final result = Platform.environment['USERPROFILE'];
+      if (result != null) {
+        value ??= path.normalize(result);
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
+
+    return value!;
+  }
+  throw UnsupportedError('Unsupported platform: ${Platform.operatingSystem}');
+}
+
+/// Returns the legacy default directory to save the application data.
+Future<String> getLegacyDefaultDirectory() async {
+  if (Platform.isAndroid) {
+    final result = await AndroidStorageController.instance.getCacheDirectory();
+    return path.normalize(result.path);
+  } else if (Platform.isLinux) {
+    final result = Platform.environment['HOME'];
+    return path.normalize(result!);
+  } else if (Platform.isMacOS) {
+    final result = await path.getApplicationSupportDirectory();
+    return path.normalize(result.path);
+  } else if (Platform.isWindows) {
+    String? value;
+
+    final rfid = GUIDFromString(FOLDERID_Profile);
     final result = calloc<PWSTR>();
     try {
       final hr = SHGetKnownFolderPath(
