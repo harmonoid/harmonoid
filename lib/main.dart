@@ -24,7 +24,7 @@ import 'package:harmonoid/ui/splash.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/macos_storage_controller.dart';
-import 'package:harmonoid/utils/tag_reader_fallback.dart';
+import 'package:harmonoid/utils/platform_tag_reader_factory.dart';
 import 'package:harmonoid/utils/window_lifecycle.dart';
 
 Future<void> main(List<String> args) async {
@@ -84,7 +84,7 @@ Future<void> main(List<String> args) async {
       await MacOSStorageController.ensureInitialized(directories: Configuration.instance.mediaLibraryDirectories);
     }
 
-    tagReaderParseFallback = tagReaderParseFallbackImpl;
+    TagReader.platformTagReaderFactory = platformTagReaderFactoryImpl;
 
     MediaKit.ensureInitialized(libmpv: Configuration.instance.mpvPath.nullIfBlank());
     await Localization.ensureInitialized(localization: Configuration.instance.localization);

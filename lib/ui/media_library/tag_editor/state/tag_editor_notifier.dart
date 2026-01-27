@@ -332,10 +332,7 @@ class TagEditorNotifier extends ChangeNotifier {
   }
 
   Future<void> _initializeTagWriter() async {
-    debugPrint('TagEditorNotifier: _initializeTagWriter: File format: ${_oldTags.fileFormat}');
-    debugPrint('TagEditorNotifier: _initializeTagWriter: Audio codec: ${_oldTags.audioCodec}');
-
-    _writer = TagWriter(resource, fileFormat: _oldTags.fileFormat, audioCodec: _oldTags.audioCodec);
+    _writer = TagWriter(resource);
 
     _oldPropertiesMap = (await _writer.getProperties()).whereNotEmpty((entry) => entry.value.firstOrNull ?? '');
     _oldCover = await _writer.getCover();

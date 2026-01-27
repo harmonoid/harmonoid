@@ -1,67 +1,17 @@
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:safe_local_storage/file_system.dart';
 import 'package:tag_reader/tag_reader.dart';
 import 'package:tag_writer/tag_writer.dart';
 
-import 'package:harmonoid/core/configuration/configuration.dart';
-
-Future<Tags?> tagReaderParseFallbackImpl(String uri, File? cover, Duration timeout, Tags? result) async {
-  if (!Configuration.instance.mediaLibraryTagReaderFallback || result == null) return null;
-
-  final hasTags = basename(result.uri) != result.title;
-  final hasCover = await cover?.exists_() ?? false;
-
-  debugPrint('tagReaderParseFallbackImpl: uri: $uri, cover: $cover, hasTags: $hasTags, hasCover: $hasCover');
-
-  // Both tags and cover are present.
-  if (hasTags && hasCover) return null;
-
-  Tags? tags;
-  TagWriter? writer;
-  try {
-    writer = TagWriter(uri, audioCodec: result.audioCodec, fileFormat: result.fileFormat);
-  } catch (exception, stacktrace) {
-    debugPrint(exception.toString());
-    debugPrint(stacktrace.toString());
-  }
-  try {
-    if (writer != null) {
-      final mapper = TagWriter2TagReader(
-        configuration: const TagReaderConfiguration(),
-        writer: writer,
-        hasTags: hasTags,
-        hasCover: hasCover,
-      );
-      final result = await mapper.parse(uri, cover: cover, timeout: timeout);
-      if (!hasTags) tags = result;
-    }
-  } catch (exception, stacktrace) {
-    debugPrint(exception.toString());
-    debugPrint(stacktrace.toString());
-  }
-  try {
-    await writer?.dispose();
-  } catch (exception, stacktrace) {
-    debugPrint(exception.toString());
-    debugPrint(stacktrace.toString());
-  }
-
-  return tags;
+PlatformTagReader? platformTagReaderFactoryImpl(TagReaderConfiguration configuration) {
+  return TagWriter2TagReader(configuration: configuration);
 }
 
 class TagWriter2TagReader extends PlatformTagReader {
-  TagWriter2TagReader({
-    required super.configuration,
-    required this.writer,
-    required this.hasTags,
-    required this.hasCover,
-  });
-
-  final TagWriter writer;
-  final bool hasTags;
-  final bool hasCover;
+  TagWriter2TagReader({required super.configuration});
 
   @override
   Future<Tags> serialize(String uri, Map<String, String> metadata) async {
@@ -116,8 +66,7 @@ class TagWriter2TagReader extends PlatformTagReader {
     } catch (_) {}
 
     try {
-      year ??= parseInteger(metadata['DATE']);
-      year ??= parseInteger(splitDateTagValue(metadata['DATE']));
+      year ??= parseInteger(splitDateTagValue(splitTagValue(metadata['DATE']).lastOrNull));
     } catch (_) {}
 
     try {
@@ -162,8 +111,6 @@ class TagWriter2TagReader extends PlatformTagReader {
       lyrics: lyrics,
       duration: 0,
       bitrate: 0,
-      audioCodec: '',
-      fileFormat: '',
       timestamp: timestamp,
       artists: artists,
       genres: genres,
@@ -177,15 +124,26 @@ class TagWriter2TagReader extends PlatformTagReader {
   Future<Map<String, String>> metadata(String uri, {File? cover, Duration timeout = kDefaultTimeout}) async {
     final metadata = <String, String>{};
 
+    TagWriter? writer;
+
     try {
-      if (!hasTags) {
-        final properties = await writer.getProperties();
-        for (final entry in properties.entries) {
-          final k = entry.key;
-          final v = entry.value.where((e) => e.isNotEmpty).join(';');
-          if (v.isNotEmpty) {
-            metadata[k] = v;
-          }
+      writer = TagWriter(uri);
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
+
+    if (writer == null) {
+      return metadata;
+    }
+
+    try {
+      final properties = await writer.getProperties();
+      for (final entry in properties.entries) {
+        final k = entry.key;
+        final v = entry.value.where((e) => e.isNotEmpty).join(';');
+        if (v.isNotEmpty) {
+          metadata[k] = v;
         }
       }
     } catch (exception, stacktrace) {
@@ -194,12 +152,16 @@ class TagWriter2TagReader extends PlatformTagReader {
     }
 
     try {
-      if (cover != null && !hasCover) {
-        final data = await writer.getCover();
-        if (data != null) {
-          await cover.write_(data.data);
-        }
+      if (cover != null) {
+        await writer.saveCover(cover.path);
       }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
+
+    try {
+      await writer.dispose();
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());

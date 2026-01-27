@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/router.dart';
-import 'package:harmonoid/ui/settings/sections/experimental_section.dart';
 import 'package:harmonoid/ui/settings/sections/display_section.dart';
 import 'package:harmonoid/ui/settings/sections/language_section.dart';
 import 'package:harmonoid/ui/settings/sections/lastfm_section.dart';
@@ -60,7 +59,7 @@ class SettingsScreen extends StatelessWidget {
               PermissionsSection(),
               LanguageSection(),
               MiscellaneousSection(),
-              ExperimentalSection(),
+              // ExperimentalSection(),
               SliverSpacer(),
             ],
           ),
