@@ -138,7 +138,7 @@ class TagWriter2TagReader extends PlatformTagReader {
     }
 
     try {
-      final properties = await writer.getProperties();
+      final properties = await writer.getProperties().timeout(timeout);
       for (final entry in properties.entries) {
         final k = entry.key;
         final v = entry.value.where((e) => e.isNotEmpty).join(';');
@@ -153,7 +153,7 @@ class TagWriter2TagReader extends PlatformTagReader {
 
     try {
       if (cover != null) {
-        await writer.saveCover(cover.path);
+        await writer.saveCover(cover.path).timeout(timeout);
       }
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());

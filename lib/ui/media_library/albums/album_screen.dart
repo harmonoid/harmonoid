@@ -118,13 +118,11 @@ class _AlbumScreenState extends State<AlbumScreen> {
             );
             // NOTE: The track could've been deleted, so we need to check & update the list.
             final tracks = await context.read<MediaLibrary>().tracksFromAlbum(widget.album);
-            if (tracks.length != _tracks.length) {
-              setState(() {
-                _tracks
-                  ..clear()
-                  ..addAll(tracks);
-              });
-            }
+            setState(() {
+              _tracks
+                ..clear()
+                ..addAll(tracks);
+            });
           },
           showItemSelection: isDesktop || mediaLibrarySelectedTracks.value.isNotEmpty,
           isItemSelected: (i) => mediaLibrarySelectedTracks.value.contains(_tracks[i]),

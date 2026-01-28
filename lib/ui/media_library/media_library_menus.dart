@@ -148,11 +148,11 @@ class TrackMenuProvider {
   }
 
   Future<void> fileInformation() async {
-    context.push(Uri(path: '/$kFileInfoPath', queryParameters: {kFileInfoArgResource: track.uri.toString()}).toString());
+    await context.push(Uri(path: '/$kFileInfoPath', queryParameters: {kFileInfoArgResource: track.uri.toString()}).toString());
   }
 
   Future<void> editTags() async {
-    _subscriptionNotifier.accessSubscriptionFeature(
+    return _subscriptionNotifier.accessSubscriptionFeature(
       context,
       () async {
         final bool canWrite;
@@ -162,7 +162,7 @@ class TrackMenuProvider {
           canWrite = true;
         }
         if (!canWrite) return;
-        context.push(Uri(path: '/$kTagEditorPath', queryParameters: {kTagEditorArgResource: track.uri.toString()}).toString());
+        await context.push(Uri(path: '/$kTagEditorPath', queryParameters: {kTagEditorArgResource: track.uri.toString()}).toString());
       },
     );
   }

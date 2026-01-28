@@ -5,14 +5,12 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:media_library/media_library.dart' hide FileSystemMediaLibrary;
 import 'package:safe_local_storage/file_system.dart';
-import 'package:tag_reader/tag_reader.dart';
 import 'package:tag_writer/tag_writer.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/media_library_item.dart';
-import 'package:harmonoid/mappers/tags.dart';
 import 'package:harmonoid/ui/media_library/tag_editor/search/models/track_search_result.dart';
 import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -40,8 +38,7 @@ class TagEditorNotifier extends ChangeNotifier {
   @override
   void dispose() {
     super.dispose();
-    _writer.dispose();
-    _reader.dispose();
+    _disposeTagWriter();
     for (final v in properties.values) {
       _disposeTextEditingController(v);
     }
@@ -212,14 +209,9 @@ class TagEditorNotifier extends ChangeNotifier {
 
       await _writer.save();
 
-      await _refreshProperties();
-      await _refreshCover();
-
+      await _disposeTagWriter();
       await _postProcessResource();
-
-      _oldTags = await _getTags();
-      _oldPropertiesMap = propertiesMap;
-      _oldCover = await _writer.getCover();
+      await _initializeTagWriter();
       propertiesChanged = false;
       coverChanged = false;
 
@@ -274,18 +266,12 @@ class TagEditorNotifier extends ChangeNotifier {
     cover = await _writer.getCover();
   }
 
-  Future<Tags> _getTags() async {
-    final tags = await _reader.parse(resource);
-    return tags;
-  }
-
   Future<void> _initialize() async {
     propertiesLoading = true;
     coverLoading = true;
     notifyListeners();
     try {
       await _preProcessResource();
-      await _initializeTagReader();
       await _initializeTagWriter();
 
       propertiesLoading = false;
@@ -304,31 +290,27 @@ class TagEditorNotifier extends ChangeNotifier {
   Future<void> _postProcessResource() async {
     // Refresh the media library.
 
-    final track = _fileSystemMediaLibrary.lookupTrack(TrackLookupKey(uri: resource));
-    if (track != null) {
-      await MediaLibrary.trackUriToCoverFile(_fileSystemMediaLibrary.covers, resource).delete_();
-      AsyncFileImage.reset(track.toImageKey());
+    final originalTrack = _fileSystemMediaLibrary.lookupTrack(TrackLookupKey(uri: resource));
 
-      await _fileSystemMediaLibrary.remove([track], delete: false);
+    if (originalTrack != null) {
+      AsyncFileImage.reset(originalTrack.toImageKey());
+      await MediaLibrary.trackUriToCoverFile(_fileSystemMediaLibrary.covers, resource).delete_();
+
+      await _fileSystemMediaLibrary.remove([originalTrack], delete: false);
       await _fileSystemMediaLibrary.add(File(resource));
       await _fileSystemMediaLibrary.populate();
     }
 
     // Refresh the playlists.
 
-    final oldTags = _oldTags;
-    final oldHash = HashEncoder.trackToHash(oldTags.toTrack());
+    final newTrack = _fileSystemMediaLibrary.lookupTrack(TrackLookupKey(uri: resource));
 
-    final newTags = await _getTags();
-    final newHash = HashEncoder.trackToHash(newTags.toTrack());
-
-    await _fileSystemMediaLibrary.playlists.replaceHash(oldHash, newHash);
-  }
-
-  Future<void> _initializeTagReader() async {
-    _reader = TagReader(configuration: const TagReaderConfiguration(verbose: true, fallback: false));
-
-    _oldTags = await _getTags();
+    if (originalTrack != null && newTrack != null) {
+      await _fileSystemMediaLibrary.playlists.replaceHash(
+        HashEncoder.trackToHash(originalTrack),
+        HashEncoder.trackToHash(newTrack),
+      );
+    }
   }
 
   Future<void> _initializeTagWriter() async {
@@ -341,9 +323,11 @@ class TagEditorNotifier extends ChangeNotifier {
     await _refreshCover();
   }
 
-  late final TagReader _reader;
-  late final TagWriter _writer;
-  late Tags _oldTags;
+  Future<void> _disposeTagWriter() async {
+    await _writer.dispose();
+  }
+
+  late TagWriter _writer;
   late Map<String, String> _oldPropertiesMap;
   late CoverData? _oldCover;
   final FileSystemMediaLibrary _fileSystemMediaLibrary = FileSystemMediaLibrary.instance;

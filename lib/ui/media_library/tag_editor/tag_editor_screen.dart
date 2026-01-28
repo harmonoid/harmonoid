@@ -25,7 +25,9 @@ class TagEditorScreen extends StatefulWidget {
   State<TagEditorScreen> createState() => _TagEditorScreenState();
 }
 
-class _TagEditorScreenState extends State<TagEditorScreen> {
+class _TagEditorScreenState extends State<TagEditorScreen> with ScrollControllerMixin {
+  late final ScrollController _controller = getScrollController('tag-editor-screen');
+
   void _onPopInvokedWithResult(BuildContext context, bool didPop, Object? result) async {
     if (didPop) return;
 
@@ -190,6 +192,15 @@ class _TagEditorScreenState extends State<TagEditorScreen> {
                   );
                   if (property != null) {
                     notifier.addProperty(property);
+
+                    Future.delayed(
+                      const Duration(milliseconds: 500),
+                      () => _controller.animateTo(
+                        _controller.position.maxScrollExtent,
+                        duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+                        curve: Curves.easeInOut,
+                      ),
+                    );
                   }
                 },
                 child: Text(label(Localization.instance.TAG_EDITOR_ADD_PROPERTY)),
@@ -307,6 +318,7 @@ class _TagEditorScreenState extends State<TagEditorScreen> {
                 slivers: notifier.propertiesLoading ? [const SliverFillRemaining(child: Center(child: CircularProgressIndicator()))] : _buildSlivers(context),
                 trailing: _buildTrailing(context),
                 floatingActionButton: _buildSaveFloatingActionButton(context),
+                scrollController: _controller,
               ),
             );
           },
