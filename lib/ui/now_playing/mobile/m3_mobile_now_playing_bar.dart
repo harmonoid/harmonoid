@@ -43,6 +43,8 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
   final ValueNotifier<double> _valueNotifier = ValueNotifier<double>(0.0);
   final MiniPlayerController _miniPlayerController = MiniPlayerController();
   final PanelController _panelController = PanelController();
+  final GlobalKey<TooltipState> _lyricsTooltipKey = GlobalKey<TooltipState>();
+  Object? _lastLyricsTooltipUri;
   bool _lyricsVisible = false;
   Timer? _miniPlayerControllerCallbackTimer;
 
@@ -141,7 +143,7 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.stretch,
                                       children: [
-                                        _buildAppBar(context, mediaPlayer),
+                                        _buildAppBar(context, mediaPlayer, percentage),
                                         _buildCarousel(context, mediaPlayer, percentage),
                                         _buildDetails(context, mediaPlayer),
                                         _buildControls(context, mediaPlayer),
@@ -306,7 +308,23 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
     );
   }
 
-  Widget _buildAppBar(BuildContext context, MediaPlayer mediaPlayer) {
+  Future<void> _showLyricsTooltipIfNeeded(double percentage, Object? currentUri) async {
+    if (percentage != 1.0 || currentUri == null || _lastLyricsTooltipUri == currentUri || Configuration.instance.nowPlayingLyricsFtuxCount > 5) return;
+    await Future.delayed(const Duration(seconds: 3));
+    if (!mounted) return;
+    final state = _lyricsTooltipKey.currentState;
+    if (state != null) {
+      _lastLyricsTooltipUri = currentUri;
+      Configuration.instance.set(nowPlayingLyricsFtuxCount: Configuration.instance.nowPlayingLyricsFtuxCount + 1);
+
+      state.ensureTooltipVisible();
+
+      await Future.delayed(const Duration(seconds: 3));
+      Tooltip.dismissAllToolTips();
+    }
+  }
+
+  Widget _buildAppBar(BuildContext context, MediaPlayer mediaPlayer, double percentage) {
     return Container(
       height: kToolbarHeight,
       margin: EdgeInsets.only(top: MediaQuery.paddingOf(context).top, left: 8.0, right: 8.0),
@@ -323,13 +341,19 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
               if (lyricsNotifier.lyrics.isEmpty) {
                 return const SizedBox.shrink();
               }
-              return IconButton(
-                onPressed: () async {
-                  _lyricsVisible = true;
-                  await context.push('/$kNowPlayingLyricsPath');
-                  _lyricsVisible = false;
-                },
-                icon: const Icon(Icons.text_format),
+              _showLyricsTooltipIfNeeded(percentage, mediaPlayer.current.uri);
+              return Tooltip(
+                key: _lyricsTooltipKey,
+                message: Localization.instance.SHOW_LYRICS,
+                showDuration: const Duration(seconds: 3),
+                child: IconButton(
+                  onPressed: () async {
+                    _lyricsVisible = true;
+                    await context.push('/$kNowPlayingLyricsPath');
+                    _lyricsVisible = false;
+                  },
+                  icon: const Icon(Icons.text_format),
+                ),
               );
             },
           ),

@@ -4,12 +4,14 @@ import 'package:provider/provider.dart';
 import 'package:system_fonts/system_fonts.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 class NowPlayingLyrics extends StatefulWidget {
-  const NowPlayingLyrics({super.key});
+  final ValueNotifier<bool>? selectionModeNotifier;
+  const NowPlayingLyrics({super.key, this.selectionModeNotifier});
 
   @override
   State<NowPlayingLyrics> createState() => _NowPlayingLyricsState();
@@ -34,6 +36,16 @@ class _NowPlayingLyricsState extends State<NowPlayingLyrics> {
     });
   }
 
+  void Function(int)? _onLyricTap(LyricsNotifier lyricsNotifier) {
+    if (lyricsNotifier.lyrics.isEmpty) return null;
+    return (i) {
+      if (i >= 0 && i < lyricsNotifier.lyrics.length) {
+        lyricsNotifier.setIndex(i);
+        MediaPlayer.instance.seek(Duration(milliseconds: lyricsNotifier.lyrics[i].timestamp) + const Duration(milliseconds: 100));
+      }
+    };
+  }
+
   Widget _buildDesktopLayout(BuildContext context) {
     return AnimatedOpacity(
       curve: Curves.easeInOut,
@@ -41,26 +53,29 @@ class _NowPlayingLyricsState extends State<NowPlayingLyrics> {
       duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
       child: Consumer<LyricsNotifier>(
         builder: (context, lyricsNotifier, _) {
+          final lyricsList = lyricsNotifier.lyrics.map((e) => e.text).toList();
+          final subscriptsList = lyricsNotifier.subscripts.length == lyricsList.length ? List<String>.from(lyricsNotifier.subscripts) : null;
           return LyricsView(
+            selectionModeNotifier: widget.selectionModeNotifier,
             index: lyricsNotifier.index,
-            lyrics: lyricsNotifier.lyrics.map((e) => e.text).toList(),
-            padding: EdgeInsets.only(
-              left: 32.0,
-              right: 32.0,
-              top: kDesktopAppBarHeight + MediaQuery.sizeOf(context).height * 0.1,
-            ),
+            lyrics: lyricsList,
+            subscripts: subscriptsList,
+            onLyricTap: _onLyricTap(lyricsNotifier),
+            padding: const EdgeInsets.only(left: 32.0, right: 32.0),
             focusedTextStyle: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  fontSize: Configuration.instance.lyricsViewFocusedFontSize,
-                  height: Configuration.instance.lyricsViewFocusedLineHeight,
-                  fontFamily: _fontFamily?.nullIfBlank(),
-                ),
+              fontSize: Configuration.instance.lyricsViewFocusedFontSize,
+              height: Configuration.instance.lyricsViewFocusedLineHeight,
+              fontFamily: _fontFamily?.nullIfBlank(),
+            ),
             unfocusedTextStyle: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  fontSize: Configuration.instance.lyricsViewUnfocusedFontSize,
-                  height: Configuration.instance.lyricsViewUnfocusedLineHeight,
-                  fontFamily: _fontFamily?.nullIfBlank(),
-                ),
+              fontSize: Configuration.instance.lyricsViewUnfocusedFontSize,
+              height: Configuration.instance.lyricsViewUnfocusedLineHeight,
+              fontFamily: _fontFamily?.nullIfBlank(),
+            ),
             textAlign: Configuration.instance.lyricsViewTextAlign,
-            alignment: Alignment.topCenter,
+            alignment: Alignment.center,
+            viewportWidth: 1920.0 * 1.0,
+            viewportHeight: 1080.0 * 0.6,
           );
         },
       ),
@@ -78,28 +93,33 @@ class _NowPlayingLyricsState extends State<NowPlayingLyrics> {
       duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
       child: Consumer<LyricsNotifier>(
         builder: (context, lyricsNotifier, _) {
+          final lyricsList = lyricsNotifier.lyrics.map((e) => e.text).toList();
+          final subscriptsList = lyricsNotifier.subscripts.length == lyricsList.length ? List<String>.from(lyricsNotifier.subscripts) : null;
           return LyricsView(
+            selectionModeNotifier: widget.selectionModeNotifier,
             index: lyricsNotifier.index,
-            lyrics: lyricsNotifier.lyrics.map((e) => e.text).toList(),
+            lyrics: lyricsList,
+            subscripts: subscriptsList,
+            onLyricTap: _onLyricTap(lyricsNotifier),
             padding: EdgeInsets.only(
               left: 16.0,
               right: 16.0,
-              top: -1.0 * MediaQuery.sizeOf(context).height * 0.2,
+              top: MediaQuery.sizeOf(context).height * -0.2,
             ),
             focusedTextStyle: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  fontSize: Configuration.instance.lyricsViewFocusedFontSize,
-                  height: Configuration.instance.lyricsViewFocusedLineHeight,
-                  fontFamily: _fontFamily?.nullIfBlank(),
-                ),
+              fontSize: Configuration.instance.lyricsViewFocusedFontSize,
+              height: Configuration.instance.lyricsViewFocusedLineHeight,
+              fontFamily: _fontFamily?.nullIfBlank(),
+            ),
             unfocusedTextStyle: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  fontSize: Configuration.instance.lyricsViewUnfocusedFontSize,
-                  height: Configuration.instance.lyricsViewUnfocusedLineHeight,
-                  fontFamily: _fontFamily?.nullIfBlank(),
-                ),
+              fontSize: Configuration.instance.lyricsViewUnfocusedFontSize,
+              height: Configuration.instance.lyricsViewUnfocusedLineHeight,
+              fontFamily: _fontFamily?.nullIfBlank(),
+            ),
             textAlign: Configuration.instance.lyricsViewTextAlign,
+            alignment: Alignment.center,
             viewportWidth: MediaQuery.sizeOf(context).width,
             viewportHeight: MediaQuery.sizeOf(context).height,
-            alignment: Alignment.center,
           );
         },
       ),

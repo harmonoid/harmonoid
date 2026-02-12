@@ -104,11 +104,7 @@ class Configuration extends ConfigurationBase {
     _lyricsViewUnfocusedFontSize = await read<double, double>(kKeyLyricsViewUnfocusedFontSize, defaults);
     _lyricsViewUnfocusedLineHeight = await read<double, double>(kKeyLyricsViewUnfocusedLineHeight, defaults);
     _mediaLibraryAddPlaylistToNowPlaying = await read<bool, bool>(kKeyMediaLibraryAddPlaylistToNowPlaying, defaults);
-    _mediaLibraryAlbumGroupingParameters = await read<dynamic, Set<AlbumGroupingParameter>>(
-      kKeyMediaLibraryAlbumGroupingParameters,
-      defaults,
-      (value) => value.map<AlbumGroupingParameter>((e) => AlbumGroupingParameter.values[e]).toSet(),
-    );
+    _mediaLibraryAlbumGroupingParameters = await read<dynamic, Set<AlbumGroupingParameter>>(kKeyMediaLibraryAlbumGroupingParameters, defaults, (value) => value.map<AlbumGroupingParameter>((e) => AlbumGroupingParameter.values[e]).toSet());
     _mediaLibraryAlbumSortAscending = await read<bool, bool>(kKeyMediaLibraryAlbumSortAscending, defaults);
     _mediaLibraryAlbumSortType = await read<int, AlbumSortType>(kKeyMediaLibraryAlbumSortType, defaults, (value) => AlbumSortType.values[value]);
     _mediaLibraryArtistImages = await read<bool, bool>(kKeyMediaLibraryArtistImages, defaults);
@@ -141,6 +137,7 @@ class Configuration extends ConfigurationBase {
     _notificationLyrics = await read<bool, bool>(kKeyNotificationLyrics, defaults);
     _nowPlayingAudioFormat = await read<bool, bool>(kKeyNowPlayingAudioFormat, defaults);
     _nowPlayingDisplayUponPlay = await read<bool, bool>(kKeyNowPlayingDisplayUponPlay, defaults);
+    _nowPlayingLyricsFtuxCount = await read<int, int>(kKeyNowPlayingLyricsFtuxCount, defaults);
     _nowPlayingStartMixAfterEnding = await read<bool, bool>(kKeyNowPlayingStartMixAfterEnding, defaults);
     _themeAnimationDuration = await read<dynamic, AnimationDuration>(kKeyThemeAnimationDuration, defaults, (value) => AnimationDuration.fromJson(value));
     _themeMaterialStandard = await read<int, int>(kKeyThemeMaterialStandard, defaults);

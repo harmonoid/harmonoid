@@ -63,6 +63,7 @@ class ConfigurationBase {
   bool get notificationLyrics => _notificationLyrics!;
   bool get nowPlayingAudioFormat => _nowPlayingAudioFormat!;
   bool get nowPlayingDisplayUponPlay => _nowPlayingDisplayUponPlay!;
+  int get nowPlayingLyricsFtuxCount => _nowPlayingLyricsFtuxCount!;
   bool get nowPlayingStartMixAfterEnding => _nowPlayingStartMixAfterEnding!;
   AnimationDuration get themeAnimationDuration => _themeAnimationDuration!;
   int get themeMaterialStandard => _themeMaterialStandard!;
@@ -123,6 +124,7 @@ class ConfigurationBase {
     bool? notificationLyrics,
     bool? nowPlayingAudioFormat,
     bool? nowPlayingDisplayUponPlay,
+    int? nowPlayingLyricsFtuxCount,
     bool? nowPlayingStartMixAfterEnding,
     AnimationDuration? themeAnimationDuration,
     int? themeMaterialStandard,
@@ -335,6 +337,10 @@ class ConfigurationBase {
       _nowPlayingDisplayUponPlay = nowPlayingDisplayUponPlay;
       await db.setValue(kKeyNowPlayingDisplayUponPlay, kTypeBoolean, booleanValue: nowPlayingDisplayUponPlay);
     }
+    if (nowPlayingLyricsFtuxCount != null) {
+      _nowPlayingLyricsFtuxCount = nowPlayingLyricsFtuxCount;
+      await db.setValue(kKeyNowPlayingLyricsFtuxCount, kTypeInteger, integerValue: nowPlayingLyricsFtuxCount);
+    }
     if (nowPlayingStartMixAfterEnding != null) {
       _nowPlayingStartMixAfterEnding = nowPlayingStartMixAfterEnding;
       await db.setValue(kKeyNowPlayingStartMixAfterEnding, kTypeBoolean, booleanValue: nowPlayingStartMixAfterEnding);
@@ -418,6 +424,7 @@ class ConfigurationBase {
       /* Boolean */ kKeyNotificationLyrics: true,
       /* Boolean */ kKeyNowPlayingAudioFormat: true,
       /* Boolean */ kKeyNowPlayingDisplayUponPlay: isDesktop,
+      /* Integer */ kKeyNowPlayingLyricsFtuxCount: 0,
       /* Boolean */ kKeyNowPlayingStartMixAfterEnding: true,
       /* Json    */ kKeyThemeAnimationDuration: const AnimationDuration(),
       /* Integer */ kKeyThemeMaterialStandard: isDesktop ? 2 : 3,
@@ -479,6 +486,7 @@ class ConfigurationBase {
   bool? _notificationLyrics;
   bool? _nowPlayingAudioFormat;
   bool? _nowPlayingDisplayUponPlay;
+  int? _nowPlayingLyricsFtuxCount;
   bool? _nowPlayingStartMixAfterEnding;
   AnimationDuration? _themeAnimationDuration;
   int? _themeMaterialStandard;
@@ -541,6 +549,7 @@ const kKeyMpvPath = 'MPV_PATH';
 const kKeyNotificationLyrics = 'NOTIFICATION_LYRICS';
 const kKeyNowPlayingAudioFormat = 'NOW_PLAYING_AUDIO_FORMAT';
 const kKeyNowPlayingDisplayUponPlay = 'NOW_PLAYING_DISPLAY_UPON_PLAY';
+const kKeyNowPlayingLyricsFtuxCount = 'NOW_PLAYING_LYRICS_FTUX_COUNT';
 const kKeyNowPlayingStartMixAfterEnding = 'NOW_PLAYING_START_MIX_AFTER_ENDING';
 const kKeyThemeAnimationDuration = 'THEME_ANIMATION_DURATION';
 const kKeyThemeMaterialStandard = 'THEME_MATERIAL_STANDARD';

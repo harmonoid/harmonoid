@@ -94,39 +94,40 @@ class DesktopNowPlayingScreenState extends State<DesktopNowPlayingScreen> {
                           ),
                         ),
                       ),
+                      // Positioned.fill(
+                      //   child: GestureDetector(
+                      //     onTap: () async {
+                      //       if (_fullscreenTimer?.isActive ?? false) {
+                      //         WindowPlus.instance.setIsFullscreen(!await WindowPlus.instance.fullscreen);
+                      //       }
+                      //       _fullscreenTimer = Timer(const Duration(milliseconds: 200), () => _fullscreenTimer = null);
+                      //     },
+                      //     child: Container(
+                      //       color: Colors.transparent,
+                      //     ),
+                      //   ),
+                      // ),
                       Positioned.fill(
-                        child: AnimatedSwitcher(
-                          duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
-                          switchInCurve: Curves.easeInOut,
-                          switchOutCurve: Curves.easeInOut,
-                          child: SizedBox(
-                            key: ValueKey(_desktopNowPlayingScreenLyrics),
-                            width: double.infinity,
-                            height: double.infinity,
-                            child: _desktopNowPlayingScreenLyrics ? const NowPlayingLyrics() : const SizedBox(),
-                          ),
-                        ),
-                      ),
-                      Positioned.fill(
-                        child: GestureDetector(
-                          onTap: () async {
-                            if (_fullscreenTimer?.isActive ?? false) {
-                              WindowPlus.instance.setIsFullscreen(!await WindowPlus.instance.fullscreen);
-                            }
-                            _fullscreenTimer = Timer(const Duration(milliseconds: 200), () => _fullscreenTimer = null);
-                          },
-                          child: Container(
-                            color: Colors.transparent,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 0.0,
-                        left: 0.0,
-                        right: 0.0,
-                        child: Controls(
-                          setDesktopNowPlayingCarousel: setDesktopNowPlayingCarousel,
-                          setDesktopNowPlayingLyrics: setDesktopNowPlayingLyrics,
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: AnimatedSwitcher(
+                                duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+                                switchInCurve: Curves.easeInOut,
+                                switchOutCurve: Curves.easeInOut,
+                                child: SizedBox(
+                                  key: ValueKey(_desktopNowPlayingScreenLyrics),
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  child: _desktopNowPlayingScreenLyrics ? const NowPlayingLyrics() : const SizedBox(),
+                                ),
+                              ),
+                            ),
+                            Controls(
+                              setDesktopNowPlayingCarousel: setDesktopNowPlayingCarousel,
+                              setDesktopNowPlayingLyrics: setDesktopNowPlayingLyrics,
+                            ),
+                          ],
                         ),
                       ),
                       Positioned(

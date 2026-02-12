@@ -14,10 +14,10 @@ import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:synchronized/synchronized.dart';
 
 import 'package:harmonoid/api/lyrics_get.dart';
+import 'package:harmonoid/api/translation_get.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
-import 'package:harmonoid/extensions/playable.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/lyrics.dart';
 import 'package:harmonoid/models/lyric.dart';
@@ -58,6 +58,7 @@ class LyricsNotifier extends ChangeNotifier {
         if (current != _current && currentDuration != _currentDuration && currentPosition > Duration.zero) {
           index = 0;
           lyrics.clear();
+          subscripts.clear();
           _timestampsAndIndexes.clear();
           notifyListeners();
 
@@ -69,6 +70,7 @@ class LyricsNotifier extends ChangeNotifier {
           _current = current;
           _currentDuration = currentDuration;
           await retrieve();
+          await _fetchTranslations();
 
           for (int i = 0; i < lyrics.length; i++) {
             _timestampsAndIndexes[lyrics[i].timestamp] = i;
@@ -114,6 +116,9 @@ class LyricsNotifier extends ChangeNotifier {
 
   /// Lyrics.
   final Lyrics lyrics = <Lyric>[];
+
+  /// Subscripts (e.g. translations), one per lyric line when length matches.
+  final List<String> subscripts = <String>[];
 
   /// Directory used to store lyrics.
   final Directory directory;
@@ -199,7 +204,8 @@ class LyricsNotifier extends ChangeNotifier {
     try {
       final lyricsGet = LyricsGet();
       final result = await lyricsGet.call(
-        playable.lyricsGetQuery,
+        playable.title,
+        playable.subtitle.firstOrNull ?? '',
         _currentDuration?.inMilliseconds,
       );
       if (result != null) {
@@ -218,6 +224,22 @@ class LyricsNotifier extends ChangeNotifier {
       debugPrint(stacktrace.toString());
       lyrics.clear();
       notifyListeners();
+    }
+  }
+
+  Future<void> _fetchTranslations() async {
+    if (lyrics.isEmpty) return;
+    try {
+      final lines = await TranslationGet().call(lyrics.map((e) => e.text).join('\n'));
+      if (lines != null && lines.length == lyrics.length) {
+        subscripts
+          ..clear()
+          ..addAll(lines);
+        notifyListeners();
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
     }
   }
 
@@ -246,6 +268,12 @@ class LyricsNotifier extends ChangeNotifier {
     if (await file.exists_()) {
       await file.delete_();
     }
+  }
+
+  /// Sets the index.
+  void setIndex(int index) {
+    this.index = index;
+    notifyListeners();
   }
 
   /// Returns target .LRC [File].
