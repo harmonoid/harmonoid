@@ -106,11 +106,7 @@ class Configuration extends ConfigurationBase {
     _lyricsViewUnfocusedLineHeight = await read<double, double>(kKeyLyricsViewUnfocusedLineHeight, defaults);
     _lyricsTranslationLanguage = await read<dynamic, Language>(kKeyLyricsTranslationLanguage, defaults, (value) => Language.fromJson(value));
     _mediaLibraryAddPlaylistToNowPlaying = await read<bool, bool>(kKeyMediaLibraryAddPlaylistToNowPlaying, defaults);
-    _mediaLibraryAlbumGroupingParameters = await read<dynamic, Set<AlbumGroupingParameter>>(
-      kKeyMediaLibraryAlbumGroupingParameters,
-      defaults,
-      (value) => value.map<AlbumGroupingParameter>((e) => AlbumGroupingParameter.values[e]).toSet(),
-    );
+    _mediaLibraryAlbumGroupingParameters = await read<dynamic, Set<AlbumGroupingParameter>>(kKeyMediaLibraryAlbumGroupingParameters, defaults, (value) => value.map<AlbumGroupingParameter>((e) => AlbumGroupingParameter.values[e]).toSet());
     _mediaLibraryAlbumSortAscending = await read<bool, bool>(kKeyMediaLibraryAlbumSortAscending, defaults);
     _mediaLibraryAlbumSortType = await read<int, AlbumSortType>(kKeyMediaLibraryAlbumSortType, defaults, (value) => AlbumSortType.values[value]);
     _mediaLibraryArtistImages = await read<bool, bool>(kKeyMediaLibraryArtistImages, defaults);
