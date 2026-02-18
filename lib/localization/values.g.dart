@@ -28,6 +28,7 @@ class Values {
   late String ARTIST;
   late String ARTISTS;
   late String ASCENDING;
+  late String AUDIO_CONTROL_PANEL;
   late String AVAILABLE_STORAGES;
   late String A_TO_Z;
   late String BACK;
@@ -42,7 +43,6 @@ class Values {
   late String CONFIGURE_VISIBLE_TABS_TITLE;
   late String CONNECT;
   late String CONNECTED;
-  late String CONTROL_PANEL;
   late String COPY_AS_JSON;
   late String COPY_LINK;
   late String CORRUPT_LRC_FILE;
@@ -125,10 +125,12 @@ class Values {
   late String LOOKUP_FOR_LRC_IN_DIRECTORY;
   late String LYRICS;
   late String LYRICS_ALIGNMENT;
+  late String LYRICS_CONTROL_PANEL;
   late String LYRICS_FONT_FAMILY;
   late String LYRICS_NOT_FOUND;
   late String LYRICS_RETRIEVING;
   late String LYRICS_SIZE;
+  late String LYRICS_TRANSLATION;
   late String MATERIAL_DESIGN;
   late String MEDIA_FILES;
   late String MEDIA_LIBRARY;
@@ -318,6 +320,7 @@ class Values {
   late String TRACKS_DELETE_DIALOG_SUBTITLE;
   late String TRACK_DELETE_DIALOG_SUBTITLE;
   late String TRACK_NUMBER;
+  late String TRANSLATION;
   late String TYPE;
   late String UNMUTE;
   late String UNSELECT;

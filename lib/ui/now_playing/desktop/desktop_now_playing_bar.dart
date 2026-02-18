@@ -19,7 +19,7 @@ import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/ui/now_playing/desktop/desktop_now_playing_playlist.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_colors.dart';
-import 'package:harmonoid/ui/now_playing/now_playing_control_panel.dart';
+import 'package:harmonoid/ui/now_playing/now_playing_audio_control_panel.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/material_wave_slider.dart';
@@ -210,12 +210,12 @@ class DesktopNowPlayingBarState extends State<DesktopNowPlayingBar> {
                                       ),
                                     ),
                                     IconButton(
-                                      onPressed: () => NowPlayingControlPanel.show(context),
+                                      onPressed: () => NowPlayingAudioControlPanel.show(context),
                                       color: nowPlayingColors.backgroundEnabledIcon,
-                                      icon: const Icon(Icons.more_horiz),
+                                      icon: const Icon(Icons.speaker),
                                       splashRadius: 20.0,
                                       iconSize: 20.0,
-                                      tooltip: Localization.instance.CONTROL_PANEL,
+                                      tooltip: Localization.instance.AUDIO_CONTROL_PANEL,
                                     ),
                                     const SizedBox(width: 12.0),
                                   ],

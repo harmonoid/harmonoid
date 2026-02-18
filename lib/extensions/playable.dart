@@ -8,9 +8,6 @@ extension PlayableExtensions on Playable {
   /// Display subtitle.
   String get displaySubtitle => subtitle.join(', ');
 
-  /// Query used to search for lyrics.
-  String get lyricsGetQuery => [title, if (subtitle.isNotEmpty) subtitle.first].join(' ');
-
   /// Playlist entry title.
   /// Ref: media_library/lib/src/extensions/track.dart
   String get playlistEntryTitle => [title, subtitle.join(', ')].where((e) => e.isNotEmpty).join(' • ');

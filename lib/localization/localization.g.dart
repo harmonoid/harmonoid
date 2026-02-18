@@ -3,7 +3,6 @@
 part of 'localization.dart';
 
 class LocalizationBase extends Values {
-
   late LocalizationData current;
 
   Future<void> set({required LocalizationData value}) async {
@@ -33,6 +32,7 @@ class LocalizationBase extends Values {
     ARTIST = map['ARTIST']!;
     ARTISTS = map['ARTISTS']!;
     ASCENDING = map['ASCENDING']!;
+    AUDIO_CONTROL_PANEL = map['AUDIO_CONTROL_PANEL']!;
     AVAILABLE_STORAGES = map['AVAILABLE_STORAGES']!;
     A_TO_Z = map['A_TO_Z']!;
     BACK = map['BACK']!;
@@ -47,7 +47,6 @@ class LocalizationBase extends Values {
     CONFIGURE_VISIBLE_TABS_TITLE = map['CONFIGURE_VISIBLE_TABS_TITLE']!;
     CONNECT = map['CONNECT']!;
     CONNECTED = map['CONNECTED']!;
-    CONTROL_PANEL = map['CONTROL_PANEL']!;
     COPY_AS_JSON = map['COPY_AS_JSON']!;
     COPY_LINK = map['COPY_LINK']!;
     CORRUPT_LRC_FILE = map['CORRUPT_LRC_FILE']!;
@@ -130,10 +129,12 @@ class LocalizationBase extends Values {
     LOOKUP_FOR_LRC_IN_DIRECTORY = map['LOOKUP_FOR_LRC_IN_DIRECTORY']!;
     LYRICS = map['LYRICS']!;
     LYRICS_ALIGNMENT = map['LYRICS_ALIGNMENT']!;
+    LYRICS_CONTROL_PANEL = map['LYRICS_CONTROL_PANEL']!;
     LYRICS_FONT_FAMILY = map['LYRICS_FONT_FAMILY']!;
     LYRICS_NOT_FOUND = map['LYRICS_NOT_FOUND']!;
     LYRICS_RETRIEVING = map['LYRICS_RETRIEVING']!;
     LYRICS_SIZE = map['LYRICS_SIZE']!;
+    LYRICS_TRANSLATION = map['LYRICS_TRANSLATION']!;
     MATERIAL_DESIGN = map['MATERIAL_DESIGN']!;
     MEDIA_FILES = map['MEDIA_FILES']!;
     MEDIA_LIBRARY = map['MEDIA_LIBRARY']!;
@@ -323,6 +324,7 @@ class LocalizationBase extends Values {
     TRACKS_DELETE_DIALOG_SUBTITLE = map['TRACKS_DELETE_DIALOG_SUBTITLE']!;
     TRACK_DELETE_DIALOG_SUBTITLE = map['TRACK_DELETE_DIALOG_SUBTITLE']!;
     TRACK_NUMBER = map['TRACK_NUMBER']!;
+    TRANSLATION = map['TRANSLATION']!;
     TYPE = map['TYPE']!;
     UNMUTE = map['UNMUTE']!;
     UNSELECT = map['UNSELECT']!;

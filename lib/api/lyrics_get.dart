@@ -13,15 +13,16 @@ import 'package:harmonoid/models/lyrics.dart';
 ///
 /// {@endtemplate}
 class LyricsGet {
-  Future<Lyrics?> call(String query, int? duration) async {
+  Future<Lyrics?> call(String track, String artist, int duration) async {
     try {
       final response = await http.get(
         Uri.https(
           apiBaseUrl,
           '/functions/v1/lyrics-get',
           {
-            'query': query.toString(),
-            if (duration != null) 'duration': duration.toString(),
+            'track': track,
+            'artist': artist,
+            'duration': duration.toString(),
           },
         ),
         headers: {
@@ -29,6 +30,7 @@ class LyricsGet {
           'X-API-Key': apiKey,
         },
       );
+      if (response.statusCode != 200) return null;
       final body = json.decode(utf8.decode(response.bodyBytes));
       return body.map<Lyric>((e) => Lyric.fromJson(e)).toList();
     } catch (exception, stacktrace) {

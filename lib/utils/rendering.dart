@@ -433,28 +433,32 @@ Future<T?> showSelection<T>(
               children: [
                 if (actions || values.length > 10) const Divider(height: 1.0),
                 Flexible(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: values
-                          .map(
-                            (value) => ListItem(
-                              leading:
-                                  leading?.call(value) ??
-                                  (radio
-                                      ? Radio(
-                                          value: value,
-                                          groupValue: result ?? selected,
-                                          onChanged: set,
-                                        )
-                                      : null),
-                              trailing: trailing?.call(value),
-                              onTap: () => set(value),
-                              title: text(value),
-                            ),
-                          )
-                          .toList(),
+                  child: ScrollControllerBuilder(
+                    keyName: 'selection-scroll-controller',
+                    builder: (context, controller) => SingleChildScrollView(
+                      controller: controller,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: values
+                            .map(
+                              (value) => ListItem(
+                                leading:
+                                    leading?.call(value) ??
+                                    (radio
+                                        ? Radio(
+                                            value: value,
+                                            groupValue: result ?? selected,
+                                            onChanged: set,
+                                          )
+                                        : null),
+                                trailing: trailing?.call(value),
+                                onTap: () => set(value),
+                                title: text(value),
+                              ),
+                            )
+                            .toList(),
+                      ),
                     ),
                   ),
                 ),

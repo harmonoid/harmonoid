@@ -78,6 +78,13 @@ Future<void> main(List<String> args) async {
     }
 
     await Configuration.ensureInitialized();
+    await IdentityNotifier.ensureInitialized(
+      getItem: (key) => Configuration.instance.db.getString(key),
+      setItem: (key, value) => Configuration.instance.db.setValue(key, kTypeString, stringValue: value),
+      removeItem: (key) => Configuration.instance.db.remove(key),
+      deviceId: Configuration.instance.identifier,
+    );
+    await SubscriptionNotifier.ensureInitialized();
 
     // HACK:
     if (Platform.isMacOS) {
@@ -113,13 +120,6 @@ Future<void> main(List<String> args) async {
     await LyricsNotifier.ensureInitialized();
     await NowPlayingVisualsNotifier.ensureInitialized();
     await NowPlayingColorPaletteNotifier.ensureInitialized();
-    await IdentityNotifier.ensureInitialized(
-      getItem: (key) => Configuration.instance.db.getString(key),
-      setItem: (key, value) => Configuration.instance.db.setValue(key, kTypeString, stringValue: value),
-      removeItem: (key) => Configuration.instance.db.remove(key),
-      deviceId: Configuration.instance.identifier,
-    );
-    await SubscriptionNotifier.ensureInitialized();
     runApp(const Harmonoid());
   } catch (exception, stacktrace) {
     debugPrint(exception.toString());

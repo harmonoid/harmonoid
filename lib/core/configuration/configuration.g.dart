@@ -29,6 +29,7 @@ class ConfigurationBase {
   TextAlign get lyricsViewTextAlign => _lyricsViewTextAlign!;
   double get lyricsViewUnfocusedFontSize => _lyricsViewUnfocusedFontSize!;
   double get lyricsViewUnfocusedLineHeight => _lyricsViewUnfocusedLineHeight!;
+  Language get lyricsTranslationLanguage => _lyricsTranslationLanguage!;
   bool get mediaLibraryAddPlaylistToNowPlaying => _mediaLibraryAddPlaylistToNowPlaying!;
   Set<AlbumGroupingParameter> get mediaLibraryAlbumGroupingParameters => _mediaLibraryAlbumGroupingParameters!;
   bool get mediaLibraryAlbumSortAscending => _mediaLibraryAlbumSortAscending!;
@@ -63,6 +64,7 @@ class ConfigurationBase {
   bool get notificationLyrics => _notificationLyrics!;
   bool get nowPlayingAudioFormat => _nowPlayingAudioFormat!;
   bool get nowPlayingDisplayUponPlay => _nowPlayingDisplayUponPlay!;
+  int get nowPlayingLyricsFtuxCount => _nowPlayingLyricsFtuxCount!;
   bool get nowPlayingStartMixAfterEnding => _nowPlayingStartMixAfterEnding!;
   AnimationDuration get themeAnimationDuration => _themeAnimationDuration!;
   int get themeMaterialStandard => _themeMaterialStandard!;
@@ -89,6 +91,7 @@ class ConfigurationBase {
     TextAlign? lyricsViewTextAlign,
     double? lyricsViewUnfocusedFontSize,
     double? lyricsViewUnfocusedLineHeight,
+    Language? lyricsTranslationLanguage,
     bool? mediaLibraryAddPlaylistToNowPlaying,
     Set<AlbumGroupingParameter>? mediaLibraryAlbumGroupingParameters,
     bool? mediaLibraryAlbumSortAscending,
@@ -123,6 +126,7 @@ class ConfigurationBase {
     bool? notificationLyrics,
     bool? nowPlayingAudioFormat,
     bool? nowPlayingDisplayUponPlay,
+    int? nowPlayingLyricsFtuxCount,
     bool? nowPlayingStartMixAfterEnding,
     AnimationDuration? themeAnimationDuration,
     int? themeMaterialStandard,
@@ -198,6 +202,10 @@ class ConfigurationBase {
     if (lyricsViewUnfocusedLineHeight != null) {
       _lyricsViewUnfocusedLineHeight = lyricsViewUnfocusedLineHeight;
       await db.setValue(kKeyLyricsViewUnfocusedLineHeight, kTypeDouble, doubleValue: lyricsViewUnfocusedLineHeight);
+    }
+    if (lyricsTranslationLanguage != null) {
+      _lyricsTranslationLanguage = lyricsTranslationLanguage;
+      await db.setValue(kKeyLyricsTranslationLanguage, kTypeJson, jsonValue: lyricsTranslationLanguage.toJson());
     }
     if (mediaLibraryAddPlaylistToNowPlaying != null) {
       _mediaLibraryAddPlaylistToNowPlaying = mediaLibraryAddPlaylistToNowPlaying;
@@ -335,6 +343,10 @@ class ConfigurationBase {
       _nowPlayingDisplayUponPlay = nowPlayingDisplayUponPlay;
       await db.setValue(kKeyNowPlayingDisplayUponPlay, kTypeBoolean, booleanValue: nowPlayingDisplayUponPlay);
     }
+    if (nowPlayingLyricsFtuxCount != null) {
+      _nowPlayingLyricsFtuxCount = nowPlayingLyricsFtuxCount;
+      await db.setValue(kKeyNowPlayingLyricsFtuxCount, kTypeInteger, integerValue: nowPlayingLyricsFtuxCount);
+    }
     if (nowPlayingStartMixAfterEnding != null) {
       _nowPlayingStartMixAfterEnding = nowPlayingStartMixAfterEnding;
       await db.setValue(kKeyNowPlayingStartMixAfterEnding, kTypeBoolean, booleanValue: nowPlayingStartMixAfterEnding);
@@ -384,6 +396,7 @@ class ConfigurationBase {
       /* Integer */ kKeyLyricsViewTextAlign: TextAlign.start.index,
       /* Double  */ kKeyLyricsViewUnfocusedFontSize: isDesktop ? 28.0: 24.0,
       /* Double  */ kKeyLyricsViewUnfocusedLineHeight: 1.2,
+      /* Json    */ kKeyLyricsTranslationLanguage: await getDefaultLyricsTranslationLanguage(),
       /* Boolean */ kKeyMediaLibraryAddPlaylistToNowPlaying: false,
       /* Json    */ kKeyMediaLibraryAlbumGroupingParameters: [AlbumGroupingParameter.album.index],
       /* Boolean */ kKeyMediaLibraryAlbumSortAscending: true,
@@ -418,6 +431,7 @@ class ConfigurationBase {
       /* Boolean */ kKeyNotificationLyrics: true,
       /* Boolean */ kKeyNowPlayingAudioFormat: true,
       /* Boolean */ kKeyNowPlayingDisplayUponPlay: isDesktop,
+      /* Integer */ kKeyNowPlayingLyricsFtuxCount: 0,
       /* Boolean */ kKeyNowPlayingStartMixAfterEnding: true,
       /* Json    */ kKeyThemeAnimationDuration: const AnimationDuration(),
       /* Integer */ kKeyThemeMaterialStandard: isDesktop ? 2 : 3,
@@ -445,6 +459,7 @@ class ConfigurationBase {
   TextAlign? _lyricsViewTextAlign;
   double? _lyricsViewUnfocusedFontSize;
   double? _lyricsViewUnfocusedLineHeight;
+  Language? _lyricsTranslationLanguage;
   bool? _mediaLibraryAddPlaylistToNowPlaying;
   Set<AlbumGroupingParameter>? _mediaLibraryAlbumGroupingParameters;
   bool? _mediaLibraryAlbumSortAscending;
@@ -479,6 +494,7 @@ class ConfigurationBase {
   bool? _notificationLyrics;
   bool? _nowPlayingAudioFormat;
   bool? _nowPlayingDisplayUponPlay;
+  int? _nowPlayingLyricsFtuxCount;
   bool? _nowPlayingStartMixAfterEnding;
   AnimationDuration? _themeAnimationDuration;
   int? _themeMaterialStandard;
@@ -507,6 +523,7 @@ const kKeyLyricsViewFontFamily = 'LYRICS_VIEW_FONT_FAMILY';
 const kKeyLyricsViewTextAlign = 'LYRICS_VIEW_TEXT_ALIGN';
 const kKeyLyricsViewUnfocusedFontSize = 'LYRICS_VIEW_UNFOCUSED_FONT_SIZE';
 const kKeyLyricsViewUnfocusedLineHeight = 'LYRICS_VIEW_UNFOCUSED_LINE_HEIGHT';
+const kKeyLyricsTranslationLanguage = 'LYRICS_TRANSLATION_LANGUAGE';
 const kKeyMediaLibraryAddPlaylistToNowPlaying = 'MEDIA_LIBRARY_ADD_PLAYLIST_TO_NOW_PLAYING';
 const kKeyMediaLibraryAlbumGroupingParameters = 'MEDIA_LIBRARY_ALBUM_GROUPING_PARAMETERS';
 const kKeyMediaLibraryAlbumSortAscending = 'MEDIA_LIBRARY_ALBUM_SORT_ASCENDING';
@@ -541,6 +558,7 @@ const kKeyMpvPath = 'MPV_PATH';
 const kKeyNotificationLyrics = 'NOTIFICATION_LYRICS';
 const kKeyNowPlayingAudioFormat = 'NOW_PLAYING_AUDIO_FORMAT';
 const kKeyNowPlayingDisplayUponPlay = 'NOW_PLAYING_DISPLAY_UPON_PLAY';
+const kKeyNowPlayingLyricsFtuxCount = 'NOW_PLAYING_LYRICS_FTUX_COUNT';
 const kKeyNowPlayingStartMixAfterEnding = 'NOW_PLAYING_START_MIX_AFTER_ENDING';
 const kKeyThemeAnimationDuration = 'THEME_ANIMATION_DURATION';
 const kKeyThemeMaterialStandard = 'THEME_MATERIAL_STANDARD';

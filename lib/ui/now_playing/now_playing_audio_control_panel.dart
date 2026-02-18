@@ -6,8 +6,8 @@ import 'package:identity/identity.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/extensions/build_context.dart';
 import 'package:harmonoid/extensions/duration.dart';
-import 'package:harmonoid/extensions/go_router.dart';
 import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/replaygain.dart';
@@ -18,11 +18,11 @@ import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/slide_on_enter.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
-class NowPlayingControlPanel extends StatefulWidget {
-  const NowPlayingControlPanel({super.key});
+class NowPlayingAudioControlPanel extends StatefulWidget {
+  const NowPlayingAudioControlPanel({super.key});
 
   static Future<void> show(BuildContext context) async {
-    final path = router.location.split('/').last;
+    final path = context.location.split('/').last;
     if (isDesktop) {
       await showDialog(
         context: context,
@@ -38,7 +38,7 @@ class NowPlayingControlPanel extends StatefulWidget {
                 16.0,
                 16.0 + (path == kNowPlayingPath ? 0.0 : NowPlayingBar.height),
               ),
-              child: const NowPlayingControlPanel(),
+              child: const NowPlayingAudioControlPanel(),
             ),
           ),
         ),
@@ -56,18 +56,17 @@ class NowPlayingControlPanel extends StatefulWidget {
         isScrollControlled: true,
         builder: (context) => const Padding(
           padding: EdgeInsets.all(16.0),
-          child: NowPlayingControlPanel(),
+          child: NowPlayingAudioControlPanel(),
         ),
       );
     }
   }
 
   @override
-  State<NowPlayingControlPanel> createState() => NowPlayingControlPanelState();
+  State<NowPlayingAudioControlPanel> createState() => NowPlayingAudioControlPanelState();
 }
 
-class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
-  // WHAT THE FUCK
+class NowPlayingAudioControlPanelState extends State<NowPlayingAudioControlPanel> {
   EdgeInsets get _contentPadding => switch ((isDesktop, isMaterial2)) {
     (true, true) => const EdgeInsets.only(left: 4.0, bottom: 20.0),
     (true, false) => const EdgeInsets.only(left: 4.0, bottom: 18.0),
@@ -134,7 +133,7 @@ class NowPlayingControlPanelState extends State<NowPlayingControlPanel> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    Localization.instance.CONTROL_PANEL,
+                    Localization.instance.AUDIO_CONTROL_PANEL,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(width: 8.0),

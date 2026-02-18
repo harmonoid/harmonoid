@@ -21,7 +21,7 @@ import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_colors.dart';
-import 'package:harmonoid/ui/now_playing/now_playing_control_panel.dart';
+import 'package:harmonoid/ui/now_playing/now_playing_audio_control_panel.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_playlist_item.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
@@ -42,6 +42,8 @@ class M2MobileNowPlayingBarState extends State<M2MobileNowPlayingBar> {
   final ValueNotifier<double> _valueNotifier = ValueNotifier<double>(0.0);
   final MiniPlayerController _miniPlayerController = MiniPlayerController();
   final PanelController _panelController = PanelController();
+  final GlobalKey<TooltipState> _lyricsTooltipKey = GlobalKey<TooltipState>();
+  Object? _lastLyricsTooltipUri;
   bool _lyricsVisible = false;
   Timer? _miniPlayerControllerCallbackTimer;
 
@@ -304,7 +306,23 @@ class M2MobileNowPlayingBarState extends State<M2MobileNowPlayingBar> {
     );
   }
 
-  Widget _buildAppBar(BuildContext context, MediaPlayer mediaPlayer) {
+  Future<void> _showLyricsTooltipIfNeeded(double percentage, Object? currentUri) async {
+    if (percentage != 1.0 || currentUri == null || _lastLyricsTooltipUri == currentUri || Configuration.instance.nowPlayingLyricsFtuxCount > 5) return;
+    await Future.delayed(const Duration(seconds: 3));
+    if (!mounted) return;
+    final state = _lyricsTooltipKey.currentState;
+    if (state != null) {
+      _lastLyricsTooltipUri = currentUri;
+      Configuration.instance.set(nowPlayingLyricsFtuxCount: Configuration.instance.nowPlayingLyricsFtuxCount + 1);
+
+      state.ensureTooltipVisible();
+
+      await Future.delayed(const Duration(seconds: 3));
+      Tooltip.dismissAllToolTips();
+    }
+  }
+
+  Widget _buildAppBar(BuildContext context, MediaPlayer mediaPlayer, double percentage) {
     return IconTheme(
       data: const IconThemeData(color: Colors.white),
       child: Container(
@@ -323,18 +341,23 @@ class M2MobileNowPlayingBarState extends State<M2MobileNowPlayingBar> {
                 if (lyricsNotifier.lyrics.isEmpty) {
                   return const SizedBox.shrink();
                 }
-                return IconButton(
-                  onPressed: () async {
-                    _lyricsVisible = true;
-                    await context.push('/$kNowPlayingLyricsPath');
-                    _lyricsVisible = false;
-                  },
-                  icon: const Icon(Icons.text_format),
+                _showLyricsTooltipIfNeeded(percentage, mediaPlayer.current.uri);
+                return Tooltip(
+                  key: _lyricsTooltipKey,
+                  message: Localization.instance.SHOW_LYRICS,
+                  child: IconButton(
+                    onPressed: () async {
+                      _lyricsVisible = true;
+                      await context.push('/$kNowPlayingLyricsPath');
+                      _lyricsVisible = false;
+                    },
+                    icon: const Icon(Icons.text_format),
+                  ),
                 );
               },
             ),
             IconButton(
-              onPressed: () => NowPlayingControlPanel.show(context),
+              onPressed: () => NowPlayingAudioControlPanel.show(context),
               icon: const Icon(Icons.equalizer),
             ),
             Consumer<MediaLibrary>(
@@ -408,7 +431,7 @@ class M2MobileNowPlayingBarState extends State<M2MobileNowPlayingBar> {
             ),
           ),
         ),
-        _buildAppBar(context, mediaPlayer),
+        _buildAppBar(context, mediaPlayer, percentage),
       ],
     );
   }

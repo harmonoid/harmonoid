@@ -14,15 +14,19 @@ import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:synchronized/synchronized.dart';
 
 import 'package:harmonoid/api/lyrics_get.dart';
+import 'package:harmonoid/api/lyrics_translation_get.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
-import 'package:harmonoid/extensions/playable.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/lyrics.dart';
+import 'package:harmonoid/models/language.dart';
 import 'package:harmonoid/models/lyric.dart';
 import 'package:harmonoid/models/lyrics.dart';
 import 'package:harmonoid/models/playable.dart';
+import 'package:harmonoid/models/remote_config_key.dart';
+import 'package:harmonoid/models/remote_config_value.dart';
+import 'package:harmonoid/state/remote_config_provider.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 
 /// {@template lyrics_notifier}
@@ -55,9 +59,10 @@ class LyricsNotifier extends ChangeNotifier {
         final currentDuration = state.duration;
         final currentPosition = state.position;
 
-        if (current != _current && currentDuration != _currentDuration && currentPosition > Duration.zero) {
+        if (current != _current && currentDuration != _currentDuration && currentDuration > Duration.zero && currentPosition > Duration.zero) {
           index = 0;
           lyrics.clear();
+          translations.clear();
           _timestampsAndIndexes.clear();
           notifyListeners();
 
@@ -68,7 +73,8 @@ class LyricsNotifier extends ChangeNotifier {
 
           _current = current;
           _currentDuration = currentDuration;
-          await retrieve();
+          await fetchLyrics();
+          await fetchTranslations();
 
           for (int i = 0; i < lyrics.length; i++) {
             _timestampsAndIndexes[lyrics[i].timestamp] = i;
@@ -95,6 +101,7 @@ class LyricsNotifier extends ChangeNotifier {
         }
       }),
     );
+    unawaited(fetchTranslationLanguages());
   }
 
   /// Initializes the [instance].
@@ -115,13 +122,23 @@ class LyricsNotifier extends ChangeNotifier {
   /// Lyrics.
   final Lyrics lyrics = <Lyric>[];
 
+  /// Translations.
+  final Lyrics translations = <Lyric>[];
+
+  /// Translation language.
+  Language translationLanguage = Configuration.instance.lyricsTranslationLanguage;
+
+  /// Translation languages.
+  final List<Language> translationLanguages = <Language>[];
+
   /// Directory used to store lyrics.
   final Directory directory;
 
-  /// Retrieves lyrics for currently playing [Playable].
-  Future<void> retrieve() async {
+  /// Fetches lyrics for currently playing [Playable].
+  Future<void> fetchLyrics() async {
     final playable = _current;
-    if (playable == null) return;
+    final duration = _currentDuration;
+    if (playable == null || duration == null) return;
 
     // 1. LRC.
 
@@ -199,8 +216,9 @@ class LyricsNotifier extends ChangeNotifier {
     try {
       final lyricsGet = LyricsGet();
       final result = await lyricsGet.call(
-        playable.lyricsGetQuery,
-        _currentDuration?.inMilliseconds,
+        playable.title,
+        playable.subtitle.firstOrNull ?? '',
+        duration.inMilliseconds,
       );
       if (result != null) {
         lyrics.addAll(result);
@@ -219,6 +237,56 @@ class LyricsNotifier extends ChangeNotifier {
       lyrics.clear();
       notifyListeners();
     }
+  }
+
+  /// Fetches lyrics for currently playing [Playable].
+  Future<void> fetchTranslations() async {
+    final language = translationLanguage;
+    final current = _current;
+    final duration = _currentDuration;
+    if (lyrics.isEmpty || language.code.isEmpty || current == null || duration == null) return;
+    try {
+      final lyricsTranslationGet = LyricsTranslationGet();
+      final result = await lyricsTranslationGet.call(
+        lyrics,
+        language.code,
+        current.title,
+        current.subtitle.firstOrNull ?? '',
+        duration.inMilliseconds,
+      );
+      if (result != null && result.length == lyrics.length) {
+        translations.addAll(result);
+        notifyListeners();
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+      lyrics.clear();
+      notifyListeners();
+    }
+  }
+
+  /// Fetches the translation languages.
+  Future<void> fetchTranslationLanguages() async {
+    final remoteConfigProvider = RemoteConfigProvider();
+    final result = await remoteConfigProvider.get(RemoteConfigKey.lyricsTranslationLanguages);
+    if (result is LyricsTranslationLanguages) {
+      translationLanguages
+        ..clear()
+        ..addAll(result.value);
+      notifyListeners();
+    }
+  }
+
+  /// Sets the translation language.
+  Future<void> setTranslationLanguage(Language language) async {
+    translationLanguage = language;
+
+    translations.clear();
+    notifyListeners();
+
+    await fetchTranslations();
+    await Configuration.instance.set(lyricsTranslationLanguage: language);
   }
 
   /// Whether .LRC is present in cache for specified [playable].
@@ -246,6 +314,12 @@ class LyricsNotifier extends ChangeNotifier {
     if (await file.exists_()) {
       await file.delete_();
     }
+  }
+
+  /// Sets the index.
+  void setIndex(int index) {
+    this.index = index;
+    notifyListeners();
   }
 
   /// Returns target .LRC [File].

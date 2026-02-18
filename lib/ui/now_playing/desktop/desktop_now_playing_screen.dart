@@ -20,7 +20,8 @@ import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/ui/now_playing/desktop/desktop_now_playing_playlist.dart';
 import 'package:harmonoid/ui/now_playing/desktop/desktop_now_playing_screen_carousel.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_colors.dart';
-import 'package:harmonoid/ui/now_playing/now_playing_control_panel.dart';
+import 'package:harmonoid/ui/now_playing/now_playing_audio_control_panel.dart';
+import 'package:harmonoid/ui/now_playing/now_playing_lyrics_control_panel.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_lyrics.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/material_wave_slider.dart';
@@ -94,39 +95,40 @@ class DesktopNowPlayingScreenState extends State<DesktopNowPlayingScreen> {
                           ),
                         ),
                       ),
+                      // Positioned.fill(
+                      //   child: GestureDetector(
+                      //     onTap: () async {
+                      //       if (_fullscreenTimer?.isActive ?? false) {
+                      //         WindowPlus.instance.setIsFullscreen(!await WindowPlus.instance.fullscreen);
+                      //       }
+                      //       _fullscreenTimer = Timer(const Duration(milliseconds: 200), () => _fullscreenTimer = null);
+                      //     },
+                      //     child: Container(
+                      //       color: Colors.transparent,
+                      //     ),
+                      //   ),
+                      // ),
                       Positioned.fill(
-                        child: AnimatedSwitcher(
-                          duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
-                          switchInCurve: Curves.easeInOut,
-                          switchOutCurve: Curves.easeInOut,
-                          child: SizedBox(
-                            key: ValueKey(_desktopNowPlayingScreenLyrics),
-                            width: double.infinity,
-                            height: double.infinity,
-                            child: _desktopNowPlayingScreenLyrics ? const NowPlayingLyrics() : const SizedBox(),
-                          ),
-                        ),
-                      ),
-                      Positioned.fill(
-                        child: GestureDetector(
-                          onTap: () async {
-                            if (_fullscreenTimer?.isActive ?? false) {
-                              WindowPlus.instance.setIsFullscreen(!await WindowPlus.instance.fullscreen);
-                            }
-                            _fullscreenTimer = Timer(const Duration(milliseconds: 200), () => _fullscreenTimer = null);
-                          },
-                          child: Container(
-                            color: Colors.transparent,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 0.0,
-                        left: 0.0,
-                        right: 0.0,
-                        child: Controls(
-                          setDesktopNowPlayingCarousel: setDesktopNowPlayingCarousel,
-                          setDesktopNowPlayingLyrics: setDesktopNowPlayingLyrics,
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: AnimatedSwitcher(
+                                duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+                                switchInCurve: Curves.easeInOut,
+                                switchOutCurve: Curves.easeInOut,
+                                child: SizedBox(
+                                  key: ValueKey(_desktopNowPlayingScreenLyrics),
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  child: _desktopNowPlayingScreenLyrics ? const NowPlayingLyrics() : const SizedBox(),
+                                ),
+                              ),
+                            ),
+                            Controls(
+                              setDesktopNowPlayingCarousel: setDesktopNowPlayingCarousel,
+                              setDesktopNowPlayingLyrics: setDesktopNowPlayingLyrics,
+                            ),
+                          ],
                         ),
                       ),
                       Positioned(
@@ -413,7 +415,7 @@ class Controls extends StatelessWidget {
                         color: nowPlayingColors.backgroundEnabledIcon,
                         icon: Icon(mediaPlayer.state.volume == 0.0 ? Icons.volume_off : (mediaPlayer.state.volume < 50.0 ? Icons.volume_down : Icons.volume_up)),
                         splashRadius: 20.0,
-                        iconSize: 20.0,
+                        iconSize: Theme.of(context).iconTheme.size! * 0.8,
                         tooltip: mediaPlayer.state.volume == 0.0 ? Localization.instance.UNMUTE : Localization.instance.MUTE,
                       ),
                       SizedBox(
@@ -427,13 +429,24 @@ class Controls extends StatelessWidget {
                           onScrolledUp: () => mediaPlayer.setVolume((mediaPlayer.state.volume + 5.0).clamp(0.0, 100.0)),
                         ),
                       ),
+                      const SizedBox(width: 16.0),
                       IconButton(
-                        onPressed: () => NowPlayingControlPanel.show(context),
+                        onPressed: () => NowPlayingLyricsControlPanel.show(context),
                         color: nowPlayingColors.backgroundEnabledIcon,
-                        icon: const Icon(Icons.more_horiz),
+                        icon: const Icon(Icons.text_format),
                         splashRadius: 20.0,
-                        iconSize: 20.0,
-                        tooltip: Localization.instance.CONTROL_PANEL,
+                        tooltip: Localization.instance.LYRICS_CONTROL_PANEL,
+                      ),
+                      IconButton(
+                        onPressed: () => NowPlayingAudioControlPanel.show(context),
+                        color: nowPlayingColors.backgroundEnabledIcon,
+                        icon: Transform.translate(
+                          offset: const Offset(0.0, -1.0),
+                          child: const Icon(Icons.speaker),
+                        ),
+                        splashRadius: 20.0,
+                        iconSize: Theme.of(context).iconTheme.size! * 0.8,
+                        tooltip: Localization.instance.AUDIO_CONTROL_PANEL,
                       ),
                       const Spacer(),
                       IconButton(

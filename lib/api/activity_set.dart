@@ -33,10 +33,9 @@ class ActivitySet {
         ..headers['Content-Type'] = 'application/json'
         ..headers['X-API-Key'] = apiKey;
       final response = await request.send();
-      if (response.statusCode == 200) {
-        final body = utf8.decode(await response.stream.toBytes());
-        return json.decode(body)['cover'];
-      }
+      if (response.statusCode != 200) return null;
+      final body = utf8.decode(await response.stream.toBytes());
+      return json.decode(body)['cover'];
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());

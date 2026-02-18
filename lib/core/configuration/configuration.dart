@@ -18,6 +18,7 @@ import 'package:harmonoid/core/configuration/database/database.dart';
 import 'package:harmonoid/localization/localization_data.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/media_player_state.dart';
+import 'package:harmonoid/models/language.dart';
 import 'package:harmonoid/models/media_library_tab.dart';
 import 'package:harmonoid/models/media_player_state.dart';
 import 'package:harmonoid/models/playback_state.dart';
@@ -103,6 +104,7 @@ class Configuration extends ConfigurationBase {
     _lyricsViewTextAlign = await read<int, TextAlign>(kKeyLyricsViewTextAlign, defaults, (value) => TextAlign.values[value]);
     _lyricsViewUnfocusedFontSize = await read<double, double>(kKeyLyricsViewUnfocusedFontSize, defaults);
     _lyricsViewUnfocusedLineHeight = await read<double, double>(kKeyLyricsViewUnfocusedLineHeight, defaults);
+    _lyricsTranslationLanguage = await read<dynamic, Language>(kKeyLyricsTranslationLanguage, defaults, (value) => Language.fromJson(value));
     _mediaLibraryAddPlaylistToNowPlaying = await read<bool, bool>(kKeyMediaLibraryAddPlaylistToNowPlaying, defaults);
     _mediaLibraryAlbumGroupingParameters = await read<dynamic, Set<AlbumGroupingParameter>>(
       kKeyMediaLibraryAlbumGroupingParameters,
@@ -141,6 +143,7 @@ class Configuration extends ConfigurationBase {
     _notificationLyrics = await read<bool, bool>(kKeyNotificationLyrics, defaults);
     _nowPlayingAudioFormat = await read<bool, bool>(kKeyNowPlayingAudioFormat, defaults);
     _nowPlayingDisplayUponPlay = await read<bool, bool>(kKeyNowPlayingDisplayUponPlay, defaults);
+    _nowPlayingLyricsFtuxCount = await read<int, int>(kKeyNowPlayingLyricsFtuxCount, defaults);
     _nowPlayingStartMixAfterEnding = await read<bool, bool>(kKeyNowPlayingStartMixAfterEnding, defaults);
     _themeAnimationDuration = await read<dynamic, AnimationDuration>(kKeyThemeAnimationDuration, defaults, (value) => AnimationDuration.fromJson(value));
     _themeMaterialStandard = await read<int, int>(kKeyThemeMaterialStandard, defaults);
@@ -193,6 +196,11 @@ Future<LocalizationData> getDefaultLocalization() async {
     debugPrint(stacktrace.toString());
     return const LocalizationData(code: 'en_US', name: 'English', country: 'United States');
   }
+}
+
+/// Returns the default lyrics translation language.
+Future<Language> getDefaultLyricsTranslationLanguage() {
+  return getDefaultLocalization().then((value) => Language(code: value.code.split('_').first, name: value.name));
 }
 
 /// Returns the default directory to save the application data.
