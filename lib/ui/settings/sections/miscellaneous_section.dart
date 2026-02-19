@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
+import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/settings/settings_section.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -22,6 +24,24 @@ class _MiscellaneousSectionState extends State<MiscellaneousSection> {
       subtitle: Localization.instance.SETTINGS_SECTION_MISCELLANEOUS_SUBTITLE,
       contentPadding: const EdgeInsets.symmetric(horizontal: 64.0 - 16.0),
       children: [
+        Consumer<FileSystemMediaLibrary>(
+          builder: (context, mediaLibrary, _) {
+            return ListItem(
+              trailing: Switch(
+                value: mediaLibrary.hideSecondaryArtists,
+                onChanged: (value) async {
+                  await mediaLibrary.setHideSecondaryArtists(value);
+                  await Configuration.instance.set(mediaLibraryHideSecondaryArtists: value);
+                },
+              ),
+              title: Localization.instance.HIDE_SECONDARY_ARTISTS,
+              onTap: () async {
+                await mediaLibrary.setHideSecondaryArtists(!mediaLibrary.hideSecondaryArtists);
+                await Configuration.instance.set(mediaLibraryHideSecondaryArtists: !mediaLibrary.hideSecondaryArtists);
+              },
+            );
+          },
+        ),
         if ( /* MOBILE */ isMobile)
           ListItem(
             trailing: Switch(

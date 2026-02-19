@@ -48,6 +48,7 @@ class FileSystemMediaLibrary extends media_library.FileSystemMediaLibrary with C
     required super.trackSortAscending,
     required super.minimumFileSize,
     required super.albumGroupingParameters,
+    required super.hideSecondaryArtists,
   });
 
   /// Initializes the [instance].
@@ -64,6 +65,7 @@ class FileSystemMediaLibrary extends media_library.FileSystemMediaLibrary with C
     required bool trackSortAscending,
     required int minimumFileSize,
     required Set<AlbumGroupingParameter> albumGroupingParameters,
+    required bool hideSecondaryArtists,
   }) async {
     if (initialized) return;
     initialized = true;
@@ -86,6 +88,7 @@ class FileSystemMediaLibrary extends media_library.FileSystemMediaLibrary with C
       trackSortAscending: trackSortAscending,
       minimumFileSize: minimumFileSize,
       albumGroupingParameters: albumGroupingParameters,
+      hideSecondaryArtists: hideSecondaryArtists,
     );
     // Populate the media library from the database.
     await instance.refresh(

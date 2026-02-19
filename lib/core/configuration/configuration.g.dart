@@ -45,6 +45,7 @@ class ConfigurationBase {
   bool get mediaLibraryFolderFileExplorerShowHiddenFiles => _mediaLibraryFolderFileExplorerShowHiddenFiles!;
   bool get mediaLibraryGenreSortAscending => _mediaLibraryGenreSortAscending!;
   GenreSortType get mediaLibraryGenreSortType => _mediaLibraryGenreSortType!;
+  bool get mediaLibraryHideSecondaryArtists => _mediaLibraryHideSecondaryArtists!;
   int get mediaLibraryMinimumFileSize => _mediaLibraryMinimumFileSize!;
   String get mediaLibraryPath => _mediaLibraryPath!;
   bool get mediaLibraryRefreshUponStart => _mediaLibraryRefreshUponStart!;
@@ -107,6 +108,7 @@ class ConfigurationBase {
     bool? mediaLibraryFolderFileExplorerShowHiddenFiles,
     bool? mediaLibraryGenreSortAscending,
     GenreSortType? mediaLibraryGenreSortType,
+    bool? mediaLibraryHideSecondaryArtists,
     int? mediaLibraryMinimumFileSize,
     String? mediaLibraryPath,
     bool? mediaLibraryRefreshUponStart,
@@ -267,6 +269,10 @@ class ConfigurationBase {
       _mediaLibraryGenreSortType = mediaLibraryGenreSortType;
       await db.setValue(kKeyMediaLibraryGenreSortType, kTypeInteger, integerValue: mediaLibraryGenreSortType.index);
     }
+    if (mediaLibraryHideSecondaryArtists != null) {
+      _mediaLibraryHideSecondaryArtists = mediaLibraryHideSecondaryArtists;
+      await db.setValue(kKeyMediaLibraryHideSecondaryArtists, kTypeBoolean, booleanValue: mediaLibraryHideSecondaryArtists);
+    }
     if (mediaLibraryMinimumFileSize != null) {
       _mediaLibraryMinimumFileSize = mediaLibraryMinimumFileSize;
       await db.setValue(kKeyMediaLibraryMinimumFileSize, kTypeInteger, integerValue: mediaLibraryMinimumFileSize);
@@ -412,6 +418,7 @@ class ConfigurationBase {
       /* Boolean */ kKeyMediaLibraryFolderFileExplorerShowHiddenFiles: false,
       /* Boolean */ kKeyMediaLibraryGenreSortAscending: true,
       /* Integer */ kKeyMediaLibraryGenreSortType: GenreSortType.genre.index,
+      /* Boolean */ kKeyMediaLibraryHideSecondaryArtists: false,
       /* Integer */ kKeyMediaLibraryMinimumFileSize: 0,
       /* String  */ kKeyMediaLibraryPath: kAlbumsPath,
       /* Boolean */ kKeyMediaLibraryRefreshUponStart: false,
@@ -475,6 +482,7 @@ class ConfigurationBase {
   bool? _mediaLibraryFolderFileExplorerShowHiddenFiles;
   bool? _mediaLibraryGenreSortAscending;
   GenreSortType? _mediaLibraryGenreSortType;
+  bool? _mediaLibraryHideSecondaryArtists;
   int? _mediaLibraryMinimumFileSize;
   String? _mediaLibraryPath;
   bool? _mediaLibraryRefreshUponStart;
@@ -539,6 +547,7 @@ const kKeyMediaLibraryFolderFileExplorerSortAscending = 'MEDIA_LIBRARY_FOLDER_FI
 const kKeyMediaLibraryFolderFileExplorerShowHiddenFiles = 'MEDIA_LIBRARY_FOLDER_FILE_EXPLORER_SHOW_HIDDEN_FILES';
 const kKeyMediaLibraryGenreSortAscending = 'MEDIA_LIBRARY_GENRE_SORT_ASCENDING';
 const kKeyMediaLibraryGenreSortType = 'MEDIA_LIBRARY_GENRE_SORT_TYPE';
+const kKeyMediaLibraryHideSecondaryArtists = 'MEDIA_LIBRARY_HIDE_SECONDARY_ARTISTS';
 const kKeyMediaLibraryMinimumFileSize = 'MEDIA_LIBRARY_MINIMUM_FILE_SIZE';
 const kKeyMediaLibraryPath = 'MEDIA_LIBRARY_PATH';
 const kKeyMediaLibraryRefreshUponStart = 'MEDIA_LIBRARY_REFRESH_UPON_START';

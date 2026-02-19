@@ -108,6 +108,7 @@ Future<void> main(List<String> args) async {
       trackSortAscending: Configuration.instance.mediaLibraryTrackSortAscending,
       minimumFileSize: Configuration.instance.mediaLibraryMinimumFileSize,
       albumGroupingParameters: Configuration.instance.mediaLibraryAlbumGroupingParameters,
+      hideSecondaryArtists: Configuration.instance.mediaLibraryHideSecondaryArtists,
     );
     await MediaPlayer.ensureInitialized();
     await Intent.ensureInitialized(args: args);

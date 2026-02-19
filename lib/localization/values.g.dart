@@ -107,6 +107,7 @@ class Values {
   late String HIDE;
   late String HIDE_HIDDEN_FILES;
   late String HIDE_LYRICS;
+  late String HIDE_SECONDARY_ARTISTS;
   late String HISTORY;
   late String IMAGES;
   late String IMPORT;

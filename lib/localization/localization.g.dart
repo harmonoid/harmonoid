@@ -3,6 +3,7 @@
 part of 'localization.dart';
 
 class LocalizationBase extends Values {
+
   late LocalizationData current;
 
   Future<void> set({required LocalizationData value}) async {
@@ -111,6 +112,7 @@ class LocalizationBase extends Values {
     HIDE = map['HIDE']!;
     HIDE_HIDDEN_FILES = map['HIDE_HIDDEN_FILES']!;
     HIDE_LYRICS = map['HIDE_LYRICS']!;
+    HIDE_SECONDARY_ARTISTS = map['HIDE_SECONDARY_ARTISTS']!;
     HISTORY = map['HISTORY']!;
     IMAGES = map['IMAGES']!;
     IMPORT = map['IMPORT']!;

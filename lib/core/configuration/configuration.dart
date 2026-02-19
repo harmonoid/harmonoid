@@ -120,6 +120,7 @@ class Configuration extends ConfigurationBase {
     _mediaLibraryFolderFileExplorerShowHiddenFiles = await read<bool, bool>(kKeyMediaLibraryFolderFileExplorerShowHiddenFiles, defaults);
     _mediaLibraryGenreSortAscending = await read<bool, bool>(kKeyMediaLibraryGenreSortAscending, defaults);
     _mediaLibraryGenreSortType = await read<int, GenreSortType>(kKeyMediaLibraryGenreSortType, defaults, (value) => GenreSortType.values[value]);
+    _mediaLibraryHideSecondaryArtists = await read<bool, bool>(kKeyMediaLibraryHideSecondaryArtists, defaults);
     _mediaLibraryMinimumFileSize = await read<int, int>(kKeyMediaLibraryMinimumFileSize, defaults);
     _mediaLibraryPath = await read<String, String>(kKeyMediaLibraryPath, defaults);
     _mediaLibraryRefreshUponStart = await read<bool, bool>(kKeyMediaLibraryRefreshUponStart, defaults);
