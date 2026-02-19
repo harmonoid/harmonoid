@@ -37,7 +37,7 @@ class _MiscellaneousSectionState extends State<MiscellaneousSection> {
               title: Localization.instance.HIDE_SECONDARY_ARTISTS,
               onTap: () async {
                 await mediaLibrary.setHideSecondaryArtists(!mediaLibrary.hideSecondaryArtists);
-                await Configuration.instance.set(mediaLibraryHideSecondaryArtists: !mediaLibrary.hideSecondaryArtists);
+                await Configuration.instance.set(mediaLibraryHideSecondaryArtists: !Configuration.instance.mediaLibraryHideSecondaryArtists);
               },
             );
           },
