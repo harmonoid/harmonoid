@@ -120,6 +120,20 @@ class _PlusSectionState extends State<PlusSection> {
               ),
               title: Localization.instance.TAG_EDITOR,
             ),
+            ListItem(
+              trailing: Consumer<SubscriptionNotifier>(
+                builder: (context, notifier, child) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Checkbox(
+                      value: notifier.state is SubscriptionValid,
+                      onChanged: (_) {},
+                    ),
+                  );
+                },
+              ),
+              title: Localization.instance.LYRICS_TRANSLATION,
+            ),
           ],
           childrenBuilder: (child) => SubscriptionReveal(child: child),
         );
