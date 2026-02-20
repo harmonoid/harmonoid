@@ -25,6 +25,7 @@ class ArtistImage extends StatelessWidget {
             cacheWidth: cacheWidth,
           ),
           fit: BoxFit.cover,
+          gaplessPlayback: true,
         );
       },
     );

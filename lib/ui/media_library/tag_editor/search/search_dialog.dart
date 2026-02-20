@@ -109,6 +109,7 @@ class _SearchDialogState extends State<SearchDialog> {
                     height: _kListItemHeight,
                     cacheWidth: _kListItemHeight.toInt() * 2,
                     fit: BoxFit.cover,
+                    gaplessPlayback: true,
                   ),
                   onItemPressed: (context, i) => _onItemPressed(results[i]),
                   physics: const NeverScrollableScrollPhysics(),

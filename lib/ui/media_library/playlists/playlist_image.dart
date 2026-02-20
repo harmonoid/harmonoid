@@ -30,6 +30,7 @@ class PlaylistImage extends StatelessWidget {
                 cacheWidth: small ? 64 : null,
               ),
               fit: BoxFit.cover,
+              gaplessPlayback: true,
             ),
           ),
           SizedBox(width: padding),
@@ -46,6 +47,7 @@ class PlaylistImage extends StatelessWidget {
                       cacheWidth: small ? 64 : null,
                     ),
                     fit: BoxFit.cover,
+                    gaplessPlayback: true,
                   ),
                 ),
                 SizedBox(height: padding),
@@ -56,6 +58,7 @@ class PlaylistImage extends StatelessWidget {
                       cacheWidth: small ? 64 : null,
                     ),
                     fit: BoxFit.cover,
+                    gaplessPlayback: true,
                   ),
                 ),
               ],
@@ -76,6 +79,7 @@ class PlaylistImage extends StatelessWidget {
                 cacheWidth: small ? 64 : null,
               ),
               fit: BoxFit.cover,
+              gaplessPlayback: true,
             ),
           ),
           SizedBox(width: padding),
@@ -86,6 +90,7 @@ class PlaylistImage extends StatelessWidget {
                 cacheWidth: small ? 64 : null,
               ),
               fit: BoxFit.cover,
+              gaplessPlayback: true,
             ),
           ),
         ],
@@ -97,6 +102,7 @@ class PlaylistImage extends StatelessWidget {
           cacheWidth: small ? 64 : null,
         ),
         fit: BoxFit.cover,
+        gaplessPlayback: true,
       );
     } else {
       return LayoutBuilder(

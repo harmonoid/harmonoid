@@ -63,6 +63,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                       child: Image(
                         image: cover(item: widget.album),
                         fit: BoxFit.cover,
+                        gaplessPlayback: true,
                       ),
                     ),
                   ),
@@ -75,6 +76,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
           return Image(
             image: cover(item: widget.album),
             fit: BoxFit.cover,
+            gaplessPlayback: true,
           );
         }
         throw UnimplementedError();

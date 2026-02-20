@@ -105,6 +105,7 @@ class _AlbumItemState extends State<AlbumItem> {
                           item: widget.album,
                           cacheWidth: (widget.width * MediaQuery.of(context).devicePixelRatio).toInt(),
                         ),
+                        gaplessPlayback: true,
                       ),
                     ),
                   ),
@@ -178,6 +179,7 @@ class _AlbumItemState extends State<AlbumItem> {
                       cacheWidth: (kMobileHeaderHeight * MediaQuery.of(context).devicePixelRatio).toInt(),
                     ),
                     fit: BoxFit.cover,
+                    gaplessPlayback: true,
                   ),
                   const SizedBox(width: 16.0),
                   Expanded(

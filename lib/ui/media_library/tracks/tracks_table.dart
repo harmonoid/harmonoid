@@ -89,6 +89,7 @@ class _TracksTableState extends State<TracksTable> {
           cacheHeight: linearTileHeight.toInt(),
         ),
         fit: BoxFit.cover,
+        gaplessPlayback: true,
       ),
       popupMenuBuilder: (context, i) => TrackMenuProvider(context, widget.tracks[i]).getPopupMenuItems(),
       onItemPressed: (context, i) {

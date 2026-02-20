@@ -134,6 +134,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
               cacheHeight: 96 * 2,
             ),
             fit: BoxFit.cover,
+            gaplessPlayback: true,
           );
         },
         popupMenuBuilder: (context, file) {

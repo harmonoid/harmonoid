@@ -100,6 +100,7 @@ class _TagEditorScreenState extends State<TagEditorScreen> with ScrollController
                               : MemoryImage(data),
                           width: double.infinity,
                           fit: BoxFit.cover,
+                          gaplessPlayback: true,
                         ),
                       ),
                     ),
