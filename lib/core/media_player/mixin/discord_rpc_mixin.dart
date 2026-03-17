@@ -120,23 +120,27 @@ mixin DiscordRpcMixin implements BaseMediaPlayer {
 
   Future<String?> _getFileUrl(Playable playable, FutureOr<File?> inputFuture) async {
     final input = await inputFuture;
-    final output = await TempFile.create();
 
     if (input == null) return null;
 
+    final output = await TempFile.create();
+    final deviceId = Configuration.instance.identifier;
+    final activitySet = ActivitySet();
+
     try {
-      final deviceId = Configuration.instance.identifier;
-      final activitySet = ActivitySet();
+      try {
+        final cmd = img.Command()
+          ..decodeImageFile(input.path)
+          ..copyResize(width: 256)
+          ..encodeJpg(quality: 85)
+          ..writeToFile(output.path);
 
-      final cmd = img.Command()
-        ..decodeImageFile(input.path)
-        ..copyResize(width: 256)
-        ..encodeJpg(quality: 85)
-        ..writeToFile(output.path);
+        await cmd.executeThread();
 
-      await cmd.executeThread();
-
-      return await activitySet(deviceId, playable, output);
+        return await activitySet(deviceId, playable, output);
+      } catch (_) {
+        return await activitySet(deviceId, playable, input);
+      }
     } finally {
       await output.delete_();
     }
