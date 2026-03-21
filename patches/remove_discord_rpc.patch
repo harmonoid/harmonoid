@@ -1,5 +1,5 @@
-diff --git a/lib/core/media_player/media_player.dart b/lib/core/media_player/media_player.dart
-index 881fc261..d5bfa477 100644
+﻿diff --git a/lib/core/media_player/media_player.dart b/lib/core/media_player/media_player.dart
+index c26ed6c9..9ba2ccc0 100644
 --- a/lib/core/media_player/media_player.dart
 +++ b/lib/core/media_player/media_player.dart
 @@ -11,7 +11,6 @@ import 'package:harmonoid/core/filesystem_media_library.dart';
@@ -10,18 +10,16 @@ index 881fc261..d5bfa477 100644
  import 'package:harmonoid/core/media_player/mixin/history_playlist_mixin.dart';
  import 'package:harmonoid/core/media_player/mixin/lastfm_mixin.dart';
  import 'package:harmonoid/core/media_player/mixin/mpris_mixin.dart';
-@@ -41,9 +40,7 @@ import 'package:harmonoid/utils/constants.dart';
- /// Implementation to handle the media playback & other related functionalities.
+@@ -42,7 +41,7 @@ import 'package:harmonoid/utils/constants.dart';
  ///
  /// {@endtemplate}
--class MediaPlayer extends ChangeNotifier
+ class MediaPlayer extends ChangeNotifier
 -    with AudioServiceMixin, AudioSessionMixin, DiscordRpcMixin, HistoryPlaylistMixin, LastFmMixin, MprisMixin, SystemMediaTransportControlsMixin, WindowsTaskbarMixin
--    implements BaseMediaPlayer {
-+class MediaPlayer extends ChangeNotifier with AudioServiceMixin, AudioSessionMixin, HistoryPlaylistMixin, LastFmMixin, MprisMixin, SystemMediaTransportControlsMixin, WindowsTaskbarMixin implements BaseMediaPlayer {
++    with AudioServiceMixin, AudioSessionMixin, HistoryPlaylistMixin, LastFmMixin, MprisMixin, SystemMediaTransportControlsMixin, WindowsTaskbarMixin
+     implements BaseMediaPlayer {
    static const Duration kCrossfadeDefaultDuration = Duration(seconds: 5);
    static const Duration kCrossfadeMinDuration = Duration(seconds: 2);
-   static const Duration kCrossfadeMaxDuration = Duration(seconds: 30);
-@@ -69,7 +66,6 @@ class MediaPlayer extends ChangeNotifier
+@@ -69,7 +68,6 @@ class MediaPlayer extends ChangeNotifier
        [
          ensureInitializedAudioService(),
          ensureInitializedAudioSession(),
@@ -29,7 +27,7 @@ index 881fc261..d5bfa477 100644
          ensureInitializedHistoryPlaylist(),
          ensureInitializedLastFm(),
          ensureInitializedMpris(),
-@@ -445,7 +441,6 @@ class MediaPlayer extends ChangeNotifier
+@@ -457,7 +455,6 @@ class MediaPlayer extends ChangeNotifier
      _tagReader.dispose();
      disposeAudioService();
      disposeAudioSession();
@@ -39,10 +37,10 @@ index 881fc261..d5bfa477 100644
      disposeMpris();
 diff --git a/lib/core/media_player/mixin/discord_rpc_mixin.dart b/lib/core/media_player/mixin/discord_rpc_mixin.dart
 deleted file mode 100644
-index 009750ef..00000000
+index bdf48f2f..00000000
 --- a/lib/core/media_player/mixin/discord_rpc_mixin.dart
 +++ /dev/null
-@@ -1,153 +0,0 @@
+@@ -1,157 +0,0 @@
 -// ignore_for_file: implementation_imports
 -
 -import 'dart:async';
@@ -165,23 +163,27 @@ index 009750ef..00000000
 -
 -  Future<String?> _getFileUrl(Playable playable, FutureOr<File?> inputFuture) async {
 -    final input = await inputFuture;
--    final output = await TempFile.create();
 -
 -    if (input == null) return null;
 -
+-    final output = await TempFile.create();
+-    final deviceId = Configuration.instance.identifier;
+-    final activitySet = ActivitySet();
+-
 -    try {
--      final deviceId = Configuration.instance.identifier;
--      final activitySet = ActivitySet();
+-      try {
+-        final cmd = img.Command()
+-          ..decodeImageFile(input.path)
+-          ..copyResize(width: 256)
+-          ..encodeJpg(quality: 85)
+-          ..writeToFile(output.path);
 -
--      final cmd = img.Command()
--        ..decodeImageFile(input.path)
--        ..copyResize(width: 256)
--        ..encodeJpg(quality: 85)
--        ..writeToFile(output.path);
+-        await cmd.executeThread();
 -
--      await cmd.executeThread();
--
--      return await activitySet(deviceId, playable, output);
+-        return await activitySet(deviceId, playable, output);
+-      } catch (_) {
+-        return await activitySet(deviceId, playable, input);
+-      }
 -    } finally {
 -      await output.delete_();
 -    }
@@ -209,7 +211,7 @@ index 694aaa20..cb4a99f0 100644
        ..resetFlagsSystemMediaTransportControls();
      NowPlayingColorPaletteNotifier.instance.resetCurrent();
 diff --git a/lib/utils/rendering.dart b/lib/utils/rendering.dart
-index 4137da72..7b5df3bf 100644
+index 017afe07..77dd4a43 100644
 --- a/lib/utils/rendering.dart
 +++ b/lib/utils/rendering.dart
 @@ -219,7 +219,6 @@ ImageProvider cover({
@@ -221,7 +223,7 @@ index 4137da72..7b5df3bf 100644
            ..resetFlagsSystemMediaTransportControls();
          NowPlayingColorPaletteNotifier.instance.resetCurrent();
 diff --git a/pubspec.yaml b/pubspec.yaml
-index 77e3b8ee..b3333f19 100644
+index c163c1d4..e5d4ef87 100644
 --- a/pubspec.yaml
 +++ b/pubspec.yaml
 @@ -27,7 +27,6 @@ dependencies:
@@ -232,3 +234,4 @@ index 77e3b8ee..b3333f19 100644
    flutter_displaymode: ^0.7.0
    flutter_local_notifications:
      git:
+
