@@ -447,12 +447,6 @@ jobs:
                 --dart-define=SUPABASE_PUBLISHABLE_KEY=$SUPABASE_PUBLISHABLE_KEY \
                 --dart-define=REVENUECAT_API_KEY=$REVENUECAT_API_KEY
 
-              # Apply ARM64 CJK fix using krystic/flutter-arm-cjk-fix tool.
-              # Use "-e" for non-Snap executable path (this bundle is not a Snap app).
-              git clone --depth 1 https://github.com/krystic/flutter-arm-cjk-fix.git /tmp/flutter-arm-cjk-fix
-              chmod +x /tmp/flutter-arm-cjk-fix/flutter-font-fix
-              /tmp/flutter-arm-cjk-fix/flutter-font-fix -e build/linux/arm64/release/bundle/harmonoid
-
               # Bundle RPM
               cp -fr build/linux/arm64/release/bundle linux/debian/usr/share/harmonoid
               mkdir -p linux/debian/usr/bin
