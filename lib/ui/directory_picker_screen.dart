@@ -36,14 +36,16 @@ class _DirectoryPickerScreenState extends State<DirectoryPickerScreen> {
   @override
   void initState() {
     super.initState();
-    AndroidStorageController.instance.getStorageDirectories().then((value) {
-      setState(() {
-        _storageDirectories = value;
-        if (value.length == 1) {
-          _navigateTo(value.first.path);
-        }
+    if (Platform.isAndroid) {
+      AndroidStorageController.instance.getStorageDirectories().then((value) {
+        setState(() {
+          _storageDirectories = value;
+          if (value.length == 1) {
+            _navigateTo(value.first.path);
+          }
+        });
       });
-    });
+    }
   }
 
   @override

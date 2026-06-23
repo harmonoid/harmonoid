@@ -28,12 +28,12 @@ class Intent {
 
   /// {@macro intent}
   Intent._() {
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid || Platform.isIOS) {
       _intentControllerMethodChannel.setMethodCallHandler((call) async {
         debugPrint('Intent: _: Arguments: ${call.arguments}');
         debugPrint('Intent: _: Notify invoked: ${instance._notifyInvoked}');
         // Skip calls from platform channel until [notify] has been invoked at least once.
-        // This case happens only for the very first call i.e. Flutter engine didn't start yet & Kotlin invoked a method through the platform channel.
+        // This case happens only for the very first call i.e. Flutter engine didn't start yet & native code invoked a method through the platform channel.
         if (!instance._notifyInvoked) {
           return;
         }

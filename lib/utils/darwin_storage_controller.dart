@@ -4,14 +4,14 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
 
-/// {@template macos_storage_controller}
+/// {@template darwin_storage_controller}
 ///
-/// MacOSStorageController
-/// ----------------------
-/// Implementation to handle macOS specific file operations.
+/// DarwinStorageController
+/// -----------------------
+/// Implementation to handle macOS & iOS specific file operations.
 ///
 /// {@endtemplate}
-class MacOSStorageController {
+class DarwinStorageController {
   static const String kMethodChannelName = 'com.alexmercerind.harmonoid/storage_controller';
   static const String kPickDirectoryMethodName = 'pickDirectory';
   static const String kPickFileMethodName = 'pickFile';
@@ -24,14 +24,14 @@ class MacOSStorageController {
   static const String kInvalidateAccessPathArg = 'path';
 
   /// Singleton instance.
-  static const MacOSStorageController instance = MacOSStorageController._();
+  static const DarwinStorageController instance = DarwinStorageController._();
 
   /// Whether the [instance] is initialized.
   static bool initialized = false;
 
   /// Initializes the [instance].
   static Future<void> ensureInitialized({required Set<Directory> directories}) async {
-    if (!Platform.isMacOS) return;
+    if (!Platform.isMacOS && !Platform.isIOS) return;
     if (initialized) return;
     initialized = true;
 
@@ -40,8 +40,8 @@ class MacOSStorageController {
     }
   }
 
-  /// {@macro macos_storage_controller}
-  const MacOSStorageController._();
+  /// {@macro darwin_storage_controller}
+  const DarwinStorageController._();
 
   Future<Directory?> pickDirectory({
     // It's important to preserve access to any directory picked by the user.

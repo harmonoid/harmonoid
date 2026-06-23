@@ -23,7 +23,7 @@ import 'package:harmonoid/ui/harmonoid.dart';
 import 'package:harmonoid/ui/splash.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/constants.dart';
-import 'package:harmonoid/utils/macos_storage_controller.dart';
+import 'package:harmonoid/utils/darwin_storage_controller.dart';
 import 'package:harmonoid/utils/platform_tag_reader_factory.dart';
 import 'package:harmonoid/utils/window_lifecycle.dart';
 
@@ -67,6 +67,16 @@ Future<void> main(List<String> args) async {
         }
       }
     }
+    if (Platform.isIOS) {
+      await SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.edgeToEdge,
+        overlays: SystemUiOverlay.values,
+      );
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+    }
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
       await WindowPlus.ensureInitialized(
         application: kApplication,
@@ -86,9 +96,8 @@ Future<void> main(List<String> args) async {
     );
     await SubscriptionNotifier.ensureInitialized();
 
-    // HACK:
-    if (Platform.isMacOS) {
-      await MacOSStorageController.ensureInitialized(directories: Configuration.instance.mediaLibraryDirectories);
+    if (Platform.isMacOS || Platform.isIOS) {
+      await DarwinStorageController.ensureInitialized(directories: Configuration.instance.mediaLibraryDirectories);
     }
 
     TagReader.platformTagReaderFactory = platformTagReaderFactoryImpl;

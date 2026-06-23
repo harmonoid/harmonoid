@@ -61,6 +61,11 @@ dependencies:
       url: https://github.com/media-kit/media-kit.git
       ref: 7ff27650
       path: libs/android/media_kit_libs_android_audio
+  media_kit_libs_ios_audio:
+    git:
+      url: https://github.com/media-kit/media-kit.git
+      ref: 7ff27650
+      path: libs/ios/media_kit_libs_ios_audio
   media_kit_libs_linux:
     git:
       url: https://github.com/media-kit/media-kit.git
@@ -88,7 +93,7 @@ dependencies:
   permission_handler: ^12.0.1
   pool: ^1.5.2
   provider: ^6.0.1
-  safe_local_storage: ^2.0.3
+  safe_local_storage: ^2.0.4
   share_plus: ^12.0.1
   sqlite3: ^2.9.4
   sqlite3_flutter_libs: ^0.5.40
@@ -131,7 +136,8 @@ dependency_overrides:
       url: https://github.com/localsend/permission_handler_windows_noop.git
       ref: 2dadd8afbf81e0e3e4791d7144e689555e58f649
   # https://github.com/harmonoid/harmonoid/issues/587#issue-3850475343
-  safe_local_storage: ^2.0.3
+  # https://github.com/alexmercerind/safe_local_storage/commit/984eac5927ffddbfe621991ad1b5a8af9673ef97
+  safe_local_storage: ^2.0.4
   vector_math: 2.2.0
 flutter:
   uses-material-design: true

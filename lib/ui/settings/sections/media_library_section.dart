@@ -15,7 +15,7 @@ import 'package:harmonoid/mappers/media_library_tab.dart';
 import 'package:harmonoid/models/media_library_tab.dart';
 import 'package:harmonoid/ui/settings/settings_section.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
-import 'package:harmonoid/utils/macos_storage_controller.dart';
+import 'package:harmonoid/utils/darwin_storage_controller.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
@@ -102,7 +102,9 @@ class MediaLibrarySection extends StatelessWidget {
       }
       await Configuration.instance.removeMediaLibraryDirectory(directory);
       await mediaLibrary.removeDirectories({directory});
-      await MacOSStorageController.instance.invalidateAccess(directory);
+      if (Platform.isMacOS || Platform.isIOS) {
+        await DarwinStorageController.instance.invalidateAccess(directory);
+      }
     });
   }
 
@@ -568,11 +570,13 @@ class _MobileMediaLibrarySectionState extends State<MobileMediaLibrarySection> {
   @override
   void initState() {
     super.initState();
-    AndroidStorageController.instance.getStorageDirectories().then((value) {
-      setState(() {
-        _storageDirectories = value;
+    if (Platform.isAndroid) {
+      AndroidStorageController.instance.getStorageDirectories().then((value) {
+        setState(() {
+          _storageDirectories = value;
+        });
       });
-    });
+    }
   }
 
   @override

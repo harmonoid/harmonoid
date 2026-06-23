@@ -10,3 +10,4 @@ linter:
     prefer_const_constructors: true
 formatter:
   trailing_commas: preserve
+  page_width: 200

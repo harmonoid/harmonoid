@@ -11,7 +11,7 @@ import 'package:harmonoid/extensions/configuration.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/constants.dart';
-import 'package:harmonoid/utils/macos_storage_controller.dart';
+import 'package:harmonoid/utils/darwin_storage_controller.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 class MediaLibraryInaccessibleDirectoriesScreen extends StatefulWidget {
@@ -97,7 +97,9 @@ class _MediaLibraryInaccessibleDirectoriesScreenState extends State<MediaLibrary
 
       await refresh();
 
-      await MacOSStorageController.instance.invalidateAccess(directory);
+      if (Platform.isMacOS || Platform.isIOS) {
+        await DarwinStorageController.instance.invalidateAccess(directory);
+      }
     } catch (_) {}
     removing = false;
   }

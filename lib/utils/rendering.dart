@@ -24,7 +24,7 @@ import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/android_utils.dart';
 import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/constants.dart';
-import 'package:harmonoid/utils/macos_storage_controller.dart';
+import 'package:harmonoid/utils/darwin_storage_controller.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
 bool get isMaterial3 => Theme.of(rootNavigatorKey.currentContext!).extension<MaterialStandard>()?.value == 3;
@@ -506,8 +506,8 @@ Future<void> showMessage(BuildContext context, String title, String subtitle) as
 }
 
 Future<File?> pickFile({Set<String>? extensions}) async {
-  if (Platform.isMacOS) {
-    return MacOSStorageController.instance.pickFile(extensions?.toList() ?? []);
+  if (Platform.isMacOS || Platform.isIOS) {
+    return DarwinStorageController.instance.pickFile(extensions?.toList() ?? []);
   }
 
   final result = await FilePicker.platform.pickFiles(
@@ -530,8 +530,8 @@ Future<Directory?> pickDirectory() async {
   if (Platform.isAndroid) {
     return router.push('/$kDirectoryPickerPath');
   }
-  if (Platform.isMacOS) {
-    return MacOSStorageController.instance.pickDirectory();
+  if (Platform.isMacOS || Platform.isIOS) {
+    return DarwinStorageController.instance.pickDirectory();
   }
   final path = await FilePicker.platform.getDirectoryPath();
   return path != null ? Directory(path) : null;
@@ -750,7 +750,9 @@ Future<void> showAddToPlaylistDialog(
           builder: (context, mediaLibrary, _) {
             final playlists = mediaLibrary.playlists.playlists;
             return ListView(
-              padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).padding.bottom,
+              ),
               controller: controller,
               shrinkWrap: true,
               children: [

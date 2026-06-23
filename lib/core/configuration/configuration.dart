@@ -25,7 +25,7 @@ import 'package:harmonoid/models/playback_state.dart';
 import 'package:harmonoid/ui/router.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/constants.dart';
-import 'package:harmonoid/utils/macos_storage_controller.dart';
+import 'package:harmonoid/utils/darwin_storage_controller.dart';
 
 part 'configuration.g.dart';
 
@@ -205,6 +205,9 @@ Future<String> getDefaultDirectory() async {
   if (Platform.isAndroid) {
     final result = await AndroidStorageController.instance.getCacheDirectory();
     return path.normalize(result.path);
+  } else if (Platform.isIOS) {
+    final result = await path.getApplicationSupportDirectory();
+    return path.normalize(result.path);
   } else if (Platform.isLinux) {
     String? value;
 
@@ -275,6 +278,9 @@ Future<String> getLegacyDefaultDirectory() async {
   if (Platform.isAndroid) {
     final result = await AndroidStorageController.instance.getCacheDirectory();
     return path.normalize(result.path);
+  } else if (Platform.isIOS) {
+    final result = await path.getApplicationSupportDirectory();
+    return path.normalize(result.path);
   } else if (Platform.isLinux) {
     final result = Platform.environment['HOME'];
     return path.normalize(result!);
@@ -324,6 +330,9 @@ Future<List<String>> getDefaultMediaLibraryDirectories() async {
   if (Platform.isAndroid) {
     final result = await AndroidStorageController.instance.getDefaultMediaLibraryDirectory();
     return [path.normalize(result.path)];
+  } else if (Platform.isIOS || Platform.isMacOS) {
+    final result = await DarwinStorageController.instance.getDefaultMediaLibraryDirectory();
+    return [if (result != null) result.path];
   } else if (Platform.isLinux) {
     String? value;
 
@@ -356,11 +365,7 @@ Future<List<String>> getDefaultMediaLibraryDirectories() async {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
     }
-
     return [value!];
-  } else if (Platform.isMacOS) {
-    final result = await MacOSStorageController.instance.getDefaultMediaLibraryDirectory();
-    return [if (result != null) result.path];
   } else if (Platform.isWindows) {
     String? value;
 
