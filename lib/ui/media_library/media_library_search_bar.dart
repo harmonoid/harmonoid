@@ -26,6 +26,16 @@ class MediaLibrarySearchBar extends StatelessWidget {
         right: margin,
       ),
       child: SearchAnchor(
+        viewLeading: IconButton(
+          onPressed: () {
+            Navigator.of(context).maybePop();
+            mediaLibrarySearchController.text = '';
+          },
+          tooltip: Localization.instance.BACK,
+          icon: const Icon(Icons.arrow_back),
+          iconSize: 24.0,
+          splashRadius: 20.0,
+        ),
         searchController: mediaLibrarySearchController,
         viewHintText: Localization.instance.SEARCH_HINT,
         builder: (context, controller) {
