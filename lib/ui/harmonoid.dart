@@ -29,10 +29,10 @@ import 'package:harmonoid/ui/update/state/update_notifier.dart';
 import 'package:harmonoid/ui/update/update.dart';
 import 'package:harmonoid/ui/user/login/login.dart';
 import 'package:harmonoid/utils/actions.dart';
-import 'package:harmonoid/utils/android_utils.dart';
 import 'package:harmonoid/utils/keyboard_shortcuts.dart';
 import 'package:harmonoid/utils/macos_menu_bar.dart';
 import 'package:harmonoid/utils/mouse_navigation.dart';
+import 'package:harmonoid/utils/platform_utils.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 class Harmonoid extends StatefulWidget {
@@ -84,7 +84,7 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
       return true;
     }
     if (!router.canPop() && !fileExplorerCanPop) {
-      AndroidUtils.instance.moveTaskToBack();
+      PlatformUtils.instance.moveTaskToBack();
       return true;
     }
     return super.didPopRoute();

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:harmonoid/utils/android_storage_controller.dart';
+import 'package:harmonoid/utils/platform_utils.dart';
 
 /// {@template theme_notifier}
 ///
@@ -66,7 +67,7 @@ class ThemeNotifier extends ChangeNotifier {
       debugPrint(stacktrace.toString());
     }
     try {
-      final accentColor = await DynamicColorPlugin.getAccentColor();
+      final accentColor = await PlatformUtils.instance.getSystemAccentColor() ?? await DynamicColorPlugin.getAccentColor();
       if (accentColor != null) {
         systemLightColorScheme ??= ColorScheme.fromSeed(seedColor: accentColor, brightness: Brightness.light);
         systemDarkColorScheme = ColorScheme.fromSeed(seedColor: accentColor, brightness: Brightness.dark);

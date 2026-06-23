@@ -11,20 +11,22 @@ class LoginNotifier extends ChangeNotifier {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController otpController = TextEditingController();
+  final FocusNode emailFocusNode = FocusNode();
+  final FocusNode otpFocusNode = FocusNode();
   bool loading = false;
   bool otpSent = false;
   String? message;
   String? error;
 
-  VoidCallback? get onPressed => loading
-      ? null
-      : () {
-          if (otpSent) {
-            _verify();
-          } else {
-            _authenticate();
-          }
-        };
+  VoidCallback? get onPressed => loading ? null : submit;
+
+  void submit() {
+    if (otpSent) {
+      _verify();
+    } else {
+      _authenticate();
+    }
+  }
 
   Future<void> _authenticate() async {
     if (!formKey.currentState!.validate()) return;
@@ -40,6 +42,9 @@ class LoginNotifier extends ChangeNotifier {
       loading = false;
       message = Localization.instance.OTP_SEND_SUCCESS;
       notifyListeners();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        otpFocusNode.requestFocus();
+      });
     } on AuthException catch (exception) {
       loading = false;
       error = exception.message;
@@ -81,5 +86,7 @@ class LoginNotifier extends ChangeNotifier {
     super.dispose();
     emailController.dispose();
     otpController.dispose();
+    emailFocusNode.dispose();
+    otpFocusNode.dispose();
   }
 }

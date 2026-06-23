@@ -25,13 +25,15 @@ class LoginForm extends StatelessWidget {
               children: [
                 DefaultTextFormField(
                   controller: notifier.emailController,
+                  focusNode: notifier.emailFocusNode,
                   keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
+                  textInputAction: TextInputAction.done,
                   enabled: !notifier.otpSent,
                   autofocus: true,
                   autocorrect: false,
                   style: Theme.of(context).textTheme.bodyMedium,
                   decoration: InputDecoration(hintText: Localization.instance.EMAIL),
+                  onFieldSubmitted: (_) => notifier.onPressed?.call(),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return '';
@@ -45,6 +47,7 @@ class LoginForm extends StatelessWidget {
                 const SizedBox(height: 8.0),
                 DefaultTextFormField(
                   controller: notifier.otpController,
+                  focusNode: notifier.otpFocusNode,
                   keyboardType: TextInputType.number,
                   textInputAction: TextInputAction.done,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -53,6 +56,7 @@ class LoginForm extends StatelessWidget {
                   autocorrect: false,
                   style: Theme.of(context).textTheme.bodyMedium,
                   decoration: InputDecoration(hintText: Localization.instance.OTP),
+                  onFieldSubmitted: (_) => notifier.onPressed?.call(),
                   validator: (value) {
                     if (!notifier.otpSent) return null;
                     if (value == null || value.trim().isEmpty) {

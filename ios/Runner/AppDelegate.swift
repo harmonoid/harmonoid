@@ -7,6 +7,7 @@ import UniformTypeIdentifiers
 @objc class AppDelegate: FlutterAppDelegate, UIDocumentPickerDelegate {
     static let kIntentControllerMethodChannelName = "com.alexmercerind.harmonoid/intent_controller"
     static let kStorageControllerMethodChannelName = "com.alexmercerind.harmonoid/storage_controller"
+    static let kUtilsMethodChannelName = "com.alexmercerind.harmonoid/utils"
     
     static let kNotifyIntentMethodName = "notifyIntent"
     
@@ -15,6 +16,7 @@ import UniformTypeIdentifiers
     static let kPreserveAccessMethodName = "preserveAccess"
     static let kInvalidateAccessMethodName = "invalidateAccess"
     static let kGetDefaultMediaLibraryDirectoryMethodName = "getDefaultMediaLibraryDirectory"
+    static let kGetSystemAccentColorMethodName = "getSystemAccentColor"
 
     static let kPickFileAllowedFileTypesArg = "allowedFileTypes"
     static let kPreserveAccessPathArg = "path"
@@ -22,6 +24,7 @@ import UniformTypeIdentifiers
     
     private var intentControllerMethodChannel: FlutterMethodChannel?
     private var storageControllerMethodChannel: FlutterMethodChannel?
+    private var utilsMethodChannel: FlutterMethodChannel?
     private var documentPickerResult: FlutterResult?
     private var uri: String?
     
@@ -57,6 +60,19 @@ import UniformTypeIdentifiers
                     self.flutterInvalidateAccess(call: call, result: result)
                 } else if (call.method == AppDelegate.kGetDefaultMediaLibraryDirectoryMethodName) {
                     self.flutterGetDefaultMediaLibraryDirectory(call: call, result: result)
+                } else {
+                    result(FlutterMethodNotImplemented)
+                }
+            })
+            
+            utilsMethodChannel = FlutterMethodChannel(
+                name: AppDelegate.kUtilsMethodChannelName,
+                binaryMessenger: controller.binaryMessenger
+            )
+            utilsMethodChannel?.setMethodCallHandler({
+                (_ call: FlutterMethodCall, _ result: FlutterResult) -> Void in
+                if (call.method == AppDelegate.kGetSystemAccentColorMethodName) {
+                    result(self.systemAccentColor())
                 } else {
                     result(FlutterMethodNotImplemented)
                 }
@@ -134,6 +150,24 @@ import UniformTypeIdentifiers
     
     private func flutterGetDefaultMediaLibraryDirectory(call: FlutterMethodCall, result: FlutterResult) {
         result(defaultMediaLibraryDirectory()?.path)
+    }
+    
+    private func systemAccentColor() -> Int? {
+        let traits = window?.rootViewController?.traitCollection ?? UIScreen.main.traitCollection
+        let color = (window?.tintColor ?? UIColor.systemBlue).resolvedColor(with: traits)
+        var red: CGFloat = 0.0
+        var green: CGFloat = 0.0
+        var blue: CGFloat = 0.0
+        var alpha: CGFloat = 0.0
+        guard color.getRed(&red, green: &green, blue: &blue, alpha: &alpha) else {
+            return nil
+        }
+        
+        let a = Int(round(alpha * 255.0)) & 0xFF
+        let r = Int(round(red * 255.0)) & 0xFF
+        let g = Int(round(green * 255.0)) & 0xFF
+        let b = Int(round(blue * 255.0)) & 0xFF
+        return (a << 24) | (r << 16) | (g << 8) | b
     }
     
     private func beginDocumentPicker(result: @escaping FlutterResult) -> Bool {

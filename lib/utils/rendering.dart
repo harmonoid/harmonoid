@@ -21,10 +21,10 @@ import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/ui/media_library/artists/state/artist_image_notifier.dart';
 import 'package:harmonoid/ui/media_library/playlists/playlist_item.dart';
 import 'package:harmonoid/ui/router.dart';
-import 'package:harmonoid/utils/android_utils.dart';
 import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/darwin_storage_controller.dart';
+import 'package:harmonoid/utils/platform_utils.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
 bool get isMaterial3 => Theme.of(rootNavigatorKey.currentContext!).extension<MaterialStandard>()?.value == 3;
@@ -665,9 +665,9 @@ Future<void> showAddToPlaylistDialog(
       final entry = track?.title ?? playable?.playlistEntryTitle;
       final playlistName = playlist.name;
       if (entry != null) {
-        AndroidUtils.instance.showToast(Localization.instance.ADDED_ENTRY_TO_PLAYLIST.replaceAll('"ENTRY"', entry).replaceAll('"PLAYLIST"', playlistName));
+        PlatformUtils.instance.showToast(Localization.instance.ADDED_ENTRY_TO_PLAYLIST.replaceAll('"ENTRY"', entry).replaceAll('"PLAYLIST"', playlistName));
       } else {
-        AndroidUtils.instance.showToast(Localization.instance.ADDED_N_ENTRIES_TO_PLAYLIST.replaceAll('"N"', tracks?.length.toString() ?? '0').replaceAll('"PLAYLIST"', playlistName));
+        PlatformUtils.instance.showToast(Localization.instance.ADDED_N_ENTRIES_TO_PLAYLIST.replaceAll('"N"', tracks?.length.toString() ?? '0').replaceAll('"PLAYLIST"', playlistName));
       }
     }
   }
