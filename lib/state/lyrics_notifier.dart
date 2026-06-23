@@ -38,8 +38,9 @@ import 'package:harmonoid/utils/android_storage_controller.dart';
 /// {@endtemplate}
 class LyricsNotifier extends ChangeNotifier {
   static const _kNotificationId = 0;
-  static const _kNotificationChannelId = 'com.alexmercerind.harmonoid.lyrics';
   static const _kNotificationChannelName = 'Lyrics';
+  static const _kNotificationChannelId = 'com.alexmercerind.harmonoid.lyrics';
+  static const _kNotificationCategoryId = 'com.alexmercerind.harmonoid.lyrics.category';
   static const _kNotificationHideActionId = 'com.alexmercerind.harmonoid.lyrics.hide';
 
   /// Singleton instance.
@@ -329,10 +330,32 @@ class LyricsNotifier extends ChangeNotifier {
 
   /// Initializes the notification.
   Future<void> initializeNotification() async {
-    if (!Platform.isAndroid) return;
+    if (!(Platform.isAndroid || Platform.isIOS)) return;
     if (_initializeNotificationInvoked) return;
     _initializeNotificationInvoked = true;
-    const initializationSettings = InitializationSettings(android: AndroidInitializationSettings('ic_stat_format_color_text'));
+    final initializationSettings = InitializationSettings(
+      android: const AndroidInitializationSettings('ic_stat_format_color_text'),
+      iOS: DarwinInitializationSettings(
+        requestCriticalPermission: false,
+        requestProvisionalPermission: false,
+        requestAlertPermission: false,
+        requestSoundPermission: false,
+        requestBadgePermission: false,
+        defaultPresentSound: false,
+        defaultPresentBadge: false,
+        notificationCategories: [
+          DarwinNotificationCategory(
+            _kNotificationCategoryId,
+            actions: [
+              DarwinNotificationAction.plain(
+                _kNotificationHideActionId,
+                Localization.instance.HIDE,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
     await FlutterLocalNotificationsPlugin().initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: _onDidReceiveNotificationResponse,
@@ -382,6 +405,16 @@ class LyricsNotifier extends ChangeNotifier {
               ),
             ],
           ),
+          iOS: const DarwinNotificationDetails(
+            presentAlert: false,
+            presentBanner: false,
+            presentList: false,
+            presentSound: false,
+            presentBadge: false,
+            threadIdentifier: _kNotificationChannelId,
+            categoryIdentifier: _kNotificationCategoryId,
+            interruptionLevel: InterruptionLevel.passive,
+          ),
         ),
       );
     });
@@ -396,8 +429,9 @@ class LyricsNotifier extends ChangeNotifier {
 
   /// Invokes the [callback] if the notification can be handled.
   Future<void> ensureNotification(void Function() callback) async {
-    if (!Platform.isAndroid) return;
-    if (!(AndroidStorageController.instance.version < 33 || await Permission.notification.isGranted)) return;
+    if (!(Platform.isAndroid || Platform.isIOS)) return;
+    if (Platform.isAndroid && !(AndroidStorageController.instance.version < 33 || await Permission.notification.isGranted)) return;
+    if (Platform.isIOS && !(await Permission.notification.isGranted)) return;
     if (!_initializeNotificationInvoked) return;
     if (!Configuration.instance.notificationLyrics) return;
     if (await isNotificationHidden()) return;
@@ -418,7 +452,7 @@ class LyricsNotifier extends ChangeNotifier {
 @pragma('vm:entry-point')
 void _onDidReceiveNotificationResponse(NotificationResponse notificationResponse) async {
   if (notificationResponse.actionId == LyricsNotifier._kNotificationHideActionId) {
-    await AndroidStorageController.ensureInitialized();
+    if (Platform.isAndroid) await AndroidStorageController.ensureInitialized();
     await Configuration.ensureInitialized();
     await Configuration.instance.set(mobileNotificationLyricsHidden: true);
   }

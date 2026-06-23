@@ -4,6 +4,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart' hide MediaLibrary, FileSystemMediaLibrary;
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
@@ -579,6 +580,16 @@ class _MobileMediaLibrarySectionState extends State<MobileMediaLibrarySection> {
     }
   }
 
+  String _formatDirectory(String value) {
+    if (Platform.isAndroid) {
+      return value.replaceAll(_storageDirectories!.first.path, Localization.instance.PHONE).replaceAll(_storageDirectories!.last.path, Localization.instance.SD_CARD);
+    }
+    if (Platform.isIOS) {
+      return basename(value);
+    }
+    return value;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<FileSystemMediaLibrary>(
@@ -697,10 +708,6 @@ class _MobileMediaLibrarySectionState extends State<MobileMediaLibrarySection> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: mediaLibrary.directories.map((directory) {
-            final path = _storageDirectories == null
-                ? directory.path
-                : directory.path.replaceAll(_storageDirectories!.first.path, Localization.instance.PHONE).replaceAll(_storageDirectories!.last.path, Localization.instance.SD_CARD);
-
             return Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
               child: Row(
@@ -712,7 +719,7 @@ class _MobileMediaLibrarySectionState extends State<MobileMediaLibrarySection> {
                   const SizedBox(width: 8.0),
                   Expanded(
                     child: Text(
-                      path,
+                      _formatDirectory(directory.path),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.bodyLarge,

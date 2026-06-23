@@ -26,26 +26,27 @@ class _PermissionsSectionState extends State<PermissionsSection> {
 
   @override
   Widget build(BuildContext context) {
-    if (!(Platform.isAndroid && AndroidStorageController.instance.version >= 33)) return const SizedBox.shrink();
-    /* ANDROID */
+    if (!((Platform.isAndroid && AndroidStorageController.instance.version >= 33) || Platform.isIOS)) return const SizedBox.shrink();
+    /* ANDROID & iOS */
     return SettingsSection(
       title: Localization.instance.SETTINGS_SECTION_PERMISSIONS_TITLE,
       subtitle: Localization.instance.SETTINGS_SECTION_PERMISSIONS_SUBTITLE,
       children: [
-        FutureBuilder(
-          future: AndroidStorageController.instance.version >= 33 ? Permission.audio.status : Permission.storage.status,
-          builder: (context, snapshot) {
-            return ListItem(
-              onTap: () => request(AndroidStorageController.instance.version >= 33 ? Permission.audio : Permission.storage),
-              leading: Checkbox(
-                value: snapshot.data == PermissionStatus.granted,
-                onChanged: (_) => request(AndroidStorageController.instance.version >= 33 ? Permission.audio : Permission.storage),
-              ),
-              title: Localization.instance.PERMISSION_MUSIC_AND_AUDIO,
-              subtitle: Localization.instance.PERMISSION_MUSIC_AND_AUDIO_SUBTITLE,
-            );
-          },
-        ),
+        if (Platform.isAndroid)
+          FutureBuilder(
+            future: AndroidStorageController.instance.version >= 33 ? Permission.audio.status : Permission.storage.status,
+            builder: (context, snapshot) {
+              return ListItem(
+                onTap: () => request(AndroidStorageController.instance.version >= 33 ? Permission.audio : Permission.storage),
+                leading: Checkbox(
+                  value: snapshot.data == PermissionStatus.granted,
+                  onChanged: (_) => request(AndroidStorageController.instance.version >= 33 ? Permission.audio : Permission.storage),
+                ),
+                title: Localization.instance.PERMISSION_MUSIC_AND_AUDIO,
+                subtitle: Localization.instance.PERMISSION_MUSIC_AND_AUDIO_SUBTITLE,
+              );
+            },
+          ),
         FutureBuilder(
           future: Permission.notification.status,
           builder: (context, snapshot) {
