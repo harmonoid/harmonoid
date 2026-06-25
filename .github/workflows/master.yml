@@ -19,7 +19,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
-          flutter-version: "3.32.8"
+          flutter-version: "3.44.3"
       - name: Build
         run: |
           rm -rf "assets/icons"
@@ -96,7 +96,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
-          flutter-version: "3.32.8"
+          flutter-version: "3.44.3"
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
       - name: Build SMTC DLL
@@ -197,9 +197,6 @@ jobs:
         run: |
           git config --global core.autocrlf false
           git apply --whitespace=fix patches/remove_discord_rpc.patch
-          cd external/adaptive_layouts
-          git apply --whitespace=fix --ignore-whitespace ../../patches/flutter_3_38_5_adaptive_layouts.patch
-          cd ../../
       - name: Build SMTC DLL
         run: |
           cd external/smtc-win32
@@ -395,9 +392,6 @@ jobs:
         run: |
           git config --global core.autocrlf false
           git apply --whitespace=fix patches/remove_discord_rpc.patch
-          cd external/adaptive_layouts
-          git apply --whitespace=fix --ignore-whitespace ../../patches/flutter_3_38_5_adaptive_layouts.patch
-          cd ../../
       - name: Build
         run: |
           docker run --rm \
@@ -517,7 +511,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
-          flutter-version: "3.32.8"
+          flutter-version: "3.44.3"
       - name: Create Key Store
         id: create_key_store
         uses: timheuer/base64-to-file@v1

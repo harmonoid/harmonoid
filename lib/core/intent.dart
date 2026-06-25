@@ -65,9 +65,9 @@ class Intent {
     return _notifyLock.synchronized(() async {
       _notifyInvoked = true;
 
-      // Android: Attempt to refresh the resource.
+      // Android/iOS: Attempt to refresh the resource.
       try {
-        if (Platform.isAndroid) {
+        if (Platform.isAndroid || Platform.isIOS) {
           final result = await _intentControllerMethodChannel.invokeMethod('~');
           if (result != null) {
             _resource = result;

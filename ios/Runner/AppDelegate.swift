@@ -4,7 +4,7 @@ import UIKit
 import UniformTypeIdentifiers
 
 @main
-@objc class AppDelegate: FlutterAppDelegate, UIDocumentPickerDelegate {
+@objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate, UIDocumentPickerDelegate {
     static let kIntentControllerMethodChannelName = "com.alexmercerind.harmonoid/intent_controller"
     static let kStorageControllerMethodChannelName = "com.alexmercerind.harmonoid/storage_controller"
     static let kUtilsMethodChannelName = "com.alexmercerind.harmonoid/utils"
@@ -32,67 +32,87 @@ import UniformTypeIdentifiers
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        GeneratedPluginRegistrant.register(with: self)
-        
-        if let controller = window?.rootViewController as? FlutterViewController {
-            intentControllerMethodChannel = FlutterMethodChannel(
-                name: AppDelegate.kIntentControllerMethodChannelName,
-                binaryMessenger: controller.binaryMessenger
-            )
-            intentControllerMethodChannel?.setMethodCallHandler({
-                (_ call: FlutterMethodCall, _ result: FlutterResult) -> Void in
-                result(self.uri)
-            })
-            
-            storageControllerMethodChannel = FlutterMethodChannel(
-                name: AppDelegate.kStorageControllerMethodChannelName,
-                binaryMessenger: controller.binaryMessenger
-            )
-            storageControllerMethodChannel?.setMethodCallHandler({
-                (_ call: FlutterMethodCall, _ result: @escaping FlutterResult) -> Void in
-                if (call.method == AppDelegate.kPickDirectoryMethodName) {
-                    self.flutterPickDirectory(call: call, result: result)
-                } else if (call.method == AppDelegate.kPickFileMethodName) {
-                    self.flutterPickFile(call: call, result: result)
-                } else if (call.method == AppDelegate.kPreserveAccessMethodName) {
-                    self.flutterPreserveAccess(call: call, result: result)
-                } else if (call.method == AppDelegate.kInvalidateAccessMethodName) {
-                    self.flutterInvalidateAccess(call: call, result: result)
-                } else if (call.method == AppDelegate.kGetDefaultMediaLibraryDirectoryMethodName) {
-                    self.flutterGetDefaultMediaLibraryDirectory(call: call, result: result)
-                } else {
-                    result(FlutterMethodNotImplemented)
-                }
-            })
-            
-            utilsMethodChannel = FlutterMethodChannel(
-                name: AppDelegate.kUtilsMethodChannelName,
-                binaryMessenger: controller.binaryMessenger
-            )
-            utilsMethodChannel?.setMethodCallHandler({
-                (_ call: FlutterMethodCall, _ result: FlutterResult) -> Void in
-                if (call.method == AppDelegate.kGetSystemAccentColorMethodName) {
-                    result(self.systemAccentColor())
-                } else {
-                    result(FlutterMethodNotImplemented)
-                }
-            })
-        }
-        
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
-    override func application(
-        _ app: UIApplication,
-        open url: URL,
-        options: [UIApplication.OpenURLOptionsKey: Any] = [:]
-    ) -> Bool {
-        if let value = resolveIncomingURL(url) {
-            uri = value
-            intentControllerMethodChannel?.invokeMethod(AppDelegate.kNotifyIntentMethodName, arguments: uri)
-            return true
+    func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
+        GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
+        
+        intentControllerMethodChannel = FlutterMethodChannel(
+            name: AppDelegate.kIntentControllerMethodChannelName,
+            binaryMessenger: engineBridge.applicationRegistrar.messenger()
+        )
+        intentControllerMethodChannel?.setMethodCallHandler({
+            (_ call: FlutterMethodCall, _ result: FlutterResult) -> Void in
+            result(self.uri)
+        })
+        
+        storageControllerMethodChannel = FlutterMethodChannel(
+            name: AppDelegate.kStorageControllerMethodChannelName,
+            binaryMessenger: engineBridge.applicationRegistrar.messenger()
+        )
+        storageControllerMethodChannel?.setMethodCallHandler({
+            (_ call: FlutterMethodCall, _ result: @escaping FlutterResult) -> Void in
+            if (call.method == AppDelegate.kPickDirectoryMethodName) {
+                self.flutterPickDirectory(call: call, result: result)
+            } else if (call.method == AppDelegate.kPickFileMethodName) {
+                self.flutterPickFile(call: call, result: result)
+            } else if (call.method == AppDelegate.kPreserveAccessMethodName) {
+                self.flutterPreserveAccess(call: call, result: result)
+            } else if (call.method == AppDelegate.kInvalidateAccessMethodName) {
+                self.flutterInvalidateAccess(call: call, result: result)
+            } else if (call.method == AppDelegate.kGetDefaultMediaLibraryDirectoryMethodName) {
+                self.flutterGetDefaultMediaLibraryDirectory(call: call, result: result)
+            } else {
+                result(FlutterMethodNotImplemented)
+            }
+        })
+        
+        utilsMethodChannel = FlutterMethodChannel(
+            name: AppDelegate.kUtilsMethodChannelName,
+            binaryMessenger: engineBridge.applicationRegistrar.messenger()
+        )
+        utilsMethodChannel?.setMethodCallHandler({
+            (_ call: FlutterMethodCall, _ result: FlutterResult) -> Void in
+            if (call.method == AppDelegate.kGetSystemAccentColorMethodName) {
+                result(self.systemAccentColor())
+            } else {
+                result(FlutterMethodNotImplemented)
+            }
+        })
+    }
+    
+    func resolveIncomingURL(_ url: URL, openInPlace: Bool) {
+        let didStartAccessingSecurityScopedResource = openInPlace
+            ? url.startAccessingSecurityScopedResource()
+            : false
+
+        defer {
+            if didStartAccessingSecurityScopedResource {
+                url.stopAccessingSecurityScopedResource()
+            }
         }
-        return super.application(app, open: url, options: options)
+        
+        do {
+            let cache = try FileManager.default.url(
+                for: .cachesDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true
+            )
+            let directory = cache.appendingPathComponent("IntentController", isDirectory: true)
+            let destination = directory.appendingPathComponent(UUID().uuidString + "-" + url.lastPathComponent)
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            if FileManager.default.fileExists(atPath: destination.path) {
+                try FileManager.default.removeItem(at: destination)
+            }
+            try FileManager.default.copyItem(at: url, to: destination)
+            
+            self.uri = destination.absoluteString
+            intentControllerMethodChannel?.invokeMethod(AppDelegate.kNotifyIntentMethodName, arguments: destination.absoluteString)
+        } catch {
+            // NO/OP
+        }
     }
     
     private func flutterPickDirectory(call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -277,38 +297,5 @@ import UniformTypeIdentifiers
             return documents
         }
         return result
-    }
-    
-    private func resolveIncomingURL(_ url: URL) -> String? {
-        guard url.isFileURL else {
-            return url.absoluteString
-        }
-        
-        let didStartAccessing = url.startAccessingSecurityScopedResource()
-        defer {
-            if didStartAccessing {
-                url.stopAccessingSecurityScopedResource()
-            }
-        }
-        
-        do {
-            let cache = try FileManager.default.url(
-                for: .cachesDirectory,
-                in: .userDomainMask,
-                appropriateFor: nil,
-                create: true
-            )
-            let directory = cache.appendingPathComponent("IntentController", isDirectory: true)
-            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-            
-            let destination = directory.appendingPathComponent(UUID().uuidString + "-" + url.lastPathComponent)
-            if FileManager.default.fileExists(atPath: destination.path) {
-                try FileManager.default.removeItem(at: destination)
-            }
-            try FileManager.default.copyItem(at: url, to: destination)
-            return destination.absoluteString
-        } catch {
-            return url.absoluteString
-        }
     }
 }

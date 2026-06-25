@@ -344,7 +344,7 @@ class MediaPlayer extends ChangeNotifier
     await setReplayGain(state.replayGain);
     await setReplayGainPreamp(state.replayGainPreamp);
     await setCrossfadeDuration(state.crossfadeDuration);
-    if (onOpen != null) {
+    if (onOpen != null && state.playables.isNotEmpty) {
       await open(
         state.playables,
         index: state.index,
