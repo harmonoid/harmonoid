@@ -79,6 +79,7 @@ class AlbumsScreenState extends State<AlbumsScreen> {
                     width: w,
                     height: h,
                   ),
+                  displayLabel: true,
                   labelTextStyle: scrollViewBuilderHelperData.labelTextStyle,
                   itemWidth: scrollViewBuilderHelperData.itemWidth,
                   itemHeight: scrollViewBuilderHelperData.itemHeight,
