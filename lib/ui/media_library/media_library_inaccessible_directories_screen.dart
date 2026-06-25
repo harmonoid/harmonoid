@@ -22,7 +22,7 @@ class MediaLibraryInaccessibleDirectoriesScreen extends StatefulWidget {
   static Future<bool> showIfRequired(BuildContext context) async {
     final directories = <Directory>[];
     for (final directory in FileSystemMediaLibrary.instance.directories) {
-      if (Platform.isMacOS) {
+      if (Platform.isIOS || Platform.isMacOS) {
         try {
           // NOTE: Not using package:safe_local_storage API.
           directory.listSync();
@@ -114,12 +114,7 @@ class _MediaLibraryInaccessibleDirectoriesScreenState extends State<MediaLibrary
           ? Localization.instance.MEDIA_LIBRARY_INACCESSIBLE_FOLDERS_SUBTITLE.replaceAll('"OPERATING_SYSTEM"', operatingSystem)
           // No new-line characters on mobile.
           : Localization.instance.MEDIA_LIBRARY_INACCESSIBLE_FOLDERS_SUBTITLE.replaceAll('"OPERATING_SYSTEM"', operatingSystem).replaceAll(RegExp(r'\s'), ' '),
-      leading: IconButton(
-        onPressed: () => refresh(),
-        icon: const Icon(Icons.arrow_back),
-        iconSize: 24.0,
-        splashRadius: 20.0,
-      ),
+      implyBackButton: false,
       actions: {
         Icons.refresh: (context, _) => refresh(),
         Icons.settings: (context, _) => context.push('/$kSettingsPath'),
