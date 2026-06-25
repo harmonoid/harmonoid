@@ -506,7 +506,7 @@ class _DesktopMediaLibrarySectionState extends State<DesktopMediaLibrarySection>
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Icon(FluentIcons.folder_32_regular, size: 32.0),
+            const Icon(FluentIcons.folder_prohibited_32_regular, size: 32.0),
             const SizedBox(width: 8.0),
             Expanded(
               child: Text(
@@ -685,7 +685,7 @@ class _MobileMediaLibrarySectionState extends State<MobileMediaLibrarySection> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Icon(FluentIcons.folder_32_regular, size: 32.0),
+            const Icon(FluentIcons.folder_prohibited_32_regular, size: 32.0),
             const SizedBox(width: 8.0),
             Expanded(
               child: Text(
