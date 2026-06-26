@@ -1,6 +1,9 @@
 import 'dart:io';
+import 'package:audio_session/audio_session.dart';
 import 'package:flutter/foundation.dart';
 import 'package:media_kit/media_kit.dart' hide Playable, Track;
+// ignore: unused_import
+import 'package:media_kit/generated/libmpv/bindings.dart' show mpv_event_id;
 import 'package:media_library/media_library.dart' hide Playlist, FileSystemMediaLibrary;
 import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:synchronized/synchronized.dart';
@@ -435,13 +438,24 @@ class MediaPlayer extends ChangeNotifier
     if (Platform.isAndroid) {
       await platform.setProperty('ao', 'audiotrack,opensles');
     }
+    if (Platform.isIOS) {
+      await platform.setProperty('ao', 'audiounit');
+      await platform.observeEvent(mpv_event_id.MPV_EVENT_AUDIO_RECONFIG, (_) async {
+        // We need to update audio session params after the audio output driver has been configured.
+        // https://github.com/mpv-player/mpv/blob/c75b8d2cca08fb09502bc6e4ae4e514d30bb1250/audio/out/ao_audiounit.m#L104
+        await instanceAudioSession?.configure(const AudioSessionConfiguration.music());
+      });
+    }
     if (Platform.isMacOS) {
       await platform.setProperty('ao', 'coreaudio');
     }
     if (Platform.isWindows) {
       await platform.setProperty('ao', 'wasapi');
     }
-    await platform.setProperty('audio-stream-silence', 'yes');
+    if (!Platform.isIOS) {
+      // Does not work with --ao=audiounit.
+      await platform.setProperty('audio-stream-silence', 'yes');
+    }
     // https://github.com/harmonoid/harmonoid/issues/527
     // https://discord.com/channels/935994617663483916/936215125772341289/1450093460127219743
     await platform.setProperty('sub-auto', 'no');
@@ -488,7 +502,7 @@ class MediaPlayer extends ChangeNotifier
     final currentMediaAtIndex = playlist.medias.elementAtOrNull(currentIndex);
 
     // Avoid heavy deserialization.
-    final shouldUpdatePlayables = previousPlayables.length != playlist.medias.length || !_comparePlayableListAndMediaList(previousPlayables, playlist.medias);
+    final shouldUpdatePlayables = !_comparePlayableListAndMediaList(previousPlayables, playlist.medias);
     // Avoid fucking up the lyrics accuracy.
     final shouldResetPosition = previousPlayableAtIndex?.uri != currentMediaAtIndex?.uri;
 

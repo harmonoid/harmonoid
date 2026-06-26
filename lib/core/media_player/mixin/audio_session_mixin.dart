@@ -22,6 +22,7 @@ mixin AudioSessionMixin implements BaseMediaPlayer {
     try {
       final session = await AudioSession.instance;
       await session.configure(const AudioSessionConfiguration.music());
+      instanceAudioSession = session;
 
       _interruptionSubscription = session.interruptionEventStream.listen((event) {
         if (event.begin) {
@@ -55,12 +56,12 @@ mixin AudioSessionMixin implements BaseMediaPlayer {
     _lockAudioSession.synchronized(() async {
       if (_flagPlayingAudioSession != state.playing) {
         _flagPlayingAudioSession = state.playing;
-        final session = await AudioSession.instance;
-        await session.setActive(state.playing);
+        await instanceAudioSession?.setActive(state.playing);
       }
     });
   }
 
+  AudioSession? instanceAudioSession;
   final Lock _lockAudioSession = Lock();
 
   bool? _flagPlayingAudioSession;
