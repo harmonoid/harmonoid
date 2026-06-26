@@ -3,10 +3,8 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:synchronized/synchronized.dart';
 
-import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player/base_media_player.dart';
 import 'package:harmonoid/mappers/image_provider.dart';
-import 'package:harmonoid/mappers/media_player_state.dart';
 import 'package:harmonoid/models/loop.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -256,7 +254,6 @@ class _AudioServiceImpl extends BaseAudioHandler with QueueHandler, SeekHandler 
   @override
   Future<void> onTaskRemoved() async {
     await stop();
-    await Configuration.instance.set(mediaPlayerPlaybackState: _instance.state.toPlaybackState());
     playbackState.add(PlaybackState());
   }
 }

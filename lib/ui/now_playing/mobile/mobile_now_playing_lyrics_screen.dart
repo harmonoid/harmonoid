@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
@@ -54,6 +55,15 @@ class _MobileNowPlayingLyricsScreenState extends State<MobileNowPlayingLyricsScr
                     children: [
                       const Positioned.fill(child: NowPlayingBackground()),
                       Positioned.fill(child: NowPlayingLyrics(selectionModeNotifier: _selectionModeNotifier)),
+                      Positioned(
+                        top: MediaQuery.paddingOf(context).top + 8.0,
+                        left: MediaQuery.paddingOf(context).left + 8.0,
+                        child: IconButton(
+                          onPressed: context.pop,
+                          color: context.read<NowPlayingColors>().foregroundIcon,
+                          icon: const Icon(Icons.arrow_back),
+                        ),
+                      ),
                       Positioned(
                         bottom: 16.0 + MediaQuery.paddingOf(context).bottom,
                         left: 16.0 + MediaQuery.paddingOf(context).left,

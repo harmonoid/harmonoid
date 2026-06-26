@@ -14,6 +14,7 @@ import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/mappers/media_player_state.dart';
 import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
@@ -88,6 +89,15 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
       return true;
     }
     return super.didPopRoute();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (!Platform.isAndroid && !Platform.isIOS) return;
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
+      Configuration.instance.set(mediaPlayerPlaybackState: MediaPlayer.instance.state.toPlaybackState());
+    }
   }
 
   @override
