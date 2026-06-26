@@ -408,7 +408,7 @@ class LyricsNotifier extends ChangeNotifier {
           iOS: const DarwinNotificationDetails(
             presentAlert: false,
             presentBanner: false,
-            presentList: false,
+            presentList: true,
             presentSound: false,
             presentBadge: false,
             threadIdentifier: _kNotificationChannelId,
