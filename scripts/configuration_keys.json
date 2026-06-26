@@ -17,7 +17,7 @@
   {"key": "LYRICS_VIEW_UNFOCUSED_FONT_SIZE", "serializedType": "Double", "dartType": "double", "default": "isDesktop ? 28.0: 24.0"},
   {"key": "LYRICS_VIEW_UNFOCUSED_LINE_HEIGHT", "serializedType": "Double", "dartType": "double", "default": "1.2"},
   {"key": "LYRICS_TRANSLATION_LANGUAGE", "serializedType": "Json", "dartType": "Language", "default": "await getDefaultLyricsTranslationLanguage()"},
-  {"key": "MEDIA_LIBRARY_ADD_PLAYLIST_TO_NOW_PLAYING", "serializedType": "Boolean", "dartType": "bool", "default": "false"},
+  {"key": "MEDIA_LIBRARY_ADD_PLAYLIST_TO_NOW_PLAYING", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
   {"key": "MEDIA_LIBRARY_ALBUM_GROUPING_PARAMETERS", "serializedType": "Json", "dartType": "Set<AlbumGroupingParameter>", "default": "[AlbumGroupingParameter.album.index]"},
   {"key": "MEDIA_LIBRARY_ALBUM_SORT_ASCENDING", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
   {"key": "MEDIA_LIBRARY_ALBUM_SORT_TYPE", "serializedType": "Integer", "dartType": "AlbumSortType", "default": "AlbumSortType.album.index"},

@@ -403,7 +403,7 @@ class ConfigurationBase {
       /* Double  */ kKeyLyricsViewUnfocusedFontSize: isDesktop ? 28.0: 24.0,
       /* Double  */ kKeyLyricsViewUnfocusedLineHeight: 1.2,
       /* Json    */ kKeyLyricsTranslationLanguage: await getDefaultLyricsTranslationLanguage(),
-      /* Boolean */ kKeyMediaLibraryAddPlaylistToNowPlaying: false,
+      /* Boolean */ kKeyMediaLibraryAddPlaylistToNowPlaying: true,
       /* Json    */ kKeyMediaLibraryAlbumGroupingParameters: [AlbumGroupingParameter.album.index],
       /* Boolean */ kKeyMediaLibraryAlbumSortAscending: true,
       /* Integer */ kKeyMediaLibraryAlbumSortType: AlbumSortType.album.index,

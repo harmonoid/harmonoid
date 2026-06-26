@@ -1,9 +1,9 @@
+import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
@@ -45,7 +45,7 @@ class _MobileNowPlayingLyricsScreenState extends State<MobileNowPlayingLyricsScr
           return Provider<NowPlayingColors>.value(
             value: NowPlayingColors.fromPalette(
               context,
-              Configuration.instance.mobileNowPlayingRipple ? nowPlayingColorPaletteNotifier.palette : null,
+              null,
             ),
             builder: (context, _) {
               return Theme(
@@ -54,13 +54,33 @@ class _MobileNowPlayingLyricsScreenState extends State<MobileNowPlayingLyricsScr
                   body: Stack(
                     children: [
                       const Positioned.fill(child: NowPlayingBackground()),
+                      Positioned.fill(
+                        child: ColoredBox(color: Colors.black.withValues(alpha: 0.2)),
+                      ),
+                      Positioned.fill(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              stops: const [0.0, 0.2, 0.5, 0.8],
+                              colors: [
+                                Colors.black.withValues(alpha: 0.2),
+                                Colors.transparent,
+                                Colors.transparent,
+                                Colors.black.withValues(alpha: 0.2),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                       Positioned.fill(child: NowPlayingLyrics(selectionModeNotifier: _selectionModeNotifier)),
                       Positioned(
                         top: MediaQuery.paddingOf(context).top + 8.0,
                         left: MediaQuery.paddingOf(context).left + 8.0,
                         child: IconButton(
                           onPressed: context.pop,
-                          color: context.read<NowPlayingColors>().foregroundIcon,
+                          color: Theme.of(context).extension<IconColors>()?.appBarDark,
                           icon: const Icon(Icons.arrow_back),
                         ),
                       ),
