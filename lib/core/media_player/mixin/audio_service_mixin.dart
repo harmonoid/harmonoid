@@ -163,8 +163,10 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
 
       if (_flagCompletedAudioService != state.completed) {
         _flagCompletedAudioService = state.completed;
-        _playbackStateAudioService = _playbackStateAudioService.copyWith(processingState: AudioProcessingState.completed);
-        _instanceAudioService?.playbackState.add(_playbackStateAudioService);
+        if (state.completed) {
+          _playbackStateAudioService = _playbackStateAudioService.copyWith(processingState: AudioProcessingState.completed);
+          _instanceAudioService?.playbackState.add(_playbackStateAudioService);
+        }
       }
     });
   }

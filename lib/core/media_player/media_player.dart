@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter/foundation.dart';
 import 'package:media_kit/media_kit.dart' hide Playable, Track;
-// ignore: unused_import
 import 'package:media_kit/generated/libmpv/bindings.dart' show mpv_event_id;
 import 'package:media_library/media_library.dart' hide Playlist, FileSystemMediaLibrary;
 import 'package:safe_local_storage/safe_local_storage.dart';
@@ -98,13 +97,17 @@ class MediaPlayer extends ChangeNotifier
   }
 
   @override
-  Future<void> play() => _player.play();
+  Future<void> play() => _player.play().then((_) => setActiveAudioSession(true));
 
   @override
-  Future<void> pause() => _player.pause();
+  Future<void> pause() => _player.pause().then((_) => setActiveAudioSession(false));
 
   @override
-  Future<void> playOrPause() => _player.playOrPause();
+  Future<void> playOrPause() async {
+    final wasPlaying = state.playing;
+    await _player.playOrPause();
+    await setActiveAudioSession(!wasPlaying);
+  }
 
   @override
   Future<void> next() => _player.next();
@@ -196,6 +199,10 @@ class MediaPlayer extends ChangeNotifier
     state = state.copyWith(shuffle: false, mixOffset: mixOffset);
 
     await _player.open(Playlist(medias, index: index), play: play);
+    if (play) {
+      await setActiveAudioSession(true);
+    }
+
     onOpen?.call();
   }
 
@@ -425,7 +432,11 @@ class MediaPlayer extends ChangeNotifier
     if (crossfadeDuration != Duration.zero) {
       _player = Player(
         platformPlayer: CrossfadePlayer(
-          configuration: CrossfadePlayerConfiguration(title: kTitle, pitch: true, crossfadeDuration: crossfadeDuration),
+          configuration: CrossfadePlayerConfiguration(
+            title: kTitle,
+            pitch: true,
+            crossfadeDuration: crossfadeDuration,
+          ),
         ),
       );
     } else {

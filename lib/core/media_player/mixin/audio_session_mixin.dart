@@ -4,7 +4,6 @@ import 'package:audio_session/audio_session.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:harmonoid/core/media_player/base_media_player.dart';
-import 'package:synchronized/synchronized.dart';
 
 /// {@template audio_session_mixin}
 ///
@@ -49,22 +48,29 @@ mixin AudioSessionMixin implements BaseMediaPlayer {
   }
 
   void resetFlagsAudioSession() {
-    _flagPlayingAudioSession = null;
+    // _flagPlayingAudioSession = null;
+  }
+
+  Future<void> setActiveAudioSession(bool active) async {
+    await instanceAudioSession?.setActive(active);
   }
 
   void _listenerAudioSession() {
-    _lockAudioSession.synchronized(() async {
-      if (_flagPlayingAudioSession != state.playing) {
-        _flagPlayingAudioSession = state.playing;
-        await instanceAudioSession?.setActive(state.playing);
-      }
-    });
+    // NOTE: Following causes issues on iOS upon index changes.
+    //       Only being called for manual play/pause/playOrPause now.
+    //       Calling setActive(false) blocks all audio output, media_kit flips playing stream along side completed stream.
+    // _lockAudioSession.synchronized(() async {
+    //   if (_flagPlayingAudioSession != state.playing) {
+    //     _flagPlayingAudioSession = state.playing;
+    //     await instanceAudioSession?.setActive(state.playing);
+    //   }
+    // });
   }
 
   AudioSession? instanceAudioSession;
-  final Lock _lockAudioSession = Lock();
+  // final Lock _lockAudioSession = Lock();
 
-  bool? _flagPlayingAudioSession;
+  // bool? _flagPlayingAudioSession;
 
   StreamSubscription<AudioInterruptionEvent>? _interruptionSubscription;
   StreamSubscription<void>? _becomingNoisySubscription;
