@@ -304,6 +304,8 @@ jobs:
           docker run --rm \
             -v ${{ github.workspace }}:/workspace \
             -w /workspace \
+            -e DEBIAN_FRONTEND=noninteractive \
+            -e TZ=Etc/UTC \
             -e API_KEY="${{ secrets.API_KEY }}" \
             -e API_BASE_URL="${{ secrets.API_BASE_URL }}" \
             -e LASTFM_API_KEY="${{ secrets.LASTFM_API_KEY }}" \
@@ -314,10 +316,12 @@ jobs:
             ubuntu:20.04 \
             bash -c '
               set -e
+              export DEBIAN_FRONTEND=noninteractive
+              export TZ=Etc/UTC
 
               # Update and install dependencies
               apt-get update
-              apt-get install -y \
+              apt-get install -yq \
                 git curl wget unzip xz-utils zip libglu1-mesa file \
                 clang cmake ninja-build pkg-config libgtk-3-dev \
                 mpv libmpv-dev dpkg-dev rpm tree
@@ -416,6 +420,8 @@ jobs:
           docker run --rm \
             -v ${{ github.workspace }}:/workspace \
             -w /workspace \
+            -e DEBIAN_FRONTEND=noninteractive \
+            -e TZ=Etc/UTC \
             -e API_KEY="${{ secrets.API_KEY }}" \
             -e API_BASE_URL="${{ secrets.API_BASE_URL }}" \
             -e LASTFM_API_KEY="${{ secrets.LASTFM_API_KEY }}" \
@@ -426,10 +432,12 @@ jobs:
             ubuntu:20.04 \
             bash -c '
               set -e
+              export DEBIAN_FRONTEND=noninteractive
+              export TZ=Etc/UTC
 
               # Update and install dependencies
               apt-get update
-              apt-get install -y \
+              apt-get install -yq \
                 git curl wget unzip xz-utils zip libglu1-mesa file \
                 clang cmake ninja-build pkg-config libgtk-3-dev \
                 mpv libmpv-dev dpkg-dev rpm tree
