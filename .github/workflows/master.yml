@@ -317,9 +317,6 @@ jobs:
 
               # Update and install dependencies
               apt-get update
-              apt-get install -y software-properties-common
-              add-apt-repository -y ppa:git-core/ppa
-              apt-get update
               apt-get install -y \
                 git curl wget unzip xz-utils zip libglu1-mesa file \
                 clang cmake ninja-build pkg-config libgtk-3-dev \
@@ -431,9 +428,6 @@ jobs:
               set -e
 
               # Update and install dependencies
-              apt-get update
-              apt-get install -y software-properties-common
-              add-apt-repository -y ppa:git-core/ppa
               apt-get update
               apt-get install -y \
                 git curl wget unzip xz-utils zip libglu1-mesa file \
