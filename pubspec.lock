@@ -491,35 +491,43 @@ packages:
     dependency: "direct main"
     description:
       path: flutter_local_notifications
-      ref: "7f18146"
-      resolved-ref: "7f181464afd5ccd1691be9eaa3811ec1ae438085"
+      ref: "9de1a098edf09b84d4b9ff31ff653fb5837aa550"
+      resolved-ref: "9de1a098edf09b84d4b9ff31ff653fb5837aa550"
       url: "https://github.com/alexmercerind/flutter_local_notifications.git"
     source: git
-    version: "20.0.0-dev.2"
+    version: "22.0.1"
   flutter_local_notifications_linux:
     dependency: transitive
     description:
       name: flutter_local_notifications_linux
-      sha256: "3d4ba506021bde2361939b33cc50bfb134236464317154f5a61b461a998aa22a"
+      sha256: "9ca97e63776f29ab1b955725c09999fc2c150523269db150c39274f2a43c5a8b"
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.0-dev.1"
+    version: "8.0.1"
   flutter_local_notifications_platform_interface:
     dependency: transitive
     description:
       name: flutter_local_notifications_platform_interface
-      sha256: ddeee72504b7b3464692cd3a2ea25af879e264d9c816b1ac2d7b85a385efc75d
+      sha256: ff0013eae795e8dc8fad4a8992a209e64d3ba2fbd8bf5e43c36bf448f95bd814
       url: "https://pub.dev"
     source: hosted
-    version: "10.0.0-dev.1"
+    version: "12.0.0"
+  flutter_local_notifications_web:
+    dependency: transitive
+    description:
+      name: flutter_local_notifications_web
+      sha256: "516afaf97a2d1e67a036c6617321b00d205d72f7a67b6eccf936cd565f985878"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   flutter_local_notifications_windows:
     dependency: transitive
     description:
       name: flutter_local_notifications_windows
-      sha256: "6f794ec3a7c481e3c5b2b418336c8ecd95a3c2b85c25e76e5ca3c29260fda86c"
+      sha256: "6f43bdd03b171b7a90f22647506fea33e2bb12294b7c7c7a3d690e960a382945"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0-dev.2"
+    version: "3.1.1"
   flutter_markdown_plus:
     dependency: "direct main"
     description:
@@ -654,10 +662,10 @@ packages:
     dependency: "direct main"
     description:
       name: http
-      sha256: bb2ce4590bc2667c96f318d68cac1b5a7987ec819351d32b1c987239a815e007
+      sha256: "87721a4a50b19c7f1d49001e51409bddc46303966ce89a65af4f4e6004896412"
       url: "https://pub.dev"
     source: hosted
-    version: "1.5.0"
+    version: "1.6.0"
   http_multi_server:
     dependency: transitive
     description:
@@ -1536,10 +1544,10 @@ packages:
     dependency: transitive
     description:
       name: timezone
-      sha256: dd14a3b83cfd7cb19e7888f1cbc20f258b8d71b54c06f79ac585f14093a287d1
+      sha256: "784a5e34d2eb62e1326f24d6f600aaaee452eb8ca8ef2f384a59244e292d158b"
       url: "https://pub.dev"
     source: hosted
-    version: "0.10.1"
+    version: "0.11.0"
   typed_data:
     dependency: transitive
     description:
@@ -1776,4 +1784,4 @@ packages:
     version: "2.1.0"
 sdks:
   dart: ">=3.12.1 <4.0.0"
-  flutter: ">=3.32.0"
+  flutter: ">=3.38.1"
