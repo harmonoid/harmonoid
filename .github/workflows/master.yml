@@ -4,6 +4,7 @@ on:
     branches:
       - master
       - vnext
+      - feat/ios
 
 jobs:
   build_macos:
@@ -20,6 +21,11 @@ jobs:
         with:
           channel: "stable"
           flutter-version: "3.44.3"
+      - name: Patch Flutter
+        run: |
+          flutter_root="$(cd "$(dirname "$(command -v flutter)")/.." && pwd)"
+          sed -i.bak 's/return kIsWeb ? SystemMouseCursors\.click : SystemMouseCursors\.basic;/return SystemMouseCursors.click;/' "$flutter_root/packages/flutter/lib/src/widgets/widget_state.dart"
+          rm "$flutter_root/packages/flutter/lib/src/widgets/widget_state.dart.bak"
       - name: Build
         run: |
           rm -rf "assets/icons"
@@ -97,6 +103,13 @@ jobs:
         with:
           channel: "stable"
           flutter-version: "3.44.3"
+      - name: Patch Flutter
+        run: |
+          $flutterRoot = Split-Path -Parent (Split-Path -Parent (Get-Command flutter).Source)
+          $file = Join-Path $flutterRoot "packages/flutter/lib/src/widgets/widget_state.dart"
+          $content = Get-Content $file -Raw
+          $content = $content.Replace("return kIsWeb ? SystemMouseCursors.click : SystemMouseCursors.basic;", "return SystemMouseCursors.click;")
+          Set-Content -Path $file -Value $content -NoNewline
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
       - name: Build SMTC DLL
@@ -189,6 +202,13 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/flutter/flutter.git $env:RUNNER_TEMP\flutter
           Add-Content $env:GITHUB_PATH "$env:RUNNER_TEMP\flutter\bin"
+      - name: Patch Flutter
+        run: |
+          $flutterRoot = Split-Path -Parent (Split-Path -Parent (Get-Command flutter).Source)
+          $file = Join-Path $flutterRoot "packages/flutter/lib/src/widgets/widget_state.dart"
+          $content = Get-Content $file -Raw
+          $content = $content.Replace("return kIsWeb ? SystemMouseCursors.click : SystemMouseCursors.basic;", "return SystemMouseCursors.click;")
+          Set-Content -Path $file -Value $content -NoNewline
       - name: Install Flutter
         run: flutter doctor
       - name: Setup MSBuild
@@ -314,6 +334,8 @@ jobs:
               git config --global --add safe.directory /opt/flutter
               export PATH="/opt/flutter/bin:$PATH"
               flutter --version
+              sed -i.bak '"'"'s/return kIsWeb ? SystemMouseCursors\.click : SystemMouseCursors\.basic;/return SystemMouseCursors.click;/'"'"' /opt/flutter/packages/flutter/lib/src/widgets/widget_state.dart
+              rm /opt/flutter/packages/flutter/lib/src/widgets/widget_state.dart.bak
 
               # Build application
               cd /workspace
@@ -425,6 +447,8 @@ jobs:
               git clone --depth 1 https://github.com/flutter/flutter.git
               git config --global --add safe.directory /opt/flutter
               export PATH="/opt/flutter/bin:$PATH"
+              sed -i.bak '"'"'s/return kIsWeb ? SystemMouseCursors\.click : SystemMouseCursors\.basic;/return SystemMouseCursors.click;/'"'"' /opt/flutter/packages/flutter/lib/src/widgets/widget_state.dart
+              rm /opt/flutter/packages/flutter/lib/src/widgets/widget_state.dart.bak
               flutter doctor
 
               # Build application
@@ -512,6 +536,11 @@ jobs:
         with:
           channel: "stable"
           flutter-version: "3.44.3"
+      - name: Patch Flutter
+        run: |
+          flutter_root="$(cd "$(dirname "$(command -v flutter)")/.." && pwd)"
+          sed -i.bak 's/return kIsWeb ? SystemMouseCursors\.click : SystemMouseCursors\.basic;/return SystemMouseCursors.click;/' "$flutter_root/packages/flutter/lib/src/widgets/widget_state.dart"
+          rm "$flutter_root/packages/flutter/lib/src/widgets/widget_state.dart.bak"
       - name: Create Key Store
         id: create_key_store
         uses: timheuer/base64-to-file@v1
