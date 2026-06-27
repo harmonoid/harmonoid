@@ -4,7 +4,7 @@
 
 **🎵 Plays & manages your music library. Looks beautiful & juicy.**
 
-[Website](https://harmonoid.com) • [Download](https://harmonoid.com/downloads) • [Discord](https://discord.gg/2Rc3edFWd8) • Available for Windows, GNU/Linux, macOS & Android!
+[Website](https://harmonoid.com) • [Download](https://harmonoid.com/downloads) • [Discord](https://discord.gg/2Rc3edFWd8) • Available for Windows, GNU/Linux, macOS, Android & iOS!
 
 ![](https://github.com/harmonoid/harmonoid/blob/assets/macos/light-2/0.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/macos/light-2/1.webp?raw=true)
@@ -72,12 +72,12 @@
 - Multiple artist & genre support.
 - Fallback cover support. e.g. cover.jpg, Folder.jpg etc.
 - Small installer (≈ 35 MB) & low RAM usage (≈ 150 MB).
-- Excellent backward compatibility. Android 5.0 or higher. macOS 10.15 or higher. Windows 10 or higher.
+- Excellent backward compatibility, Windows 10+, macOS 10.15+, Android 7.0+ & iOS 13.0+.
 - Portable.
-- Cross-platform (Windows, GNU/Linux, macOS & Android).
+- Cross-platform (Windows, GNU/Linux, macOS, Android & iOS).
 - System Media Transport Controls & Taskbar Thumbnail Toolbar for Windows.
 - D-Bus MPRIS controls for GNU/Linux.
-- MPNowPlayingInfoCenter for macOS.
+- MPNowPlayingInfoCenter for macOS & iOS.
 - Notification.MediaStyle for Android.
 
 ## Why
