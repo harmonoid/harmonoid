@@ -20,9 +20,14 @@ class Debouncer {
     _timer = Timer(timeout, action);
   }
 
+  /// Cancels the pending action.
+  void cancel() {
+    _timer?.cancel();
+  }
+
   /// Disposes the instance.
   void dispose() {
-    _timer?.cancel();
+    cancel();
   }
 
   /// The internal [Timer] instance.
