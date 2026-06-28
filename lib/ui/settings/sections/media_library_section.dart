@@ -581,7 +581,7 @@ class _MobileMediaLibrarySectionState extends State<MobileMediaLibrarySection> {
   }
 
   String _formatDirectory(String value) {
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid && _storageDirectories != null) {
       return value.replaceAll(_storageDirectories!.first.path, Localization.instance.PHONE).replaceAll(_storageDirectories!.last.path, Localization.instance.SD_CARD);
     }
     if (Platform.isIOS) {
