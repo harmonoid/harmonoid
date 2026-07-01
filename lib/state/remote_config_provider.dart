@@ -13,14 +13,21 @@ class RemoteConfigProvider {
     RemoteConfigValue? result;
 
     try {
-      result = await getCached(key);
+      final local = await getCached(key);
+      if (local != null) {
+        result = local;
+      }
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
     }
 
     try {
-      result = await setCached(key, await _remoteConfigGet.call(key));
+      final remote = await _remoteConfigGet.call(key);
+      if (remote != null) {
+        await setCached(key, remote);
+        result = remote;
+      }
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
@@ -35,10 +42,8 @@ class RemoteConfigProvider {
     return RemoteConfigValue.fromJson(value);
   }
 
-  Future<RemoteConfigValue?> setCached(RemoteConfigKey key, RemoteConfigValue? value) async {
-    if (value == null) return null;
+  Future<void> setCached(RemoteConfigKey key, RemoteConfigValue value) async {
     await Configuration.instance.db.setValue(_transformKey(key), kTypeJson, jsonValue: _transformValue(key, value));
-    return value;
   }
 
   String _transformKey(RemoteConfigKey key) => '$kStoragePrefix${key.key}';
