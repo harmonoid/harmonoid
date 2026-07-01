@@ -4,7 +4,7 @@ publish_to: "none"
 version: 0.3.22+9033
 
 environment:
-  sdk: ">=3.12.1 <4.0.0"
+  sdk: ">=3.9.2 <4.0.0"
 
 dependencies:
   flutter:
@@ -19,7 +19,7 @@ dependencies:
   collection: ^1.18.0
   crypto: ^3.0.3
   draggable_float_widget: ^0.1.0
-  drift: ^2.34.0
+  drift: ^2.30.1
   dynamic_color: ^1.8.1
   ffi: ^2.1.2
   file_picker:
@@ -32,7 +32,7 @@ dependencies:
   flutter_local_notifications:
     git:
       url: https://github.com/alexmercerind/flutter_local_notifications.git
-      ref: 9de1a098edf09b84d4b9ff31ff653fb5837aa550
+      ref: 7f18146
       path: flutter_local_notifications
   flutter_markdown_plus: ^1.0.5
   flutter_svg: ^2.2.1
@@ -95,7 +95,8 @@ dependencies:
   provider: ^6.0.1
   safe_local_storage: ^2.0.4
   share_plus: ^12.0.1
-  sqlite3: ^3.3.3
+  sqlite3: ^2.9.4
+  sqlite3_flutter_libs: ^0.5.40
   syncfusion_flutter_sliders: 24.2.7
   synchronized: ^3.0.0+2
   system_fonts: ^1.0.1

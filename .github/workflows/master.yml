@@ -330,8 +330,8 @@ jobs:
 
               # Install Flutter
               cd /opt
-              wget -q https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.44.3-stable.tar.xz
-              tar xf flutter_linux_3.44.3-stable.tar.xz
+              wget -q https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.35.7-stable.tar.xz
+              tar xf flutter_linux_3.35.7-stable.tar.xz
               git config --global --add safe.directory /opt/flutter
               export PATH="/opt/flutter/bin:$PATH"
               flutter --version
@@ -444,14 +444,15 @@ jobs:
 
               curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
-              # Clone Flutter (master channel for ARM64 support)
+              # Install Flutter
               cd /opt
-              git clone --depth 1 https://github.com/flutter/flutter.git
+              wget -q https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.35.7-stable.tar.xz
+              tar xf flutter_linux_3.35.7-stable.tar.xz
               git config --global --add safe.directory /opt/flutter
               export PATH="/opt/flutter/bin:$PATH"
+              flutter --version
               sed -i.bak '"'"'s/return kIsWeb ? SystemMouseCursors\.click : SystemMouseCursors\.basic;/return SystemMouseCursors.click;/'"'"' /opt/flutter/packages/flutter/lib/src/widgets/widget_state.dart
               rm /opt/flutter/packages/flutter/lib/src/widgets/widget_state.dart.bak
-              flutter doctor
 
               # Build application
               cd /workspace
