@@ -467,8 +467,8 @@ packages:
     dependency: "direct main"
     description:
       path: flutter_local_notifications
-      ref: "7f18146"
-      resolved-ref: "7f181464afd5ccd1691be9eaa3811ec1ae438085"
+      ref: "54c397a"
+      resolved-ref: "54c397aafe4fd33b232d8d49185ef03b6bbe7885"
       url: "https://github.com/alexmercerind/flutter_local_notifications.git"
     source: git
     version: "20.0.0-dev.2"
@@ -489,12 +489,13 @@ packages:
     source: hosted
     version: "10.0.0-dev.1"
   flutter_local_notifications_windows:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: flutter_local_notifications_windows
-      sha256: "6f794ec3a7c481e3c5b2b418336c8ecd95a3c2b85c25e76e5ca3c29260fda86c"
-      url: "https://pub.dev"
-    source: hosted
+      path: flutter_local_notifications_windows
+      ref: "54c397a"
+      resolved-ref: "54c397aafe4fd33b232d8d49185ef03b6bbe7885"
+      url: "https://github.com/alexmercerind/flutter_local_notifications.git"
+    source: git
     version: "2.0.0-dev.2"
   flutter_markdown_plus:
     dependency: "direct main"
@@ -566,10 +567,10 @@ packages:
     dependency: transitive
     description:
       name: functions_client
-      sha256: "967483bbc198cf9daa822ae2f4af0f03521c3f0aeff0617fbaa512374f0bffac"
+      sha256: "5b17b8dcf5ae1cd6a6428e7a4ca8b569477297a7f158955b5407dda23baeaa5b"
       url: "https://pub.dev"
     source: hosted
-    version: "2.6.2"
+    version: "2.6.3"
   glob:
     dependency: transitive
     description:
@@ -590,10 +591,10 @@ packages:
     dependency: transitive
     description:
       name: gotrue
-      sha256: ea9aacde70ec9a5b0c59493dcc1ec133190ae42554b06dcae4fe9133a2ba500a
+      sha256: "54e8abe49c8596234c503f4b64d07022c7913a6475c7a85c1f1eacc1a93af166"
       url: "https://pub.dev"
     source: hosted
-    version: "2.23.0"
+    version: "2.24.0"
   graphs:
     dependency: transitive
     description:
@@ -1094,10 +1095,10 @@ packages:
     dependency: transitive
     description:
       name: postgrest
-      sha256: "41c313d3c0aeb8ded9e06d49daadd7f036a3c092e7849e87375b6264a602624c"
+      sha256: "801f6659cffbb6372d38cb4deb0cd892cb0cb38d75e0686ff24f4a724e9f4999"
       url: "https://pub.dev"
     source: hosted
-    version: "2.7.3"
+    version: "2.7.4"
   provider:
     dependency: "direct main"
     description:
@@ -1134,10 +1135,10 @@ packages:
     dependency: transitive
     description:
       name: realtime_client
-      sha256: f377b8e30d23eb83f30110ddfb6cbfa7af67232ead04abad6b39b3885d7ad699
+      sha256: "3261ba98af41fccfdbb6c66299b5bd6871907e98bb41bce9d55e0fb91287ed85"
       url: "https://pub.dev"
     source: hosted
-    version: "2.9.0"
+    version: "2.9.1"
   recase:
     dependency: transitive
     description:
@@ -1387,10 +1388,10 @@ packages:
     dependency: transitive
     description:
       name: storage_client
-      sha256: "4450ab5ea7626f1c12ab39513833d2fc5015d052da91e7183784367fd0072ae9"
+      sha256: "2cc5432c312c4a08687bcce795aff377d006e2892097c7f88d57512885bb4b10"
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.8"
+    version: "2.5.9"
   stream_channel:
     dependency: transitive
     description:
@@ -1419,18 +1420,18 @@ packages:
     dependency: transitive
     description:
       name: supabase
-      sha256: e6da1076b83091fd0a507ebd476364f3223a5c88595b54b54365e69cf72fbba2
+      sha256: d425df9330ce5f215a0ee708b084899d89031e8a8f3e096f46c38ea37df9fd7d
       url: "https://pub.dev"
     source: hosted
-    version: "2.13.1"
+    version: "2.13.3"
   supabase_flutter:
     dependency: transitive
     description:
       name: supabase_flutter
-      sha256: "36311320c3e05817eaaa5d86f4015b985e2752907c3d374309d3e04cf3b0e988"
+      sha256: "262c7eda45997a308ac0311be82fe8e9134526a18125fe5e0cf0a58e9cd16cb6"
       url: "https://pub.dev"
     source: hosted
-    version: "2.15.1"
+    version: "2.15.3"
   syncfusion_flutter_core:
     dependency: transitive
     description:
