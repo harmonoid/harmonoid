@@ -7,10 +7,14 @@ import 'package:provider/provider.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 
 class NowPlayingBackground extends StatelessWidget {
-  const NowPlayingBackground({super.key});
+  final bool enabled;
+  const NowPlayingBackground({super.key, this.enabled = true});
 
   @override
   Widget build(BuildContext context) {
+    if (!enabled) {
+      return const SizedBox();
+    }
     return Consumer<NowPlayingColorPaletteNotifier>(
       builder: (context, nowPlayingColorPaletteNotifier, _) {
         final palette = nowPlayingColorPaletteNotifier.palette?.where((e) => e.computeLuminance() < 0.5).toList() ?? [];

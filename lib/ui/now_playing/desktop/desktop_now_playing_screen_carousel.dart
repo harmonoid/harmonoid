@@ -20,10 +20,13 @@ class DesktopNowPlayingScreenCarousel extends StatelessWidget {
   Widget build(BuildContext context) {
     return StatefulPageViewBuilder(
       index: value,
+      itemCount: itemCount,
       itemBuilder: (context, i) {
-        i = i % itemCount;
         if (i == 0) {
-          return const NowPlayingBackground();
+          return NowPlayingBackground(
+            // HACK(GNU/Linux): Do not render if not visible.
+            enabled: !Platform.isLinux || i == value,
+          );
         }
         if (i == 1) {
           return Consumer<NowPlayingColorPaletteNotifier>(
@@ -53,6 +56,10 @@ class DesktopNowPlayingScreenCarousel extends StatelessWidget {
               );
             },
           );
+        }
+        // HACK(GNU/Linux): Do not render if not visible.
+        if (Platform.isLinux && i != value) {
+          return const SizedBox();
         }
         if (i >= kBuiltInCount && i < kBuiltInCount + NowPlayingVisualsNotifier.instance.bundled.length) {
           i -= kBuiltInCount;

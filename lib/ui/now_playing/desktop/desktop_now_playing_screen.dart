@@ -318,15 +318,23 @@ class Controls extends StatelessWidget {
                       ),
                       const SizedBox(width: 12.0),
                       Expanded(
-                        child: MaterialWaveSlider(
-                          height: 28.0,
-                          min: sliderMin,
-                          max: sliderMax,
-                          value: sliderValue,
-                          onChanged: (value) => mediaPlayer.seek(Duration(milliseconds: value.round())),
-                          paused: !mediaPlayer.state.playing,
-                        ),
+                        child: isMaterial3
+                            ? MaterialWaveSlider(
+                                height: 28.0,
+                                min: sliderMin,
+                                max: sliderMax,
+                                value: sliderValue,
+                                onChanged: (value) => mediaPlayer.seek(Duration(milliseconds: value.round())),
+                                paused: !mediaPlayer.state.playing,
+                              )
+                            : ScrollableSlider(
+                                min: sliderMin,
+                                max: sliderMax,
+                                value: sliderValue,
+                                onChanged: (value) => mediaPlayer.seek(Duration(milliseconds: value.round())),
+                              ),
                       ),
+
                       const SizedBox(width: 12.0),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 2.0),
