@@ -183,6 +183,14 @@ class DesktopNowPlayingBarState extends State<DesktopNowPlayingBar> {
                                     const Spacer(),
                                     const SizedBox(width: 12.0),
                                     IconButton(
+                                      onPressed: () => showAddToPlaylistDialog(context, playable: mediaPlayer.current),
+                                      color: nowPlayingColors.backgroundEnabledIcon,
+                                      icon: const Icon(Icons.playlist_add),
+                                      splashRadius: 20.0,
+                                      iconSize: 20.0,
+                                      tooltip: Localization.instance.ADD_TO_PLAYLIST,
+                                    ),
+                                    IconButton(
                                       onPressed: () => DesktopNowPlayingPlaylist.show(context),
                                       color: nowPlayingColors.backgroundEnabledIcon,
                                       icon: const Icon(Icons.queue_music),
