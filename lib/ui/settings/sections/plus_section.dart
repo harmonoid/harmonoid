@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
-import 'package:harmonoid/extensions/duration.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/ui/settings/settings_section.dart';
 import 'package:harmonoid/utils/async_file_image.dart';
@@ -106,16 +105,6 @@ class _PlusSectionState extends State<PlusSection> {
                 onChanged: (value) => _setCrossfadeDuration(
                   mediaPlayer,
                   Duration(seconds: value.round()),
-                  debounce: true,
-                ),
-                onScrolledUp: () => _setCrossfadeDuration(
-                  mediaPlayer,
-                  (crossfadeDuration + const Duration(seconds: 1)).clamp(MediaPlayer.kCrossfadeMinDuration, MediaPlayer.kCrossfadeMaxDuration),
-                  debounce: true,
-                ),
-                onScrolledDown: () => _setCrossfadeDuration(
-                  mediaPlayer,
-                  (crossfadeDuration - const Duration(seconds: 1)).clamp(MediaPlayer.kCrossfadeMinDuration, MediaPlayer.kCrossfadeMaxDuration),
                   debounce: true,
                 ),
               ),

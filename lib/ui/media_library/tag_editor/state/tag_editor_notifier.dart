@@ -29,33 +29,43 @@ class TagEditorNotifier extends ChangeNotifier {
   bool coverLoading = false;
   bool propertiesChanged = false;
   bool coverChanged = false;
-  Map<String, TextEditingController> properties = {};
+  Map<String, TextEditingController> textEditingControllers = {};
+  Map<String, FocusNode> focusNodes = {};
   CoverData? cover;
 
-  Map<String, String> get propertiesMap => properties.whereNotEmpty((entry) => entry.value.text);
+  Map<String, String> get propertiesMap => textEditingControllers.whereNotEmpty((entry) => entry.value.text);
   CoverData? get oldCover => _oldCover;
 
   @override
   void dispose() {
     super.dispose();
     _disposeTagWriter();
-    for (final v in properties.values) {
-      _disposeTextEditingController(v);
+    for (final e in textEditingControllers.values) {
+      _disposeTextEditingController(e);
+    }
+    for (final e in focusNodes.values) {
+      _disposeFocusNode(e);
     }
   }
 
   void addProperty(String key, [String? value]) {
-    if (!properties.containsKey(key)) {
-      properties[key] = _createTextEditingController();
+    if (!textEditingControllers.containsKey(key)) {
+      textEditingControllers[key] = _createTextEditingController();
+    }
+    if (!focusNodes.containsKey(key)) {
+      focusNodes[key] = FocusNode();
     }
     if (value != null) {
-      properties[key]?.text = value;
+      textEditingControllers[key]?.text = value;
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) => focusNodes[key]?.requestFocus());
     }
     notifyListeners();
   }
 
   void removeProperty(String key) {
-    _disposeTextEditingController(properties.remove(key));
+    _disposeTextEditingController(textEditingControllers.remove(key));
+    _disposeFocusNode(focusNodes.remove(key));
     notifyListeners();
   }
 
@@ -239,6 +249,10 @@ class TagEditorNotifier extends ChangeNotifier {
     _listenerTextEditingController();
   }
 
+  void _disposeFocusNode(FocusNode? focusNode) {
+    focusNode?.dispose();
+  }
+
   void _listenerTextEditingController() {
     final oldPropertiesMap = _oldPropertiesMap;
     final newPropertiesMap = propertiesMap;
@@ -256,10 +270,10 @@ class TagEditorNotifier extends ChangeNotifier {
   }
 
   Future<void> _refreshProperties() async {
-    for (final value in properties.values) {
+    for (final value in textEditingControllers.values) {
       _disposeTextEditingController(value);
     }
-    properties = (await _writer.getProperties()).whereNotEmpty((entry) => entry.value.firstOrNull ?? '').map((key, value) => MapEntry(key, _createTextEditingController(value)));
+    textEditingControllers = (await _writer.getProperties()).whereNotEmpty((entry) => entry.value.firstOrNull ?? '').map((key, value) => MapEntry(key, _createTextEditingController(value)));
   }
 
   Future<void> _refreshCover() async {

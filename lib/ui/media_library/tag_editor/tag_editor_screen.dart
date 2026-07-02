@@ -124,10 +124,10 @@ class _TagEditorScreenState extends State<TagEditorScreen> with ScrollController
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 16.0,
             children: [
-              if (notifier.properties.isEmpty)
+              if (notifier.textEditingControllers.isEmpty)
                 const TagEditorNoTagsBanner()
               else
-                ...notifier.properties.entries.map(
+                ...notifier.textEditingControllers.entries.map(
                   (e) => Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -159,6 +159,7 @@ class _TagEditorScreenState extends State<TagEditorScreen> with ScrollController
                       const SizedBox(height: 8.0),
                       DefaultTextFormField(
                         controller: e.value,
+                        focusNode: notifier.focusNodes[e.key],
                         maxLines: null,
                       ),
                     ],
@@ -187,12 +188,15 @@ class _TagEditorScreenState extends State<TagEditorScreen> with ScrollController
                     TagWriter.kProperties,
                     null,
                     (key) => key,
-                    trailing: (key) => notifier.properties.containsKey(key) ? Icon(Icons.check_circle, size: 16.0, color: Theme.of(context).colorScheme.primary) : null,
+                    trailing: (key) => notifier.textEditingControllers.containsKey(key) ? Icon(Icons.check_circle, size: 16.0, color: Theme.of(context).colorScheme.primary) : null,
                     actions: false,
                     radio: false,
                   );
                   if (property != null) {
                     notifier.addProperty(property);
+
+                    // Scroll to bottom if the property was newly added.
+                    if (notifier.propertiesMap[property] != null) return;
 
                     Future.delayed(
                       const Duration(milliseconds: 500),
