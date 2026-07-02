@@ -151,6 +151,7 @@ class LyricsNotifier extends ChangeNotifier {
         if (contents != null && LrcParser.isValid(contents)) {
           final lrc = LrcParser.parse(contents);
           final result = lrc.lyrics;
+          if (!_isCurrentGuard(playable, duration)) return;
           lyrics.addAll(result.map((e) => Lyric(timestamp: (lrc.offset ?? 0) + e.timestamp.inMilliseconds, text: e.lyrics.trim())).toList());
           notifyListeners();
           return;
@@ -159,8 +160,10 @@ class LyricsNotifier extends ChangeNotifier {
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
-      lyrics.clear();
-      notifyListeners();
+      if (_isCurrentGuard(playable, duration)) {
+        lyrics.clear();
+        notifyListeners();
+      }
     }
 
     // 2. Tags.
@@ -171,6 +174,7 @@ class LyricsNotifier extends ChangeNotifier {
       if (track != null && LrcParser.isValid(track.lyrics)) {
         final lrc = LrcParser.parse(track.lyrics);
         final result = lrc.lyrics;
+        if (!_isCurrentGuard(playable, duration)) return;
         lyrics.addAll(result.map((e) => Lyric(timestamp: (lrc.offset ?? 0) + e.timestamp.inMilliseconds, text: e.lyrics.trim())).toList());
         notifyListeners();
         return;
@@ -178,8 +182,10 @@ class LyricsNotifier extends ChangeNotifier {
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
-      lyrics.clear();
-      notifyListeners();
+      if (_isCurrentGuard(playable, duration)) {
+        lyrics.clear();
+        notifyListeners();
+      }
     }
 
     // 3. Directory.
@@ -198,6 +204,7 @@ class LyricsNotifier extends ChangeNotifier {
           if (contents != null && LrcParser.isValid(contents)) {
             final lrc = LrcParser.parse(contents);
             final result = lrc.lyrics;
+            if (!_isCurrentGuard(playable, duration)) return;
             lyrics.addAll(result.map((e) => Lyric(timestamp: (lrc.offset ?? 0) + e.timestamp.inMilliseconds, text: e.lyrics.trim())).toList());
             notifyListeners();
             return;
@@ -207,8 +214,10 @@ class LyricsNotifier extends ChangeNotifier {
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
-      lyrics.clear();
-      notifyListeners();
+      if (_isCurrentGuard(playable, duration)) {
+        lyrics.clear();
+        notifyListeners();
+      }
     }
 
     // 4. API.
@@ -222,6 +231,7 @@ class LyricsNotifier extends ChangeNotifier {
         duration.inMilliseconds,
       );
       if (result != null) {
+        if (!_isCurrentGuard(playable, duration)) return;
         lyrics.addAll(result);
         notifyListeners();
 
@@ -235,8 +245,10 @@ class LyricsNotifier extends ChangeNotifier {
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
-      lyrics.clear();
-      notifyListeners();
+      if (_isCurrentGuard(playable, duration)) {
+        lyrics.clear();
+        notifyListeners();
+      }
     }
   }
 
@@ -255,6 +267,7 @@ class LyricsNotifier extends ChangeNotifier {
         current.subtitle.firstOrNull ?? '',
         duration.inMilliseconds,
       );
+      if (!_isCurrentGuard(current, duration) || language != translationLanguage) return;
       if (result != null && result.length == lyrics.length) {
         translations.addAll(result);
         notifyListeners();
@@ -262,8 +275,10 @@ class LyricsNotifier extends ChangeNotifier {
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
-      lyrics.clear();
-      notifyListeners();
+      if (_isCurrentGuard(current, duration)) {
+        lyrics.clear();
+        notifyListeners();
+      }
     }
   }
 
@@ -440,6 +455,14 @@ class LyricsNotifier extends ChangeNotifier {
 
   Future<bool> isNotificationHidden() {
     return Configuration.instance.read<bool, bool>(kKeyMobileNotificationLyricsHidden, {kKeyMobileNotificationLyricsHidden: false});
+  }
+
+  bool _isCurrentGuard(Playable playable, Duration duration) {
+    try {
+      return playable == MediaPlayer.instance.current && duration == MediaPlayer.instance.state.duration;
+    } catch (_) {
+      return false;
+    }
   }
 
   Playable? _current;
