@@ -330,8 +330,8 @@ jobs:
 
               # Install Flutter
               cd /opt
-              wget -q https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.35.7-stable.tar.xz
-              tar xf flutter_linux_3.35.7-stable.tar.xz
+              wget -q https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.41.9-stable.tar.xz
+              tar xf flutter_linux_3.41.9-stable.tar.xz
               git config --global --add safe.directory /opt/flutter
               export PATH="/opt/flutter/bin:$PATH"
               flutter --version
@@ -446,7 +446,7 @@ jobs:
 
               # Install Flutter
               cd /opt
-              git clone --depth 1 --branch 3.35.7 https://github.com/flutter/flutter.git
+              git clone --depth 1 --branch 3.41.9 https://github.com/flutter/flutter.git
               git config --global --add safe.directory /opt/flutter
               export PATH="/opt/flutter/bin:$PATH"
               flutter --version
