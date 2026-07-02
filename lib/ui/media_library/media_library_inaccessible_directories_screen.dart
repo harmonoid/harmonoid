@@ -39,14 +39,10 @@ class MediaLibraryInaccessibleDirectoriesScreen extends StatefulWidget {
     }
 
     if (directories.isNotEmpty) {
-      context.push(
-        '/$kInaccessibleDirectoriesPath',
-        extra: InaccessibleDirectoriesPathExtra(directories: directories),
-      );
-      return true;
+      await context.push('/$kInaccessibleDirectoriesPath', extra: InaccessibleDirectoriesPathExtra(directories: directories));
     }
 
-    return false;
+    return directories.isNotEmpty;
   }
 
   @override
