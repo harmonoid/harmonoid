@@ -104,6 +104,10 @@ class _MediaLibraryInaccessibleDirectoriesScreenState extends State<MediaLibrary
     removing = false;
   }
 
+  void ignore() {
+    context.pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return HeroContentScreen(
@@ -117,10 +121,12 @@ class _MediaLibraryInaccessibleDirectoriesScreenState extends State<MediaLibrary
       implyBackButton: false,
       actions: {
         Icons.refresh: (context, _) => refresh(),
+        Icons.visibility_off: (context, _) => ignore(),
         Icons.settings: (context, _) => context.push('/$kSettingsPath'),
       },
       labels: {
         Icons.refresh: Localization.instance.REFRESH,
+        Icons.visibility_off: Localization.instance.IGNORE,
         Icons.settings: Localization.instance.SETTINGS,
       },
       tabs: [''],
@@ -132,7 +138,10 @@ class _MediaLibraryInaccessibleDirectoriesScreenState extends State<MediaLibrary
             key: ValueKey(i.toString()),
             children: [
               TappableText(text: [TappableTextData(text: directories[i].path)]),
-              TextButton(onPressed: () => remove(directories[i]), child: Text(label(Localization.instance.REMOVE))),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(onPressed: () => remove(directories[i]), child: Text(label(Localization.instance.REMOVE))),
+              ),
             ],
           ),
           leadingBuilder: (context, i) => const Icon(FluentIcons.folder_32_regular, size: 32.0),

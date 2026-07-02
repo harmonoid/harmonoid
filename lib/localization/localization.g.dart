@@ -48,6 +48,7 @@ class LocalizationBase extends Values {
     CONFIGURE_VISIBLE_TABS_TITLE = map['CONFIGURE_VISIBLE_TABS_TITLE']!;
     CONNECT = map['CONNECT']!;
     CONNECTED = map['CONNECTED']!;
+    CONTINUE = map['CONTINUE']!;
     COPY_AS_JSON = map['COPY_AS_JSON']!;
     COPY_LINK = map['COPY_LINK']!;
     CORRUPT_LRC_FILE = map['CORRUPT_LRC_FILE']!;
@@ -114,6 +115,7 @@ class LocalizationBase extends Values {
     HIDE_LYRICS = map['HIDE_LYRICS']!;
     HIDE_SECONDARY_ARTISTS = map['HIDE_SECONDARY_ARTISTS']!;
     HISTORY = map['HISTORY']!;
+    IGNORE = map['IGNORE']!;
     IMAGES = map['IMAGES']!;
     IMPORT = map['IMPORT']!;
     IMPROVE_METADATA_COMPATIBILITY = map['IMPROVE_METADATA_COMPATIBILITY']!;

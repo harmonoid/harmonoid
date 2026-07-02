@@ -43,6 +43,7 @@ class Values {
   late String CONFIGURE_VISIBLE_TABS_TITLE;
   late String CONNECT;
   late String CONNECTED;
+  late String CONTINUE;
   late String COPY_AS_JSON;
   late String COPY_LINK;
   late String CORRUPT_LRC_FILE;
@@ -109,6 +110,7 @@ class Values {
   late String HIDE_LYRICS;
   late String HIDE_SECONDARY_ARTISTS;
   late String HISTORY;
+  late String IGNORE;
   late String IMAGES;
   late String IMPORT;
   late String IMPROVE_METADATA_COMPATIBILITY;
