@@ -57,7 +57,7 @@ class Intent {
     instance._resource = args.isEmpty ? null : args.first;
   }
 
-  /// Notifies to [play] about externally opened resource.
+  /// Notifies to play the externally opened resource (after restoring the playback state).
   Future<void> notify({
     PlaybackState? playbackState,
     void Function()? onPlaybackStateRestore = intentNotifyOnPlaybackStateRestore,

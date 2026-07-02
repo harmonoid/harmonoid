@@ -52,15 +52,15 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await Intent.instance.notify(playbackState: Configuration.instance.mediaPlayerPlaybackState);
       // HACK: It is very difficult to pass the entry point arguments to main like other platforms.
       if (Platform.isMacOS) {
         await const MethodChannel('com.alexmercerind/window_plus').invokeMethod('notifyUrls');
       }
-      final inaccessibleDirectories = await MediaLibraryInaccessibleDirectoriesScreen.showIfRequired(context);
-      if (!inaccessibleDirectories && Configuration.instance.mediaLibraryRefreshUponStart) {
+      final hasInaccessibleDirectories = await MediaLibraryInaccessibleDirectoriesScreen.showIfRequired(context);
+      if (!hasInaccessibleDirectories && Configuration.instance.mediaLibraryRefreshUponStart) {
         FileSystemMediaLibrary.instance.refresh();
       }
+      Intent.instance.notify(playbackState: Configuration.instance.mediaPlayerPlaybackState);
     });
   }
 
