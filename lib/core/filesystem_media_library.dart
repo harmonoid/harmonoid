@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -168,9 +169,15 @@ class FileSystemMediaLibrary extends media_library.FileSystemMediaLibrary with C
   /// Disposes the [instance]. Releases allocated resources back to the system.
   @override
   void dispose() {
-    super.close();
     super.dispose();
-    _tagReader.dispose();
+    unawaited(close());
+  }
+
+  /// Closes the [instance].
+  @override
+  Future<void> close() async {
+    await super.close();
+    await _tagReader.dispose();
   }
 
   /// Tag reader.

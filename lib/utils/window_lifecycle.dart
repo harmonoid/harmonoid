@@ -47,7 +47,9 @@ class WindowLifecycle {
   static Future<bool> windowCloseHandler({bool force = false}) async {
     try {
       if (!FileSystemMediaLibrary.instance.refreshing || force) {
-        Configuration.instance.set(mediaPlayerPlaybackState: MediaPlayer.instance.state.toPlaybackState());
+        await Configuration.instance.set(mediaPlayerPlaybackState: MediaPlayer.instance.state.toPlaybackState());
+        await FileSystemMediaLibrary.instance.close();
+        await Configuration.instance.db.close();
         MediaPlayer.instance.dispose();
         await Future.delayed(const Duration(seconds: 1));
         return true;
