@@ -3,7 +3,8 @@
 part of 'database.dart';
 
 // ignore_for_file: type=lint
-class $LyricssTable extends Lyricss with TableInfo<$LyricssTable, LyricsEntity> {
+class $LyricssTable extends Lyricss
+    with TableInfo<$LyricssTable, LyricsEntity> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -38,13 +39,14 @@ class $LyricssTable extends Lyricss with TableInfo<$LyricssTable, LyricsEntity> 
     requiredDuringInsert: true,
   );
   @override
-  late final GeneratedColumnWithTypeConverter<Lyrics, String> lyrics = GeneratedColumn<String>(
-    'lyrics',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  ).withConverter<Lyrics>($LyricssTable.$converterlyrics);
+  late final GeneratedColumnWithTypeConverter<Lyrics, String> lyrics =
+      GeneratedColumn<String>(
+        'lyrics',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<Lyrics>($LyricssTable.$converterlyrics);
   @override
   List<GeneratedColumn> get $columns => [track, artist, duration, lyrics];
   @override
@@ -118,7 +120,8 @@ class $LyricssTable extends Lyricss with TableInfo<$LyricssTable, LyricsEntity> 
     return $LyricssTable(attachedDatabase, alias);
   }
 
-  static JsonTypeConverter2<Lyrics, String, String> $converterlyrics = const LyricsConverter();
+  static JsonTypeConverter2<Lyrics, String, String> $converterlyrics =
+      const LyricsConverter();
 }
 
 class LyricsEntity extends DataClass implements Insertable<LyricsEntity> {
@@ -224,7 +227,12 @@ class LyricsEntity extends DataClass implements Insertable<LyricsEntity> {
   int get hashCode => Object.hash(track, artist, duration, lyrics);
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || (other is LyricsEntity && other.track == this.track && other.artist == this.artist && other.duration == this.duration && other.lyrics == this.lyrics);
+      identical(this, other) ||
+      (other is LyricsEntity &&
+          other.track == this.track &&
+          other.artist == this.artist &&
+          other.duration == this.duration &&
+          other.lyrics == this.lyrics);
 }
 
 class LyricssCompanion extends UpdateCompanion<LyricsEntity> {
@@ -318,7 +326,8 @@ class LyricssCompanion extends UpdateCompanion<LyricsEntity> {
   }
 }
 
-class $LyricsTranslationsTable extends LyricsTranslations with TableInfo<$LyricsTranslationsTable, LyricsTranslationEntity> {
+class $LyricsTranslationsTable extends LyricsTranslations
+    with TableInfo<$LyricsTranslationsTable, LyricsTranslationEntity> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -364,13 +373,14 @@ class $LyricsTranslationsTable extends LyricsTranslations with TableInfo<$Lyrics
     requiredDuringInsert: true,
   );
   @override
-  late final GeneratedColumnWithTypeConverter<Lyrics?, String> lyrics = GeneratedColumn<String>(
-    'lyrics',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  ).withConverter<Lyrics?>($LyricsTranslationsTable.$converterlyricsn);
+  late final GeneratedColumnWithTypeConverter<Lyrics?, String> lyrics =
+      GeneratedColumn<String>(
+        'lyrics',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<Lyrics?>($LyricsTranslationsTable.$converterlyricsn);
   static const VerificationMeta _sameMeta = const VerificationMeta('same');
   @override
   late final GeneratedColumn<bool> same = GeneratedColumn<bool>(
@@ -490,11 +500,14 @@ class $LyricsTranslationsTable extends LyricsTranslations with TableInfo<$Lyrics
     return $LyricsTranslationsTable(attachedDatabase, alias);
   }
 
-  static JsonTypeConverter2<Lyrics, String, String> $converterlyrics = const LyricsConverter();
-  static JsonTypeConverter2<Lyrics?, String?, String?> $converterlyricsn = JsonTypeConverter2.asNullable($converterlyrics);
+  static JsonTypeConverter2<Lyrics, String, String> $converterlyrics =
+      const LyricsConverter();
+  static JsonTypeConverter2<Lyrics?, String?, String?> $converterlyricsn =
+      JsonTypeConverter2.asNullable($converterlyrics);
 }
 
-class LyricsTranslationEntity extends DataClass implements Insertable<LyricsTranslationEntity> {
+class LyricsTranslationEntity extends DataClass
+    implements Insertable<LyricsTranslationEntity> {
   /// Track title.
   final String track;
 
@@ -542,7 +555,9 @@ class LyricsTranslationEntity extends DataClass implements Insertable<LyricsTran
       artist: Value(artist),
       duration: Value(duration),
       language: Value(language),
-      lyrics: lyrics == null && nullToAbsent ? const Value.absent() : Value(lyrics),
+      lyrics: lyrics == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lyrics),
       same: Value(same),
     );
   }
@@ -618,7 +633,8 @@ class LyricsTranslationEntity extends DataClass implements Insertable<LyricsTran
   }
 
   @override
-  int get hashCode => Object.hash(track, artist, duration, language, lyrics, same);
+  int get hashCode =>
+      Object.hash(track, artist, duration, language, lyrics, same);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -631,7 +647,8 @@ class LyricsTranslationEntity extends DataClass implements Insertable<LyricsTran
           other.same == this.same);
 }
 
-class LyricsTranslationsCompanion extends UpdateCompanion<LyricsTranslationEntity> {
+class LyricsTranslationsCompanion
+    extends UpdateCompanion<LyricsTranslationEntity> {
   final Value<String> track;
   final Value<String> artist;
   final Value<int> duration;
@@ -749,16 +766,19 @@ abstract class _$LyricsDatabase extends GeneratedDatabase {
   _$LyricsDatabase(QueryExecutor e) : super(e);
   $LyricsDatabaseManager get managers => $LyricsDatabaseManager(this);
   late final $LyricssTable lyricss = $LyricssTable(this);
-  late final $LyricsTranslationsTable lyricsTranslations = $LyricsTranslationsTable(this);
+  late final $LyricsTranslationsTable lyricsTranslations =
+      $LyricsTranslationsTable(this);
   @override
-  Iterable<TableInfo<Table, Object?>> get allTables => allSchemaEntities.whereType<TableInfo<Table, Object?>>();
+  Iterable<TableInfo<Table, Object?>> get allTables =>
+      allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     lyricss,
     lyricsTranslations,
   ];
   @override
-  DriftDatabaseOptions get options => const DriftDatabaseOptions(storeDateTimeAsText: true);
+  DriftDatabaseOptions get options =>
+      const DriftDatabaseOptions(storeDateTimeAsText: true);
 }
 
 typedef $$LyricssTableCreateCompanionBuilder =
@@ -778,7 +798,8 @@ typedef $$LyricssTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-class $$LyricssTableFilterComposer extends Composer<_$LyricsDatabase, $LyricssTable> {
+class $$LyricssTableFilterComposer
+    extends Composer<_$LyricsDatabase, $LyricssTable> {
   $$LyricssTableFilterComposer({
     required super.$db,
     required super.$table,
@@ -801,13 +822,15 @@ class $$LyricssTableFilterComposer extends Composer<_$LyricsDatabase, $LyricssTa
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<Lyrics, Lyrics, String> get lyrics => $composableBuilder(
-    column: $table.lyrics,
-    builder: (column) => ColumnWithTypeConverterFilters(column),
-  );
+  ColumnWithTypeConverterFilters<Lyrics, Lyrics, String> get lyrics =>
+      $composableBuilder(
+        column: $table.lyrics,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 }
 
-class $$LyricssTableOrderingComposer extends Composer<_$LyricsDatabase, $LyricssTable> {
+class $$LyricssTableOrderingComposer
+    extends Composer<_$LyricsDatabase, $LyricssTable> {
   $$LyricssTableOrderingComposer({
     required super.$db,
     required super.$table,
@@ -836,7 +859,8 @@ class $$LyricssTableOrderingComposer extends Composer<_$LyricsDatabase, $Lyricss
   );
 }
 
-class $$LyricssTableAnnotationComposer extends Composer<_$LyricsDatabase, $LyricssTable> {
+class $$LyricssTableAnnotationComposer
+    extends Composer<_$LyricsDatabase, $LyricssTable> {
   $$LyricssTableAnnotationComposer({
     required super.$db,
     required super.$table,
@@ -844,13 +868,17 @@ class $$LyricssTableAnnotationComposer extends Composer<_$LyricsDatabase, $Lyric
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<String> get track => $composableBuilder(column: $table.track, builder: (column) => column);
+  GeneratedColumn<String> get track =>
+      $composableBuilder(column: $table.track, builder: (column) => column);
 
-  GeneratedColumn<String> get artist => $composableBuilder(column: $table.artist, builder: (column) => column);
+  GeneratedColumn<String> get artist =>
+      $composableBuilder(column: $table.artist, builder: (column) => column);
 
-  GeneratedColumn<int> get duration => $composableBuilder(column: $table.duration, builder: (column) => column);
+  GeneratedColumn<int> get duration =>
+      $composableBuilder(column: $table.duration, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<Lyrics, String> get lyrics => $composableBuilder(column: $table.lyrics, builder: (column) => column);
+  GeneratedColumnWithTypeConverter<Lyrics, String> get lyrics =>
+      $composableBuilder(column: $table.lyrics, builder: (column) => column);
 }
 
 class $$LyricssTableTableManager
@@ -876,9 +904,12 @@ class $$LyricssTableTableManager
         TableManagerState(
           db: db,
           table: table,
-          createFilteringComposer: () => $$LyricssTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () => $$LyricssTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () => $$LyricssTableAnnotationComposer($db: db, $table: table),
+          createFilteringComposer: () =>
+              $$LyricssTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LyricssTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LyricssTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<String> track = const Value.absent(),
@@ -907,7 +938,9 @@ class $$LyricssTableTableManager
                 lyrics: lyrics,
                 rowid: rowid,
               ),
-          withReferenceMapper: (p0) => p0.map((e) => (e.readTable(table), BaseReferences(db, table, e))).toList(),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
           prefetchHooksCallback: null,
         ),
       );
@@ -951,7 +984,8 @@ typedef $$LyricsTranslationsTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-class $$LyricsTranslationsTableFilterComposer extends Composer<_$LyricsDatabase, $LyricsTranslationsTable> {
+class $$LyricsTranslationsTableFilterComposer
+    extends Composer<_$LyricsDatabase, $LyricsTranslationsTable> {
   $$LyricsTranslationsTableFilterComposer({
     required super.$db,
     required super.$table,
@@ -979,10 +1013,11 @@ class $$LyricsTranslationsTableFilterComposer extends Composer<_$LyricsDatabase,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<Lyrics?, Lyrics, String> get lyrics => $composableBuilder(
-    column: $table.lyrics,
-    builder: (column) => ColumnWithTypeConverterFilters(column),
-  );
+  ColumnWithTypeConverterFilters<Lyrics?, Lyrics, String> get lyrics =>
+      $composableBuilder(
+        column: $table.lyrics,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<bool> get same => $composableBuilder(
     column: $table.same,
@@ -990,7 +1025,8 @@ class $$LyricsTranslationsTableFilterComposer extends Composer<_$LyricsDatabase,
   );
 }
 
-class $$LyricsTranslationsTableOrderingComposer extends Composer<_$LyricsDatabase, $LyricsTranslationsTable> {
+class $$LyricsTranslationsTableOrderingComposer
+    extends Composer<_$LyricsDatabase, $LyricsTranslationsTable> {
   $$LyricsTranslationsTableOrderingComposer({
     required super.$db,
     required super.$table,
@@ -1029,7 +1065,8 @@ class $$LyricsTranslationsTableOrderingComposer extends Composer<_$LyricsDatabas
   );
 }
 
-class $$LyricsTranslationsTableAnnotationComposer extends Composer<_$LyricsDatabase, $LyricsTranslationsTable> {
+class $$LyricsTranslationsTableAnnotationComposer
+    extends Composer<_$LyricsDatabase, $LyricsTranslationsTable> {
   $$LyricsTranslationsTableAnnotationComposer({
     required super.$db,
     required super.$table,
@@ -1037,17 +1074,23 @@ class $$LyricsTranslationsTableAnnotationComposer extends Composer<_$LyricsDatab
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<String> get track => $composableBuilder(column: $table.track, builder: (column) => column);
+  GeneratedColumn<String> get track =>
+      $composableBuilder(column: $table.track, builder: (column) => column);
 
-  GeneratedColumn<String> get artist => $composableBuilder(column: $table.artist, builder: (column) => column);
+  GeneratedColumn<String> get artist =>
+      $composableBuilder(column: $table.artist, builder: (column) => column);
 
-  GeneratedColumn<int> get duration => $composableBuilder(column: $table.duration, builder: (column) => column);
+  GeneratedColumn<int> get duration =>
+      $composableBuilder(column: $table.duration, builder: (column) => column);
 
-  GeneratedColumn<String> get language => $composableBuilder(column: $table.language, builder: (column) => column);
+  GeneratedColumn<String> get language =>
+      $composableBuilder(column: $table.language, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<Lyrics?, String> get lyrics => $composableBuilder(column: $table.lyrics, builder: (column) => column);
+  GeneratedColumnWithTypeConverter<Lyrics?, String> get lyrics =>
+      $composableBuilder(column: $table.lyrics, builder: (column) => column);
 
-  GeneratedColumn<bool> get same => $composableBuilder(column: $table.same, builder: (column) => column);
+  GeneratedColumn<bool> get same =>
+      $composableBuilder(column: $table.same, builder: (column) => column);
 }
 
 class $$LyricsTranslationsTableTableManager
@@ -1063,7 +1106,11 @@ class $$LyricsTranslationsTableTableManager
           $$LyricsTranslationsTableUpdateCompanionBuilder,
           (
             LyricsTranslationEntity,
-            BaseReferences<_$LyricsDatabase, $LyricsTranslationsTable, LyricsTranslationEntity>,
+            BaseReferences<
+              _$LyricsDatabase,
+              $LyricsTranslationsTable,
+              LyricsTranslationEntity
+            >,
           ),
           LyricsTranslationEntity,
           PrefetchHooks Function()
@@ -1075,12 +1122,15 @@ class $$LyricsTranslationsTableTableManager
         TableManagerState(
           db: db,
           table: table,
-          createFilteringComposer: () => $$LyricsTranslationsTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () => $$LyricsTranslationsTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () => $$LyricsTranslationsTableAnnotationComposer(
-            $db: db,
-            $table: table,
-          ),
+          createFilteringComposer: () =>
+              $$LyricsTranslationsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LyricsTranslationsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LyricsTranslationsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
           updateCompanionCallback:
               ({
                 Value<String> track = const Value.absent(),
@@ -1117,7 +1167,9 @@ class $$LyricsTranslationsTableTableManager
                 same: same,
                 rowid: rowid,
               ),
-          withReferenceMapper: (p0) => p0.map((e) => (e.readTable(table), BaseReferences(db, table, e))).toList(),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
           prefetchHooksCallback: null,
         ),
       );
@@ -1135,7 +1187,11 @@ typedef $$LyricsTranslationsTableProcessedTableManager =
       $$LyricsTranslationsTableUpdateCompanionBuilder,
       (
         LyricsTranslationEntity,
-        BaseReferences<_$LyricsDatabase, $LyricsTranslationsTable, LyricsTranslationEntity>,
+        BaseReferences<
+          _$LyricsDatabase,
+          $LyricsTranslationsTable,
+          LyricsTranslationEntity
+        >,
       ),
       LyricsTranslationEntity,
       PrefetchHooks Function()
@@ -1144,6 +1200,8 @@ typedef $$LyricsTranslationsTableProcessedTableManager =
 class $LyricsDatabaseManager {
   final _$LyricsDatabase _db;
   $LyricsDatabaseManager(this._db);
-  $$LyricssTableTableManager get lyricss => $$LyricssTableTableManager(_db, _db.lyricss);
-  $$LyricsTranslationsTableTableManager get lyricsTranslations => $$LyricsTranslationsTableTableManager(_db, _db.lyricsTranslations);
+  $$LyricssTableTableManager get lyricss =>
+      $$LyricssTableTableManager(_db, _db.lyricss);
+  $$LyricsTranslationsTableTableManager get lyricsTranslations =>
+      $$LyricsTranslationsTableTableManager(_db, _db.lyricsTranslations);
 }

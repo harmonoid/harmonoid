@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:harmonoid/localization/localization.dart';
-import 'package:harmonoid/state/lyrics_notifier.dart';
+import 'package:harmonoid/state/lyrics/lyrics_notifier.dart';
 import 'package:harmonoid/ui/settings/settings_section.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/widgets.dart';

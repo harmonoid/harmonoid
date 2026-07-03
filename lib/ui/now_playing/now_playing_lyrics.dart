@@ -6,7 +6,7 @@ import 'package:system_fonts/system_fonts.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/string.dart';
-import 'package:harmonoid/state/lyrics_notifier.dart';
+import 'package:harmonoid/state/lyrics/lyrics_notifier.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 class NowPlayingLyrics extends StatefulWidget {
@@ -104,7 +104,7 @@ class _NowPlayingLyricsState extends State<NowPlayingLyrics> {
             padding: EdgeInsets.only(
               left: 16.0,
               right: 16.0,
-              top: MediaQuery.sizeOf(context).height * -0.2,
+              top: MediaQuery.sizeOf(context).height * -0.3,
             ),
             focusedTextStyle: Theme.of(context).textTheme.displayLarge?.copyWith(
               fontSize: Configuration.instance.lyricsViewFocusedFontSize,

@@ -13,7 +13,7 @@ import 'package:harmonoid/extensions/go_router.dart';
 import 'package:harmonoid/extensions/track.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
-import 'package:harmonoid/state/lyrics_notifier.dart';
+import 'package:harmonoid/state/lyrics/lyrics_notifier.dart';
 import 'package:harmonoid/ui/media_library/media_library_flags.dart';
 import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/ui/media_library/media_library_search_bar.dart';

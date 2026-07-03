@@ -17,7 +17,7 @@ import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/build_context.dart';
 import 'package:harmonoid/models/loop.dart';
-import 'package:harmonoid/state/lyrics_notifier.dart';
+import 'package:harmonoid/state/lyrics/lyrics_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';

@@ -16,7 +16,7 @@ import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/models/loop.dart';
-import 'package:harmonoid/state/lyrics_notifier.dart';
+import 'package:harmonoid/state/lyrics/lyrics_notifier.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
 import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/ui/now_playing/desktop/desktop_now_playing_playlist.dart';

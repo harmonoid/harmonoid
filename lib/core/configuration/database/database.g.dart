@@ -512,6 +512,9 @@ abstract class _$Database extends GeneratedDatabase {
     entries,
     indexEntriesTableKey,
   ];
+  @override
+  DriftDatabaseOptions get options =>
+      const DriftDatabaseOptions(storeDateTimeAsText: true);
 }
 
 typedef $$EntriesTableCreateCompanionBuilder =

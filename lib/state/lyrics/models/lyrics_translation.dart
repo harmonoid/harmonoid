@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:harmonoid/models/lyric.dart';
-import 'package:harmonoid/models/lyrics.dart';
+import 'package:harmonoid/state/lyrics/models/lyric.dart';
+import 'package:harmonoid/state/lyrics/models/lyrics.dart';
 
 part 'lyrics_translation.freezed.dart';
 part 'lyrics_translation.g.dart';

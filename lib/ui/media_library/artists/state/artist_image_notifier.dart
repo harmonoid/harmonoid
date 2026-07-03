@@ -9,7 +9,7 @@ import 'package:path/path.dart';
 import 'package:pool/pool.dart';
 import 'package:safe_local_storage/file_system.dart';
 
-import 'package:harmonoid/api/artist_image_get.dart';
+import 'package:harmonoid/ui/media_library/artists/api/artist_image_get.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/mappers/media_library_item.dart';
 import 'package:harmonoid/utils/async_file_image.dart';

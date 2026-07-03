@@ -4,9 +4,9 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path/path.dart' as path;
 
-import 'package:harmonoid/models/lyric.dart';
-import 'package:harmonoid/models/lyrics.dart';
-import 'package:harmonoid/models/lyrics_translation.dart';
+import 'package:harmonoid/state/lyrics/models/lyric.dart';
+import 'package:harmonoid/state/lyrics/models/lyrics.dart';
+import 'package:harmonoid/state/lyrics/models/lyrics_translation.dart';
 import 'package:harmonoid/state/lyrics/models/lyrics_key.dart';
 import 'package:harmonoid/state/lyrics/models/lyrics_translation_key.dart';
 

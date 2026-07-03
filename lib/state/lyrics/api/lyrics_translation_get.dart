@@ -3,8 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:identity/identity.dart';
 
 import 'package:harmonoid/api/utils/constants.dart';
-import 'package:harmonoid/models/lyrics.dart';
-import 'package:harmonoid/models/lyrics_translation.dart';
+import 'package:harmonoid/state/lyrics/models/lyrics.dart';
+import 'package:harmonoid/state/lyrics/models/lyrics_translation.dart';
 
 /// {@template lyrics_translation_get}
 ///
