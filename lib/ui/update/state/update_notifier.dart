@@ -21,7 +21,7 @@ class UpdateNotifier extends ChangeNotifier {
   static const String kAndroidDownloadUrl = 'https://play.google.com/store/apps/details?id=com.alexmercerind.harmonoid';
 
   UpdateNotifier({required this.showUpdate}) {
-    unawaited(check(false));
+    unawaited(check());
   }
 
   final Future<bool> Function() showUpdate;
@@ -29,7 +29,7 @@ class UpdateNotifier extends ChangeNotifier {
   GithubRelease? latestRelease;
   bool updateAvailable = false;
 
-  Future<void> check([bool force = true]) async {
+  Future<void> check() async {
     final latestReleaseGet = LatestReleaseGet();
     final release = await latestReleaseGet();
 
@@ -42,17 +42,17 @@ class UpdateNotifier extends ChangeNotifier {
     updateAvailable = _compareVersions(latestVersion, currentVersion);
     notifyListeners();
 
-    if (force || (Configuration.instance.updateCheckVersion != latestVersion && updateAvailable)) {
+    if (Configuration.instance.updateCheckVersion != latestVersion && updateAvailable) {
       final result = await showUpdate();
       if (result) {
-        _download();
+        await download();
       } else {
         await Configuration.instance.set(updateCheckVersion: latestVersion);
       }
     }
   }
 
-  Future<void> _download() {
+  Future<void> download() {
     return launchUrlString(
       Platform.isAndroid ? kAndroidDownloadUrl : kDesktopDownloadUrl,
       mode: LaunchMode.externalApplication,

@@ -357,7 +357,7 @@ class LyricsNotifier extends ChangeNotifier {
       final lyricsTranslationGet = LyricsTranslationGet();
       final response = await lyricsTranslationGet.call(
         lyrics,
-        localTranslationLanguage.code,
+        '${localTranslationLanguage.name} (${localTranslationLanguage.code})',
         localCurrent.title,
         localCurrent.subtitle.firstOrNull ?? '',
         localCurrentDuration.inMilliseconds,
