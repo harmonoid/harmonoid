@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
@@ -62,8 +64,6 @@ class LyricsNotifier extends ChangeNotifier {
 
         if (current != _current && currentDuration != _currentDuration && currentDuration > Duration.zero && currentPosition > Duration.zero) {
           index = 0;
-          lyrics.clear();
-          translations.clear();
           _timestampsAndIndexes.clear();
           notifyListeners();
 
@@ -120,176 +120,189 @@ class LyricsNotifier extends ChangeNotifier {
   /// Index.
   int index = 0;
 
+  /// Whether the lyrics are loading.
+  bool lyricsLoading = false;
+
   /// Lyrics.
-  final Lyrics lyrics = <Lyric>[];
+  Lyrics lyrics = <Lyric>[];
+
+  /// Whether the translations are loading.
+  bool translationsLoading = false;
 
   /// Translations.
-  final Lyrics translations = <Lyric>[];
+  Lyrics translations = <Lyric>[];
+
+  /// Translation languages.
+  List<Language> translationLanguages = <Language>[];
 
   /// Translation language.
   Language translationLanguage = Configuration.instance.lyricsTranslationLanguage;
 
-  /// Translation languages.
-  final List<Language> translationLanguages = <Language>[];
+  /// Whether lyrics are shown on the desktop now playing screen.
+  bool desktopNowPlayingLyrics = Configuration.instance.desktopNowPlayingLyrics;
 
   /// Directory used to store lyrics.
   final Directory directory;
 
   /// Fetches lyrics for currently playing [Playable].
   Future<void> fetchLyrics() async {
-    final playable = _current;
-    final duration = _currentDuration;
-    if (playable == null || duration == null) return;
+    final localCurrent = _current;
+    final localCurrentDuration = _currentDuration;
+    if (localCurrent == null || localCurrentDuration == null) return;
+
+    if (_isCurrentGuard(localCurrent, localCurrentDuration)) {
+      lyricsLoading = true;
+      lyrics = [];
+      notifyListeners();
+    }
+
+    Lyrics? result;
 
     // 1. LRC.
 
-    debugPrint('LyricsNotifier: retrieve: LRC: ${playable.uri}');
-    try {
-      final file = uriToLRCFile(playable.uri);
-      if (await file.exists_()) {
-        final contents = await file.readAsString_();
-        if (contents != null && LrcParser.isValid(contents)) {
-          final lrc = LrcParser.parse(contents);
-          final result = lrc.lyrics;
-          if (!_isCurrentGuard(playable, duration)) return;
-          lyrics.addAll(result.map((e) => Lyric(timestamp: (lrc.offset ?? 0) + e.timestamp.inMilliseconds, text: e.lyrics.trim())).toList());
-          notifyListeners();
-          return;
+    if (result == null) {
+      debugPrint('LyricsNotifier: retrieve: LRC: ${localCurrent.uri}');
+      try {
+        final file = uriToLRCFile(localCurrent.uri);
+        if (await file.exists_()) {
+          final contents = await file.readAsString_();
+          if (contents != null && LrcParser.isValid(contents)) {
+            final lrc = LrcParser.parse(contents);
+            result = lrc.lyrics.map((e) => Lyric(timestamp: (lrc.offset ?? 0) + e.timestamp.inMilliseconds, text: e.lyrics.trim())).toList();
+          }
         }
-      }
-    } catch (exception, stacktrace) {
-      debugPrint(exception.toString());
-      debugPrint(stacktrace.toString());
-      if (_isCurrentGuard(playable, duration)) {
-        lyrics.clear();
-        notifyListeners();
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
       }
     }
 
     // 2. Tags.
 
-    debugPrint('LyricsNotifier: retrieve: Tags: ${playable.uri}');
-    try {
-      final track = FileSystemMediaLibrary.instance.lookupTrack(TrackLookupKey(uri: playable.uri));
-      if (track != null && LrcParser.isValid(track.lyrics)) {
-        final lrc = LrcParser.parse(track.lyrics);
-        final result = lrc.lyrics;
-        if (!_isCurrentGuard(playable, duration)) return;
-        lyrics.addAll(result.map((e) => Lyric(timestamp: (lrc.offset ?? 0) + e.timestamp.inMilliseconds, text: e.lyrics.trim())).toList());
-        notifyListeners();
-        return;
-      }
-    } catch (exception, stacktrace) {
-      debugPrint(exception.toString());
-      debugPrint(stacktrace.toString());
-      if (_isCurrentGuard(playable, duration)) {
-        lyrics.clear();
-        notifyListeners();
+    if (result == null) {
+      debugPrint('LyricsNotifier: retrieve: Tags: ${localCurrent.uri}');
+      try {
+        final track = FileSystemMediaLibrary.instance.lookupTrack(TrackLookupKey(uri: localCurrent.uri));
+        if (track != null && LrcParser.isValid(track.lyrics)) {
+          final lrc = LrcParser.parse(track.lyrics);
+          result = lrc.lyrics.map((e) => Lyric(timestamp: (lrc.offset ?? 0) + e.timestamp.inMilliseconds, text: e.lyrics.trim())).toList();
+        }
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
       }
     }
 
     // 3. Directory.
 
-    debugPrint('LyricsNotifier: retrieve: Directory: ${playable.uri}');
-    try {
-      if (Configuration.instance.lrcFromDirectory) {
-        final dir = dirname(playable.uri);
-        final name = basenameWithoutExtension(playable.uri);
-        final files = [
-          File(join(dir, '$name.lrc')),
-          File(join(dir, '$name.LRC')),
-        ];
-        for (final file in files) {
-          final contents = await file.readAsString_();
-          if (contents != null && LrcParser.isValid(contents)) {
-            final lrc = LrcParser.parse(contents);
-            final result = lrc.lyrics;
-            if (!_isCurrentGuard(playable, duration)) return;
-            lyrics.addAll(result.map((e) => Lyric(timestamp: (lrc.offset ?? 0) + e.timestamp.inMilliseconds, text: e.lyrics.trim())).toList());
-            notifyListeners();
-            return;
+    if (result == null) {
+      debugPrint('LyricsNotifier: retrieve: Directory: ${localCurrent.uri}');
+      try {
+        if (Configuration.instance.lrcFromDirectory) {
+          final dir = dirname(localCurrent.uri);
+          final name = basenameWithoutExtension(localCurrent.uri);
+          final files = [
+            File(join(dir, '$name.lrc')),
+            File(join(dir, '$name.LRC')),
+          ];
+          for (final file in files) {
+            final contents = await file.readAsString_();
+            if (contents != null && LrcParser.isValid(contents)) {
+              final lrc = LrcParser.parse(contents);
+              result = lrc.lyrics.map((e) => Lyric(timestamp: (lrc.offset ?? 0) + e.timestamp.inMilliseconds, text: e.lyrics.trim())).toList();
+            }
           }
         }
-      }
-    } catch (exception, stacktrace) {
-      debugPrint(exception.toString());
-      debugPrint(stacktrace.toString());
-      if (_isCurrentGuard(playable, duration)) {
-        lyrics.clear();
-        notifyListeners();
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
       }
     }
 
     // 4. API.
 
-    debugPrint('LyricsNotifier: retrieve: API: ${playable.uri}');
-    try {
-      final lyricsGet = LyricsGet();
-      final result = await lyricsGet.call(
-        playable.title,
-        playable.subtitle.firstOrNull ?? '',
-        duration.inMilliseconds,
-      );
-      if (result != null) {
-        if (!_isCurrentGuard(playable, duration)) return;
-        lyrics.addAll(result);
-        notifyListeners();
-
-        if (!contains(playable)) {
-          final file = uriToLRCFile(playable.uri);
-          await file.write_(result.toLrc());
+    if (result == null) {
+      debugPrint('LyricsNotifier: retrieve: API: ${localCurrent.uri}');
+      try {
+        final lyricsGet = LyricsGet();
+        final response = await lyricsGet.call(
+          localCurrent.title,
+          localCurrent.subtitle.firstOrNull ?? '',
+          localCurrentDuration.inMilliseconds,
+        );
+        if (response != null) {
+          result = response;
+          if (!contains(localCurrent)) {
+            final file = uriToLRCFile(localCurrent.uri);
+            await file.write_(response.toLrc());
+          }
         }
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+    }
 
-        return;
-      }
-    } catch (exception, stacktrace) {
-      debugPrint(exception.toString());
-      debugPrint(stacktrace.toString());
-      if (_isCurrentGuard(playable, duration)) {
-        lyrics.clear();
-        notifyListeners();
-      }
+    if (_isCurrentGuard(localCurrent, localCurrentDuration)) {
+      lyricsLoading = false;
+      lyrics = result ?? [];
+      notifyListeners();
     }
   }
 
   /// Fetches lyrics for currently playing [Playable].
   Future<void> fetchTranslations() async {
-    final language = translationLanguage;
-    final current = _current;
-    final duration = _currentDuration;
-    if (lyrics.isEmpty || language.code.isEmpty || current == null || duration == null) return;
+    final localTranslationLanguage = translationLanguage;
+    final localCurrent = _current;
+    final localCurrentDuration = _currentDuration;
+
+    if (localCurrent == null || localCurrentDuration == null) return;
+
+    if (lyrics.isEmpty || localTranslationLanguage.code.isEmpty && _isCurrentGuard(localCurrent, localCurrentDuration)) {
+      translationsLoading = false;
+      translations = [];
+      notifyListeners();
+      return;
+    }
+
+    if (_isCurrentGuard(localCurrent, localCurrentDuration)) {
+      translationsLoading = true;
+      translations = [];
+      notifyListeners();
+    }
+
+    Lyrics? result;
+
     try {
       final lyricsTranslationGet = LyricsTranslationGet();
-      final result = await lyricsTranslationGet.call(
+      final response = await lyricsTranslationGet.call(
         lyrics,
-        language.code,
-        current.title,
-        current.subtitle.firstOrNull ?? '',
-        duration.inMilliseconds,
+        localTranslationLanguage.code,
+        localCurrent.title,
+        localCurrent.subtitle.firstOrNull ?? '',
+        localCurrentDuration.inMilliseconds,
       );
-      if (!_isCurrentGuard(current, duration) || language != translationLanguage) return;
-      if (result != null && result.length == lyrics.length) {
-        translations.addAll(result);
-        notifyListeners();
+      if (response != null && response.length == lyrics.length && localTranslationLanguage == translationLanguage && _isCurrentGuard(localCurrent, localCurrentDuration)) {
+        result = response;
       }
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
-      if (_isCurrentGuard(current, duration)) {
-        lyrics.clear();
-        notifyListeners();
-      }
+    }
+
+    if (_isCurrentGuard(localCurrent, localCurrentDuration)) {
+      translationsLoading = false;
+      translations = result ?? [];
+      notifyListeners();
     }
   }
 
   /// Fetches the translation languages.
   Future<void> fetchTranslationLanguages() async {
     final remoteConfigProvider = RemoteConfigProvider();
-    final result = await remoteConfigProvider.get(RemoteConfigKey.lyricsTranslationLanguages);
-    if (result is LyricsTranslationLanguages) {
-      translationLanguages
-        ..clear()
-        ..addAll(result.value);
+    final response = await remoteConfigProvider.get(RemoteConfigKey.lyricsTranslationLanguages);
+    if (response is LyricsTranslationLanguages) {
+      translationLanguages = response.value;
       notifyListeners();
     }
   }
@@ -297,12 +310,16 @@ class LyricsNotifier extends ChangeNotifier {
   /// Sets the translation language.
   Future<void> setTranslationLanguage(Language language) async {
     translationLanguage = language;
-
-    translations.clear();
-    notifyListeners();
-
     await fetchTranslations();
     await Configuration.instance.set(lyricsTranslationLanguage: language);
+  }
+
+  /// Sets whether lyrics are shown on the desktop now playing screen.
+  Future<void> setDesktopNowPlayingLyrics(bool value) async {
+    if (desktopNowPlayingLyrics == value) return;
+    desktopNowPlayingLyrics = value;
+    notifyListeners();
+    await Configuration.instance.set(desktopNowPlayingLyrics: value);
   }
 
   /// Whether .LRC is present in cache for specified [playable].
@@ -457,7 +474,7 @@ class LyricsNotifier extends ChangeNotifier {
     return Configuration.instance.read<bool, bool>(kKeyMobileNotificationLyricsHidden, {kKeyMobileNotificationLyricsHidden: false});
   }
 
-  bool _isCurrentGuard(Playable playable, Duration duration) {
+  bool _isCurrentGuard(Playable? playable, Duration? duration) {
     try {
       return playable == MediaPlayer.instance.current && duration == MediaPlayer.instance.state.duration;
     } catch (_) {

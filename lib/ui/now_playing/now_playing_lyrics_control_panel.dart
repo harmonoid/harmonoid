@@ -16,27 +16,34 @@ import 'package:harmonoid/utils/slide_on_enter.dart';
 class NowPlayingLyricsControlPanel extends StatefulWidget {
   const NowPlayingLyricsControlPanel({super.key});
 
-  static Future<void> show(BuildContext context) async {
+  static const double kDesktopWidth = 300.0;
+  static const double kDesktopMargin = 16.0;
+
+  static Future<void> show(BuildContext context, {Rect? anchorBounds}) async {
     final path = context.location.split('/').last;
     if (isDesktop) {
       await showDialog(
         context: context,
         useRootNavigator: true,
         barrierColor: Colors.transparent,
-        builder: (context) => SlideOnEnter(
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(
-                16.0,
-                16.0,
-                16.0,
-                16.0 + (path == kNowPlayingPath ? 0.0 : NowPlayingBar.height),
-              ),
-              child: const NowPlayingLyricsControlPanel(),
+        builder: (context) {
+          final size = MediaQuery.sizeOf(context);
+          final bounds = path == kNowPlayingPath ? anchorBounds : null;
+          final maxLeft = size.width > kDesktopWidth + kDesktopMargin * 2 ? size.width - kDesktopWidth - kDesktopMargin : kDesktopMargin;
+          final left = bounds == null ? maxLeft : (bounds.center.dx - kDesktopWidth / 2).clamp(kDesktopMargin, maxLeft).toDouble();
+          final bottom = bounds == null ? kDesktopMargin + (path == kNowPlayingPath ? 0.0 : NowPlayingBar.height) : size.height - bounds.top + 8.0;
+          return SlideOnEnter(
+            child: Stack(
+              children: [
+                Positioned(
+                  left: left,
+                  bottom: bottom,
+                  child: const NowPlayingLyricsControlPanel(),
+                ),
+              ],
             ),
-          ),
-        ),
+          );
+        },
       );
     }
     if (isTablet) {
@@ -78,30 +85,70 @@ class NowPlayingLyricsControlPanelState extends State<NowPlayingLyricsControlPan
     await notifier.setTranslationLanguage(result);
   }
 
+  Widget _buildDesktopLyricsVisibility(BuildContext context) {
+    return Consumer<LyricsNotifier>(
+      builder: (context, notifier, _) {
+        return InkWell(
+          onTap: () => notifier.setDesktopNowPlayingLyrics(!notifier.desktopNowPlayingLyrics),
+          child: Container(
+            height: 48.0,
+            padding: const EdgeInsets.only(left: 20.0, right: 16.0),
+            child: Row(
+              children: [
+                Text(
+                  Localization.instance.SHOW_LYRICS,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                const SizedBox(width: 16.0),
+                if (notifier.lyricsLoading) const SizedBox.square(dimension: 12.0, child: CircularProgressIndicator()),
+                const Spacer(),
+                const SizedBox(width: 8.0),
+                Switch(
+                  value: notifier.desktopNowPlayingLyrics,
+                  onChanged: (value) => notifier.setDesktopNowPlayingLyrics(value),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildTranslationLanguage(BuildContext context) {
     return Consumer<LyricsNotifier>(
       builder: (context, notifier, _) {
         final selected = notifier.translationLanguage;
         final selectedName = context.read<SubscriptionNotifier>().state is! SubscriptionValid || selected.code.isEmpty ? Localization.instance.OFF : selected.name;
         return SubscriptionReveal(
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  Localization.instance.TRANSLATION,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
+          child: InkWell(
+            onTap: _openLanguageSelection,
+            child: Container(
+              height: 48.0,
+              padding: const EdgeInsets.only(left: 20.0, right: 16.0),
+              child: Row(
+                children: [
+                  Text(
+                    Localization.instance.TRANSLATION,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  const SizedBox(width: 16.0),
+                  if (notifier.translationsLoading) const SizedBox.square(dimension: 12.0, child: CircularProgressIndicator()),
+                  const Spacer(),
+                  const SizedBox(width: 8.0),
+                  ActionChip(
+                    elevation: 0.0,
+                    pressElevation: 0.0,
+                    onPressed: _openLanguageSelection,
+                    label: Text(selectedName),
+                  ),
+                ],
               ),
-              const SizedBox(width: 8.0),
-              ActionChip(
-                elevation: 0.0,
-                pressElevation: 0.0,
-                onPressed: _openLanguageSelection,
-                label: Text(selectedName),
-              ),
-            ],
+            ),
           ),
         );
       },
@@ -127,35 +174,54 @@ class NowPlayingLyricsControlPanelState extends State<NowPlayingLyricsControlPan
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Row(
-                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    Localization.instance.LYRICS_CONTROL_PANEL,
-                    style: Theme.of(context).textTheme.titleMedium,
+                  Expanded(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            Localization.instance.LYRICS_CONTROL_PANEL,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ),
+                        const SizedBox(width: 8.0),
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Theme.of(context).dividerColor,
+                            ),
+                          ),
+                          child: Text(
+                            Localization.instance.BETA.uppercase(),
+                            style: Theme.of(context).textTheme.labelSmall,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(width: 8.0),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Theme.of(context).dividerColor,
-                      ),
-                    ),
-                    child: Text(
-                      Localization.instance.BETA.uppercase(),
-                      style: Theme.of(context).textTheme.labelSmall,
-                    ),
+                  IconButton(
+                    visualDensity: VisualDensity.compact,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints.tightFor(width: 28.0, height: 28.0),
+                    iconSize: 18.0,
+                    tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.close),
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 12.0),
             const Divider(height: 1.0, thickness: 1.0),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-              child: _buildContent(context),
-            ),
+            _buildDesktopLyricsVisibility(context),
+            const Divider(height: 1.0, thickness: 1.0),
+            _buildContent(context),
           ],
         ),
       ),

@@ -21,27 +21,34 @@ import 'package:harmonoid/utils/widgets.dart';
 class NowPlayingAudioControlPanel extends StatefulWidget {
   const NowPlayingAudioControlPanel({super.key});
 
-  static Future<void> show(BuildContext context) async {
+  static const double kDesktopWidth = 300.0;
+  static const double kDesktopMargin = 16.0;
+
+  static Future<void> show(BuildContext context, {Rect? anchorBounds}) async {
     final path = context.location.split('/').last;
     if (isDesktop) {
       await showDialog(
         context: context,
         useRootNavigator: true,
         barrierColor: Colors.transparent,
-        builder: (context) => SlideOnEnter(
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(
-                16.0,
-                16.0,
-                16.0,
-                16.0 + (path == kNowPlayingPath ? 0.0 : NowPlayingBar.height),
-              ),
-              child: const NowPlayingAudioControlPanel(),
+        builder: (context) {
+          final size = MediaQuery.sizeOf(context);
+          final bounds = path == kNowPlayingPath ? anchorBounds : null;
+          final maxLeft = size.width > kDesktopWidth + kDesktopMargin * 2 ? size.width - kDesktopWidth - kDesktopMargin : kDesktopMargin;
+          final left = bounds == null ? maxLeft : (bounds.center.dx - kDesktopWidth / 2).clamp(kDesktopMargin, maxLeft).toDouble();
+          final bottom = bounds == null ? kDesktopMargin + (path == kNowPlayingPath ? 0.0 : NowPlayingBar.height) : size.height - bounds.top + 8.0;
+          return SlideOnEnter(
+            child: Stack(
+              children: [
+                Positioned(
+                  left: left,
+                  bottom: bottom,
+                  child: const NowPlayingAudioControlPanel(),
+                ),
+              ],
             ),
-          ),
-        ),
+          );
+        },
       );
     }
     if (isTablet) {
@@ -128,25 +135,45 @@ class NowPlayingAudioControlPanelState extends State<NowPlayingAudioControlPanel
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Row(
-                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    Localization.instance.AUDIO_CONTROL_PANEL,
-                    style: Theme.of(context).textTheme.titleMedium,
+                  Expanded(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            Localization.instance.AUDIO_CONTROL_PANEL,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ),
+                        const SizedBox(width: 8.0),
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Theme.of(context).dividerColor,
+                            ),
+                          ),
+                          child: Text(
+                            Localization.instance.BETA.uppercase(),
+                            style: Theme.of(context).textTheme.labelSmall,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(width: 8.0),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Theme.of(context).dividerColor,
-                      ),
-                    ),
-                    child: Text(
-                      Localization.instance.BETA.uppercase(),
-                      style: Theme.of(context).textTheme.labelSmall,
-                    ),
+                  IconButton(
+                    visualDensity: VisualDensity.compact,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints.tightFor(width: 28.0, height: 28.0),
+                    iconSize: 18.0,
+                    tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.close),
                   ),
                 ],
               ),

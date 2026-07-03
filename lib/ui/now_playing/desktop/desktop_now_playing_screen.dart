@@ -10,11 +10,13 @@ import 'package:provider/provider.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/duration.dart';
+import 'package:harmonoid/extensions/global_key.dart';
 import 'package:harmonoid/extensions/list.dart';
 import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/models/loop.dart';
+import 'package:harmonoid/state/lyrics_notifier.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
 import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/ui/now_playing/desktop/desktop_now_playing_playlist.dart';
@@ -37,19 +39,11 @@ class DesktopNowPlayingScreen extends StatefulWidget {
 
 class DesktopNowPlayingScreenState extends State<DesktopNowPlayingScreen> {
   int _desktopNowPlayingScreenCarousel = Configuration.instance.desktopNowPlayingCarousel;
-  bool _desktopNowPlayingScreenLyrics = Configuration.instance.desktopNowPlayingLyrics;
-
   Timer? _fullscreenTimer;
 
   void setDesktopNowPlayingCarousel(int value) {
     _desktopNowPlayingScreenCarousel = value;
     Configuration.instance.set(desktopNowPlayingCarousel: value);
-    setState(() {});
-  }
-
-  void setDesktopNowPlayingLyrics(bool value) {
-    _desktopNowPlayingScreenLyrics = value;
-    Configuration.instance.set(desktopNowPlayingLyrics: value);
     setState(() {});
   }
 
@@ -112,21 +106,22 @@ class DesktopNowPlayingScreenState extends State<DesktopNowPlayingScreen> {
                         child: Column(
                           children: [
                             Expanded(
-                              child: AnimatedSwitcher(
-                                duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
-                                switchInCurve: Curves.easeInOut,
-                                switchOutCurve: Curves.easeInOut,
-                                child: SizedBox(
-                                  key: ValueKey(_desktopNowPlayingScreenLyrics),
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                  child: _desktopNowPlayingScreenLyrics ? const NowPlayingLyrics() : const SizedBox(),
+                              child: Consumer<LyricsNotifier>(
+                                builder: (context, notifier, _) => AnimatedSwitcher(
+                                  duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+                                  switchInCurve: Curves.easeInOut,
+                                  switchOutCurve: Curves.easeInOut,
+                                  child: SizedBox(
+                                    key: ValueKey(notifier.desktopNowPlayingLyrics),
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    child: notifier.desktopNowPlayingLyrics ? const NowPlayingLyrics() : const SizedBox(),
+                                  ),
                                 ),
                               ),
                             ),
                             Controls(
                               setDesktopNowPlayingCarousel: setDesktopNowPlayingCarousel,
-                              setDesktopNowPlayingLyrics: setDesktopNowPlayingLyrics,
                             ),
                           ],
                         ),
@@ -161,15 +156,21 @@ class DesktopNowPlayingScreenState extends State<DesktopNowPlayingScreen> {
   }
 }
 
-class Controls extends StatelessWidget {
+class Controls extends StatefulWidget {
   final void Function(int value) setDesktopNowPlayingCarousel;
-  final void Function(bool value) setDesktopNowPlayingLyrics;
 
   const Controls({
     super.key,
     required this.setDesktopNowPlayingCarousel,
-    required this.setDesktopNowPlayingLyrics,
   });
+
+  @override
+  State<Controls> createState() => _ControlsState();
+}
+
+class _ControlsState extends State<Controls> {
+  final GlobalKey _lyricsControlPanelButtonKey = GlobalKey();
+  final GlobalKey _audioControlPanelButtonKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -412,13 +413,6 @@ class Controls extends StatelessWidget {
                         tooltip: Localization.instance.ADD_TO_PLAYLIST,
                       ),
                       IconButton(
-                        onPressed: () => setDesktopNowPlayingLyrics(!Configuration.instance.desktopNowPlayingLyrics),
-                        color: Configuration.instance.desktopNowPlayingLyrics ? nowPlayingColors.backgroundEnabledIcon : nowPlayingColors.backgroundDisabledIcon,
-                        icon: const Icon(Icons.text_format),
-                        splashRadius: 20.0,
-                        tooltip: Configuration.instance.desktopNowPlayingLyrics ? Localization.instance.HIDE_LYRICS : Localization.instance.SHOW_LYRICS,
-                      ),
-                      IconButton(
                         onPressed: mediaPlayer.muteOrUnmute,
                         color: nowPlayingColors.backgroundEnabledIcon,
                         icon: Icon(mediaPlayer.state.volume == 0.0 ? Icons.volume_off : (mediaPlayer.state.volume < 50.0 ? Icons.volume_down : Icons.volume_up)),
@@ -439,14 +433,16 @@ class Controls extends StatelessWidget {
                       ),
                       const SizedBox(width: 16.0),
                       IconButton(
-                        onPressed: () => NowPlayingLyricsControlPanel.show(context),
+                        key: _lyricsControlPanelButtonKey,
+                        onPressed: () => NowPlayingLyricsControlPanel.show(context, anchorBounds: _lyricsControlPanelButtonKey.globalPaintBounds),
                         color: nowPlayingColors.backgroundEnabledIcon,
                         icon: const Icon(Icons.text_format),
                         splashRadius: 20.0,
                         tooltip: Localization.instance.LYRICS_CONTROL_PANEL,
                       ),
                       IconButton(
-                        onPressed: () => NowPlayingAudioControlPanel.show(context),
+                        key: _audioControlPanelButtonKey,
+                        onPressed: () => NowPlayingAudioControlPanel.show(context, anchorBounds: _audioControlPanelButtonKey.globalPaintBounds),
                         color: nowPlayingColors.backgroundEnabledIcon,
                         icon: Transform.translate(
                           offset: const Offset(0.0, -1.0),
@@ -458,7 +454,7 @@ class Controls extends StatelessWidget {
                       ),
                       const Spacer(),
                       IconButton(
-                        onPressed: () => setDesktopNowPlayingCarousel(
+                        onPressed: () => widget.setDesktopNowPlayingCarousel(
                           (Configuration.instance.desktopNowPlayingCarousel - 1) % DesktopNowPlayingScreenCarousel.itemCount,
                         ),
                         color: nowPlayingColors.backgroundEnabledIcon,
@@ -467,7 +463,7 @@ class Controls extends StatelessWidget {
                         tooltip: Localization.instance.PREVIOUS,
                       ),
                       IconButton(
-                        onPressed: () => setDesktopNowPlayingCarousel(
+                        onPressed: () => widget.setDesktopNowPlayingCarousel(
                           (Configuration.instance.desktopNowPlayingCarousel + 1) % DesktopNowPlayingScreenCarousel.itemCount,
                         ),
                         color: nowPlayingColors.backgroundEnabledIcon,
