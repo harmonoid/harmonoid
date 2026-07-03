@@ -17,6 +17,7 @@ import 'package:harmonoid/utils/constants.dart';
 ///
 /// {@endtemplate}
 class UpdateNotifier extends ChangeNotifier {
+  static const String kSkipInAppUpdateDialog = 'SKIP_IN_APP_UPDATE_DIALOG';
   static const String kDesktopDownloadUrl = 'https://harmonoid.com/downloads';
   static const String kAndroidDownloadUrl = 'https://play.google.com/store/apps/details?id=com.alexmercerind.harmonoid';
 
@@ -35,6 +36,7 @@ class UpdateNotifier extends ChangeNotifier {
 
     if (release == null) return;
 
+    final skipInAppUpdateDialog = release.body.contains(kSkipInAppUpdateDialog);
     final latestVersion = release.tagName;
     const currentVersion = kVersion;
 
@@ -42,7 +44,7 @@ class UpdateNotifier extends ChangeNotifier {
     updateAvailable = _compareVersions(latestVersion, currentVersion);
     notifyListeners();
 
-    if (Configuration.instance.updateCheckVersion != latestVersion && updateAvailable) {
+    if (Configuration.instance.updateCheckVersion != latestVersion && !skipInAppUpdateDialog && updateAvailable) {
       final result = await showUpdate();
       if (result) {
         await download();
