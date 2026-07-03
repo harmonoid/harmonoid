@@ -104,7 +104,7 @@ class _NowPlayingLyricsState extends State<NowPlayingLyrics> {
             padding: EdgeInsets.only(
               left: 16.0,
               right: 16.0,
-              top: MediaQuery.sizeOf(context).height * -0.3,
+              top: MediaQuery.sizeOf(context).height * -0.1,
             ),
             focusedTextStyle: Theme.of(context).textTheme.displayLarge?.copyWith(
               fontSize: Configuration.instance.lyricsViewFocusedFontSize,

@@ -19,6 +19,31 @@ class NowPlayingLyricsControlPanel extends StatefulWidget {
   static const double kDesktopWidth = 300.0;
   static const double kDesktopMargin = 16.0;
 
+  // TODO: Move this back into the lyrics control panel flow once the panel grows beyond translation.
+  static Future<void> showTranslationLanguageSelection(BuildContext context, {bool subscription = false}) async {
+    Future<void> open() async {
+      final notifier = context.read<LyricsNotifier>();
+      final languages = notifier.translationLanguages;
+      final values = [Language(code: '', name: Localization.instance.OFF), ...languages];
+      final selected = notifier.translationLanguage;
+      final result = await showSelection(
+        context,
+        Localization.instance.TRANSLATION,
+        values,
+        selected,
+        (language) => language.name,
+      );
+      if (result == null) return;
+      await notifier.setTranslationLanguage(result);
+    }
+
+    if (subscription) {
+      await context.read<SubscriptionNotifier>().accessSubscriptionFeature(context, open);
+    } else {
+      await open();
+    }
+  }
+
   static Future<void> show(BuildContext context, {Rect? anchorBounds}) async {
     final path = context.location.split('/').last;
     if (isDesktop) {
@@ -69,22 +94,6 @@ class NowPlayingLyricsControlPanel extends StatefulWidget {
 }
 
 class NowPlayingLyricsControlPanelState extends State<NowPlayingLyricsControlPanel> {
-  Future<void> _openLanguageSelection() async {
-    final notifier = context.read<LyricsNotifier>();
-    final languages = notifier.translationLanguages;
-    final values = [Language(code: '', name: Localization.instance.OFF), ...languages];
-    final selected = notifier.translationLanguage;
-    final result = await showSelection(
-      context,
-      Localization.instance.TRANSLATION,
-      values,
-      selected,
-      (language) => language.name,
-    );
-    if (result == null) return;
-    await notifier.setTranslationLanguage(result);
-  }
-
   Widget _buildDesktopLyricsVisibility(BuildContext context) {
     return Consumer<LyricsNotifier>(
       builder: (context, notifier, _) {
@@ -124,7 +133,7 @@ class NowPlayingLyricsControlPanelState extends State<NowPlayingLyricsControlPan
         final selectedName = context.read<SubscriptionNotifier>().state is! SubscriptionValid || selected.code.isEmpty ? Localization.instance.OFF : selected.name;
         return SubscriptionReveal(
           child: InkWell(
-            onTap: _openLanguageSelection,
+            onTap: () => NowPlayingLyricsControlPanel.showTranslationLanguageSelection(context),
             child: Container(
               height: 48.0,
               padding: const EdgeInsets.only(left: 20.0, right: 16.0),
@@ -143,7 +152,7 @@ class NowPlayingLyricsControlPanelState extends State<NowPlayingLyricsControlPan
                   ActionChip(
                     elevation: 0.0,
                     pressElevation: 0.0,
-                    onPressed: _openLanguageSelection,
+                    onPressed: () => NowPlayingLyricsControlPanel.showTranslationLanguageSelection(context),
                     label: Text(selectedName),
                   ),
                 ],

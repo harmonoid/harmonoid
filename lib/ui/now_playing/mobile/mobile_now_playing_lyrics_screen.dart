@@ -5,11 +5,13 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/state/lyrics/lyrics_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_background.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_colors.dart';
 import 'package:harmonoid/ui/now_playing/now_playing_lyrics.dart';
+import 'package:harmonoid/ui/now_playing/now_playing_lyrics_control_panel.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 class MobileNowPlayingLyricsScreen extends StatefulWidget {
@@ -82,6 +84,26 @@ class _MobileNowPlayingLyricsScreenState extends State<MobileNowPlayingLyricsScr
                           onPressed: context.pop,
                           color: Theme.of(context).extension<IconColors>()?.appBarDark,
                           icon: const Icon(Icons.arrow_back),
+                        ),
+                      ),
+                      Positioned(
+                        top: MediaQuery.paddingOf(context).top + 8.0,
+                        right: MediaQuery.paddingOf(context).right + 8.0,
+                        child: Consumer<LyricsNotifier>(
+                          builder: (context, lyricsNotifier, _) {
+                            final color = Theme.of(context).extension<IconColors>()?.appBarDark;
+                            return IconButton(
+                              onPressed: () => NowPlayingLyricsControlPanel.showTranslationLanguageSelection(context, subscription: true),
+                              color: color,
+                              tooltip: Localization.instance.TRANSLATION,
+                              icon: lyricsNotifier.translationLoading
+                                  ? SizedBox.square(
+                                      dimension: 18.0,
+                                      child: CircularProgressIndicator(color: color),
+                                    )
+                                  : const Icon(Icons.translate),
+                            );
+                          },
                         ),
                       ),
                       Positioned(
