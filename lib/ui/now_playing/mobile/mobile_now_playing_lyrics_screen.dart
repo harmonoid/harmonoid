@@ -2,6 +2,7 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:identity/identity.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/localization/localization.dart';
@@ -47,7 +48,7 @@ class _MobileNowPlayingLyricsScreenState extends State<MobileNowPlayingLyricsScr
           return Provider<NowPlayingColors>.value(
             value: NowPlayingColors.fromPalette(
               context,
-              null,
+              nowPlayingColorPaletteNotifier.palette,
             ),
             builder: (context, _) {
               return Theme(
@@ -89,21 +90,23 @@ class _MobileNowPlayingLyricsScreenState extends State<MobileNowPlayingLyricsScr
                       Positioned(
                         top: MediaQuery.paddingOf(context).top + 8.0,
                         right: MediaQuery.paddingOf(context).right + 8.0,
-                        child: Consumer<LyricsNotifier>(
-                          builder: (context, lyricsNotifier, _) {
-                            final color = Theme.of(context).extension<IconColors>()?.appBarDark;
-                            return IconButton(
-                              onPressed: () => NowPlayingLyricsControlPanel.showTranslationLanguageSelection(context, subscription: true),
-                              color: color,
-                              tooltip: Localization.instance.TRANSLATION,
-                              icon: lyricsNotifier.translationLoading
-                                  ? SizedBox.square(
-                                      dimension: 18.0,
-                                      child: CircularProgressIndicator(color: color),
-                                    )
-                                  : const Icon(Icons.translate),
-                            );
-                          },
+                        child: SubscriptionReveal(
+                          child: Consumer<LyricsNotifier>(
+                            builder: (context, lyricsNotifier, _) {
+                              final color = Theme.of(context).extension<IconColors>()?.appBarDark;
+                              return IconButton(
+                                onPressed: () => NowPlayingLyricsControlPanel.showTranslationLanguageSelection(context, subscription: true),
+                                color: color,
+                                tooltip: Localization.instance.TRANSLATION,
+                                icon: lyricsNotifier.translationLoading
+                                    ? SizedBox.square(
+                                        dimension: 18.0,
+                                        child: CircularProgressIndicator(color: color),
+                                      )
+                                    : const Icon(Icons.translate),
+                              );
+                            },
+                          ),
                         ),
                       ),
                       Positioned(

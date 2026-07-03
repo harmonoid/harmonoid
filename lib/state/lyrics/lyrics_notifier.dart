@@ -55,7 +55,7 @@ class LyricsNotifier extends ChangeNotifier {
   static bool initialized = false;
 
   /// {@macro lyrics_notifier}
-  LyricsNotifier._(this.directory) : db = LyricsDatabase(directory) {
+  LyricsNotifier._() : db = LyricsDatabase(Configuration.instance.directory) {
     MediaPlayer.instance.addListener(
       () => _lock.synchronized(() async {
         if (MediaPlayer.instance.state.playables.isEmpty) return;
@@ -112,11 +112,7 @@ class LyricsNotifier extends ChangeNotifier {
   static Future<void> ensureInitialized() async {
     if (initialized) return;
     initialized = true;
-    final directory = Directory(join(Configuration.instance.directory.path, 'Lyrics'));
-    if (!await directory.exists_()) {
-      await directory.create_();
-    }
-    instance = LyricsNotifier._(directory);
+    instance = LyricsNotifier._();
     await instance.initializeNotification();
   }
 
@@ -143,9 +139,6 @@ class LyricsNotifier extends ChangeNotifier {
 
   /// Whether lyrics are shown on the desktop now playing screen.
   bool desktopNowPlayingLyrics = Configuration.instance.desktopNowPlayingLyrics;
-
-  /// Directory used to cache lyrics and lyrics translations.
-  final Directory directory;
 
   /// Database used to cache lyrics and lyrics translations.
   final LyricsDatabase db;
@@ -421,7 +414,7 @@ class LyricsNotifier extends ChangeNotifier {
     return null;
   }
 
-  File _legacyLrcCacheFileForUri(String uri) => File(join(directory.path, '${sha256.convert(utf8.encode(uri)).toString()}.LRC'));
+  File _legacyLrcCacheFileForUri(String uri) => File(join(Configuration.instance.directory.path, 'Lyrics', '${sha256.convert(utf8.encode(uri)).toString()}.LRC'));
 
   // --------------------------------------------------
 
