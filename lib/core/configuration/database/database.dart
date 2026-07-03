@@ -147,7 +147,7 @@ class Database extends _$Database {
       sqlite3.tempDirectory = cachebase;
 
       final file = File(path.join(directory.path, 'Configuration.DB'));
-      return NativeDatabase.createInBackground(file);
+      return NativeDatabase(file);
     });
   }
 }

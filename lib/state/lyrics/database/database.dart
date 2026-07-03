@@ -106,7 +106,7 @@ class LyricsDatabase extends _$LyricsDatabase {
   static LazyDatabase _openConnection(Directory directory) {
     return LazyDatabase(() async {
       final file = File(path.join(directory.path, 'Lyrics.DB'));
-      return NativeDatabase.createInBackground(file);
+      return NativeDatabase(file);
     });
   }
 }
