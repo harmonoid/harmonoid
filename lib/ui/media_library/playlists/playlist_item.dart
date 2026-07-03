@@ -26,7 +26,7 @@ class PlaylistItemState extends State<PlaylistItem> {
 
   Future<void> onSecondaryPress(BuildContext context, {RelativeRect? position}) async {
     final playlistMenuProvider = PlaylistMenuProvider(context, widget.playlist);
-    final result = await showMenuItems(context, playlistMenuProvider.getPopupMenuItems(), position: position);
+    final result = await showMenuItems(context, await playlistMenuProvider.getPopupMenuItems(), position: position);
     await playlistMenuProvider.handlePopupMenuAction(result);
   }
 

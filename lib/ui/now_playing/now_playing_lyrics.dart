@@ -54,7 +54,7 @@ class _NowPlayingLyricsState extends State<NowPlayingLyrics> {
       child: Consumer<LyricsNotifier>(
         builder: (context, lyricsNotifier, _) {
           final lyricsList = lyricsNotifier.lyrics.map((e) => e.text).toList();
-          final subscriptsList = lyricsNotifier.translations.map((e) => e.text).toList();
+          final subscriptsList = lyricsNotifier.translation.map((e) => e.text).toList();
           return LyricsView(
             selectionModeNotifier: widget.selectionModeNotifier,
             index: lyricsNotifier.index,
@@ -94,7 +94,7 @@ class _NowPlayingLyricsState extends State<NowPlayingLyrics> {
       child: Consumer<LyricsNotifier>(
         builder: (context, lyricsNotifier, _) {
           final lyricsList = lyricsNotifier.lyrics.map((e) => e.text).toList();
-          final subscriptsList = lyricsNotifier.translations.map((e) => e.text).toList();
+          final subscriptsList = lyricsNotifier.translation.map((e) => e.text).toList();
           return LyricsView(
             selectionModeNotifier: widget.selectionModeNotifier,
             index: lyricsNotifier.index,

@@ -7,6 +7,7 @@ import 'package:uri_parser/uri_parser.dart';
 import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/models/media_player_state.dart';
 import 'package:harmonoid/models/playable.dart';
+import 'package:harmonoid/state/lyrics/models/lyrics_key.dart';
 import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
@@ -62,6 +63,15 @@ extension PlayableMappers on Playable {
       track: title,
       album: album,
       duration: duration.inSeconds,
+    );
+  }
+
+  /// Converts to [LyricsKey].
+  LyricsKey toLyricsKey(Duration duration) {
+    return LyricsKey(
+      track: title,
+      artist: subtitle.firstOrNull ?? '',
+      duration: duration.inMilliseconds,
     );
   }
 }

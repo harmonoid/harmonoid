@@ -107,17 +107,27 @@ class _SelectionToolbarState extends State<SelectionToolbar> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          ...(limit != null ? TracksMenuAction.values.take(limit).toList() : TracksMenuAction.values).map(
-                            (action) => IconButton(
-                              icon: Icon(tracksMenuProvider.getIcon(action), color: _foregroundColor),
-                              onPressed: () => tracksMenuProvider.handlePopupMenuAction(action.index),
-                              tooltip: tracksMenuProvider.getLabel(action),
-                            ),
-                          ),
+                          ...[
+                            for (final action in limit != null ? TracksMenuAction.values.take(limit) : TracksMenuAction.values)
+                              FutureBuilder<String>(
+                                future: tracksMenuProvider.getLabel(action),
+                                builder: (context, snapshot) {
+                                  return IconButton(
+                                    icon: Icon(tracksMenuProvider.getIcon(action), color: _foregroundColor),
+                                    onPressed: () => tracksMenuProvider.handlePopupMenuAction(action.index),
+                                    tooltip: snapshot.data,
+                                  );
+                                },
+                              ),
+                          ],
                           if (limit != null && TracksMenuAction.values.length > limit)
                             IconButton(
                               icon: Icon(Icons.more_horiz, color: _foregroundColor),
-                              onPressed: () => showMenuItems(context, tracksMenuProvider.getPopupMenuItems().skip(limit).toList()).then((value) => tracksMenuProvider.handlePopupMenuAction(value)),
+                              onPressed: () async {
+                                final items = await tracksMenuProvider.getPopupMenuItems();
+                                final value = await showMenuItems(context, items.skip(limit).toList());
+                                await tracksMenuProvider.handlePopupMenuAction(value);
+                              },
                               tooltip: Localization.instance.MORE,
                             ),
                         ],

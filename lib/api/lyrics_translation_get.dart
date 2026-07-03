@@ -3,8 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:identity/identity.dart';
 
 import 'package:harmonoid/api/utils/constants.dart';
-import 'package:harmonoid/models/lyric.dart';
 import 'package:harmonoid/models/lyrics.dart';
+import 'package:harmonoid/models/lyrics_translation.dart';
 
 /// {@template lyrics_translation_get}
 ///
@@ -13,7 +13,7 @@ import 'package:harmonoid/models/lyrics.dart';
 ///
 /// {@endtemplate}
 class LyricsTranslationGet {
-  Future<Lyrics?> call(Lyrics lyrics, String language, String track, String artist, int duration) async {
+  Future<LyricsTranslation?> call(Lyrics lyrics, String language, String track, String artist, int duration) async {
     if (lyrics.isEmpty || language.isEmpty) return null;
     try {
       final response = await Supabase.instance.client.functions.invoke(
@@ -29,11 +29,7 @@ class LyricsTranslationGet {
         headers: {'X-API-Key': apiKey},
       );
       if (response.status != 200) return null;
-      final body = response.data;
-      final bodySame = body?['same'] as bool?;
-      final bodyLyrics = body?['lyrics']?.map<Lyric>((e) => Lyric.fromJson(e)).toList();
-      if (bodySame == true || bodyLyrics == null) return null;
-      return bodyLyrics;
+      return LyricsTranslation.fromJson(response.data);
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());

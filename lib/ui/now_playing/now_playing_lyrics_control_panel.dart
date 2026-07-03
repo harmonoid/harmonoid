@@ -137,7 +137,7 @@ class NowPlayingLyricsControlPanelState extends State<NowPlayingLyricsControlPan
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   const SizedBox(width: 16.0),
-                  if (notifier.translationsLoading) const SizedBox.square(dimension: 12.0, child: CircularProgressIndicator()),
+                  if (notifier.translationLoading) const SizedBox.square(dimension: 12.0, child: CircularProgressIndicator()),
                   const Spacer(),
                   const SizedBox(width: 8.0),
                   ActionChip(

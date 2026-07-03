@@ -55,7 +55,7 @@ class _GenreItemState extends State<GenreItem> {
   Future<void> onSecondaryPress(BuildContext context, {RelativeRect? position}) async {
     tracks = await context.read<MediaLibrary>().tracksFromGenre(widget.genre);
     final tracksMenuProvider = TracksMenuProvider(context, tracks!);
-    final result = await showMenuItems(context, tracksMenuProvider.getPopupMenuItems(), position: position);
+    final result = await showMenuItems(context, await tracksMenuProvider.getPopupMenuItems(), position: position);
     await tracksMenuProvider.handlePopupMenuAction(result);
   }
 

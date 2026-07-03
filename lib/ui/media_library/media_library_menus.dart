@@ -42,22 +42,14 @@ class TrackMenuProvider {
   final BuildContext context;
   final Track track;
 
-  List<PopupMenuItem<int>> getPopupMenuItems() {
-    return TrackMenuAction.values
-        .where((action) => getVisible(action))
-        .map(
-          (action) => PopupMenuItem<int>(
-            value: action.index,
-            child: ListTile(
-              leading: Icon(getIcon(action)),
-              title: Text(
-                getLabel(action),
-                style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-              ),
-            ),
-          ),
-        )
-        .toList();
+  Future<List<PopupMenuItem<int>>> getPopupMenuItems() {
+    return _buildPopupMenuItems(
+      context: context,
+      actions: TrackMenuAction.values,
+      getVisible: getVisible,
+      getIcon: getIcon,
+      getLabel: getLabel,
+    );
   }
 
   Future<void> handlePopupMenuAction(int? result, {Future<bool> Function()? recursivelyPopNavigatorOnDeleteIf}) async {
@@ -122,12 +114,12 @@ class TrackMenuProvider {
   }
 
   Future<void> setOrClearLrcFile() async {
-    if (_lyricsNotifier.contains(track.toPlayable())) {
-      await _lyricsNotifier.remove(track.toPlayable());
+    if (await _lyricsNotifier.contains(track)) {
+      await _lyricsNotifier.remove(track);
     } else {
       final file = await pickFile(extensions: Platform.isAndroid ? null : {'LRC'});
       if (file != null) {
-        final result = await _lyricsNotifier.add(track.toPlayable(), file);
+        final result = await _lyricsNotifier.add(track, file);
         if (!result) {
           await showMessage(
             context,
@@ -231,14 +223,14 @@ class TrackMenuProvider {
     };
   }
 
-  String getLabel(TrackMenuAction action) {
+  Future<String> getLabel(TrackMenuAction action) async {
     return switch (action) {
       TrackMenuAction.playNext => Localization.instance.PLAY_NEXT,
       TrackMenuAction.addToNowPlaying => Localization.instance.ADD_TO_NOW_PLAYING,
       TrackMenuAction.addToPlaylist => Localization.instance.ADD_TO_PLAYLIST,
       TrackMenuAction.showAlbum => Localization.instance.SHOW_ALBUM,
       TrackMenuAction.showArtists => Localization.instance.SHOW_ARTIST,
-      TrackMenuAction.setOrClearLrcFile => _lyricsNotifier.contains(track.toPlayable()) ? Localization.instance.CLEAR_LRC_FILE : Localization.instance.SET_LRC_FILE,
+      TrackMenuAction.setOrClearLrcFile => await _lyricsNotifier.contains(track) ? Localization.instance.CLEAR_LRC_FILE : Localization.instance.SET_LRC_FILE,
       TrackMenuAction.share => Localization.instance.SHARE,
       TrackMenuAction.showInFileManager => Localization.instance.SHOW_IN_FILE_MANAGER,
       TrackMenuAction.fileInformation => Localization.instance.FILE_INFORMATION,
@@ -345,22 +337,14 @@ class TracksMenuProvider extends _BaseTracksMenuProvider {
 
   final List<Track> tracks;
 
-  List<PopupMenuItem<int>> getPopupMenuItems() {
-    return TracksMenuAction.values
-        .where((action) => getVisible(action))
-        .map(
-          (action) => PopupMenuItem<int>(
-            value: action.index,
-            child: ListTile(
-              leading: Icon(getIcon(action)),
-              title: Text(
-                getLabel(action),
-                style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-              ),
-            ),
-          ),
-        )
-        .toList();
+  Future<List<PopupMenuItem<int>>> getPopupMenuItems() {
+    return _buildPopupMenuItems(
+      context: context,
+      actions: TracksMenuAction.values,
+      getVisible: getVisible,
+      getIcon: getIcon,
+      getLabel: getLabel,
+    );
   }
 
   Future<void> handlePopupMenuAction(int? result, {Future<bool> Function()? recursivelyPopNavigatorOnDeleteIf}) async {
@@ -397,7 +381,7 @@ class TracksMenuProvider extends _BaseTracksMenuProvider {
     };
   }
 
-  String getLabel(TracksMenuAction action) {
+  Future<String> getLabel(TracksMenuAction action) async {
     return switch (action) {
       TracksMenuAction.playAll => Localization.instance.PLAY_ALL,
       TracksMenuAction.shuffle => Localization.instance.SHUFFLE,
@@ -422,21 +406,14 @@ class DirectoryMenuProvider extends _BaseTracksMenuProvider {
 
   final Directory directory;
 
-  List<PopupMenuItem<int>> getPopupMenuItems() {
-    return DirectoryMenuAction.values
-        .map(
-          (action) => PopupMenuItem<int>(
-            value: action.index,
-            child: ListTile(
-              leading: Icon(getIcon(action)),
-              title: Text(
-                getLabel(action),
-                style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-              ),
-            ),
-          ),
-        )
-        .toList();
+  Future<List<PopupMenuItem<int>>> getPopupMenuItems() {
+    return _buildPopupMenuItems(
+      context: context,
+      actions: DirectoryMenuAction.values,
+      getVisible: (_) => true,
+      getIcon: getIcon,
+      getLabel: getLabel,
+    );
   }
 
   Future<void> handlePopupMenuAction(int? result, {Future<bool> Function()? recursivelyPopNavigatorOnDeleteIf}) async {
@@ -481,7 +458,7 @@ class DirectoryMenuProvider extends _BaseTracksMenuProvider {
     };
   }
 
-  String getLabel(DirectoryMenuAction action) {
+  Future<String> getLabel(DirectoryMenuAction action) async {
     return switch (action) {
       DirectoryMenuAction.playAll => Localization.instance.PLAY_ALL,
       DirectoryMenuAction.shuffle => Localization.instance.SHUFFLE,
@@ -503,27 +480,19 @@ class PlaylistMenuProvider {
   final BuildContext context;
   final Playlist playlist;
 
-  List<PopupMenuItem<int>> getPopupMenuItems() {
+  Future<List<PopupMenuItem<int>>> getPopupMenuItems() async {
     final mediaLibrary = context.read<MediaLibrary>();
     if (playlist == mediaLibrary.playlists.likedPlaylist || playlist == mediaLibrary.playlists.historyPlaylist) {
       return [];
     }
 
-    return PlaylistMenuAction.values
-        .where((action) => getVisible(action))
-        .map(
-          (action) => PopupMenuItem<int>(
-            value: action.index,
-            child: ListTile(
-              leading: Icon(getIcon(action)),
-              title: Text(
-                getLabel(action),
-                style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-              ),
-            ),
-          ),
-        )
-        .toList();
+    return await _buildPopupMenuItems(
+      context: context,
+      actions: PlaylistMenuAction.values,
+      getVisible: getVisible,
+      getIcon: getIcon,
+      getLabel: getLabel,
+    );
   }
 
   Future<void> handlePopupMenuAction(int? result) async {
@@ -577,7 +546,7 @@ class PlaylistMenuProvider {
     };
   }
 
-  String getLabel(PlaylistMenuAction action) {
+  Future<String> getLabel(PlaylistMenuAction action) async {
     return switch (action) {
       PlaylistMenuAction.rename => Localization.instance.RENAME,
       PlaylistMenuAction.delete => Localization.instance.DELETE,
@@ -598,22 +567,14 @@ class PlaylistEntryMenuProvider {
   final Playlist playlist;
   final PlaylistEntry playlistEntry;
 
-  List<PopupMenuItem<int>> getPopupMenuItems() {
-    return PlaylistEntryMenuAction.values
-        .where((action) => getVisible(action))
-        .map(
-          (action) => PopupMenuItem<int>(
-            value: action.index,
-            child: ListTile(
-              leading: Icon(getIcon(action)),
-              title: Text(
-                getLabel(action),
-                style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-              ),
-            ),
-          ),
-        )
-        .toList();
+  Future<List<PopupMenuItem<int>>> getPopupMenuItems() {
+    return _buildPopupMenuItems(
+      context: context,
+      actions: PlaylistEntryMenuAction.values,
+      getVisible: getVisible,
+      getIcon: getIcon,
+      getLabel: getLabel,
+    );
   }
 
   Future<void> handlePopupMenuAction(int? result) async {
@@ -647,7 +608,7 @@ class PlaylistEntryMenuProvider {
     };
   }
 
-  String getLabel(PlaylistEntryMenuAction action) {
+  Future<String> getLabel(PlaylistEntryMenuAction action) async {
     return switch (action) {
       PlaylistEntryMenuAction.remove => Localization.instance.REMOVE,
     };
@@ -686,4 +647,31 @@ Future<void> recursivelyPopNavigator() async {
     }
     router.pop();
   }
+}
+
+Future<List<PopupMenuItem<int>>> _buildPopupMenuItems<T extends Enum>({
+  required BuildContext context,
+  required Iterable<T> actions,
+  required bool Function(T action) getVisible,
+  required IconData Function(T action) getIcon,
+  required Future<String> Function(T action) getLabel,
+}) async {
+  final style = isDesktop ? Theme.of(context).textTheme.bodyLarge : null;
+  final items = <PopupMenuItem<int>>[];
+  for (final action in actions) {
+    if (!getVisible(action)) continue;
+    items.add(
+      PopupMenuItem<int>(
+        value: action.index,
+        child: ListTile(
+          leading: Icon(getIcon(action)),
+          title: Text(
+            await getLabel(action),
+            style: style,
+          ),
+        ),
+      ),
+    );
+  }
+  return items;
 }

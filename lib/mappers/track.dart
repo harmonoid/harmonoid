@@ -5,6 +5,7 @@ import 'package:media_library/media_library.dart';
 import 'package:harmonoid/extensions/set.dart';
 import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/models/playable.dart';
+import 'package:harmonoid/state/lyrics/models/lyrics_key.dart';
 import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
 import 'package:harmonoid/utils/constants.dart';
 
@@ -93,4 +94,13 @@ extension TrackMappers on Track {
     ],
     separator: ' • ',
   );
+
+  /// Converts to [LyricsKey].
+  LyricsKey toLyricsKey() {
+    return LyricsKey(
+      track: title,
+      artist: artists.firstOrNull ?? '',
+      duration: duration,
+    );
+  }
 }
