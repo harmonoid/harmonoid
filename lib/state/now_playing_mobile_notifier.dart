@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:harmonoid/state/in_app_review_notifier.dart';
 import 'package:harmonoid/ui/media_library/media_library_screen.dart';
 import 'package:harmonoid/ui/media_library/media_library_shell_route.dart';
 import 'package:harmonoid/ui/now_playing/mobile/m2_mobile_now_playing_bar.dart';
@@ -11,6 +14,8 @@ import 'package:harmonoid/ui/now_playing/mobile/m3_mobile_now_playing_bar.dart';
 ///
 /// {@endtemplate}
 class NowPlayingMobileNotifier {
+  static const Duration kInAppReviewDelay = Duration(seconds: 5);
+
   /// Singleton instance.
   static final NowPlayingMobileNotifier instance = NowPlayingMobileNotifier._();
 
@@ -21,6 +26,7 @@ class NowPlayingMobileNotifier {
   M2MobileNowPlayingBarState? _m2MobileNowPlayingBarStateRef;
   MediaLibraryScreenState? _mediaLibraryScreenStateRef;
   MediaLibraryShellRouteState? _mediaLibraryShellRouteStateRef;
+  Timer? _inAppReviewTimer;
 
   bool get maximized => (_m3MobileNowPlayingBarStateRef?.maximized ?? false) || (_m2MobileNowPlayingBarStateRef?.maximized ?? false);
 
@@ -77,5 +83,13 @@ class NowPlayingMobileNotifier {
 
   void setBottomNavigationBarVisibility(double value) {
     _mediaLibraryShellRouteStateRef?.mobileSetBottomNavigationBarVisibility(value);
+  }
+
+  void didMaximizeNowPlayingBar() {
+    _inAppReviewTimer?.cancel();
+    _inAppReviewTimer = Timer(kInAppReviewDelay, () async {
+      if (!maximized) return;
+      await InAppReviewNotifier.instance.requestReview();
+    });
   }
 }

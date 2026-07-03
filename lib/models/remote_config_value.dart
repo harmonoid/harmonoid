@@ -7,6 +7,7 @@ part 'remote_config_value.g.dart';
 
 @freezed
 sealed class RemoteConfigValue with _$RemoteConfigValue {
+  const factory RemoteConfigValue.enableInAppReview(bool value) = EnableInAppReview;
   const factory RemoteConfigValue.lyricsTranslationLanguages(List<Language> value) = LyricsTranslationLanguages;
 
   factory RemoteConfigValue.fromJson(Map<String, dynamic> json) => _$RemoteConfigValueFromJson(json);

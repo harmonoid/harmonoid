@@ -54,6 +54,9 @@ class ConfigurationBase {
   TrackSortType get mediaLibraryTrackSortType => _mediaLibraryTrackSortType!;
   Set<MediaLibraryTab> get mediaLibraryVisibleTabs => _mediaLibraryVisibleTabs!;
   PlaybackState get mediaPlayerPlaybackState => _mediaPlayerPlaybackState!;
+  String get metaInstallDate => _metaInstallDate!;
+  bool get metaInAppReviewSubmitted => _metaInAppReviewSubmitted!;
+  int get metaLaunchCount => _metaLaunchCount!;
   int get mobileMediaLibraryAlbumGridSpan => _mobileMediaLibraryAlbumGridSpan!;
   int get mobileMediaLibraryArtistGridSpan => _mobileMediaLibraryArtistGridSpan!;
   int get mobileMediaLibraryGenreGridSpan => _mobileMediaLibraryGenreGridSpan!;
@@ -117,6 +120,9 @@ class ConfigurationBase {
     TrackSortType? mediaLibraryTrackSortType,
     Set<MediaLibraryTab>? mediaLibraryVisibleTabs,
     PlaybackState? mediaPlayerPlaybackState,
+    String? metaInstallDate,
+    bool? metaInAppReviewSubmitted,
+    int? metaLaunchCount,
     int? mobileMediaLibraryAlbumGridSpan,
     int? mobileMediaLibraryArtistGridSpan,
     int? mobileMediaLibraryGenreGridSpan,
@@ -305,6 +311,18 @@ class ConfigurationBase {
       _mediaPlayerPlaybackState = mediaPlayerPlaybackState;
       await db.setValue(kKeyMediaPlayerPlaybackState, kTypeJson, jsonValue: mediaPlayerPlaybackState.toJson());
     }
+    if (metaInstallDate != null) {
+      _metaInstallDate = metaInstallDate;
+      await db.setValue(kKeyMetaInstallDate, kTypeString, stringValue: metaInstallDate);
+    }
+    if (metaInAppReviewSubmitted != null) {
+      _metaInAppReviewSubmitted = metaInAppReviewSubmitted;
+      await db.setValue(kKeyMetaInAppReviewSubmitted, kTypeBoolean, booleanValue: metaInAppReviewSubmitted);
+    }
+    if (metaLaunchCount != null) {
+      _metaLaunchCount = metaLaunchCount;
+      await db.setValue(kKeyMetaLaunchCount, kTypeInteger, integerValue: metaLaunchCount);
+    }
     if (mobileMediaLibraryAlbumGridSpan != null) {
       _mobileMediaLibraryAlbumGridSpan = mobileMediaLibraryAlbumGridSpan;
       await db.setValue(kKeyMobileMediaLibraryAlbumGridSpan, kTypeInteger, integerValue: mobileMediaLibraryAlbumGridSpan);
@@ -427,6 +445,9 @@ class ConfigurationBase {
       /* Integer */ kKeyMediaLibraryTrackSortType: TrackSortType.title.index,
       /* Json    */ kKeyMediaLibraryVisibleTabs: [MediaLibraryTab.albums.index, MediaLibraryTab.tracks.index, MediaLibraryTab.artists.index, MediaLibraryTab.folders.index, MediaLibraryTab.playlists.index],
       /* Json    */ kKeyMediaPlayerPlaybackState: MediaPlayerState.defaults().toPlaybackState(),
+      /* String  */ kKeyMetaInstallDate: DateTime.now().toIso8601String(),
+      /* Boolean */ kKeyMetaInAppReviewSubmitted: false,
+      /* Integer */ kKeyMetaLaunchCount: 0,
       /* Integer */ kKeyMobileMediaLibraryAlbumGridSpan: 2,
       /* Integer */ kKeyMobileMediaLibraryArtistGridSpan: 3,
       /* Integer */ kKeyMobileMediaLibraryGenreGridSpan: 3,
@@ -491,6 +512,9 @@ class ConfigurationBase {
   TrackSortType? _mediaLibraryTrackSortType;
   Set<MediaLibraryTab>? _mediaLibraryVisibleTabs;
   PlaybackState? _mediaPlayerPlaybackState;
+  String? _metaInstallDate;
+  bool? _metaInAppReviewSubmitted;
+  int? _metaLaunchCount;
   int? _mobileMediaLibraryAlbumGridSpan;
   int? _mobileMediaLibraryArtistGridSpan;
   int? _mobileMediaLibraryGenreGridSpan;
@@ -556,6 +580,9 @@ const kKeyMediaLibraryTrackSortAscending = 'MEDIA_LIBRARY_TRACK_SORT_ASCENDING';
 const kKeyMediaLibraryTrackSortType = 'MEDIA_LIBRARY_TRACK_SORT_TYPE';
 const kKeyMediaLibraryVisibleTabs = 'MEDIA_LIBRARY_VISIBLE_TABS';
 const kKeyMediaPlayerPlaybackState = 'MEDIA_PLAYER_PLAYBACK_STATE';
+const kKeyMetaInstallDate = 'META_INSTALL_DATE';
+const kKeyMetaInAppReviewSubmitted = 'META_IN_APP_REVIEW_SUBMITTED';
+const kKeyMetaLaunchCount = 'META_LAUNCH_COUNT';
 const kKeyMobileMediaLibraryAlbumGridSpan = 'MOBILE_MEDIA_LIBRARY_ALBUM_GRID_SPAN';
 const kKeyMobileMediaLibraryArtistGridSpan = 'MOBILE_MEDIA_LIBRARY_ARTIST_GRID_SPAN';
 const kKeyMobileMediaLibraryGenreGridSpan = 'MOBILE_MEDIA_LIBRARY_GENRE_GRID_SPAN';

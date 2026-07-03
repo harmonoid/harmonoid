@@ -129,6 +129,9 @@ class Configuration extends ConfigurationBase {
     _mediaLibraryTrackSortType = await read<int, TrackSortType>(kKeyMediaLibraryTrackSortType, defaults, (value) => TrackSortType.values[value]);
     _mediaLibraryVisibleTabs = await read<dynamic, Set<MediaLibraryTab>>(kKeyMediaLibraryVisibleTabs, defaults, (value) => value.map<MediaLibraryTab>((e) => MediaLibraryTab.values[e]).toSet());
     _mediaPlayerPlaybackState = await read<dynamic, PlaybackState>(kKeyMediaPlayerPlaybackState, defaults, (value) => PlaybackState.fromJson(value));
+    _metaInstallDate = await read<String, String>(kKeyMetaInstallDate, defaults);
+    _metaInAppReviewSubmitted = await read<bool, bool>(kKeyMetaInAppReviewSubmitted, defaults);
+    _metaLaunchCount = await read<int, int>(kKeyMetaLaunchCount, defaults);
     _mobileMediaLibraryAlbumGridSpan = await read<int, int>(kKeyMobileMediaLibraryAlbumGridSpan, defaults);
     _mobileMediaLibraryArtistGridSpan = await read<int, int>(kKeyMobileMediaLibraryArtistGridSpan, defaults);
     _mobileMediaLibraryGenreGridSpan = await read<int, int>(kKeyMobileMediaLibraryGenreGridSpan, defaults);

@@ -14,6 +14,7 @@ import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/state/in_app_review_notifier.dart';
 import 'package:harmonoid/state/lyrics/lyrics_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/now_playing_visuals_notifier.dart';
@@ -128,6 +129,7 @@ Future<void> main(List<String> args) async {
       animationDuration: Configuration.instance.themeAnimationDuration,
     );
     await LyricsNotifier.ensureInitialized();
+    await InAppReviewNotifier.ensureInitialized();
     await NowPlayingVisualsNotifier.ensureInitialized();
     await NowPlayingColorPaletteNotifier.ensureInitialized();
     runApp(const Harmonoid());

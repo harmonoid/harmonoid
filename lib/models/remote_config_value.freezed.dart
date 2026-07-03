@@ -14,20 +14,31 @@ T _$identity<T>(T value) => value;
 RemoteConfigValue _$RemoteConfigValueFromJson(
   Map<String, dynamic> json
 ) {
-    return LyricsTranslationLanguages.fromJson(
-      json
-    );
+        switch (json['runtimeType']) {
+                  case 'enableInAppReview':
+          return EnableInAppReview.fromJson(
+            json
+          );
+                case 'lyricsTranslationLanguages':
+          return LyricsTranslationLanguages.fromJson(
+            json
+          );
+
+          default:
+            throw CheckedFromJsonException(
+  json,
+  'runtimeType',
+  'RemoteConfigValue',
+  'Invalid union type "${json['runtimeType']}"!'
+);
+        }
+
 }
 
 /// @nodoc
 mixin _$RemoteConfigValue {
 
- List<Language> get value;
-/// Create a copy of RemoteConfigValue
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$RemoteConfigValueCopyWith<RemoteConfigValue> get copyWith => _$RemoteConfigValueCopyWithImpl<RemoteConfigValue>(this as RemoteConfigValue, _$identity);
+ Object get value;
 
   /// Serializes this RemoteConfigValue to a JSON map.
   Map<String, dynamic> toJson();
@@ -51,34 +62,8 @@ String toString() {
 }
 
 /// @nodoc
-abstract mixin class $RemoteConfigValueCopyWith<$Res>  {
-  factory $RemoteConfigValueCopyWith(RemoteConfigValue value, $Res Function(RemoteConfigValue) _then) = _$RemoteConfigValueCopyWithImpl;
-@useResult
-$Res call({
- List<Language> value
-});
-
-
-
-
-}
-/// @nodoc
-class _$RemoteConfigValueCopyWithImpl<$Res>
-    implements $RemoteConfigValueCopyWith<$Res> {
-  _$RemoteConfigValueCopyWithImpl(this._self, this._then);
-
-  final RemoteConfigValue _self;
-  final $Res Function(RemoteConfigValue) _then;
-
-/// Create a copy of RemoteConfigValue
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? value = null,}) {
-  return _then(_self.copyWith(
-value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
-as List<Language>,
-  ));
-}
-
+class $RemoteConfigValueCopyWith<$Res>  {
+$RemoteConfigValueCopyWith(RemoteConfigValue _, $Res Function(RemoteConfigValue) __);
 }
 
 
@@ -96,10 +81,11 @@ extension RemoteConfigValuePatterns on RemoteConfigValue {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( LyricsTranslationLanguages value)?  lyricsTranslationLanguages,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( EnableInAppReview value)?  enableInAppReview,TResult Function( LyricsTranslationLanguages value)?  lyricsTranslationLanguages,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case LyricsTranslationLanguages() when lyricsTranslationLanguages != null:
+case EnableInAppReview() when enableInAppReview != null:
+return enableInAppReview(_that);case LyricsTranslationLanguages() when lyricsTranslationLanguages != null:
 return lyricsTranslationLanguages(_that);case _:
   return orElse();
 
@@ -118,10 +104,11 @@ return lyricsTranslationLanguages(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( LyricsTranslationLanguages value)  lyricsTranslationLanguages,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( EnableInAppReview value)  enableInAppReview,required TResult Function( LyricsTranslationLanguages value)  lyricsTranslationLanguages,}){
 final _that = this;
 switch (_that) {
-case LyricsTranslationLanguages():
+case EnableInAppReview():
+return enableInAppReview(_that);case LyricsTranslationLanguages():
 return lyricsTranslationLanguages(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
@@ -136,10 +123,11 @@ return lyricsTranslationLanguages(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( LyricsTranslationLanguages value)?  lyricsTranslationLanguages,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( EnableInAppReview value)?  enableInAppReview,TResult? Function( LyricsTranslationLanguages value)?  lyricsTranslationLanguages,}){
 final _that = this;
 switch (_that) {
-case LyricsTranslationLanguages() when lyricsTranslationLanguages != null:
+case EnableInAppReview() when enableInAppReview != null:
+return enableInAppReview(_that);case LyricsTranslationLanguages() when lyricsTranslationLanguages != null:
 return lyricsTranslationLanguages(_that);case _:
   return null;
 
@@ -157,9 +145,10 @@ return lyricsTranslationLanguages(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( List<Language> value)?  lyricsTranslationLanguages,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( bool value)?  enableInAppReview,TResult Function( List<Language> value)?  lyricsTranslationLanguages,required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case LyricsTranslationLanguages() when lyricsTranslationLanguages != null:
+case EnableInAppReview() when enableInAppReview != null:
+return enableInAppReview(_that.value);case LyricsTranslationLanguages() when lyricsTranslationLanguages != null:
 return lyricsTranslationLanguages(_that.value);case _:
   return orElse();
 
@@ -178,9 +167,10 @@ return lyricsTranslationLanguages(_that.value);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( List<Language> value)  lyricsTranslationLanguages,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( bool value)  enableInAppReview,required TResult Function( List<Language> value)  lyricsTranslationLanguages,}) {final _that = this;
 switch (_that) {
-case LyricsTranslationLanguages():
+case EnableInAppReview():
+return enableInAppReview(_that.value);case LyricsTranslationLanguages():
 return lyricsTranslationLanguages(_that.value);}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -195,9 +185,10 @@ return lyricsTranslationLanguages(_that.value);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( List<Language> value)?  lyricsTranslationLanguages,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( bool value)?  enableInAppReview,TResult? Function( List<Language> value)?  lyricsTranslationLanguages,}) {final _that = this;
 switch (_that) {
-case LyricsTranslationLanguages() when lyricsTranslationLanguages != null:
+case EnableInAppReview() when enableInAppReview != null:
+return enableInAppReview(_that.value);case LyricsTranslationLanguages() when lyricsTranslationLanguages != null:
 return lyricsTranslationLanguages(_that.value);case _:
   return null;
 
@@ -209,8 +200,81 @@ return lyricsTranslationLanguages(_that.value);case _:
 /// @nodoc
 @JsonSerializable()
 
+class EnableInAppReview implements RemoteConfigValue {
+  const EnableInAppReview(this.value, {final  String? $type}): $type = $type ?? 'enableInAppReview';
+  factory EnableInAppReview.fromJson(Map<String, dynamic> json) => _$EnableInAppReviewFromJson(json);
+
+@override final  bool value;
+
+@JsonKey(name: 'runtimeType')
+final String $type;
+
+
+/// Create a copy of RemoteConfigValue
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$EnableInAppReviewCopyWith<EnableInAppReview> get copyWith => _$EnableInAppReviewCopyWithImpl<EnableInAppReview>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$EnableInAppReviewToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EnableInAppReview&&(identical(other.value, value) || other.value == value));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,value);
+
+@override
+String toString() {
+  return 'RemoteConfigValue.enableInAppReview(value: $value)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $EnableInAppReviewCopyWith<$Res> implements $RemoteConfigValueCopyWith<$Res> {
+  factory $EnableInAppReviewCopyWith(EnableInAppReview value, $Res Function(EnableInAppReview) _then) = _$EnableInAppReviewCopyWithImpl;
+@useResult
+$Res call({
+ bool value
+});
+
+
+
+
+}
+/// @nodoc
+class _$EnableInAppReviewCopyWithImpl<$Res>
+    implements $EnableInAppReviewCopyWith<$Res> {
+  _$EnableInAppReviewCopyWithImpl(this._self, this._then);
+
+  final EnableInAppReview _self;
+  final $Res Function(EnableInAppReview) _then;
+
+/// Create a copy of RemoteConfigValue
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? value = null,}) {
+  return _then(EnableInAppReview(
+null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
 class LyricsTranslationLanguages implements RemoteConfigValue {
-  const LyricsTranslationLanguages(final  List<Language> value): _value = value;
+  const LyricsTranslationLanguages(final  List<Language> value, {final  String? $type}): _value = value,$type = $type ?? 'lyricsTranslationLanguages';
   factory LyricsTranslationLanguages.fromJson(Map<String, dynamic> json) => _$LyricsTranslationLanguagesFromJson(json);
 
  final  List<Language> _value;
@@ -221,9 +285,13 @@ class LyricsTranslationLanguages implements RemoteConfigValue {
 }
 
 
+@JsonKey(name: 'runtimeType')
+final String $type;
+
+
 /// Create a copy of RemoteConfigValue
 /// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
+@JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $LyricsTranslationLanguagesCopyWith<LyricsTranslationLanguages> get copyWith => _$LyricsTranslationLanguagesCopyWithImpl<LyricsTranslationLanguages>(this, _$identity);
 
@@ -252,7 +320,7 @@ String toString() {
 /// @nodoc
 abstract mixin class $LyricsTranslationLanguagesCopyWith<$Res> implements $RemoteConfigValueCopyWith<$Res> {
   factory $LyricsTranslationLanguagesCopyWith(LyricsTranslationLanguages value, $Res Function(LyricsTranslationLanguages) _then) = _$LyricsTranslationLanguagesCopyWithImpl;
-@override @useResult
+@useResult
 $Res call({
  List<Language> value
 });
@@ -271,7 +339,7 @@ class _$LyricsTranslationLanguagesCopyWithImpl<$Res>
 
 /// Create a copy of RemoteConfigValue
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? value = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? value = null,}) {
   return _then(LyricsTranslationLanguages(
 null == value ? _self._value : value // ignore: cast_nullable_to_non_nullable
 as List<Language>,

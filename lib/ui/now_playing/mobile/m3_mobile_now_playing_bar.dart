@@ -117,7 +117,11 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
                               _panelController.close();
                             }
 
+                            final wasMaximized = _valueNotifier.value == 1.0;
                             _valueNotifier.value = percentage;
+                            if (!wasMaximized && percentage == 1.0) {
+                              context.read<NowPlayingMobileNotifier>().didMaximizeNowPlayingBar();
+                            }
                             context.read<NowPlayingMobileNotifier>().setBottomNavigationBarVisibility((1.0 - percentage * 2.0).clamp(0.0, 1.0));
                           } catch (_) {}
                         });

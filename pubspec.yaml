@@ -41,6 +41,7 @@ dependencies:
   http: ^1.2.1
   identity:
     path: external/identity
+  in_app_review: ^2.0.12
   json_annotation: ^4.9.0
   lastfm:
     path: external/lastfm

@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/color.dart';
+import 'package:harmonoid/state/in_app_review_notifier.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -70,6 +71,10 @@ class _AboutScreenState extends State<AboutScreen> {
       Uri.parse(value),
       mode: LaunchMode.externalApplication,
     );
+  }
+
+  Future<void> _requestReview() {
+    return InAppReviewNotifier.instance.requestReview(force: true);
   }
 
   EdgeInsets _headerPadding() {
@@ -147,12 +152,15 @@ class _AboutScreenState extends State<AboutScreen> {
               height: 96.0,
               child: Row(
                 children: [
-                  Container(
-                    width: 112.0,
-                    height: 96.0,
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.all(24.0),
-                    child: _imagePicture,
+                  GestureDetector(
+                    onDoubleTap: _requestReview,
+                    child: Container(
+                      width: 112.0,
+                      height: 96.0,
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(24.0),
+                      child: _imagePicture,
+                    ),
                   ),
                   Expanded(
                     child: Column(
@@ -165,16 +173,16 @@ class _AboutScreenState extends State<AboutScreen> {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                color: _fg0M3,
-                              ),
+                            color: _fg0M3,
+                          ),
                         ),
                         Text(
                           kVersion,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: _fg0M3,
-                              ),
+                            color: _fg0M3,
+                          ),
                         ),
                       ],
                     ),
@@ -208,13 +216,16 @@ class _AboutScreenState extends State<AboutScreen> {
               height: 96.0,
               child: Row(
                 children: [
-                  Container(
-                    width: 96.0,
-                    height: 96.0,
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.all(24.0),
-                    color: ThemeNotifier.kDefaultLightPrimaryColorM2,
-                    child: _imagePicture,
+                  GestureDetector(
+                    onDoubleTap: _requestReview,
+                    child: Container(
+                      width: 96.0,
+                      height: 96.0,
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(24.0),
+                      color: ThemeNotifier.kDefaultLightPrimaryColorM2,
+                      child: _imagePicture,
+                    ),
                   ),
                   const SizedBox(width: 28.0),
                   Expanded(
