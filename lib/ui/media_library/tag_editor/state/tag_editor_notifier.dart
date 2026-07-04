@@ -145,7 +145,7 @@ class TagEditorNotifier extends ChangeNotifier {
 
   Future<void> exportCover() async {
     if (cover == null) return;
-    await FilePicker.platform.saveFile(
+    await FilePicker.saveFile(
       fileName: '${const Uuid().v4()}.${cover!.mimeType.split('/').last}',
       type: FileType.custom,
       allowedExtensions: [cover!.mimeType.split('/').last],

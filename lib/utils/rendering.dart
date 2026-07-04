@@ -510,7 +510,7 @@ Future<File?> pickFile({Set<String>? extensions}) async {
     return DarwinStorageController.instance.pickFile(extensions?.toList() ?? []);
   }
 
-  final result = await FilePicker.platform.pickFiles(
+  final result = await FilePicker.pickFile(
     type: extensions == null ? FileType.any : FileType.custom,
     allowedExtensions: extensions == null
         ? null
@@ -519,11 +519,8 @@ Future<File?> pickFile({Set<String>? extensions}) async {
             ...extensions.map((e) => e.toUpperCase()),
           }.toList(),
   );
-  if ((result?.count ?? 0) > 0) {
-    final path = result?.files.first.path;
-    return path != null ? File(path) : null;
-  }
-  return null;
+  final path = result?.path;
+  return path == null ? null : File(path);
 }
 
 Future<Directory?> pickDirectory() async {
@@ -533,8 +530,8 @@ Future<Directory?> pickDirectory() async {
   if (Platform.isMacOS || Platform.isIOS) {
     return DarwinStorageController.instance.pickDirectory();
   }
-  final path = await FilePicker.platform.getDirectoryPath();
-  return path != null ? Directory(path) : null;
+  final path = await FilePicker.getDirectoryPath();
+  return path == null ? null : Directory(path);
 }
 
 Future<String?> pickResource(BuildContext context, String title) async {

@@ -7,6 +7,25 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>ogg</string>
+				<string>oga</string>
+				<string>ogx</string>
+				<string>aac</string>
+				<string>m4a</string>
+				<string>mp3</string>
+				<string>wma</string>
+				<string>wav</string>
+				<string>flac</string>
+				<string>opus</string>
+				<string>aiff</string>
+				<string>ac3</string>
+				<string>adt</string>
+				<string>adts</string>
+				<string>amr</string>
+				<string>ec3</string>
+			</array>
 			<key>CFBundleTypeIconSystemGenerated</key>
 			<integer>1</integer>
 			<key>CFBundleTypeName</key>
@@ -19,27 +38,15 @@
 			<array>
 				<string>public.audio</string>
 			</array>
-			<key>CFBundleTypeExtensions</key>
-            <array>
-                <string>ogg</string>
-                <string>oga</string>
-                <string>ogx</string>
-                <string>aac</string>
-                <string>m4a</string>
-                <string>mp3</string>
-                <string>wma</string>
-                <string>wav</string>
-                <string>flac</string>
-                <string>opus</string>
-                <string>aiff</string>
-                <string>ac3</string>
-                <string>adt</string>
-                <string>adts</string>
-                <string>amr</string>
-                <string>ec3</string>
-            </array>
 		</dict>
 		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>m3u</string>
+				<string>m4r</string>
+				<string>wpl</string>
+				<string>zpl</string>
+			</array>
 			<key>CFBundleTypeIconSystemGenerated</key>
 			<integer>1</integer>
 			<key>CFBundleTypeName</key>
@@ -52,13 +59,6 @@
 			<array>
 				<string>public.text</string>
 			</array>
-			<key>CFBundleTypeExtensions</key>
-            <array>
-                <string>m3u</string>
-                <string>m4r</string>
-                <string>wpl</string>
-                <string>zpl</string>
-            </array>
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>

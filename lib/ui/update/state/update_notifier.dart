@@ -18,8 +18,9 @@ import 'package:harmonoid/utils/constants.dart';
 /// {@endtemplate}
 class UpdateNotifier extends ChangeNotifier {
   static const String kSkipInAppUpdateDialog = 'SKIP_IN_APP_UPDATE_DIALOG';
-  static const String kDesktopDownloadUrl = 'https://harmonoid.com/downloads';
+  static const String kDownloadUrl = 'https://harmonoid.com/downloads';
   static const String kAndroidDownloadUrl = 'https://play.google.com/store/apps/details?id=com.alexmercerind.harmonoid';
+  static const String kIOSDownloadUrl = 'https://apps.apple.com/us/app/harmonoid/id6787241125';
 
   UpdateNotifier({required this.showUpdate}) {
     unawaited(check());
@@ -55,10 +56,14 @@ class UpdateNotifier extends ChangeNotifier {
   }
 
   Future<void> download() {
-    return launchUrlString(
-      Platform.isAndroid ? kAndroidDownloadUrl : kDesktopDownloadUrl,
-      mode: LaunchMode.externalApplication,
-    );
+    String url = kDownloadUrl;
+    if (Platform.isAndroid) {
+      url = kAndroidDownloadUrl;
+    }
+    if (Platform.isIOS) {
+      url = kIOSDownloadUrl;
+    }
+    return launchUrlString(url, mode: LaunchMode.externalApplication);
   }
 
   bool _compareVersions(String? latestVersion, String currentVersion) {

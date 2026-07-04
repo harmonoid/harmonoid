@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:io';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:collection/collection.dart';
@@ -241,24 +240,11 @@ Future<String> getDefaultDirectory() async {
   } else if (Platform.isWindows) {
     String? value;
 
-    final rfid = GUIDFromString(FOLDERID_LocalAppData);
-    final result = calloc<PWSTR>();
     try {
-      final hr = SHGetKnownFolderPath(
-        rfid,
-        KF_FLAG_DEFAULT,
-        NULL,
-        result,
-      );
-      if (SUCCEEDED(hr)) {
-        value ??= path.normalize(result.value.toDartString());
-      }
+      value ??= _win32GetKnownFolderPath(FOLDERID_LocalAppData);
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
-    } finally {
-      calloc.free(rfid);
-      calloc.free(result);
     }
 
     try {
@@ -293,24 +279,11 @@ Future<String> getLegacyDefaultDirectory() async {
   } else if (Platform.isWindows) {
     String? value;
 
-    final rfid = GUIDFromString(FOLDERID_Profile);
-    final result = calloc<PWSTR>();
     try {
-      final hr = SHGetKnownFolderPath(
-        rfid,
-        KF_FLAG_DEFAULT,
-        NULL,
-        result,
-      );
-      if (SUCCEEDED(hr)) {
-        value ??= path.normalize(result.value.toDartString());
-      }
+      value ??= _win32GetKnownFolderPath(FOLDERID_Profile);
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
-    } finally {
-      calloc.free(rfid);
-      calloc.free(result);
     }
 
     try {
@@ -378,25 +351,11 @@ Future<List<String>> getDefaultMediaLibraryDirectories() async {
   } else if (Platform.isWindows) {
     String? value;
 
-    final rfid = GUIDFromString(FOLDERID_Music);
-    final result = calloc<PWSTR>();
-
     try {
-      final hr = SHGetKnownFolderPath(
-        rfid,
-        KF_FLAG_DEFAULT,
-        NULL,
-        result,
-      );
-      if (SUCCEEDED(hr)) {
-        value ??= path.normalize(result.value.toDartString());
-      }
+      value ??= _win32GetKnownFolderPath(FOLDERID_Music);
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
-    } finally {
-      calloc.free(rfid);
-      calloc.free(result);
     }
 
     try {
@@ -412,6 +371,21 @@ Future<List<String>> getDefaultMediaLibraryDirectories() async {
     return [value!];
   }
   throw UnsupportedError('Unsupported platform: ${Platform.operatingSystem}');
+}
+
+String _win32GetKnownFolderPath(GUID folderID) {
+  return using((arena) {
+    final result = SHGetKnownFolderPath(
+      folderID.toNative(allocator: arena),
+      KF_FLAG_DEFAULT,
+      null,
+    );
+    try {
+      return path.normalize(result.toDartString());
+    } finally {
+      CoTaskMemFree(result);
+    }
+  });
 }
 
 extension on Set<AlbumGroupingParameter> {

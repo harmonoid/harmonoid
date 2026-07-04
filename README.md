@@ -72,7 +72,7 @@
 - Multiple artist & genre support.
 - Fallback cover support. e.g. cover.jpg, Folder.jpg etc.
 - Small installer (≈ 35 MB) & low RAM usage (≈ 150 MB).
-- Excellent backward compatibility, Windows 10+, macOS 10.15+, Android 7.0+ & iOS 13.0+.
+- Excellent backward compatibility, Windows 10+, macOS 10.15+, Android 7.0+ & iOS 14.0+.
 - Portable.
 - Cross-platform (Windows, GNU/Linux, macOS, Android & iOS).
 - System Media Transport Controls & Taskbar Thumbnail Toolbar for Windows.
