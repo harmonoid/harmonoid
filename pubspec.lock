@@ -1720,8 +1720,8 @@ packages:
     dependency: transitive
     description:
       path: "."
-      ref: eb47ed4
-      resolved-ref: eb47ed4cf1bcb663464f311bc15763750105731a
+      ref: "0054fd2"
+      resolved-ref: "0054fd21e82c4d1d5f34a76684b810d582c6e338"
       url: "https://github.com/alexmercerind/window_plus.git"
     source: git
     version: "0.0.1"
