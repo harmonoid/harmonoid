@@ -15,9 +15,9 @@ class UpdateButton extends StatelessWidget {
           return const SizedBox.shrink();
         }
         return IconButton(
-          onPressed: updateNotifier.download,
+          onPressed: updateNotifier.showUpdate,
           tooltip: Localization.instance.UPDATE_AVAILABLE,
-          icon: const Icon(Icons.download),
+          icon: const Badge(child: Icon(Icons.download)),
           iconSize: 20.0,
           splashRadius: 18.0,
           color: Theme.of(context).appBarTheme.actionsIconTheme?.color,

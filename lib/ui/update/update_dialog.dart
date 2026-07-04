@@ -87,7 +87,10 @@ class _UpdateDialogState extends State<UpdateDialog> with ScrollControllerMixin 
           ),
           actions: [
             TextButton(
-              onPressed: () => context.pop(true),
+              onPressed: () {
+                updateNotifier.download();
+                context.pop(true);
+              },
               child: Text(Localization.instance.OK),
             ),
             TextButton(
