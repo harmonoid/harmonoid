@@ -27,3 +27,32 @@ LyricsTranslationLanguages _$LyricsTranslationLanguagesFromJson(
 Map<String, dynamic> _$LyricsTranslationLanguagesToJson(
   LyricsTranslationLanguages instance,
 ) => <String, dynamic>{'value': instance.value, 'runtimeType': instance.$type};
+
+SubscriptionPurchaseConfigValue _$SubscriptionPurchaseConfigValueFromJson(
+  Map<String, dynamic> json,
+) => SubscriptionPurchaseConfigValue(
+  SubscriptionPurchaseConfig.fromJson(json['value'] as Map<String, dynamic>),
+  $type: json['runtimeType'] as String?,
+);
+
+Map<String, dynamic> _$SubscriptionPurchaseConfigValueToJson(
+  SubscriptionPurchaseConfigValue instance,
+) => <String, dynamic>{'value': instance.value, 'runtimeType': instance.$type};
+
+_SubscriptionPurchaseConfig _$SubscriptionPurchaseConfigFromJson(
+  Map<String, dynamic> json,
+) => _SubscriptionPurchaseConfig(
+  maxVersion: json['max_version'] as String,
+  minVersion: json['min_version'] as String,
+  blacklistedVersions: (json['blacklisted_versions'] as List<dynamic>)
+      .map((e) => e as String)
+      .toList(),
+);
+
+Map<String, dynamic> _$SubscriptionPurchaseConfigToJson(
+  _SubscriptionPurchaseConfig instance,
+) => <String, dynamic>{
+  'max_version': instance.maxVersion,
+  'min_version': instance.minVersion,
+  'blacklisted_versions': instance.blacklistedVersions,
+};

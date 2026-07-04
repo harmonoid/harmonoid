@@ -18,6 +18,9 @@ import 'package:harmonoid/mappers/media_player_state.dart';
 import 'package:harmonoid/state/lyrics/lyrics_notifier.dart';
 import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
+import 'package:harmonoid/state/remote_config/models/remote_config_key.dart';
+import 'package:harmonoid/state/remote_config/models/remote_config_value.dart';
+import 'package:harmonoid/state/remote_config/remote_config_provider.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
 import 'package:harmonoid/ui/media_library/artists/state/artist_image_notifier.dart';
 import 'package:harmonoid/ui/media_library/folders/state/file_explorer_notifier.dart';
@@ -30,6 +33,7 @@ import 'package:harmonoid/ui/update/state/update_notifier.dart';
 import 'package:harmonoid/ui/update/update.dart';
 import 'package:harmonoid/ui/user/login/login.dart';
 import 'package:harmonoid/utils/actions.dart';
+import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/keyboard_shortcuts.dart';
 import 'package:harmonoid/utils/macos_menu_bar.dart';
 import 'package:harmonoid/utils/mouse_navigation.dart';
@@ -123,6 +127,18 @@ class _HarmonoidState extends State<Harmonoid> with WidgetsBindingObserver {
             userNotifier: ctx.read(),
             functions: SubscriptionFunctions(
               updateAvailable: () => context.read<UpdateNotifier>().updateAvailable,
+              subscriptionPurchaseAvailable: () async {
+                final remoteConfigProvider = RemoteConfigProvider();
+                final response = await remoteConfigProvider.get(RemoteConfigKey.subscriptionPurchaseConfig);
+                if (response is SubscriptionPurchaseConfigValue) {
+                  final config = response.value;
+                  final belowMinimumVersion = compareVersions(config.minVersion, kVersion);
+                  final aboveMaximumVersion = compareVersions(kVersion, config.maxVersion);
+                  final blacklistedVersion = config.blacklistedVersions.contains(kVersion);
+                  return !belowMinimumVersion && !aboveMaximumVersion && !blacklistedVersion;
+                }
+                return false;
+              },
               showUpdate: () => showUpdate(context),
               showLogin: () => showLogin(context),
               onSubscriptionUpdate: subscriptionNotifierOnSubscriptionUpdate,

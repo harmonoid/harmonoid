@@ -42,7 +42,7 @@ class UpdateNotifier extends ChangeNotifier {
     const currentVersion = kVersion;
 
     latestRelease = release;
-    updateAvailable = _compareVersions(latestVersion, currentVersion);
+    updateAvailable = compareVersions(latestVersion, currentVersion);
     notifyListeners();
 
     if (Configuration.instance.updateCheckVersion != latestVersion && !skipInAppUpdateDialog && updateAvailable) {
@@ -65,17 +65,17 @@ class UpdateNotifier extends ChangeNotifier {
     }
     return launchUrlString(url, mode: LaunchMode.externalApplication);
   }
+}
 
-  bool _compareVersions(String? latestVersion, String currentVersion) {
-    if (latestVersion == null) return false;
-    final latestVersionParts = latestVersion.substring(1).split('.');
-    final currentVersionParts = currentVersion.substring(1).split('.');
-    for (int i = 0; i < max(latestVersionParts.length, currentVersionParts.length); i++) {
-      final latestPart = int.parse(latestVersionParts.elementAtOrNull(i) ?? '0');
-      final currentPart = int.parse(currentVersionParts.elementAtOrNull(i) ?? '0');
-      if (latestPart > currentPart) return true;
-      if (latestPart < currentPart) return false;
-    }
-    return false;
+bool compareVersions(String? to, String from) {
+  if (to == null) return false;
+  final latestVersionParts = to.substring(1).split('.');
+  final currentVersionParts = from.substring(1).split('.');
+  for (int i = 0; i < max(latestVersionParts.length, currentVersionParts.length); i++) {
+    final latestPart = int.parse(latestVersionParts.elementAtOrNull(i) ?? '0');
+    final currentPart = int.parse(currentVersionParts.elementAtOrNull(i) ?? '0');
+    if (latestPart > currentPart) return true;
+    if (latestPart < currentPart) return false;
   }
+  return false;
 }

@@ -3,9 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:in_app_review/in_app_review.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
-import 'package:harmonoid/models/remote_config_key.dart';
-import 'package:harmonoid/models/remote_config_value.dart';
-import 'package:harmonoid/state/remote_config_provider.dart';
+import 'package:harmonoid/state/remote_config/models/remote_config_key.dart';
+import 'package:harmonoid/state/remote_config/models/remote_config_value.dart';
+import 'package:harmonoid/state/remote_config/remote_config_provider.dart';
 
 /// {@template in_app_review_notifier}
 ///

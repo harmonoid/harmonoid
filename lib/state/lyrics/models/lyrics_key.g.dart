@@ -12,8 +12,9 @@ _LyricsKey _$LyricsKeyFromJson(Map<String, dynamic> json) => _LyricsKey(
   duration: (json['duration'] as num).toInt(),
 );
 
-Map<String, dynamic> _$LyricsKeyToJson(_LyricsKey instance) => <String, dynamic>{
-  'track': instance.track,
-  'artist': instance.artist,
-  'duration': instance.duration,
-};
+Map<String, dynamic> _$LyricsKeyToJson(_LyricsKey instance) =>
+    <String, dynamic>{
+      'track': instance.track,
+      'artist': instance.artist,
+      'duration': instance.duration,
+    };

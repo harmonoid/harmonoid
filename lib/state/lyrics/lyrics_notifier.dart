@@ -28,10 +28,10 @@ import 'package:harmonoid/models/language.dart';
 import 'package:harmonoid/state/lyrics/models/lyric.dart';
 import 'package:harmonoid/state/lyrics/models/lyrics.dart';
 import 'package:harmonoid/models/playable.dart';
-import 'package:harmonoid/models/remote_config_key.dart';
-import 'package:harmonoid/models/remote_config_value.dart';
+import 'package:harmonoid/state/remote_config/models/remote_config_key.dart';
+import 'package:harmonoid/state/remote_config/models/remote_config_value.dart';
 import 'package:harmonoid/state/lyrics/database/database.dart';
-import 'package:harmonoid/state/remote_config_provider.dart';
+import 'package:harmonoid/state/remote_config/remote_config_provider.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 
 /// {@template lyrics_notifier}
@@ -49,7 +49,7 @@ class LyricsNotifier extends ChangeNotifier {
   static const _kNotificationHideActionId = 'com.alexmercerind.harmonoid.lyrics.hide';
 
   /// Singleton instance.
-  static late final LyricsNotifier instance;
+  static final LyricsNotifier instance = LyricsNotifier._();
 
   /// Whether the [LyricsNotifier] is initialized.
   static bool initialized = false;
@@ -112,7 +112,6 @@ class LyricsNotifier extends ChangeNotifier {
   static Future<void> ensureInitialized() async {
     if (initialized) return;
     initialized = true;
-    instance = LyricsNotifier._();
     await instance.initializeNotification();
   }
 

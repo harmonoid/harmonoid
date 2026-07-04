@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:identity/identity.dart';
 
 import 'package:harmonoid/api/utils/constants.dart';
-import 'package:harmonoid/models/remote_config_key.dart';
-import 'package:harmonoid/models/remote_config_value.dart';
+import 'package:harmonoid/state/remote_config/models/remote_config_key.dart';
+import 'package:harmonoid/state/remote_config/models/remote_config_value.dart';
 
 /// {@template remote_config_get}
 ///

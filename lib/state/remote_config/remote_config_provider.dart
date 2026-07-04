@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:harmonoid/api/remote_config_get.dart';
+import 'package:harmonoid/state/remote_config/api/remote_config_get.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/configuration/database/constants.dart';
-import 'package:harmonoid/models/remote_config_key.dart';
-import 'package:harmonoid/models/remote_config_value.dart';
+import 'package:harmonoid/state/remote_config/models/remote_config_key.dart';
+import 'package:harmonoid/state/remote_config/models/remote_config_value.dart';
 
 class RemoteConfigProvider {
   static const String kStoragePrefix = '_REMOTE_CONFIG_';
