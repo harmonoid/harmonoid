@@ -15,11 +15,15 @@ const double kDesktopAlbumTileHeight = 148.0 + 64.0;
 const double kMobileAlbumTileWidth = 168.0;
 const double kMobileAlbumTileHeight = 168.0 + 72.0;
 
-const double kArtistTileWidth = 142.0;
-const double kArtistTileHeight = 142.0 + 36.0;
+const double kDesktopArtistTileWidth = 142.0;
+const double kDesktopArtistTileHeight = 142.0 + 36.0;
+const double kMobileArtistTileWidth = 112.0;
+const double kMobileArtistTileHeight = 112.0 + 36.0;
 
-const double kGenreTileWidth = 142.0;
-const double kGenreTileHeight = 142.0;
+const double kDesktopGenreTileWidth = 142.0;
+const double kDesktopGenreTileHeight = 142.0;
+const double kMobileGenreTileWidth = 112.0;
+const double kMobileGenreTileHeight = 112.0 + 36.0;
 
 const double kDesktopLinearTileHeight = ListItemTableState.kDesktopRowHeight;
 const double kMobileLinearTileHeight = ListItemTableState.kMobileRowHeight;

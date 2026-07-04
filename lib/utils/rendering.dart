@@ -76,6 +76,50 @@ double get albumTileHeight {
   throw UnimplementedError();
 }
 
+double get artistTileWidth {
+  if (isDesktop) {
+    return kDesktopArtistTileWidth;
+  } else if (isTablet) {
+    throw UnimplementedError();
+  } else if (isMobile) {
+    return kMobileArtistTileWidth;
+  }
+  throw UnimplementedError();
+}
+
+double get artistTileHeight {
+  if (isDesktop) {
+    return kDesktopArtistTileHeight;
+  } else if (isTablet) {
+    throw UnimplementedError();
+  } else if (isMobile) {
+    return kMobileArtistTileHeight;
+  }
+  throw UnimplementedError();
+}
+
+double get genreTileWidth {
+  if (isDesktop) {
+    return kDesktopGenreTileWidth;
+  } else if (isTablet) {
+    throw UnimplementedError();
+  } else if (isMobile) {
+    return kMobileGenreTileWidth;
+  }
+  throw UnimplementedError();
+}
+
+double get genreTileHeight {
+  if (isDesktop) {
+    return kDesktopGenreTileHeight;
+  } else if (isTablet) {
+    throw UnimplementedError();
+  } else if (isMobile) {
+    return kMobileGenreTileHeight;
+  }
+  throw UnimplementedError();
+}
+
 double get linearTileHeight {
   if (isDesktop) {
     return kDesktopLinearTileHeight;

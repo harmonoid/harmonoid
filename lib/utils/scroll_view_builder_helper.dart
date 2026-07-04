@@ -4,7 +4,6 @@ import 'package:media_library/media_library.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/ui/router.dart';
-import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 /// {@template scroll_view_builder_helper}
@@ -25,8 +24,8 @@ class ScrollViewBuilderHelper {
     final span = isDesktop
         ? null
         : (Configuration.instance.mobileMediaLibraryAlbumGridSpan == 0
-            ? (MediaQuery.of(rootNavigatorKey.currentContext!).size.width - margin) ~/ (albumTileWidth + margin)
-            : Configuration.instance.mobileMediaLibraryAlbumGridSpan);
+              ? (MediaQuery.of(rootNavigatorKey.currentContext!).size.width - margin) ~/ (albumTileWidth + margin)
+              : Configuration.instance.mobileMediaLibraryAlbumGridSpan);
     final itemWidth = span != 1 ? albumTileWidth : double.infinity;
     final itemHeight = span != 1 ? albumTileHeight : linearTileHeight;
     final TextStyle labelTextStyle;
@@ -80,10 +79,10 @@ class ScrollViewBuilderHelper {
     final span = isDesktop
         ? null
         : (Configuration.instance.mobileMediaLibraryArtistGridSpan == 0
-            ? (MediaQuery.of(rootNavigatorKey.currentContext!).size.width - margin) ~/ (kArtistTileWidth + margin)
-            : Configuration.instance.mobileMediaLibraryArtistGridSpan);
-    final itemWidth = span != 1 ? kArtistTileWidth : double.infinity;
-    final itemHeight = span != 1 ? kArtistTileHeight : linearTileHeight;
+              ? (MediaQuery.of(rootNavigatorKey.currentContext!).size.width - margin) ~/ (artistTileWidth + margin)
+              : Configuration.instance.mobileMediaLibraryArtistGridSpan);
+    final itemWidth = span != 1 ? artistTileWidth : double.infinity;
+    final itemHeight = span != 1 ? artistTileHeight : linearTileHeight;
     final TextStyle labelTextStyle;
     switch (Configuration.instance.mediaLibraryArtistSortType) {
       case ArtistSortType.artist:
@@ -105,10 +104,10 @@ class ScrollViewBuilderHelper {
     final span = isDesktop
         ? null
         : (Configuration.instance.mobileMediaLibraryGenreGridSpan == 0
-            ? (MediaQuery.of(rootNavigatorKey.currentContext!).size.width - margin) ~/ (kGenreTileWidth + margin)
-            : Configuration.instance.mobileMediaLibraryGenreGridSpan);
-    final itemWidth = span != 1 ? kGenreTileWidth : double.infinity;
-    final itemHeight = span != 1 ? kGenreTileHeight : linearTileHeight;
+              ? (MediaQuery.of(rootNavigatorKey.currentContext!).size.width - margin) ~/ (genreTileWidth + margin)
+              : Configuration.instance.mobileMediaLibraryGenreGridSpan);
+    final itemWidth = span != 1 ? genreTileWidth : double.infinity;
+    final itemHeight = span != 1 ? genreTileHeight : linearTileHeight;
     final TextStyle labelTextStyle;
     switch (Configuration.instance.mediaLibraryGenreSortType) {
       case GenreSortType.genre:

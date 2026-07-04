@@ -13,7 +13,6 @@ import 'package:harmonoid/ui/media_library/search/search_banner.dart';
 import 'package:harmonoid/ui/media_library/search/search_no_items_banner.dart';
 import 'package:harmonoid/ui/media_library/tracks/tracks_table.dart';
 import 'package:harmonoid/ui/router.dart';
-import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
@@ -161,7 +160,7 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
             ),
             Container(
               alignment: Alignment.centerLeft,
-              height: kArtistTileHeight + margin,
+              height: artistTileHeight + margin,
               child: ListView.separated(
                 itemCount: _artists.length.clamp(0, _kLimit),
                 scrollDirection: Axis.horizontal,
@@ -172,8 +171,8 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
                 ),
                 itemBuilder: (context, i) => ArtistItem(
                   artist: _artists[i],
-                  width: kArtistTileWidth,
-                  height: kArtistTileHeight,
+                  width: artistTileWidth,
+                  height: artistTileHeight,
                 ),
                 separatorBuilder: (context, _) => SizedBox(width: margin),
               ),
@@ -203,7 +202,7 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
             ),
             Container(
               alignment: Alignment.centerLeft,
-              height: kGenreTileHeight + margin,
+              height: genreTileHeight + margin,
               child: ListView.separated(
                 itemCount: _genres.length.clamp(0, _kLimit),
                 scrollDirection: Axis.horizontal,
@@ -214,8 +213,8 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
                 ),
                 itemBuilder: (context, i) => GenreItem(
                   genre: _genres[i],
-                  width: kGenreTileWidth,
-                  height: kGenreTileHeight,
+                  width: genreTileWidth,
+                  height: genreTileHeight,
                 ),
                 separatorBuilder: (context, _) => SizedBox(width: margin),
               ),
