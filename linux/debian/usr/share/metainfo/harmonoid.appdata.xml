@@ -13,6 +13,7 @@
 	<developer_name>Hitesh Kumar Saini</developer_name>
 	<launchable type="desktop-id">harmonoid.desktop</launchable>
 	<releases>
+	    <release version="0.3.24" date="2026-07-05" />
 	    <release version="0.3.23" date="2026-07-04" />
 		<release version="0.3.22" date="2026-01-28" />
 		<release version="0.3.21" date="2026-01-15" />
