@@ -28,11 +28,36 @@ class _LastfmSectionState extends State<LastfmSection> {
 
   Future<void> _connect() async {
     BuildContext? ctx;
-    showGeneralDialog(
+
+    void pop() {
+      if (ctx?.mounted == true) {
+        ctx?.pop();
+      }
+    }
+
+    showDialog(
       context: context,
-      pageBuilder: (context, _, __) {
+      builder: (context) {
         ctx = context;
-        return const Center(child: CircularProgressIndicator());
+        return Scaffold(
+          backgroundColor: Colors.black12,
+          body: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const CircularProgressIndicator(color: Colors.white),
+                const SizedBox(height: 32.0),
+                TextButton(
+                  onPressed: pop,
+                  child: Text(
+                    Localization.instance.CANCEL,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
       },
     );
 
@@ -40,7 +65,7 @@ class _LastfmSectionState extends State<LastfmSection> {
     await Configuration.instance.set(lastfmSession: _instance.session);
 
     setState(() {});
-    ctx?.pop();
+    pop();
   }
 
   Future<void> _disconnect() async {
@@ -53,7 +78,9 @@ class _LastfmSectionState extends State<LastfmSection> {
     );
     if (result) {
       await _instance.clearSession();
-      await Configuration.instance.set(lastfmSession: const Session(name: '', key: ''));
+      await Configuration.instance.set(
+        lastfmSession: const Session(name: '', key: ''),
+      );
       setState(() {});
     }
   }
