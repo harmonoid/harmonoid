@@ -1,71 +1,70 @@
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:synchronized/synchronized.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
-import 'package:harmonoid/core/media_player/base_media_player.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/core/media_player/mixin/media_player_mixin.dart';
 import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/models/media_player_state.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
 
 /// {@template windows_taskbar_mixin}
 ///
 /// WindowsTaskbarMixin
 /// -------------------
-/// package:windows_taskbar mixin for [BaseMediaPlayer].
+/// package:windows_taskbar mixin for [MediaPlayer].
 ///
 /// {@endtemplate}
-mixin WindowsTaskbarMixin implements BaseMediaPlayer {
+final class WindowsTaskbarMixin implements MediaPlayerMixin {
   static bool get supported => Platform.isWindows;
 
-  Future<void> ensureInitializedWindowsTaskbar() async {
-    if (!supported) return;
-    // NO/OP
-    try {
-      addListener(_listenerWindowsTaskbar);
-    } catch (exception, stacktrace) {
-      debugPrint(exception.toString());
-      debugPrint(stacktrace.toString());
-    }
-  }
+  WindowsTaskbarMixin(this._player);
 
-  Future<void> disposeWindowsTaskbar() async {
-    if (!supported) return;
+  @override
+  Future<void> ensureInitialized() async {
     // NO/OP
   }
 
-  void resetFlagsWindowsTaskbar() {
+  @override
+  Future<void> dispose() async {
     // NO/OP
   }
 
-  void _listenerWindowsTaskbar() {
-    _lockWindowsTaskbar.synchronized(() async {
-      if (_flagPlayingWindowsTaskbar != state.playing) {
-        _flagPlayingWindowsTaskbar = state.playing;
+  @override
+  Future<void> resetFlags() async {
+    _flagPlaying = null;
+  }
+
+  @override
+  Future<void> notifyState(MediaPlayerState state) {
+    return _lock.synchronized(() async {
+      if (_flagPlaying != state.playing) {
+        _flagPlaying = state.playing;
         WindowsTaskbar.setThumbnailToolbar(
           [
             ThumbnailToolbarButton(
               ThumbnailToolbarAssetIcon('assets/icons/previous.ico'),
               Localization.instance.PREVIOUS,
-              previous,
+              _player.previous,
               mode: state.isFirst ? ThumbnailToolbarButtonMode.disabled : 0,
             ),
             if (state.playing)
               ThumbnailToolbarButton(
                 ThumbnailToolbarAssetIcon('assets/icons/pause.ico'),
                 Localization.instance.PAUSE,
-                pause,
+                _player.pause,
               )
             else
               ThumbnailToolbarButton(
                 ThumbnailToolbarAssetIcon('assets/icons/play.ico'),
                 Localization.instance.PLAY,
-                play,
+                _player.play,
               ),
             ThumbnailToolbarButton(
               ThumbnailToolbarAssetIcon('assets/icons/next.ico'),
               Localization.instance.NEXT,
-              next,
+              _player.next,
               mode: state.isLast ? ThumbnailToolbarButtonMode.disabled : 0,
             ),
           ],
@@ -79,7 +78,9 @@ mixin WindowsTaskbarMixin implements BaseMediaPlayer {
     });
   }
 
-  final Lock _lockWindowsTaskbar = Lock();
+  final MediaPlayer _player;
 
-  bool? _flagPlayingWindowsTaskbar;
+  final Lock _lock = Lock();
+
+  bool? _flagPlaying;
 }

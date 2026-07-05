@@ -3,74 +3,83 @@ import 'dart:io';
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:harmonoid/core/media_player/base_media_player.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/core/media_player/mixin/media_player_mixin.dart';
+import 'package:harmonoid/models/media_player_state.dart';
 
 /// {@template audio_session_mixin}
 ///
 /// AudioSessionMixin
 /// -----------------
-/// package:audio_session mixin for [BaseMediaPlayer].
+/// package:audio_session mixin for [MediaPlayer].
 ///
 /// {@endtemplate}
-mixin AudioSessionMixin implements BaseMediaPlayer {
+final class AudioSessionMixin implements MediaPlayerMixin {
   static bool get supported => Platform.isAndroid || Platform.isIOS;
 
-  Future<void> ensureInitializedAudioSession() async {
-    if (!supported) return;
+  AudioSessionMixin(this._player);
 
+  @override
+  Future<void> ensureInitialized() async {
     try {
       final session = await AudioSession.instance;
       await session.configure(const AudioSessionConfiguration.music());
-      instanceAudioSession = session;
+      _instance = session;
 
       _interruptionSubscription = session.interruptionEventStream.listen((event) {
         if (event.begin) {
-          pause();
+          _player.pause();
         } else {
-          play();
+          _player.play();
         }
       });
       _becomingNoisySubscription = session.becomingNoisyEventStream.listen((_) {
-        pause();
+        _player.pause();
       });
-
-      addListener(_listenerAudioSession);
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
     }
   }
 
-  Future<void> disposeAudioSession() async {
-    if (!supported) return;
+  @override
+  Future<void> dispose() async {
     await _interruptionSubscription?.cancel();
     await _becomingNoisySubscription?.cancel();
   }
 
-  void resetFlagsAudioSession() {
-    // _flagPlayingAudioSession = null;
+  @override
+  Future<void> resetFlags() async {
+    // _flagPlaying = null;
   }
 
-  Future<void> setActiveAudioSession(bool active) async {
-    await instanceAudioSession?.setActive(active);
-  }
-
-  void _listenerAudioSession() {
+  @override
+  Future<void> notifyState(MediaPlayerState state) async {
     // NOTE: Following causes issues on iOS upon index changes.
     //       Only being called for manual play/pause/playOrPause now.
     //       Calling setActive(false) blocks all audio output, media_kit flips playing stream along side completed stream.
-    // _lockAudioSession.synchronized(() async {
-    //   if (_flagPlayingAudioSession != state.playing) {
-    //     _flagPlayingAudioSession = state.playing;
-    //     await instanceAudioSession?.setActive(state.playing);
+    // _lock.synchronized(() async {
+    //   if (_flagPlaying != state.playing) {
+    //     _flagPlaying = state.playing;
+    //     await _instance?.setActive(state.playing);
     //   }
     // });
   }
 
-  AudioSession? instanceAudioSession;
-  // final Lock _lockAudioSession = Lock();
+  Future<void> setActive(bool active) async {
+    await _instance?.setActive(active);
+  }
 
-  // bool? _flagPlayingAudioSession;
+  Future<void> configure(AudioSessionConfiguration configuration) async {
+    await _instance?.configure(configuration);
+  }
+
+  final MediaPlayer _player;
+
+  AudioSession? _instance;
+  // final Lock _lock = Lock();
+
+  // bool? _flagPlaying;
 
   StreamSubscription<AudioInterruptionEvent>? _interruptionSubscription;
   StreamSubscription<void>? _becomingNoisySubscription;

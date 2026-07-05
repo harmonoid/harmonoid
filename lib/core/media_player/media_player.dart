@@ -10,15 +10,8 @@ import 'package:tag_reader/tag_reader.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/filesystem_media_library.dart';
-import 'package:harmonoid/core/media_player/base_media_player.dart';
-import 'package:harmonoid/core/media_player/mixin/audio_service_mixin.dart';
 import 'package:harmonoid/core/media_player/mixin/audio_session_mixin.dart';
-import 'package:harmonoid/core/media_player/mixin/discord_rpc_mixin.dart';
-import 'package:harmonoid/core/media_player/mixin/history_playlist_mixin.dart';
-import 'package:harmonoid/core/media_player/mixin/lastfm_mixin.dart';
-import 'package:harmonoid/core/media_player/mixin/mpris_mixin.dart';
-import 'package:harmonoid/core/media_player/mixin/system_media_transport_controls_mixin.dart';
-import 'package:harmonoid/core/media_player/mixin/windows_taskbar_mixin.dart';
+import 'package:harmonoid/core/media_player/media_player_mixin_registry.dart';
 import 'package:harmonoid/mappers/loop.dart';
 import 'package:harmonoid/mappers/media.dart';
 import 'package:harmonoid/mappers/playable.dart';
@@ -43,9 +36,7 @@ import 'package:harmonoid/utils/constants.dart';
 /// Implementation to handle the media playback & other related functionalities.
 ///
 /// {@endtemplate}
-class MediaPlayer extends ChangeNotifier
-    with AudioServiceMixin, AudioSessionMixin, DiscordRpcMixin, HistoryPlaylistMixin, LastFmMixin, MprisMixin, SystemMediaTransportControlsMixin, WindowsTaskbarMixin
-    implements BaseMediaPlayer {
+final class MediaPlayer extends ChangeNotifier {
   static const Duration kCrossfadeDefaultDuration = Duration(seconds: 5);
   static const Duration kCrossfadeMinDuration = Duration(seconds: 2);
   static const Duration kCrossfadeMaxDuration = Duration(seconds: 30);
@@ -67,24 +58,11 @@ class MediaPlayer extends ChangeNotifier
   }
 
   Future<void> _ensureInitialized() async {
-    await Future.wait(
-      [
-        ensureInitializedAudioService(),
-        ensureInitializedAudioSession(),
-        ensureInitializedDiscordRpc(),
-        ensureInitializedHistoryPlaylist(),
-        ensureInitializedLastFm(),
-        ensureInitializedMpris(),
-        ensureInitializedSystemMediaTransportControls(),
-        ensureInitializedWindowsTaskbar(),
-      ],
-    );
+    await _mixinRegistry.ensureInitialized();
   }
 
-  @override
   Playable get current => _current ?? state.playables[state.index];
 
-  @override
   MediaPlayerState get state => _state;
 
   set state(MediaPlayerState state) {
@@ -96,44 +74,40 @@ class MediaPlayer extends ChangeNotifier
     }
   }
 
-  @override
-  Future<void> play() => _player.play().then((_) => setActiveAudioSession(true));
+  MediaPlayerMixinRegistry get mixinRegistry => _mixinRegistry;
 
   @override
-  Future<void> pause() => _player.pause().then((_) => setActiveAudioSession(false));
+  void notifyListeners() {
+    super.notifyListeners();
+    _mixinRegistry.notifyState(state);
+  }
 
-  @override
+  Future<void> play() => _player.play().then((_) => _mixinRegistry.get<AudioSessionMixin>()?.setActive(true));
+
+  Future<void> pause() => _player.pause().then((_) => _mixinRegistry.get<AudioSessionMixin>()?.setActive(false));
+
   Future<void> playOrPause() async {
     final wasPlaying = state.playing;
     await _player.playOrPause();
-    await setActiveAudioSession(!wasPlaying);
+    await _mixinRegistry.get<AudioSessionMixin>()?.setActive(!wasPlaying);
   }
 
-  @override
   Future<void> next() => _player.next();
 
-  @override
   Future<void> previous() => _player.previous();
 
-  @override
   Future<void> jump(int index) => _player.jump(index);
 
-  @override
   Future<void> seek(Duration position) => _player.seek(position);
 
-  @override
   Future<void> setLoop(Loop loop) => _player.setPlaylistMode(loop.toPlaylistMode());
 
-  @override
   Future<void> setRate(double rate) => _player.setRate(rate);
 
-  @override
   Future<void> setPitch(double pitch) => _player.setPitch(pitch);
 
-  @override
   Future<void> setVolume(double volume) => _player.setVolume(volume);
 
-  @override
   Future<void> setMute(bool mute) {
     if (mute) {
       _setMuteVolume = state.volume;
@@ -143,16 +117,12 @@ class MediaPlayer extends ChangeNotifier
     }
   }
 
-  @override
   Future<void> muteOrUnmute() => setMute(state.volume != 0.0);
 
-  @override
   Future<void> setShuffle(bool shuffle) => _player.setShuffle(shuffle).then((_) => state = state.copyWith(shuffle: shuffle));
 
-  @override
   Future<void> shuffleOrUnshuffle() => _player.setShuffle(!state.shuffle).then((_) => state = state.copyWith(shuffle: !state.shuffle));
 
-  @override
   Future<void> setMix(bool mix, {void Function(bool)? onMix = mediaPlayerSetMixOnMix}) async {
     if (_mixLock.locked) return;
     return _mixLock.synchronized(() async {
@@ -171,10 +141,8 @@ class MediaPlayer extends ChangeNotifier
     });
   }
 
-  @override
   Future<void> mixOrUnmix() => setMix(state.mixOffset == null);
 
-  @override
   Future<void> open(
     Iterable<Playable> playables, {
     int index = 0,
@@ -200,13 +168,12 @@ class MediaPlayer extends ChangeNotifier
 
     await _player.open(Playlist(medias, index: index), play: play);
     if (play) {
-      await setActiveAudioSession(true);
+      await _mixinRegistry.get<AudioSessionMixin>()?.setActive(true);
     }
 
     onOpen?.call();
   }
 
-  @override
   Future<void> move(int from, int to) async {
     await _player.move(from, to);
 
@@ -223,7 +190,6 @@ class MediaPlayer extends ChangeNotifier
     }
   }
 
-  @override
   Future<void> remove(int index) async {
     await _player.remove(index);
 
@@ -234,7 +200,6 @@ class MediaPlayer extends ChangeNotifier
     }
   }
 
-  @override
   Future<void> add(Iterable<Playable> playables) async {
     final mixOffset = state.mixOffset;
     if (mixOffset != null) {
@@ -260,7 +225,6 @@ class MediaPlayer extends ChangeNotifier
     }
   }
 
-  @override
   Future<void> insert(int index, Playable playable) async {
     await _player.add(playable.toMedia());
     await _player.move(
@@ -278,7 +242,6 @@ class MediaPlayer extends ChangeNotifier
     }
   }
 
-  @override
   Future<void> setExclusiveAudio(
     bool exclusiveAudio, {
     void Function()? onError = mediaPlayerSetExclusiveAudioOnError,
@@ -292,21 +255,18 @@ class MediaPlayer extends ChangeNotifier
     state = state.copyWith(exclusiveAudio: exclusiveAudio);
   }
 
-  @override
   Future<void> setReplayGain(ReplayGain replayGain) async {
     final platform = _player.platform as dynamic;
     await platform.setProperty('replaygain', replayGain.toProperty());
     state = state.copyWith(replayGain: replayGain);
   }
 
-  @override
   Future<void> setReplayGainPreamp(double replayGainPreamp) async {
     final platform = _player.platform as dynamic;
     await platform.setProperty('replaygain-preamp', replayGainPreamp.toString());
     state = state.copyWith(replayGainPreamp: replayGainPreamp);
   }
 
-  @override
   Future<void> setCrossfadeDuration(
     Duration crossfadeDuration, {
     void Function()? onError = mediaPlayerSetCrossfadeDurationOnError,
@@ -454,7 +414,7 @@ class MediaPlayer extends ChangeNotifier
       await platform.observeEvent(mpv_event_id.MPV_EVENT_AUDIO_RECONFIG, (_) async {
         // We need to update audio session params after the audio output driver has been configured.
         // https://github.com/mpv-player/mpv/blob/c75b8d2cca08fb09502bc6e4ae4e514d30bb1250/audio/out/ao_audiounit.m#L104
-        await instanceAudioSession?.configure(const AudioSessionConfiguration.music());
+        await _mixinRegistry.get<AudioSessionMixin>()?.configure(const AudioSessionConfiguration.music());
       });
     }
     if (Platform.isMacOS) {
@@ -480,14 +440,11 @@ class MediaPlayer extends ChangeNotifier
     super.dispose();
     _player.dispose();
     _tagReader.dispose();
-    disposeAudioService();
-    disposeAudioSession();
-    disposeDiscordRpc();
-    disposeHistoryPlaylist();
-    disposeLastFm();
-    disposeMpris();
-    disposeSystemMediaTransportControls();
-    disposeWindowsTaskbar();
+    _mixinRegistry.dispose();
+  }
+
+  Future<void> resetFlags() {
+    return _mixinRegistry.resetFlags();
   }
 
   // HACK:
@@ -565,7 +522,8 @@ class MediaPlayer extends ChangeNotifier
   MediaPlayerState _state = MediaPlayerState.defaults();
 
   late Player _player;
-  final TagReader _tagReader = TagReader();
+  late final TagReader _tagReader = TagReader();
+  late final MediaPlayerMixinRegistry _mixinRegistry = MediaPlayerMixinRegistry(this);
 }
 
 List<Playable> _mapMediasToPlayables(List<Media> medias) {

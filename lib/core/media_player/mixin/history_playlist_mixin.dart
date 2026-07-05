@@ -1,46 +1,46 @@
-import 'package:flutter/foundation.dart';
 import 'package:media_library/media_library.dart' hide FileSystemMediaLibrary;
 import 'package:synchronized/synchronized.dart';
 
 import 'package:harmonoid/core/filesystem_media_library.dart';
-import 'package:harmonoid/core/media_player/base_media_player.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/core/media_player/mixin/media_player_mixin.dart';
 import 'package:harmonoid/extensions/playable.dart';
+import 'package:harmonoid/models/media_player_state.dart';
 import 'package:harmonoid/models/playable.dart';
 
-/// {@template stub_mixin}
+/// {@template history_playlist_mixin}
 ///
 /// HistoryPlaylistMixin
 /// --------------------
-/// History playlist mixin for [BaseMediaPlayer].
+/// History playlist mixin for [MediaPlayer].
 ///
 /// {@endtemplate}
-mixin HistoryPlaylistMixin implements BaseMediaPlayer {
+final class HistoryPlaylistMixin implements MediaPlayerMixin {
   static bool get supported => true;
 
-  Future<void> ensureInitializedHistoryPlaylist() async {
-    if (!supported) return;
-    // NO/OP
-    try {
-      addListener(_listenerHistoryPlaylist);
-    } catch (exception, stacktrace) {
-      debugPrint(exception.toString());
-      debugPrint(stacktrace.toString());
-    }
-  }
+  HistoryPlaylistMixin(this._player);
 
-  Future<void> disposeHistoryPlaylist() async {
-    if (!supported) return;
+  @override
+  Future<void> ensureInitialized() async {
     // NO/OP
   }
 
-  void resetFlagsHistoryPlaylist() {
-    _flagPlayableHistoryPlaylist = null;
+  @override
+  Future<void> dispose() async {
+    // NO/OP
   }
 
-  void _listenerHistoryPlaylist() {
-    _lockHistoryPlaylist.synchronized(() async {
-      if (_flagPlayableHistoryPlaylist != current) {
-        _flagPlayableHistoryPlaylist = current;
+  @override
+  Future<void> resetFlags() async {
+    _flagPlayable = null;
+  }
+
+  @override
+  Future<void> notifyState(MediaPlayerState state) {
+    return _lock.synchronized(() async {
+      final current = _player.current;
+      if (_flagPlayable != current) {
+        _flagPlayable = current;
         // TODO: Add support for HTTP URIs.
         if (await FileSystemMediaLibrary.instance.db.contains(current.uri)) {
           // Save as track i.e. hash + title.
@@ -53,7 +53,8 @@ mixin HistoryPlaylistMixin implements BaseMediaPlayer {
     });
   }
 
-  final Lock _lockHistoryPlaylist = Lock();
+  final MediaPlayer _player;
+  final Lock _lock = Lock();
 
-  Playable? _flagPlayableHistoryPlaylist;
+  Playable? _flagPlayable;
 }

@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 
-import 'package:harmonoid/core/media_player/base_media_player.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/core/media_player/mixin/media_player_mixin.dart';
 import 'package:harmonoid/mappers/image_provider.dart';
+import 'package:harmonoid/models/media_player_state.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:synchronized/synchronized.dart';
@@ -12,69 +14,73 @@ import 'package:system_media_transport_controls/system_media_transport_controls.
 ///
 /// SystemMediaTransportControlsMixin
 /// ---------------------------------
-/// package:system_media_transport_controls mixin for [BaseMediaPlayer].
+/// package:system_media_transport_controls mixin for [MediaPlayer].
 ///
 /// {@endtemplate}
-mixin SystemMediaTransportControlsMixin implements BaseMediaPlayer {
+final class SystemMediaTransportControlsMixin implements MediaPlayerMixin {
   static bool get supported => Platform.isWindows;
 
-  Future<void> ensureInitializedSystemMediaTransportControls() async {
-    if (!supported) return;
+  SystemMediaTransportControlsMixin(this._player);
 
+  @override
+  Future<void> ensureInitialized() async {
     try {
       SystemMediaTransportControls.ensureInitialized();
       final instance = SystemMediaTransportControls.instance
         ..create((event) {
           switch (event) {
             case SMTCEvent.play:
-              play();
+              _player.play();
             case SMTCEvent.pause:
-              pause();
+              _player.pause();
             case SMTCEvent.next:
-              next();
+              _player.next();
             case SMTCEvent.previous:
-              previous();
+              _player.previous();
             default:
               break;
           }
         });
 
-      _instanceSystemMediaTransportControls = instance;
-
-      addListener(_listenerSystemMediaTransportControls);
+      _instance = instance;
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
     }
   }
 
-  Future<void> disposeSystemMediaTransportControls() async {
-    if (!supported) return;
-    _instanceSystemMediaTransportControls?.dispose();
+  @override
+  Future<void> dispose() async {
+    _instance?.dispose();
   }
 
-  void resetFlagsSystemMediaTransportControls() {
-    _flagPlayableSystemMediaTransportControls = null;
+  @override
+  Future<void> resetFlags() async {
+    _flagPlayable = null;
+    _flagPlaying = null;
+    _flagPosition = null;
   }
 
-  void _listenerSystemMediaTransportControls() {
-    _lockSystemMediaTransportControls.synchronized(() async {
-      if (_flagPlayingSystemMediaTransportControls != state.playing) {
-        _flagPlayingSystemMediaTransportControls = state.playing;
-        _instanceSystemMediaTransportControls?.setStatus(state.playing ? SMTCStatus.playing : SMTCStatus.paused);
+  @override
+  Future<void> notifyState(MediaPlayerState state) {
+    return _lock.synchronized(() async {
+      final current = _player.current;
+      if (_flagPlaying != state.playing) {
+        _flagPlaying = state.playing;
+        _instance?.setStatus(state.playing ? SMTCStatus.playing : SMTCStatus.paused);
       }
 
-      if (_flagPositionSystemMediaTransportControls != state.position) {
-        _flagPositionSystemMediaTransportControls = state.position;
-        _instanceSystemMediaTransportControls?.setTimelineData(endTime: state.duration.inMilliseconds, position: state.position.inMilliseconds);
+      if (_flagPosition != state.position) {
+        _flagPosition = state.position;
+        _instance?.setTimelineData(endTime: state.duration.inMilliseconds, position: state.position.inMilliseconds);
       }
 
-      if (_flagPlayableSystemMediaTransportControls != current) {
-        _flagPlayableSystemMediaTransportControls = current;
+      if (_flagPlayable != current) {
+        _flagPlayable = current;
 
         final image = cover(uri: current.uri);
         final artwork = await image.toResource();
-        _instanceSystemMediaTransportControls
+        _instance
           ?..setMusicData(
             albumTitle: current.description.firstOrNull,
             albumArtist: current.subtitle.firstOrNull,
@@ -86,10 +92,12 @@ mixin SystemMediaTransportControlsMixin implements BaseMediaPlayer {
     });
   }
 
-  SystemMediaTransportControls? _instanceSystemMediaTransportControls;
-  final Lock _lockSystemMediaTransportControls = Lock();
+  final MediaPlayer _player;
 
-  Playable? _flagPlayableSystemMediaTransportControls;
-  bool? _flagPlayingSystemMediaTransportControls;
-  Duration? _flagPositionSystemMediaTransportControls;
+  SystemMediaTransportControls? _instance;
+  final Lock _lock = Lock();
+
+  Playable? _flagPlayable;
+  bool? _flagPlaying;
+  Duration? _flagPosition;
 }

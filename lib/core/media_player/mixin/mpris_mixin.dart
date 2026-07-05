@@ -4,9 +4,11 @@ import 'package:mpris_service/mpris_service.dart';
 import 'package:synchronized/synchronized.dart';
 
 import 'package:harmonoid/core/intent.dart';
-import 'package:harmonoid/core/media_player/base_media_player.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/core/media_player/mixin/media_player_mixin.dart';
 import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/mappers/playable.dart';
+import 'package:harmonoid/models/media_player_state.dart';
 import 'package:harmonoid/models/loop.dart';
 import 'package:harmonoid/models/playable.dart';
 
@@ -14,19 +16,20 @@ import 'package:harmonoid/models/playable.dart';
 ///
 /// MprisMixin
 /// ----------
-/// package:mpris_service mixin for [BaseMediaPlayer].
+/// package:mpris_service mixin for [MediaPlayer].
 ///
 /// {@endtemplate}
-mixin MprisMixin implements BaseMediaPlayer {
+final class MprisMixin implements MediaPlayerMixin {
   static const String kBusName = 'org.mpris.MediaPlayer2.harmonoid';
   static const String kIdentity = 'Harmonoid';
   static const String kDesktopEntry = '/usr/share/applications/harmonoid';
 
   static bool get supported => Platform.isLinux;
 
-  Future<void> ensureInitializedMpris() async {
-    if (!supported) return;
+  MprisMixin(this._player);
 
+  @override
+  Future<void> ensureInitialized() async {
     try {
       final instance =
           await MPRIS.create(
@@ -38,49 +41,49 @@ mixin MprisMixin implements BaseMediaPlayer {
             ..maximumRate = 2.0
             ..setEventHandler(
               MPRISEventHandler(
-                next: () => next(),
-                previous: () => previous(),
-                pause: () => pause(),
-                playPause: () => playOrPause(),
-                play: () => play(),
-                seek: (value) => seek(value),
-                setPosition: (_, value) => seek(Duration(microseconds: value)),
+                next: () => _player.next(),
+                previous: () => _player.previous(),
+                pause: () => _player.pause(),
+                playPause: () => _player.playOrPause(),
+                play: () => _player.play(),
+                seek: (value) => _player.seek(value),
+                setPosition: (_, value) => _player.seek(Duration(microseconds: value)),
                 openUri: (value) => Intent.instance.play(value.toString()),
-                loopStatus: (value) => setLoop(
+                loopStatus: (value) => _player.setLoop(
                   switch (value) {
                     MPRISLoopStatus.none => Loop.off,
                     MPRISLoopStatus.track => Loop.one,
                     MPRISLoopStatus.playlist => Loop.all,
                   },
                 ),
-                rate: (value) => setRate(value),
-                shuffle: (value) => setShuffle(value),
-                volume: (value) => setVolume(value * 100.0),
+                rate: (value) => _player.setRate(value),
+                shuffle: (value) => _player.setShuffle(value),
+                volume: (value) => _player.setVolume(value * 100.0),
               ),
             );
 
-      _instanceMpris = instance;
-
-      addListener(_listenerMpris);
+      _instance = instance;
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
     }
   }
 
-  Future<void> disposeMpris() async {
-    if (!supported) return;
-
-    await _instanceMpris?.dispose();
+  @override
+  Future<void> dispose() async {
+    await _instance?.dispose();
   }
 
-  void resetFlagsMpris() {
-    _flagPlayableMpris = null;
+  @override
+  Future<void> resetFlags() async {
+    _flagPlayable = null;
   }
 
-  void _listenerMpris() {
-    _lockMpris.synchronized(() async {
-      _instanceMpris
+  @override
+  Future<void> notifyState(MediaPlayerState state) {
+    return _lock.synchronized(() async {
+      final current = _player.current;
+      _instance
         ?..playbackStatus = switch ((state.completed, state.playing)) {
           (true, _) => MPRISPlaybackStatus.stopped,
           (false, true) => MPRISPlaybackStatus.playing,
@@ -98,15 +101,17 @@ mixin MprisMixin implements BaseMediaPlayer {
         ..canGoPrevious = !state.isFirst
         ..canGoNext = !state.isLast;
 
-      if (_flagPlayableMpris != current && state.duration > Duration.zero) {
-        _flagPlayableMpris = current;
-        _instanceMpris?.metadata = await current.toMPRISMetadata(state);
+      if (_flagPlayable != current && state.duration > Duration.zero) {
+        _flagPlayable = current;
+        _instance?.metadata = await current.toMPRISMetadata(state);
       }
     });
   }
 
-  MPRIS? _instanceMpris;
-  final Lock _lockMpris = Lock();
+  final MediaPlayer _player;
 
-  Playable? _flagPlayableMpris;
+  MPRIS? _instance;
+  final Lock _lock = Lock();
+
+  Playable? _flagPlayable;
 }

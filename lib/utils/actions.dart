@@ -85,11 +85,7 @@ void mediaPlayerUpdateCurrentOnUpdateCurrent(String uri) {
   debugPrint('actions.dart: mediaPlayerUpdateCurrentOnUpdateCurrent: $uri');
   if (AsyncFileImage.isFallback(uri)) {
     AsyncFileImage.reset(uri);
-    MediaPlayer.instance
-      ..resetFlagsAudioService()
-      ..resetFlagsDiscordRpc()
-      ..resetFlagsMpris()
-      ..resetFlagsSystemMediaTransportControls();
+    MediaPlayer.instance.resetFlags();
     NowPlayingColorPaletteNotifier.instance.resetCurrent();
   }
 }

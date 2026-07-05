@@ -9,11 +9,13 @@ import 'package:safe_local_storage/file_system.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:media_kit/src/player/native/utils/temp_file.dart';
 
-import 'package:harmonoid/api/activity_set.dart';
+import 'package:harmonoid/core/media_player/mixin/api/activity_set.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
-import 'package:harmonoid/core/media_player/base_media_player.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/core/media_player/mixin/media_player_mixin.dart';
 import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/models/media_player_state.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -22,10 +24,10 @@ import 'package:harmonoid/utils/rendering.dart';
 ///
 /// DiscordRpcMixin
 /// ---------------
-/// package:flutter_discord_rpc mixin for [BaseMediaPlayer].
+/// package:flutter_discord_rpc mixin for [MediaPlayer].
 ///
 /// {@endtemplate}
-mixin DiscordRpcMixin implements BaseMediaPlayer {
+final class DiscordRpcMixin implements MediaPlayerMixin {
   static const String kApplicationId = '881480706545573918';
   static const String kDefaultLargeImage = 'cover_default';
   static const String kPauseSmallImage = 'pause';
@@ -33,63 +35,68 @@ mixin DiscordRpcMixin implements BaseMediaPlayer {
 
   static bool get supported => (Platform.isLinux || Platform.isMacOS || Platform.isWindows) && Configuration.instance.discordRpc;
 
-  Future<void> ensureInitializedDiscordRpc() async {
-    if (!supported) return;
+  DiscordRpcMixin(this._player);
 
+  @override
+  Future<void> ensureInitialized() async {
     try {
       await FlutterDiscordRPC.initialize(kApplicationId);
       final instance = FlutterDiscordRPC.instance..connect();
 
-      _instanceDiscordRpc = instance;
-
-      addListener(_listenerDiscordRpc);
+      _instance = instance;
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
     }
   }
 
-  Future<void> disposeDiscordRpc() async {
-    if (!supported) return;
-    _instanceDiscordRpc = null;
+  @override
+  Future<void> dispose() async {
+    _instance = null;
   }
 
-  void resetFlagsDiscordRpc() {
-    _flagPlayableDiscordRpc = null;
+  @override
+  Future<void> resetFlags() async {
+    _flagPlayable = null;
+    _flagPlaying = null;
+    _flagPosition = null;
+    _largeImage = null;
   }
 
-  void _listenerDiscordRpc() {
-    if (_instanceDiscordRpc?.isConnected != true) return;
+  @override
+  Future<void> notifyState(MediaPlayerState state) {
+    if (_instance?.isConnected != true) return Future.value();
 
-    _lockDiscordRpc.synchronized(() async {
+    return _lock.synchronized(() async {
+      final current = _player.current;
       bool notify = false;
 
-      if (_flagPlayableDiscordRpc != current) {
-        _flagPlayableDiscordRpc = current;
+      if (_flagPlayable != current) {
+        _flagPlayable = current;
         notify = true;
         try {
           final image = cover(uri: current.uri);
-          _largeImageDiscordRpc = switch (image) {
+          _largeImage = switch (image) {
             AsyncFileImage() => await _getFileUrl(current, image.getFile()),
             FileImage() => await _getFileUrl(current, image.file),
             NetworkImage() => image.url,
             _ => null,
           }!;
         } catch (_) {
-          _largeImageDiscordRpc = kDefaultLargeImage;
+          _largeImage = kDefaultLargeImage;
         }
       }
-      if (_flagPlayingDiscordRpc != state.playing) {
-        _flagPlayingDiscordRpc = state.playing;
+      if (_flagPlaying != state.playing) {
+        _flagPlaying = state.playing;
         notify = true;
       }
-      if (((_flagPositionDiscordRpc ?? Duration.zero) - state.position).abs() > const Duration(seconds: 10)) {
-        _flagPositionDiscordRpc = state.position;
+      if (((_flagPosition ?? Duration.zero) - state.position).abs() > const Duration(seconds: 10)) {
+        _flagPosition = state.position;
         notify = true;
       }
 
       if (notify) {
-        await _instanceDiscordRpc?.setActivity(
+        await _instance?.setActivity(
           activity: RPCActivity(
             state: current.subtitle.take(2).join(', ').ellipsis(128).nullIfBlank(),
             details: current.title.ellipsis(128).nullIfBlank(),
@@ -100,7 +107,7 @@ mixin DiscordRpcMixin implements BaseMediaPlayer {
                   )
                 : null,
             assets: RPCAssets(
-              largeImage: _largeImageDiscordRpc,
+              largeImage: _largeImage,
               smallImage: state.playing ? kPlaySmallImage : kPauseSmallImage,
               largeText: current.description.join(' • ').ellipsis(128).nullIfBlank(),
               smallText: state.playing ? Localization.instance.PLAYING : Localization.instance.PAUSED,
@@ -146,12 +153,14 @@ mixin DiscordRpcMixin implements BaseMediaPlayer {
     }
   }
 
-  FlutterDiscordRPC? _instanceDiscordRpc;
-  final Lock _lockDiscordRpc = Lock();
+  final MediaPlayer _player;
 
-  Playable? _flagPlayableDiscordRpc;
-  bool? _flagPlayingDiscordRpc;
-  Duration? _flagPositionDiscordRpc;
+  FlutterDiscordRPC? _instance;
+  final Lock _lock = Lock();
 
-  String? _largeImageDiscordRpc;
+  Playable? _flagPlayable;
+  bool? _flagPlaying;
+  Duration? _flagPosition;
+
+  String? _largeImage;
 }

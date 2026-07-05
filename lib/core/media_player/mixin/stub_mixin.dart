@@ -1,49 +1,55 @@
 import 'package:flutter/foundation.dart';
 import 'package:synchronized/synchronized.dart';
 
+import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/core/media_player/mixin/media_player_mixin.dart';
+import 'package:harmonoid/models/media_player_state.dart';
 import 'package:harmonoid/models/playable.dart';
-import 'package:harmonoid/core/media_player/base_media_player.dart';
 
 /// {@template stub_mixin}
 ///
 /// StubMixin
 /// ---------
-/// Stub (for reference) mixin for [BaseMediaPlayer].
+/// Stub (for reference) mixin for [MediaPlayer].
 ///
 /// {@endtemplate}
-mixin StubMixin implements BaseMediaPlayer {
+final class StubMixin implements MediaPlayerMixin {
   static bool get supported => true;
 
-  Future<void> ensureInitializedStub() async {
-    if (!supported) return;
+  StubMixin(this._player);
 
+  @override
+  Future<void> ensureInitialized() async {
     const instance = null;
 
-    _instanceStub = instance;
-
-    addListener(_listenerStub);
+    _instance = instance;
   }
 
-  Future<void> disposeStub() async {
-    if (!supported) return;
-    _instanceStub = null;
+  @override
+  Future<void> dispose() async {
+    _instance = null;
   }
 
-  void resetFlagsStub() {
-    _flagPlayableStub = null;
+  @override
+  Future<void> resetFlags() async {
+    _flagPlayable = null;
   }
 
-  void _listenerStub() {
-    _lockStub.synchronized(() async {
-      if (_flagPlayableStub != current) {
-        _flagPlayableStub = current;
-        debugPrint(_instanceStub.toString());
+  @override
+  Future<void> notifyState(MediaPlayerState state) {
+    return _lock.synchronized(() async {
+      final current = _player.current;
+      if (_flagPlayable != current) {
+        _flagPlayable = current;
+        debugPrint(_instance.toString());
       }
     });
   }
 
-  Null _instanceStub;
-  final Lock _lockStub = Lock();
+  final MediaPlayer _player;
 
-  Playable? _flagPlayableStub;
+  Null _instance;
+  final Lock _lock = Lock();
+
+  Playable? _flagPlayable;
 }

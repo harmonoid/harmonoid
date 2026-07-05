@@ -3,8 +3,10 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:synchronized/synchronized.dart';
 
-import 'package:harmonoid/core/media_player/base_media_player.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/core/media_player/mixin/media_player_mixin.dart';
 import 'package:harmonoid/mappers/image_provider.dart';
+import 'package:harmonoid/models/media_player_state.dart';
 import 'package:harmonoid/models/loop.dart';
 import 'package:harmonoid/models/playable.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -13,22 +15,23 @@ import 'package:harmonoid/utils/rendering.dart';
 ///
 /// AudioServiceMixin
 /// -----------------
-/// package:audio_service mixin for [BaseMediaPlayer].
+/// package:audio_service mixin for [MediaPlayer].
 ///
 /// {@endtemplate}
-mixin AudioServiceMixin implements BaseMediaPlayer {
+final class AudioServiceMixin implements MediaPlayerMixin {
   static const String kAndroidNotificationChannelId = 'com.alexmercerind.harmonoid';
   static const String kAndroidNotificationChannelName = 'Harmonoid';
   static const String kAndroidNotificationIcon = 'drawable/ic_stat_music_note';
 
   static bool get supported => Platform.isAndroid || Platform.isIOS || Platform.isMacOS;
 
-  Future<void> ensureInitializedAudioService() async {
-    if (!supported) return;
+  AudioServiceMixin(this._player);
 
+  @override
+  Future<void> ensureInitialized() async {
     try {
       final instance = await AudioService.init(
-        builder: () => _AudioServiceImpl(this),
+        builder: () => _AudioServiceImpl(_player),
         config: const AudioServiceConfig(
           androidNotificationChannelId: kAndroidNotificationChannelId,
           androidNotificationChannelName: kAndroidNotificationChannelName,
@@ -38,41 +41,41 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
         ),
       );
 
-      _instanceAudioService = instance;
-
-      addListener(_listenerAudioService);
+      _instance = instance;
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
     }
   }
 
-  Future<void> disposeAudioService() async {
-    if (!supported) return;
-
-    await _instanceAudioService?.stop();
+  @override
+  Future<void> dispose() async {
+    await _instance?.stop();
   }
 
-  void resetFlagsAudioService() {
-    _flagPlayableAudioService = null;
-    _flagIndexAudioService = null;
-    _flagRateAudioService = null;
-    _flagShuffleAudioService = null;
-    _flagLoopAudioService = null;
-    _flagPositionAudioService = null;
-    _flagDurationAudioService = null;
-    _flagPlayingAudioService = null;
-    _flagCompletedAudioService = null;
+  @override
+  Future<void> resetFlags() async {
+    _flagPlayable = null;
+    _flagIndex = null;
+    _flagRate = null;
+    _flagShuffle = null;
+    _flagLoop = null;
+    _flagPosition = null;
+    _flagDuration = null;
+    _flagPlaying = null;
+    _flagCompleted = null;
   }
 
-  void _listenerAudioService() {
-    _lockAudioService.synchronized(() async {
-      if (_flagIndexAudioService != state.index || _flagPlayableAudioService != current) {
-        _flagIndexAudioService = state.index;
-        _flagPlayableAudioService = current;
+  @override
+  Future<void> notifyState(MediaPlayerState state) {
+    return _lock.synchronized(() async {
+      final current = _player.current;
+      if (_flagIndex != state.index || _flagPlayable != current) {
+        _flagIndex = state.index;
+        _flagPlayable = current;
         final image = cover(uri: current.uri);
         final artUri = await image.toUri();
-        _mediaItemAudioService = _mediaItemAudioService.copyWith(
+        _mediaItem = _mediaItem.copyWith(
           id: current.uri,
           title: current.title,
           artist: current.subtitle.join(', '),
@@ -80,9 +83,9 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
           displayTitle: current.title,
           displaySubtitle: current.subtitle.join(', '),
         );
-        _instanceAudioService?.mediaItem.add(_mediaItemAudioService);
+        _instance?.mediaItem.add(_mediaItem);
 
-        _playbackStateAudioService = _playbackStateAudioService.copyWith(
+        _playbackState = _playbackState.copyWith(
           queueIndex: state.index,
           processingState: AudioProcessingState.ready,
           playing: state.playing,
@@ -92,53 +95,53 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
             MediaControl.skipToNext,
           ],
         );
-        _instanceAudioService?.playbackState.add(_playbackStateAudioService);
+        _instance?.playbackState.add(_playbackState);
       }
 
-      if (_flagRateAudioService != state.rate) {
-        _flagRateAudioService = state.rate;
-        _playbackStateAudioService = _playbackStateAudioService.copyWith(speed: state.rate);
-        _instanceAudioService?.playbackState.add(_playbackStateAudioService);
+      if (_flagRate != state.rate) {
+        _flagRate = state.rate;
+        _playbackState = _playbackState.copyWith(speed: state.rate);
+        _instance?.playbackState.add(_playbackState);
       }
 
-      if (_flagShuffleAudioService != state.shuffle) {
-        _flagShuffleAudioService = state.shuffle;
-        _playbackStateAudioService = _playbackStateAudioService.copyWith(
+      if (_flagShuffle != state.shuffle) {
+        _flagShuffle = state.shuffle;
+        _playbackState = _playbackState.copyWith(
           shuffleMode: switch (state.shuffle) {
             true => AudioServiceShuffleMode.all,
             false => AudioServiceShuffleMode.none,
           },
         );
-        _instanceAudioService?.playbackState.add(_playbackStateAudioService);
+        _instance?.playbackState.add(_playbackState);
       }
 
-      if (_flagLoopAudioService != state.loop) {
-        _flagLoopAudioService = state.loop;
-        _playbackStateAudioService = _playbackStateAudioService.copyWith(
+      if (_flagLoop != state.loop) {
+        _flagLoop = state.loop;
+        _playbackState = _playbackState.copyWith(
           repeatMode: switch (state.loop) {
             Loop.off => AudioServiceRepeatMode.none,
             Loop.one => AudioServiceRepeatMode.one,
             Loop.all => AudioServiceRepeatMode.all,
           },
         );
-        _instanceAudioService?.playbackState.add(_playbackStateAudioService);
+        _instance?.playbackState.add(_playbackState);
       }
 
-      if (_flagPositionAudioService == null || (state.position - _flagPositionAudioService!).abs() > const Duration(seconds: 1)) {
-        _flagPositionAudioService = state.position;
-        _playbackStateAudioService = _playbackStateAudioService.copyWith(updatePosition: state.position);
-        _instanceAudioService?.playbackState.add(_playbackStateAudioService);
+      if (_flagPosition == null || (state.position - _flagPosition!).abs() > const Duration(seconds: 1)) {
+        _flagPosition = state.position;
+        _playbackState = _playbackState.copyWith(updatePosition: state.position);
+        _instance?.playbackState.add(_playbackState);
       }
 
-      if (_flagDurationAudioService != state.duration && state.duration > Duration.zero) {
-        _flagDurationAudioService = state.duration;
-        _mediaItemAudioService = _mediaItemAudioService.copyWith(duration: state.duration);
-        _instanceAudioService?.mediaItem.add(_mediaItemAudioService);
+      if (_flagDuration != state.duration && state.duration > Duration.zero) {
+        _flagDuration = state.duration;
+        _mediaItem = _mediaItem.copyWith(duration: state.duration);
+        _instance?.mediaItem.add(_mediaItem);
       }
 
-      if (_flagPlayingAudioService != state.playing) {
-        _flagPlayingAudioService = state.playing;
-        _playbackStateAudioService = _playbackStateAudioService.copyWith(
+      if (_flagPlaying != state.playing) {
+        _flagPlaying = state.playing;
+        _playbackState = _playbackState.copyWith(
           processingState: AudioProcessingState.ready,
           playing: state.playing,
           controls: [
@@ -158,38 +161,40 @@ mixin AudioServiceMixin implements BaseMediaPlayer {
             MediaAction.setSpeed,
           },
         );
-        _instanceAudioService?.playbackState.add(_playbackStateAudioService);
+        _instance?.playbackState.add(_playbackState);
       }
 
-      if (_flagCompletedAudioService != state.completed) {
-        _flagCompletedAudioService = state.completed;
+      if (_flagCompleted != state.completed) {
+        _flagCompleted = state.completed;
         if (state.completed) {
-          _playbackStateAudioService = _playbackStateAudioService.copyWith(processingState: AudioProcessingState.completed);
-          _instanceAudioService?.playbackState.add(_playbackStateAudioService);
+          _playbackState = _playbackState.copyWith(processingState: AudioProcessingState.completed);
+          _instance?.playbackState.add(_playbackState);
         }
       }
     });
   }
 
-  _AudioServiceImpl? _instanceAudioService;
-  final Lock _lockAudioService = Lock();
+  final MediaPlayer _player;
 
-  Playable? _flagPlayableAudioService;
-  int? _flagIndexAudioService;
-  double? _flagRateAudioService;
-  bool? _flagShuffleAudioService;
-  Loop? _flagLoopAudioService;
-  Duration? _flagPositionAudioService;
-  Duration? _flagDurationAudioService;
-  bool? _flagPlayingAudioService;
-  bool? _flagCompletedAudioService;
+  _AudioServiceImpl? _instance;
+  final Lock _lock = Lock();
 
-  MediaItem _mediaItemAudioService = const MediaItem(id: '~', title: '~');
-  PlaybackState _playbackStateAudioService = PlaybackState();
+  Playable? _flagPlayable;
+  int? _flagIndex;
+  double? _flagRate;
+  bool? _flagShuffle;
+  Loop? _flagLoop;
+  Duration? _flagPosition;
+  Duration? _flagDuration;
+  bool? _flagPlaying;
+  bool? _flagCompleted;
+
+  MediaItem _mediaItem = const MediaItem(id: '~', title: '~');
+  PlaybackState _playbackState = PlaybackState();
 }
 
 class _AudioServiceImpl extends BaseAudioHandler with QueueHandler, SeekHandler {
-  final BaseMediaPlayer _instance;
+  final MediaPlayer _instance;
 
   _AudioServiceImpl(this._instance);
 
