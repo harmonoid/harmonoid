@@ -4,10 +4,10 @@ import 'package:media_library/media_library.dart';
 
 import 'package:harmonoid/extensions/set.dart';
 import 'package:harmonoid/extensions/string.dart';
-import 'package:harmonoid/models/playable.dart';
+import 'package:harmonoid/core/media_player/models/playable.dart';
 import 'package:harmonoid/state/lyrics/models/lyrics_key.dart';
-import 'package:harmonoid/ui/media_library/media_library_hyperlinks.dart';
-import 'package:harmonoid/utils/constants.dart';
+import 'package:harmonoid/features/media_library/utils/rendering.dart';
+import 'package:harmonoid/features/media_library/utils/constants.dart';
 
 /// Mappers for [Track].
 extension TrackMappers on Track {

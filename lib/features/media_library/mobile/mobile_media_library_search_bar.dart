@@ -1,0 +1,93 @@
+import 'package:flutter/material.dart';
+import 'package:media_library/media_library.dart';
+import 'package:provider/provider.dart';
+
+import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/features/media_library/mobile/mobile_media_library_app_bar_overflow_button.dart';
+import 'package:harmonoid/features/media_library/mobile/mobile_media_library_grid_span_button.dart';
+import 'package:harmonoid/features/media_library/search/search_screen.dart';
+import 'package:harmonoid/features/update/update_button.dart';
+import 'package:harmonoid/utils/dimensions.dart';
+
+final SearchController mediaLibrarySearchController = SearchController();
+
+class MobileMediaLibrarySearchBar extends StatelessWidget {
+  const MobileMediaLibrarySearchBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final shape = Theme.of(context).searchBarTheme.shape?.resolve({});
+    final borderRadius = shape is! RoundedRectangleBorder ? null : shape.borderRadius as BorderRadius;
+
+    return Container(
+      alignment: Alignment.center,
+      padding: EdgeInsets.only(
+        top: MediaQuery.of(context).padding.top + margin,
+        left: margin,
+        right: margin,
+      ),
+      child: SearchAnchor(
+        viewLeading: IconButton(
+          onPressed: () {
+            Navigator.of(context).maybePop();
+            mediaLibrarySearchController.text = '';
+          },
+          tooltip: Localization.instance.BACK,
+          icon: const Icon(Icons.arrow_back),
+          iconSize: 24.0,
+          splashRadius: 20.0,
+        ),
+        searchController: mediaLibrarySearchController,
+        viewHintText: Localization.instance.SEARCH_HINT,
+        builder: (context, controller) {
+          return Consumer<MediaLibrary>(
+            builder: (context, mediaLibrary, _) {
+              return Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  ExcludeFocus(
+                    child: SearchBar(
+                      autoFocus: false,
+                      leading: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Icon(Icons.search),
+                      ),
+                      onTap: controller.openView,
+                      trailing: const [
+                        UpdateButton(),
+                        MobileMediaLibraryGridSpanButton(),
+                        MobileMediaLibraryAppBarOverflowButton(),
+                      ],
+                      hintText: !mediaLibrary.refreshing
+                          ? Localization.instance.SEARCH_HINT
+                          : mediaLibrary.current == null
+                          ? Localization.instance.DISCOVERING_FILES
+                          : Localization.instance.ADDED_M_OF_N_FILES
+                                .replaceAll('"M"', (mediaLibrary.current ?? 0).toString())
+                                .replaceAll('"N"', (mediaLibrary.total == 0 ? 1 : mediaLibrary.total).toString()),
+                    ),
+                  ),
+                  if (mediaLibrary.refreshing)
+                    Positioned.fill(
+                      child: IgnorePointer(
+                        child: Container(
+                          clipBehavior: Clip.antiAlias,
+                          alignment: Alignment.bottomCenter,
+                          decoration: BoxDecoration(borderRadius: borderRadius),
+                          child: LinearProgressIndicator(
+                            value: mediaLibrary.current == null ? null : (mediaLibrary.current ?? 0) / (mediaLibrary.total == 0 ? 1 : mediaLibrary.total),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          );
+        },
+        suggestionsBuilder: (context, controller) => [SearchScreen(query: controller.text)],
+        viewBuilder: (suggestions) => suggestions.elementAtOrNull(0) ?? const SizedBox.shrink(),
+      ),
+    );
+  }
+}

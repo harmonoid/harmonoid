@@ -20,12 +20,12 @@ import 'package:harmonoid/mappers/playlist_mode.dart';
 import 'package:harmonoid/mappers/replaygain.dart';
 import 'package:harmonoid/mappers/tags.dart';
 import 'package:harmonoid/mappers/track.dart';
-import 'package:harmonoid/models/loop.dart';
-import 'package:harmonoid/models/media_player_state.dart';
-import 'package:harmonoid/models/playable.dart';
-import 'package:harmonoid/models/playback_state.dart';
-import 'package:harmonoid/models/replaygain.dart';
-import 'package:harmonoid/ui/harmonoid.dart';
+import 'package:harmonoid/core/media_player/models/loop.dart';
+import 'package:harmonoid/core/media_player/models/media_player_state.dart';
+import 'package:harmonoid/core/media_player/models/playable.dart';
+import 'package:harmonoid/core/media_player/models/playback_state.dart';
+import 'package:harmonoid/core/media_player/models/replaygain.dart';
+import 'package:harmonoid/features/app/harmonoid.dart';
 import 'package:harmonoid/utils/actions.dart';
 import 'package:harmonoid/utils/constants.dart';
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:harmonoid/localization/localization.dart';
-import 'package:harmonoid/models/media_library_tab.dart';
-import 'package:harmonoid/ui/router.dart';
+import 'package:harmonoid/features/media_library/models/media_library_tab.dart';
+import 'package:harmonoid/routing/utils/constants.dart';
 
 /// Mappers for [MediaLibraryTab].
 extension MediaLibraryTabMappers on MediaLibraryTab {

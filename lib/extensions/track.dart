@@ -4,7 +4,7 @@ import 'package:media_library/media_library.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/extensions/date_time.dart';
 import 'package:harmonoid/extensions/string.dart';
-import 'package:harmonoid/utils/constants.dart';
+import 'package:harmonoid/features/media_library/utils/constants.dart';
 
 /// Extensions for [Track].
 extension TrackExtensions on Track {

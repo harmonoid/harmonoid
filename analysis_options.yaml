@@ -2,8 +2,10 @@ include: package:flutter_lints/flutter.yaml
 
 analyzer:
   errors:
+    dangling_library_doc_comments: ignore
     library_prefixes: ignore
     no_leading_underscores_for_library_prefixes: ignore
+    unintended_html_in_doc_comment: ignore
     use_build_context_synchronously: ignore
 linter:
   rules:

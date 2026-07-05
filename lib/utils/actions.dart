@@ -7,9 +7,10 @@ import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/go_router.dart';
 import 'package:harmonoid/localization/localization.dart';
-import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
-import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
-import 'package:harmonoid/ui/router.dart';
+import 'package:harmonoid/features/now_playing/state/now_playing_color_palette_notifier.dart';
+import 'package:harmonoid/features/now_playing/state/now_playing_mobile_notifier.dart';
+import 'package:harmonoid/routing/router.dart';
+import 'package:harmonoid/routing/utils/constants.dart';
 import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/rendering.dart';
 

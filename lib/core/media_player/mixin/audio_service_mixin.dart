@@ -6,9 +6,9 @@ import 'package:synchronized/synchronized.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/core/media_player/mixin/media_player_mixin.dart';
 import 'package:harmonoid/mappers/image_provider.dart';
-import 'package:harmonoid/models/media_player_state.dart';
-import 'package:harmonoid/models/loop.dart';
-import 'package:harmonoid/models/playable.dart';
+import 'package:harmonoid/core/media_player/models/media_player_state.dart';
+import 'package:harmonoid/core/media_player/models/loop.dart';
+import 'package:harmonoid/core/media_player/models/playable.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 /// {@template audio_service_mixin}

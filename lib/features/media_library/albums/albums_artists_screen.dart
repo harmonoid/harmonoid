@@ -1,0 +1,171 @@
+import 'package:adaptive_layouts/adaptive_layouts.dart';
+import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
+import 'package:media_library/media_library.dart';
+import 'package:provider/provider.dart';
+
+import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/extensions/album.dart';
+import 'package:harmonoid/mappers/track.dart';
+import 'package:harmonoid/features/media_library/albums/album_item.dart';
+import 'package:harmonoid/features/media_library/albums/albums_screen.dart';
+import 'package:harmonoid/features/media_library/desktop/desktop_media_library_header.dart';
+import 'package:harmonoid/features/media_library/state/media_library_scroll_view_builder_data_provider.dart';
+import 'package:harmonoid/features/media_library/utils/constants.dart';
+import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/widgets.dart';
+
+class AlbumsArtistsScreen extends StatefulWidget {
+  const AlbumsArtistsScreen({super.key});
+
+  @override
+  State<AlbumsArtistsScreen> createState() => AlbumsArtistsScreenState();
+}
+
+class AlbumsArtistsScreenState extends State<AlbumsArtistsScreen> {
+  @override
+  Widget build(BuildContext context) {
+    if (isDesktop) {
+      return const DesktopAlbumsArtistsScreen();
+    }
+    if (isTablet) {
+      throw UnimplementedError();
+    }
+    if (isMobile) {
+      throw UnimplementedError();
+    }
+    throw UnimplementedError();
+  }
+}
+
+class DesktopAlbumsArtistsScreen extends StatefulWidget {
+  const DesktopAlbumsArtistsScreen({super.key});
+
+  @override
+  State<DesktopAlbumsArtistsScreen> createState() => DesktopAlbumsArtistsScreenState();
+}
+
+class DesktopAlbumsArtistsScreenState extends State<DesktopAlbumsArtistsScreen> {
+  final _key = GlobalKey<ScrollViewBuilderState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, _) {
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: Consumer<MediaLibrary>(
+            builder: (context, mediaLibrary, _) {
+              final albumArtists = mediaLibrary.albumArtists.entries.toList();
+              final scrollViewBuilderHelperData = MediaLibraryScrollViewBuilderDataProvider(context).album;
+              return KeyedSubtree(
+                key: ValueKey((mediaLibrary.albumSortType, mediaLibrary.albumSortAscending)),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(
+                      width: 172.0,
+                      child: NotificationListener<ScrollNotification>(
+                        onNotification: (_) => true,
+                        child: KeyedSubtree(
+                          key: ValueKey((albumArtists.length)),
+                          child: ScrollViewBuilder(
+                            key: const PageStorageKey(AlbumsScreen),
+                            margin: 0.0,
+                            span: 1,
+                            displayHeaders: false,
+                            headerCount: albumArtists.length,
+                            headerBuilder: (context, i, h) => const SizedBox.shrink(),
+                            headerHeight: 0.0,
+                            itemCounts: albumArtists.map((_) => 1).toList(),
+                            itemBuilder: (context, i, j, w, h) {
+                              return InkWell(
+                                key: const ValueKey(''),
+                                onTap: () {
+                                  _key.currentState?.animateToHeader(
+                                    i + 1,
+                                    difference: -8.0,
+                                  );
+                                },
+                                child: Container(
+                                  alignment: Alignment.centerLeft,
+                                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Text(
+                                    albumArtists[i].key.isEmpty ? kDefaultArtist : albumArtists[i].key,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              );
+                            },
+                            itemWidth: double.infinity,
+                            itemHeight: 28.0,
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const VerticalDivider(
+                      width: 1.0,
+                      thickness: 1.0,
+                    ),
+                    Expanded(
+                      child: ScrollViewBuilder(
+                        key: _key,
+                        margin: margin,
+                        span: scrollViewBuilderHelperData.span,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        headerCount: 1 + albumArtists.length,
+                        headerBuilder: (context, i, h) {
+                          if (i == 0) {
+                            return const DesktopMediaLibraryHeader(key: ValueKey(''));
+                          } else {
+                            return SubHeader(
+                              albumArtists[i - 1].key.isEmpty ? kDefaultArtist : albumArtists[i - 1].key,
+                              key: ValueKey(albumArtists[i - 1].key.isEmpty ? kDefaultArtist[0] : albumArtists[i - 1].key[0]),
+                              padding: EdgeInsets.only(
+                                left: margin,
+                                right: margin,
+                                bottom: margin,
+                              ),
+                              trailing: MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    final futures = albumArtists[i - 1].value.map((e) => mediaLibrary.tracksFromAlbum(e));
+                                    final trackss = await Future.wait(futures);
+                                    final tracks = trackss.flattened;
+                                    MediaPlayer.instance.open(tracks.map((e) => e.toPlayable()));
+                                  },
+                                  child: const Icon(Icons.play_arrow, size: 20.0),
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                        headerHeight: kDesktopHeaderHeight,
+                        itemCounts: [0, ...albumArtists.map((e) => e.value.length)],
+                        itemBuilder: (context, i, j, w, h) => AlbumItem(
+                          key: albumArtists[i - 1].value[j].scrollViewBuilderKey,
+                          album: albumArtists[i - 1].value[j],
+                          width: w,
+                          height: h,
+                        ),
+                        itemWidth: scrollViewBuilderHelperData.itemWidth,
+                        itemHeight: scrollViewBuilderHelperData.itemHeight,
+                        padding: MediaLibraryScrollViewBuilderDataProvider(context).padding,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+}

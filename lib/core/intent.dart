@@ -8,8 +8,8 @@ import 'package:uri_parser/uri_parser.dart';
 
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/mappers/file.dart';
-import 'package:harmonoid/models/playable.dart';
-import 'package:harmonoid/models/playback_state.dart';
+import 'package:harmonoid/core/media_player/models/playable.dart';
+import 'package:harmonoid/core/media_player/models/playback_state.dart';
 import 'package:harmonoid/utils/actions.dart';
 
 /// {@template intent}

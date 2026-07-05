@@ -5,8 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:media_library/media_library.dart';
 
 import 'package:harmonoid/core/media_player/media_player.dart';
-import 'package:harmonoid/ui/media_library/media_library_screen.dart';
-import 'package:harmonoid/ui/router.dart';
+import 'package:harmonoid/features/media_library/media_library_screen.dart';
+import 'package:harmonoid/routing/router.dart';
+import 'package:harmonoid/routing/utils/constants.dart';
 import 'package:provider/provider.dart';
 
 /// {@template keyboard_shortcuts}

@@ -1,0 +1,419 @@
+import 'package:adaptive_layouts/adaptive_layouts.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:m3_expressive_shapes/rounded_polygon_border.dart';
+import 'package:m3_expressive_shapes/shapes/material_shapes.dart';
+import 'package:media_library/media_library.dart';
+import 'package:provider/provider.dart';
+
+import 'package:harmonoid/core/configuration/configuration.dart';
+import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/extensions/duration.dart';
+import 'package:harmonoid/extensions/list.dart';
+import 'package:harmonoid/extensions/media_player_state.dart';
+import 'package:harmonoid/extensions/string.dart';
+import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/core/media_player/models/loop.dart';
+import 'package:harmonoid/features/now_playing/state/now_playing_color_palette_notifier.dart';
+import 'package:harmonoid/features/media_library/utils/rendering.dart';
+import 'package:harmonoid/features/media_library/playlists/utils/rendering.dart';
+import 'package:harmonoid/features/media_library/utils/constants.dart';
+import 'package:harmonoid/features/now_playing/desktop/desktop_now_playing_playlist.dart';
+import 'package:harmonoid/features/now_playing/now_playing_bar.dart';
+import 'package:harmonoid/features/now_playing/now_playing_colors.dart';
+import 'package:harmonoid/features/now_playing/now_playing_audio_control_panel.dart';
+import 'package:harmonoid/routing/utils/constants.dart';
+import 'package:harmonoid/third_party/material_wave_slider.dart';
+import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/widgets.dart';
+
+class DesktopNowPlayingBar extends StatefulWidget {
+  const DesktopNowPlayingBar({super.key});
+
+  @override
+  State<DesktopNowPlayingBar> createState() => DesktopNowPlayingBarState();
+}
+
+class DesktopNowPlayingBarState extends State<DesktopNowPlayingBar> {
+  final ValueNotifier<bool> _coverHoverNotifier = ValueNotifier<bool>(false);
+
+  @override
+  void dispose() {
+    super.dispose();
+    _coverHoverNotifier.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<NowPlayingColorPaletteNotifier>(
+      builder: (context, nowPlayingColorPaletteNotifier, _) {
+        return Provider<NowPlayingColors>.value(
+          value: NowPlayingColors.fromPalette(
+            context,
+            isMaterial2 && Configuration.instance.desktopNowPlayingBarColorPalette ? nowPlayingColorPaletteNotifier.palette : null,
+          ),
+          builder: (context, _) {
+            final nowPlayingColors = context.read<NowPlayingColors>();
+            return Material(
+              color: nowPlayingColors.background,
+              elevation: Theme.of(context).bottomAppBarTheme.elevation ?? kDefaultHeavyElevation,
+              child: Consumer<MediaPlayer>(
+                builder: (context, mediaPlayer, _) {
+                  return Stack(
+                    children: [
+                      Positioned.fill(
+                        child: RippleSurface(color: nowPlayingColors.background),
+                      ),
+                      SliderTheme(
+                        data: nowPlayingColors.toSliderThemeData(),
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: NowPlayingBar.height,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              () {
+                                try {
+                                  return Expanded(
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        MouseRegion(
+                                          onEnter: (_) => _coverHoverNotifier.value = true,
+                                          onExit: (_) => _coverHoverNotifier.value = false,
+                                          child: Stack(
+                                            children: [
+                                              ClipRect(
+                                                child: ScaleOnHover(
+                                                  child: Image(
+                                                    width: NowPlayingBar.height,
+                                                    height: NowPlayingBar.height,
+                                                    image: cover(
+                                                      uri: mediaPlayer.current.uri,
+                                                      cacheWidth: NowPlayingBar.height.toInt(),
+                                                    ),
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ),
+                                              ValueListenableBuilder<bool>(
+                                                valueListenable: _coverHoverNotifier,
+                                                builder: (context, value, _) {
+                                                  return Positioned.fill(
+                                                    child: AnimatedOpacity(
+                                                      opacity: value ? 1.0 : 0.0,
+                                                      duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
+                                                      curve: Curves.easeInOut,
+                                                      child: Material(
+                                                        color: Colors.black.withValues(alpha: 0.5),
+                                                        child: InkWell(
+                                                          onTap: () {
+                                                            context.push('/$kNowPlayingPath');
+                                                          },
+                                                          child: const Center(
+                                                            child: Icon(
+                                                              Icons.music_note,
+                                                              size: 32.0,
+                                                              color: Colors.white,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12.0),
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                mediaPlayer.current.title,
+                                                style: Theme.of(context).textTheme.titleMedium?.copyWith(color: nowPlayingColors.backgroundText),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              if (mediaPlayer.current.subtitle.isNotEmpty)
+                                                TappableText(
+                                                  text: mediaPlayer.current.subtitle
+                                                      .ifEmpty([''])
+                                                      .map(
+                                                        (e) => TappableTextData(
+                                                          text: e.nullIfBlank() ?? kDefaultArtist,
+                                                          onTap: () => navigateToArtist(context, ArtistLookupKey(artist: e)),
+                                                        ),
+                                                      )
+                                                      .toList(),
+                                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: nowPlayingColors.backgroundText),
+                                                ),
+                                              if (Configuration.instance.nowPlayingAudioFormat)
+                                                Text(
+                                                  mediaPlayer.state.getAudioFormatLabel(),
+                                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: nowPlayingColors.backgroundText),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12.0),
+                                      ],
+                                    ),
+                                  );
+                                } catch (_) {
+                                  return const Spacer();
+                                }
+                              }(),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width / 2.5,
+                                child: Controls(
+                                  key: ValueKey(Theme.of(context).extension<MaterialStandard>()?.value ?? 0),
+                                ),
+                              ),
+                              Expanded(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const Spacer(),
+                                    const SizedBox(width: 12.0),
+                                    IconButton(
+                                      onPressed: () => showAddToPlaylistDialog(context, playable: mediaPlayer.current),
+                                      color: nowPlayingColors.backgroundEnabledIcon,
+                                      icon: const Icon(Icons.playlist_add),
+                                      splashRadius: 20.0,
+                                      iconSize: 20.0,
+                                      tooltip: Localization.instance.ADD_TO_PLAYLIST,
+                                    ),
+                                    IconButton(
+                                      onPressed: () => DesktopNowPlayingPlaylist.show(context),
+                                      color: nowPlayingColors.backgroundEnabledIcon,
+                                      icon: const Icon(Icons.queue_music),
+                                      splashRadius: 20.0,
+                                      iconSize: 20.0,
+                                      tooltip: Localization.instance.PLAYLIST,
+                                    ),
+                                    IconButton(
+                                      onPressed: mediaPlayer.muteOrUnmute,
+                                      color: nowPlayingColors.backgroundEnabledIcon,
+                                      icon: Icon(mediaPlayer.state.volume == 0.0 ? Icons.volume_off : (mediaPlayer.state.volume < 50.0 ? Icons.volume_down : Icons.volume_up)),
+                                      splashRadius: 20.0,
+                                      iconSize: 20.0,
+                                      tooltip: mediaPlayer.state.volume == 0.0 ? Localization.instance.UNMUTE : Localization.instance.MUTE,
+                                    ),
+                                    SizedBox(
+                                      width: 108.0,
+                                      child: ScrollableSlider(
+                                        min: 0.0,
+                                        max: 100.0,
+                                        value: mediaPlayer.state.volume.clamp(0.0, 100.0),
+                                        onChanged: (value) => mediaPlayer.setVolume(value),
+                                        onScrolledDown: () => mediaPlayer.setVolume((mediaPlayer.state.volume - 5.0).clamp(0.0, 100.0)),
+                                        onScrolledUp: () => mediaPlayer.setVolume((mediaPlayer.state.volume + 5.0).clamp(0.0, 100.0)),
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () => NowPlayingAudioControlPanel.show(context),
+                                      color: nowPlayingColors.backgroundEnabledIcon,
+                                      icon: const Icon(Icons.speaker),
+                                      splashRadius: 20.0,
+                                      iconSize: 20.0,
+                                      tooltip: Localization.instance.AUDIO_CONTROL_PANEL,
+                                    ),
+                                    const SizedBox(width: 12.0),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class Controls extends StatelessWidget {
+  const Controls({super.key});
+
+  static double? get floatingActionButtonElevation => isMaterial3 ? 0.0 : null;
+  static double? get floatingActionButtonDimension => isMaterial3 ? 56.0 : 48.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final nowPlayingColors = context.read<NowPlayingColors>();
+    return Consumer<MediaPlayer>(
+      builder: (context, mediaPlayer, _) {
+        const sliderMin = 0.0;
+        final sliderMax = mediaPlayer.state.duration.inMilliseconds.toDouble();
+        final sliderValue = mediaPlayer.state.position.inMilliseconds.clamp(sliderMin, sliderMax).toDouble();
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 8.0),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: mediaPlayer.shuffleOrUnshuffle,
+                  color: mediaPlayer.state.shuffle ? nowPlayingColors.backgroundEnabledIcon : nowPlayingColors.backgroundDisabledIcon,
+                  icon: const Icon(Icons.shuffle),
+                  splashRadius: 20.0,
+                  iconSize: Theme.of(context).iconTheme.size! * 0.8,
+                  tooltip: Localization.instance.SHUFFLE,
+                ),
+                IconButton(
+                  onPressed: mediaPlayer.previous,
+                  color: mediaPlayer.state.isFirst ? nowPlayingColors.backgroundDisabledIcon : nowPlayingColors.backgroundEnabledIcon,
+                  icon: const Icon(Icons.skip_previous),
+                  splashRadius: 20.0,
+                  tooltip: Localization.instance.PREVIOUS,
+                ),
+                const SizedBox(width: 8.0),
+                if (isMaterial3)
+                  AnimatedContainer(
+                    curve: const ElasticOutCurve(0.85),
+                    width: floatingActionButtonDimension,
+                    height: floatingActionButtonDimension,
+                    duration: Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero,
+                    decoration: ShapeDecoration(
+                      color: nowPlayingColors.foreground,
+                      shape: RoundedPolygonBorder(polygon: mediaPlayer.state.playing ? MaterialShapes.sunny : MaterialShapes.square),
+                    ),
+                    child: Tooltip(
+                      message: mediaPlayer.state.playing ? Localization.instance.PAUSE : Localization.instance.PLAY,
+                      child: InkWell(
+                        onTap: mediaPlayer.playOrPause,
+                        child: Center(
+                          child: StatefulAnimatedIcon(
+                            dismissed: mediaPlayer.state.playing,
+                            icon: AnimatedIcons.play_pause,
+                            size: Theme.of(context).iconTheme.size! * 1.5,
+                            color: nowPlayingColors.foregroundIcon,
+                            duration: const Duration(milliseconds: 500),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  SizedBox.square(
+                    dimension: floatingActionButtonDimension,
+                    child: FloatingActionButton(
+                      heroTag: '***',
+                      elevation: floatingActionButtonElevation,
+                      focusElevation: floatingActionButtonElevation,
+                      hoverElevation: floatingActionButtonElevation,
+                      highlightElevation: floatingActionButtonElevation,
+                      onPressed: mediaPlayer.playOrPause,
+                      backgroundColor: nowPlayingColors.foreground,
+                      foregroundColor: nowPlayingColors.foregroundIcon,
+                      tooltip: mediaPlayer.state.playing ? Localization.instance.PAUSE : Localization.instance.PLAY,
+                      child: StatefulAnimatedIcon(
+                        dismissed: mediaPlayer.state.playing,
+                        icon: AnimatedIcons.play_pause,
+                        size: Theme.of(context).iconTheme.size! * 1.4,
+                      ),
+                    ),
+                  ),
+                const SizedBox(width: 8.0),
+                IconButton(
+                  onPressed: mediaPlayer.next,
+                  color: mediaPlayer.state.isLast ? nowPlayingColors.backgroundDisabledIcon : nowPlayingColors.backgroundEnabledIcon,
+                  icon: const Icon(Icons.skip_next),
+                  splashRadius: 20.0,
+                  tooltip: Localization.instance.NEXT,
+                ),
+                IconButton(
+                  onPressed: () => mediaPlayer.setLoop(Loop.values[(mediaPlayer.state.loop.index + 1) % Loop.values.length]),
+                  color: switch (mediaPlayer.state.loop) {
+                    Loop.off => nowPlayingColors.backgroundDisabledIcon,
+                    Loop.one => nowPlayingColors.backgroundEnabledIcon,
+                    Loop.all => nowPlayingColors.backgroundEnabledIcon,
+                  },
+                  icon: switch (mediaPlayer.state.loop) {
+                    Loop.off => const Icon(Icons.repeat),
+                    Loop.one => const Icon(Icons.repeat_one),
+                    Loop.all => const Icon(Icons.repeat),
+                  },
+                  splashRadius: 20.0,
+                  iconSize: Theme.of(context).iconTheme.size! * 0.8,
+                  tooltip: Localization.instance.REPEAT,
+                ),
+              ],
+            ),
+            const Spacer(),
+            Transform.translate(
+              offset: Offset(0.0, isMaterial2 ? -2.0 : 0.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 2.0),
+                    child: Text(
+                      mediaPlayer.state.position.label,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: nowPlayingColors.backgroundText,
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12.0),
+                  if (isMaterial3)
+                    Expanded(
+                      child: MaterialWaveSlider(
+                        height: 28.0,
+                        min: sliderMin,
+                        max: sliderMax,
+                        value: sliderValue,
+                        onChanged: (value) => mediaPlayer.seek(Duration(milliseconds: value.round())),
+                        paused: !mediaPlayer.state.playing,
+                      ),
+                    ),
+                  if (isMaterial2)
+                    Expanded(
+                      child: ScrollableSlider(
+                        min: sliderMin,
+                        max: sliderMax,
+                        value: sliderValue,
+                        onChanged: (value) => mediaPlayer.seek(Duration(milliseconds: value.round())),
+                      ),
+                    ),
+                  const SizedBox(width: 12.0),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 2.0),
+                    child: Text(
+                      mediaPlayer.state.duration.label,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: nowPlayingColors.backgroundText,
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}

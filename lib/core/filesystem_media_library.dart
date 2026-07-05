@@ -10,7 +10,6 @@ import 'package:tag_reader/tag_reader.dart';
 
 import 'package:harmonoid/mappers/tags.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
-import 'package:harmonoid/utils/constants.dart';
 
 /// {@template filesystem_media_library}
 ///
@@ -20,7 +19,6 @@ import 'package:harmonoid/utils/constants.dart';
 ///
 /// {@endtemplate}
 class FileSystemMediaLibrary extends media_library.FileSystemMediaLibrary with ChangeNotifier {
-  /// Pool size for [PooledTagReader].
   static final int kPooledTagReaderSize = () {
     try {
       return Platform.numberOfProcessors.round().clamp(1, 8) ~/ 2;
@@ -28,6 +26,8 @@ class FileSystemMediaLibrary extends media_library.FileSystemMediaLibrary with C
       return 2;
     }
   }();
+  static const String kCoverDefaultAssetKey = 'assets/images/default_album.jpg';
+  static const String kCoverDefaultFileName = 'Album.JPG';
 
   /// Singleton instance.
   static late final FileSystemMediaLibrary instance;

@@ -1,906 +1,24 @@
-// ignore_for_file: depend_on_referenced_packages, invalid_use_of_protected_member
+// ignore_for_file: depend_on_referenced_packages
 
-import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart' hide CarouselView, CarouselController, ReorderableDragStartListener, Intent;
+import 'package:flutter/material.dart' hide CarouselView, CarouselController, ReorderableDragStartListener;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
-import 'package:identity/identity.dart';
 import 'package:m3_expressive_shapes/rounded_polygon_border.dart';
 import 'package:m3_expressive_shapes/shapes/material_shapes.dart';
-import 'package:media_library/media_library.dart';
-import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
-import 'package:harmonoid/core/configuration/configuration.dart';
-import 'package:harmonoid/core/intent.dart';
-import 'package:harmonoid/core/media_player/media_player.dart';
-import 'package:harmonoid/extensions/build_context.dart';
-import 'package:harmonoid/extensions/set.dart';
 import 'package:harmonoid/localization/localization.dart';
-import 'package:harmonoid/mappers/media_library_tab.dart';
-import 'package:harmonoid/mappers/track.dart';
-import 'package:harmonoid/models/media_library_tab.dart';
-import 'package:harmonoid/state/now_playing_mobile_notifier.dart';
-import 'package:harmonoid/ui/media_library/folders/state/file_explorer_notifier.dart';
-import 'package:harmonoid/ui/now_playing/now_playing_bar.dart';
-import 'package:harmonoid/ui/router.dart';
-import 'package:harmonoid/utils/constants.dart';
+import 'package:harmonoid/features/now_playing/state/now_playing_mobile_notifier.dart';
+import 'package:harmonoid/features/now_playing/now_playing_bar.dart';
+import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/keyboard_shortcuts.dart';
 import 'package:harmonoid/utils/rendering.dart';
-
-class DesktopMediaLibraryHeader extends StatefulWidget {
-  const DesktopMediaLibraryHeader({super.key});
-
-  @override
-  DesktopMediaLibraryHeaderState createState() => DesktopMediaLibraryHeaderState();
-}
-
-class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
-  @override
-  Widget build(BuildContext context) {
-    final path = context.location.split('/').last;
-
-    if (![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kFoldersPath].contains(path)) {
-      return const SizedBox.shrink();
-    }
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const SizedBox(width: 16.0),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(4.0),
-            onTap: () {
-              MediaPlayer.instance.open(context.read<MediaLibrary>().tracks.map((e) => e.toPlayable()));
-            },
-            child: Container(
-              height: 44.0,
-              padding: const EdgeInsets.only(left: 2.0, right: 6.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.play_arrow,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  const SizedBox(width: 4.0),
-                  Text(
-                    Localization.instance.PLAY_ALL,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 4.0),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(4.0),
-            onTap: () {
-              MediaPlayer.instance.open(context.read<MediaLibrary>().tracks.map((e) => e.toPlayable()), shuffle: true);
-            },
-            child: Container(
-              height: 44.0,
-              padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.shuffle,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  const SizedBox(width: 4.0),
-                  Text(
-                    Localization.instance.SHUFFLE,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        const Spacer(),
-        const DesktopMediaLibrarySortButton(floating: false),
-        SizedBox(width: margin),
-      ],
-    );
-  }
-}
-
-// --------------------------------------------------
-
-class DesktopMediaLibraryFloatingSortButton extends StatefulWidget {
-  final ValueNotifier<bool> floatingNotifier;
-
-  const DesktopMediaLibraryFloatingSortButton({
-    super.key,
-    required this.floatingNotifier,
-  });
-
-  @override
-  State<DesktopMediaLibraryFloatingSortButton> createState() => DesktopMediaLibraryFloatingSortButtonState();
-}
-
-class DesktopMediaLibraryFloatingSortButtonState extends State<DesktopMediaLibraryFloatingSortButton> {
-  @override
-  Widget build(BuildContext context) {
-    final path = context.location.split('/').last;
-
-    if (![kAlbumsPath, /* kTracksPath, */ kArtistsPath, kGenresPath].contains(path)) {
-      return const SizedBox.shrink();
-    }
-
-    return ValueListenableBuilder<bool>(
-      valueListenable: widget.floatingNotifier,
-      child: const DesktopMediaLibrarySortButton(floating: true),
-      builder: (context, floating, child) => AnimatedPositioned(
-        curve: Curves.easeInOut,
-        duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
-        top: margin + captionHeight + kDesktopAppBarHeight + (floating ? 0.0 : -72.0),
-        right: margin,
-        child: Card(
-          elevation: 4.0,
-          margin: EdgeInsets.zero,
-          clipBehavior: Clip.antiAlias,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-          child: child,
-        ),
-      ),
-    );
-  }
-}
-
-// --------------------------------------------------
-
-class DesktopMediaLibrarySortButton extends StatefulWidget {
-  final bool floating;
-  const DesktopMediaLibrarySortButton({super.key, required this.floating});
-
-  @override
-  State<DesktopMediaLibrarySortButton> createState() => DesktopMediaLibrarySortButtonState();
-}
-
-class DesktopMediaLibrarySortButtonState extends State<DesktopMediaLibrarySortButton> {
-  final MenuController _sortMenuController = MenuController();
-  final MenuController _orderMenuController = MenuController();
-
-  EdgeInsetsGeometry get _inkWellPadding {
-    return widget.floating ? EdgeInsets.zero : const EdgeInsets.symmetric(vertical: 8.0);
-  }
-
-  BorderRadius get _inkWellBorderRadius {
-    return widget.floating ? BorderRadius.zero : BorderRadius.circular(4.0);
-  }
-
-  EdgeInsetsGeometry get _containerPadding {
-    return const EdgeInsetsDirectional.only(start: 6.0, end: 4.0);
-  }
-
-  ButtonStyle get _menuItemStyle {
-    return const ButtonStyle(padding: WidgetStatePropertyAll(EdgeInsets.only(left: 8.0, right: 20.0)));
-  }
-
-  Offset get _menuAnchorAlignmentOffset {
-    return widget.floating ? const Offset(0.0, 8.0) : const Offset(0.0, -8.0);
-  }
-
-  Widget _buildLeadingIcon(bool selected) {
-    return Icon(Icons.check, size: 20.0, color: selected ? null : Colors.transparent);
-  }
-
-  Widget _buildDirectionalityLtr(Widget child) {
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: child,
-    );
-  }
-
-  Widget _buildDirectionalityRtl(Widget child) {
-    if (widget.floating) {
-      return Directionality(
-        textDirection: TextDirection.rtl,
-        child: child,
-      );
-    }
-    return child;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final path = context.location.split('/').last;
-    return Consumer2<MediaLibrary, FileExplorerNotifier>(
-      builder: (context, mediaLibrary, fileExplorerNotifier, _) => Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _buildDirectionalityLtr(
-            MenuAnchor(
-              controller: _sortMenuController,
-              alignmentOffset: _menuAnchorAlignmentOffset,
-              menuChildren: switch (path) {
-                kAlbumsPath =>
-                  AlbumSortType.values
-                      .map(
-                        (e) => MenuItemButton(
-                          onPressed: () async {
-                            await mediaLibrary.populate(albumSortType: e);
-                            await Configuration.instance.set(mediaLibraryAlbumSortType: e);
-                          },
-                          style: _menuItemStyle,
-                          leadingIcon: _buildLeadingIcon(mediaLibrary.albumSortType == e),
-                          child: Text(
-                            switch (e) {
-                              AlbumSortType.album => Localization.instance.A_TO_Z,
-                              AlbumSortType.timestamp => Localization.instance.DATE_ADDED,
-                              AlbumSortType.year => Localization.instance.YEAR,
-                              AlbumSortType.albumArtist => Localization.instance.ALBUM_ARTIST,
-                            },
-                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                          ),
-                        ),
-                      )
-                      .toList(),
-                kTracksPath =>
-                  TrackSortType.values
-                      .map(
-                        (e) => MenuItemButton(
-                          onPressed: () async {
-                            await mediaLibrary.populate(trackSortType: e);
-                            await Configuration.instance.set(mediaLibraryTrackSortType: e);
-                          },
-                          style: _menuItemStyle,
-                          leadingIcon: _buildLeadingIcon(mediaLibrary.trackSortType == e),
-                          child: Text(
-                            switch (e) {
-                              TrackSortType.title => Localization.instance.A_TO_Z,
-                              TrackSortType.timestamp => Localization.instance.DATE_ADDED,
-                              TrackSortType.year => Localization.instance.YEAR,
-                            },
-                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                          ),
-                        ),
-                      )
-                      .toList(),
-                kArtistsPath =>
-                  ArtistSortType.values
-                      .map(
-                        (e) => MenuItemButton(
-                          onPressed: () async {
-                            await mediaLibrary.populate(artistSortType: e);
-                            await Configuration.instance.set(mediaLibraryArtistSortType: e);
-                          },
-                          style: _menuItemStyle,
-                          leadingIcon: _buildLeadingIcon(mediaLibrary.artistSortType == e),
-                          child: Text(
-                            switch (e) {
-                              ArtistSortType.artist => Localization.instance.A_TO_Z,
-                              ArtistSortType.timestamp => Localization.instance.DATE_ADDED,
-                            },
-                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                          ),
-                        ),
-                      )
-                      .toList(),
-                kGenresPath =>
-                  GenreSortType.values
-                      .map(
-                        (e) => MenuItemButton(
-                          onPressed: () async {
-                            await mediaLibrary.populate(genreSortType: e);
-                            await Configuration.instance.set(mediaLibraryGenreSortType: e);
-                          },
-                          style: _menuItemStyle,
-                          leadingIcon: _buildLeadingIcon(mediaLibrary.genreSortType == e),
-                          child: Text(
-                            switch (e) {
-                              GenreSortType.genre => Localization.instance.A_TO_Z,
-                              GenreSortType.timestamp => Localization.instance.DATE_ADDED,
-                            },
-                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                          ),
-                        ),
-                      )
-                      .toList(),
-                kFoldersPath =>
-                  FileExplorerSortType.values
-                      .map(
-                        (e) => MenuItemButton(
-                          onPressed: () => fileExplorerNotifier.setSortType(e),
-                          style: _menuItemStyle,
-                          leadingIcon: _buildLeadingIcon(fileExplorerNotifier.sortType == e),
-                          child: Text(
-                            switch (e) {
-                              FileExplorerSortType.name => Localization.instance.A_TO_Z,
-                              FileExplorerSortType.timestamp => Localization.instance.DATE_ADDED,
-                            },
-                            style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                          ),
-                        ),
-                      )
-                      .toList(),
-                _ => [],
-              },
-              child: Padding(
-                padding: _inkWellPadding,
-                child: InkWell(
-                  borderRadius: _inkWellBorderRadius,
-                  onTap: () {
-                    if (_sortMenuController.isOpen) {
-                      _sortMenuController.close();
-                    } else {
-                      _sortMenuController.open();
-                    }
-                  },
-                  child: Container(
-                    height: 44.0,
-                    alignment: Alignment.center,
-                    padding: _containerPadding,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const SizedBox(width: 4.0),
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: '${Localization.instance.SORT_BY}: ',
-                                style: Theme.of(context).textTheme.bodyLarge,
-                              ),
-                              TextSpan(
-                                text: switch (path) {
-                                  kAlbumsPath => switch (mediaLibrary.albumSortType) {
-                                    AlbumSortType.album => Localization.instance.A_TO_Z,
-                                    AlbumSortType.timestamp => Localization.instance.DATE_ADDED,
-                                    AlbumSortType.year => Localization.instance.YEAR,
-                                    AlbumSortType.albumArtist => Localization.instance.ALBUM_ARTIST,
-                                  },
-                                  kTracksPath => switch (mediaLibrary.trackSortType) {
-                                    TrackSortType.title => Localization.instance.A_TO_Z,
-                                    TrackSortType.timestamp => Localization.instance.DATE_ADDED,
-                                    TrackSortType.year => Localization.instance.YEAR,
-                                  },
-                                  kArtistsPath => switch (mediaLibrary.artistSortType) {
-                                    ArtistSortType.artist => Localization.instance.A_TO_Z,
-                                    ArtistSortType.timestamp => Localization.instance.DATE_ADDED,
-                                  },
-                                  kGenresPath => switch (mediaLibrary.genreSortType) {
-                                    GenreSortType.genre => Localization.instance.A_TO_Z,
-                                    GenreSortType.timestamp => Localization.instance.DATE_ADDED,
-                                  },
-                                  kFoldersPath => switch (fileExplorerNotifier.sortType) {
-                                    FileExplorerSortType.name => Localization.instance.A_TO_Z,
-                                    FileExplorerSortType.timestamp => Localization.instance.DATE_ADDED,
-                                  },
-                                  _ => '',
-                                },
-                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 4.0),
-                        Icon(
-                          Icons.expand_more,
-                          color: Theme.of(context).colorScheme.primary,
-                          size: 18.0,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 4.0),
-          _buildDirectionalityRtl(
-            MenuAnchor(
-              controller: _orderMenuController,
-              alignmentOffset: _menuAnchorAlignmentOffset,
-              menuChildren: [
-                _buildDirectionalityLtr(
-                  MenuItemButton(
-                    onPressed: () async {
-                      if (path == kFoldersPath) {
-                        fileExplorerNotifier.setSortAscending(true);
-                        return;
-                      }
-
-                      final albumSortAscending = path == kAlbumsPath ? true : null;
-                      final trackSortAscending = path == kTracksPath ? true : null;
-                      final artistSortAscending = path == kArtistsPath ? true : null;
-                      final genreSortAscending = path == kGenresPath ? true : null;
-                      await mediaLibrary.populate(
-                        albumSortAscending: albumSortAscending,
-                        trackSortAscending: trackSortAscending,
-                        artistSortAscending: artistSortAscending,
-                        genreSortAscending: genreSortAscending,
-                      );
-                      await Configuration.instance.set(
-                        mediaLibraryAlbumSortAscending: albumSortAscending,
-                        mediaLibraryTrackSortAscending: trackSortAscending,
-                        mediaLibraryArtistSortAscending: artistSortAscending,
-                        mediaLibraryGenreSortAscending: genreSortAscending,
-                      );
-                    },
-                    style: _menuItemStyle,
-                    leadingIcon: _buildLeadingIcon(
-                      switch (path) {
-                        kAlbumsPath => mediaLibrary.albumSortAscending,
-                        kTracksPath => mediaLibrary.trackSortAscending,
-                        kArtistsPath => mediaLibrary.artistSortAscending,
-                        kGenresPath => mediaLibrary.genreSortAscending,
-                        kFoldersPath => fileExplorerNotifier.sortAscending,
-                        _ => false,
-                      },
-                    ),
-                    child: Text(
-                      Localization.instance.ASCENDING,
-                      style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                    ),
-                  ),
-                ),
-                _buildDirectionalityLtr(
-                  MenuItemButton(
-                    onPressed: () async {
-                      if (path == kFoldersPath) {
-                        fileExplorerNotifier.setSortAscending(false);
-                        return;
-                      }
-
-                      final albumSortAscending = path == kAlbumsPath ? false : null;
-                      final trackSortAscending = path == kTracksPath ? false : null;
-                      final artistSortAscending = path == kArtistsPath ? false : null;
-                      final genreSortAscending = path == kGenresPath ? false : null;
-                      await mediaLibrary.populate(
-                        albumSortAscending: albumSortAscending,
-                        trackSortAscending: trackSortAscending,
-                        artistSortAscending: artistSortAscending,
-                        genreSortAscending: genreSortAscending,
-                      );
-                      await Configuration.instance.set(
-                        mediaLibraryAlbumSortAscending: albumSortAscending,
-                        mediaLibraryTrackSortAscending: trackSortAscending,
-                        mediaLibraryArtistSortAscending: artistSortAscending,
-                        mediaLibraryGenreSortAscending: genreSortAscending,
-                      );
-                    },
-                    style: _menuItemStyle,
-                    leadingIcon: _buildLeadingIcon(
-                      !switch (path) {
-                        kAlbumsPath => mediaLibrary.albumSortAscending,
-                        kTracksPath => mediaLibrary.trackSortAscending,
-                        kArtistsPath => mediaLibrary.artistSortAscending,
-                        kGenresPath => mediaLibrary.genreSortAscending,
-                        kFoldersPath => fileExplorerNotifier.sortAscending,
-                        _ => false,
-                      },
-                    ),
-                    child: Text(
-                      Localization.instance.DESCENDING,
-                      style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                    ),
-                  ),
-                ),
-              ],
-              child: Padding(
-                padding: _inkWellPadding,
-                child: InkWell(
-                  borderRadius: _inkWellBorderRadius,
-                  onTap: () {
-                    if (_orderMenuController.isOpen) {
-                      _orderMenuController.close();
-                    } else {
-                      _orderMenuController.open();
-                    }
-                  },
-                  child: Container(
-                    height: 44.0,
-                    alignment: Alignment.center,
-                    padding: _containerPadding,
-                    child: _buildDirectionalityLtr(
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(width: 4.0),
-                          RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: '${Localization.instance.ORDER}: ',
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                                TextSpan(
-                                  text:
-                                      switch (path) {
-                                        kAlbumsPath => mediaLibrary.albumSortAscending,
-                                        kTracksPath => mediaLibrary.trackSortAscending,
-                                        kArtistsPath => mediaLibrary.artistSortAscending,
-                                        kGenresPath => mediaLibrary.genreSortAscending,
-                                        kFoldersPath => fileExplorerNotifier.sortAscending,
-                                        _ => false,
-                                      }
-                                      ? Localization.instance.ASCENDING
-                                      : Localization.instance.DESCENDING,
-                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 4.0),
-                          Icon(
-                            Icons.expand_more,
-                            color: Theme.of(context).colorScheme.primary,
-                            size: 18.0,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// --------------------------------------------------
-
-class MobileMediaLibraryHeader extends StatelessWidget {
-  final Widget? leading;
-  const MobileMediaLibraryHeader({super.key, this.leading});
-
-  @override
-  Widget build(BuildContext context) {
-    final path = context.location.split('/').last;
-    return Container(
-      height: kMobileHeaderHeight,
-      padding: EdgeInsets.symmetric(horizontal: margin),
-      alignment: Alignment.centerRight,
-      child: Consumer<MediaLibrary>(
-        builder: (context, mediaLibrary, _) {
-          return Row(
-            children: [
-              const SizedBox(width: 8.0),
-              if (leading != null)
-                leading!
-              else if (path == kAlbumsPath)
-                Text(mediaLibrary.albums.length == 1 ? Localization.instance.ONE_ALBUM : Localization.instance.N_ALBUMS.replaceAll('"N"', mediaLibrary.albums.length.toString()))
-              else if (path == kTracksPath)
-                Text(mediaLibrary.albums.length == 1 ? Localization.instance.ONE_TRACK : Localization.instance.N_TRACKS.replaceAll('"N"', mediaLibrary.tracks.length.toString()))
-              else if (path == kArtistsPath)
-                Text(mediaLibrary.albums.length == 1 ? Localization.instance.ONE_ARTIST : Localization.instance.N_ARTISTS.replaceAll('"N"', mediaLibrary.artists.length.toString()))
-              else if (path == kGenresPath)
-                Text(mediaLibrary.albums.length == 1 ? Localization.instance.ONE_GENRE : Localization.instance.N_GENRES.replaceAll('"N"', mediaLibrary.genres.length.toString())),
-              const Spacer(),
-              MobileMediaLibrarySortButton(path: path),
-            ],
-          );
-        },
-      ),
-    );
-  }
-}
-
-// --------------------------------------------------
-
-class MobileMediaLibrarySortButton extends StatefulWidget {
-  final String path;
-
-  const MobileMediaLibrarySortButton({super.key, required this.path});
-
-  @override
-  State<MobileMediaLibrarySortButton> createState() => MobileMediaLibrarySortButtonState();
-}
-
-class MobileMediaLibrarySortButtonState extends State<MobileMediaLibrarySortButton> {
-  void Function(void Function())? _setStateCallback;
-  late final MediaLibrary _mediaLibrary = context.read<MediaLibrary>();
-  late final FileExplorerNotifier _fileExplorerNotifier = context.read<FileExplorerNotifier>();
-
-  Future<void> _handle(dynamic value) async {
-    if (value is AlbumSortType) {
-      await _mediaLibrary.populate(albumSortType: value);
-      await Configuration.instance.set(mediaLibraryAlbumSortType: value);
-    } else if (value is TrackSortType) {
-      await _mediaLibrary.populate(trackSortType: value);
-      await Configuration.instance.set(mediaLibraryTrackSortType: value);
-    } else if (value is ArtistSortType) {
-      await _mediaLibrary.populate(artistSortType: value);
-      await Configuration.instance.set(mediaLibraryArtistSortType: value);
-    } else if (value is GenreSortType) {
-      await _mediaLibrary.populate(genreSortType: value);
-      await Configuration.instance.set(mediaLibraryGenreSortType: value);
-    } else if (value is FileExplorerSortType) {
-      _fileExplorerNotifier.setSortType(value);
-    }
-    if (value == true) {
-      switch (widget.path) {
-        case kAlbumsPath:
-          await _mediaLibrary.populate(albumSortAscending: true);
-          await Configuration.instance.set(mediaLibraryAlbumSortAscending: true);
-          break;
-        case kTracksPath:
-          await _mediaLibrary.populate(trackSortAscending: true);
-          await Configuration.instance.set(mediaLibraryTrackSortAscending: true);
-          break;
-        case kArtistsPath:
-          await _mediaLibrary.populate(artistSortAscending: true);
-          await Configuration.instance.set(mediaLibraryArtistSortAscending: true);
-          break;
-        case kGenresPath:
-          await _mediaLibrary.populate(genreSortAscending: true);
-          await Configuration.instance.set(mediaLibraryGenreSortAscending: true);
-          break;
-        case kFoldersPath:
-          _fileExplorerNotifier.setSortAscending(true);
-          break;
-      }
-    } else if (value == false) {
-      switch (widget.path) {
-        case kAlbumsPath:
-          await _mediaLibrary.populate(albumSortAscending: false);
-          await Configuration.instance.set(mediaLibraryAlbumSortAscending: false);
-          break;
-        case kTracksPath:
-          await _mediaLibrary.populate(trackSortAscending: false);
-          await Configuration.instance.set(mediaLibraryTrackSortAscending: false);
-          break;
-        case kArtistsPath:
-          await _mediaLibrary.populate(artistSortAscending: false);
-          await Configuration.instance.set(mediaLibraryArtistSortAscending: false);
-          break;
-        case kGenresPath:
-          await _mediaLibrary.populate(genreSortAscending: false);
-          await Configuration.instance.set(mediaLibraryGenreSortAscending: false);
-          break;
-        case kFoldersPath:
-          _fileExplorerNotifier.setSortAscending(false);
-          break;
-      }
-    }
-    _setStateCallback?.call(() {});
-  }
-
-  List<MobileMediaLibrarySortButtonPopupMenuItem> get _sort => {
-    kAlbumsPath: [AlbumSortType.album, AlbumSortType.timestamp, AlbumSortType.year]
-        .map(
-          (e) => MobileMediaLibrarySortButtonPopupMenuItem(
-            onTap: () => _handle(e),
-            checked: _mediaLibrary.albumSortType == e,
-            value: e,
-            padding: EdgeInsets.zero,
-            child: Text(
-              switch (e) {
-                AlbumSortType.album => Localization.instance.A_TO_Z,
-                AlbumSortType.timestamp => Localization.instance.DATE_ADDED,
-                AlbumSortType.year => Localization.instance.YEAR,
-                AlbumSortType.albumArtist => Localization.instance.ALBUM_ARTIST,
-              },
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-        )
-        .toList(),
-    kTracksPath: TrackSortType.values
-        .map(
-          (e) => MobileMediaLibrarySortButtonPopupMenuItem(
-            onTap: () => _handle(e),
-            checked: _mediaLibrary.trackSortType == e,
-            value: e,
-            padding: EdgeInsets.zero,
-            child: Text(
-              switch (e) {
-                TrackSortType.title => Localization.instance.A_TO_Z,
-                TrackSortType.timestamp => Localization.instance.DATE_ADDED,
-                TrackSortType.year => Localization.instance.YEAR,
-              },
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-        )
-        .toList(),
-    kArtistsPath: ArtistSortType.values
-        .map(
-          (e) => MobileMediaLibrarySortButtonPopupMenuItem(
-            onTap: () => _handle(e),
-            checked: _mediaLibrary.artistSortType == e,
-            value: e,
-            padding: EdgeInsets.zero,
-            child: Text(
-              switch (e) {
-                ArtistSortType.artist => Localization.instance.A_TO_Z,
-                ArtistSortType.timestamp => Localization.instance.DATE_ADDED,
-              },
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-        )
-        .toList(),
-    kGenresPath: GenreSortType.values
-        .map(
-          (e) => MobileMediaLibrarySortButtonPopupMenuItem(
-            onTap: () => _handle(e),
-            checked: _mediaLibrary.genreSortType == e,
-            value: e,
-            padding: EdgeInsets.zero,
-            child: Text(
-              switch (e) {
-                GenreSortType.genre => Localization.instance.A_TO_Z,
-                GenreSortType.timestamp => Localization.instance.DATE_ADDED,
-              },
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-        )
-        .toList(),
-    kFoldersPath: FileExplorerSortType.values
-        .map(
-          (e) => MobileMediaLibrarySortButtonPopupMenuItem(
-            onTap: () => _handle(e),
-            checked: _fileExplorerNotifier.sortType == e,
-            value: e,
-            padding: EdgeInsets.zero,
-            child: Text(
-              switch (e) {
-                FileExplorerSortType.name => Localization.instance.A_TO_Z,
-                FileExplorerSortType.timestamp => Localization.instance.DATE_ADDED,
-              },
-              style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-            ),
-          ),
-        )
-        .toList(),
-  }[widget.path]!;
-
-  List<MobileMediaLibrarySortButtonPopupMenuItem> get _order => [
-    MobileMediaLibrarySortButtonPopupMenuItem(
-      onTap: () => _handle(true),
-      checked: switch (widget.path) {
-        kAlbumsPath => _mediaLibrary.albumSortAscending,
-        kTracksPath => _mediaLibrary.trackSortAscending,
-        kArtistsPath => _mediaLibrary.artistSortAscending,
-        kGenresPath => _mediaLibrary.genreSortAscending,
-        kFoldersPath => _fileExplorerNotifier.sortAscending,
-        _ => false,
-      },
-      value: true,
-      padding: EdgeInsets.zero,
-      child: Text(
-        Localization.instance.ASCENDING,
-        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-      ),
-    ),
-    MobileMediaLibrarySortButtonPopupMenuItem(
-      onTap: () => _handle(false),
-      checked: switch (widget.path) {
-        kAlbumsPath => !_mediaLibrary.albumSortAscending,
-        kTracksPath => !_mediaLibrary.trackSortAscending,
-        kArtistsPath => !_mediaLibrary.artistSortAscending,
-        kGenresPath => !_mediaLibrary.genreSortAscending,
-        kFoldersPath => !_fileExplorerNotifier.sortAscending,
-        _ => false,
-      },
-      value: false,
-      padding: EdgeInsets.zero,
-      child: Text(
-        Localization.instance.DESCENDING,
-        style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-      ),
-    ),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: isMaterial2 ? BorderRadius.circular(4.0) : BorderRadius.circular(20.0),
-      onTap: () async {
-        await showModalBottomSheet(
-          context: context,
-          showDragHandle: isMaterial3OrGreater,
-          useRootNavigator: true,
-          isScrollControlled: true,
-          elevation: kDefaultHeavyElevation,
-          builder: (context) => StatefulBuilder(
-            builder: (context, setState) {
-              _setStateCallback = setState;
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ..._sort,
-                  const PopupMenuDivider(),
-                  ..._order,
-                  SizedBox(height: MediaQuery.of(context).padding.bottom),
-                ],
-              );
-            },
-          ),
-        );
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Text(
-              String.fromCharCode(_order.firstWhere((e) => e.checked).value ? Icons.arrow_upward.codePoint : Icons.arrow_downward.codePoint),
-              style: TextStyle(
-                inherit: false,
-                fontSize: 18.0,
-                fontWeight: FontWeight.w700,
-                fontFamily: Icons.arrow_downward.fontFamily,
-                package: Icons.arrow_downward.fontPackage,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-            const SizedBox(width: 10.0),
-            Text(
-              label((_sort.firstWhere((e) => e.checked).child as Text).data.toString()),
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
-            ),
-            const SizedBox(width: 4.0),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// --------------------------------------------------
-
-class MobileMediaLibrarySortButtonPopupMenuItem<T> extends StatelessWidget {
-  final T value;
-  final bool checked;
-  final VoidCallback onTap;
-  final Widget child;
-  final EdgeInsets? padding;
-
-  const MobileMediaLibrarySortButtonPopupMenuItem({
-    super.key,
-    required this.value,
-    this.checked = false,
-    required this.onTap,
-    required this.child,
-    required this.padding,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      onTap: onTap,
-      leading: AnimatedOpacity(
-        opacity: checked ? 1.0 : 0.0,
-        curve: Curves.easeInOut,
-        duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
-        child: const Icon(Icons.done),
-      ),
-      title: child,
-    );
-  }
-}
-
-// --------------------------------------------------
 
 class MobileNowPlayingBarScrollNotifier extends StatelessWidget {
   final Widget child;
@@ -952,6 +70,158 @@ class ScaleOnHoverState extends State<ScaleOnHover> {
         scale: _scale,
         duration: Theme.of(context).extension<AnimationDuration>()?.fast ?? Duration.zero,
         child: widget.child,
+      ),
+    );
+  }
+}
+
+// --------------------------------------------------
+
+class RippleSurface extends StatefulWidget {
+  final Color? color;
+  final Duration? duration;
+  final Curve? curve;
+
+  const RippleSurface({
+    super.key,
+    this.color,
+    this.duration,
+    this.curve,
+  });
+
+  @override
+  State<RippleSurface> createState() => RippleSurfaceState();
+}
+
+class RippleSurfaceState extends State<RippleSurface> {
+  static const _kRippleDimension = 2.0;
+
+  double _width = 1.0;
+  double _height = 1.0;
+  Widget? _background;
+  Widget? _ripple;
+
+  @override
+  void initState() {
+    super.initState();
+    _background = Positioned.fill(child: Container(color: widget.color));
+  }
+
+  @override
+  void didUpdateWidget(covariant RippleSurface oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.color != widget.color) {
+      // The change in color was very fast, so we don't need to animate the ripple.
+      if (_ripple != null) {
+        setState(() {
+          _ripple = null;
+          _background = Positioned.fill(child: Container(color: widget.color));
+        });
+      }
+
+      setState(() {
+        _ripple = TweenAnimationBuilder<double>(
+          key: ValueKey(Random().nextDouble()),
+          tween: Tween<double>(
+            begin: 1.0,
+            end: max(_width / _kRippleDimension, _height / _kRippleDimension) * 2.0,
+          ),
+          duration: widget.duration ?? Theme.of(context).extension<AnimationDuration>()?.slow ?? Duration.zero,
+          curve: widget.curve ?? Curves.easeInOut,
+          onEnd: () {
+            setState(() {
+              _background = Positioned.fill(child: Container(color: widget.color));
+              _ripple = null;
+            });
+          },
+          builder: (context, scale, _) {
+            return Transform.scale(
+              scale: scale,
+              child: Container(
+                width: _kRippleDimension,
+                height: _kRippleDimension,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: widget.color,
+                ),
+              ),
+            );
+          },
+        );
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRect(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          _width = constraints.maxWidth;
+          _height = constraints.maxHeight;
+          return Stack(
+            alignment: Alignment.center,
+            children: [
+              if (_background != null) _background!,
+              if (_ripple != null) _ripple!,
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+// --------------------------------------------------
+
+class SlideOnEnter extends StatefulWidget {
+  final Widget child;
+  final Duration? duration;
+  final Curve? curve;
+  const SlideOnEnter({
+    super.key,
+    required this.child,
+    this.duration,
+    this.curve,
+  });
+
+  @override
+  State<SlideOnEnter> createState() => SlideOnEnterState();
+}
+
+class SlideOnEnterState extends State<SlideOnEnter> {
+  Offset offset = const Offset(0.0, 1.0);
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () => setState(() => offset = Offset.zero));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final duration = widget.duration ?? Theme.of(context).extension<AnimationDuration>()?.medium ?? Duration.zero;
+    final curve = widget.curve ?? Curves.easeInOut;
+    return AnimatedSlide(
+      offset: offset,
+      duration: duration,
+      curve: curve,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: GestureDetector(
+              onTap: () async {
+                setState(() => offset = const Offset(0.0, 1.0));
+                await Navigator.of(context).maybePop();
+              },
+            ),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: widget.child,
+          ),
+        ],
       ),
     );
   }
@@ -1114,82 +384,6 @@ class SubHeader extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-// --------------------------------------------------
-
-class MediaLibraryRefreshButton extends StatelessWidget {
-  const MediaLibraryRefreshButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<MediaLibrary>(
-      builder: (context, mediaLibrary, _) => mediaLibrary.refreshing
-          ? const SizedBox.shrink()
-          : FloatingActionButton(
-              heroTag: 'media-library-refresh-button',
-              tooltip: Localization.instance.REFRESH,
-              onPressed: mediaLibrary.refresh,
-              child: const Icon(Icons.refresh),
-            ),
-    );
-  }
-}
-
-// --------------------------------------------------
-
-class MediaLibraryCreatePlaylistButton extends StatelessWidget {
-  const MediaLibraryCreatePlaylistButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return FloatingActionButton(
-      heroTag: 'media-library-create-playlist-button',
-      tooltip: Localization.instance.CREATE_NEW_PLAYLIST,
-      onPressed: () => showCreatePlaylistDialog(context),
-      child: const Icon(Icons.edit),
-    );
-  }
-}
-
-// --------------------------------------------------
-
-class MobileNavigationBar extends StatelessWidget {
-  const MobileNavigationBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final path = context.location.split('/').last;
-    final tabs = Configuration.instance.mediaLibraryVisibleTabs.ifEmpty(MediaLibraryTab.values.toSet());
-    final paths = tabs.map((tab) => tab.toPath()).toList();
-    final labels = tabs.map((tab) => tab.toLabel()).toList();
-    final index = paths.indexOf(path);
-    final displayLabels = labels.max.length <= 10;
-
-    void onDestinationSelected(int i) {
-      if (index == i) return;
-      context.push('/$kMediaLibraryPath/${paths[i]}');
-      Configuration.instance.set(mediaLibraryPath: paths[i]);
-      NowPlayingMobileNotifier.instance.showNowPlayingBar();
-    }
-
-    return isMaterial3
-        ? NavigationBar(
-            selectedIndex: index,
-            onDestinationSelected: onDestinationSelected,
-            labelBehavior: displayLabels ? NavigationDestinationLabelBehavior.alwaysShow : NavigationDestinationLabelBehavior.alwaysHide,
-            destinations: tabs.map((tab) => NavigationDestination(icon: Icon(tab.toIcon()), label: tab.toLabel())).toList(),
-          )
-        : Container(
-            decoration: const BoxDecoration(boxShadow: [BoxShadow(color: Colors.black45, blurRadius: 8.0)]),
-            child: BottomNavigationBar(
-              currentIndex: index,
-              type: BottomNavigationBarType.shifting,
-              onTap: onDestinationSelected,
-              items: tabs.map((tab) => BottomNavigationBarItem(icon: Icon(tab.toIcon()), label: displayLabels ? tab.toLabel() : null, backgroundColor: Theme.of(context).colorScheme.primary)).toList(),
-            ),
-          );
   }
 }
 
@@ -1565,245 +759,6 @@ class DefaultTextFormField extends StatelessWidget {
         stylusHandwritingEnabled: stylusHandwritingEnabled,
         canRequestFocus: canRequestFocus,
       ),
-    );
-  }
-}
-
-// --------------------------------------------------
-
-class PlayFileOrURLButton extends StatelessWidget {
-  const PlayFileOrURLButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      tooltip: Localization.instance.OPEN_FILE_OR_URL,
-      icon: const Icon(Icons.file_open),
-      iconSize: 20.0,
-      splashRadius: 18.0,
-      color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
-      onPressed: () async {
-        final result = await pickResource(context, Localization.instance.OPEN_FILE_OR_URL);
-        if (result != null) {
-          await Intent.instance.play(result);
-        }
-      },
-    );
-  }
-}
-
-// --------------------------------------------------
-
-class EditTagsButton extends StatelessWidget {
-  const EditTagsButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      tooltip: Localization.instance.EDIT_TAGS,
-      icon: const Icon(Icons.label),
-      iconSize: 20.0,
-      splashRadius: 18.0,
-      color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
-      onPressed: () async {
-        context.read<SubscriptionNotifier>().accessSubscriptionFeature(context, () async {
-          final result = await pickFile(extensions: kDefaultSupportedFileTypes);
-          if (result != null) {
-            await context.push(Uri(path: '/$kTagEditorPath', queryParameters: {kTagEditorArgResource: result.path}).toString());
-          }
-        });
-      },
-    );
-  }
-}
-
-// --------------------------------------------------
-
-class MobileGridSpanButton extends StatelessWidget {
-  const MobileGridSpanButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final path = context.location.split('/').last;
-    if (![kAlbumsPath, kArtistsPath, kGenresPath].contains(path)) {
-      return const SizedBox.shrink();
-    }
-    return IconButton(
-      icon: const Icon(Icons.view_list_outlined),
-      onPressed: () async {
-        final String title;
-        final int groupValue;
-        Future<void> Function(int?) onChanged;
-        switch (path) {
-          case kAlbumsPath:
-            title = Localization.instance.MOBILE_ALBUM_GRID_SIZE;
-            groupValue = Configuration.instance.mobileMediaLibraryAlbumGridSpan;
-            onChanged = (value) => Configuration.instance.set(mobileMediaLibraryAlbumGridSpan: value);
-            break;
-          case kArtistsPath:
-            title = Localization.instance.MOBILE_ARTIST_GRID_SIZE;
-            groupValue = Configuration.instance.mobileMediaLibraryArtistGridSpan;
-            onChanged = (value) => Configuration.instance.set(mobileMediaLibraryArtistGridSpan: value);
-            break;
-          case kGenresPath:
-            title = Localization.instance.MOBILE_GENRE_GRID_SIZE;
-            groupValue = Configuration.instance.mobileMediaLibraryGenreGridSpan;
-            onChanged = (value) => Configuration.instance.set(mobileMediaLibraryGenreGridSpan: value);
-            break;
-          default:
-            throw UnimplementedError();
-        }
-
-        await showDialog(
-          context: context,
-          builder: (context) => SimpleDialog(
-            title: Text(title),
-            children: [
-              for (int i = 0; i <= 4; i++)
-                RadioListTile<int?>(
-                  value: i,
-                  groupValue: groupValue,
-                  onChanged: (value) {
-                    final mediaLibrary = context.read<MediaLibrary>();
-                    onChanged(value).then((_) => Navigator.of(context).pop()).then((_) => mediaLibrary.notify());
-                  },
-                  title: Text(
-                    i == 0 ? '#' : i.toString(),
-                    style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                  ),
-                ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-
-// --------------------------------------------------
-
-class MobileAppBarOverflowButton extends StatefulWidget {
-  const MobileAppBarOverflowButton({super.key});
-
-  @override
-  State<MobileAppBarOverflowButton> createState() => MobileAppBarOverflowButtonState();
-}
-
-class MobileAppBarOverflowButtonState extends State<MobileAppBarOverflowButton> {
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.more_vert),
-      onPressed: () async {
-        final mediaLibrary = context.read<MediaLibrary>();
-        Completer<int> completer = Completer<int>();
-        await showModalBottomSheet(
-          context: context,
-          showDragHandle: isMaterial3OrGreater,
-          useRootNavigator: true,
-          isScrollControlled: true,
-          elevation: kDefaultHeavyElevation,
-          builder: (context) => Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                onTap: () {
-                  completer.complete(0);
-                  Navigator.of(context).maybePop();
-                },
-                leading: const Icon(Icons.play_arrow),
-                title: Text(
-                  Localization.instance.PLAY_ALL,
-                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                ),
-              ),
-              ListTile(
-                onTap: () {
-                  completer.complete(1);
-                  Navigator.of(context).maybePop();
-                },
-                leading: const Icon(Icons.shuffle),
-                title: Text(
-                  Localization.instance.SHUFFLE,
-                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                ),
-              ),
-              ListTile(
-                onTap: () {
-                  completer.complete(2);
-                  Navigator.of(context).maybePop();
-                },
-                leading: const Icon(Icons.file_open),
-                title: Text(
-                  Localization.instance.OPEN_FILE_OR_URL,
-                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                ),
-              ),
-              ListTile(
-                onTap: () {
-                  completer.complete(3);
-                  Navigator.of(context).maybePop();
-                },
-                leading: const Icon(Icons.label),
-                title: Text(
-                  Localization.instance.EDIT_TAGS,
-                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                ),
-              ),
-              ListTile(
-                onTap: () {
-                  completer.complete(4);
-                  Navigator.of(context).maybePop();
-                },
-                leading: const Icon(Icons.settings),
-                title: Text(
-                  Localization.instance.SETTINGS,
-                  style: isDesktop ? Theme.of(context).textTheme.bodyLarge : null,
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).padding.bottom),
-            ],
-          ),
-        );
-        completer.future.then((value) async {
-          await Future.delayed(const Duration(milliseconds: 300));
-          switch (value) {
-            case 0:
-              {
-                await MediaPlayer.instance.open(mediaLibrary.tracks.map((e) => e.toPlayable()));
-                break;
-              }
-            case 1:
-              {
-                MediaPlayer.instance.open(mediaLibrary.tracks.map((e) => e.toPlayable()), shuffle: true);
-                break;
-              }
-            case 2:
-              {
-                final result = await pickResource(context, Localization.instance.OPEN_FILE_OR_URL);
-                if (result != null) {
-                  await Intent.instance.play(result);
-                }
-                break;
-              }
-            case 3:
-              {
-                context.read<SubscriptionNotifier>().accessSubscriptionFeature(context, () async {
-                  final result = await pickFile(extensions: kDefaultSupportedFileTypes);
-                  if (result != null) {
-                    await context.push(Uri(path: '/$kTagEditorPath', queryParameters: {kTagEditorArgResource: result.path}).toString());
-                  }
-                });
-                break;
-              }
-            case 4:
-              {
-                await context.push('/$kSettingsPath');
-                break;
-              }
-          }
-        });
-      },
     );
   }
 }

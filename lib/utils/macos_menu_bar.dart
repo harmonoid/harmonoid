@@ -6,7 +6,8 @@ import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/localization/localization.dart';
-import 'package:harmonoid/ui/router.dart';
+import 'package:harmonoid/routing/router.dart';
+import 'package:harmonoid/routing/utils/constants.dart';
 import 'package:harmonoid/utils/constants.dart';
 
 class MacOSMenuBar extends StatelessWidget {

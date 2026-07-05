@@ -10,7 +10,7 @@ import 'package:harmonoid/core/media_player/mixin/media_player_mixin.dart';
 import 'package:harmonoid/core/media_player/mixin/mpris_mixin.dart';
 import 'package:harmonoid/core/media_player/mixin/system_media_transport_controls_mixin.dart';
 import 'package:harmonoid/core/media_player/mixin/windows_taskbar_mixin.dart';
-import 'package:harmonoid/models/media_player_state.dart';
+import 'package:harmonoid/core/media_player/models/media_player_state.dart';
 
 /// {@template media_player_mixin_registry}
 ///

@@ -5,8 +5,8 @@ import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/core/media_player/mixin/media_player_mixin.dart';
 import 'package:harmonoid/extensions/playable.dart';
-import 'package:harmonoid/models/media_player_state.dart';
-import 'package:harmonoid/models/playable.dart';
+import 'package:harmonoid/core/media_player/models/media_player_state.dart';
+import 'package:harmonoid/core/media_player/models/playable.dart';
 
 /// {@template history_playlist_mixin}
 ///

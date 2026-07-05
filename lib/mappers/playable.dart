@@ -5,8 +5,8 @@ import 'package:mpris_service/mpris_service.dart';
 import 'package:uri_parser/uri_parser.dart';
 
 import 'package:harmonoid/extensions/string.dart';
-import 'package:harmonoid/models/media_player_state.dart';
-import 'package:harmonoid/models/playable.dart';
+import 'package:harmonoid/core/media_player/models/media_player_state.dart';
+import 'package:harmonoid/core/media_player/models/playable.dart';
 import 'package:harmonoid/state/lyrics/models/lyrics_key.dart';
 import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/rendering.dart';

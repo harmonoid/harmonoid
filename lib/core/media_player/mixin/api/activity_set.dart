@@ -7,7 +7,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:harmonoid/api/utils/constants.dart';
-import 'package:harmonoid/models/playable.dart';
+import 'package:harmonoid/core/media_player/models/playable.dart';
 
 /// {@template activity_set}
 ///

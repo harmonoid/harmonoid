@@ -1,4 +1,4 @@
-import 'package:harmonoid/models/media_player_state.dart';
+import 'package:harmonoid/core/media_player/models/media_player_state.dart';
 
 /// {@template media_player_mixin}
 ///

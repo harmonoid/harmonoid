@@ -1,4 +1,4 @@
-import 'package:harmonoid/models/playable.dart';
+import 'package:harmonoid/core/media_player/models/playable.dart';
 
 /// Extensions for [Playable].
 extension PlayableExtensions on Playable {

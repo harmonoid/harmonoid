@@ -3,7 +3,7 @@ import 'package:media_library/media_library.dart';
 import 'package:path/path.dart';
 
 import 'package:harmonoid/mappers/track.dart';
-import 'package:harmonoid/models/playable.dart';
+import 'package:harmonoid/core/media_player/models/playable.dart';
 
 /// Mappers for [File].
 extension FileMappers on File {

@@ -7,7 +7,7 @@ import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/media_player_state.dart';
-import 'package:harmonoid/ui/router.dart';
+import 'package:harmonoid/routing/router.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 /// {@template window_lifecycle}

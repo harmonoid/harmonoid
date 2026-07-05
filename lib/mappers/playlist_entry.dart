@@ -2,7 +2,7 @@ import 'package:media_library/media_library.dart' hide FileSystemMediaLibrary;
 
 import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/mappers/track.dart';
-import 'package:harmonoid/models/playable.dart';
+import 'package:harmonoid/core/media_player/models/playable.dart';
 
 /// Mappers for [PlaylistEntry].
 extension PlaylistEntryMappers on PlaylistEntry {

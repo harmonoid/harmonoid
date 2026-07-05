@@ -3,7 +3,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:harmonoid/extensions/go_router.dart';
-import 'package:harmonoid/ui/router.dart';
+import 'package:harmonoid/routing/router.dart';
+import 'package:harmonoid/routing/utils/constants.dart';
 
 class MouseNavigationListener extends StatefulWidget {
   final Widget child;

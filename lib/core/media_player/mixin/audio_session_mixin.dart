@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/core/media_player/mixin/media_player_mixin.dart';
-import 'package:harmonoid/models/media_player_state.dart';
+import 'package:harmonoid/core/media_player/models/media_player_state.dart';
 
 /// {@template audio_session_mixin}
 ///

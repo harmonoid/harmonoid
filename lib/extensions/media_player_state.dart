@@ -1,8 +1,8 @@
 import 'package:harmonoid/localization/localization.dart';
 import 'package:path/path.dart';
 
-import 'package:harmonoid/models/loop.dart';
-import 'package:harmonoid/models/media_player_state.dart';
+import 'package:harmonoid/core/media_player/models/loop.dart';
+import 'package:harmonoid/core/media_player/models/media_player_state.dart';
 
 /// Extensions for [MediaPlayerState].
 extension MediaPlayerStateExtensions on MediaPlayerState {

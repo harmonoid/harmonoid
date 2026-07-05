@@ -6,7 +6,7 @@ import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/core/media_player/mixin/media_player_mixin.dart';
 import 'package:harmonoid/extensions/media_player_state.dart';
 import 'package:harmonoid/localization/localization.dart';
-import 'package:harmonoid/models/media_player_state.dart';
+import 'package:harmonoid/core/media_player/models/media_player_state.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
 
 /// {@template windows_taskbar_mixin}

@@ -1,6 +1,6 @@
 import 'package:media_kit/media_kit.dart' hide Playable;
 
-import 'package:harmonoid/models/playable.dart';
+import 'package:harmonoid/core/media_player/models/playable.dart';
 
 /// Mappers for [Media].
 extension MediaMappers on Media {

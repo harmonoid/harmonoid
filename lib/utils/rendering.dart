@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart' hide FileSystemMediaLibrary;
 import 'package:provider/provider.dart';
@@ -11,20 +12,17 @@ import 'package:uri_parser/uri_parser.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
-import 'package:harmonoid/extensions/playable.dart';
 import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/mappers/color.dart';
 import 'package:harmonoid/mappers/media_library_item.dart';
 import 'package:harmonoid/mappers/playlist_entry.dart';
-import 'package:harmonoid/models/playable.dart';
-import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
-import 'package:harmonoid/ui/media_library/artists/state/artist_image_notifier.dart';
-import 'package:harmonoid/ui/media_library/playlists/playlist_item.dart';
-import 'package:harmonoid/ui/router.dart';
+import 'package:harmonoid/features/now_playing/state/now_playing_color_palette_notifier.dart';
+import 'package:harmonoid/features/media_library/artists/state/artist_image_notifier.dart';
+import 'package:harmonoid/routing/router.dart';
+import 'package:harmonoid/routing/utils/constants.dart';
 import 'package:harmonoid/utils/async_file_image.dart';
-import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/darwin_storage_controller.dart';
-import 'package:harmonoid/utils/platform_utils.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
 bool get isMaterial3 => Theme.of(rootNavigatorKey.currentContext!).extension<MaterialStandard>()?.value == 3;
@@ -40,120 +38,6 @@ bool get isDesktop => Theme.of(rootNavigatorKey.currentContext!).extension<Layou
 bool get isTablet => Theme.of(rootNavigatorKey.currentContext!).extension<LayoutVariantThemeExtension>()?.value == LayoutVariant.tablet;
 
 bool get isMobile => Theme.of(rootNavigatorKey.currentContext!).extension<LayoutVariantThemeExtension>()?.value == LayoutVariant.mobile;
-
-bool get isDarkMode => Theme.of(rootNavigatorKey.currentContext!).brightness == Brightness.dark;
-
-double get margin {
-  if (isDesktop) {
-    return kDesktopMargin;
-  } else if (isTablet) {
-    throw UnimplementedError();
-  } else if (isMobile) {
-    return kMobileMargin;
-  }
-  throw UnimplementedError();
-}
-
-double get albumTileWidth {
-  if (isDesktop) {
-    return kDesktopAlbumTileWidth;
-  } else if (isTablet) {
-    throw UnimplementedError();
-  } else if (isMobile) {
-    return kMobileAlbumTileWidth;
-  }
-  throw UnimplementedError();
-}
-
-double get albumTileHeight {
-  if (isDesktop) {
-    return kDesktopAlbumTileHeight;
-  } else if (isTablet) {
-    throw UnimplementedError();
-  } else if (isMobile) {
-    return kMobileAlbumTileHeight;
-  }
-  throw UnimplementedError();
-}
-
-double get artistTileWidth {
-  if (isDesktop) {
-    return kDesktopArtistTileWidth;
-  } else if (isTablet) {
-    throw UnimplementedError();
-  } else if (isMobile) {
-    return kMobileArtistTileWidth;
-  }
-  throw UnimplementedError();
-}
-
-double get artistTileHeight {
-  if (isDesktop) {
-    return kDesktopArtistTileHeight;
-  } else if (isTablet) {
-    throw UnimplementedError();
-  } else if (isMobile) {
-    return kMobileArtistTileHeight;
-  }
-  throw UnimplementedError();
-}
-
-double get genreTileWidth {
-  if (isDesktop) {
-    return kDesktopGenreTileWidth;
-  } else if (isTablet) {
-    throw UnimplementedError();
-  } else if (isMobile) {
-    return kMobileGenreTileWidth;
-  }
-  throw UnimplementedError();
-}
-
-double get genreTileHeight {
-  if (isDesktop) {
-    return kDesktopGenreTileHeight;
-  } else if (isTablet) {
-    throw UnimplementedError();
-  } else if (isMobile) {
-    return kMobileGenreTileHeight;
-  }
-  throw UnimplementedError();
-}
-
-double get linearTileHeight {
-  if (isDesktop) {
-    return kDesktopLinearTileHeight;
-  } else if (isTablet) {
-    throw UnimplementedError();
-  } else if (isMobile) {
-    return kMobileLinearTileHeight;
-  }
-  throw UnimplementedError();
-}
-
-double get captionHeight {
-  try {
-    return WindowPlus.instance.captionHeight;
-  } catch (_) {
-    return 0.0;
-  }
-}
-
-EdgeInsets get mediaLibraryScrollViewBuilderPadding {
-  if (isDesktop) {
-    return EdgeInsets.zero;
-  } else if (isTablet) {
-    throw UnimplementedError();
-  } else if (isMobile) {
-    return EdgeInsets.only(
-      top: MediaQuery.of(rootNavigatorKey.currentContext!).padding.top + margin + kMobileSearchBarHeight,
-      bottom: kMobileNowPlayingBarHeight,
-    );
-  }
-  throw UnimplementedError();
-}
-
-double get navigationBarHeight => isMaterial3 ? 80.0 : kBottomNavigationBarHeight;
 
 double get textButtonPadding {
   if (isMaterial3) {
@@ -182,6 +66,25 @@ String get operatingSystem {
 }
 
 String label(String value) => isMaterial3OrGreater ? value : value.uppercase();
+
+Future<String> loadMaterialVectorAsset(
+  BuildContext context, {
+  required String material3,
+  required String material2Light,
+  required String material2Dark,
+}) async {
+  final theme = Theme.of(context);
+  if (isMaterial3) {
+    final data = await rootBundle.loadString(material3);
+    return data
+        .replaceAll('"white"', '"${theme.colorScheme.surface.toHex()}"')
+        .replaceAll('"black"', '"${theme.colorScheme.onSurface.toHex()}"')
+        .replaceAll('"#651FFF"', '"${theme.colorScheme.primary.toHex()}"')
+        .replaceAll('"#B388FF"', '"${theme.colorScheme.inversePrimary.toHex()}"');
+  } else {
+    return await rootBundle.loadString(theme.brightness == Brightness.dark ? material2Dark : material2Light);
+  }
+}
 
 ImageProvider cover({
   MediaLibraryItem? item,
@@ -639,182 +542,4 @@ Future<String?> pickResource(BuildContext context, String title) async {
   );
 
   return result;
-}
-
-Future<String?> showCreatePlaylistDialog(BuildContext context) async {
-  final name = await showInput(
-    context,
-    Localization.instance.CREATE_NEW_PLAYLIST,
-    Localization.instance.PLAYLIST_CREATE_DIALOG_SUBTITLE,
-    Localization.instance.CREATE,
-    (value) {
-      if (value?.isEmpty ?? true) {
-        return '';
-      }
-      return null;
-    },
-    keyboardType: TextInputType.name,
-    textCapitalization: TextCapitalization.words,
-  );
-
-  if (name.isNotEmpty) {
-    final mediaLibrary = context.read<MediaLibrary>();
-    await mediaLibrary.playlists.create(name);
-    return name;
-  }
-  return null;
-}
-
-Future<void> showAddToPlaylistDialog(
-  BuildContext context, {
-  Track? track,
-  Playable? playable,
-  List<Track>? tracks,
-}) {
-  assert(track != null || playable != null || tracks != null);
-
-  void onTap(MediaLibrary mediaLibrary, Playlist playlist) async {
-    context.pop();
-
-    if (track != null) {
-      await mediaLibrary.playlists.createEntry(
-        playlist,
-        track: track,
-      );
-    }
-    if (playable != null) {
-      await mediaLibrary.playlists.createEntry(
-        playlist,
-        uri: playable.uri,
-        title: playable.playlistEntryTitle,
-      );
-    }
-    if (tracks != null) {
-      for (final track in tracks) {
-        await mediaLibrary.playlists.createEntry(
-          playlist,
-          track: track,
-        );
-      }
-    }
-
-    if (Platform.isAndroid) {
-      final entry = track?.title ?? playable?.playlistEntryTitle;
-      final playlistName = playlist.name;
-      if (entry != null) {
-        PlatformUtils.instance.showToast(Localization.instance.ADDED_ENTRY_TO_PLAYLIST.replaceAll('"ENTRY"', entry).replaceAll('"PLAYLIST"', playlistName));
-      } else {
-        PlatformUtils.instance.showToast(Localization.instance.ADDED_N_ENTRIES_TO_PLAYLIST.replaceAll('"N"', tracks?.length.toString() ?? '0').replaceAll('"PLAYLIST"', playlistName));
-      }
-    }
-  }
-
-  if (isDesktop) {
-    return showDialog(
-      context: context,
-      builder: (ctx) => Consumer<MediaLibrary>(
-        builder: (context, mediaLibrary, _) {
-          final playlists = mediaLibrary.playlists.playlists;
-          return AlertDialog(
-            contentPadding: const EdgeInsets.only(top: 20.0),
-            title: Text(Localization.instance.PLAYLIST_ADD_DIALOG_TITLE),
-            content: SizedBox(
-              width: 640.0,
-              child: Material(
-                color: Colors.transparent,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Divider(height: 1.0),
-                    Flexible(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ListItem(
-                              leading: Container(
-                                width: 56.0,
-                                height: 56.0,
-                                alignment: Alignment.center,
-                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: const CircleAvatar(child: Icon(Icons.add)),
-                              ),
-                              title: Localization.instance.CREATE_NEW_PLAYLIST,
-                              onTap: () => showCreatePlaylistDialog(context),
-                            ),
-                            const Divider(height: 1.0),
-                            for (int i = 0; i < playlists.length; i++) ...[
-                              PlaylistItem(
-                                playlist: playlists[i],
-                                onTap: () => onTap(mediaLibrary, playlists[i]),
-                              ),
-                              if (i < playlists.length - 1) const Divider(height: 1.0),
-                            ],
-                          ],
-                        ),
-                      ),
-                    ),
-                    const Divider(height: 1.0),
-                  ],
-                ),
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: context.pop,
-                child: Text(label(Localization.instance.CANCEL)),
-              ),
-            ],
-          );
-        },
-      ),
-    );
-  } else {
-    return showModalBottomSheet(
-      context: context,
-      showDragHandle: isMaterial3OrGreater,
-      useRootNavigator: true,
-      isScrollControlled: true,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.6,
-        maxChildSize: 0.8,
-        expand: false,
-        builder: (context, controller) => Consumer<MediaLibrary>(
-          builder: (context, mediaLibrary, _) {
-            final playlists = mediaLibrary.playlists.playlists;
-            return ListView(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).padding.bottom,
-              ),
-              controller: controller,
-              shrinkWrap: true,
-              children: [
-                ListItem(
-                  leading: Container(
-                    width: 56.0,
-                    height: 56.0,
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: const CircleAvatar(child: Icon(Icons.add)),
-                  ),
-                  title: Localization.instance.CREATE_NEW_PLAYLIST,
-                  onTap: () => showCreatePlaylistDialog(context),
-                ),
-                const Divider(height: 1.0),
-                for (int i = 0; i < playlists.length; i++)
-                  PlaylistItem(
-                    playlist: playlists[i],
-                    onTap: () => onTap(mediaLibrary, playlists[i]),
-                  ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
 }

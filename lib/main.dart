@@ -16,12 +16,12 @@ import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/state/in_app_review_notifier.dart';
 import 'package:harmonoid/state/lyrics/lyrics_notifier.dart';
-import 'package:harmonoid/state/now_playing_color_palette_notifier.dart';
-import 'package:harmonoid/state/now_playing_visuals_notifier.dart';
+import 'package:harmonoid/features/now_playing/state/now_playing_color_palette_notifier.dart';
+import 'package:harmonoid/features/now_playing/state/now_playing_visuals_notifier.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
-import 'package:harmonoid/ui/exception.dart';
-import 'package:harmonoid/ui/harmonoid.dart';
-import 'package:harmonoid/ui/splash.dart';
+import 'package:harmonoid/features/app/exception.dart';
+import 'package:harmonoid/features/app/harmonoid.dart';
+import 'package:harmonoid/features/app/splash.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/darwin_storage_controller.dart';
@@ -132,7 +132,7 @@ Future<void> main(List<String> args) async {
     await InAppReviewNotifier.ensureInitialized();
     await NowPlayingVisualsNotifier.ensureInitialized();
     await NowPlayingColorPaletteNotifier.ensureInitialized();
-    runApp(const Harmonoid());
+    runApp(const HarmonoidApp());
   } catch (exception, stacktrace) {
     debugPrint(exception.toString());
     debugPrint(stacktrace.toString());
