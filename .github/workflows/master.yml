@@ -46,7 +46,7 @@ jobs:
           keychain-password: ${{ secrets.MACOS_KEYCHAIN_PASSWORD }}
           p12-file-base64: ${{ secrets.MACOS_APPLICATION_CERTIFICATE_BASE64 }}
           p12-password: ${{ secrets.MACOS_APPLICATION_CERTIFICATE_PASSWORD }}
-      - name: Import Developer ID DMG Certificate
+      - name: Import Developer ID Installer Certificate
         uses: apple-actions/import-codesign-certs@v7
         with:
           keychain: dmg-signing
@@ -58,16 +58,23 @@ jobs:
           security list-keychains -d user -s app-signing.keychain dmg-signing.keychain login.keychain
           security default-keychain -s app-signing.keychain
 
-          application_identity="$(security find-identity -v -p codesigning app-signing.keychain | awk '/Developer ID Application/ {print $2; exit}')"
-          dmg_identity="$(security find-identity -v -p codesigning dmg-signing.keychain | awk '/Developer ID Application/ {print $2; exit}')"
+          find_certificate_name() {
+            security find-certificate -a -c "$1" -p "$2" |
+              openssl x509 -noout -subject -nameopt RFC2253 |
+              sed -n 's/.*CN=\([^,]*\).*/\1/p' |
+              head -n 1
+          }
+
+          application_identity="$(find_certificate_name "Developer ID Application" app-signing.keychain)"
+          dmg_identity="$(find_certificate_name "Developer ID Installer" dmg-signing.keychain)"
 
           if [ -z "$application_identity" ]; then
-            echo "No Developer ID Application signing identity found in application certificate."
+            echo "No Developer ID Application signing identity found."
             exit 1
           fi
 
           if [ -z "$dmg_identity" ]; then
-            echo "No Developer ID Application signing identity found in DMG certificate. Developer ID Installer certificates are only for .pkg files, not .dmg files."
+            echo "No Developer ID Installer signing identity found."
             exit 1
           fi
 
