@@ -47,10 +47,10 @@ class _ArtistItemState extends State<ArtistItem> {
     }
 
     try {
-      await precacheImage(cover(item: widget.artist), rootNavigatorKey.currentContext!);
+      await precacheImage(cover(item: widget.artist), context);
     } catch (_) {}
 
-    await rootNavigatorKey.currentContext!.push(
+    await context.push(
       '/$kMediaLibraryPath/$kArtistPath',
       extra: ArtistPathExtra(
         artist: widget.artist,

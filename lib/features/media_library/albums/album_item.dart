@@ -55,10 +55,10 @@ class _AlbumItemState extends State<AlbumItem> {
     }
 
     try {
-      await precacheImage(cover(item: widget.album), rootNavigatorKey.currentContext!);
+      await precacheImage(cover(item: widget.album), context);
     } catch (_) {}
 
-    await rootNavigatorKey.currentContext!.push(
+    await context.push(
       '/$kMediaLibraryPath/$kAlbumPath',
       extra: AlbumPathExtra(
         album: widget.album,

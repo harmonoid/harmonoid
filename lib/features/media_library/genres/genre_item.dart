@@ -41,10 +41,10 @@ class _GenreItemState extends State<GenreItem> {
     final tracks = await context.read<MediaLibrary>().tracksFromGenre(widget.genre);
 
     try {
-      await precacheImage(cover(item: widget.genre), rootNavigatorKey.currentContext!);
+      await precacheImage(cover(item: widget.genre), context);
     } catch (_) {}
 
-    await rootNavigatorKey.currentContext!.push(
+    await context.push(
       '/$kMediaLibraryPath/$kGenrePath',
       extra: GenrePathExtra(
         genre: widget.genre,
