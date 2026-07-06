@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:identity/identity.dart';
 import 'package:provider/provider.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/state/lyrics/lyrics_notifier.dart';
@@ -26,8 +29,15 @@ class _MobileNowPlayingLyricsScreenState extends State<MobileNowPlayingLyricsScr
   final ValueNotifier<bool> _selectionModeNotifier = ValueNotifier<bool>(false);
 
   @override
+  void initState() {
+    super.initState();
+    unawaited(WakelockPlus.enable());
+  }
+
+  @override
   void dispose() {
     super.dispose();
+    unawaited(WakelockPlus.disable());
     _selectionModeNotifier.dispose();
   }
 

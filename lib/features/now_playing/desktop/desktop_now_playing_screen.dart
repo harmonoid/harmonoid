@@ -6,6 +6,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:media_library/media_library.dart';
 import 'package:provider/provider.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
@@ -43,6 +44,12 @@ class DesktopNowPlayingScreenState extends State<DesktopNowPlayingScreen> {
   int _desktopNowPlayingScreenCarousel = Configuration.instance.desktopNowPlayingCarousel;
   Timer? _fullscreenTimer;
 
+  @override
+  void initState() {
+    super.initState();
+    unawaited(WakelockPlus.enable());
+  }
+
   void setDesktopNowPlayingCarousel(int value) {
     _desktopNowPlayingScreenCarousel = value;
     Configuration.instance.set(desktopNowPlayingCarousel: value);
@@ -52,6 +59,7 @@ class DesktopNowPlayingScreenState extends State<DesktopNowPlayingScreen> {
   @override
   void dispose() {
     super.dispose();
+    unawaited(WakelockPlus.disable());
     _fullscreenTimer?.cancel();
   }
 

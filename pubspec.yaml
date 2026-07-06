@@ -111,6 +111,7 @@ dependencies:
   uri_parser: ^3.0.2
   url_launcher: ^6.3.2
   uuid: ^4.3.3
+  wakelock_plus: ^1.6.1
   win32: ^6.3.0
   windows_taskbar:
     git:
