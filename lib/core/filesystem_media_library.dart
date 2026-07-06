@@ -6,7 +6,7 @@ import 'package:media_library/media_library.dart' as media_library;
 import 'package:media_library/media_library.dart' hide MediaLibrary;
 import 'package:path/path.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
-import 'package:tag_reader/tag_reader.dart';
+import 'package:tag_reader/tag_reader.dart' as tag_reader;
 
 import 'package:harmonoid/mappers/tags.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
@@ -150,7 +150,7 @@ class FileSystemMediaLibrary extends media_library.FileSystemMediaLibrary with C
 
   @override
   Set<String> splitTagValue(String? tag) {
-    return splitTagValue(tag);
+    return tag_reader.splitTagValue(tag);
   }
 
   /// Returns the default cover file.
@@ -172,7 +172,7 @@ class FileSystemMediaLibrary extends media_library.FileSystemMediaLibrary with C
   }
 
   /// Tag reader.
-  final PooledTagReader _tagReader = PooledTagReader(size: kPooledTagReaderSize);
+  final tag_reader.PooledTagReader _tagReader = tag_reader.PooledTagReader(size: kPooledTagReaderSize);
 
   /// Whether [remove] has been invoked.
   bool _removeInvoked = false;
