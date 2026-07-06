@@ -148,7 +148,7 @@ jobs:
           body: ${{ github.sha }}
           tag_name: snapshot
           files: harmonoid-macos-*.dmg
-          token: ${{ secrets.ACCESS_TOKEN_2 }}
+          token: ${{ secrets.ACCESS_TOKEN }}
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -247,7 +247,7 @@ jobs:
           files: |
             Output/harmonoid-windows-x64-setup.exe
             harmonoid-windows-x64-exe.zip
-          token: ${{ secrets.ACCESS_TOKEN_2 }}
+          token: ${{ secrets.ACCESS_TOKEN }}
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -352,7 +352,7 @@ jobs:
           files: |
             Output/harmonoid-windows-arm64-setup.exe
             harmonoid-windows-arm64-exe.zip
-          token: ${{ secrets.ACCESS_TOKEN_2 }}
+          token: ${{ secrets.ACCESS_TOKEN }}
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -463,7 +463,7 @@ jobs:
           body: ${{ github.sha }}
           tag_name: snapshot
           files: harmonoid-linux-*
-          token: ${{ secrets.ACCESS_TOKEN_2 }}
+          token: ${{ secrets.ACCESS_TOKEN }}
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -577,7 +577,7 @@ jobs:
           body: ${{ github.sha }}
           tag_name: snapshot
           files: harmonoid-linux-aarch64*
-          token: ${{ secrets.ACCESS_TOKEN_2 }}
+          token: ${{ secrets.ACCESS_TOKEN }}
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
