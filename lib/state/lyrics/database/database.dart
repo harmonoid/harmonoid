@@ -47,7 +47,8 @@ class LyricsDatabase extends _$LyricsDatabase {
         await (selectOnly(lyricss)
               ..addColumns([count])
               ..where(
-                lyricss.track.equals(key.track) & lyricss.artist.equals(key.artist) & lyricss.duration.equals(key.duration),
+                // NOTE: The reported duration can vary between media_kit & tag_reader. So, omit duration from the query.
+                lyricss.track.equals(key.track) & lyricss.artist.equals(key.artist) /* & lyricss.duration.equals(key.duration) */,
               ))
             .getSingle();
     return row.read(count)! > 0;
