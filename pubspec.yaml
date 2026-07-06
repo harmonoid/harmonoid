@@ -145,6 +145,8 @@ dependency_overrides:
   # https://github.com/harmonoid/harmonoid/issues/587#issue-3850475343
   # https://github.com/alexmercerind/safe_local_storage/commit/984eac5927ffddbfe621991ad1b5a8af9673ef97
   safe_local_storage: ^2.0.4
+  taglib:
+    path: external/taglib/taglib
   vector_math: 2.2.0
 flutter:
   uses-material-design: true
