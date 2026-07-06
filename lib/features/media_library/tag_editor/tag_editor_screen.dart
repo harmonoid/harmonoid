@@ -2,7 +2,7 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:tag_writer/tag_writer.dart';
+import 'package:taglib/taglib.dart';
 
 import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/extensions/shape_border.dart';
@@ -186,7 +186,7 @@ class _TagEditorScreenState extends State<TagEditorScreen> with ScrollController
                   final property = await showSelection<String>(
                     context,
                     Localization.instance.TAG_EDITOR_ADD_PROPERTY,
-                    TagWriter.kProperties,
+                    TagLibFile.kProperties,
                     null,
                     (key) => key,
                     trailing: (key) => notifier.textEditingControllers.containsKey(key) ? Icon(Icons.check_circle, size: 16.0, color: Theme.of(context).colorScheme.primary) : null,

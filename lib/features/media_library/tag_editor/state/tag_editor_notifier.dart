@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:media_library/media_library.dart' hide FileSystemMediaLibrary;
 import 'package:safe_local_storage/file_system.dart';
-import 'package:tag_writer/tag_writer.dart';
+import 'package:taglib/taglib.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:harmonoid/core/filesystem_media_library.dart';
@@ -39,7 +39,7 @@ class TagEditorNotifier extends ChangeNotifier {
   @override
   void dispose() {
     super.dispose();
-    _disposeTagWriter();
+    _disposeTagLibFile();
     for (final e in textEditingControllers.values) {
       _disposeTextEditingController(e);
     }
@@ -75,7 +75,7 @@ class TagEditorNotifier extends ChangeNotifier {
 
     try {
       if (coverData != null) {
-        await _writer.setCover(coverData);
+        await _tagLibFile.setCover(coverData);
         coverChanged = true;
       } else {
         final file = await pickFile(extensions: kSupportedImageFormats);
@@ -94,7 +94,7 @@ class TagEditorNotifier extends ChangeNotifier {
 
         if (data == null || mimeType == null) throw const FormatException();
 
-        await _writer.setCover(CoverData(data: data, mimeType: mimeType));
+        await _tagLibFile.setCover(CoverData(data: data, mimeType: mimeType));
         coverChanged = true;
       }
 
@@ -122,7 +122,7 @@ class TagEditorNotifier extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await _writer.removeCover();
+      await _tagLibFile.removeCover();
       coverChanged = true;
 
       await _refreshCover();
@@ -202,26 +202,26 @@ class TagEditorNotifier extends ChangeNotifier {
 
       for (final key in oldPropertiesMap.keys) {
         if (!newPropertiesMap.containsKey(key)) {
-          await _writer.removeProperty(key);
+          await _tagLibFile.removeProperty(key);
           debugPrint('TagEditorNotifier: save: Remove property: $key');
         }
       }
       for (final MapEntry(:key, :value) in newPropertiesMap.entries) {
         if (oldPropertiesMap[key] == value) continue;
         if (value.isEmpty) {
-          await _writer.removeProperty(key);
+          await _tagLibFile.removeProperty(key);
           debugPrint('TagEditorNotifier: save: Remove property: $key');
         } else {
-          await _writer.setProperty(key, [value]);
+          await _tagLibFile.setProperty(key, [value]);
           debugPrint('TagEditorNotifier: save: Set property: $key: $value');
         }
       }
 
-      await _writer.save();
+      await _tagLibFile.save();
 
-      await _disposeTagWriter();
+      await _disposeTagLibFile();
       await _postProcessResource();
-      await _initializeTagWriter();
+      await _initializeTagLibFile();
       propertiesChanged = false;
       coverChanged = false;
 
@@ -273,11 +273,11 @@ class TagEditorNotifier extends ChangeNotifier {
     for (final value in textEditingControllers.values) {
       _disposeTextEditingController(value);
     }
-    textEditingControllers = (await _writer.getProperties()).whereNotEmpty((entry) => entry.value.firstOrNull ?? '').map((key, value) => MapEntry(key, _createTextEditingController(value)));
+    textEditingControllers = (await _tagLibFile.getProperties()).whereNotEmpty((entry) => entry.value.firstOrNull ?? '').map((key, value) => MapEntry(key, _createTextEditingController(value)));
   }
 
   Future<void> _refreshCover() async {
-    cover = await _writer.getCover();
+    cover = await _tagLibFile.getCover();
   }
 
   Future<void> _initialize() async {
@@ -286,7 +286,7 @@ class TagEditorNotifier extends ChangeNotifier {
     notifyListeners();
     try {
       await _preProcessResource();
-      await _initializeTagWriter();
+      await _initializeTagLibFile();
 
       propertiesLoading = false;
       coverLoading = false;
@@ -327,21 +327,21 @@ class TagEditorNotifier extends ChangeNotifier {
     }
   }
 
-  Future<void> _initializeTagWriter() async {
-    _writer = TagWriter(resource);
+  Future<void> _initializeTagLibFile() async {
+    _tagLibFile = TagLibFile(resource);
 
-    _oldPropertiesMap = (await _writer.getProperties()).whereNotEmpty((entry) => entry.value.firstOrNull ?? '');
-    _oldCover = await _writer.getCover();
+    _oldPropertiesMap = (await _tagLibFile.getProperties()).whereNotEmpty((entry) => entry.value.firstOrNull ?? '');
+    _oldCover = await _tagLibFile.getCover();
 
     await _refreshProperties();
     await _refreshCover();
   }
 
-  Future<void> _disposeTagWriter() async {
-    await _writer.dispose();
+  Future<void> _disposeTagLibFile() async {
+    await _tagLibFile.dispose();
   }
 
-  late TagWriter _writer;
+  late TagLibFile _tagLibFile;
   late Map<String, String> _oldPropertiesMap;
   late CoverData? _oldCover;
   final FileSystemMediaLibrary _fileSystemMediaLibrary = FileSystemMediaLibrary.instance;

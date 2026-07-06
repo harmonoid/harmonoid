@@ -67,6 +67,7 @@ class Configuration extends ConfigurationBase {
     await instance.refresh();
   }
 
+  /// Refreshes the loaded values.
   Future<void> refresh() async {
     // Insert default values if any key is absent.
     final defaults = await getDefaults();
@@ -123,7 +124,6 @@ class Configuration extends ConfigurationBase {
     _mediaLibraryMinimumFileSize = await read<int, int>(kKeyMediaLibraryMinimumFileSize, defaults);
     _mediaLibraryPath = await read<String, String>(kKeyMediaLibraryPath, defaults);
     _mediaLibraryRefreshUponStart = await read<bool, bool>(kKeyMediaLibraryRefreshUponStart, defaults);
-    _mediaLibraryTagReaderFallback = await read<bool, bool>(kKeyMediaLibraryTagReaderFallback, defaults);
     _mediaLibraryTrackSortAscending = await read<bool, bool>(kKeyMediaLibraryTrackSortAscending, defaults);
     _mediaLibraryTrackSortType = await read<int, TrackSortType>(kKeyMediaLibraryTrackSortType, defaults, (value) => TrackSortType.values[value]);
     _mediaLibraryVisibleTabs = await read<dynamic, Set<MediaLibraryTab>>(kKeyMediaLibraryVisibleTabs, defaults, (value) => value.map<MediaLibraryTab>((e) => MediaLibraryTab.values[e]).toSet());
@@ -150,6 +150,11 @@ class Configuration extends ConfigurationBase {
     _themeSystemColorScheme = await read<bool, bool>(kKeyThemeSystemColorScheme, defaults);
     _updateCheckVersion = await read<String, String>(kKeyUpdateCheckVersion, defaults);
     _windowsTaskbarProgress = await read<bool, bool>(kKeyWindowsTaskbarProgress, defaults);
+  }
+
+  /// Disposes the [instance]. Releases allocated resources back to the system.
+  Future<void> dispose() async {
+    await db.close();
   }
 
   Future<O> read<I, O>(String key, Map<String, dynamic> defaults, [O Function(I)? map]) async {

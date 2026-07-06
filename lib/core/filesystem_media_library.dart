@@ -148,12 +148,9 @@ class FileSystemMediaLibrary extends media_library.FileSystemMediaLibrary with C
     return result;
   }
 
-  // HACK:
-
   @override
   Set<String> splitTagValue(String? tag) {
-    // ignore: invalid_use_of_protected_member
-    return _tagReader.instances.first.platform!.splitTagValue(tag);
+    return splitTagValue(tag);
   }
 
   /// Returns the default cover file.
@@ -170,14 +167,8 @@ class FileSystemMediaLibrary extends media_library.FileSystemMediaLibrary with C
   @override
   void dispose() {
     super.dispose();
-    unawaited(close());
-  }
-
-  /// Closes the [instance].
-  @override
-  Future<void> close() async {
-    await super.close();
-    await _tagReader.dispose();
+    super.close();
+    _tagReader.dispose();
   }
 
   /// Tag reader.

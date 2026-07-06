@@ -76,7 +76,7 @@ android {
 
     packaging {
         jniLibs {
-            excludes += "/lib/**/libtag_writer.so"
+            excludes += "/lib/**/libtaglib.so"
             excludes += "/lib/**/libflutter_discord_rpc.so"
         }
     }

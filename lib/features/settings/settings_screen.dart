@@ -59,7 +59,6 @@ class SettingsScreen extends StatelessWidget {
               PermissionsSection(),
               LanguageSection(),
               MiscellaneousSection(),
-              // ExperimentalSection(),
               SliverSpacer(),
             ],
           ),

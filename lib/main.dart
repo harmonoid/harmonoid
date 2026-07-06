@@ -4,8 +4,8 @@ import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
 import 'package:identity/identity.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:tag_reader/tag_reader.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/configuration/database/constants.dart';
@@ -25,7 +25,6 @@ import 'package:harmonoid/features/app/splash.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/darwin_storage_controller.dart';
-import 'package:harmonoid/utils/platform_tag_reader_factory.dart';
 import 'package:harmonoid/utils/window_lifecycle.dart';
 
 Future<void> main(List<String> args) async {
@@ -100,8 +99,6 @@ Future<void> main(List<String> args) async {
     if (Platform.isMacOS || Platform.isIOS) {
       await DarwinStorageController.ensureInitialized(directories: Configuration.instance.mediaLibraryDirectories);
     }
-
-    TagReader.platformTagReaderFactory = platformTagReaderFactoryImpl;
 
     MediaKit.ensureInitialized(libmpv: Configuration.instance.mpvPath.nullIfBlank());
     await Localization.ensureInitialized(localization: Configuration.instance.localization);

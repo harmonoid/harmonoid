@@ -1501,10 +1501,17 @@ packages:
       relative: true
     source: path
     version: "1.0.0"
-  tag_writer:
+  taglib:
     dependency: "direct main"
     description:
-      path: "external/tag_writer"
+      path: "external/taglib/taglib"
+      relative: true
+    source: path
+    version: "1.0.0"
+  taglib_libs:
+    dependency: "direct main"
+    description:
+      path: "external/taglib/taglib_libs"
       relative: true
     source: path
     version: "1.0.0"

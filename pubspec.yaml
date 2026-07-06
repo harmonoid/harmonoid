@@ -104,8 +104,10 @@ dependencies:
     path: external/smtc-win32/bindings/system_media_transport_controls
   tag_reader:
     path: external/tag_reader
-  tag_writer:
-    path: external/tag_writer
+  taglib:
+    path: external/taglib/taglib
+  taglib_libs:
+    path: external/taglib/taglib_libs
   uri_parser: ^3.0.2
   url_launcher: ^6.3.2
   uuid: ^4.3.3

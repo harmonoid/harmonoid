@@ -10,6 +10,7 @@ import 'package:tag_reader/tag_reader.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/filesystem_media_library.dart';
+import 'package:harmonoid/private/crossfade_player.dart';
 import 'package:harmonoid/core/media_player/mixin/audio_session_mixin.dart';
 import 'package:harmonoid/core/media_player/media_player_mixin_registry.dart';
 import 'package:harmonoid/mappers/loop.dart';
