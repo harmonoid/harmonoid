@@ -70,7 +70,8 @@ class LyricsDatabase extends _$LyricsDatabase {
   /// Removes the cached lyrics with the given [key].
   Future<void> removeLyrics(LyricsKey key) async {
     await (delete(lyricss)..where(
-          (e) => e.track.equals(key.track) & e.artist.equals(key.artist) & e.duration.equals(key.duration),
+          // NOTE: The reported duration can vary between media_kit & tag_reader. So, omit duration from the query.
+          (e) => e.track.equals(key.track) & e.artist.equals(key.artist) /* & lyricss.duration.equals(key.duration) */,
         ))
         .go();
   }

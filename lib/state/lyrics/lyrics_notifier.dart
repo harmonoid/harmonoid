@@ -8,29 +8,32 @@ import 'dart:math';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:identity/identity.dart';
 import 'package:lrc/lrc.dart';
 import 'package:media_library/media_library.dart' hide FileSystemMediaLibrary;
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:synchronized/synchronized.dart';
 
-import 'package:harmonoid/state/lyrics/api/lyrics_get.dart';
-import 'package:harmonoid/state/lyrics/api/lyrics_translation_get.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/filesystem_media_library.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/core/media_player/models/playable.dart';
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/localization/models/language.dart';
 import 'package:harmonoid/mappers/lyrics_key.dart';
 import 'package:harmonoid/mappers/playable.dart';
 import 'package:harmonoid/mappers/track.dart';
-import 'package:harmonoid/localization/models/language.dart';
+import 'package:harmonoid/routing/router.dart';
+import 'package:harmonoid/state/lyrics/api/lyrics_get.dart';
+import 'package:harmonoid/state/lyrics/api/lyrics_translation_get.dart';
+import 'package:harmonoid/state/lyrics/database/database.dart';
 import 'package:harmonoid/state/lyrics/models/lyric.dart';
 import 'package:harmonoid/state/lyrics/models/lyrics.dart';
-import 'package:harmonoid/core/media_player/models/playable.dart';
 import 'package:harmonoid/state/remote_config/models/remote_config_key.dart';
 import 'package:harmonoid/state/remote_config/models/remote_config_value.dart';
-import 'package:harmonoid/state/lyrics/database/database.dart';
 import 'package:harmonoid/state/remote_config/remote_config_provider.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 
@@ -141,6 +144,10 @@ class LyricsNotifier extends ChangeNotifier {
 
   /// Database used to cache lyrics and lyrics translations.
   final LyricsDatabase db;
+
+  /// HACK: Make LyricsNotifier DI friendly.
+  /// Subscription notifier.
+  SubscriptionNotifier get subscriptionNotifier => rootNavigatorKey.currentContext!.read();
 
   /// Sets the translation language.
   Future<void> setTranslationLanguage(Language language) async {
@@ -312,7 +319,7 @@ class LyricsNotifier extends ChangeNotifier {
 
     if (localCurrent == null || localCurrentDuration == null) return;
 
-    if ((lyrics.isEmpty || localTranslationLanguage.code.isEmpty) && _isCurrentGuard(localCurrent, localCurrentDuration)) {
+    if ((lyrics.isEmpty || localTranslationLanguage.code.isEmpty || subscriptionNotifier.state is! SubscriptionValid) && _isCurrentGuard(localCurrent, localCurrentDuration)) {
       translationLoading = false;
       translation = [];
       notifyListeners();
