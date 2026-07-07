@@ -94,14 +94,14 @@ class MediaLibrarySection extends StatelessWidget {
 
   static Future<void> removeFolder(BuildContext context, FileSystemMediaLibrary mediaLibrary, Directory directory) {
     return ensureNotRefreshing(context, mediaLibrary, () async {
-      if (mediaLibrary.directories.length <= 1) {
-        await showMessage(
-          context,
-          Localization.instance.WARNING,
-          Localization.instance.LAST_DIRECTORY_REMOVED,
-        );
-        return;
-      }
+      // if (mediaLibrary.directories.length <= 1) {
+      //   await showMessage(
+      //     context,
+      //     Localization.instance.WARNING,
+      //     Localization.instance.LAST_DIRECTORY_REMOVED,
+      //   );
+      //   return;
+      // }
       await Configuration.instance.removeMediaLibraryDirectory(directory);
       await mediaLibrary.removeDirectories({directory});
       if (Platform.isMacOS || Platform.isIOS) {
