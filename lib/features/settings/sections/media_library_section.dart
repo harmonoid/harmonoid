@@ -15,6 +15,7 @@ import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/media_library_tab.dart';
 import 'package:harmonoid/features/media_library/models/media_library_tab.dart';
 import 'package:harmonoid/features/settings/settings_section.dart';
+import 'package:harmonoid/features/settings/state/settings_notifier.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/darwin_storage_controller.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -395,8 +396,8 @@ class DesktopMediaLibrarySection extends StatefulWidget {
 class _DesktopMediaLibrarySectionState extends State<DesktopMediaLibrarySection> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<FileSystemMediaLibrary>(
-      builder: (context, mediaLibrary, _) {
+    return Consumer2<FileSystemMediaLibrary, SettingsNotifier>(
+      builder: (context, mediaLibrary, settingsNotifier, _) {
         return SettingsSection(
           title: Localization.instance.SETTINGS_SECTION_MEDIA_LIBRARY_TITLE,
           subtitle: Localization.instance.SETTINGS_SECTION_MEDIA_LIBRARY_SUBTITLE,
@@ -411,9 +412,21 @@ class _DesktopMediaLibrarySectionState extends State<DesktopMediaLibrarySection>
                 children: [
                   Transform.translate(
                     offset: Offset(-textButtonPadding, 0.0),
-                    child: TextButton(
-                      onPressed: () => MediaLibrarySection.addFolder(context, mediaLibrary),
-                      child: Text(label(Localization.instance.ADD_NEW_FOLDER)),
+                    child: Stack(
+                      children: [
+                        TextButton(
+                          onPressed: () => MediaLibrarySection.addFolder(context, mediaLibrary),
+                          child: Text(label(Localization.instance.ADD_NEW_FOLDER)),
+                        ),
+                        if (settingsNotifier.highlightMediaLibraryAddFolder)
+                          Positioned.fill(
+                            child: IgnorePointer(
+                              child: Container(
+                                decoration: BoxDecoration(border: Border.all(color: Colors.red)),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 8.0),
@@ -594,14 +607,27 @@ class _MobileMediaLibrarySectionState extends State<MobileMediaLibrarySection> {
   Widget build(BuildContext context) {
     return Consumer<FileSystemMediaLibrary>(
       builder: (context, mediaLibrary, _) {
+        final settingsNotifier = context.watch<SettingsNotifier>();
         return SettingsSection(
           title: Localization.instance.SETTINGS_SECTION_MEDIA_LIBRARY_TITLE,
           subtitle: Localization.instance.SETTINGS_SECTION_MEDIA_LIBRARY_SUBTITLE,
           children: [
-            ListItem(
-              title: Localization.instance.ADD_NEW_FOLDER,
-              subtitle: Localization.instance.ADD_NEW_FOLDER_SUBTITLE,
-              onTap: () => MediaLibrarySection.addFolder(context, mediaLibrary),
+            Stack(
+              children: [
+                ListItem(
+                  title: Localization.instance.ADD_NEW_FOLDER,
+                  subtitle: Localization.instance.ADD_NEW_FOLDER_SUBTITLE,
+                  onTap: () => MediaLibrarySection.addFolder(context, mediaLibrary),
+                ),
+                if (settingsNotifier.highlightMediaLibraryAddFolder)
+                  Positioned.fill(
+                    child: IgnorePointer(
+                      child: Container(
+                        decoration: BoxDecoration(border: Border.all(color: Colors.red)),
+                      ),
+                    ),
+                  ),
+              ],
             ),
             ListItem(
               title: Localization.instance.REFRESH,

@@ -67,7 +67,7 @@ class MediaLibraryNoItemsBanner extends StatelessWidget {
               const SizedBox(height: 16.0),
               TextButton(
                 onPressed: () {
-                  context.push('/$kSettingsPath');
+                  context.push(Uri(path: '/$kSettingsPath', queryParameters: {kSettingsArgFrom: kSettingsArgFromMediaLibraryNoItems}).toString());
                 },
                 child: Text(label(Localization.instance.GO_TO_SETTINGS)),
               ),

@@ -147,7 +147,11 @@ class LyricsNotifier extends ChangeNotifier {
 
   /// HACK: Make LyricsNotifier DI friendly.
   /// Subscription notifier.
-  SubscriptionNotifier get subscriptionNotifier => rootNavigatorKey.currentContext!.read();
+  SubscriptionNotifier? get subscriptionNotifier {
+    final context = rootNavigatorKey.currentContext;
+    if (context == null || !context.mounted) return null;
+    return context.read();
+  }
 
   /// Sets the translation language.
   Future<void> setTranslationLanguage(Language language) async {
@@ -319,7 +323,7 @@ class LyricsNotifier extends ChangeNotifier {
 
     if (localCurrent == null || localCurrentDuration == null) return;
 
-    if ((lyrics.isEmpty || localTranslationLanguage.code.isEmpty || subscriptionNotifier.state is! SubscriptionValid) && _isCurrentGuard(localCurrent, localCurrentDuration)) {
+    if ((lyrics.isEmpty || localTranslationLanguage.code.isEmpty || subscriptionNotifier?.state is! SubscriptionValid) && _isCurrentGuard(localCurrent, localCurrentDuration)) {
       translationLoading = false;
       translation = [];
       notifyListeners();

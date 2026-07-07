@@ -30,6 +30,10 @@ const String kInaccessibleDirectoriesPath = 'inaccessible-directories';
 
 const String kSettingsPath = 'settings';
 
+const String kSettingsArgFrom = 'from';
+
+const String kSettingsArgFromMediaLibraryNoItems = 'media_library_no_items';
+
 const String kAboutPath = 'about';
 
 const String kNowPlayingPath = 'now-playing';

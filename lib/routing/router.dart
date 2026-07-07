@@ -34,6 +34,7 @@ import 'package:harmonoid/features/media_library/tracks/tracks_screen.dart';
 import 'package:harmonoid/features/now_playing/now_playing_lyrics_screen.dart';
 import 'package:harmonoid/features/now_playing/now_playing_screen.dart';
 import 'package:harmonoid/features/settings/settings_screen.dart';
+import 'package:harmonoid/features/settings/state/settings_notifier.dart';
 import 'package:harmonoid/features/user/login/login_screen.dart';
 import 'package:harmonoid/features/user/login/state/login_notifier.dart';
 
@@ -234,10 +235,16 @@ final router = GoRouter(
     GoRoute(
       path: '/$kSettingsPath',
       pageBuilder: (context, state) {
+        final highlightMediaLibraryAddFolder = state.uri.queryParameters[kSettingsArgFrom] == kSettingsArgFromMediaLibraryNoItems;
         return buildPageWithDefaultTransition(
           context: context,
           state: state,
-          child: const SettingsScreen(),
+          child: ChangeNotifierProvider(
+            create: (_) => SettingsNotifier(
+              highlightMediaLibraryAddFolder: highlightMediaLibraryAddFolder,
+            ),
+            child: const SettingsScreen(),
+          ),
         );
       },
     ),
