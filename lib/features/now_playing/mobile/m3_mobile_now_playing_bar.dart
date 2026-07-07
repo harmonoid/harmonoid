@@ -47,8 +47,9 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
   final MiniPlayerController _miniPlayerController = MiniPlayerController();
   final PanelController _panelController = PanelController();
   final GlobalKey<TooltipState> _lyricsTooltipKey = GlobalKey<TooltipState>();
-  Object? _lastLyricsTooltipUri;
+  String? _lyricsTooltipUri;
   bool _lyricsVisible = false;
+  Timer? _lyricsTooltipTimer;
   Timer? _miniPlayerControllerCallbackTimer;
 
   // FIXED
@@ -68,6 +69,14 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => context.read<NowPlayingMobileNotifier>().setM3MobileNowPlayingBarStateRef(this));
+  }
+
+  @override
+  void dispose() {
+    _lyricsTooltipTimer?.cancel();
+    _miniPlayerControllerCallbackTimer?.cancel();
+    _valueNotifier.dispose();
+    super.dispose();
   }
 
   bool get maximized => !_lyricsVisible && _valueNotifier.value == 1.0;
@@ -315,20 +324,26 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
     );
   }
 
-  Future<void> _showLyricsTooltipIfNeeded(double percentage, Object? currentUri) async {
-    if (percentage != 1.0 || currentUri == null || _lastLyricsTooltipUri == currentUri || Configuration.instance.nowPlayingLyricsFtuxCount > 5) return;
-    await Future.delayed(const Duration(seconds: 3));
-    if (!mounted) return;
+  void _showLyricsTooltipIfNeeded(double percentage, String? currentUri) {
+    if (percentage != 1.0 || currentUri == null || _lyricsTooltipUri == currentUri || Configuration.instance.mobileNowPlayingLyricsFtux > 5) return;
+    _lyricsTooltipUri = currentUri;
+    _lyricsTooltipTimer?.cancel();
+    _lyricsTooltipTimer = Timer(const Duration(seconds: 3), () => _showLyricsTooltip(currentUri));
+  }
+
+  Future<void> _showLyricsTooltip(Object currentUri) async {
+    _lyricsTooltipTimer = null;
+    if (!mounted || _lyricsTooltipUri != currentUri) return;
+
     final state = _lyricsTooltipKey.currentState;
-    if (state != null) {
-      _lastLyricsTooltipUri = currentUri;
-      Configuration.instance.set(nowPlayingLyricsFtuxCount: Configuration.instance.nowPlayingLyricsFtuxCount + 1);
+    if (state == null) return;
 
-      state.ensureTooltipVisible();
+    unawaited(Configuration.instance.set(mobileNowPlayingLyricsFtux: Configuration.instance.mobileNowPlayingLyricsFtux + 1));
 
-      await Future.delayed(const Duration(seconds: 3));
-      Tooltip.dismissAllToolTips();
-    }
+    state.ensureTooltipVisible();
+
+    await Future.delayed(const Duration(seconds: 3));
+    Tooltip.dismissAllToolTips();
   }
 
   Widget _buildAppBar(BuildContext context, MediaPlayer mediaPlayer, double percentage) {

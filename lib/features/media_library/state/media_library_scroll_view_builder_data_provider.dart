@@ -23,9 +23,9 @@ class MediaLibraryScrollViewBuilderDataProvider {
   ScrollViewBuilderData get album {
     final span = isDesktop
         ? null
-        : (Configuration.instance.mobileMediaLibraryAlbumGridSpan == 0
+        : (Configuration.instance.mobileMediaLibraryAlbumScrollViewBuilderSpan == 0
               ? (MediaQuery.of(context).size.width - margin) ~/ (albumItemWidth + margin)
-              : Configuration.instance.mobileMediaLibraryAlbumGridSpan);
+              : Configuration.instance.mobileMediaLibraryAlbumScrollViewBuilderSpan);
     final itemWidth = span != 1 ? albumItemWidth : double.infinity;
     final itemHeight = span != 1 ? albumItemHeight : linearTileHeight;
     final TextStyle labelTextStyle;
@@ -78,9 +78,9 @@ class MediaLibraryScrollViewBuilderDataProvider {
   ScrollViewBuilderData get artist {
     final span = isDesktop
         ? null
-        : (Configuration.instance.mobileMediaLibraryArtistGridSpan == 0
+        : (Configuration.instance.mobileMediaLibraryArtistScrollViewBuilderSpan == 0
               ? (MediaQuery.of(context).size.width - margin) ~/ (artistItemWidth + margin)
-              : Configuration.instance.mobileMediaLibraryArtistGridSpan);
+              : Configuration.instance.mobileMediaLibraryArtistScrollViewBuilderSpan);
     final itemWidth = span != 1 ? artistItemWidth : double.infinity;
     final itemHeight = span != 1 ? artistItemHeight : linearTileHeight;
     final TextStyle labelTextStyle;
@@ -103,9 +103,9 @@ class MediaLibraryScrollViewBuilderDataProvider {
   ScrollViewBuilderData get genre {
     final span = isDesktop
         ? null
-        : (Configuration.instance.mobileMediaLibraryGenreGridSpan == 0
+        : (Configuration.instance.mobileMediaLibraryGenreScrollViewBuilderSpan == 0
               ? (MediaQuery.of(context).size.width - margin) ~/ (genreItemWidth + margin)
-              : Configuration.instance.mobileMediaLibraryGenreGridSpan);
+              : Configuration.instance.mobileMediaLibraryGenreScrollViewBuilderSpan);
     final itemWidth = span != 1 ? genreItemWidth : double.infinity;
     final itemHeight = span != 1 ? genreItemHeight : linearTileHeight;
     final TextStyle labelTextStyle;

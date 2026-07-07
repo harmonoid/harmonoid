@@ -28,18 +28,18 @@ class MobileMediaLibraryGridSpanButton extends StatelessWidget {
         switch (path) {
           case kAlbumsPath:
             title = Localization.instance.MOBILE_ALBUM_GRID_SIZE;
-            groupValue = Configuration.instance.mobileMediaLibraryAlbumGridSpan;
-            onChanged = (value) => Configuration.instance.set(mobileMediaLibraryAlbumGridSpan: value);
+            groupValue = Configuration.instance.mobileMediaLibraryAlbumScrollViewBuilderSpan;
+            onChanged = (value) => Configuration.instance.set(mobileMediaLibraryAlbumScrollViewBuilderSpan: value);
             break;
           case kArtistsPath:
             title = Localization.instance.MOBILE_ARTIST_GRID_SIZE;
-            groupValue = Configuration.instance.mobileMediaLibraryArtistGridSpan;
-            onChanged = (value) => Configuration.instance.set(mobileMediaLibraryArtistGridSpan: value);
+            groupValue = Configuration.instance.mobileMediaLibraryArtistScrollViewBuilderSpan;
+            onChanged = (value) => Configuration.instance.set(mobileMediaLibraryArtistScrollViewBuilderSpan: value);
             break;
           case kGenresPath:
             title = Localization.instance.MOBILE_GENRE_GRID_SIZE;
-            groupValue = Configuration.instance.mobileMediaLibraryGenreGridSpan;
-            onChanged = (value) => Configuration.instance.set(mobileMediaLibraryGenreGridSpan: value);
+            groupValue = Configuration.instance.mobileMediaLibraryGenreScrollViewBuilderSpan;
+            onChanged = (value) => Configuration.instance.set(mobileMediaLibraryGenreScrollViewBuilderSpan: value);
             break;
           default:
             throw UnimplementedError();

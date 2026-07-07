@@ -23,13 +23,13 @@ class ConfigurationBase {
   Session get lastfmSession => _lastfmSession!;
   LocalizationData get localization => _localization!;
   bool get lrcFromDirectory => _lrcFromDirectory!;
+  Language get lyricsTranslationLanguage => _lyricsTranslationLanguage!;
   double get lyricsViewFocusedFontSize => _lyricsViewFocusedFontSize!;
   double get lyricsViewFocusedLineHeight => _lyricsViewFocusedLineHeight!;
   String get lyricsViewFontFamily => _lyricsViewFontFamily!;
   TextAlign get lyricsViewTextAlign => _lyricsViewTextAlign!;
   double get lyricsViewUnfocusedFontSize => _lyricsViewUnfocusedFontSize!;
   double get lyricsViewUnfocusedLineHeight => _lyricsViewUnfocusedLineHeight!;
-  Language get lyricsTranslationLanguage => _lyricsTranslationLanguage!;
   bool get mediaLibraryAddPlaylistToNowPlaying => _mediaLibraryAddPlaylistToNowPlaying!;
   Set<AlbumGroupingParameter> get mediaLibraryAlbumGroupingParameters => _mediaLibraryAlbumGroupingParameters!;
   bool get mediaLibraryAlbumSortAscending => _mediaLibraryAlbumSortAscending!;
@@ -39,10 +39,10 @@ class ConfigurationBase {
   ArtistSortType get mediaLibraryArtistSortType => _mediaLibraryArtistSortType!;
   bool get mediaLibraryCoverFallback => _mediaLibraryCoverFallback!;
   Set<Directory> get mediaLibraryDirectories => _mediaLibraryDirectories!;
-  FileExplorerViewType get mediaLibraryFolderFileExplorerViewType => _mediaLibraryFolderFileExplorerViewType!;
-  FileExplorerSortType get mediaLibraryFolderFileExplorerSortType => _mediaLibraryFolderFileExplorerSortType!;
-  bool get mediaLibraryFolderFileExplorerSortAscending => _mediaLibraryFolderFileExplorerSortAscending!;
   bool get mediaLibraryFolderFileExplorerShowHiddenFiles => _mediaLibraryFolderFileExplorerShowHiddenFiles!;
+  bool get mediaLibraryFolderFileExplorerSortAscending => _mediaLibraryFolderFileExplorerSortAscending!;
+  FileExplorerSortType get mediaLibraryFolderFileExplorerSortType => _mediaLibraryFolderFileExplorerSortType!;
+  FileExplorerViewType get mediaLibraryFolderFileExplorerViewType => _mediaLibraryFolderFileExplorerViewType!;
   bool get mediaLibraryGenreSortAscending => _mediaLibraryGenreSortAscending!;
   GenreSortType get mediaLibraryGenreSortType => _mediaLibraryGenreSortType!;
   bool get mediaLibraryHideSecondaryArtists => _mediaLibraryHideSecondaryArtists!;
@@ -56,10 +56,11 @@ class ConfigurationBase {
   String get metaInstallDate => _metaInstallDate!;
   bool get metaInAppReviewSubmitted => _metaInAppReviewSubmitted!;
   int get metaLaunchCount => _metaLaunchCount!;
-  int get mobileMediaLibraryAlbumGridSpan => _mobileMediaLibraryAlbumGridSpan!;
-  int get mobileMediaLibraryArtistGridSpan => _mobileMediaLibraryArtistGridSpan!;
-  int get mobileMediaLibraryGenreGridSpan => _mobileMediaLibraryGenreGridSpan!;
+  int get mobileMediaLibraryAlbumScrollViewBuilderSpan => _mobileMediaLibraryAlbumScrollViewBuilderSpan!;
+  int get mobileMediaLibraryArtistScrollViewBuilderSpan => _mobileMediaLibraryArtistScrollViewBuilderSpan!;
+  int get mobileMediaLibraryGenreScrollViewBuilderSpan => _mobileMediaLibraryGenreScrollViewBuilderSpan!;
   bool get mobileNotificationLyricsHidden => _mobileNotificationLyricsHidden!;
+  int get mobileNowPlayingLyricsFtux => _mobileNowPlayingLyricsFtux!;
   bool get mobileNowPlayingRipple => _mobileNowPlayingRipple!;
   bool get mobileNowPlayingVolumeSlider => _mobileNowPlayingVolumeSlider!;
   Map<String, String> get mpvOptions => _mpvOptions!;
@@ -67,7 +68,6 @@ class ConfigurationBase {
   bool get notificationLyrics => _notificationLyrics!;
   bool get nowPlayingAudioFormat => _nowPlayingAudioFormat!;
   bool get nowPlayingDisplayUponPlay => _nowPlayingDisplayUponPlay!;
-  int get nowPlayingLyricsFtuxCount => _nowPlayingLyricsFtuxCount!;
   bool get nowPlayingStartMixAfterEnding => _nowPlayingStartMixAfterEnding!;
   AnimationDuration get themeAnimationDuration => _themeAnimationDuration!;
   int get themeMaterialStandard => _themeMaterialStandard!;
@@ -88,13 +88,13 @@ class ConfigurationBase {
     Session? lastfmSession,
     LocalizationData? localization,
     bool? lrcFromDirectory,
+    Language? lyricsTranslationLanguage,
     double? lyricsViewFocusedFontSize,
     double? lyricsViewFocusedLineHeight,
     String? lyricsViewFontFamily,
     TextAlign? lyricsViewTextAlign,
     double? lyricsViewUnfocusedFontSize,
     double? lyricsViewUnfocusedLineHeight,
-    Language? lyricsTranslationLanguage,
     bool? mediaLibraryAddPlaylistToNowPlaying,
     Set<AlbumGroupingParameter>? mediaLibraryAlbumGroupingParameters,
     bool? mediaLibraryAlbumSortAscending,
@@ -104,10 +104,10 @@ class ConfigurationBase {
     ArtistSortType? mediaLibraryArtistSortType,
     bool? mediaLibraryCoverFallback,
     Set<Directory>? mediaLibraryDirectories,
-    FileExplorerViewType? mediaLibraryFolderFileExplorerViewType,
-    FileExplorerSortType? mediaLibraryFolderFileExplorerSortType,
-    bool? mediaLibraryFolderFileExplorerSortAscending,
     bool? mediaLibraryFolderFileExplorerShowHiddenFiles,
+    bool? mediaLibraryFolderFileExplorerSortAscending,
+    FileExplorerSortType? mediaLibraryFolderFileExplorerSortType,
+    FileExplorerViewType? mediaLibraryFolderFileExplorerViewType,
     bool? mediaLibraryGenreSortAscending,
     GenreSortType? mediaLibraryGenreSortType,
     bool? mediaLibraryHideSecondaryArtists,
@@ -121,10 +121,11 @@ class ConfigurationBase {
     String? metaInstallDate,
     bool? metaInAppReviewSubmitted,
     int? metaLaunchCount,
-    int? mobileMediaLibraryAlbumGridSpan,
-    int? mobileMediaLibraryArtistGridSpan,
-    int? mobileMediaLibraryGenreGridSpan,
+    int? mobileMediaLibraryAlbumScrollViewBuilderSpan,
+    int? mobileMediaLibraryArtistScrollViewBuilderSpan,
+    int? mobileMediaLibraryGenreScrollViewBuilderSpan,
     bool? mobileNotificationLyricsHidden,
+    int? mobileNowPlayingLyricsFtux,
     bool? mobileNowPlayingRipple,
     bool? mobileNowPlayingVolumeSlider,
     Map<String, String>? mpvOptions,
@@ -132,7 +133,6 @@ class ConfigurationBase {
     bool? notificationLyrics,
     bool? nowPlayingAudioFormat,
     bool? nowPlayingDisplayUponPlay,
-    int? nowPlayingLyricsFtuxCount,
     bool? nowPlayingStartMixAfterEnding,
     AnimationDuration? themeAnimationDuration,
     int? themeMaterialStandard,
@@ -185,6 +185,10 @@ class ConfigurationBase {
       _lrcFromDirectory = lrcFromDirectory;
       await db.setValue(kKeyLrcFromDirectory, kTypeBoolean, booleanValue: lrcFromDirectory);
     }
+    if (lyricsTranslationLanguage != null) {
+      _lyricsTranslationLanguage = lyricsTranslationLanguage;
+      await db.setValue(kKeyLyricsTranslationLanguage, kTypeJson, jsonValue: lyricsTranslationLanguage.toJson());
+    }
     if (lyricsViewFocusedFontSize != null) {
       _lyricsViewFocusedFontSize = lyricsViewFocusedFontSize;
       await db.setValue(kKeyLyricsViewFocusedFontSize, kTypeDouble, doubleValue: lyricsViewFocusedFontSize);
@@ -208,10 +212,6 @@ class ConfigurationBase {
     if (lyricsViewUnfocusedLineHeight != null) {
       _lyricsViewUnfocusedLineHeight = lyricsViewUnfocusedLineHeight;
       await db.setValue(kKeyLyricsViewUnfocusedLineHeight, kTypeDouble, doubleValue: lyricsViewUnfocusedLineHeight);
-    }
-    if (lyricsTranslationLanguage != null) {
-      _lyricsTranslationLanguage = lyricsTranslationLanguage;
-      await db.setValue(kKeyLyricsTranslationLanguage, kTypeJson, jsonValue: lyricsTranslationLanguage.toJson());
     }
     if (mediaLibraryAddPlaylistToNowPlaying != null) {
       _mediaLibraryAddPlaylistToNowPlaying = mediaLibraryAddPlaylistToNowPlaying;
@@ -249,21 +249,21 @@ class ConfigurationBase {
       _mediaLibraryDirectories = mediaLibraryDirectories;
       await db.setValue(kKeyMediaLibraryDirectories, kTypeJson, jsonValue: mediaLibraryDirectories.toJson());
     }
-    if (mediaLibraryFolderFileExplorerViewType != null) {
-      _mediaLibraryFolderFileExplorerViewType = mediaLibraryFolderFileExplorerViewType;
-      await db.setValue(kKeyMediaLibraryFolderFileExplorerViewType, kTypeInteger, integerValue: mediaLibraryFolderFileExplorerViewType.index);
-    }
-    if (mediaLibraryFolderFileExplorerSortType != null) {
-      _mediaLibraryFolderFileExplorerSortType = mediaLibraryFolderFileExplorerSortType;
-      await db.setValue(kKeyMediaLibraryFolderFileExplorerSortType, kTypeInteger, integerValue: mediaLibraryFolderFileExplorerSortType.index);
+    if (mediaLibraryFolderFileExplorerShowHiddenFiles != null) {
+      _mediaLibraryFolderFileExplorerShowHiddenFiles = mediaLibraryFolderFileExplorerShowHiddenFiles;
+      await db.setValue(kKeyMediaLibraryFolderFileExplorerShowHiddenFiles, kTypeBoolean, booleanValue: mediaLibraryFolderFileExplorerShowHiddenFiles);
     }
     if (mediaLibraryFolderFileExplorerSortAscending != null) {
       _mediaLibraryFolderFileExplorerSortAscending = mediaLibraryFolderFileExplorerSortAscending;
       await db.setValue(kKeyMediaLibraryFolderFileExplorerSortAscending, kTypeBoolean, booleanValue: mediaLibraryFolderFileExplorerSortAscending);
     }
-    if (mediaLibraryFolderFileExplorerShowHiddenFiles != null) {
-      _mediaLibraryFolderFileExplorerShowHiddenFiles = mediaLibraryFolderFileExplorerShowHiddenFiles;
-      await db.setValue(kKeyMediaLibraryFolderFileExplorerShowHiddenFiles, kTypeBoolean, booleanValue: mediaLibraryFolderFileExplorerShowHiddenFiles);
+    if (mediaLibraryFolderFileExplorerSortType != null) {
+      _mediaLibraryFolderFileExplorerSortType = mediaLibraryFolderFileExplorerSortType;
+      await db.setValue(kKeyMediaLibraryFolderFileExplorerSortType, kTypeInteger, integerValue: mediaLibraryFolderFileExplorerSortType.index);
+    }
+    if (mediaLibraryFolderFileExplorerViewType != null) {
+      _mediaLibraryFolderFileExplorerViewType = mediaLibraryFolderFileExplorerViewType;
+      await db.setValue(kKeyMediaLibraryFolderFileExplorerViewType, kTypeInteger, integerValue: mediaLibraryFolderFileExplorerViewType.index);
     }
     if (mediaLibraryGenreSortAscending != null) {
       _mediaLibraryGenreSortAscending = mediaLibraryGenreSortAscending;
@@ -317,21 +317,25 @@ class ConfigurationBase {
       _metaLaunchCount = metaLaunchCount;
       await db.setValue(kKeyMetaLaunchCount, kTypeInteger, integerValue: metaLaunchCount);
     }
-    if (mobileMediaLibraryAlbumGridSpan != null) {
-      _mobileMediaLibraryAlbumGridSpan = mobileMediaLibraryAlbumGridSpan;
-      await db.setValue(kKeyMobileMediaLibraryAlbumGridSpan, kTypeInteger, integerValue: mobileMediaLibraryAlbumGridSpan);
+    if (mobileMediaLibraryAlbumScrollViewBuilderSpan != null) {
+      _mobileMediaLibraryAlbumScrollViewBuilderSpan = mobileMediaLibraryAlbumScrollViewBuilderSpan;
+      await db.setValue(kKeyMobileMediaLibraryAlbumScrollViewBuilderSpan, kTypeInteger, integerValue: mobileMediaLibraryAlbumScrollViewBuilderSpan);
     }
-    if (mobileMediaLibraryArtistGridSpan != null) {
-      _mobileMediaLibraryArtistGridSpan = mobileMediaLibraryArtistGridSpan;
-      await db.setValue(kKeyMobileMediaLibraryArtistGridSpan, kTypeInteger, integerValue: mobileMediaLibraryArtistGridSpan);
+    if (mobileMediaLibraryArtistScrollViewBuilderSpan != null) {
+      _mobileMediaLibraryArtistScrollViewBuilderSpan = mobileMediaLibraryArtistScrollViewBuilderSpan;
+      await db.setValue(kKeyMobileMediaLibraryArtistScrollViewBuilderSpan, kTypeInteger, integerValue: mobileMediaLibraryArtistScrollViewBuilderSpan);
     }
-    if (mobileMediaLibraryGenreGridSpan != null) {
-      _mobileMediaLibraryGenreGridSpan = mobileMediaLibraryGenreGridSpan;
-      await db.setValue(kKeyMobileMediaLibraryGenreGridSpan, kTypeInteger, integerValue: mobileMediaLibraryGenreGridSpan);
+    if (mobileMediaLibraryGenreScrollViewBuilderSpan != null) {
+      _mobileMediaLibraryGenreScrollViewBuilderSpan = mobileMediaLibraryGenreScrollViewBuilderSpan;
+      await db.setValue(kKeyMobileMediaLibraryGenreScrollViewBuilderSpan, kTypeInteger, integerValue: mobileMediaLibraryGenreScrollViewBuilderSpan);
     }
     if (mobileNotificationLyricsHidden != null) {
       _mobileNotificationLyricsHidden = mobileNotificationLyricsHidden;
       await db.setValue(kKeyMobileNotificationLyricsHidden, kTypeBoolean, booleanValue: mobileNotificationLyricsHidden);
+    }
+    if (mobileNowPlayingLyricsFtux != null) {
+      _mobileNowPlayingLyricsFtux = mobileNowPlayingLyricsFtux;
+      await db.setValue(kKeyMobileNowPlayingLyricsFtux, kTypeInteger, integerValue: mobileNowPlayingLyricsFtux);
     }
     if (mobileNowPlayingRipple != null) {
       _mobileNowPlayingRipple = mobileNowPlayingRipple;
@@ -360,10 +364,6 @@ class ConfigurationBase {
     if (nowPlayingDisplayUponPlay != null) {
       _nowPlayingDisplayUponPlay = nowPlayingDisplayUponPlay;
       await db.setValue(kKeyNowPlayingDisplayUponPlay, kTypeBoolean, booleanValue: nowPlayingDisplayUponPlay);
-    }
-    if (nowPlayingLyricsFtuxCount != null) {
-      _nowPlayingLyricsFtuxCount = nowPlayingLyricsFtuxCount;
-      await db.setValue(kKeyNowPlayingLyricsFtuxCount, kTypeInteger, integerValue: nowPlayingLyricsFtuxCount);
     }
     if (nowPlayingStartMixAfterEnding != null) {
       _nowPlayingStartMixAfterEnding = nowPlayingStartMixAfterEnding;
@@ -408,13 +408,13 @@ class ConfigurationBase {
       /* Json    */ kKeyLastfmSession: const Session(name: '', key: ''),
       /* Json    */ kKeyLocalization: await getDefaultLocalization(),
       /* Boolean */ kKeyLrcFromDirectory: false,
+      /* Json    */ kKeyLyricsTranslationLanguage: await getDefaultLyricsTranslationLanguage(),
       /* Double  */ kKeyLyricsViewFocusedFontSize: isDesktop ? 64.0: 48.0,
       /* Double  */ kKeyLyricsViewFocusedLineHeight: 1.2,
       /* String  */ kKeyLyricsViewFontFamily: '',
       /* Integer */ kKeyLyricsViewTextAlign: TextAlign.start.index,
       /* Double  */ kKeyLyricsViewUnfocusedFontSize: isDesktop ? 28.0: 24.0,
       /* Double  */ kKeyLyricsViewUnfocusedLineHeight: 1.2,
-      /* Json    */ kKeyLyricsTranslationLanguage: await getDefaultLyricsTranslationLanguage(),
       /* Boolean */ kKeyMediaLibraryAddPlaylistToNowPlaying: true,
       /* Json    */ kKeyMediaLibraryAlbumGroupingParameters: [AlbumGroupingParameter.album.index],
       /* Boolean */ kKeyMediaLibraryAlbumSortAscending: true,
@@ -424,10 +424,10 @@ class ConfigurationBase {
       /* Integer */ kKeyMediaLibraryArtistSortType: ArtistSortType.artist.index,
       /* Boolean */ kKeyMediaLibraryCoverFallback: false,
       /* Json    */ kKeyMediaLibraryDirectories: await getDefaultMediaLibraryDirectories(),
-      /* Integer */ kKeyMediaLibraryFolderFileExplorerViewType: FileExplorerViewType.grid.index,
-      /* Integer */ kKeyMediaLibraryFolderFileExplorerSortType: FileExplorerSortType.name.index,
-      /* Boolean */ kKeyMediaLibraryFolderFileExplorerSortAscending: true,
       /* Boolean */ kKeyMediaLibraryFolderFileExplorerShowHiddenFiles: false,
+      /* Boolean */ kKeyMediaLibraryFolderFileExplorerSortAscending: true,
+      /* Integer */ kKeyMediaLibraryFolderFileExplorerSortType: FileExplorerSortType.name.index,
+      /* Integer */ kKeyMediaLibraryFolderFileExplorerViewType: FileExplorerViewType.grid.index,
       /* Boolean */ kKeyMediaLibraryGenreSortAscending: true,
       /* Integer */ kKeyMediaLibraryGenreSortType: GenreSortType.genre.index,
       /* Boolean */ kKeyMediaLibraryHideSecondaryArtists: false,
@@ -441,10 +441,11 @@ class ConfigurationBase {
       /* String  */ kKeyMetaInstallDate: DateTime.now().toIso8601String(),
       /* Boolean */ kKeyMetaInAppReviewSubmitted: false,
       /* Integer */ kKeyMetaLaunchCount: 0,
-      /* Integer */ kKeyMobileMediaLibraryAlbumGridSpan: 0,
-      /* Integer */ kKeyMobileMediaLibraryArtistGridSpan: 0,
-      /* Integer */ kKeyMobileMediaLibraryGenreGridSpan: 0,
+      /* Integer */ kKeyMobileMediaLibraryAlbumScrollViewBuilderSpan: 0,
+      /* Integer */ kKeyMobileMediaLibraryArtistScrollViewBuilderSpan: 0,
+      /* Integer */ kKeyMobileMediaLibraryGenreScrollViewBuilderSpan: 0,
       /* Boolean */ kKeyMobileNotificationLyricsHidden: false,
+      /* Integer */ kKeyMobileNowPlayingLyricsFtux: 0,
       /* Boolean */ kKeyMobileNowPlayingRipple: true,
       /* Boolean */ kKeyMobileNowPlayingVolumeSlider: true,
       /* Json    */ kKeyMpvOptions: <String, String>{},
@@ -452,7 +453,6 @@ class ConfigurationBase {
       /* Boolean */ kKeyNotificationLyrics: true,
       /* Boolean */ kKeyNowPlayingAudioFormat: true,
       /* Boolean */ kKeyNowPlayingDisplayUponPlay: isDesktop,
-      /* Integer */ kKeyNowPlayingLyricsFtuxCount: 0,
       /* Boolean */ kKeyNowPlayingStartMixAfterEnding: true,
       /* Json    */ kKeyThemeAnimationDuration: const AnimationDuration(),
       /* Integer */ kKeyThemeMaterialStandard: isDesktop ? 2 : 3,
@@ -474,13 +474,13 @@ class ConfigurationBase {
   Session? _lastfmSession;
   LocalizationData? _localization;
   bool? _lrcFromDirectory;
+  Language? _lyricsTranslationLanguage;
   double? _lyricsViewFocusedFontSize;
   double? _lyricsViewFocusedLineHeight;
   String? _lyricsViewFontFamily;
   TextAlign? _lyricsViewTextAlign;
   double? _lyricsViewUnfocusedFontSize;
   double? _lyricsViewUnfocusedLineHeight;
-  Language? _lyricsTranslationLanguage;
   bool? _mediaLibraryAddPlaylistToNowPlaying;
   Set<AlbumGroupingParameter>? _mediaLibraryAlbumGroupingParameters;
   bool? _mediaLibraryAlbumSortAscending;
@@ -490,10 +490,10 @@ class ConfigurationBase {
   ArtistSortType? _mediaLibraryArtistSortType;
   bool? _mediaLibraryCoverFallback;
   Set<Directory>? _mediaLibraryDirectories;
-  FileExplorerViewType? _mediaLibraryFolderFileExplorerViewType;
-  FileExplorerSortType? _mediaLibraryFolderFileExplorerSortType;
-  bool? _mediaLibraryFolderFileExplorerSortAscending;
   bool? _mediaLibraryFolderFileExplorerShowHiddenFiles;
+  bool? _mediaLibraryFolderFileExplorerSortAscending;
+  FileExplorerSortType? _mediaLibraryFolderFileExplorerSortType;
+  FileExplorerViewType? _mediaLibraryFolderFileExplorerViewType;
   bool? _mediaLibraryGenreSortAscending;
   GenreSortType? _mediaLibraryGenreSortType;
   bool? _mediaLibraryHideSecondaryArtists;
@@ -507,10 +507,11 @@ class ConfigurationBase {
   String? _metaInstallDate;
   bool? _metaInAppReviewSubmitted;
   int? _metaLaunchCount;
-  int? _mobileMediaLibraryAlbumGridSpan;
-  int? _mobileMediaLibraryArtistGridSpan;
-  int? _mobileMediaLibraryGenreGridSpan;
+  int? _mobileMediaLibraryAlbumScrollViewBuilderSpan;
+  int? _mobileMediaLibraryArtistScrollViewBuilderSpan;
+  int? _mobileMediaLibraryGenreScrollViewBuilderSpan;
   bool? _mobileNotificationLyricsHidden;
+  int? _mobileNowPlayingLyricsFtux;
   bool? _mobileNowPlayingRipple;
   bool? _mobileNowPlayingVolumeSlider;
   Map<String, String>? _mpvOptions;
@@ -518,7 +519,6 @@ class ConfigurationBase {
   bool? _notificationLyrics;
   bool? _nowPlayingAudioFormat;
   bool? _nowPlayingDisplayUponPlay;
-  int? _nowPlayingLyricsFtuxCount;
   bool? _nowPlayingStartMixAfterEnding;
   AnimationDuration? _themeAnimationDuration;
   int? _themeMaterialStandard;
@@ -541,13 +541,13 @@ const kKeyIdentifier = 'IDENTIFIER';
 const kKeyLastfmSession = 'LASTFM_SESSION';
 const kKeyLocalization = 'LOCALIZATION';
 const kKeyLrcFromDirectory = 'LRC_FROM_DIRECTORY';
+const kKeyLyricsTranslationLanguage = 'LYRICS_TRANSLATION_LANGUAGE';
 const kKeyLyricsViewFocusedFontSize = 'LYRICS_VIEW_FOCUSED_FONT_SIZE';
 const kKeyLyricsViewFocusedLineHeight = 'LYRICS_VIEW_FOCUSED_LINE_HEIGHT';
 const kKeyLyricsViewFontFamily = 'LYRICS_VIEW_FONT_FAMILY';
 const kKeyLyricsViewTextAlign = 'LYRICS_VIEW_TEXT_ALIGN';
 const kKeyLyricsViewUnfocusedFontSize = 'LYRICS_VIEW_UNFOCUSED_FONT_SIZE';
 const kKeyLyricsViewUnfocusedLineHeight = 'LYRICS_VIEW_UNFOCUSED_LINE_HEIGHT';
-const kKeyLyricsTranslationLanguage = 'LYRICS_TRANSLATION_LANGUAGE';
 const kKeyMediaLibraryAddPlaylistToNowPlaying = 'MEDIA_LIBRARY_ADD_PLAYLIST_TO_NOW_PLAYING';
 const kKeyMediaLibraryAlbumGroupingParameters = 'MEDIA_LIBRARY_ALBUM_GROUPING_PARAMETERS';
 const kKeyMediaLibraryAlbumSortAscending = 'MEDIA_LIBRARY_ALBUM_SORT_ASCENDING';
@@ -557,10 +557,10 @@ const kKeyMediaLibraryArtistSortAscending = 'MEDIA_LIBRARY_ARTIST_SORT_ASCENDING
 const kKeyMediaLibraryArtistSortType = 'MEDIA_LIBRARY_ARTIST_SORT_TYPE';
 const kKeyMediaLibraryCoverFallback = 'MEDIA_LIBRARY_COVER_FALLBACK';
 const kKeyMediaLibraryDirectories = 'MEDIA_LIBRARY_DIRECTORIES';
-const kKeyMediaLibraryFolderFileExplorerViewType = 'MEDIA_LIBRARY_FOLDER_FILE_EXPLORER_VIEW_TYPE';
-const kKeyMediaLibraryFolderFileExplorerSortType = 'MEDIA_LIBRARY_FOLDER_FILE_EXPLORER_SORT_TYPE';
-const kKeyMediaLibraryFolderFileExplorerSortAscending = 'MEDIA_LIBRARY_FOLDER_FILE_EXPLORER_SORT_ASCENDING';
 const kKeyMediaLibraryFolderFileExplorerShowHiddenFiles = 'MEDIA_LIBRARY_FOLDER_FILE_EXPLORER_SHOW_HIDDEN_FILES';
+const kKeyMediaLibraryFolderFileExplorerSortAscending = 'MEDIA_LIBRARY_FOLDER_FILE_EXPLORER_SORT_ASCENDING';
+const kKeyMediaLibraryFolderFileExplorerSortType = 'MEDIA_LIBRARY_FOLDER_FILE_EXPLORER_SORT_TYPE';
+const kKeyMediaLibraryFolderFileExplorerViewType = 'MEDIA_LIBRARY_FOLDER_FILE_EXPLORER_VIEW_TYPE';
 const kKeyMediaLibraryGenreSortAscending = 'MEDIA_LIBRARY_GENRE_SORT_ASCENDING';
 const kKeyMediaLibraryGenreSortType = 'MEDIA_LIBRARY_GENRE_SORT_TYPE';
 const kKeyMediaLibraryHideSecondaryArtists = 'MEDIA_LIBRARY_HIDE_SECONDARY_ARTISTS';
@@ -574,10 +574,11 @@ const kKeyMediaPlayerPlaybackState = 'MEDIA_PLAYER_PLAYBACK_STATE';
 const kKeyMetaInstallDate = 'META_INSTALL_DATE';
 const kKeyMetaInAppReviewSubmitted = 'META_IN_APP_REVIEW_SUBMITTED';
 const kKeyMetaLaunchCount = 'META_LAUNCH_COUNT';
-const kKeyMobileMediaLibraryAlbumGridSpan = 'MOBILE_MEDIA_LIBRARY_ALBUM_GRID_SPAN';
-const kKeyMobileMediaLibraryArtistGridSpan = 'MOBILE_MEDIA_LIBRARY_ARTIST_GRID_SPAN';
-const kKeyMobileMediaLibraryGenreGridSpan = 'MOBILE_MEDIA_LIBRARY_GENRE_GRID_SPAN';
+const kKeyMobileMediaLibraryAlbumScrollViewBuilderSpan = 'MOBILE_MEDIA_LIBRARY_ALBUM_SCROLL_VIEW_BUILDER_SPAN';
+const kKeyMobileMediaLibraryArtistScrollViewBuilderSpan = 'MOBILE_MEDIA_LIBRARY_ARTIST_SCROLL_VIEW_BUILDER_SPAN';
+const kKeyMobileMediaLibraryGenreScrollViewBuilderSpan = 'MOBILE_MEDIA_LIBRARY_GENRE_SCROLL_VIEW_BUILDER_SPAN';
 const kKeyMobileNotificationLyricsHidden = 'MOBILE_NOTIFICATION_LYRICS_HIDDEN';
+const kKeyMobileNowPlayingLyricsFtux = 'MOBILE_NOW_PLAYING_LYRICS_FTUX';
 const kKeyMobileNowPlayingRipple = 'MOBILE_NOW_PLAYING_RIPPLE';
 const kKeyMobileNowPlayingVolumeSlider = 'MOBILE_NOW_PLAYING_VOLUME_SLIDER';
 const kKeyMpvOptions = 'MPV_OPTIONS';
@@ -585,7 +586,6 @@ const kKeyMpvPath = 'MPV_PATH';
 const kKeyNotificationLyrics = 'NOTIFICATION_LYRICS';
 const kKeyNowPlayingAudioFormat = 'NOW_PLAYING_AUDIO_FORMAT';
 const kKeyNowPlayingDisplayUponPlay = 'NOW_PLAYING_DISPLAY_UPON_PLAY';
-const kKeyNowPlayingLyricsFtuxCount = 'NOW_PLAYING_LYRICS_FTUX_COUNT';
 const kKeyNowPlayingStartMixAfterEnding = 'NOW_PLAYING_START_MIX_AFTER_ENDING';
 const kKeyThemeAnimationDuration = 'THEME_ANIMATION_DURATION';
 const kKeyThemeMaterialStandard = 'THEME_MATERIAL_STANDARD';
