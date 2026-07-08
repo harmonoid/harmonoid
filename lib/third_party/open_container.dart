@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -412,6 +413,18 @@ class _HideableState extends State<_Hideable> {
   }
 }
 
+const double _kInteractivePopDismissThreshold = 0.35;
+const double _kInteractivePopMinFlingVelocity = 700.0;
+const double _kInteractivePopTopDismissHeightFactor = 0.7;
+const double _kInteractivePopDragProgressMultiplier = 2.0;
+const double _kInteractivePopMinControllerValue = 0.001;
+
+enum _InteractivePopGestureDirection {
+  down,
+  right,
+  left,
+}
+
 class _OpenContainerRoute<T> extends ModalRoute<T> {
   _OpenContainerRoute({
     required this.closedColor,
@@ -607,6 +620,17 @@ class _OpenContainerRoute<T> extends ModalRoute<T> {
   AnimationStatus? _lastAnimationStatus;
   AnimationStatus? _currentAnimationStatus;
 
+  int? _interactivePopPointer;
+  _InteractivePopGestureDirection? _interactivePopGestureDirection;
+  VelocityTracker? _interactivePopVelocityTracker;
+  Offset _interactivePopDragOffset = Offset.zero;
+  double _interactivePopStartValue = 1.0;
+  bool _interactivePopInProgress = false;
+  bool _interactivePopCanDragDown = false;
+  bool _interactivePopCanDragRight = false;
+  bool _interactivePopCanDragLeft = false;
+  double? _interactivePopScrollExtentBefore;
+
   @override
   TickerFuture didPush() {
     _takeMeasurements(navigatorContext: hideableKey.currentContext!);
@@ -616,6 +640,7 @@ class _OpenContainerRoute<T> extends ModalRoute<T> {
       _currentAnimationStatus = status;
       switch (status) {
         case AnimationStatus.dismissed:
+          _interactivePopInProgress = false;
           _toggleHideable(hide: false);
           break;
         case AnimationStatus.completed:
@@ -741,6 +766,268 @@ class _OpenContainerRoute<T> extends ModalRoute<T> {
     Navigator.of(subtreeContext!).pop(returnValue);
   }
 
+  bool _isSupportedInteractivePopPointer(PointerDownEvent event) {
+    switch (event.kind) {
+      case PointerDeviceKind.touch:
+      case PointerDeviceKind.stylus:
+      case PointerDeviceKind.invertedStylus:
+      case PointerDeviceKind.unknown:
+        return true;
+      case PointerDeviceKind.mouse:
+      case PointerDeviceKind.trackpad:
+        return false;
+    }
+  }
+
+  Size? get _interactivePopSize {
+    final BuildContext? context = subtreeContext ?? hideableKey.currentContext;
+    final RenderObject? renderObject = context?.findRenderObject();
+    if (renderObject is RenderBox && renderObject.hasSize) {
+      return renderObject.size;
+    }
+    return _rectTween.end?.size;
+  }
+
+  bool _setInteractivePopGestureDirections(
+    Offset position,
+    Size size,
+  ) {
+    _interactivePopCanDragDown = position.dy <= size.height * _kInteractivePopTopDismissHeightFactor && (_interactivePopScrollExtentBefore ?? 0.0) <= 0.0;
+    _interactivePopCanDragRight = position.dx <= kMinInteractiveDimension;
+    _interactivePopCanDragLeft = size.width - position.dx <= kMinInteractiveDimension;
+    return _interactivePopCanDragDown || _interactivePopCanDragRight || _interactivePopCanDragLeft;
+  }
+
+  _InteractivePopGestureDirection? _getInteractivePopGestureDirection(Offset offset) {
+    final double horizontalDragDistance = offset.dx.abs();
+    final double verticalDragDistance = offset.dy.abs();
+    if (_interactivePopCanDragDown && offset.dy > 0.0 && verticalDragDistance >= horizontalDragDistance) {
+      return _InteractivePopGestureDirection.down;
+    }
+    if (_interactivePopCanDragRight && offset.dx > 0.0 && horizontalDragDistance > verticalDragDistance) {
+      return _InteractivePopGestureDirection.right;
+    }
+    if (_interactivePopCanDragLeft && offset.dx < 0.0 && horizontalDragDistance > verticalDragDistance) {
+      return _InteractivePopGestureDirection.left;
+    }
+    return null;
+  }
+
+  void _handleInteractivePopPointerDown(PointerDownEvent event) {
+    final AnimationController? controller = this.controller;
+    final Size? size = _interactivePopSize;
+    if (_interactivePopPointer != null || controller == null || !controller.isCompleted || size == null || !_isSupportedInteractivePopPointer(event)) {
+      return;
+    }
+
+    if (!_setInteractivePopGestureDirections(event.localPosition, size)) {
+      return;
+    }
+
+    _interactivePopPointer = event.pointer;
+    _interactivePopVelocityTracker = VelocityTracker.withKind(event.kind)..addPosition(event.timeStamp, event.localPosition);
+    _interactivePopDragOffset = Offset.zero;
+    _interactivePopStartValue = controller.value;
+  }
+
+  void _handleInteractivePopPointerMove(PointerMoveEvent event) {
+    if (event.pointer != _interactivePopPointer) {
+      return;
+    }
+
+    _interactivePopVelocityTracker?.addPosition(event.timeStamp, event.localPosition);
+    _interactivePopDragOffset += event.delta;
+
+    final _InteractivePopGestureDirection? direction = _interactivePopGestureDirection ?? _getInteractivePopGestureDirection(_interactivePopDragOffset);
+    final Size? size = _interactivePopSize;
+    final AnimationController? controller = this.controller;
+    if (size == null || controller == null) {
+      _resetInteractivePopTracking();
+      return;
+    }
+    if (direction == null) {
+      return;
+    }
+
+    final double dragDistance = _interactivePopDragDistance(direction, _interactivePopDragOffset);
+    final double crossAxisDistance = _interactivePopCrossAxisDistance(direction, _interactivePopDragOffset);
+    if (!_interactivePopInProgress) {
+      if (crossAxisDistance > kTouchSlop && crossAxisDistance > dragDistance) {
+        _resetInteractivePopTracking();
+        return;
+      }
+      if (dragDistance < kTouchSlop) {
+        return;
+      }
+      _interactivePopGestureDirection = direction;
+      _takeMeasurements(navigatorContext: subtreeContext ?? hideableKey.currentContext!);
+      _interactivePopInProgress = true;
+      controller.stop();
+    }
+
+    final double dragExtent = _interactivePopDragExtent(direction, size);
+    final double progress = (dragDistance / dragExtent * _kInteractivePopDragProgressMultiplier).clamp(0.0, 1.0);
+    controller.value = (_interactivePopStartValue - progress).clamp(_kInteractivePopMinControllerValue, 1.0);
+  }
+
+  void _handleInteractivePopPointerUp(PointerUpEvent event) {
+    if (event.pointer != _interactivePopPointer) {
+      return;
+    }
+
+    _interactivePopVelocityTracker?.addPosition(event.timeStamp, event.localPosition);
+    if (!_interactivePopInProgress) {
+      _resetInteractivePopTracking();
+      return;
+    }
+
+    final Velocity velocity = _interactivePopVelocityTracker?.getVelocity() ?? Velocity.zero;
+    _finishInteractivePop(velocity);
+  }
+
+  void _handleInteractivePopPointerCancel(PointerCancelEvent event) {
+    if (event.pointer != _interactivePopPointer) {
+      return;
+    }
+    _cancelInteractivePop();
+  }
+
+  double _interactivePopDragDistance(
+    _InteractivePopGestureDirection direction,
+    Offset offset,
+  ) {
+    switch (direction) {
+      case _InteractivePopGestureDirection.down:
+        return offset.dy.clamp(0.0, double.infinity);
+      case _InteractivePopGestureDirection.right:
+        return offset.dx.clamp(0.0, double.infinity);
+      case _InteractivePopGestureDirection.left:
+        return (-offset.dx).clamp(0.0, double.infinity);
+    }
+  }
+
+  double _interactivePopCrossAxisDistance(
+    _InteractivePopGestureDirection direction,
+    Offset offset,
+  ) {
+    switch (direction) {
+      case _InteractivePopGestureDirection.down:
+        return offset.dx.abs();
+      case _InteractivePopGestureDirection.right:
+      case _InteractivePopGestureDirection.left:
+        return offset.dy.abs();
+    }
+  }
+
+  double _interactivePopDragExtent(
+    _InteractivePopGestureDirection direction,
+    Size size,
+  ) {
+    switch (direction) {
+      case _InteractivePopGestureDirection.down:
+        return size.height;
+      case _InteractivePopGestureDirection.right:
+      case _InteractivePopGestureDirection.left:
+        return size.width;
+    }
+  }
+
+  double _interactivePopVelocityForDirection(Velocity velocity) {
+    switch (_interactivePopGestureDirection) {
+      case _InteractivePopGestureDirection.down:
+        return velocity.pixelsPerSecond.dy;
+      case _InteractivePopGestureDirection.right:
+        return velocity.pixelsPerSecond.dx;
+      case _InteractivePopGestureDirection.left:
+        return -velocity.pixelsPerSecond.dx;
+      case null:
+        return 0.0;
+    }
+  }
+
+  void _finishInteractivePop(Velocity velocity) {
+    final AnimationController? controller = this.controller;
+    if (controller == null) {
+      _resetInteractivePopTracking();
+      return;
+    }
+
+    final double progress = 1.0 - controller.value;
+    final double directionalVelocity = _interactivePopVelocityForDirection(velocity);
+    final bool shouldPop = directionalVelocity > _kInteractivePopMinFlingVelocity || (directionalVelocity >= -_kInteractivePopMinFlingVelocity && progress > _kInteractivePopDismissThreshold);
+
+    _resetInteractivePopTracking(keepAnimationInProgress: shouldPop);
+    if (shouldPop) {
+      closeContainer();
+    } else {
+      _animateInteractivePopCancel(controller);
+    }
+  }
+
+  void _cancelInteractivePop() {
+    final AnimationController? controller = this.controller;
+    _resetInteractivePopTracking();
+    if (controller != null && !controller.isCompleted) {
+      _animateInteractivePopCancel(controller);
+    }
+  }
+
+  void _animateInteractivePopCancel(AnimationController controller) {
+    final int duration = (transitionDuration.inMilliseconds * (1.0 - controller.value)).round();
+    controller.animateTo(
+      1.0,
+      duration: Duration(milliseconds: duration),
+      curve: Curves.fastOutSlowIn,
+    );
+  }
+
+  void _resetInteractivePopTracking({bool keepAnimationInProgress = false}) {
+    _interactivePopPointer = null;
+    _interactivePopGestureDirection = null;
+    _interactivePopVelocityTracker = null;
+    _interactivePopDragOffset = Offset.zero;
+    _interactivePopStartValue = 1.0;
+    _interactivePopCanDragDown = false;
+    _interactivePopCanDragRight = false;
+    _interactivePopCanDragLeft = false;
+    if (!keepAnimationInProgress) {
+      _interactivePopInProgress = false;
+    }
+  }
+
+  bool _handleScrollNotification(ScrollNotification notification) {
+    final ScrollMetrics metrics = notification.metrics;
+    if (metrics.axis == Axis.vertical) {
+      _interactivePopScrollExtentBefore = metrics.extentBefore;
+    }
+    return false;
+  }
+
+  bool _handleScrollMetricsNotification(ScrollMetricsNotification notification) {
+    final ScrollMetrics metrics = notification.metrics;
+    if (metrics.axis == Axis.vertical) {
+      _interactivePopScrollExtentBefore = metrics.extentBefore;
+    }
+    return false;
+  }
+
+  Widget _buildInteractivePopListener(Widget child) {
+    return NotificationListener<ScrollMetricsNotification>(
+      onNotification: _handleScrollMetricsNotification,
+      child: NotificationListener<ScrollNotification>(
+        onNotification: _handleScrollNotification,
+        child: Listener(
+          behavior: HitTestBehavior.translucent,
+          onPointerDown: _handleInteractivePopPointerDown,
+          onPointerMove: _handleInteractivePopPointerMove,
+          onPointerUp: _handleInteractivePopPointerUp,
+          onPointerCancel: _handleInteractivePopPointerCancel,
+          child: child,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget buildPage(
     BuildContext context,
@@ -753,53 +1040,64 @@ class _OpenContainerRoute<T> extends ModalRoute<T> {
         animation: animation,
         builder: (BuildContext context, Widget? child) {
           if (animation.isCompleted) {
-            return SizedBox.expand(
-              child: Material(
-                color: openColor,
-                elevation: openElevation,
-                shape: openShape,
-                child: Builder(
-                  key: _openBuilderKey,
-                  builder: (BuildContext context) {
-                    return openBuilder(context, closeContainer);
-                  },
+            return _buildInteractivePopListener(
+              SizedBox.expand(
+                child: Material(
+                  color: openColor,
+                  elevation: openElevation,
+                  shape: openShape,
+                  child: Builder(
+                    key: _openBuilderKey,
+                    builder: (BuildContext context) {
+                      return openBuilder(context, closeContainer);
+                    },
+                  ),
                 ),
               ),
             );
           }
 
-          final Animation<double> curvedAnimation = CurvedAnimation(
-            parent: animation,
-            curve: Curves.fastOutSlowIn,
-            reverseCurve: _transitionWasInterrupted ? null : Curves.fastOutSlowIn.flipped,
-          );
+          final Animation<double> curvedAnimation = _interactivePopInProgress
+              ? animation
+              : CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.fastOutSlowIn,
+                  reverseCurve: _transitionWasInterrupted ? null : Curves.fastOutSlowIn.flipped,
+                );
           TweenSequence<Color?>? colorTween;
           TweenSequence<double>? closedOpacityTween, openOpacityTween;
           Animatable<Color?>? scrimTween;
-          switch (animation.status) {
-            case AnimationStatus.dismissed:
-            case AnimationStatus.forward:
-              closedOpacityTween = _closedOpacityTween;
-              openOpacityTween = _openOpacityTween;
-              colorTween = _colorTween;
-              scrimTween = _scrimFadeInTween;
-              break;
-            case AnimationStatus.reverse:
-              if (_transitionWasInterrupted) {
+          if (_interactivePopInProgress) {
+            closedOpacityTween = _closedOpacityTween.flipped;
+            openOpacityTween = _openOpacityTween.flipped;
+            colorTween = _colorTween.flipped;
+            scrimTween = _scrimFadeOutTween;
+          } else {
+            switch (animation.status) {
+              case AnimationStatus.dismissed:
+              case AnimationStatus.forward:
                 closedOpacityTween = _closedOpacityTween;
                 openOpacityTween = _openOpacityTween;
                 colorTween = _colorTween;
                 scrimTween = _scrimFadeInTween;
                 break;
-              }
-              closedOpacityTween = _closedOpacityTween.flipped;
-              openOpacityTween = _openOpacityTween.flipped;
-              colorTween = _colorTween.flipped;
-              scrimTween = _scrimFadeOutTween;
-              break;
-            case AnimationStatus.completed:
-              assert(false); // Unreachable.
-              break;
+              case AnimationStatus.reverse:
+                if (_transitionWasInterrupted) {
+                  closedOpacityTween = _closedOpacityTween;
+                  openOpacityTween = _openOpacityTween;
+                  colorTween = _colorTween;
+                  scrimTween = _scrimFadeInTween;
+                  break;
+                }
+                closedOpacityTween = _closedOpacityTween.flipped;
+                openOpacityTween = _openOpacityTween.flipped;
+                colorTween = _colorTween.flipped;
+                scrimTween = _scrimFadeOutTween;
+                break;
+              case AnimationStatus.completed:
+                assert(false); // Unreachable.
+                break;
+            }
           }
           assert(colorTween != null);
           assert(closedOpacityTween != null);
@@ -807,67 +1105,69 @@ class _OpenContainerRoute<T> extends ModalRoute<T> {
           assert(scrimTween != null);
 
           final Rect rect = _rectTween.evaluate(curvedAnimation)!;
-          return SizedBox.expand(
-            child: Container(
-              color: scrimTween!.evaluate(curvedAnimation),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Transform.translate(
-                  offset: Offset(rect.left, rect.top),
-                  child: SizedBox(
-                    width: rect.width,
-                    height: rect.height,
-                    child: Material(
-                      clipBehavior: Clip.antiAlias,
-                      animationDuration: Duration.zero,
-                      color: colorTween!.evaluate(animation),
-                      shape: _shapeTween.evaluate(curvedAnimation),
-                      elevation: _elevationTween.evaluate(curvedAnimation),
-                      child: Stack(
-                        fit: StackFit.passthrough,
-                        children: <Widget>[
-                          // Closed child fading out.
-                          FittedBox(
-                            fit: BoxFit.fitWidth,
-                            alignment: Alignment.topLeft,
-                            child: SizedBox(
-                              width: _rectTween.begin!.width,
-                              height: _rectTween.begin!.height,
-                              child: (hideableKey.currentState?.isInTree ?? false)
-                                  ? null
-                                  : FadeTransition(
-                                      opacity: closedOpacityTween!.animate(animation),
-                                      child: Builder(
-                                        key: closedBuilderKey,
-                                        builder: (BuildContext context) {
-                                          // Use dummy "open container" callback
-                                          // since we are in the process of opening.
-                                          return closedBuilder(context, () {});
-                                        },
+          return _buildInteractivePopListener(
+            SizedBox.expand(
+              child: Container(
+                color: scrimTween!.evaluate(curvedAnimation),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Transform.translate(
+                    offset: Offset(rect.left, rect.top),
+                    child: SizedBox(
+                      width: rect.width,
+                      height: rect.height,
+                      child: Material(
+                        clipBehavior: Clip.antiAlias,
+                        animationDuration: Duration.zero,
+                        color: colorTween!.evaluate(animation),
+                        shape: _shapeTween.evaluate(curvedAnimation),
+                        elevation: _elevationTween.evaluate(curvedAnimation),
+                        child: Stack(
+                          fit: StackFit.passthrough,
+                          children: <Widget>[
+                            // Closed child fading out.
+                            FittedBox(
+                              fit: BoxFit.fitWidth,
+                              alignment: Alignment.topLeft,
+                              child: SizedBox(
+                                width: _rectTween.begin!.width,
+                                height: _rectTween.begin!.height,
+                                child: (hideableKey.currentState?.isInTree ?? false)
+                                    ? null
+                                    : FadeTransition(
+                                        opacity: closedOpacityTween!.animate(animation),
+                                        child: Builder(
+                                          key: closedBuilderKey,
+                                          builder: (BuildContext context) {
+                                            // Use dummy "open container" callback
+                                            // since we are in the process of opening.
+                                            return closedBuilder(context, () {});
+                                          },
+                                        ),
                                       ),
-                                    ),
+                              ),
                             ),
-                          ),
 
-                          // Open child fading in.
-                          FittedBox(
-                            fit: BoxFit.fitWidth,
-                            alignment: Alignment.topLeft,
-                            child: SizedBox(
-                              width: _rectTween.end!.width,
-                              height: _rectTween.end!.height,
-                              child: FadeTransition(
-                                opacity: openOpacityTween!.animate(animation),
-                                child: Builder(
-                                  key: _openBuilderKey,
-                                  builder: (BuildContext context) {
-                                    return openBuilder(context, closeContainer);
-                                  },
+                            // Open child fading in.
+                            FittedBox(
+                              fit: BoxFit.fitWidth,
+                              alignment: Alignment.topLeft,
+                              child: SizedBox(
+                                width: _rectTween.end!.width,
+                                height: _rectTween.end!.height,
+                                child: FadeTransition(
+                                  opacity: openOpacityTween!.animate(animation),
+                                  child: Builder(
+                                    key: _openBuilderKey,
+                                    builder: (BuildContext context) {
+                                      return openBuilder(context, closeContainer);
+                                    },
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
