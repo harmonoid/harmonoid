@@ -170,9 +170,7 @@ ImageProvider cover({
     },
   );
 
-  final result = AsyncFileImage.getFileImage(key);
-
-  final ImageProvider image = result ?? AsyncFileImage(key, getFile, getFallbackFile);
+  final image = AsyncFileImage(key, getFile, getFallbackFile);
 
   if (cacheWidth != null || cacheHeight != null) {
     return ResizeImage.resizeIfNeeded(cacheWidth, cacheHeight, image);

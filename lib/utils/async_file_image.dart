@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:io';
 import 'dart:ui' as ui;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:safe_local_storage/safe_local_storage.dart';
@@ -17,7 +18,7 @@ import 'package:synchronized/synchronized.dart';
 ///
 /// {@endtemplate}
 @immutable
-class AsyncFileImage extends ImageProvider<AsyncFileImage> {
+class AsyncFileImage extends ImageProvider<AsyncFileImageKey> {
   /// {@macro async_file_image}
   const AsyncFileImage(
     this.key,
@@ -34,60 +35,69 @@ class AsyncFileImage extends ImageProvider<AsyncFileImage> {
   final double scale = 1.0;
 
   @override
-  Future<AsyncFileImage> obtainKey(ImageConfiguration configuration) {
-    return SynchronousFuture<AsyncFileImage>(this);
+  Future<AsyncFileImageKey> obtainKey(ImageConfiguration configuration) {
+    final file = lookupFile(key);
+    if (file != null) {
+      return SynchronousFuture<AsyncFileImageKey>(_toCacheKey(file));
+    }
+    return _obtainFile().then<AsyncFileImageKey>(_toCacheKey);
   }
 
   @override
-  ImageStreamCompleter loadBuffer(AsyncFileImage key, DecoderBufferCallback decode) {
+  ImageStreamCompleter loadBuffer(AsyncFileImageKey key, DecoderBufferCallback decode) {
     return MultiFrameImageStreamCompleter(
       codec: _loadAsync(key, decode: decode),
       scale: key.scale,
-      debugLabel: this.key,
+      debugLabel: key.file.path,
     );
   }
 
   @override
   @protected
-  ImageStreamCompleter loadImage(AsyncFileImage key, ImageDecoderCallback decode) {
+  ImageStreamCompleter loadImage(AsyncFileImageKey key, ImageDecoderCallback decode) {
     return MultiFrameImageStreamCompleter(
       codec: _loadAsync(key, decode: decode),
       scale: key.scale,
-      debugLabel: this.key,
+      debugLabel: key.file.path,
     );
   }
 
-  Future<ui.Codec> _loadAsync(AsyncFileImage key, {required _SimpleDecoderCallback decode}) async {
-    assert(key == this);
+  Future<File> _obtainFile() async {
+    fileLocks.putIfAbsent(key, () => Lock());
 
-    fileLocks.putIfAbsent(key.key, () => Lock());
-
-    final instance = await fileLocks[key.key]!.synchronized(() async {
+    return fileLocks[key]!.synchronized(() async {
       // There's a chance that the file got resolved in another call, return that instead of attempting to resolve again.
-      final fileImage = getFileImage(key.key);
-      if (fileImage != null) fileImage.file;
-
-      final result = await _resolve(getFile());
-
-      if (result != null) {
-        fallbacks[key.key] ??= false;
-        fileImages[key.key] ??= FileImage(result, scale: scale);
-        return result;
-      } else {
-        final file = await getFallbackFile();
-        fallbacks[key.key] ??= true;
-        fileImages[key.key] ??= FileImage(file, scale: scale);
+      final file = lookupFile(key);
+      if (file != null) {
         return file;
       }
-    });
 
-    final lengthInBytes = await instance.length_();
-    if (lengthInBytes == 0) {
-      // The file may become available later.
-      PaintingBinding.instance.imageCache.evict(key);
-      throw StateError('$this.key is empty and cannot be loaded as an image.');
-    }
-    return decode(await ui.ImmutableBuffer.fromFilePath(instance.path));
+      final result = await _resolve(getFile());
+      final instance = result ?? await getFallbackFile();
+
+      final lengthInBytes = await instance.length_();
+      if (lengthInBytes == 0) {
+        // The file may become available later.
+        throw StateError('$key is empty and cannot be loaded as an image.');
+      }
+
+      files[key] = instance;
+      fallbacks[key] = result == null;
+      return instance;
+    });
+  }
+
+  AsyncFileImageKey _toCacheKey(File file) {
+    return AsyncFileImageKey(
+      key: key,
+      file: file,
+      scale: scale,
+      generation: generations[key] ?? 0,
+    );
+  }
+
+  Future<ui.Codec> _loadAsync(AsyncFileImageKey key, {required _SimpleDecoderCallback decode}) async {
+    return decode(await ui.ImmutableBuffer.fromFilePath(key.file.path));
   }
 
   Future<T?> _resolve<T>(FutureOr<T?> future) async {
@@ -100,24 +110,27 @@ class AsyncFileImage extends ImageProvider<AsyncFileImage> {
     }
   }
 
-  static final HashMap<String, bool> fallbacks = HashMap<String, bool>();
-
-  static final HashMap<String, FileImage> fileImages = HashMap<String, FileImage>();
+  static final HashMap<String, File> files = HashMap<String, File>();
 
   static final HashMap<String, Lock> fileLocks = HashMap<String, Lock>();
+
+  static final HashMap<String, bool> fallbacks = HashMap<String, bool>();
+
+  static final HashMap<String, int> generations = HashMap<String, int>();
 
   static final HashMap<String, int> attemptToResolveIfFallbackCounts = HashMap<String, int>();
 
   static final HashMap<String, DateTime> attemptToResolveIfFallbackTimestamps = HashMap<String, DateTime>();
 
-  static FileImage? getFileImage(String key) => fileImages[key];
+  static File? lookupFile(String key) => files[key];
 
   static bool isFallback(String key) => fallbacks[key] ?? false;
 
   static void clear() {
-    fallbacks.clear();
-    fileImages.clear();
+    files.clear();
     fileLocks.clear();
+    fallbacks.clear();
+    generations.clear();
     // DO NOT RESET THE COUNT; PREVENT ENDLESS ATTEMPTS.
     // attemptToResolveIfFallbackCounts.clear();
     attemptToResolveIfFallbackTimestamps.clear();
@@ -125,9 +138,10 @@ class AsyncFileImage extends ImageProvider<AsyncFileImage> {
   }
 
   static void reset(String key) {
-    fallbacks.remove(key);
-    fileImages.remove(key);
+    files.remove(key);
     fileLocks.remove(key);
+    fallbacks.remove(key);
+    generations[key] = (generations[key] ?? 0) + 1;
     // DO NOT RESET THE COUNT; PREVENT ENDLESS ATTEMPTS.
     // attemptToResolveIfFallbackCounts.remove(key);
     attemptToResolveIfFallbackTimestamps.remove(key);
@@ -146,14 +160,46 @@ class AsyncFileImage extends ImageProvider<AsyncFileImage> {
       attemptToResolveIfFallbackCounts[key] = attemptToResolveIfFallbackCounts[key]! + 1;
       attemptToResolveIfFallbackTimestamps[key] = DateTime.now();
 
-      if (await file() != null) {
-        // A file could be resolved, evict the incorrect cache.
-        fileImages.remove(key);
-        fallbacks.remove(key);
-        onResolve?.call();
+      try {
+        if (await file() != null) {
+          // A file could be resolved, evict the incorrect cache.
+          files.remove(key);
+          fallbacks.remove(key);
+          generations[key] = (generations[key] ?? 0) + 1;
+          onResolve?.call();
+        }
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
       }
     }
   }
 }
 
 typedef _SimpleDecoderCallback = Future<ui.Codec> Function(ui.ImmutableBuffer buffer);
+
+@immutable
+class AsyncFileImageKey {
+  const AsyncFileImageKey({
+    required this.key,
+    required this.file,
+    required this.scale,
+    required this.generation,
+  });
+
+  final String key;
+
+  final File file;
+
+  final double scale;
+
+  final int generation;
+
+  @override
+  bool operator ==(Object other) {
+    return other is AsyncFileImageKey && other.key == key && other.file.path == file.path && other.scale == scale && other.generation == generation;
+  }
+
+  @override
+  int get hashCode => Object.hash(key, file.path, scale, generation);
+}

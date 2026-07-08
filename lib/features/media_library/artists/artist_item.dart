@@ -241,6 +241,8 @@ class _ArtistItemState extends State<ArtistItem> {
                             tracks = await context.read<MediaLibrary>().tracksFromArtist(widget.artist);
                             albums = await context.read<MediaLibrary>().albumsFromArtist(widget.artist);
 
+                            await precacheImage(cover(item: widget.artist), context);
+
                             action();
                             context.read<NowPlayingMobileNotifier>().hideBottomNavigationBar();
                           },
