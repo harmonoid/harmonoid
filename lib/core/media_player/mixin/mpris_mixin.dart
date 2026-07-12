@@ -77,29 +77,72 @@ final class MprisMixin implements MediaPlayerMixin {
   @override
   Future<void> resetFlags() async {
     _flagPlayable = null;
+    _flagPlaybackStatus = null;
+    _flagLoop = null;
+    _flagRate = null;
+    _flagVolume = null;
+    _flagShuffle = null;
+    _flagPosition = null;
+    _flagCanGoPrevious = null;
+    _flagCanGoNext = null;
   }
 
   @override
   Future<void> notifyState(MediaPlayerState state) {
     return _lock.synchronized(() async {
       final current = _player.current;
-      _instance
-        ?..playbackStatus = switch ((state.completed, state.playing)) {
-          (true, _) => MPRISPlaybackStatus.stopped,
-          (false, true) => MPRISPlaybackStatus.playing,
-          (false, false) => MPRISPlaybackStatus.paused,
-        }
-        ..loopStatus = switch (state.loop) {
-          Loop.off => MPRISLoopStatus.none,
-          Loop.one => MPRISLoopStatus.track,
-          Loop.all => MPRISLoopStatus.playlist,
-        }
-        ..rate = state.rate
-        ..volume = state.volume
-        ..shuffle = state.shuffle
-        ..position = state.position
-        ..canGoPrevious = !state.isFirst
-        ..canGoNext = !state.isLast;
+
+      final playbackStatus = switch ((state.completed, state.playing)) {
+        (true, _) => MPRISPlaybackStatus.stopped,
+        (false, true) => MPRISPlaybackStatus.playing,
+        (false, false) => MPRISPlaybackStatus.paused,
+      };
+      if (_flagPlaybackStatus != playbackStatus) {
+        _flagPlaybackStatus = playbackStatus;
+        _instance?.playbackStatus = playbackStatus;
+      }
+
+      final loop = switch (state.loop) {
+        Loop.off => MPRISLoopStatus.none,
+        Loop.one => MPRISLoopStatus.track,
+        Loop.all => MPRISLoopStatus.playlist,
+      };
+      if (_flagLoop != loop) {
+        _flagLoop = loop;
+        _instance?.loopStatus = loop;
+      }
+
+      if (_flagRate != state.rate) {
+        _flagRate = state.rate;
+        _instance?.rate = state.rate;
+      }
+
+      if (_flagVolume != state.volume) {
+        _flagVolume = state.volume;
+        _instance?.volume = state.volume;
+      }
+
+      if (_flagShuffle != state.shuffle) {
+        _flagShuffle = state.shuffle;
+        _instance?.shuffle = state.shuffle;
+      }
+
+      if (_flagPosition == null || (state.position - _flagPosition!).abs() > const Duration(seconds: 1)) {
+        _flagPosition = state.position;
+        _instance?.position = state.position;
+      }
+
+      final canGoPrevious = !state.isFirst;
+      if (_flagCanGoPrevious != canGoPrevious) {
+        _flagCanGoPrevious = canGoPrevious;
+        _instance?.canGoPrevious = canGoPrevious;
+      }
+
+      final canGoNext = !state.isLast;
+      if (_flagCanGoNext != canGoNext) {
+        _flagCanGoNext = canGoNext;
+        _instance?.canGoNext = canGoNext;
+      }
 
       if (_flagPlayable != current && state.duration > Duration.zero) {
         _flagPlayable = current;
@@ -114,4 +157,12 @@ final class MprisMixin implements MediaPlayerMixin {
   final Lock _lock = Lock();
 
   Playable? _flagPlayable;
+  MPRISPlaybackStatus? _flagPlaybackStatus;
+  MPRISLoopStatus? _flagLoop;
+  double? _flagRate;
+  double? _flagVolume;
+  bool? _flagShuffle;
+  Duration? _flagPosition;
+  bool? _flagCanGoPrevious;
+  bool? _flagCanGoNext;
 }
