@@ -67,10 +67,25 @@ final class LastFmMixin implements MediaPlayerMixin {
 
       final current = _player.current;
 
-      // Prime/re-prime the current playable. The first-5s guard avoids switching
-      // mid-track, while the null guard lets resetFlags recover the same track.
-      if (_flagPlayable == null ||
-          (_flagPlayable != current && _flagDuration != state.duration && state.duration > Duration.zero && state.position > Duration.zero && state.position < const Duration(seconds: 5))) {
+      // Last 5s window: Reset playable.
+      final isLast5SWindow = state.duration - state.position < const Duration(seconds: 5);
+      if (isLast5SWindow) {
+        // Reset the previous flags.
+        // This allows scrobbling the same playable again (w/ Loop.one).
+        _flagPlayable = null;
+        _flagDuration = null;
+        _lastTimestamp = DateTime.now();
+        _lastUpdateNowPlaying = null;
+        _lastScrobbled = null;
+        // Allow scrobbling again when we escape this window.
+        return;
+      }
+
+      // First 5s window: Reset playable.
+      final isPlayableNotSet = _flagPlayable == null;
+      final isPlayableChangedInFirst5SWindow =
+          _flagPlayable != current && _flagDuration != state.duration && state.duration > Duration.zero && state.position > Duration.zero && state.position < const Duration(seconds: 5);
+      if (isPlayableNotSet || isPlayableChangedInFirst5SWindow) {
         _flagPlayable = current;
         _flagDuration = state.duration;
 
@@ -103,17 +118,6 @@ final class LastFmMixin implements MediaPlayerMixin {
             debugPrint(stacktrace.toString());
           }
         }
-      }
-
-      // Last 5s window: Reset playable.
-      if (state.duration - state.position < const Duration(seconds: 5)) {
-        // Reset the last timestamp, now playing playable & scrobbled playable.
-        // This case allows scrobbling same playable again (w/ Loop.one).
-        _flagPlayable = null;
-        _flagDuration = null;
-        _lastTimestamp = DateTime.now();
-        _lastUpdateNowPlaying = null;
-        _lastScrobbled = null;
       }
     });
   }
