@@ -144,8 +144,9 @@ final class MprisMixin implements MediaPlayerMixin {
         _instance?.canGoNext = canGoNext;
       }
 
-      if (_flagPlayable != current && state.duration > Duration.zero) {
+      if (_flagPlayable != current && _flagDuration != state.duration && state.duration > Duration.zero) {
         _flagPlayable = current;
+        _flagDuration = state.duration;
         _instance?.metadata = await current.toMPRISMetadata(state);
       }
     });
@@ -156,7 +157,6 @@ final class MprisMixin implements MediaPlayerMixin {
   MPRIS? _instance;
   final Lock _lock = Lock();
 
-  Playable? _flagPlayable;
   MPRISPlaybackStatus? _flagPlaybackStatus;
   MPRISLoopStatus? _flagLoop;
   double? _flagRate;
@@ -165,4 +165,6 @@ final class MprisMixin implements MediaPlayerMixin {
   Duration? _flagPosition;
   bool? _flagCanGoPrevious;
   bool? _flagCanGoNext;
+  Playable? _flagPlayable;
+  Duration? _flagDuration;
 }
