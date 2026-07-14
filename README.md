@@ -56,6 +56,8 @@
 - Material Design 3 & 2.
 - Light & dark themes.
 - Lyrics (LRC, tags & online).
+- Lyrics translations.
+- Notification lyrics.
 - Artist images.
 - Playlists.
 - Gapless playback.
@@ -68,7 +70,7 @@
 - Tag editor.
 - Last.fm integration.
 - Discord RPC integration.
-- mpv backend.
+- mpv/FFmpeg backend. Supports all file formats.
 - Multiple artist & genre support.
 - Fallback cover support. e.g. cover.jpg, Folder.jpg etc.
 - Small installer (≈ 35 MB) & low RAM usage (≈ 150 MB).
