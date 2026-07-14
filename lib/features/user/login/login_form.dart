@@ -27,6 +27,7 @@ class LoginForm extends StatelessWidget {
                   controller: notifier.emailController,
                   focusNode: notifier.emailFocusNode,
                   keyboardType: TextInputType.emailAddress,
+                  autofillHints: [AutofillHints.email],
                   textInputAction: TextInputAction.done,
                   enabled: !notifier.otpSent,
                   autofocus: true,
