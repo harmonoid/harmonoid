@@ -5,12 +5,13 @@ import 'package:media_library/media_library.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/track.dart';
-import 'package:harmonoid/localization/localization.dart';
-import 'package:harmonoid/mappers/track.dart';
-import 'package:harmonoid/features/media_library/utils/rendering.dart';
 import 'package:harmonoid/features/media_library/media_library_menus.dart';
 import 'package:harmonoid/features/media_library/state/media_library_scroll_view_builder_data_provider.dart';
+import 'package:harmonoid/features/media_library/tracks/models/track_view_type.dart';
+import 'package:harmonoid/features/media_library/utils/rendering.dart';
 import 'package:harmonoid/features/now_playing/utils/dimensions.dart';
+import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/mappers/track.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
@@ -65,6 +66,7 @@ class _TracksTableState extends State<TracksTable> {
     }
 
     return ListItemTable(
+      verticalScrollKey: const PageStorageKey(TrackViewType.list),
       headerBuilder: widget.headerBuilder,
       footerBuilder: _buildFooter,
       columns: columns,

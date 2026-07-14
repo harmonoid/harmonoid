@@ -1,8 +1,11 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:harmonoid/extensions/build_context.dart';
 import 'package:harmonoid/features/media_library/desktop/desktop_media_library_sort_button.dart';
+import 'package:harmonoid/features/media_library/tracks/models/track_view_type.dart';
+import 'package:harmonoid/features/media_library/tracks/state/tracks_notifier.dart';
 import 'package:harmonoid/routing/utils/constants.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 
@@ -23,7 +26,10 @@ class DesktopMediaLibraryFloatingSortButtonState extends State<DesktopMediaLibra
   Widget build(BuildContext context) {
     final path = context.location.split('/').last;
 
-    if (![kAlbumsPath, /* kTracksPath, */ kArtistsPath, kGenresPath].contains(path)) {
+    // TracksTable does not require floating sort button.
+    final showForTracks = path == kTracksPath && context.watch<TracksNotifier>().viewType == TrackViewType.grid;
+
+    if (![kAlbumsPath, kArtistsPath, kGenresPath].contains(path) && !showForTracks) {
       return const SizedBox.shrink();
     }
 

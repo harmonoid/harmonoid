@@ -6,6 +6,9 @@ import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/features/media_library/desktop/desktop_media_library_header.dart';
 import 'package:harmonoid/features/media_library/mobile/mobile_media_library_header.dart';
 import 'package:harmonoid/features/media_library/state/media_library_scroll_view_builder_data_provider.dart';
+import 'package:harmonoid/features/media_library/tracks/models/track_view_type.dart';
+import 'package:harmonoid/features/media_library/tracks/state/tracks_notifier.dart';
+import 'package:harmonoid/features/media_library/tracks/tracks_grid.dart';
 import 'package:harmonoid/features/media_library/tracks/tracks_table.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/debouncer.dart';
@@ -49,21 +52,27 @@ class TracksScreenState extends State<TracksScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      body: Consumer<MediaLibrary>(
-        builder: (context, mediaLibrary, _) {
+      body: Consumer2<MediaLibrary, TracksNotifier>(
+        builder: (context, mediaLibrary, tracksNotifier, _) {
           return KeyedSubtree(
-            key: ValueKey((mediaLibrary.albumSortType, mediaLibrary.albumSortAscending)),
-            child: TracksTable(
-              key: const PageStorageKey(TracksScreen),
-              tracks: mediaLibrary.tracks,
-              headerBuilder: _buildHeader,
-              desktopOnColumnResize: (widths) {
-                _desktopColumnWidthsDebouncer.run(() {
-                  Configuration.instance.set(desktopMediaLibraryTracksScreenColumnWidths: widths);
-                });
-              },
-              mobileDisplayLabel: true,
-            ),
+            key: ValueKey((mediaLibrary.trackSortType, mediaLibrary.trackSortAscending, mediaLibrary.tracks.length, tracksNotifier.viewType)),
+            child: switch (tracksNotifier.viewType) {
+              TrackViewType.list => TracksTable(
+                key: const PageStorageKey(TracksScreen),
+                tracks: mediaLibrary.tracks,
+                headerBuilder: _buildHeader,
+                desktopOnColumnResize: (widths) {
+                  _desktopColumnWidthsDebouncer.run(() {
+                    Configuration.instance.set(desktopMediaLibraryTracksScreenColumnWidths: widths);
+                  });
+                },
+                mobileDisplayLabel: true,
+              ),
+              TrackViewType.grid => TracksGrid(
+                key: const PageStorageKey(TracksScreen),
+                tracks: mediaLibrary.tracks,
+              ),
+            },
           );
         },
       ),

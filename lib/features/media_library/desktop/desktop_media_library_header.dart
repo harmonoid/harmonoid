@@ -4,8 +4,10 @@ import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/extensions/build_context.dart';
+import 'package:harmonoid/features/media_library/tracks/state/tracks_notifier.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/track.dart';
+import 'package:harmonoid/mappers/track_view_type.dart';
 import 'package:harmonoid/features/media_library/desktop/desktop_media_library_sort_button.dart';
 import 'package:harmonoid/routing/utils/constants.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -21,6 +23,7 @@ class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
   @override
   Widget build(BuildContext context) {
     final path = context.location.split('/').last;
+    final tracksNotifier = context.watch<TracksNotifier>();
 
     if (![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath, kFoldersPath].contains(path)) {
       return const SizedBox.shrink();
@@ -88,6 +91,18 @@ class DesktopMediaLibraryHeaderState extends State<DesktopMediaLibraryHeader> {
           ),
         ),
         const Spacer(),
+        // Show TrackViewType toggle button for TracksScreen.
+        if (path == kTracksPath) ...[
+          const SizedBox(width: 4.0),
+          IconButton(
+            onPressed: tracksNotifier.toggleViewType,
+            tooltip: tracksNotifier.viewType.toToggleLabel(),
+            icon: Icon(tracksNotifier.viewType.toToggleIcon()),
+            iconSize: 20.0,
+            color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
+          ),
+          const SizedBox(width: 4.0),
+        ],
         const DesktopMediaLibrarySortButton(floating: false),
         SizedBox(width: margin),
       ],

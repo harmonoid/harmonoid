@@ -6,7 +6,9 @@ import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/extensions/build_context.dart';
+import 'package:harmonoid/features/media_library/tracks/state/tracks_notifier.dart';
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/mappers/track_view_type.dart';
 import 'package:harmonoid/routing/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
@@ -16,11 +18,20 @@ class MobileMediaLibraryGridSpanButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final path = context.location.split('/').last;
-    if (![kAlbumsPath, kArtistsPath, kGenresPath].contains(path)) {
+    if (![kAlbumsPath, kTracksPath, kArtistsPath, kGenresPath].contains(path)) {
       return const SizedBox.shrink();
     }
+    // Show TrackViewType toggle button for TracksScreen.
+    if (path == kTracksPath) {
+      final tracksNotifier = context.watch<TracksNotifier>();
+      return IconButton(
+        icon: Icon(tracksNotifier.viewType.toToggleIcon()),
+        tooltip: tracksNotifier.viewType.toToggleLabel(),
+        onPressed: tracksNotifier.toggleViewType,
+      );
+    }
     return IconButton(
-      icon: const Icon(Icons.view_list_outlined),
+      icon: const Icon(Icons.list),
       onPressed: () async {
         final String title;
         final int groupValue;

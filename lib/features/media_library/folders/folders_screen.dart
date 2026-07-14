@@ -121,7 +121,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
                 switch ((isDesktop, fileExplorerNotifier.viewType)) {
                   (true, FileExplorerViewType.list) => [track.toArtistsTappableText(context), track.toAlbumTappableText(context), track.toGenresTappableText(context), track.toYearTappableText()],
                   (false, FileExplorerViewType.list) => [track.toSubtitleTappableText()],
-                  (_, FileExplorerViewType.grid) => [track.toFileExplorerGridSubtitle0TappableText(context), track.toFileExplorerGridSubtitle1TappableText(context)],
+                  (_, FileExplorerViewType.grid) => [track.toGridSubtitle0TappableText(context), track.toGridSubtitle1TappableText(context)],
                 },
           );
         },

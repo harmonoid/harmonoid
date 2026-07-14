@@ -1,3 +1,4 @@
+import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:media_library/media_library.dart';
 
@@ -52,9 +53,9 @@ class MediaLibraryScrollViewBuilderDataProvider {
   }
 
   ScrollViewBuilderData get track {
-    const span = 1;
-    const itemWidth = double.infinity;
-    final itemHeight = linearTileHeight;
+    const span = null;
+    const itemWidth = SelectableGridTile.kWidth;
+    const itemHeight = SelectableGridTile.kHeight;
     final TextStyle labelTextStyle;
     switch (Configuration.instance.mediaLibraryTrackSortType) {
       case TrackSortType.title:

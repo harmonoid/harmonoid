@@ -51,6 +51,7 @@ class ConfigurationBase {
   bool get mediaLibraryRefreshUponStart => _mediaLibraryRefreshUponStart!;
   bool get mediaLibraryTrackSortAscending => _mediaLibraryTrackSortAscending!;
   TrackSortType get mediaLibraryTrackSortType => _mediaLibraryTrackSortType!;
+  TrackViewType get mediaLibraryTrackViewType => _mediaLibraryTrackViewType!;
   Set<MediaLibraryTab> get mediaLibraryVisibleTabs => _mediaLibraryVisibleTabs!;
   PlaybackState get mediaPlayerPlaybackState => _mediaPlayerPlaybackState!;
   String get metaInstallDate => _metaInstallDate!;
@@ -116,6 +117,7 @@ class ConfigurationBase {
     bool? mediaLibraryRefreshUponStart,
     bool? mediaLibraryTrackSortAscending,
     TrackSortType? mediaLibraryTrackSortType,
+    TrackViewType? mediaLibraryTrackViewType,
     Set<MediaLibraryTab>? mediaLibraryVisibleTabs,
     PlaybackState? mediaPlayerPlaybackState,
     String? metaInstallDate,
@@ -297,6 +299,10 @@ class ConfigurationBase {
       _mediaLibraryTrackSortType = mediaLibraryTrackSortType;
       await db.setValue(kKeyMediaLibraryTrackSortType, kTypeInteger, integerValue: mediaLibraryTrackSortType.index);
     }
+    if (mediaLibraryTrackViewType != null) {
+      _mediaLibraryTrackViewType = mediaLibraryTrackViewType;
+      await db.setValue(kKeyMediaLibraryTrackViewType, kTypeInteger, integerValue: mediaLibraryTrackViewType.index);
+    }
     if (mediaLibraryVisibleTabs != null) {
       _mediaLibraryVisibleTabs = mediaLibraryVisibleTabs;
       await db.setValue(kKeyMediaLibraryVisibleTabs, kTypeJson, jsonValue: mediaLibraryVisibleTabs.toJson());
@@ -436,6 +442,7 @@ class ConfigurationBase {
       /* Boolean */ kKeyMediaLibraryRefreshUponStart: false,
       /* Boolean */ kKeyMediaLibraryTrackSortAscending: true,
       /* Integer */ kKeyMediaLibraryTrackSortType: TrackSortType.title.index,
+      /* Integer */ kKeyMediaLibraryTrackViewType: TrackViewType.list.index,
       /* Json    */ kKeyMediaLibraryVisibleTabs: [MediaLibraryTab.albums.index, MediaLibraryTab.tracks.index, MediaLibraryTab.artists.index, MediaLibraryTab.folders.index, MediaLibraryTab.playlists.index],
       /* Json    */ kKeyMediaPlayerPlaybackState: MediaPlayerState.defaults().toPlaybackState(),
       /* String  */ kKeyMetaInstallDate: DateTime.now().toIso8601String(),
@@ -502,6 +509,7 @@ class ConfigurationBase {
   bool? _mediaLibraryRefreshUponStart;
   bool? _mediaLibraryTrackSortAscending;
   TrackSortType? _mediaLibraryTrackSortType;
+  TrackViewType? _mediaLibraryTrackViewType;
   Set<MediaLibraryTab>? _mediaLibraryVisibleTabs;
   PlaybackState? _mediaPlayerPlaybackState;
   String? _metaInstallDate;
@@ -569,6 +577,7 @@ const kKeyMediaLibraryPath = 'MEDIA_LIBRARY_PATH';
 const kKeyMediaLibraryRefreshUponStart = 'MEDIA_LIBRARY_REFRESH_UPON_START';
 const kKeyMediaLibraryTrackSortAscending = 'MEDIA_LIBRARY_TRACK_SORT_ASCENDING';
 const kKeyMediaLibraryTrackSortType = 'MEDIA_LIBRARY_TRACK_SORT_TYPE';
+const kKeyMediaLibraryTrackViewType = 'MEDIA_LIBRARY_TRACK_VIEW_TYPE';
 const kKeyMediaLibraryVisibleTabs = 'MEDIA_LIBRARY_VISIBLE_TABS';
 const kKeyMediaPlayerPlaybackState = 'MEDIA_PLAYER_PLAYBACK_STATE';
 const kKeyMetaInstallDate = 'META_INSTALL_DATE';

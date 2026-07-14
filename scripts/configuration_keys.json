@@ -38,6 +38,7 @@
   {"key": "MEDIA_LIBRARY_REFRESH_UPON_START", "serializedType": "Boolean", "dartType": "bool", "default": "false"},
   {"key": "MEDIA_LIBRARY_TRACK_SORT_ASCENDING", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
   {"key": "MEDIA_LIBRARY_TRACK_SORT_TYPE", "serializedType": "Integer", "dartType": "TrackSortType", "default": "TrackSortType.title.index"},
+  {"key": "MEDIA_LIBRARY_TRACK_VIEW_TYPE", "serializedType": "Integer", "dartType": "TrackViewType", "default": "TrackViewType.list.index"},
   {"key": "MEDIA_LIBRARY_VISIBLE_TABS", "serializedType": "Json", "dartType": "Set<MediaLibraryTab>", "default": "[MediaLibraryTab.albums.index, MediaLibraryTab.tracks.index, MediaLibraryTab.artists.index, MediaLibraryTab.folders.index, MediaLibraryTab.playlists.index]"},
   {"key": "MEDIA_PLAYER_PLAYBACK_STATE", "serializedType": "Json", "dartType": "PlaybackState", "default": "MediaPlayerState.defaults().toPlaybackState()"},
   {"key": "META_INSTALL_DATE", "serializedType": "String", "dartType": "String", "default": "DateTime.now().toIso8601String()"},

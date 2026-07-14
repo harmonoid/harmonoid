@@ -19,6 +19,7 @@ import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/media_player_state.dart';
 import 'package:harmonoid/localization/models/language.dart';
 import 'package:harmonoid/features/media_library/models/media_library_tab.dart';
+import 'package:harmonoid/features/media_library/tracks/models/track_view_type.dart';
 import 'package:harmonoid/core/media_player/models/media_player_state.dart';
 import 'package:harmonoid/core/media_player/models/playback_state.dart';
 import 'package:harmonoid/routing/utils/constants.dart';
@@ -126,6 +127,7 @@ class Configuration extends ConfigurationBase {
     _mediaLibraryRefreshUponStart = await read<bool, bool>(kKeyMediaLibraryRefreshUponStart, defaults);
     _mediaLibraryTrackSortAscending = await read<bool, bool>(kKeyMediaLibraryTrackSortAscending, defaults);
     _mediaLibraryTrackSortType = await read<int, TrackSortType>(kKeyMediaLibraryTrackSortType, defaults, (value) => TrackSortType.values[value]);
+    _mediaLibraryTrackViewType = await read<int, TrackViewType>(kKeyMediaLibraryTrackViewType, defaults, (value) => TrackViewType.values[value]);
     _mediaLibraryVisibleTabs = await read<dynamic, Set<MediaLibraryTab>>(kKeyMediaLibraryVisibleTabs, defaults, (value) => value.map<MediaLibraryTab>((e) => MediaLibraryTab.values[e]).toSet());
     _mediaPlayerPlaybackState = await read<dynamic, PlaybackState>(kKeyMediaPlayerPlaybackState, defaults, (value) => PlaybackState.fromJson(value));
     _metaInstallDate = await read<String, String>(kKeyMetaInstallDate, defaults);

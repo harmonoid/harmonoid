@@ -72,8 +72,8 @@ extension TrackMappers on Track {
   /// Converts to year [TappableText].
   TappableText toYearTappableText() => TappableText(text: [TappableTextData(text: year == 0 ? kDefaultYear : year.toString())]);
 
-  /// Converts to [FileExplorer] grid subtitle 0 [TappableText].
-  TappableText toFileExplorerGridSubtitle0TappableText(BuildContext context) => TappableText(
+  /// Converts to grid subtitle 0 [TappableText].
+  TappableText toGridSubtitle0TappableText(BuildContext context) => TappableText(
     text: artists.map(
       (e) => TappableTextData(
         text: e.nullIfBlank() ?? kDefaultArtist,
@@ -82,8 +82,8 @@ extension TrackMappers on Track {
     ),
   );
 
-  /// Converts to [FileExplorer] grid subtitle 1 [TappableText].
-  TappableText toFileExplorerGridSubtitle1TappableText(BuildContext context) => TappableText(
+  /// Converts to grid subtitle 1 [TappableText].
+  TappableText toGridSubtitle1TappableText(BuildContext context) => TappableText(
     text: [
       if (album.isNotEmpty)
         TappableTextData(

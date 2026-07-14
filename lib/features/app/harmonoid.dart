@@ -24,6 +24,7 @@ import 'package:harmonoid/state/remote_config/remote_config_provider.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
 import 'package:harmonoid/features/media_library/artists/state/artist_image_notifier.dart';
 import 'package:harmonoid/features/media_library/folders/state/file_explorer_notifier.dart';
+import 'package:harmonoid/features/media_library/tracks/state/tracks_notifier.dart';
 import 'package:harmonoid/features/media_library/utils/rendering.dart';
 import 'package:harmonoid/features/media_library/media_library_inaccessible_directories_screen.dart';
 import 'package:harmonoid/features/media_library/mobile/mobile_media_library_search_bar.dart';
@@ -157,6 +158,7 @@ class HarmonoidAppState extends State<HarmonoidApp> with WidgetsBindingObserver 
         ),
         ChangeNotifierProvider(create: (_) => ArtistImageNotifier()),
         ChangeNotifierProvider(create: (_) => FileExplorerNotifier()),
+        ChangeNotifierProvider(create: (_) => TracksNotifier()),
       ],
       builder: (context, _) => Consumer2<ThemeNotifier, Localization>(
         builder: (context, themeNotifier, localization, _) => AdaptiveLayoutsLocalizations(
