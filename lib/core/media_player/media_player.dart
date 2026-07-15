@@ -252,7 +252,19 @@ final class MediaPlayer extends ChangeNotifier {
       return;
     }
     final platform = _player.platform as dynamic;
+
+    // Only using --ao=wasapi with --audio-exclusive=yes
+    // https://github.com/harmonoid/harmonoid/issues/644
+
+    if (Platform.isWindows && exclusiveAudio) {
+      await platform.setProperty('ao', 'wasapi');
+    }
+
     await platform.setProperty('audio-exclusive', exclusiveAudio ? 'yes' : 'no');
+
+    if (Platform.isWindows && !exclusiveAudio) {
+      await platform.setProperty('ao', '');
+    }
     state = state.copyWith(exclusiveAudio: exclusiveAudio);
   }
 
@@ -421,10 +433,8 @@ final class MediaPlayer extends ChangeNotifier {
     if (Platform.isMacOS) {
       await platform.setProperty('ao', 'coreaudio');
     }
-    if (Platform.isWindows) {
-      await platform.setProperty('ao', 'wasapi');
-    }
     if (!Platform.isIOS) {
+      // I think I added this to make crossfade work on macOS. Remove if it works well without this.
       // Does not work with --ao=audiounit.
       await platform.setProperty('audio-stream-silence', 'yes');
     }
