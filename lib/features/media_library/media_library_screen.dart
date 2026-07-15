@@ -45,13 +45,13 @@ class MediaLibraryScreen extends StatefulWidget {
 }
 
 class MediaLibraryScreenState extends State<MediaLibraryScreen> {
-  static final FocusNode desktopQueryTextFieldFocusNode = FocusNode();
+  static final FocusNode desktopSearchQueryTextFieldFocusNode = FocusNode();
 
   late final AnimationDuration? _duration = Theme.of(context).extension<AnimationDuration>();
 
-  final ValueNotifier<bool> _desktopMediaLibrarySortButtonFloatingNotifier = ValueNotifier(false);
   final ValueNotifier<bool> _desktopAppBarElevatedNotifier = ValueNotifier<bool>(false);
-  final TextEditingController _desktopSearchTextEditingController = TextEditingController();
+  final TextEditingController _desktopSearchQueryTextEditingController = TextEditingController();
+  final ValueNotifier<bool> _desktopMediaLibrarySortButtonFloatingNotifier = ValueNotifier(false);
   final ValueNotifier<double> _mobileMediaLibrarySearchBarOffsetNotifier = ValueNotifier<double>(0.0);
   final ValueNotifier<double> _mobileMediaLibraryRefreshButtonOffsetNotifier = ValueNotifier<double>(0.0);
 
@@ -80,7 +80,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
   void dispose() {
     _desktopMediaLibrarySortButtonFloatingNotifier.dispose();
     _desktopAppBarElevatedNotifier.dispose();
-    _desktopSearchTextEditingController.dispose();
+    _desktopSearchQueryTextEditingController.dispose();
     _mobileMediaLibrarySearchBarOffsetNotifier.dispose();
     _mobileMediaLibraryRefreshButtonOffsetNotifier.dispose();
     super.dispose();
@@ -104,13 +104,9 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
               body: Stack(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(
-                      top: captionHeight + kDesktopAppBarHeight,
-                    ),
+                    padding: EdgeInsets.only(top: captionHeight + kDesktopAppBarHeight),
                     child: mediaLibrary.tracks.isEmpty
-                        ? const Center(
-                            child: MediaLibraryNoItemsBanner(),
-                          )
+                        ? const Center(child: MediaLibraryNoItemsBanner())
                         : NotificationListener<ScrollMetricsNotification>(
                             // https://github.com/flutter/flutter/issues/70504#issuecomment-1170609808
                             onNotification: (notification) {
@@ -123,9 +119,7 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                             child: widget.child,
                           ),
                   ),
-                  DesktopMediaLibraryFloatingSortButton(
-                    floatingNotifier: _desktopMediaLibrarySortButtonFloatingNotifier,
-                  ),
+                  DesktopMediaLibraryFloatingSortButton(floatingNotifier: _desktopMediaLibrarySortButtonFloatingNotifier),
                   const Positioned(
                     left: 16.0,
                     bottom: 16.0,
@@ -244,12 +238,12 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                     height: 40.0,
                                     width: 280.0,
                                     child: DefaultTextFormField(
-                                      focusNode: desktopQueryTextFieldFocusNode,
-                                      controller: _desktopSearchTextEditingController,
+                                      focusNode: desktopSearchQueryTextFieldFocusNode,
+                                      controller: _desktopSearchQueryTextEditingController,
                                       onFieldSubmitted: (value) async {
                                         context.push(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: value}).toString());
                                         await Future.delayed(MaterialRoute.animationDuration?.medium ?? const Duration(milliseconds: 300));
-                                        desktopQueryTextFieldFocusNode.requestFocus();
+                                        desktopSearchQueryTextFieldFocusNode.requestFocus();
                                       },
                                       style: Theme.of(context).textTheme.bodyMedium,
                                       textAlignVertical: TextAlignVertical.center,
@@ -258,9 +252,9 @@ class MediaLibraryScreenState extends State<MediaLibraryScreen> {
                                         hintText: Localization.instance.SEARCH_BANNER_SUBTITLE,
                                         suffixIcon: GestureDetector(
                                           onTap: () async {
-                                            context.push(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: _desktopSearchTextEditingController.text}).toString());
+                                            context.push(Uri(path: '/$kMediaLibraryPath/$kSearchPath', queryParameters: {kSearchArgQuery: _desktopSearchQueryTextEditingController.text}).toString());
                                             await Future.delayed(MaterialRoute.animationDuration?.medium ?? const Duration(milliseconds: 300));
-                                            desktopQueryTextFieldFocusNode.requestFocus();
+                                            desktopSearchQueryTextFieldFocusNode.requestFocus();
                                           },
                                           child: Transform.rotate(
                                             angle: pi / 2,

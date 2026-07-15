@@ -37,7 +37,7 @@ class MediaLibraryShellRouteState extends State<MediaLibraryShellRoute> with Tic
     const duration = MaterialRoute.kDefaultTransitionDuration;
     // Hidden by default
     _mobileNowPlayingBarController = AnimationController(vsync: this, duration: duration, reverseDuration: duration)..value = 1.0;
-    // Hidden by default
+    // Visible by default
     _mobileBottomNavigationBarController = AnimationController(vsync: this, duration: duration, reverseDuration: duration)..value = 1.0;
     WidgetsBinding.instance.addPostFrameCallback((_) => context.read<NowPlayingMobileNotifier>().setMediaLibraryShellRouteStateRef(this));
   }
@@ -74,6 +74,7 @@ class MediaLibraryShellRouteState extends State<MediaLibraryShellRoute> with Tic
     if (_mobileBottomNavigationBarFlag) return;
     _mobileBottomNavigationBarFlag = true;
     Future.delayed(MaterialRoute.kDefaultTransitionDuration, () {
+      // Hide it just beneath the navigation bar (bottom padding).
       final value = MediaQuery.paddingOf(context).bottom / _mobileBottomNavigationBarHeight;
       _mobileBottomNavigationBarController.animateTo(value, curve: _kCurve);
     });
