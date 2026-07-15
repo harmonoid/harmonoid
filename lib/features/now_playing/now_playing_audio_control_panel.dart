@@ -272,13 +272,7 @@ class NowPlayingAudioControlPanelState extends State<NowPlayingAudioControlPanel
                     return '';
                   },
                   value: mediaPlayer.state.crossfadeDuration.inSeconds.clamp(MediaPlayer.kCrossfadeMinDuration.inSeconds.toDouble(), MediaPlayer.kCrossfadeMaxDuration.inSeconds.toDouble()).toDouble(),
-                  onChanged: (value) => mediaPlayer.setCrossfadeDuration(Duration(seconds: value.round())),
-                  onScrolledUp: () => mediaPlayer.setCrossfadeDuration(
-                    (mediaPlayer.state.crossfadeDuration + const Duration(seconds: 1)).clamp(MediaPlayer.kCrossfadeMinDuration, MediaPlayer.kCrossfadeMaxDuration),
-                  ),
-                  onScrolledDown: () => mediaPlayer.setCrossfadeDuration(
-                    (mediaPlayer.state.crossfadeDuration - const Duration(seconds: 1)).clamp(MediaPlayer.kCrossfadeMinDuration, MediaPlayer.kCrossfadeMaxDuration),
-                  ),
+                  onChangeEnd: (value) => mediaPlayer.setCrossfadeDuration(Duration(seconds: value.round())),
                 ),
               ),
               const SizedBox(height: 12.0),

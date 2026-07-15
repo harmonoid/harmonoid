@@ -428,7 +428,7 @@ class ShowAllButton extends StatelessWidget {
 
 // --------------------------------------------------
 
-class ScrollableSlider extends StatelessWidget {
+class ScrollableSlider extends StatefulWidget {
   final double min;
   final double max;
   final double? value;
@@ -437,6 +437,7 @@ class ScrollableSlider extends StatelessWidget {
   final double? stepSize;
   final bool showLabels;
   final void Function(dynamic)? onChanged;
+  final void Function(dynamic)? onChangeEnd;
   final VoidCallback? onScrolledUp;
   final VoidCallback? onScrolledDown;
   final LabelFormatterCallback? labelFormatterCallback;
@@ -450,29 +451,59 @@ class ScrollableSlider extends StatelessWidget {
     this.interval,
     this.stepSize,
     this.showLabels = false,
-    required this.onChanged,
+    this.onChanged,
+    this.onChangeEnd,
     this.onScrolledUp,
     this.onScrolledDown,
     this.labelFormatterCallback,
   }) : max = min >= max ? 4294967296.0 /* 2^32 */ : max;
 
   @override
+  State<ScrollableSlider> createState() => ScrollableSliderState();
+}
+
+class ScrollableSliderState extends State<ScrollableSlider> {
+  double? _value;
+  List<double>? _values;
+
+  bool get _usesLocalValue => widget.onChanged == null && widget.onChangeEnd != null;
+
+  @override
+  void initState() {
+    super.initState();
+    _syncLocalValues();
+  }
+
+  @override
+  void didUpdateWidget(covariant ScrollableSlider oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value || !const ListEquality().equals(oldWidget.values, widget.values)) {
+      _syncLocalValues();
+    }
+  }
+
+  void _syncLocalValues() {
+    _value = widget.value;
+    _values = widget.values == null ? null : List<double>.of(widget.values!);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      cursor: onChanged == null ? SystemMouseCursors.forbidden : SystemMouseCursors.click,
+      cursor: widget.onChanged == null && widget.onChangeEnd == null ? SystemMouseCursors.forbidden : SystemMouseCursors.click,
       child: Listener(
         onPointerSignal: (event) {
           if (event is PointerScrollEvent) {
             if (event.scrollDelta.dy < 0) {
-              onScrolledUp?.call();
+              widget.onScrolledUp?.call();
             }
             if (event.scrollDelta.dy > 0) {
-              onScrolledDown?.call();
+              widget.onScrolledDown?.call();
             }
           }
         },
         child: () {
-          if (value != null) {
+          if (widget.value != null) {
             return SfSliderTheme(
               data: SfSliderThemeData(
                 activeTrackHeight: 4.0,
@@ -487,19 +518,27 @@ class ScrollableSlider extends StatelessWidget {
                 disabledActiveTrackColor: SliderTheme.of(context).disabledActiveTrackColor,
               ),
               child: SfSlider(
-                min: min,
-                max: max,
-                value: value,
-                interval: interval,
-                stepSize: stepSize,
-                showLabels: showLabels,
-                labelFormatterCallback: labelFormatterCallback,
+                min: widget.min,
+                max: widget.max,
+                value: _usesLocalValue ? _value : widget.value,
+                interval: widget.interval,
+                stepSize: widget.stepSize,
+                showLabels: widget.showLabels,
+                labelFormatterCallback: widget.labelFormatterCallback,
                 edgeLabelPlacement: EdgeLabelPlacement.inside,
-                onChanged: onChanged == null ? null : (result) => onChanged?.call(result),
+                onChanged: widget.onChanged == null && widget.onChangeEnd == null
+                    ? null
+                    : (result) {
+                        if (_usesLocalValue) {
+                          setState(() => _value = (result as num).toDouble());
+                        }
+                        widget.onChanged?.call(result);
+                      },
+                onChangeEnd: widget.onChangeEnd == null ? null : (result) => widget.onChangeEnd?.call(result),
               ),
             );
           }
-          if (values != null) {
+          if (widget.values != null) {
             return SfRangeSliderTheme(
               data: SfRangeSliderThemeData(
                 activeTrackHeight: 4.0,
@@ -514,15 +553,30 @@ class ScrollableSlider extends StatelessWidget {
                 disabledActiveTrackColor: SliderTheme.of(context).disabledActiveTrackColor,
               ),
               child: SfRangeSlider(
-                min: min,
-                max: max,
-                values: SfRangeValues(values![0], values![1]),
-                interval: interval,
-                stepSize: stepSize,
-                showLabels: showLabels,
-                labelFormatterCallback: labelFormatterCallback,
+                min: widget.min,
+                max: widget.max,
+                values: SfRangeValues(
+                  _usesLocalValue ? _values![0] : widget.values![0],
+                  _usesLocalValue ? _values![1] : widget.values![1],
+                ),
+                interval: widget.interval,
+                stepSize: widget.stepSize,
+                showLabels: widget.showLabels,
+                labelFormatterCallback: widget.labelFormatterCallback,
                 edgeLabelPlacement: EdgeLabelPlacement.inside,
-                onChanged: onChanged == null ? null : (result) => onChanged?.call([result.start, result.end]),
+                onChanged: widget.onChanged == null && widget.onChangeEnd == null
+                    ? null
+                    : (result) {
+                        final values = <double>[
+                          (result.start as num).toDouble(),
+                          (result.end as num).toDouble(),
+                        ];
+                        if (_usesLocalValue) {
+                          setState(() => _values = values);
+                        }
+                        widget.onChanged?.call(values);
+                      },
+                onChangeEnd: widget.onChangeEnd == null ? null : (result) => widget.onChangeEnd?.call([result.start, result.end]),
               ),
             );
           }

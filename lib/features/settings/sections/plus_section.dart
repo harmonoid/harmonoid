@@ -7,7 +7,6 @@ import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/features/settings/settings_section.dart';
 import 'package:harmonoid/utils/async_file_image.dart';
-import 'package:harmonoid/utils/debouncer.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
 class PlusSection extends StatefulWidget {
@@ -18,40 +17,11 @@ class PlusSection extends StatefulWidget {
 }
 
 class _PlusSectionState extends State<PlusSection> {
-  final Debouncer kCrossfadeDurationDebouncer = Debouncer(timeout: const Duration(seconds: 3));
-
-  Duration? _pendingCrossfadeDuration;
-
-  Duration _getCrossfadeDuration(MediaPlayer mediaPlayer) {
-    return _pendingCrossfadeDuration ?? mediaPlayer.state.crossfadeDuration;
-  }
-
-  void _setCrossfadeDuration(
-    MediaPlayer mediaPlayer,
-    Duration duration, {
-    bool debounce = false,
-  }) {
-    if (debounce) {
-      setState(() => _pendingCrossfadeDuration = duration);
-      kCrossfadeDurationDebouncer.run(() async {
-        await mediaPlayer.setCrossfadeDuration(duration);
-        if (mounted && _pendingCrossfadeDuration == duration) {
-          setState(() => _pendingCrossfadeDuration = null);
-        }
-      });
-      return;
-    }
-
-    kCrossfadeDurationDebouncer.cancel();
-    setState(() => _pendingCrossfadeDuration = null);
-    mediaPlayer.setCrossfadeDuration(duration);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<MediaPlayer>(
       builder: (context, mediaPlayer, _) {
-        final crossfadeDuration = _getCrossfadeDuration(mediaPlayer);
+        final crossfadeDuration = mediaPlayer.state.crossfadeDuration;
         return SettingsSection(
           title: 'Plus⁺',
           subtitle: Localization.instance.SETTINGS_SECTION_PLUS_SUBTITLE,
@@ -102,21 +72,17 @@ class _PlusSectionState extends State<PlusSection> {
                   return '';
                 },
                 value: crossfadeDuration.inSeconds.clamp(2.0, 30.0).toDouble(),
-                onChanged: (value) => _setCrossfadeDuration(
-                  mediaPlayer,
-                  Duration(seconds: value.round()),
-                  debounce: true,
-                ),
+                onChangeEnd: (value) => mediaPlayer.setCrossfadeDuration(Duration(seconds: value.round())),
               ),
             ),
             const SizedBox(height: 8.0),
             ListItem(
               trailing: Switch(
                 value: crossfadeDuration != Duration.zero,
-                onChanged: (value) => _setCrossfadeDuration(mediaPlayer, value ? const Duration(seconds: 5) : Duration.zero),
+                onChanged: (value) => mediaPlayer.setCrossfadeDuration(value ? const Duration(seconds: 5) : Duration.zero),
               ),
               title: Localization.instance.CROSSFADE_BETWEEN_TRACKS,
-              onTap: () => _setCrossfadeDuration(mediaPlayer, crossfadeDuration == Duration.zero ? const Duration(seconds: 5) : Duration.zero),
+              onTap: () => mediaPlayer.setCrossfadeDuration(crossfadeDuration == Duration.zero ? const Duration(seconds: 5) : Duration.zero),
             ),
             ListItem(
               trailing: Switch(
