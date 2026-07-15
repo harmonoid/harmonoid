@@ -722,7 +722,7 @@ class DefaultTextFormField extends StatelessWidget {
     this.restorationId,
     this.enableIMEPersonalizedLearning = true,
     this.mouseCursor,
-    this.contextMenuBuilder,
+    this.contextMenuBuilder = _defaultContextMenuBuilder,
     this.spellCheckConfiguration,
     this.magnifierConfiguration,
     this.undoController,
@@ -736,6 +736,16 @@ class DefaultTextFormField extends StatelessWidget {
     this.stylusHandwritingEnabled = EditableText.defaultStylusHandwritingEnabled,
     this.canRequestFocus = true,
   });
+
+  static Widget _defaultContextMenuBuilder(
+    BuildContext context,
+    EditableTextState editableTextState,
+  ) {
+    if (SystemContextMenu.isSupportedByField(editableTextState)) {
+      return SystemContextMenu.editableText(editableTextState: editableTextState);
+    }
+    return AdaptiveTextSelectionToolbar.editableText(editableTextState: editableTextState);
+  }
 
   @override
   Widget build(BuildContext context) {
