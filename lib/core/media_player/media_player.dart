@@ -409,12 +409,23 @@ final class MediaPlayer extends ChangeNotifier {
             title: kTitle,
             pitch: true,
             crossfadeDuration: crossfadeDuration,
+            // logLevel: MPVLogLevel.v,
           ),
         ),
       );
     } else {
-      _player = Player(configuration: const PlayerConfiguration(title: kTitle, pitch: true));
+      _player = Player(
+        configuration: const PlayerConfiguration(
+          title: kTitle,
+          pitch: true,
+          // logLevel: MPVLogLevel.v,
+        ),
+      );
     }
+
+    // _player.stream.log.listen((e) {
+    //   debugPrint('${e.level} | ${e.prefix} | ${e.text}');
+    // });
 
     mapPlayerToState();
 
