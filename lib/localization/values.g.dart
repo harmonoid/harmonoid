@@ -57,6 +57,7 @@ class Values {
   late String DATE_ADDED;
   late String DEFAULT;
   late String DELETE;
+  late String DELETE_YOUR_ACCOUNT;
   late String DEMO_HINT;
   late String DESCENDING;
   late String DEVELOPER;
@@ -337,4 +338,5 @@ class Values {
   late String X;
   late String YEAR;
   late String YES;
+  late String YOUR_ACCOUNT_HAS_BEEN_DELETED;
 }

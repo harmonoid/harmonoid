@@ -62,6 +62,7 @@ class LocalizationBase extends Values {
     DATE_ADDED = map['DATE_ADDED']!;
     DEFAULT = map['DEFAULT']!;
     DELETE = map['DELETE']!;
+    DELETE_YOUR_ACCOUNT = map['DELETE_YOUR_ACCOUNT']!;
     DEMO_HINT = map['DEMO_HINT']!;
     DESCENDING = map['DESCENDING']!;
     DEVELOPER = map['DEVELOPER']!;
@@ -342,5 +343,6 @@ class LocalizationBase extends Values {
     X = map['X']!;
     YEAR = map['YEAR']!;
     YES = map['YES']!;
+    YOUR_ACCOUNT_HAS_BEEN_DELETED = map['YOUR_ACCOUNT_HAS_BEEN_DELETED']!;
   }
 }

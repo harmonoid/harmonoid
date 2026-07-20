@@ -832,6 +832,7 @@ class DefaultTextFormField extends StatelessWidget {
 class ListItem extends StatefulWidget {
   final String title;
   final String? subtitle;
+  final TextStyle? titleStyle;
   final Widget? leading;
   final Widget? trailing;
   final VoidCallback? onTap;
@@ -842,6 +843,7 @@ class ListItem extends StatefulWidget {
   const ListItem({
     super.key,
     required this.title,
+    this.titleStyle,
     this.subtitle,
     this.leading,
     this.trailing,
@@ -867,7 +869,7 @@ class ListItemState extends State<ListItem> {
             widget.title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).listTileTheme.titleTextStyle,
+            style: widget.titleStyle ?? Theme.of(context).listTileTheme.titleTextStyle,
           ),
           subtitle: widget.subtitle == null
               ? null
