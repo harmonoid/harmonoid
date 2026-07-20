@@ -93,7 +93,7 @@ dependencies:
   permission_handler: ^12.0.3
   pool: ^1.5.2
   provider: ^6.0.1
-  safe_local_storage: ^2.0.4
+  safe_local_storage: ^2.0.6
   share_plus: ^13.2.0
   sqlite3: ^2.9.4
   sqlite3_flutter_libs: ^0.5.40
@@ -145,7 +145,7 @@ dependency_overrides:
       ref: 2dadd8afbf81e0e3e4791d7144e689555e58f649
   # https://github.com/harmonoid/harmonoid/issues/587#issue-3850475343
   # https://github.com/alexmercerind/safe_local_storage/commit/984eac5927ffddbfe621991ad1b5a8af9673ef97
-  safe_local_storage: ^2.0.4
+  safe_local_storage: ^2.0.6
   taglib:
     path: external/taglib/taglib
   vector_math: 2.2.0
