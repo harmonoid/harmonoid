@@ -3,7 +3,6 @@
 part of 'localization.dart';
 
 class LocalizationBase extends Values {
-
   late LocalizationData current;
 
   Future<void> set({required LocalizationData value}) async {
@@ -62,6 +61,8 @@ class LocalizationBase extends Values {
     DATE_ADDED = map['DATE_ADDED']!;
     DEFAULT = map['DEFAULT']!;
     DELETE = map['DELETE']!;
+    DELETE_ACCOUNT_CONFIRMATION_DIALOG_SUBTITLE = map['DELETE_ACCOUNT_CONFIRMATION_DIALOG_SUBTITLE']!;
+    DELETE_ACCOUNT_SUCCESS_DIALOG_SUBTITLE = map['DELETE_ACCOUNT_SUCCESS_DIALOG_SUBTITLE']!;
     DELETE_YOUR_ACCOUNT = map['DELETE_YOUR_ACCOUNT']!;
     DEMO_HINT = map['DEMO_HINT']!;
     DESCENDING = map['DESCENDING']!;
@@ -343,6 +344,5 @@ class LocalizationBase extends Values {
     X = map['X']!;
     YEAR = map['YEAR']!;
     YES = map['YES']!;
-    YOUR_ACCOUNT_HAS_BEEN_DELETED = map['YOUR_ACCOUNT_HAS_BEEN_DELETED']!;
   }
 }

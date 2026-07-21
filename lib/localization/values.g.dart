@@ -57,6 +57,8 @@ class Values {
   late String DATE_ADDED;
   late String DEFAULT;
   late String DELETE;
+  late String DELETE_ACCOUNT_CONFIRMATION_DIALOG_SUBTITLE;
+  late String DELETE_ACCOUNT_SUCCESS_DIALOG_SUBTITLE;
   late String DELETE_YOUR_ACCOUNT;
   late String DEMO_HINT;
   late String DESCENDING;
@@ -338,5 +340,4 @@ class Values {
   late String X;
   late String YEAR;
   late String YES;
-  late String YOUR_ACCOUNT_HAS_BEEN_DELETED;
 }

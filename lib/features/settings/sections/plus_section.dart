@@ -27,6 +27,16 @@ class _PlusSectionState extends State<PlusSection> {
 
     if (email == null) return;
 
+    final result = await showConfirmation(
+      context,
+      Localization.instance.DELETE_YOUR_ACCOUNT,
+      Localization.instance.DELETE_ACCOUNT_CONFIRMATION_DIALOG_SUBTITLE,
+      positiveAction: Localization.instance.DELETE,
+      negativeAction: Localization.instance.CANCEL,
+    );
+
+    if (!result) return;
+
     await subscriptionNotifier.deleteAccount();
     await userNotifier.logout();
 
@@ -34,8 +44,8 @@ class _PlusSectionState extends State<PlusSection> {
 
     await showMessage(
       context,
-      Localization.instance.WARNING,
-      Localization.instance.YOUR_ACCOUNT_HAS_BEEN_DELETED,
+      Localization.instance.DELETE_YOUR_ACCOUNT,
+      Localization.instance.DELETE_ACCOUNT_SUCCESS_DIALOG_SUBTITLE,
     );
   }
 
@@ -165,7 +175,7 @@ class _PlusSectionState extends State<PlusSection> {
                 return ListItem(
                   title: Localization.instance.DELETE_YOUR_ACCOUNT,
                   onTap: _onDeleteAccount,
-                  titleStyle: Theme.of(context).listTileTheme.titleTextStyle?.copyWith(color: Colors.red),
+                  titleStyle: const TextStyle(color: Colors.red),
                 );
               },
             ),
