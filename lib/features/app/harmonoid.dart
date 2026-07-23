@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:identity/identity.dart';
 import 'package:media_library/media_library.dart' hide FileSystemMediaLibrary;
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/filesystem_media_library.dart';
@@ -152,6 +153,8 @@ class HarmonoidAppState extends State<HarmonoidApp> with WidgetsBindingObserver 
                 );
                 subscriptionNotifierOnSubscriptionUpdate(state);
               },
+              onLicenseTap: () => launchUrlString(kLicenseUrl),
+              onPrivacyTap: () => launchUrlString(kPrivacyUrl),
               showTagEditorDemo: () => showTagEditorDemo(context),
             ),
           ),

@@ -77,7 +77,7 @@ class _UpdateDialogState extends State<UpdateDialog> with ScrollControllerMixin 
                   styleSheet: styleSheet,
                   onTapLink: (text, href, title) {
                     if (href != null) {
-                      launchUrlString(href);
+                      launchUrlString(href, mode: LaunchMode.externalApplication);
                     }
                   },
                 ),
