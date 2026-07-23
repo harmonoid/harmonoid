@@ -4,8 +4,6 @@ import 'package:identity/identity.dart';
 import 'package:harmonoid/localization/localization.dart';
 
 class LoginNotifier extends ChangeNotifier {
-  LoginNotifier({required this.userNotifier, this.onSuccess});
-
   final UserNotifier userNotifier;
   final VoidCallback? onSuccess;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -13,10 +11,14 @@ class LoginNotifier extends ChangeNotifier {
   final TextEditingController otpController = TextEditingController();
   final FocusNode emailFocusNode = FocusNode();
   final FocusNode otpFocusNode = FocusNode();
-  bool loading = false;
   bool otpSent = false;
+  bool loading = false;
   String? message;
   String? error;
+
+  LoginNotifier({required this.userNotifier, this.onSuccess}) {
+    emailController.addListener(_emailControllerListener);
+  }
 
   VoidCallback? get onPressed => loading ? null : submit;
 
@@ -81,6 +83,15 @@ class LoginNotifier extends ChangeNotifier {
     }
   }
 
+  void _emailControllerListener() {
+    if (otpSent) {
+      otpSent = false;
+      message = null;
+      error = null;
+      notifyListeners();
+    }
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -88,5 +99,6 @@ class LoginNotifier extends ChangeNotifier {
     otpController.dispose();
     emailFocusNode.dispose();
     otpFocusNode.dispose();
+    emailController.removeListener(_emailControllerListener);
   }
 }

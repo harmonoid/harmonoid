@@ -115,10 +115,10 @@ class _PlusSectionState extends State<PlusSection> {
                   ListItem(
                     trailing: Switch(
                       value: crossfadeDuration != Duration.zero,
-                      onChanged: (value) => mediaPlayer.setCrossfadeDuration(value ? const Duration(seconds: 5) : Duration.zero),
+                      onChanged: (value) => mediaPlayer.setCrossfadeDuration(value ? const Duration(seconds: 10) : Duration.zero),
                     ),
                     title: Localization.instance.CROSSFADE_BETWEEN_TRACKS,
-                    onTap: () => mediaPlayer.setCrossfadeDuration(crossfadeDuration == Duration.zero ? const Duration(seconds: 5) : Duration.zero),
+                    onTap: () => mediaPlayer.setCrossfadeDuration(crossfadeDuration == Duration.zero ? const Duration(seconds: 10) : Duration.zero),
                   ),
                   ListItem(
                     trailing: Switch(
