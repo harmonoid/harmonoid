@@ -165,10 +165,12 @@ class FileSystemMediaLibrary extends media_library.FileSystemMediaLibrary with C
 
   /// Disposes the [instance]. Releases allocated resources back to the system.
   @override
-  void dispose() {
+  Future<void> dispose() async {
     super.dispose();
-    super.close();
-    _tagReader.dispose();
+    return Future(() async {
+      await super.close();
+      await _tagReader.dispose();
+    });
   }
 
   /// Tag reader.

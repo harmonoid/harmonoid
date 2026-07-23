@@ -12,6 +12,7 @@ import flutter_local_notifications
     static let kUtilsMethodChannelName = "com.alexmercerind.harmonoid/utils"
     
     static let kNotifyIntentMethodName = "notifyIntent"
+    static let kNotifySceneDidDisconnectMethodName = "notifySceneDidDisconnect"
     
     static let kPickDirectoryMethodName = "pickDirectory"
     static let kPickFileMethodName = "pickFile"
@@ -36,6 +37,14 @@ import flutter_local_notifications
     ) -> Bool {
         UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
+
+    func notifySceneDidDisconnect() {
+        let runLoop = CFRunLoopGetCurrent()
+        utilsMethodChannel?.invokeMethod(AppDelegate.kNotifySceneDidDisconnectMethodName, arguments: nil) { _ in
+            CFRunLoopStop(runLoop)
+        }
+        CFRunLoopRunInMode(.defaultMode, 5.0, false)
     }
     
     func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {

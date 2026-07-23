@@ -19,6 +19,11 @@ class SceneDelegate: FlutterSceneDelegate {
         resolveIncomingURL(URLContexts: URLContexts)
     }
 
+    override func sceneDidDisconnect(_ scene: UIScene) {
+        (UIApplication.shared.delegate as? AppDelegate)?.notifySceneDidDisconnect()
+        super.sceneDidDisconnect(scene)
+    }
+
     private func resolveIncomingURL(URLContexts: Set<UIOpenURLContext>) {
         guard let context = URLContexts.first else { return }
         (UIApplication.shared.delegate as? AppDelegate)?.resolveIncomingURL(context.url, openInPlace: context.options.openInPlace)

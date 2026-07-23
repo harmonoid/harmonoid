@@ -25,6 +25,7 @@ import 'package:harmonoid/features/app/splash.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/darwin_storage_controller.dart';
+import 'package:harmonoid/utils/platform_utils.dart';
 import 'package:harmonoid/utils/window_lifecycle.dart';
 
 Future<void> main(List<String> args) async {
@@ -86,7 +87,7 @@ Future<void> main(List<String> args) async {
       WindowLifecycle.ensureInitialized();
       runApp(const SplashApp());
     }
-
+    PlatformUtils.ensureInitialized();
     await Configuration.ensureInitialized();
     await IdentityNotifier.ensureInitialized(
       getItem: (key) => Configuration.instance.db.getString(key),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart' hide Intent;
 
@@ -31,9 +33,11 @@ class WindowLifecycle {
   static void ensureInitialized() {
     if (initialized) return;
     initialized = true;
-    WindowPlus.instance
-      ..setSingleInstanceArgumentsHandler(singleInstanceArgumentsHandler)
-      ..setWindowCloseHandler(windowCloseHandler);
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+      WindowPlus.instance
+        ..setSingleInstanceArgumentsHandler(singleInstanceArgumentsHandler)
+        ..setWindowCloseHandler(windowCloseHandler);
+    }
   }
 
   /// Invoked when argument vector is received.
@@ -47,10 +51,30 @@ class WindowLifecycle {
   static Future<bool> windowCloseHandler({bool force = false}) async {
     try {
       if (!FileSystemMediaLibrary.instance.refreshing || force) {
-        await Configuration.instance.set(mediaPlayerPlaybackState: MediaPlayer.instance.state.toPlaybackState());
-        Configuration.instance.dispose();
-        FileSystemMediaLibrary.instance.dispose();
-        MediaPlayer.instance.dispose();
+        try {
+          await Configuration.instance.set(mediaPlayerPlaybackState: MediaPlayer.instance.state.toPlaybackState());
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
+        }
+        try {
+          await FileSystemMediaLibrary.instance.dispose();
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
+        }
+        try {
+          await MediaPlayer.instance.dispose();
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
+        }
+        try {
+          await Configuration.instance.dispose();
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
+        }
         await Future.delayed(const Duration(seconds: 1));
         return true;
       } else {

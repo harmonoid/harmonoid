@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 
+import 'package:harmonoid/utils/window_lifecycle.dart';
+
 /// {@template platform_utils}
 ///
 /// PlatformUtils
@@ -17,12 +19,30 @@ class PlatformUtils {
   static const String kShowToastMethodName = 'showToast';
   static const String kShowToastArgText = 'text';
   static const String kGetSystemAccentColorMethodName = 'getSystemAccentColor';
+  static const String kNotifySceneDidDisconnectMethodName = 'notifySceneDidDisconnect';
 
   /// Singleton instance.
   static final PlatformUtils instance = PlatformUtils._();
 
+  /// Whether the [instance] is initialized.
+  static bool initialized = false;
+
   /// {@macro platform_utils}
   PlatformUtils._();
+
+  /// Initializes the [instance].
+  static void ensureInitialized() {
+    if (initialized) return;
+    initialized = true;
+    if (Platform.isIOS) {
+      instance._channel.setMethodCallHandler((call) async {
+        if (call.method == kNotifySceneDidDisconnectMethodName) {
+          return WindowLifecycle.windowCloseHandler(force: true);
+        }
+        throw MissingPluginException();
+      });
+    }
+  }
 
   Future<void> moveTaskToBack() async {
     if (!Platform.isAndroid) return;

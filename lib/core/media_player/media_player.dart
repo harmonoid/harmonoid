@@ -458,11 +458,13 @@ final class MediaPlayer extends ChangeNotifier {
   }
 
   @override
-  void dispose() {
+  Future<void> dispose() {
     super.dispose();
-    _player.dispose();
-    _tagReader.dispose();
-    _mixinRegistry.dispose();
+    return Future(() async {
+      await _player.dispose();
+      await _tagReader.dispose();
+      await _mixinRegistry.dispose();
+    });
   }
 
   Future<void> resetFlags() {
