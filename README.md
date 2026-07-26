@@ -6,46 +6,46 @@
 
 [Website](https://harmonoid.com) • [Download](https://harmonoid.com/downloads) • [Discord](https://discord.gg/2Rc3edFWd8) • Available for Windows, GNU/Linux, macOS, Android & iOS!
 
-![](https://github.com/harmonoid/harmonoid/blob/assets/macos/light-2/0.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/macos/light-2/1.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/macos/light-2/2.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/macos/light-2/3.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/macos/light-2/4.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/macos/light-2/7.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/macos/dark-2/0.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/macos/dark-2/1.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/macos/dark-2/2.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/macos/dark-2/3.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/macos/dark-2/4.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/macos/dark-2/7.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/screenshots/macos/light-2/0.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/screenshots/macos/light-2/1.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/screenshots/macos/light-2/2.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/screenshots/macos/light-2/3.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/screenshots/macos/light-2/4.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/screenshots/macos/light-2/7.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/screenshots/macos/dark-2/0.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/screenshots/macos/dark-2/1.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/screenshots/macos/dark-2/2.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/screenshots/macos/dark-2/3.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/screenshots/macos/dark-2/4.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/screenshots/macos/dark-2/7.webp?raw=true)
 
 <table>
   <tr>
     <td>
-      <img src='https://github.com/harmonoid/harmonoid/blob/assets/android/0.webp?raw=true'>
+      <img src='https://github.com/harmonoid/harmonoid/blob/screenshots/ios/light-3/0.webp?raw=true'>
     </td>
     <td>
-      <img src='https://github.com/harmonoid/harmonoid/blob/assets/android/1.webp?raw=true'>
+      <img src='https://github.com/harmonoid/harmonoid/blob/screenshots/ios/light-3/1.webp?raw=true'>
     </td>
     <td>
-      <img src='https://github.com/harmonoid/harmonoid/blob/assets/android/2.webp?raw=true'>
+      <img src='https://github.com/harmonoid/harmonoid/blob/screenshots/ios/light-3/2.webp?raw=true'>
     </td>
     <td>
-      <img src='https://github.com/harmonoid/harmonoid/blob/assets/android/3.webp?raw=true'>
+      <img src='https://github.com/harmonoid/harmonoid/blob/screenshots/ios/light-3/3.webp?raw=true'>
     </td>
   </tr>
   <tr>
     <td>
-      <img src='https://github.com/harmonoid/harmonoid/blob/assets/android/4.webp?raw=true'>
+      <img src='https://github.com/harmonoid/harmonoid/blob/screenshots/ios/dark-3/4.webp?raw=true'>
     </td>
     <td>
-      <img src='https://github.com/harmonoid/harmonoid/blob/assets/android/5.webp?raw=true'>
+      <img src='https://github.com/harmonoid/harmonoid/blob/screenshots/ios/dark-3/6.webp?raw=true'>
     </td>
     <td>
-      <img src='https://github.com/harmonoid/harmonoid/blob/assets/android/6.webp?raw=true'>
+      <img src='https://github.com/harmonoid/harmonoid/blob/screenshots/ios/dark-3/7.webp?raw=true'>
     </td>
     <td>
-      <img src='https://github.com/harmonoid/harmonoid/blob/assets/android/7.webp?raw=true'>
+      <img src='https://github.com/harmonoid/harmonoid/blob/screenshots/ios/dark-3/8.webp?raw=true'>
     </td>
   </tr>
 </table>
