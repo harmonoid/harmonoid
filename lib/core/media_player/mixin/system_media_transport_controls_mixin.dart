@@ -70,7 +70,7 @@ final class SystemMediaTransportControlsMixin implements MediaPlayerMixin {
         _instance?.setStatus(state.playing ? SMTCStatus.playing : SMTCStatus.paused);
       }
 
-      if (_flagPosition != state.position) {
+      if (_flagPosition == null || (state.position - _flagPosition!).abs() > const Duration(seconds: 1)) {
         _flagPosition = state.position;
         _instance?.setTimelineData(endTime: state.duration.inMilliseconds, position: state.position.inMilliseconds);
       }

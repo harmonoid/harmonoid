@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter/widgets.dart';
+import 'package:identity/identity.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
@@ -65,17 +65,4 @@ class UpdateNotifier extends ChangeNotifier {
     }
     return launchUrlString(url, mode: LaunchMode.externalApplication);
   }
-}
-
-bool compareVersions(String? to, String from) {
-  if (to == null) return false;
-  final latestVersionParts = to.substring(1).split('.');
-  final currentVersionParts = from.substring(1).split('.');
-  for (int i = 0; i < max(latestVersionParts.length, currentVersionParts.length); i++) {
-    final latestPart = int.parse(latestVersionParts.elementAtOrNull(i) ?? '0');
-    final currentPart = int.parse(currentVersionParts.elementAtOrNull(i) ?? '0');
-    if (latestPart > currentPart) return true;
-    if (latestPart < currentPart) return false;
-  }
-  return false;
 }

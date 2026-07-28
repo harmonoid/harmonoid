@@ -127,20 +127,17 @@ class HarmonoidAppState extends State<HarmonoidApp> with WidgetsBindingObserver 
         ChangeNotifierProvider(
           lazy: false,
           create: (ctx) => SubscriptionNotifierFactory.create(
+            version: kVersion,
             userNotifier: ctx.read(),
             functions: SubscriptionFunctions(
               updateAvailable: () => context.read<UpdateNotifier>().updateAvailable,
-              subscriptionPurchaseAvailable: () async {
+              getSubscriptionConfig: () async {
                 final remoteConfigProvider = RemoteConfigProvider();
                 final response = await remoteConfigProvider.get(RemoteConfigKey.subscriptionPurchaseConfig);
                 if (response is SubscriptionPurchaseConfigValue) {
-                  final config = response.value;
-                  final belowMinimumVersion = compareVersions(config.minVersion, kVersion);
-                  final aboveMaximumVersion = compareVersions(kVersion, config.maxVersion);
-                  final blacklistedVersion = config.blacklistedVersions.contains(kVersion);
-                  return !belowMinimumVersion && !aboveMaximumVersion && !blacklistedVersion;
+                  return response.value;
                 }
-                return false;
+                return null;
               },
               showUpdate: () => showUpdate(context),
               showLogin: () => showLogin(context),
