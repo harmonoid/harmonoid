@@ -6,6 +6,17 @@ part of 'remote_config_value.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+ArtistImageCacheVersion _$ArtistImageCacheVersionFromJson(
+  Map<String, dynamic> json,
+) => ArtistImageCacheVersion(
+  (json['value'] as num).toInt(),
+  $type: json['runtimeType'] as String?,
+);
+
+Map<String, dynamic> _$ArtistImageCacheVersionToJson(
+  ArtistImageCacheVersion instance,
+) => <String, dynamic>{'value': instance.value, 'runtimeType': instance.$type};
+
 EnableInAppReview _$EnableInAppReviewFromJson(Map<String, dynamic> json) =>
     EnableInAppReview(
       json['value'] as bool,

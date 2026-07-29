@@ -156,7 +156,10 @@ class HarmonoidAppState extends State<HarmonoidApp> with WidgetsBindingObserver 
             ),
           ),
         ),
-        ChangeNotifierProvider(create: (_) => ArtistImageNotifier()),
+        ChangeNotifierProvider(
+          lazy: false,
+          create: (_) => ArtistImageNotifier(),
+        ),
         ChangeNotifierProvider(create: (_) => FileExplorerNotifier()),
         ChangeNotifierProvider(create: (_) => TracksNotifier()),
       ],

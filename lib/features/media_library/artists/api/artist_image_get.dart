@@ -25,7 +25,7 @@ class ArtistImageGet {
 
       final response = await client.send(request);
 
-      if (response.statusCode >= 200 && response.statusCode < 300) {
+      if (response.statusCode == 200) {
         final sink = file.openWrite();
         try {
           await response.stream.pipe(sink);
@@ -35,7 +35,8 @@ class ArtistImageGet {
         }
       }
 
-      return false;
+      // Only cache a definitive "not found" response. Other errors should be retried later.
+      return response.statusCode != 404;
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
