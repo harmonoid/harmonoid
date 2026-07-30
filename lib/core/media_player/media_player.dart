@@ -59,6 +59,7 @@ final class MediaPlayer extends ChangeNotifier {
   }
 
   Future<void> _ensureInitialized() async {
+    await _ensureInitializedPlayer();
     await _mixinRegistry.ensureInitialized();
   }
 
@@ -289,12 +290,7 @@ final class MediaPlayer extends ChangeNotifier {
       onError?.call();
       return;
     }
-    if ((state.crossfadeDuration != Duration.zero && crossfadeDuration == Duration.zero) || (state.crossfadeDuration == Duration.zero && crossfadeDuration != Duration.zero)) {
-      state = MediaPlayerState.defaults();
-      _current = null;
-      onPlayerReset?.call();
-      await ensureInitializedPlayer(crossfadeDuration: crossfadeDuration);
-    }
+    await _ensureInitializedPlayer(crossfadeDuration: crossfadeDuration, onPlayerReset: onPlayerReset);
     if (crossfadeDuration != Duration.zero) {
       final platform = _player.platform as CrossfadePlayer;
       await platform.setCrossfadeDuration(crossfadeDuration);
@@ -306,7 +302,7 @@ final class MediaPlayer extends ChangeNotifier {
     PlaybackState playbackState, {
     void Function()? onOpen,
   }) async {
-    await ensureInitializedPlayer(crossfadeDuration: playbackState.crossfadeDuration);
+    await _ensureInitializedPlayer(crossfadeDuration: playbackState.crossfadeDuration);
 
     state = playbackState.toMediaPlayerState();
     if (state.rate != 1.0) {
@@ -326,7 +322,6 @@ final class MediaPlayer extends ChangeNotifier {
     await setExclusiveAudio(state.exclusiveAudio);
     await setReplayGain(state.replayGain);
     await setReplayGainPreamp(state.replayGainPreamp);
-    await setCrossfadeDuration(state.crossfadeDuration);
     if (onOpen != null && state.playables.isNotEmpty) {
       await open(
         state.playables,
@@ -397,12 +392,27 @@ final class MediaPlayer extends ChangeNotifier {
     });
   }
 
-  Future<void> ensureInitializedPlayer({required Duration crossfadeDuration}) async {
+  Future<void> _ensureInitializedPlayer({
+    // Supplying as null will force Player re-init.
+    Duration? crossfadeDuration,
+    void Function()? onPlayerReset,
+  }) async {
+    final wasCrossfadeEnabled = state.crossfadeDuration != Duration.zero;
+    final isCrossfadeEnabled = crossfadeDuration != Duration.zero;
+    if (wasCrossfadeEnabled == isCrossfadeEnabled) return;
+
+    debugPrint('_ensureInitializedPlayer');
+
+    _current = null;
+    state = MediaPlayerState.defaults();
+
+    onPlayerReset?.call();
+
     try {
       await _player.dispose();
     } catch (_) {}
 
-    if (crossfadeDuration != Duration.zero) {
+    if (crossfadeDuration != null && crossfadeDuration != Duration.zero) {
       _player = Player(
         platformPlayer: CrossfadePlayer(
           configuration: CrossfadePlayerConfiguration(
