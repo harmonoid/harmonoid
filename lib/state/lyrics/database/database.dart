@@ -20,6 +20,7 @@ part 'database.g.dart';
 /// LyricsDatabase
 /// --------------
 /// The package:drift database containing cached lyrics and lyrics translations.
+/// NOTE: The reported duration can vary between media_kit & tag_reader. So, omit duration from the query.
 ///
 /// {@endtemplate}
 @DriftDatabase(tables: [Lyricss, LyricsTranslations])
@@ -32,25 +33,18 @@ class LyricsDatabase extends _$LyricsDatabase {
 
   /// Gets the cached lyrics with the given [key].
   Future<Lyrics?> getLyrics(LyricsKey key) async {
-    final entry =
-        await (select(lyricss)..where(
-              (e) => e.track.equals(key.track) & e.artist.equals(key.artist) & e.duration.equals(key.duration),
-            ))
-            .getSingleOrNull();
+    final query = select(lyricss)..where((e) => e.track.equals(key.track) & e.artist.equals(key.artist));
+    final entry = await query.getSingleOrNull();
     return entry?.lyrics;
   }
 
   /// Gets whether the cached lyrics exist with the given [key].
   Future<bool> containsLyrics(LyricsKey key) async {
     final count = countAll();
-    final row =
-        await (selectOnly(lyricss)
-              ..addColumns([count])
-              ..where(
-                // NOTE: The reported duration can vary between media_kit & tag_reader. So, omit duration from the query.
-                lyricss.track.equals(key.track) & lyricss.artist.equals(key.artist) /* & lyricss.duration.equals(key.duration) */,
-              ))
-            .getSingle();
+    final query = selectOnly(lyricss)
+      ..addColumns([count])
+      ..where(lyricss.track.equals(key.track) & lyricss.artist.equals(key.artist));
+    final row = await query.getSingle();
     return row.read(count)! > 0;
   }
 
@@ -69,20 +63,14 @@ class LyricsDatabase extends _$LyricsDatabase {
 
   /// Removes the cached lyrics with the given [key].
   Future<void> removeLyrics(LyricsKey key) async {
-    await (delete(lyricss)..where(
-          // NOTE: The reported duration can vary between media_kit & tag_reader. So, omit duration from the query.
-          (e) => e.track.equals(key.track) & e.artist.equals(key.artist) /* & lyricss.duration.equals(key.duration) */,
-        ))
-        .go();
+    final query = delete(lyricss)..where((e) => e.track.equals(key.track) & e.artist.equals(key.artist));
+    await query.go();
   }
 
   /// Gets the cached lyrics translation with the given [key].
   Future<LyricsTranslation?> getLyricsTranslation(LyricsTranslationKey key) async {
-    final entry =
-        await (select(lyricsTranslations)..where(
-              (e) => e.track.equals(key.track) & e.artist.equals(key.artist) & e.duration.equals(key.duration) & e.language.equals(key.language),
-            ))
-            .getSingleOrNull();
+    final query = select(lyricsTranslations)..where((e) => e.track.equals(key.track) & e.artist.equals(key.artist) & e.language.equals(key.language));
+    final entry = await query.getSingleOrNull();
     if (entry == null) return null;
     return LyricsTranslation(
       same: entry.same,
