@@ -64,6 +64,7 @@ class LanguageSection extends StatelessWidget {
                     ),
                   ],
                   style: Theme.of(context).textTheme.bodySmall,
+                  ignoring: false,
                 ),
               ),
             ],

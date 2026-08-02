@@ -160,7 +160,7 @@ class RippleSurfaceState extends State<RippleSurface> {
           _width = constraints.maxWidth;
           _height = constraints.maxHeight;
           return Stack(
-            alignment: Alignment.center,
+            alignment: const FractionalOffset(0.5, 0.3),
             children: [
               if (_background != null) _background!,
               if (_ripple != null) _ripple!,

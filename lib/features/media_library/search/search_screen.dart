@@ -28,7 +28,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
-  static const int _kLimit = 20;
+  static const int kLimit = 20;
 
   late final ScrollController _scrollController = getScrollController('search-screen');
   final List<Album> _albums = <Album>[];
@@ -42,7 +42,7 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
     _currentQuery = query;
     final result = await context.read<MediaLibrary>().search(
       query,
-      limit: _kLimit,
+      limit: kLimit,
     );
     if (_currentQuery != query) {
       return;
@@ -101,16 +101,14 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
               children: [
                 SubHeader(Localization.instance.ALBUMS),
                 const Spacer(),
-                if (_albums.length > _kLimit)
+                if (_albums.length > kLimit)
                   ShowAllButton(
                     onPressed: () async {
                       context.push(
                         '/$kMediaLibraryPath/$kSearchItemsPath',
                         extra: SearchItemsPathExtra(
                           query: widget.query,
-                          items: (await context.read<MediaLibrary>().search(
-                            widget.query,
-                          )).whereType<Album>().toList(),
+                          items: (await context.read<MediaLibrary>().search(widget.query)).whereType<Album>().toList(),
                         ),
                       );
                     },
@@ -122,7 +120,7 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
               alignment: Alignment.centerLeft,
               height: albumItemHeight + margin,
               child: ListView.separated(
-                itemCount: _albums.length.clamp(0, _kLimit),
+                itemCount: _albums.length.clamp(0, kLimit),
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.only(
                   left: margin,
@@ -143,16 +141,14 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
               children: [
                 SubHeader(Localization.instance.ARTISTS),
                 const Spacer(),
-                if (_artists.length > _kLimit)
+                if (_artists.length > kLimit)
                   ShowAllButton(
                     onPressed: () async {
                       context.push(
                         '/$kMediaLibraryPath/$kSearchItemsPath',
                         extra: SearchItemsPathExtra(
                           query: widget.query,
-                          items: (await context.read<MediaLibrary>().search(
-                            widget.query,
-                          )).whereType<Artist>().toList(),
+                          items: (await context.read<MediaLibrary>().search(widget.query)).whereType<Artist>().toList(),
                         ),
                       );
                     },
@@ -164,7 +160,7 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
               alignment: Alignment.centerLeft,
               height: artistItemHeight + margin,
               child: ListView.separated(
-                itemCount: _artists.length.clamp(0, _kLimit),
+                itemCount: _artists.length.clamp(0, kLimit),
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.only(
                   left: margin,
@@ -185,16 +181,14 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
               children: [
                 SubHeader(Localization.instance.GENRES),
                 const Spacer(),
-                if (_genres.length > _kLimit)
+                if (_genres.length > kLimit)
                   ShowAllButton(
                     onPressed: () async {
                       context.push(
                         '/$kMediaLibraryPath/$kSearchItemsPath',
                         extra: SearchItemsPathExtra(
                           query: widget.query,
-                          items: (await context.read<MediaLibrary>().search(
-                            widget.query,
-                          )).whereType<Genre>().toList(),
+                          items: (await context.read<MediaLibrary>().search(widget.query)).whereType<Genre>().toList(),
                         ),
                       );
                     },
@@ -206,7 +200,7 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
               alignment: Alignment.centerLeft,
               height: genreItemHeight + margin,
               child: ListView.separated(
-                itemCount: _genres.length.clamp(0, _kLimit),
+                itemCount: _genres.length.clamp(0, kLimit),
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.only(
                   left: margin,
@@ -227,16 +221,14 @@ class SearchScreenState extends State<SearchScreen> with ScrollControllerMixin {
               children: [
                 SubHeader(Localization.instance.TRACKS),
                 const Spacer(),
-                if (_tracks.length > _kLimit)
+                if (_tracks.length > kLimit)
                   ShowAllButton(
                     onPressed: () async {
                       context.push(
                         '/$kMediaLibraryPath/$kSearchItemsPath',
                         extra: SearchItemsPathExtra(
                           query: widget.query,
-                          items: (await context.read<MediaLibrary>().search(
-                            widget.query,
-                          )).whereType<Track>().toList(),
+                          items: (await context.read<MediaLibrary>().search(widget.query)).whereType<Track>().toList(),
                         ),
                       );
                     },

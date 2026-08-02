@@ -11,28 +11,29 @@ import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
+import 'package:harmonoid/core/media_player/models/loop.dart';
 import 'package:harmonoid/extensions/duration.dart';
 import 'package:harmonoid/extensions/list.dart';
 import 'package:harmonoid/extensions/media_player_state.dart';
-import 'package:harmonoid/localization/localization.dart';
-import 'package:harmonoid/mappers/build_context.dart';
-import 'package:harmonoid/core/media_player/models/loop.dart';
-import 'package:harmonoid/state/lyrics/lyrics_notifier.dart';
-import 'package:harmonoid/features/now_playing/state/now_playing_color_palette_notifier.dart';
-import 'package:harmonoid/features/now_playing/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/features/media_library/playlists/utils/rendering.dart';
 import 'package:harmonoid/features/media_library/utils/constants.dart';
+import 'package:harmonoid/features/media_library/utils/rendering.dart';
+import 'package:harmonoid/features/now_playing/now_playing_audio_control_panel.dart';
 import 'package:harmonoid/features/now_playing/now_playing_bar.dart';
 import 'package:harmonoid/features/now_playing/now_playing_colors.dart';
-import 'package:harmonoid/features/now_playing/now_playing_audio_control_panel.dart';
 import 'package:harmonoid/features/now_playing/now_playing_playlist_item.dart';
+import 'package:harmonoid/features/now_playing/state/now_playing_color_palette_notifier.dart';
+import 'package:harmonoid/features/now_playing/state/now_playing_mobile_notifier.dart';
+import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/mappers/build_context.dart';
 import 'package:harmonoid/routing/router.dart';
 import 'package:harmonoid/routing/utils/constants.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/state/lyrics/lyrics_notifier.dart';
 import 'package:harmonoid/third_party/material_wave_slider.dart';
 import 'package:harmonoid/third_party/mini_player.dart';
-import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/third_party/sliding_up_panel.dart';
+import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
 class M3MobileNowPlayingBar extends StatefulWidget {
@@ -459,8 +460,20 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
               strutStyle: StrutStyle.fromTextStyle(Theme.of(context).textTheme.headlineMedium!.copyWith(height: 1.5)),
             ),
             TappableText(
-              text: mediaPlayer.current.subtitle.ifEmpty(['']).map((e) => TappableTextData(text: e.isEmpty ? kDefaultArtist : e)).toList(),
+              text: mediaPlayer.current.subtitle
+                  .ifEmpty([''])
+                  .map(
+                    (e) => TappableTextData(
+                      text: e.isEmpty ? kDefaultArtist : e,
+                      onTap: () {
+                        navigateToArtist(context, ArtistLookupKey(artist: e));
+                        _miniPlayerController.animateToHeight(state: MiniPlayerPanelState.MIN);
+                      },
+                    ),
+                  )
+                  .toList(),
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant).copyWith(height: 1.0),
+              ignoring: false,
             ),
             if (Configuration.instance.nowPlayingAudioFormat)
               Text(
@@ -620,16 +633,23 @@ class Controls extends StatelessWidget {
           final sliderValue = mediaPlayer.state.position.inMilliseconds.clamp(sliderMin, sliderMax).toDouble();
           return Column(
             children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: (MediaQuery.sizeOf(context).width * 1 / 9 + 4.0 - 2 * 16.0).clamp(0.0, MediaQuery.sizeOf(context).width)),
-                child: MaterialWaveSlider(
-                  height: 28.0,
-                  amplitude: 28.0 / 10.0,
-                  min: sliderMin,
-                  max: sliderMax,
-                  value: sliderValue,
-                  onChanged: (value) => mediaPlayer.seek(Duration(milliseconds: value.round())),
-                  paused: !mediaPlayer.state.playing,
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                // Claim non-horizontal drags that start on the slider before
+                // the mini player's parent pan recognizer can receive them.
+                onPanUpdate: (_) {},
+                child: Container(
+                  color: Colors.transparent,
+                  padding: EdgeInsets.symmetric(horizontal: (MediaQuery.sizeOf(context).width * 1 / 9 + 4.0 - 2 * 16.0).clamp(0.0, MediaQuery.sizeOf(context).width)),
+                  child: MaterialWaveSlider(
+                    height: 28.0,
+                    amplitude: 28.0 / 10.0,
+                    min: sliderMin,
+                    max: sliderMax,
+                    value: sliderValue,
+                    onChanged: (value) => mediaPlayer.seek(Duration(milliseconds: value.round())),
+                    paused: !mediaPlayer.state.playing,
+                  ),
                 ),
               ),
               Container(
