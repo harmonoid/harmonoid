@@ -144,7 +144,7 @@ final class MprisMixin implements MediaPlayerMixin {
         _instance?.canGoNext = canGoNext;
       }
 
-      if (_flagPlayable != current && _flagDuration != state.duration && state.duration > Duration.zero) {
+      if ((_flagPlayable != current || _flagDuration != state.duration) && state.duration > Duration.zero) {
         _flagPlayable = current;
         _flagDuration = state.duration;
         _instance?.metadata = await current.toMPRISMetadata(state);
