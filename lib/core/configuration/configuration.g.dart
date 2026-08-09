@@ -407,7 +407,7 @@ class ConfigurationBase {
       /* Json    */ kKeyDesktopMediaLibraryFoldersScreenColumnWidths: <double>[],
       /* Json    */ kKeyDesktopMediaLibraryTracksScreenColumnWidths: <double>[],
       /* Boolean */ kKeyDesktopNowPlayingBarColorPalette: true,
-      /* Integer */ kKeyDesktopNowPlayingCarousel: 0,
+      /* Integer */ kKeyDesktopNowPlayingCarousel: 2,
       /* Boolean */ kKeyDesktopNowPlayingLyrics: true,
       /* Boolean */ kKeyDiscordRpc: true,
       /* String  */ kKeyIdentifier: const Uuid().v4(),
