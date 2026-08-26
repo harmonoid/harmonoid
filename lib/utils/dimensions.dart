@@ -17,8 +17,6 @@ const double kMobileSearchBarHeight = 56.0;
 const double kDesktopSliverTileSpacerHeight = 32.0;
 const double kMobileSliverTileSpacerHeight = 16.0;
 
-const double kDesktopCenteredLayoutWidth = 832.0;
-
 double get margin {
   if (Theme.of(rootNavigatorKey.currentContext!).extension<LayoutVariantThemeExtension>()?.value == LayoutVariant.desktop) {
     return kDesktopMargin;

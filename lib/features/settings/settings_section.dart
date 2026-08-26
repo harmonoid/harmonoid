@@ -1,6 +1,6 @@
+import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 
-import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 

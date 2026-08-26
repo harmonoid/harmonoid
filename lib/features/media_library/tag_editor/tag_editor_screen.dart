@@ -13,7 +13,6 @@ import 'package:harmonoid/features/media_library/tag_editor/state/tag_editor_not
 import 'package:harmonoid/features/media_library/tag_editor/tag_editor_no_tags_banner.dart';
 import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/constants.dart';
-import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 

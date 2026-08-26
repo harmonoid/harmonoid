@@ -11,7 +11,6 @@ import 'package:media_kit/src/player/native/utils/temp_file.dart';
 
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/utils/constants.dart';
-import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 class FileInfoScreen extends StatefulWidget {

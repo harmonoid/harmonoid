@@ -9,7 +9,6 @@ import 'package:harmonoid/mappers/color.dart';
 import 'package:harmonoid/state/in_app_review_notifier.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
 import 'package:harmonoid/utils/constants.dart';
-import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 

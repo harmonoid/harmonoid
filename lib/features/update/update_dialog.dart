@@ -7,7 +7,6 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/features/update/state/update_notifier.dart';
-import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 class UpdateDialog extends StatefulWidget {
