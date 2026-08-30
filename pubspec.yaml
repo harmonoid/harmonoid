@@ -54,32 +54,32 @@ dependencies:
   media_kit:
     git:
       url: https://github.com/media-kit/media-kit.git
-      ref: 2e35dbde
+      ref: c533e446755f51cf53c7e57aea873f2aa5355f81
       path: media_kit
   media_kit_libs_android_audio:
     git:
       url: https://github.com/media-kit/media-kit.git
-      ref: 2e35dbde
+      ref: c533e446755f51cf53c7e57aea873f2aa5355f81
       path: libs/android/media_kit_libs_android_audio
   media_kit_libs_ios_audio:
     git:
       url: https://github.com/media-kit/media-kit.git
-      ref: 2e35dbde
+      ref: c533e446755f51cf53c7e57aea873f2aa5355f81
       path: libs/ios/media_kit_libs_ios_audio
   media_kit_libs_linux:
     git:
       url: https://github.com/media-kit/media-kit.git
-      ref: 2e35dbde
+      ref: c533e446755f51cf53c7e57aea873f2aa5355f81
       path: libs/linux/media_kit_libs_linux
   media_kit_libs_macos_audio:
     git:
       url: https://github.com/media-kit/media-kit.git
-      ref: 2e35dbde
+      ref: c533e446755f51cf53c7e57aea873f2aa5355f81
       path: libs/macos/media_kit_libs_macos_audio
   media_kit_libs_windows_audio:
     git:
       url: https://github.com/media-kit/media-kit.git
-      ref: 2e35dbde
+      ref: c533e446755f51cf53c7e57aea873f2aa5355f81
       path: libs/windows/media_kit_libs_windows_audio
   media_library:
     path: external/media_library
@@ -135,7 +135,7 @@ dependency_overrides:
   media_kit:
     git:
       url: https://github.com/media-kit/media-kit.git
-      ref: 2e35dbde
+      ref: c533e446755f51cf53c7e57aea873f2aa5355f81
       path: media_kit
   # https://github.com/Baseflow/flutter-permission-handler/issues/983
   # https://github.com/Baseflow/flutter-permission-handler/issues/1034
