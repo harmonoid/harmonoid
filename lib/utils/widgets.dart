@@ -858,6 +858,12 @@ class ListItemState extends State<ListItem> {
   final ValueNotifier<bool> isThreeLineNotifier = ValueNotifier<bool>(false);
 
   @override
+  void dispose() {
+    isThreeLineNotifier.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
       valueListenable: isThreeLineNotifier,

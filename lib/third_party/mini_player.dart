@@ -105,6 +105,10 @@ class MiniPlayerState extends State<MiniPlayer> with TickerProviderStateMixin {
   @override
   void dispose() {
     _heightController.close();
+    dragDownPercentage.dispose();
+    if (widget.valueNotifier == null) {
+      heightNotifier.dispose();
+    }
     if (_animationController != null) {
       _animationController!.dispose();
     }

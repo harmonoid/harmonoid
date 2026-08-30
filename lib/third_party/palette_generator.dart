@@ -109,13 +109,13 @@ class PaletteGenerator with Diagnosticable {
     final ImageStream stream = imageProvider.resolve(
       ImageConfiguration(size: size, devicePixelRatio: 1.0),
     );
-    final Completer<ui.Image> imageCompleter = Completer<ui.Image>();
+    final Completer<ImageInfo> imageCompleter = Completer<ImageInfo>();
     Timer? loadFailureTimeout;
     late ImageStreamListener listener;
     listener = ImageStreamListener((ImageInfo info, bool synchronousCall) {
       loadFailureTimeout?.cancel();
       stream.removeListener(listener);
-      imageCompleter.complete(info.image);
+      imageCompleter.complete(info);
     });
 
     if (timeout != Duration.zero) {
@@ -127,24 +127,29 @@ class PaletteGenerator with Diagnosticable {
       });
     }
     stream.addListener(listener);
-    final ui.Image image = await imageCompleter.future;
-    ui.Rect? newRegion = region;
-    if (size != null && region != null) {
-      final double scale = image.width / size.width;
-      newRegion = Rect.fromLTRB(
-        region.left * scale,
-        region.top * scale,
-        region.right * scale,
-        region.bottom * scale,
+    final ImageInfo imageInfo = await imageCompleter.future;
+    try {
+      final ui.Image image = imageInfo.image;
+      ui.Rect? newRegion = region;
+      if (size != null && region != null) {
+        final double scale = image.width / size.width;
+        newRegion = Rect.fromLTRB(
+          region.left * scale,
+          region.top * scale,
+          region.right * scale,
+          region.bottom * scale,
+        );
+      }
+      return await PaletteGenerator.fromImage(
+        image,
+        region: newRegion,
+        maximumColorCount: maximumColorCount,
+        filters: filters,
+        targets: targets,
       );
+    } finally {
+      imageInfo.dispose();
     }
-    return PaletteGenerator.fromImage(
-      image,
-      region: newRegion,
-      maximumColorCount: maximumColorCount,
-      filters: filters,
-      targets: targets,
-    );
   }
 
   static const int _defaultCalculateNumberColors = 16;
