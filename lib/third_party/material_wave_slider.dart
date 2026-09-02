@@ -105,35 +105,50 @@ class MaterialWaveSliderState extends State<MaterialWaveSlider> with SingleTicke
   double get _percent => widget.value == 0.0 ? 0.0 : ((_current ?? widget.value) / (widget.max - widget.min)).clamp(0.0, 1.0);
 
   double? _current;
-  Color? _color;
-  Path? _defaultPath;
-  Widget? _defaultPaint;
   late bool _paused = widget.paused;
   late bool _running = !widget.paused;
-  final ScrollController _controller = ScrollController();
+  late final AnimationController _phaseController;
 
   @override
   void didUpdateWidget(covariant MaterialWaveSlider oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (_current == null) {
-      if (widget.paused) {
-        pause();
-      } else {
-        resume();
+    if (widget.velocity != oldWidget.velocity) {
+      _phaseController.duration = _phaseDuration;
+      if (_running) {
+        _syncPhaseAnimation();
       }
+    }
+    if (widget.paused != oldWidget.paused) {
+      _paused = widget.paused;
+      _running = !widget.paused && _current == null;
+      _syncPhaseAnimation();
     }
   }
 
   void pause() {
+    if (_paused) return;
     _paused = true;
     _running = false;
+    _syncPhaseAnimation();
     setState(() {});
   }
 
   void resume() {
+    if (!_paused) return;
     _paused = false;
     _running = true;
+    _syncPhaseAnimation();
     setState(() {});
+  }
+
+  Duration get _phaseDuration => Duration(milliseconds: max(1, widget.velocity.round()));
+
+  void _syncPhaseAnimation() {
+    if (_running) {
+      _phaseController.repeat();
+    } else {
+      _phaseController.stop();
+    }
   }
 
   void _onPointerDown(PointerDownEvent e, BoxConstraints constraints) {
@@ -141,6 +156,7 @@ class MaterialWaveSliderState extends State<MaterialWaveSlider> with SingleTicke
       setState(() {
         if (widget.transitionOnChange && !_paused) {
           _running = false;
+          _syncPhaseAnimation();
         }
         _current = e.localPosition.dx / constraints.maxWidth * (widget.max - widget.min);
       });
@@ -152,6 +168,7 @@ class MaterialWaveSliderState extends State<MaterialWaveSlider> with SingleTicke
       setState(() {
         if (widget.transitionOnChange && !_paused) {
           _running = false;
+          _syncPhaseAnimation();
         }
         _current = e.localPosition.dx / constraints.maxWidth * (widget.max - widget.min);
       });
@@ -163,6 +180,7 @@ class MaterialWaveSliderState extends State<MaterialWaveSlider> with SingleTicke
       setState(() {
         if (widget.transitionOnChange && !_paused) {
           _running = true;
+          _syncPhaseAnimation();
         }
         _current = null;
       });
@@ -174,22 +192,14 @@ class MaterialWaveSliderState extends State<MaterialWaveSlider> with SingleTicke
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      const multiplier = 1 << 32;
-      final distance = widget.height * multiplier;
-      final duration = widget.velocity * multiplier;
-      _controller.animateTo(
-        distance,
-        duration: Duration(milliseconds: duration.round()),
-        curve: Curves.linear,
-      );
-    });
+    _phaseController = AnimationController(vsync: this, duration: _phaseDuration);
+    _syncPhaseAnimation();
   }
 
   @override
   void dispose() {
+    _phaseController.dispose();
     super.dispose();
-    _controller.dispose();
   }
 
   @override
@@ -215,26 +225,6 @@ class MaterialWaveSliderState extends State<MaterialWaveSlider> with SingleTicke
       valueIndicatorTextStyle: sliderTheme.valueIndicatorTextStyle ?? defaults.valueIndicatorTextStyle,
     );
 
-    if (_color != sliderTheme.activeTrackColor) {
-      _defaultPath = null;
-      _defaultPaint = null;
-    }
-
-    _color ??= sliderTheme.activeTrackColor;
-    _defaultPath ??= SinePainter.calculatePath(widget.height / 25.0, _amplitude, 0.0, widget.height, widget.height);
-    _defaultPaint ??= CustomPaint(
-      key: const ValueKey(true),
-      painter: SinePainter(
-        color: sliderTheme.activeTrackColor!,
-        delta: widget.height / 25.0,
-        phase: 0.0,
-        amplitude: _amplitude,
-        strokeWidth: sliderTheme.trackHeight!,
-        path: _defaultPath,
-      ),
-      size: Size(widget.height, widget.height),
-    );
-
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: LayoutBuilder(
@@ -250,38 +240,24 @@ class MaterialWaveSliderState extends State<MaterialWaveSlider> with SingleTicke
                 children: [
                   ClipRect(
                     clipper: RectClipper(_percent),
-                    child: SizedBox(
-                      width: constraints.maxWidth,
-                      height: widget.height,
-                      child: ListView.builder(
-                        controller: _controller,
-                        itemExtent: widget.height,
-                        padding: EdgeInsets.zero,
-                        scrollDirection: Axis.horizontal,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, _) => TweenAnimationBuilder<double>(
-                          tween: Tween<double>(
-                            begin: _running ? _amplitude : 0.0,
-                            end: _running ? _amplitude : 0.0,
-                          ),
+                    child: RepaintBoundary(
+                      child: SizedBox(
+                        width: constraints.maxWidth,
+                        height: widget.height,
+                        child: TweenAnimationBuilder<double>(
+                          tween: Tween<double>(end: _running ? _amplitude : 0.0),
                           curve: widget.transitionCurve,
                           duration: widget.transitionDuration,
-                          builder: (context, value, _) {
-                            if (value == _amplitude) {
-                              return _defaultPaint!;
-                            }
-                            return CustomPaint(
-                              key: ValueKey(value),
-                              painter: SinePainter(
-                                color: sliderTheme.activeTrackColor!,
-                                delta: widget.height / 25.0,
-                                phase: 0.0,
-                                amplitude: value,
-                                strokeWidth: sliderTheme.trackHeight!,
-                              ),
-                              size: Size(widget.height, widget.height),
-                            );
-                          },
+                          builder: (context, amplitude, _) => CustomPaint(
+                            painter: _WavePainter(
+                              color: sliderTheme.activeTrackColor!,
+                              animation: _phaseController,
+                              amplitude: amplitude,
+                              period: widget.height,
+                              sampleInterval: widget.height / 25.0,
+                              strokeWidth: sliderTheme.trackHeight!,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -319,76 +295,61 @@ class MaterialWaveSliderState extends State<MaterialWaveSlider> with SingleTicke
   }
 }
 
-/// {@template sine_painter}
-///
-/// SinePainter
-/// -----------
-/// A [CustomPainter] to draw a sine wave.
-///
-/// {@endtemplate}
-class SinePainter extends CustomPainter {
-  /// The color of the wave.
+class _WavePainter extends CustomPainter {
   final Color color;
-
-  /// The delta used to calculate the [sin] value when drawing the path.
-  final double delta;
-
-  /// The phase of the wave.
-  final double phase;
-
-  /// The amplitude of the wave.
+  final Animation<double> animation;
   final double amplitude;
-
-  /// The stroke-cap of the wave.
-  final StrokeCap strokeCap;
-
-  /// The stroke-width of the wave.
+  final double period;
+  final double sampleInterval;
   final double strokeWidth;
+  Path? _path;
+  Size? _pathSize;
 
-  /// Pre-calculated [Path] to draw the wave.
-  final Path? path;
-
-  /// {@macro sine_painter}
-  SinePainter({
+  _WavePainter({
     required this.color,
-    this.delta = 2.0,
-    this.phase = pi,
-    this.amplitude = 16.0,
-    this.strokeCap = StrokeCap.butt,
-    this.strokeWidth = 2.0,
-    this.path,
-  });
-
-  static Path calculatePath(double delta, double amplitude, double phase, double width, double height) {
-    final path = Path();
-    for (double x = 0.0; x <= width + delta; x += delta) {
-      final y = height / 2.0 + amplitude * sin(x / width * 2 * pi + phase);
-      if (x == 0.0) {
-        path.moveTo(x, y);
-      }
-      path.lineTo(x, y);
-    }
-    return path;
-  }
+    required this.animation,
+    required this.amplitude,
+    required this.period,
+    required this.sampleInterval,
+    required this.strokeWidth,
+  }) : super(repaint: animation);
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = color
-      ..strokeCap = strokeCap
       ..strokeWidth = strokeWidth
       ..style = PaintingStyle.stroke;
 
-    canvas.drawPath(
-      path ?? calculatePath(delta, amplitude, phase, size.width, size.height),
-      paint,
-    );
+    if (_path == null || _pathSize != size) {
+      final path = Path();
+      for (double x = 0.0; x <= size.width + period * 2.0 + sampleInterval; x += sampleInterval) {
+        final y = size.height / 2.0 + amplitude * sin(x / period * 2.0 * pi);
+        if (x == 0.0) {
+          path.moveTo(x, y);
+        } else {
+          path.lineTo(x, y);
+        }
+      }
+      _path = path;
+      _pathSize = size;
+    }
+
+    canvas.save();
+    canvas.translate(-period * (1.0 + animation.value), 0.0);
+    canvas.drawPath(_path!, paint);
+    canvas.restore();
   }
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-    final previous = (oldDelegate as SinePainter);
-    return color != previous.color || delta != previous.delta || phase != previous.phase || amplitude != previous.amplitude || strokeCap != previous.strokeCap || strokeWidth != previous.strokeWidth;
+    final previous = oldDelegate as _WavePainter;
+    return color != previous.color ||
+        animation != previous.animation ||
+        amplitude != previous.amplitude ||
+        period != previous.period ||
+        sampleInterval != previous.sampleInterval ||
+        strokeWidth != previous.strokeWidth;
   }
 }
 
