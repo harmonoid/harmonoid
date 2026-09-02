@@ -95,9 +95,6 @@ ImageProvider cover({
 }) {
   final context = rootNavigatorKey.currentContext!;
 
-  if (cacheWidth != null) cacheWidth *= 2;
-  if (cacheHeight != null) cacheHeight *= 2;
-
   final key = switch ((item, playlistEntry, uri)) {
     (MediaLibraryItem e, _, _) => e.toImageKey(),
     (_, PlaylistEntry e, _) => e.toImageKey(),
