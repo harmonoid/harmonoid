@@ -116,7 +116,7 @@ dependencies:
   windows_taskbar:
     git:
       url: https://github.com/alexmercerind/windows_taskbar.git
-      ref: b3273d58aab9d71f61b51a84d5c6fb6cf0821529
+      ref: c1fe0c37171521af8b55bc8ce89734cfe13262c1
 
 dev_dependencies:
   build_runner: ^2.4.8

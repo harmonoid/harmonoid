@@ -1768,11 +1768,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: b3273d58aab9d71f61b51a84d5c6fb6cf0821529
-      resolved-ref: b3273d58aab9d71f61b51a84d5c6fb6cf0821529
+      ref: c1fe0c37171521af8b55bc8ce89734cfe13262c1
+      resolved-ref: c1fe0c37171521af8b55bc8ce89734cfe13262c1
       url: "https://github.com/alexmercerind/windows_taskbar.git"
     source: git
-    version: "1.1.1"
+    version: "1.1.4"
   xdg_directories:
     dependency: transitive
     description:
