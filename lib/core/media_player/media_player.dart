@@ -52,7 +52,12 @@ final class MediaPlayer extends ChangeNotifier {
   static const Duration kCrossfadeMinDuration = Duration(seconds: 2);
   static const Duration kCrossfadeMaxDuration = Duration(seconds: 30);
   static const int kMixThreshold = 100;
-  static const int kFadeDurationMs = 500;
+  static const Duration kSoftPlayPauseDefaultDuration = Duration(milliseconds: 500);
+  static const Duration kSoftPlayPauseMinDuration = Duration(milliseconds: 100);
+  static const Duration kSoftPlayPauseMaxDuration = Duration(milliseconds: 3000);
+
+  Duration _softPlayPauseDuration = kSoftPlayPauseDefaultDuration;
+  Duration get softPlayPauseDuration => _softPlayPauseDuration;
 
   bool _fadeControllerInitialized = false;
   late final AnimationController _fadeController;
@@ -80,9 +85,27 @@ final class MediaPlayer extends ChangeNotifier {
   }
 
   Future<void> _ensureInitialized() async {
+    try {
+      final saved = await Configuration.instance.db.getInteger('SOFT_PLAY_PAUSE_DURATION');
+      if (saved != null) {
+        _softPlayPauseDuration = Duration(milliseconds: saved);
+      }
+    } catch (_) {}
     _initFadeController();
     await _ensureInitializedPlayer();
     await _mixinRegistry.ensureInitialized();
+  }
+
+  Future<void> setSoftPlayPauseDuration(Duration duration) async {
+    _softPlayPauseDuration = duration;
+    notifyListeners();
+    try {
+      await Configuration.instance.db.setValue(
+        'SOFT_PLAY_PAUSE_DURATION',
+        kTypeInteger,
+        integerValue: duration.inMilliseconds,
+      );
+    } catch (_) {}
   }
 
   void _initFadeController() {
@@ -91,7 +114,7 @@ final class MediaPlayer extends ChangeNotifier {
 
     _fadeController = AnimationController(
       vsync: const _MediaPlayerTickerProvider(),
-      duration: const Duration(milliseconds: kFadeDurationMs),
+      duration: _softPlayPauseDuration,
     );
 
     _curvedAnimation = CurvedAnimation(
@@ -140,9 +163,17 @@ final class MediaPlayer extends ChangeNotifier {
       return;
     }
 
+    final int fadeDurationMs = _softPlayPauseDuration.inMilliseconds;
+    if (fadeDurationMs <= 0) {
+      _currentVolume = targetVolume;
+      _player.setVolume(targetVolume);
+      onComplete?.call();
+      return;
+    }
+
     // Scale duration proportionally to distance to maintain consistent slew rate
     final double maxRange = state.volume > 0 ? state.volume : 100.0;
-    final int effectiveDurationMs = (kFadeDurationMs * (volumeDelta / maxRange)).round();
+    final int effectiveDurationMs = (fadeDurationMs * (volumeDelta / maxRange)).round();
 
     if (effectiveDurationMs <= 0) {
       _currentVolume = targetVolume;
@@ -170,9 +201,13 @@ final class MediaPlayer extends ChangeNotifier {
     _fadeController.forward(from: 0.0);
   }
 
-  /// Soft Play: Fades volume in to [state.volume] over 500ms along the S-curve.
+  /// Soft Play: Fades volume in to [state.volume] over [softPlayPauseDuration] along the S-curve.
   Future<void> softPlay() async {
     if (state.playables.isEmpty && _player.state.playlist.medias.isEmpty) return;
+
+    if (_softPlayPauseDuration == Duration.zero) {
+      return play(soft: false);
+    }
 
     final double target = state.volume > 0 ? state.volume : 100.0;
 
@@ -196,11 +231,15 @@ final class MediaPlayer extends ChangeNotifier {
     );
   }
 
-  /// Soft Pause: Incrementally lowers volume down to 0 over 500ms along the S-curve.
+  /// Soft Pause: Incrementally lowers volume down to 0 over [softPlayPauseDuration] along the S-curve.
   /// Pauses playback only once volume reaches 0.
   Future<void> softPause() async {
     if (state.playables.isEmpty && _player.state.playlist.medias.isEmpty) return;
     if (!state.playing && _currentVolume <= 0.0) return;
+
+    if (_softPlayPauseDuration == Duration.zero) {
+      return pause(soft: false);
+    }
 
     _startFade(
       targetVolume: 0.0,
@@ -263,7 +302,7 @@ final class MediaPlayer extends ChangeNotifier {
   }
 
   Future<void> playOrPause({bool soft = true}) async {
-    if (soft) {
+    if (soft && _softPlayPauseDuration > Duration.zero) {
       final bool shouldPause;
       if (_fadeControllerInitialized && _fadeController.isAnimating) {
         shouldPause = _fadeTargetVolume != 0.0;

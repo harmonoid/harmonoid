@@ -185,6 +185,8 @@ class NowPlayingAudioControlPanelState extends State<NowPlayingAudioControlPanel
             const Divider(height: 1.0, thickness: 1.0),
             _buildCrossfadeDuration(context),
             const Divider(height: 1.0, thickness: 1.0),
+            _buildSoftPlayPauseDuration(context),
+            const Divider(height: 1.0, thickness: 1.0),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
               child: _buildReplayGain(context),
@@ -217,6 +219,11 @@ class NowPlayingAudioControlPanelState extends State<NowPlayingAudioControlPanel
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 12.0),
           child: _buildCrossfadeDuration(context),
+        ),
+        const Divider(height: 1.0, thickness: 1.0),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12.0),
+          child: _buildSoftPlayPauseDuration(context),
         ),
         const Divider(height: 1.0, thickness: 1.0),
         Padding(
@@ -279,6 +286,75 @@ class NowPlayingAudioControlPanelState extends State<NowPlayingAudioControlPanel
           );
         },
       ),
+    );
+  }
+
+  Widget _buildSoftPlayPauseDuration(BuildContext context) {
+    return Consumer<MediaPlayer>(
+      builder: (context, mediaPlayer, _) {
+        final duration = mediaPlayer.softPlayPauseDuration;
+        final enabled = duration > Duration.zero;
+        return Column(
+          children: [
+            InkWell(
+              onTap: () => mediaPlayer.setSoftPlayPauseDuration(enabled ? Duration.zero : MediaPlayer.kSoftPlayPauseDefaultDuration),
+              child: Container(
+                height: 48.0,
+                padding: isDesktop ? const EdgeInsets.only(left: 20.0, right: 16.0) : EdgeInsets.zero,
+                child: Row(
+                  children: [
+                    Text(
+                      'Soft Pause & Play ${enabled ? '(${duration.inMilliseconds >= 1000 ? (duration.inMilliseconds / 1000).toStringAsFixed(1) : duration.inMilliseconds}${duration.inMilliseconds >= 1000 ? 's' : 'ms'})' : ''}',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    const Spacer(),
+                    Switch(
+                      value: enabled,
+                      onChanged: (value) => mediaPlayer.setSoftPlayPauseDuration(value ? MediaPlayer.kSoftPlayPauseDefaultDuration : Duration.zero),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: isDesktop ? const EdgeInsets.symmetric(horizontal: 12.0) : EdgeInsets.zero,
+              child: ScrollableSlider(
+                min: MediaPlayer.kSoftPlayPauseMinDuration.inMilliseconds.toDouble(),
+                max: MediaPlayer.kSoftPlayPauseMaxDuration.inMilliseconds.toDouble(),
+                interval: 100.0,
+                stepSize: 50.0,
+                showLabels: true,
+                labelFormatterCallback: (value, _) {
+                  if (value == MediaPlayer.kSoftPlayPauseMinDuration.inMilliseconds) {
+                    return '${MediaPlayer.kSoftPlayPauseMinDuration.inMilliseconds}ms';
+                  } else if (value == MediaPlayer.kSoftPlayPauseMaxDuration.inMilliseconds) {
+                    return '${(MediaPlayer.kSoftPlayPauseMaxDuration.inMilliseconds / 1000).toStringAsFixed(0)}s';
+                  }
+                  return '';
+                },
+                value: duration.inMilliseconds.clamp(
+                  MediaPlayer.kSoftPlayPauseMinDuration.inMilliseconds,
+                  MediaPlayer.kSoftPlayPauseMaxDuration.inMilliseconds,
+                ).toDouble(),
+                onChanged: (value) => mediaPlayer.setSoftPlayPauseDuration(Duration(milliseconds: (value as double).round())),
+                onScrolledUp: () => mediaPlayer.setSoftPlayPauseDuration(
+                  Duration(milliseconds: (duration.inMilliseconds + 50).clamp(
+                    MediaPlayer.kSoftPlayPauseMinDuration.inMilliseconds,
+                    MediaPlayer.kSoftPlayPauseMaxDuration.inMilliseconds,
+                  )),
+                ),
+                onScrolledDown: () => mediaPlayer.setSoftPlayPauseDuration(
+                  Duration(milliseconds: (duration.inMilliseconds - 50).clamp(
+                    MediaPlayer.kSoftPlayPauseMinDuration.inMilliseconds,
+                    MediaPlayer.kSoftPlayPauseMaxDuration.inMilliseconds,
+                  )),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12.0),
+          ],
+        );
+      },
     );
   }
 
