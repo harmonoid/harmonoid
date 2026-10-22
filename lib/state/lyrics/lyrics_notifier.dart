@@ -68,7 +68,9 @@ class LyricsNotifier extends ChangeNotifier {
         final currentDuration = state.duration;
         final currentPosition = state.position;
 
-        if (current != _current && currentDuration != _currentDuration && currentDuration > Duration.zero && currentPosition > Duration.zero) {
+        if (current == null) return;
+
+        if (current != _current && currentDuration > Duration.zero && currentPosition > Duration.zero) {
           index = 0;
           _timestampsAndIndexes.clear();
           notifyListeners();
@@ -183,6 +185,17 @@ class LyricsNotifier extends ChangeNotifier {
       if (lyrics == null) return false;
 
       await db.setLyrics(track.toLyricsKey(), lyrics);
+      if (_current?.uri == track.uri) {
+        this.lyrics = lyrics;
+        lyricsLoading = false;
+        index = 0;
+        _timestampsAndIndexes.clear();
+        for (int i = 0; i < this.lyrics.length; i++) {
+          _timestampsAndIndexes[this.lyrics[i].timestamp] = i;
+        }
+        notifyListeners();
+        unawaited(_fetchLyricsTranslation());
+      }
       return true;
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
@@ -204,6 +217,14 @@ class LyricsNotifier extends ChangeNotifier {
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
+    }
+    if (_current?.uri == track.uri) {
+      lyrics = [];
+      lyricsLoading = false;
+      translation = [];
+      index = 0;
+      _timestampsAndIndexes.clear();
+      notifyListeners();
     }
   }
 
@@ -402,9 +423,9 @@ class LyricsNotifier extends ChangeNotifier {
     return lrc.lyrics.map((e) => Lyric(timestamp: (lrc.offset ?? 0) + e.timestamp.inMilliseconds, text: e.lyrics.trim())).toList();
   }
 
-  bool _isCurrentGuard(Playable? playable, Duration? duration, [Language? language]) {
+  bool _isCurrentGuard(Playable? playable, [Duration? duration, Language? language]) {
     try {
-      return playable == MediaPlayer.instance.current && duration == MediaPlayer.instance.state.duration && (language == null ? true : language == translationLanguage);
+      return playable == MediaPlayer.instance.current && (language == null ? true : language == translationLanguage);
     } catch (_) {
       return false;
     }
