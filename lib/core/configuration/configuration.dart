@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:discord_social_sdk/discord_social_sdk.dart';
 import 'package:lastfm/lastfm.dart';
 import 'package:media_library/media_library.dart';
 import 'package:path/path.dart' as path;
@@ -94,7 +95,8 @@ class Configuration extends ConfigurationBase {
     _desktopNowPlayingBarColorPalette = await read<bool, bool>(kKeyDesktopNowPlayingBarColorPalette, defaults);
     _desktopNowPlayingCarousel = await read<int, int>(kKeyDesktopNowPlayingCarousel, defaults);
     _desktopNowPlayingLyrics = await read<bool, bool>(kKeyDesktopNowPlayingLyrics, defaults);
-    _discordRpc = await read<bool, bool>(kKeyDiscordRpc, defaults);
+    _discordTokens = await read<dynamic, DiscordTokens>(kKeyDiscordTokens, defaults, (value) => DiscordTokens.fromJson(value));
+    _discordUsername = await read<String, String>(kKeyDiscordUsername, defaults);
     _identifier = await read<String, String>(kKeyIdentifier, defaults);
     _lastfmSession = await read<dynamic, Session>(kKeyLastfmSession, defaults, (value) => Session.fromJson(value));
     _localization = await read<dynamic, LocalizationData>(kKeyLocalization, defaults, (value) => LocalizationData.fromJson(value));

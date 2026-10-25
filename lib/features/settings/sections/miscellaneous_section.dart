@@ -87,21 +87,6 @@ class _MiscellaneousSectionState extends State<MiscellaneousSection> {
               setState(() {});
             },
           ),
-        if ( /* DESKTOP */ isDesktop)
-          ListItem(
-            trailing: Switch(
-              value: Configuration.instance.discordRpc,
-              onChanged: (value) async {
-                await Configuration.instance.set(discordRpc: value);
-                setState(() {});
-              },
-            ),
-            title: Localization.instance.ENABLE_DISCORD_RPC,
-            onTap: () async {
-              await Configuration.instance.set(discordRpc: !Configuration.instance.discordRpc);
-              setState(() {});
-            },
-          ),
       ],
     );
   }

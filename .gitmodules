@@ -26,3 +26,6 @@
 	path = lib/private
 	url = https://github.com/harmonoid/private.git
 	branch = master
+[submodule "external/discord_social_sdk"]
+	path = external/discord_social_sdk
+	url = https://github.com/harmonoid/discord_social_sdk.git

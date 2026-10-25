@@ -2,7 +2,8 @@
 
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
+import 'package:discord_social_sdk/discord_social_sdk.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image/image.dart' as img;
 import 'package:safe_local_storage/file_system.dart';
@@ -24,35 +25,35 @@ import 'package:harmonoid/utils/rendering.dart';
 ///
 /// DiscordRpcMixin
 /// ---------------
-/// package:flutter_discord_rpc mixin for [MediaPlayer].
+/// package:discord_social_sdk mixin for [MediaPlayer].
 ///
 /// {@endtemplate}
 final class DiscordRpcMixin implements MediaPlayerMixin {
-  static const String kApplicationId = '881480706545573918';
+  static const int kApplicationId = 881480706545573918;
+  static const String kApplicationName = 'Harmonoid';
   static const String kDefaultLargeImage = 'cover_default';
   static const String kPauseSmallImage = 'pause';
   static const String kPlaySmallImage = 'play';
 
-  static bool get supported => (Platform.isLinux || Platform.isMacOS || Platform.isWindows) && Configuration.instance.discordRpc;
+  static bool get supported => Platform.isLinux || Platform.isMacOS || Platform.isWindows || Platform.isAndroid || Platform.isIOS;
 
   DiscordRpcMixin(this._player);
 
   @override
   Future<void> ensureInitialized() async {
     try {
-      await FlutterDiscordRPC.initialize(kApplicationId);
-      final instance = FlutterDiscordRPC.instance..connect();
-
-      _instance = instance;
+      await _connect();
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
     }
   }
 
+  DiscordSocialClient get client => _client;
+
   @override
   Future<void> dispose() async {
-    _instance = null;
+    _client.disconnect();
   }
 
   @override
@@ -65,7 +66,9 @@ final class DiscordRpcMixin implements MediaPlayerMixin {
 
   @override
   Future<void> notifyState(MediaPlayerState state) {
-    if (_instance?.isConnected != true) return Future.value();
+    if (Configuration.instance.discordTokens.accessToken.isEmpty) {
+      return Future.value();
+    }
 
     return _lock.synchronized(() async {
       final current = _player.current;
@@ -96,33 +99,51 @@ final class DiscordRpcMixin implements MediaPlayerMixin {
       }
 
       if (notify) {
-        await _instance?.setActivity(
-          activity: RPCActivity(
-            state: current.subtitle.take(2).join(', ').ellipsis(128).nullIfBlank(),
-            details: current.title.ellipsis(128).nullIfBlank(),
-            timestamps: state.playing
-                ? RPCTimestamps(
-                    start: DateTime.now().subtract(state.position).millisecondsSinceEpoch,
-                    end: DateTime.now().subtract(state.position).add(state.duration).millisecondsSinceEpoch,
-                  )
-                : null,
-            assets: RPCAssets(
+        try {
+          await _client.updatePresence(
+            DiscordActivity(
+              name: kApplicationName,
+              state: current.subtitle.take(2).join(', ').ellipsis(128).nullIfBlank(),
+              details: current.title.ellipsis(128).nullIfBlank(),
+              startTimestamp: state.playing ? DateTime.now().subtract(state.position) : null,
+              endTimestamp: state.playing ? DateTime.now().subtract(state.position).add(state.duration) : null,
               largeImage: _largeImage,
               smallImage: state.playing ? kPlaySmallImage : kPauseSmallImage,
               largeText: current.description.join(' • ').ellipsis(128).nullIfBlank(),
               smallText: state.playing ? Localization.instance.PLAYING : Localization.instance.PAUSED,
+              buttons: [
+                DiscordButton(
+                  label: Localization.instance.FIND,
+                  url: 'https://www.google.com/search?q=${Uri.encodeComponent([current.title, ...current.subtitle.take(2)].where((e) => e.isNotEmpty).join(' '))}',
+                ),
+              ],
+              type: DiscordActivityType.listening,
             ),
-            buttons: [
-              RPCButton(
-                label: Localization.instance.FIND,
-                url: 'https://www.google.com/search?q=${Uri.encodeComponent([current.title, ...current.subtitle.take(2)].where((e) => e.isNotEmpty).join(' '))}',
-              ),
-            ],
-            activityType: ActivityType.listening,
-          ),
-        );
+          );
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
+        }
       }
     });
+  }
+
+  Future<void> _connect([bool retryWithRefresh = false]) async {
+    if (Configuration.instance.discordTokens.accessToken.isEmpty) return;
+    try {
+      if (retryWithRefresh) {
+        final tokens = await _client.refreshToken(refreshToken: Configuration.instance.discordTokens.refreshToken);
+        await Configuration.instance.set(discordTokens: tokens);
+      }
+      await _client.updateToken(tokenType: Configuration.instance.discordTokens.tokenType, token: Configuration.instance.discordTokens.accessToken);
+      await _client.connect();
+    } catch (_) {
+      _client.disconnect();
+      if (!retryWithRefresh) {
+        return _connect(true);
+      }
+      rethrow;
+    }
   }
 
   Future<String?> _getFileUrl(Playable playable, FutureOr<File?> inputFuture) async {
@@ -155,7 +176,7 @@ final class DiscordRpcMixin implements MediaPlayerMixin {
 
   final MediaPlayer _player;
 
-  FlutterDiscordRPC? _instance;
+  final DiscordSocialClient _client = DiscordSocialClient(kApplicationId, kDebugMode);
   final Lock _lock = Lock();
 
   Playable? _flagPlayable;

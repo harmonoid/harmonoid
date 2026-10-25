@@ -3,7 +3,6 @@
 part of 'configuration.dart';
 
 class ConfigurationBase {
-
   final Directory directory;
   final Database db;
 
@@ -18,7 +17,8 @@ class ConfigurationBase {
   bool get desktopNowPlayingBarColorPalette => _desktopNowPlayingBarColorPalette!;
   int get desktopNowPlayingCarousel => _desktopNowPlayingCarousel!;
   bool get desktopNowPlayingLyrics => _desktopNowPlayingLyrics!;
-  bool get discordRpc => _discordRpc!;
+  DiscordTokens get discordTokens => _discordTokens!;
+  String get discordUsername => _discordUsername!;
   String get identifier => _identifier!;
   Session get lastfmSession => _lastfmSession!;
   LocalizationData get localization => _localization!;
@@ -84,7 +84,8 @@ class ConfigurationBase {
     bool? desktopNowPlayingBarColorPalette,
     int? desktopNowPlayingCarousel,
     bool? desktopNowPlayingLyrics,
-    bool? discordRpc,
+    DiscordTokens? discordTokens,
+    String? discordUsername,
     String? identifier,
     Session? lastfmSession,
     LocalizationData? localization,
@@ -167,9 +168,13 @@ class ConfigurationBase {
       _desktopNowPlayingLyrics = desktopNowPlayingLyrics;
       await db.setValue(kKeyDesktopNowPlayingLyrics, kTypeBoolean, booleanValue: desktopNowPlayingLyrics);
     }
-    if (discordRpc != null) {
-      _discordRpc = discordRpc;
-      await db.setValue(kKeyDiscordRpc, kTypeBoolean, booleanValue: discordRpc);
+    if (discordTokens != null) {
+      _discordTokens = discordTokens;
+      await db.setValue(kKeyDiscordTokens, kTypeJson, jsonValue: discordTokens.toJson());
+    }
+    if (discordUsername != null) {
+      _discordUsername = discordUsername;
+      await db.setValue(kKeyDiscordUsername, kTypeString, stringValue: discordUsername);
     }
     if (identifier != null) {
       _identifier = identifier;
@@ -409,17 +414,18 @@ class ConfigurationBase {
       /* Boolean */ kKeyDesktopNowPlayingBarColorPalette: true,
       /* Integer */ kKeyDesktopNowPlayingCarousel: 2,
       /* Boolean */ kKeyDesktopNowPlayingLyrics: true,
-      /* Boolean */ kKeyDiscordRpc: true,
+      /* Json    */ kKeyDiscordTokens: const DiscordTokens(accessToken: '', refreshToken: '', tokenType: DiscordTokenType.bearer, expiresIn: Duration.zero, scopes: []),
+      /* String  */ kKeyDiscordUsername: '',
       /* String  */ kKeyIdentifier: const Uuid().v4(),
       /* Json    */ kKeyLastfmSession: const Session(name: '', key: ''),
       /* Json    */ kKeyLocalization: await getDefaultLocalization(),
       /* Boolean */ kKeyLrcFromDirectory: false,
       /* Json    */ kKeyLyricsTranslationLanguage: await getDefaultLyricsTranslationLanguage(),
-      /* Double  */ kKeyLyricsViewFocusedFontSize: isDesktop ? 64.0: 48.0,
+      /* Double  */ kKeyLyricsViewFocusedFontSize: isDesktop ? 64.0 : 48.0,
       /* Double  */ kKeyLyricsViewFocusedLineHeight: 1.2,
       /* String  */ kKeyLyricsViewFontFamily: '',
       /* Integer */ kKeyLyricsViewTextAlign: TextAlign.start.index,
-      /* Double  */ kKeyLyricsViewUnfocusedFontSize: isDesktop ? 28.0: 24.0,
+      /* Double  */ kKeyLyricsViewUnfocusedFontSize: isDesktop ? 28.0 : 24.0,
       /* Double  */ kKeyLyricsViewUnfocusedLineHeight: 1.2,
       /* Boolean */ kKeyMediaLibraryAddPlaylistToNowPlaying: true,
       /* Json    */ kKeyMediaLibraryAlbumGroupingParameters: [AlbumGroupingParameter.album.index],
@@ -443,7 +449,13 @@ class ConfigurationBase {
       /* Boolean */ kKeyMediaLibraryTrackSortAscending: true,
       /* Integer */ kKeyMediaLibraryTrackSortType: TrackSortType.title.index,
       /* Integer */ kKeyMediaLibraryTrackViewType: TrackViewType.list.index,
-      /* Json    */ kKeyMediaLibraryVisibleTabs: [MediaLibraryTab.albums.index, MediaLibraryTab.tracks.index, MediaLibraryTab.artists.index, MediaLibraryTab.folders.index, MediaLibraryTab.playlists.index],
+      /* Json    */ kKeyMediaLibraryVisibleTabs: [
+        MediaLibraryTab.albums.index,
+        MediaLibraryTab.tracks.index,
+        MediaLibraryTab.artists.index,
+        MediaLibraryTab.folders.index,
+        MediaLibraryTab.playlists.index,
+      ],
       /* Json    */ kKeyMediaPlayerPlaybackState: MediaPlayerState.defaults().toPlaybackState(),
       /* String  */ kKeyMetaInstallDate: DateTime.now().toIso8601String(),
       /* Boolean */ kKeyMetaInAppReviewSubmitted: false,
@@ -463,7 +475,7 @@ class ConfigurationBase {
       /* Boolean */ kKeyNowPlayingStartMixAfterEnding: true,
       /* Json    */ kKeyThemeAnimationDuration: const AnimationDuration(),
       /* Integer */ kKeyThemeMaterialStandard: isDesktop ? 2 : 3,
-      /* Integer */ kKeyThemeMode: isDesktop ? ThemeMode.light.index: ThemeMode.system.index,
+      /* Integer */ kKeyThemeMode: isDesktop ? ThemeMode.light.index : ThemeMode.system.index,
       /* Boolean */ kKeyThemeSystemColorScheme: isMobile,
       /* String  */ kKeyUpdateCheckVersion: kVersion,
       /* Boolean */ kKeyWindowsTaskbarProgress: false,
@@ -476,7 +488,8 @@ class ConfigurationBase {
   bool? _desktopNowPlayingBarColorPalette;
   int? _desktopNowPlayingCarousel;
   bool? _desktopNowPlayingLyrics;
-  bool? _discordRpc;
+  DiscordTokens? _discordTokens;
+  String? _discordUsername;
   String? _identifier;
   Session? _lastfmSession;
   LocalizationData? _localization;
@@ -544,7 +557,8 @@ const kKeyDesktopMediaLibraryTracksScreenColumnWidths = 'DESKTOP_MEDIA_LIBRARY_T
 const kKeyDesktopNowPlayingBarColorPalette = 'DESKTOP_NOW_PLAYING_BAR_COLOR_PALETTE';
 const kKeyDesktopNowPlayingCarousel = 'DESKTOP_NOW_PLAYING_CAROUSEL';
 const kKeyDesktopNowPlayingLyrics = 'DESKTOP_NOW_PLAYING_LYRICS';
-const kKeyDiscordRpc = 'DISCORD_RPC';
+const kKeyDiscordTokens = 'DISCORD_TOKENS';
+const kKeyDiscordUsername = 'DISCORD_USERNAME';
 const kKeyIdentifier = 'IDENTIFIER';
 const kKeyLastfmSession = 'LASTFM_SESSION';
 const kKeyLocalization = 'LOCALIZATION';

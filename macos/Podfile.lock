@@ -1,27 +1,15 @@
 PODS:
-  - flutter_discord_rpc (0.0.1):
-    - FlutterMacOS
   - FlutterMacOS (1.0.0)
-  - window_plus (0.0.1):
-    - FlutterMacOS
 
 DEPENDENCIES:
-  - flutter_discord_rpc (from `Flutter/ephemeral/.symlinks/plugins/flutter_discord_rpc/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
-  - window_plus (from `Flutter/ephemeral/.symlinks/plugins/window_plus/macos`)
 
 EXTERNAL SOURCES:
-  flutter_discord_rpc:
-    :path: Flutter/ephemeral/.symlinks/plugins/flutter_discord_rpc/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
-  window_plus:
-    :path: Flutter/ephemeral/.symlinks/plugins/window_plus/macos
 
 SPEC CHECKSUMS:
-  flutter_discord_rpc: 90614fcca26f3cebfd33263557ea7875936d184b
   FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
-  window_plus: 539706b6976d6dfd1b0b60479e18fb392f51eb7b
 
 PODFILE CHECKSUM: 9ebaf0ce3d369aaa26a9ea0e159195ed94724cf3
 
