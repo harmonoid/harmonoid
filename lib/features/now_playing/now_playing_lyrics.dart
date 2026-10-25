@@ -26,12 +26,14 @@ class _NowPlayingLyricsState extends State<NowPlayingLyrics> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
         final fontFamily = Configuration.instance.lyricsViewFontFamily;
-        _fontFamily = fontFamily.isEmpty ? '' : await SystemFonts().loadFont(fontFamily);
+        if (SystemFonts().getFontList().contains(fontFamily)) {
+          _fontFamily = await SystemFonts().loadFont(fontFamily);
+        }
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
-        _fontFamily = '';
       }
+      _fontFamily ??= '';
       setState(() {});
     });
   }
