@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:audio_session/audio_session.dart';
-import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:media_kit/media_kit.dart' hide Playable, Track;
 import 'package:media_kit/generated/libmpv/bindings.dart' show mpv_event_id;
 import 'package:media_library/media_library.dart' hide Playlist, FileSystemMediaLibrary;
@@ -40,34 +38,13 @@ import 'package:harmonoid/utils/constants.dart';
 /// Implementation to handle the media playback & other related functionalities.
 ///
 /// {@endtemplate}
-final class _MediaPlayerTickerProvider implements TickerProvider {
-  const _MediaPlayerTickerProvider();
-
-  @override
-  Ticker createTicker(TickerCallback onTick) => Ticker(onTick, debugLabel: 'created by MediaPlayer');
-}
-
 final class MediaPlayer extends ChangeNotifier {
   static const Duration kCrossfadeDefaultDuration = Duration(seconds: 5);
   static const Duration kCrossfadeMinDuration = Duration(seconds: 2);
   static const Duration kCrossfadeMaxDuration = Duration(seconds: 30);
   static const int kMixThreshold = 100;
-  static const Duration kSoftPlayPauseDefaultDuration = Duration(milliseconds: 500);
-  static const Duration kSoftPlayPauseMinDuration = Duration(milliseconds: 100);
-  static const Duration kSoftPlayPauseMaxDuration = Duration(milliseconds: 3000);
 
-  Duration _softPlayPauseDuration = kSoftPlayPauseDefaultDuration;
-  Duration get softPlayPauseDuration => _softPlayPauseDuration;
-
-  bool _fadeControllerInitialized = false;
-  late final AnimationController _fadeController;
-  late final CurvedAnimation _curvedAnimation;
-  VoidCallback? _fadeOnComplete;
-  Timer? _fadeSafetyTimer;
-
-  double _fadeStartVolume = 0.0;
-  double _fadeTargetVolume = 0.0;
-  double _currentVolume = 100.0;
+  static const Duration kFadeDuration = Duration(milliseconds: 500);
 
   /// Singleton instance.
   static final MediaPlayer instance = MediaPlayer._();
@@ -85,169 +62,8 @@ final class MediaPlayer extends ChangeNotifier {
   }
 
   Future<void> _ensureInitialized() async {
-    try {
-      final saved = await Configuration.instance.db.getInteger('SOFT_PLAY_PAUSE_DURATION');
-      if (saved != null) {
-        _softPlayPauseDuration = Duration(milliseconds: saved);
-      }
-    } catch (_) {}
-    _initFadeController();
     await _ensureInitializedPlayer();
     await _mixinRegistry.ensureInitialized();
-  }
-
-  Future<void> setSoftPlayPauseDuration(Duration duration) async {
-    _softPlayPauseDuration = duration;
-    notifyListeners();
-    try {
-      await Configuration.instance.db.setValue(
-        'SOFT_PLAY_PAUSE_DURATION',
-        kTypeInteger,
-        integerValue: duration.inMilliseconds,
-      );
-    } catch (_) {}
-  }
-
-  void _initFadeController() {
-    if (_fadeControllerInitialized) return;
-    _fadeControllerInitialized = true;
-
-    _fadeController = AnimationController(
-      vsync: const _MediaPlayerTickerProvider(),
-      duration: _softPlayPauseDuration,
-    );
-
-    _curvedAnimation = CurvedAnimation(
-      parent: _fadeController,
-      curve: Curves.easeInOutCubic,
-    );
-
-    _curvedAnimation.addListener(() {
-      final double progress = _curvedAnimation.value;
-      final double newVolume = _fadeStartVolume + (_fadeTargetVolume - _fadeStartVolume) * progress;
-      _currentVolume = newVolume;
-      _player.setVolume(newVolume);
-    });
-
-    _fadeController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        _fadeSafetyTimer?.cancel();
-        _fadeSafetyTimer = null;
-        _fadeOnComplete?.call();
-        _fadeOnComplete = null;
-      }
-    });
-  }
-
-  /// Smoothly transitions volume towards [targetVolume] using VSync animation.
-  /// Handles interruptions seamlessly without volume jumps.
-  void _startFade({
-    required double targetVolume,
-    VoidCallback? onComplete,
-  }) {
-    _initFadeController();
-
-    // 1. Immediately halt any in-flight fade animation
-    _fadeController.stop();
-    _fadeSafetyTimer?.cancel();
-    _fadeSafetyTimer = null;
-    _fadeOnComplete = null;
-
-    final double startVolume = _currentVolume;
-    final double volumeDelta = (targetVolume - startVolume).abs();
-
-    if (volumeDelta < 0.001) {
-      _currentVolume = targetVolume;
-      _player.setVolume(targetVolume);
-      onComplete?.call();
-      return;
-    }
-
-    final int fadeDurationMs = _softPlayPauseDuration.inMilliseconds;
-    if (fadeDurationMs <= 0) {
-      _currentVolume = targetVolume;
-      _player.setVolume(targetVolume);
-      onComplete?.call();
-      return;
-    }
-
-    // Scale duration proportionally to distance to maintain consistent slew rate
-    final double maxRange = state.volume > 0 ? state.volume : 100.0;
-    final int effectiveDurationMs = (fadeDurationMs * (volumeDelta / maxRange)).round();
-
-    if (effectiveDurationMs <= 0) {
-      _currentVolume = targetVolume;
-      _player.setVolume(targetVolume);
-      onComplete?.call();
-      return;
-    }
-
-    _fadeStartVolume = startVolume;
-    _fadeTargetVolume = targetVolume;
-    _fadeOnComplete = onComplete;
-    _fadeController.duration = Duration(milliseconds: effectiveDurationMs);
-
-    _fadeSafetyTimer = Timer(Duration(milliseconds: effectiveDurationMs + 100), () {
-      if (_fadeController.isAnimating) {
-        _fadeController.stop();
-        _currentVolume = targetVolume;
-        _player.setVolume(targetVolume);
-        _fadeOnComplete?.call();
-        _fadeOnComplete = null;
-      }
-    });
-
-    // Forward from 0.0 to 1.0 driven by display VSync
-    _fadeController.forward(from: 0.0);
-  }
-
-  /// Soft Play: Fades volume in to [state.volume] over [softPlayPauseDuration] along the S-curve.
-  Future<void> softPlay() async {
-    if (state.playables.isEmpty && _player.state.playlist.medias.isEmpty) return;
-
-    if (_softPlayPauseDuration == Duration.zero) {
-      return play(soft: false);
-    }
-
-    final double target = state.volume > 0 ? state.volume : 100.0;
-
-    if (state.playing && _currentVolume >= target && !_fadeController.isAnimating) {
-      return;
-    }
-
-    if (!state.playing) {
-      _currentVolume = 0.0;
-      await _player.setVolume(0.0);
-      await _player.play();
-      await _mixinRegistry.get<AudioSessionMixin>()?.setActive(true);
-    } else {
-      await _player.play();
-      await _mixinRegistry.get<AudioSessionMixin>()?.setActive(true);
-    }
-
-    _startFade(
-      targetVolume: target,
-      onComplete: null,
-    );
-  }
-
-  /// Soft Pause: Incrementally lowers volume down to 0 over [softPlayPauseDuration] along the S-curve.
-  /// Pauses playback only once volume reaches 0.
-  Future<void> softPause() async {
-    if (state.playables.isEmpty && _player.state.playlist.medias.isEmpty) return;
-    if (!state.playing && _currentVolume <= 0.0) return;
-
-    if (_softPlayPauseDuration == Duration.zero) {
-      return pause(soft: false);
-    }
-
-    _startFade(
-      targetVolume: 0.0,
-      onComplete: () async {
-        await _player.pause();
-        await _mixinRegistry.get<AudioSessionMixin>()?.setActive(false);
-      },
-    );
   }
 
   Playable get current => _current ?? state.playables[state.index];
@@ -271,101 +87,61 @@ final class MediaPlayer extends ChangeNotifier {
     _mixinRegistry.notifyState(state);
   }
 
-  Future<void> play({bool soft = true}) async {
-    if (soft) {
-      return softPlay();
+  Future<void> play() async {
+    _fadeCancel();
+    final target = state.volume > 0.0 ? state.volume : 100.0;
+    if (state.playables.isEmpty) return;
+    if (state.playing && _fadeVolume >= target) return;
+    if (!state.playing) {
+      _fadeVolume = 0.0;
+      await _player.setVolume(0.0);
     }
-    if (_fadeControllerInitialized) {
-      _fadeController.stop();
-    }
-    _fadeSafetyTimer?.cancel();
-    _fadeSafetyTimer = null;
-    _fadeOnComplete = null;
-    _currentVolume = state.volume;
-    await _player.setVolume(state.volume);
     await _player.play();
     await _mixinRegistry.get<AudioSessionMixin>()?.setActive(true);
+    state = state.copyWith(playing: true);
+    await _fadeTo(target);
   }
 
-  Future<void> pause({bool soft = true}) async {
-    if (soft) {
-      return softPause();
+  Future<void> pause() async {
+    _fadeCancel();
+    if (state.playables.isEmpty) return;
+    if (!state.playing && _fadeVolume <= 0.0) return;
+    state = state.copyWith(playing: false);
+    if (await _fadeTo(0.0)) {
+      await _player.pause();
+      await _mixinRegistry.get<AudioSessionMixin>()?.setActive(false);
     }
-    if (_fadeControllerInitialized) {
-      _fadeController.stop();
-    }
-    _fadeSafetyTimer?.cancel();
-    _fadeSafetyTimer = null;
-    _fadeOnComplete = null;
-    await _player.pause();
-    await _mixinRegistry.get<AudioSessionMixin>()?.setActive(false);
   }
 
-  Future<void> playOrPause({bool soft = true}) async {
-    if (soft && _softPlayPauseDuration > Duration.zero) {
-      final bool shouldPause;
-      if (_fadeControllerInitialized && _fadeController.isAnimating) {
-        shouldPause = _fadeTargetVolume != 0.0;
-      } else {
-        shouldPause = state.playing;
-      }
-
-      if (shouldPause) {
-        await softPause();
-      } else {
-        await softPlay();
-      }
-      return;
+  Future<void> playOrPause() async {
+    final shouldPause = _fadeTarget != null ? _fadeTarget != 0.0 : state.playing;
+    _fadeCancel();
+    if (shouldPause) {
+      await pause();
+    } else {
+      await play();
     }
-
-    final wasPlaying = state.playing;
-    if (_fadeControllerInitialized) {
-      _fadeController.stop();
-    }
-    _fadeSafetyTimer?.cancel();
-    _fadeSafetyTimer = null;
-    _fadeOnComplete = null;
-    await _player.playOrPause();
-    await _mixinRegistry.get<AudioSessionMixin>()?.setActive(!wasPlaying);
   }
 
-  Future<void> next() {
-    if (_fadeControllerInitialized && _fadeController.isAnimating) {
-      _fadeController.stop();
-      _fadeSafetyTimer?.cancel();
-      _fadeSafetyTimer = null;
-      _fadeOnComplete = null;
-      _currentVolume = state.volume;
-      _player.setVolume(state.volume);
-    }
+  Future<void> next() async {
+    _fadeCancel();
     return _player.next();
   }
 
-  Future<void> previous() {
-    if (_fadeControllerInitialized && _fadeController.isAnimating) {
-      _fadeController.stop();
-      _fadeSafetyTimer?.cancel();
-      _fadeSafetyTimer = null;
-      _fadeOnComplete = null;
-      _currentVolume = state.volume;
-      _player.setVolume(state.volume);
-    }
+  Future<void> previous() async {
+    _fadeCancel();
     return _player.previous();
   }
 
-  Future<void> jump(int index) {
-    if (_fadeControllerInitialized && _fadeController.isAnimating) {
-      _fadeController.stop();
-      _fadeSafetyTimer?.cancel();
-      _fadeSafetyTimer = null;
-      _fadeOnComplete = null;
-      _currentVolume = state.volume;
-      _player.setVolume(state.volume);
-    }
+  Future<void> jump(int index) async {
+    _fadeCancel();
     return _player.jump(index);
   }
 
-  Future<void> seek(Duration position) => _player.seek(position);
+  Future<void> seek(Duration position) async {
+    _fadeCancel();
+    return _player.seek(position);
+  }
 
   Future<void> setLoop(Loop loop) => _player.setPlaylistMode(loop.toPlaylistMode());
 
@@ -373,14 +149,8 @@ final class MediaPlayer extends ChangeNotifier {
 
   Future<void> setPitch(double pitch) => _player.setPitch(pitch);
 
-  Future<void> setVolume(double volume) {
-    if (_fadeControllerInitialized) {
-      _fadeController.stop();
-    }
-    _fadeSafetyTimer?.cancel();
-    _fadeSafetyTimer = null;
-    _fadeOnComplete = null;
-    _currentVolume = volume;
+  Future<void> setVolume(double volume) async {
+    _fadeCancel();
     state = state.copyWith(volume: volume);
     return _player.setVolume(volume);
   }
@@ -443,12 +213,10 @@ final class MediaPlayer extends ChangeNotifier {
 
     state = state.copyWith(shuffle: false, mixOffset: mixOffset);
 
+    _fadeCancel();
     await _player.open(Playlist(medias, index: index), play: play);
-    if (play) {
-      await _mixinRegistry.get<AudioSessionMixin>()?.setActive(true);
-      if (_currentVolume < state.volume) {
-        _startFade(targetVolume: state.volume > 0 ? state.volume : 100.0);
-      }
+    if (play && medias.isNotEmpty) {
+      await this.play();
     }
 
     onOpen?.call();
@@ -583,7 +351,6 @@ final class MediaPlayer extends ChangeNotifier {
     await _ensureInitializedPlayer(crossfadeDuration: playbackState.crossfadeDuration);
 
     state = playbackState.toMediaPlayerState();
-    _currentVolume = state.volume;
     if (state.rate != 1.0) {
       await setRate(state.rate);
     }
@@ -621,10 +388,10 @@ final class MediaPlayer extends ChangeNotifier {
     _player.stream.rate.listen((e) => state = state.copyWith(rate: e));
     _player.stream.pitch.listen((e) => state = state.copyWith(pitch: e));
     _player.stream.volume.listen((e) {
-      if ((!_fadeControllerInitialized || !_fadeController.isAnimating) && state.playing) {
-        _currentVolume = e;
-        state = state.copyWith(volume: e);
-      }
+      if (_fadeTarget != null) return;
+      if ((e - _fadeVolume).abs() < 0.01) return;
+      _fadeVolume = e;
+      state = state.copyWith(volume: e);
     });
     _player.stream.playlistMode.listen((e) => state = state.copyWith(loop: e.toLoop()));
     _player.stream.position.listen((e) => state = state.copyWith(position: e));
@@ -755,12 +522,7 @@ final class MediaPlayer extends ChangeNotifier {
   Future<void> dispose() {
     super.dispose();
     return Future(() async {
-      _fadeSafetyTimer?.cancel();
-      if (_fadeControllerInitialized) {
-        _fadeController.stop();
-        _curvedAnimation.dispose();
-        _fadeController.dispose();
-      }
+      _fadeCancel();
       await _player.dispose();
       await _tagReader.dispose();
       await _mixinRegistry.dispose();
@@ -822,6 +584,30 @@ final class MediaPlayer extends ChangeNotifier {
     return true;
   }
 
+  Future<bool> _fadeTo(double target) async {
+    final generation = ++_fadeGeneration;
+    _fadeTarget = target;
+    final start = _fadeVolume;
+    final range = state.volume > 0 ? state.volume : 100.0;
+    await CrossfadePlayer.interpolateVolume(
+      duration: kFadeDuration * ((target - start).abs() / range).clamp(0.0, 1.0),
+      cancelled: () => generation != _fadeGeneration,
+      onTick: (_, fadingIn) async {
+        final volume = start + (target - start) * fadingIn;
+        _fadeVolume = volume;
+        await _player.setVolume(volume);
+      },
+    );
+    if (generation != _fadeGeneration) return false;
+    _fadeTarget = null;
+    return true;
+  }
+
+  void _fadeCancel() {
+    _fadeGeneration++;
+    _fadeTarget = null;
+  }
+
   // mapPlayerToState
 
   bool _disablePlayerPlaylistUpdates = false;
@@ -836,6 +622,14 @@ final class MediaPlayer extends ChangeNotifier {
   // setMute; muteOrUnmute
 
   double _setMuteVolume = 100.0;
+
+  // _fadeTo; _fadeCancel
+
+  double _fadeVolume = 100.0;
+
+  double? _fadeTarget;
+
+  int _fadeGeneration = 0;
 
   // setMix; mixOrUnmix
 
