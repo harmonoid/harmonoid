@@ -20,22 +20,29 @@ class MediaLibraryInaccessibleDirectoriesScreen extends StatefulWidget {
 
   const MediaLibraryInaccessibleDirectoriesScreen({super.key, required this.directories});
 
+  static Future<bool> isAccessible(Directory directory) async {
+    try {
+      if (Platform.isIOS || Platform.isMacOS) {
+        // NOTE: Not using package:safe_local_storage API.
+        directory.listSync();
+        return true;
+      } else {
+        final path = directory.path;
+        final isWindowsDriveRoot = Platform.isWindows && RegExp(r'^[a-zA-Z]:[/\\]?$').hasMatch(path);
+        return isWindowsDriveRoot ? await directory.exists() : await directory.exists_();
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+      return false;
+    }
+  }
+
   static Future<bool> showIfRequired(BuildContext context) async {
     final directories = <Directory>[];
     for (final directory in FileSystemMediaLibrary.instance.directories) {
-      if (Platform.isIOS || Platform.isMacOS) {
-        try {
-          // NOTE: Not using package:safe_local_storage API.
-          directory.listSync();
-        } catch (exception, stacktrace) {
-          debugPrint(exception.toString());
-          debugPrint(stacktrace.toString());
-          directories.add(directory);
-        }
-      } else {
-        if (!await directory.exists_()) {
-          directories.add(directory);
-        }
+      if (!await isAccessible(directory)) {
+        directories.add(directory);
       }
     }
 
@@ -62,19 +69,8 @@ class _MediaLibraryInaccessibleDirectoriesScreenState extends State<MediaLibrary
     try {
       directories.clear();
       for (final directory in FileSystemMediaLibrary.instance.directories) {
-        if (Platform.isMacOS) {
-          try {
-            // NOTE: Not using package:safe_local_storage API.
-            directory.listSync();
-          } catch (exception, stacktrace) {
-            debugPrint(exception.toString());
-            debugPrint(stacktrace.toString());
-            directories.add(directory);
-          }
-        } else {
-          if (!await directory.exists_()) {
-            directories.add(directory);
-          }
+        if (!await isAccessible(directory)) {
+          directories.add(directory);
         }
       }
       setState(() {});

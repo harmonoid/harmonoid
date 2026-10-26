@@ -58,15 +58,30 @@ class HarmonoidAppState extends State<HarmonoidApp> with WidgetsBindingObserver 
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final hasInaccessibleDirectories = await MediaLibraryInaccessibleDirectoriesScreen.showIfRequired(context);
-      if (!hasInaccessibleDirectories && Configuration.instance.mediaLibraryRefreshUponStart) {
-        FileSystemMediaLibrary.instance.refresh();
+      try {
+        final hasInaccessibleDirectories = await MediaLibraryInaccessibleDirectoriesScreen.showIfRequired(context);
+        if (!hasInaccessibleDirectories && Configuration.instance.mediaLibraryRefreshUponStart) {
+          FileSystemMediaLibrary.instance.refresh();
+        }
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
       }
-      await Intent.instance.notify(playbackState: Configuration.instance.mediaPlayerPlaybackState);
+      try {
+        await Intent.instance.notify(playbackState: Configuration.instance.mediaPlayerPlaybackState);
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
       // HACK: It is very difficult to pass the entry point arguments to main like other platforms.
       //       This must be done after the [Player] instance inside [MediaPlayer] is initialized.
       if (Platform.isMacOS) {
-        await const MethodChannel('com.alexmercerind/window_plus').invokeMethod('notifyUrls');
+        try {
+          await const MethodChannel('com.alexmercerind/window_plus').invokeMethod('notifyUrls');
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
+        }
       }
     });
   }

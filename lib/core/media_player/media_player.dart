@@ -63,7 +63,11 @@ final class MediaPlayer extends ChangeNotifier {
     await _mixinRegistry.ensureInitialized();
   }
 
-  Playable get current => _current ?? state.playables[state.index];
+  Playable get current =>
+      _current ??
+      (state.playables.isNotEmpty && state.index < state.playables.length
+          ? state.playables[state.index]
+          : const Playable(uri: '', title: '', subtitle: [], description: []));
 
   MediaPlayerState get state => _state;
 
