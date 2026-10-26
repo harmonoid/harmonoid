@@ -410,8 +410,6 @@ jobs:
                 clang cmake ninja-build pkg-config libgtk-3-dev \
                 mpv libmpv-dev dpkg-dev rpm tree
 
-              curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-
               # Install Flutter
               cd /opt
               wget -q https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.41.9-stable.tar.xz
@@ -520,8 +518,6 @@ jobs:
                 git curl wget unzip xz-utils zip libglu1-mesa file \
                 clang cmake ninja-build pkg-config libgtk-3-dev \
                 mpv libmpv-dev dpkg-dev rpm tree
-
-              curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
               # Install Flutter
               cd /opt
