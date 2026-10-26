@@ -111,7 +111,7 @@ class ThemeNotifier extends ChangeNotifier {
       _ => throw UnimplementedError(),
     };
 
-    if (AndroidStorageController.instance.version <= 27) {
+    if (AndroidStorageController.instance.version <= 29) {
       materialStandard = 2;
       themeMode = ThemeMode.dark;
     }

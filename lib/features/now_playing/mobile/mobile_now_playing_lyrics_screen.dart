@@ -16,6 +16,7 @@ import 'package:harmonoid/features/now_playing/now_playing_background.dart';
 import 'package:harmonoid/features/now_playing/now_playing_colors.dart';
 import 'package:harmonoid/features/now_playing/now_playing_lyrics.dart';
 import 'package:harmonoid/features/now_playing/now_playing_lyrics_control_panel.dart';
+import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 class MobileNowPlayingLyricsScreen extends StatefulWidget {
@@ -44,11 +45,11 @@ class _MobileNowPlayingLyricsScreenState extends State<MobileNowPlayingLyricsScr
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
+      value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.light,
-        systemNavigationBarColor: Colors.transparent,
-        systemNavigationBarDividerColor: Colors.transparent,
+        systemNavigationBarColor: AndroidStorageController.instance.version <= 29 ? Colors.black : Colors.transparent,
+        systemNavigationBarDividerColor: AndroidStorageController.instance.version <= 29 ? Colors.black : Colors.transparent,
         systemNavigationBarIconBrightness: Brightness.light,
         systemStatusBarContrastEnforced: false,
         systemNavigationBarContrastEnforced: false,
