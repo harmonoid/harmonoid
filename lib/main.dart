@@ -32,12 +32,7 @@ Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   PaintingBinding.instance.imageCache.maximumSize = 1000;
   PaintingBinding.instance.imageCache.maximumSizeBytes = 200 * 1024 * 1024;
-  try {
-    HttpOverrides.global = _HttpOverrides();
-  } catch (exception, stacktrace) {
-    debugPrint(exception.toString());
-    debugPrint(stacktrace.toString());
-  }
+
   try {
     if (Platform.isAndroid) {
       try {
@@ -135,18 +130,5 @@ Future<void> main(List<String> args) async {
     debugPrint(exception.toString());
     debugPrint(stacktrace.toString());
     runApp(ExceptionApp(exception: exception, stacktrace: stacktrace));
-  }
-}
-
-class _HttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)..badCertificateCallback = (cert, host, port) => true;
-  }
-
-  @override
-  String findProxyFromEnvironment(Uri url, Map<String, String>? environment) {
-    environment ??= Platform.environment;
-    return super.findProxyFromEnvironment(url, environment);
   }
 }
