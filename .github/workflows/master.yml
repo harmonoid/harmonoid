@@ -207,8 +207,13 @@ jobs:
           encodedString: ${{ secrets.CERTIFICATE }}
       - name: Sign Executable
         run: |
-          "%programfiles(x86)%\Windows Kits\10\App Certification Kit\signtool.exe" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /f "${{ steps.create_pfx.outputs.filePath }}" /p ${{ secrets.PASSWORD }} "build/windows/x64/runner/Release/harmonoid.exe"
-        shell: cmd
+          $signtool = "${env:ProgramFiles(x86)}\Windows Kits\10\App Certification Kit\signtool.exe"
+          if (-not (Test-Path $signtool)) {
+            $signtool = Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin\*\arm64\signtool.exe", "${env:ProgramFiles(x86)}\Windows Kits\10\bin\*\x64\signtool.exe" -ErrorAction SilentlyContinue |
+              Sort-Object FullName -Descending | Select-Object -First 1 -ExpandProperty FullName
+          }
+          if (-not $signtool) { Write-Error "signtool.exe not found under Windows Kits"; exit 1 }
+          & $signtool sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /f "${{ steps.create_pfx.outputs.filePath }}" /p ${{ secrets.PASSWORD }} "build/windows/x64/runner/Release/harmonoid.exe"
       - name: Bundle Executable
         run: |
           cp -r build/windows/x64/runner/Release harmonoid-windows-x64-exe
@@ -219,8 +224,13 @@ jobs:
         shell: cmd
       - name: Sign Installer
         run: |
-          "%programfiles(x86)%\Windows Kits\10\App Certification Kit\signtool.exe" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /f "${{ steps.create_pfx.outputs.filePath }}" /p ${{ secrets.PASSWORD }} "Output/harmonoid-windows-x64-setup.exe"
-        shell: cmd
+          $signtool = "${env:ProgramFiles(x86)}\Windows Kits\10\App Certification Kit\signtool.exe"
+          if (-not (Test-Path $signtool)) {
+            $signtool = Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin\*\arm64\signtool.exe", "${env:ProgramFiles(x86)}\Windows Kits\10\bin\*\x64\signtool.exe" -ErrorAction SilentlyContinue |
+              Sort-Object FullName -Descending | Select-Object -First 1 -ExpandProperty FullName
+          }
+          if (-not $signtool) { Write-Error "signtool.exe not found under Windows Kits"; exit 1 }
+          & $signtool sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /f "${{ steps.create_pfx.outputs.filePath }}" /p ${{ secrets.PASSWORD }} "Output/harmonoid-windows-x64-setup.exe"
       - name: Upload Release
         uses: softprops/action-gh-release@v1
         env:
@@ -282,10 +292,6 @@ jobs:
         run: flutter doctor
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
-      - name: Apply Patches
-        run: |
-          git config --global core.autocrlf false
-          git apply --whitespace=fix patches/remove_discord_rpc.patch
       - name: Build SMTC DLL
         run: |
           cd external/smtc-win32
@@ -312,8 +318,13 @@ jobs:
           encodedString: ${{ secrets.CERTIFICATE }}
       - name: Sign Executable
         run: |
-          "%programfiles(x86)%\Windows Kits\10\App Certification Kit\signtool.exe" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /f "${{ steps.create_pfx.outputs.filePath }}" /p ${{ secrets.PASSWORD }} "build/windows/arm64/runner/Release/harmonoid.exe"
-        shell: cmd
+          $signtool = "${env:ProgramFiles(x86)}\Windows Kits\10\App Certification Kit\signtool.exe"
+          if (-not (Test-Path $signtool)) {
+            $signtool = Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin\*\arm64\signtool.exe", "${env:ProgramFiles(x86)}\Windows Kits\10\bin\*\x64\signtool.exe" -ErrorAction SilentlyContinue |
+              Sort-Object FullName -Descending | Select-Object -First 1 -ExpandProperty FullName
+          }
+          if (-not $signtool) { Write-Error "signtool.exe not found under Windows Kits"; exit 1 }
+          & $signtool sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /f "${{ steps.create_pfx.outputs.filePath }}" /p ${{ secrets.PASSWORD }} "build/windows/arm64/runner/Release/harmonoid.exe"
       - name: Bundle Executable
         run: |
           cp -r build/windows/arm64/runner/Release harmonoid-windows-arm64-exe
@@ -324,8 +335,13 @@ jobs:
         shell: cmd
       - name: Sign Installer
         run: |
-          "%programfiles(x86)%\Windows Kits\10\App Certification Kit\signtool.exe" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /f "${{ steps.create_pfx.outputs.filePath }}" /p ${{ secrets.PASSWORD }} "Output/harmonoid-windows-arm64-setup.exe"
-        shell: cmd
+          $signtool = "${env:ProgramFiles(x86)}\Windows Kits\10\App Certification Kit\signtool.exe"
+          if (-not (Test-Path $signtool)) {
+            $signtool = Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin\*\arm64\signtool.exe", "${env:ProgramFiles(x86)}\Windows Kits\10\bin\*\x64\signtool.exe" -ErrorAction SilentlyContinue |
+              Sort-Object FullName -Descending | Select-Object -First 1 -ExpandProperty FullName
+          }
+          if (-not $signtool) { Write-Error "signtool.exe not found under Windows Kits"; exit 1 }
+          & $signtool sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /f "${{ steps.create_pfx.outputs.filePath }}" /p ${{ secrets.PASSWORD }} "Output/harmonoid-windows-arm64-setup.exe"
       - name: Upload Release
         uses: softprops/action-gh-release@v1
         env:
@@ -479,10 +495,6 @@ jobs:
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           submodules: recursive
-      - name: Apply Patches
-        run: |
-          git config --global core.autocrlf false
-          git apply --whitespace=fix patches/remove_discord_rpc.patch
       - name: Build
         run: |
           docker run --rm \

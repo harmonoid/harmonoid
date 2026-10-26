@@ -67,6 +67,16 @@
                 <data android:mimeType="application/itunes" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.discord.socialsdk.AuthenticationActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="discord-881480706545573918" />
+            </intent-filter>
+        </activity>
         <service
             android:name="com.ryanheise.audioservice.AudioService"
             android:exported="true"

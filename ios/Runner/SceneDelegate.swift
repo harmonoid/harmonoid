@@ -16,6 +16,10 @@ class SceneDelegate: FlutterSceneDelegate {
         _ scene: UIScene,
         openURLContexts URLContexts: Set<UIOpenURLContext>
     ) {
+        guard let context = URLContexts.first, context.url.isFileURL else {
+            super.scene(scene, openURLContexts: URLContexts)
+            return
+        }
         resolveIncomingURL(URLContexts: URLContexts)
     }
 
