@@ -38,12 +38,11 @@ import 'package:harmonoid/utils/constants.dart';
 ///
 /// {@endtemplate}
 final class MediaPlayer extends ChangeNotifier {
+  static const int kMixThreshold = 100;
+  static const Duration kFadeDuration = Duration(seconds: 1);
   static const Duration kCrossfadeDefaultDuration = Duration(seconds: 5);
   static const Duration kCrossfadeMinDuration = Duration(seconds: 2);
   static const Duration kCrossfadeMaxDuration = Duration(seconds: 30);
-  static const int kMixThreshold = 100;
-
-  static const Duration kFadeDuration = Duration(milliseconds: 500);
 
   /// Singleton instance.
   static final MediaPlayer instance = MediaPlayer._();
