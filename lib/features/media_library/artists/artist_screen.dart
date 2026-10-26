@@ -214,31 +214,40 @@ class _ArtistScreenState extends State<ArtistScreen> {
       spacing: 8.0,
       mainAxisSize: MainAxisSize.min,
       children: [
-        InkWell(
-          onTap: _editImage,
-          borderRadius: BorderRadius.circular(32.0),
-          child: Container(
-            padding: const EdgeInsets.all(4.0),
-            decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.black26),
-            child: const Icon(Icons.edit, size: 16.0, color: Colors.white),
+        Tooltip(
+          message: Localization.instance.EDIT,
+          child: InkWell(
+            onTap: _editImage,
+            borderRadius: BorderRadius.circular(32.0),
+            child: Container(
+              padding: const EdgeInsets.all(4.0),
+              decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.black26),
+              child: const Icon(Icons.edit, size: 16.0, color: Colors.white),
+            ),
           ),
         ),
-        InkWell(
-          onTap: _removeImage,
-          borderRadius: BorderRadius.circular(32.0),
-          child: Container(
-            padding: const EdgeInsets.all(4.0),
-            decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.black26),
-            child: const Icon(Icons.close, size: 16.0, color: Colors.white),
+        Tooltip(
+          message: Localization.instance.REMOVE,
+          child: InkWell(
+            onTap: _removeImage,
+            borderRadius: BorderRadius.circular(32.0),
+            child: Container(
+              padding: const EdgeInsets.all(4.0),
+              decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.black26),
+              child: const Icon(Icons.close, size: 16.0, color: Colors.white),
+            ),
           ),
         ),
-        InkWell(
-          onTap: _refreshImage,
-          borderRadius: BorderRadius.circular(32.0),
-          child: Container(
-            padding: const EdgeInsets.all(4.0),
-            decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.black26),
-            child: const Icon(Icons.refresh, size: 16.0, color: Colors.white),
+        Tooltip(
+          message: Localization.instance.REFRESH,
+          child: InkWell(
+            onTap: _refreshImage,
+            borderRadius: BorderRadius.circular(32.0),
+            child: Container(
+              padding: const EdgeInsets.all(4.0),
+              decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.black26),
+              child: const Icon(Icons.refresh, size: 16.0, color: Colors.white),
+            ),
           ),
         ),
       ],
