@@ -6,10 +6,9 @@ import 'package:provider/provider.dart';
 
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/routing/utils/constants.dart';
+import 'package:harmonoid/features/settings/sections/connections_section.dart';
 import 'package:harmonoid/features/settings/sections/display_section.dart';
-import 'package:harmonoid/features/settings/sections/discord_section.dart';
 import 'package:harmonoid/features/settings/sections/language_section.dart';
-import 'package:harmonoid/features/settings/sections/lastfm_section.dart';
 import 'package:harmonoid/features/settings/sections/media_library_section.dart';
 import 'package:harmonoid/features/settings/sections/miscellaneous_section.dart';
 import 'package:harmonoid/features/settings/sections/now_playing_screen_section.dart';
@@ -56,8 +55,7 @@ class SettingsScreen extends StatelessWidget {
               DisplaySection(),
               NowPlayingScreenSection(),
               PlusSection(),
-              LastfmSection(),
-              DiscordSection(),
+              ConnectionsSection(),
               PermissionsSection(),
               LanguageSection(),
               MiscellaneousSection(),
