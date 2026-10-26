@@ -78,7 +78,6 @@ android {
         jniLibs {
             useLegacyPackaging = true
             excludes += "/lib/**/libtaglib.so"
-            excludes += "/lib/**/libflutter_discord_rpc.so"
         }
     }
 }
