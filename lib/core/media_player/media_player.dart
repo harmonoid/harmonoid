@@ -583,26 +583,27 @@ final class MediaPlayer extends ChangeNotifier {
   }
 
   Future<bool> _fadeTo(double target) async {
-    final generation = ++_fadeGeneration;
+    final generation = ++_fadeKey;
     _fadeTarget = target;
     final start = _fadeVolume;
     final range = state.volume > 0 ? state.volume : 100.0;
-    await CrossfadePlayer.interpolateVolume(
+    final completed = await CrossfadePlayer.interpolateVolume(
       duration: kFadeDuration * ((target - start).abs() / range).clamp(0.0, 1.0),
-      cancelled: () => generation != _fadeGeneration,
+      originalKey: generation,
+      currentKey: () => _fadeKey,
       onTick: (_, fadingIn) async {
         final volume = start + (target - start) * fadingIn;
         _fadeVolume = volume;
         await _player.setVolume(volume);
       },
     );
-    if (generation != _fadeGeneration) return false;
+    if (!completed) return false;
     _fadeTarget = null;
     return true;
   }
 
   void _fadeCancel() {
-    _fadeGeneration++;
+    _fadeKey++;
     _fadeTarget = null;
   }
 
@@ -627,7 +628,7 @@ final class MediaPlayer extends ChangeNotifier {
 
   double? _fadeTarget;
 
-  int _fadeGeneration = 0;
+  int _fadeKey = 0;
 
   // setMix; mixOrUnmix
 
