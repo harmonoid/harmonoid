@@ -89,6 +89,7 @@ Future<void> main(List<String> args) async {
       setItem: (key, value) => Configuration.instance.db.setValue(key, kTypeString, stringValue: value),
       removeItem: (key) => Configuration.instance.db.remove(key),
       deviceId: Configuration.instance.identifier,
+      version: kVersion,
     );
     await SubscriptionNotifier.ensureInitialized();
 

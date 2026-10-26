@@ -1,8 +1,9 @@
 import 'dart:io';
-import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import 'package:identity/identity.dart';
 
-import 'package:harmonoid/api/utils/constants.dart';
+import 'package:harmonoid/extensions/supabase_client.dart';
 
 /// {@template artist_image_get}
 ///
@@ -16,12 +17,14 @@ class ArtistImageGet {
     try {
       final request = http.Request(
         'GET',
-        Uri.https(apiBaseUrl, '/functions/v1/artist-image-get', {
-          'query': query,
-        }),
+        Supabase.instance.client.functionUri(
+          'artist-image-get',
+          {
+            'query': query,
+          },
+        ),
       );
-
-      request.headers['X-API-Key'] = apiKey;
+      request.headers.addAll(Supabase.instance.client.functions.headers);
 
       final response = await client.send(request);
 

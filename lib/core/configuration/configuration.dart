@@ -89,7 +89,6 @@ class Configuration extends ConfigurationBase {
       }
     }
 
-    _apiBaseUrl = await read<String, String>(kKeyApiBaseUrl, defaults);
     _desktopMediaLibraryFoldersScreenColumnWidths = await read<dynamic, List<double>>(kKeyDesktopMediaLibraryFoldersScreenColumnWidths, defaults, (value) => List<double>.from(value));
     _desktopMediaLibraryTracksScreenColumnWidths = await read<dynamic, List<double>>(kKeyDesktopMediaLibraryTracksScreenColumnWidths, defaults, (value) => List<double>.from(value));
     _desktopNowPlayingBarColorPalette = await read<bool, bool>(kKeyDesktopNowPlayingBarColorPalette, defaults);

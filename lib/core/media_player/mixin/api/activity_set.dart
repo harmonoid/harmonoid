@@ -2,11 +2,10 @@
 
 import 'dart:convert';
 import 'dart:io';
-import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
 import 'package:flutter/foundation.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:identity/identity.dart';
 
-import 'package:harmonoid/api/utils/constants.dart';
 import 'package:harmonoid/core/media_player/models/playable.dart';
 
 /// {@template activity_set}
@@ -18,24 +17,23 @@ import 'package:harmonoid/core/media_player/models/playable.dart';
 class ActivitySet {
   Future<String?> call(String deviceId, Playable playable, File? cover) async {
     try {
-      // https://pub.dev/documentation/http/latest/http/MultipartRequest-class.html
-      final uri = Uri.https(apiBaseUrl, '/functions/v1/activity-set');
-      final request = http.MultipartRequest('POST', uri)
-        ..fields['device-id'] = deviceId
-        ..fields['playable'] = json.encode(playable)
-        ..files.add(
-          await http.MultipartFile.fromPath(
-            'cover',
-            cover!.path,
-            contentType: MediaType('image', 'jpeg'),
-          ),
-        )
-        ..headers['Content-Type'] = 'application/json'
-        ..headers['X-API-Key'] = apiKey;
-      final response = await request.send();
-      if (response.statusCode != 200) return null;
-      final body = utf8.decode(await response.stream.toBytes());
-      return json.decode(body)['cover'];
+      final response = await Supabase.instance.client.functions.invoke(
+        'activity-set',
+        method: HttpMethod.post,
+        body: {
+          'device-id': deviceId,
+          'playable': json.encode(playable),
+        },
+        files: [
+          if (cover != null)
+            await MultipartFile.fromPath(
+              'cover',
+              cover.path,
+              contentType: MediaType('image', 'jpeg'),
+            ),
+        ]
+      );
+      return response.data['cover'];
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());

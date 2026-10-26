@@ -1,5 +1,4 @@
 [
-  {"key": "API_BASE_URL", "serializedType": "String", "dartType": "String", "default": "''"},
   {"key": "DESKTOP_MEDIA_LIBRARY_FOLDERS_SCREEN_COLUMN_WIDTHS", "serializedType": "Json", "dartType": "List<double>", "default": "<double>[]"},
   {"key": "DESKTOP_MEDIA_LIBRARY_TRACKS_SCREEN_COLUMN_WIDTHS", "serializedType": "Json", "dartType": "List<double>", "default": "<double>[]"},
   {"key": "DESKTOP_NOW_PLAYING_BAR_COLOR_PALETTE", "serializedType": "Boolean", "dartType": "bool", "default": "true"},

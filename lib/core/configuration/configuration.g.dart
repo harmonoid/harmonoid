@@ -3,6 +3,7 @@
 part of 'configuration.dart';
 
 class ConfigurationBase {
+
   final Directory directory;
   final Database db;
 
@@ -11,7 +12,6 @@ class ConfigurationBase {
 
   ConfigurationBase({required this.directory, required this.db});
 
-  String get apiBaseUrl => _apiBaseUrl!;
   List<double> get desktopMediaLibraryFoldersScreenColumnWidths => _desktopMediaLibraryFoldersScreenColumnWidths!;
   List<double> get desktopMediaLibraryTracksScreenColumnWidths => _desktopMediaLibraryTracksScreenColumnWidths!;
   bool get desktopNowPlayingBarColorPalette => _desktopNowPlayingBarColorPalette!;
@@ -78,7 +78,6 @@ class ConfigurationBase {
   bool get windowsTaskbarProgress => _windowsTaskbarProgress!;
 
   Future<void> set({
-    String? apiBaseUrl,
     List<double>? desktopMediaLibraryFoldersScreenColumnWidths,
     List<double>? desktopMediaLibraryTracksScreenColumnWidths,
     bool? desktopNowPlayingBarColorPalette,
@@ -144,10 +143,6 @@ class ConfigurationBase {
     String? updateCheckVersion,
     bool? windowsTaskbarProgress,
   }) async {
-    if (apiBaseUrl != null) {
-      _apiBaseUrl = apiBaseUrl;
-      await db.setValue(kKeyApiBaseUrl, kTypeString, stringValue: apiBaseUrl);
-    }
     if (desktopMediaLibraryFoldersScreenColumnWidths != null) {
       _desktopMediaLibraryFoldersScreenColumnWidths = desktopMediaLibraryFoldersScreenColumnWidths;
       await db.setValue(kKeyDesktopMediaLibraryFoldersScreenColumnWidths, kTypeJson, jsonValue: desktopMediaLibraryFoldersScreenColumnWidths);
@@ -408,7 +403,6 @@ class ConfigurationBase {
 
   Future<Map<String, dynamic>> getDefaults() async {
     return {
-      /* String  */ kKeyApiBaseUrl: '',
       /* Json    */ kKeyDesktopMediaLibraryFoldersScreenColumnWidths: <double>[],
       /* Json    */ kKeyDesktopMediaLibraryTracksScreenColumnWidths: <double>[],
       /* Boolean */ kKeyDesktopNowPlayingBarColorPalette: true,
@@ -421,11 +415,11 @@ class ConfigurationBase {
       /* Json    */ kKeyLocalization: await getDefaultLocalization(),
       /* Boolean */ kKeyLrcFromDirectory: false,
       /* Json    */ kKeyLyricsTranslationLanguage: await getDefaultLyricsTranslationLanguage(),
-      /* Double  */ kKeyLyricsViewFocusedFontSize: isDesktop ? 64.0 : 48.0,
+      /* Double  */ kKeyLyricsViewFocusedFontSize: isDesktop ? 64.0: 48.0,
       /* Double  */ kKeyLyricsViewFocusedLineHeight: 1.2,
       /* String  */ kKeyLyricsViewFontFamily: '',
       /* Integer */ kKeyLyricsViewTextAlign: TextAlign.start.index,
-      /* Double  */ kKeyLyricsViewUnfocusedFontSize: isDesktop ? 28.0 : 24.0,
+      /* Double  */ kKeyLyricsViewUnfocusedFontSize: isDesktop ? 28.0: 24.0,
       /* Double  */ kKeyLyricsViewUnfocusedLineHeight: 1.2,
       /* Boolean */ kKeyMediaLibraryAddPlaylistToNowPlaying: true,
       /* Json    */ kKeyMediaLibraryAlbumGroupingParameters: [AlbumGroupingParameter.album.index],
@@ -449,13 +443,7 @@ class ConfigurationBase {
       /* Boolean */ kKeyMediaLibraryTrackSortAscending: true,
       /* Integer */ kKeyMediaLibraryTrackSortType: TrackSortType.title.index,
       /* Integer */ kKeyMediaLibraryTrackViewType: TrackViewType.list.index,
-      /* Json    */ kKeyMediaLibraryVisibleTabs: [
-        MediaLibraryTab.albums.index,
-        MediaLibraryTab.tracks.index,
-        MediaLibraryTab.artists.index,
-        MediaLibraryTab.folders.index,
-        MediaLibraryTab.playlists.index,
-      ],
+      /* Json    */ kKeyMediaLibraryVisibleTabs: [MediaLibraryTab.albums.index, MediaLibraryTab.tracks.index, MediaLibraryTab.artists.index, MediaLibraryTab.folders.index, MediaLibraryTab.playlists.index],
       /* Json    */ kKeyMediaPlayerPlaybackState: MediaPlayerState.defaults().toPlaybackState(),
       /* String  */ kKeyMetaInstallDate: DateTime.now().toIso8601String(),
       /* Boolean */ kKeyMetaInAppReviewSubmitted: false,
@@ -475,14 +463,13 @@ class ConfigurationBase {
       /* Boolean */ kKeyNowPlayingStartMixAfterEnding: true,
       /* Json    */ kKeyThemeAnimationDuration: const AnimationDuration(),
       /* Integer */ kKeyThemeMaterialStandard: isDesktop ? 2 : 3,
-      /* Integer */ kKeyThemeMode: isDesktop ? ThemeMode.light.index : ThemeMode.system.index,
+      /* Integer */ kKeyThemeMode: isDesktop ? ThemeMode.light.index: ThemeMode.system.index,
       /* Boolean */ kKeyThemeSystemColorScheme: isMobile,
       /* String  */ kKeyUpdateCheckVersion: kVersion,
       /* Boolean */ kKeyWindowsTaskbarProgress: false,
     };
   }
 
-  String? _apiBaseUrl;
   List<double>? _desktopMediaLibraryFoldersScreenColumnWidths;
   List<double>? _desktopMediaLibraryTracksScreenColumnWidths;
   bool? _desktopNowPlayingBarColorPalette;
@@ -551,7 +538,6 @@ class ConfigurationBase {
 
 // ----- Keys -----
 
-const kKeyApiBaseUrl = 'API_BASE_URL';
 const kKeyDesktopMediaLibraryFoldersScreenColumnWidths = 'DESKTOP_MEDIA_LIBRARY_FOLDERS_SCREEN_COLUMN_WIDTHS';
 const kKeyDesktopMediaLibraryTracksScreenColumnWidths = 'DESKTOP_MEDIA_LIBRARY_TRACKS_SCREEN_COLUMN_WIDTHS';
 const kKeyDesktopNowPlayingBarColorPalette = 'DESKTOP_NOW_PLAYING_BAR_COLOR_PALETTE';

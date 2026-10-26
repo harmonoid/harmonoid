@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:identity/identity.dart';
 
-import 'package:harmonoid/api/utils/constants.dart';
 import 'package:harmonoid/state/lyrics/models/lyrics.dart';
 import 'package:harmonoid/state/lyrics/models/lyrics_translation.dart';
 
@@ -25,8 +24,7 @@ class LyricsTranslationGet {
           'track': track,
           'artist': artist,
           'duration': duration,
-        }),
-        headers: {'X-API-Key': apiKey},
+        })
       );
       if (response.status != 200) return null;
       return LyricsTranslation.fromJson(response.data);

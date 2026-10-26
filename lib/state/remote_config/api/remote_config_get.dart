@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:identity/identity.dart';
 
-import 'package:harmonoid/api/utils/constants.dart';
 import 'package:harmonoid/state/remote_config/models/remote_config_key.dart';
 import 'package:harmonoid/state/remote_config/models/remote_config_value.dart';
 
@@ -17,8 +16,7 @@ class RemoteConfigGet {
       final response = await Supabase.instance.client.functions.invoke(
         'remote-config-get',
         method: HttpMethod.get,
-        queryParameters: {'key': key.key},
-        headers: {'X-API-Key': apiKey},
+        queryParameters: {'key': key.key}
       );
       if (response.status != 200) return null;
       final body = response.data;
