@@ -38,10 +38,11 @@ import 'package:harmonoid/utils/constants.dart';
 ///
 /// {@endtemplate}
 final class MediaPlayer extends ChangeNotifier {
+  static const int kMixThreshold = 100;
+  static const Duration kFadeDuration = Duration(seconds: 1);
   static const Duration kCrossfadeDefaultDuration = Duration(seconds: 5);
   static const Duration kCrossfadeMinDuration = Duration(seconds: 2);
   static const Duration kCrossfadeMaxDuration = Duration(seconds: 30);
-  static const int kMixThreshold = 100;
 
   /// Singleton instance.
   static final MediaPlayer instance = MediaPlayer._();
@@ -84,23 +85,61 @@ final class MediaPlayer extends ChangeNotifier {
     _mixinRegistry.notifyState(state);
   }
 
-  Future<void> play() => _player.play().then((_) => _mixinRegistry.get<AudioSessionMixin>()?.setActive(true));
-
-  Future<void> pause() => _player.pause().then((_) => _mixinRegistry.get<AudioSessionMixin>()?.setActive(false));
-
-  Future<void> playOrPause() async {
-    final wasPlaying = state.playing;
-    await _player.playOrPause();
-    await _mixinRegistry.get<AudioSessionMixin>()?.setActive(!wasPlaying);
+  Future<void> play() async {
+    _fadeCancel();
+    final target = state.volume > 0.0 ? state.volume : 100.0;
+    if (state.playables.isEmpty) return;
+    if (state.playing && _fadeVolume >= target) return;
+    state = state.copyWith(playing: true);
+    if (!state.playing) {
+      _fadeVolume = 0.0;
+      await _player.setVolume(0.0);
+    }
+    await _player.play();
+    await _mixinRegistry.get<AudioSessionMixin>()?.setActive(true);
+    await _fadeTo(target);
   }
 
-  Future<void> next() => _player.next();
+  Future<void> pause() async {
+    _fadeCancel();
+    if (state.playables.isEmpty) return;
+    if (!state.playing && _fadeVolume <= 0.0) return;
+    state = state.copyWith(playing: false);
+    if (await _fadeTo(0.0)) {
+      await _player.pause();
+      await _mixinRegistry.get<AudioSessionMixin>()?.setActive(false);
+    }
+  }
 
-  Future<void> previous() => _player.previous();
+  Future<void> playOrPause() async {
+    final shouldPause = _fadeTarget != null ? _fadeTarget != 0.0 : state.playing;
+    _fadeCancel();
+    if (shouldPause) {
+      await pause();
+    } else {
+      await play();
+    }
+  }
 
-  Future<void> jump(int index) => _player.jump(index);
+  Future<void> next() async {
+    _fadeCancel();
+    return _player.next();
+  }
 
-  Future<void> seek(Duration position) => _player.seek(position);
+  Future<void> previous() async {
+    _fadeCancel();
+    return _player.previous();
+  }
+
+  Future<void> jump(int index) async {
+    _fadeCancel();
+    return _player.jump(index);
+  }
+
+  Future<void> seek(Duration position) async {
+    _fadeCancel();
+    return _player.seek(position);
+  }
 
   Future<void> setLoop(Loop loop) => _player.setPlaylistMode(loop.toPlaylistMode());
 
@@ -108,7 +147,11 @@ final class MediaPlayer extends ChangeNotifier {
 
   Future<void> setPitch(double pitch) => _player.setPitch(pitch);
 
-  Future<void> setVolume(double volume) => _player.setVolume(volume);
+  Future<void> setVolume(double volume) async {
+    _fadeCancel();
+    state = state.copyWith(volume: volume);
+    return _player.setVolume(volume);
+  }
 
   Future<void> setMute(bool mute) {
     if (mute) {
@@ -168,9 +211,10 @@ final class MediaPlayer extends ChangeNotifier {
 
     state = state.copyWith(shuffle: false, mixOffset: mixOffset);
 
+    _fadeCancel();
     await _player.open(Playlist(medias, index: index), play: play);
-    if (play) {
-      await _mixinRegistry.get<AudioSessionMixin>()?.setActive(true);
+    if (play && medias.isNotEmpty) {
+      await this.play();
     }
 
     onOpen?.call();
@@ -341,7 +385,12 @@ final class MediaPlayer extends ChangeNotifier {
     _player.stream.playlist.listen((e) => _mapPlayerToStatePlaylistLock.synchronized(() => _applyPlayerPlaylistToState(e)));
     _player.stream.rate.listen((e) => state = state.copyWith(rate: e));
     _player.stream.pitch.listen((e) => state = state.copyWith(pitch: e));
-    _player.stream.volume.listen((e) => state = state.copyWith(volume: e));
+    _player.stream.volume.listen((e) {
+      if (_fadeTarget != null) return;
+      if ((e - _fadeVolume).abs() < 0.01) return;
+      _fadeVolume = e;
+      state = state.copyWith(volume: e);
+    });
     _player.stream.playlistMode.listen((e) => state = state.copyWith(loop: e.toLoop()));
     _player.stream.position.listen((e) => state = state.copyWith(position: e));
     _player.stream.duration.listen((e) => state = state.copyWith(duration: e));
@@ -471,6 +520,7 @@ final class MediaPlayer extends ChangeNotifier {
   Future<void> dispose() {
     super.dispose();
     return Future(() async {
+      _fadeCancel();
       await _player.dispose();
       await _tagReader.dispose();
       await _mixinRegistry.dispose();
@@ -532,6 +582,31 @@ final class MediaPlayer extends ChangeNotifier {
     return true;
   }
 
+  Future<bool> _fadeTo(double target) async {
+    final generation = ++_fadeKey;
+    _fadeTarget = target;
+    final start = _fadeVolume;
+    final range = state.volume > 0 ? state.volume : 100.0;
+    final completed = await CrossfadePlayer.interpolateVolume(
+      duration: kFadeDuration * ((target - start).abs() / range).clamp(0.0, 1.0),
+      originalKey: generation,
+      currentKey: () => _fadeKey,
+      onTick: (_, fadingIn) async {
+        final volume = start + (target - start) * fadingIn;
+        _fadeVolume = volume;
+        await _player.setVolume(volume);
+      },
+    );
+    if (!completed) return false;
+    _fadeTarget = null;
+    return true;
+  }
+
+  void _fadeCancel() {
+    _fadeKey++;
+    _fadeTarget = null;
+  }
+
   // mapPlayerToState
 
   bool _disablePlayerPlaylistUpdates = false;
@@ -546,6 +621,14 @@ final class MediaPlayer extends ChangeNotifier {
   // setMute; muteOrUnmute
 
   double _setMuteVolume = 100.0;
+
+  // _fadeTo; _fadeCancel
+
+  double _fadeVolume = 100.0;
+
+  double? _fadeTarget;
+
+  int _fadeKey = 0;
 
   // setMix; mixOrUnmix
 
