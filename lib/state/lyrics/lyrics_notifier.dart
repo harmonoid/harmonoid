@@ -310,7 +310,7 @@ class LyricsNotifier extends ChangeNotifier {
 
     if (_isCurrentGuard(localCurrent, localCurrentDuration)) {
       lyricsLoading = false;
-      lyrics = result ?? [];
+      lyrics = _cleanLyrics(result ?? []);
       notifyListeners();
     }
   }
@@ -381,7 +381,7 @@ class LyricsNotifier extends ChangeNotifier {
 
     if (_isCurrentGuard(localCurrent, localCurrentDuration)) {
       translationLoading = false;
-      translation = result ?? [];
+      translation = _cleanLyrics(result ?? []);
       notifyListeners();
     }
   }
@@ -425,6 +425,30 @@ class LyricsNotifier extends ChangeNotifier {
   }
 
   File _legacyLrcCacheFileForUri(String uri) => File(join(Configuration.instance.directory.path, 'Lyrics', '${sha256.convert(utf8.encode(uri)).toString()}.LRC'));
+
+  // Removes `<...>` segments holding numbers & special characters only (e.g. enhanced-LRC word timestamps like `<01:29.749>`).
+  Lyrics _cleanLyrics(Lyrics lyrics) {
+    final bracketed = RegExp(r'<[^<>]*>');
+    final letter = RegExp(r'\p{L}', unicode: true);
+    final whitespace = RegExp(r'[ \t]{2,}');
+    return lyrics
+        .map(
+          (lyric) => lyric.copyWith(
+            text: lyric.text
+                .replaceAllMapped(
+                  bracketed,
+                  (match) {
+                    final tag = match.group(0)!;
+                    if (tag.length <= 2 || letter.hasMatch(tag)) return tag;
+                    return '';
+                  },
+                )
+                .replaceAll(whitespace, ' ')
+                .trim(),
+          ),
+        )
+        .toList();
+  }
 
   // --------------------------------------------------
 
