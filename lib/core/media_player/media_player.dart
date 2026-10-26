@@ -90,13 +90,13 @@ final class MediaPlayer extends ChangeNotifier {
     final target = state.volume > 0.0 ? state.volume : 100.0;
     if (state.playables.isEmpty) return;
     if (state.playing && _fadeVolume >= target) return;
+    state = state.copyWith(playing: true);
     if (!state.playing) {
       _fadeVolume = 0.0;
       await _player.setVolume(0.0);
     }
     await _player.play();
     await _mixinRegistry.get<AudioSessionMixin>()?.setActive(true);
-    state = state.copyWith(playing: true);
     await _fadeTo(target);
   }
 
