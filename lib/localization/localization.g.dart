@@ -121,7 +121,6 @@ class LocalizationBase extends Values {
     IMAGES = map['IMAGES']!;
     IMPORT = map['IMPORT']!;
     IMPROVE_METADATA_COMPATIBILITY = map['IMPROVE_METADATA_COMPATIBILITY']!;
-    LASTFM = map['LASTFM']!;
     LAST_DIRECTORY_REMOVED = map['LAST_DIRECTORY_REMOVED']!;
     LESS = map['LESS']!;
     LICENSE = map['LICENSE']!;

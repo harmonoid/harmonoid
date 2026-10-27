@@ -116,7 +116,6 @@ class Values {
   late String IMAGES;
   late String IMPORT;
   late String IMPROVE_METADATA_COMPATIBILITY;
-  late String LASTFM;
   late String LAST_DIRECTORY_REMOVED;
   late String LESS;
   late String LICENSE;
