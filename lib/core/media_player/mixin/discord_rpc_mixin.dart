@@ -53,7 +53,7 @@ final class DiscordRpcMixin implements MediaPlayerMixin {
 
   @override
   Future<void> dispose() async {
-    _client.disconnect();
+    await _client.dispose();
   }
 
   @override
@@ -138,7 +138,9 @@ final class DiscordRpcMixin implements MediaPlayerMixin {
       await _client.updateToken(tokenType: Configuration.instance.discordTokens.tokenType, token: Configuration.instance.discordTokens.accessToken);
       await _client.connect();
     } catch (_) {
-      _client.disconnect();
+      try {
+        _client.disconnect();
+      } catch (_) {}
       if (!retryWithRefresh) {
         return _connect(true);
       }

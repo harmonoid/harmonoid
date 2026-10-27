@@ -109,7 +109,9 @@ class _ConnectionsSectionState extends State<ConnectionsSection> {
       final tokens = await client.fetchToken(code: code.code, codeVerifier: code.codeVerifier, redirectUri: code.redirectUri);
 
       await client.updateToken(tokenType: tokens.tokenType, token: tokens.accessToken);
-      await client.connect();
+      try {
+        await client.connect();
+      } catch (_) {}
 
       final user = await client.fetchCurrentUser(tokenType: tokens.tokenType, token: tokens.accessToken);
 
@@ -117,7 +119,9 @@ class _ConnectionsSectionState extends State<ConnectionsSection> {
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
-      client.disconnect();
+      try {
+        client.disconnect();
+      } catch (_) {}
     }
 
     setState(() {});
@@ -133,7 +137,9 @@ class _ConnectionsSectionState extends State<ConnectionsSection> {
       negativeAction: Localization.instance.CANCEL,
     );
     if (result) {
-      _discordClient?.disconnect();
+      try {
+        _discordClient?.disconnect();
+      } catch (_) {}
       await Configuration.instance.set(
         discordTokens: const DiscordTokens(
           accessToken: '',
