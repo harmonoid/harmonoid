@@ -35,18 +35,17 @@ final class DiscordRpcMixin implements MediaPlayerMixin {
   static const String kPauseSmallImage = 'pause';
   static const String kPlaySmallImage = 'play';
 
-  static bool get supported => Platform.isLinux || Platform.isMacOS || Platform.isWindows || Platform.isAndroid || Platform.isIOS;
+  static bool get supported => true;
 
   DiscordRpcMixin(this._player);
 
   @override
   Future<void> ensureInitialized() async {
-    try {
-      await _connect();
-    } catch (exception, stacktrace) {
+    // unawaited
+    _connect().catchError((exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
-    }
+    });
   }
 
   DiscordSocialClient get client => _client;
