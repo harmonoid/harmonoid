@@ -90,8 +90,9 @@ final class MediaPlayer extends ChangeNotifier {
     final target = state.volume > 0.0 ? state.volume : 100.0;
     if (state.playables.isEmpty) return;
     if (state.playing && _fadeVolume >= target) return;
+    final wasPlaying = state.playing;
     state = state.copyWith(playing: true);
-    if (!state.playing) {
+    if (!wasPlaying && _fadeVolume >= target) {
       _fadeVolume = 0.0;
       await _player.setVolume(0.0);
     }
@@ -123,21 +124,28 @@ final class MediaPlayer extends ChangeNotifier {
 
   Future<void> next() async {
     _fadeCancel();
-    return _player.next();
+    await _player.next();
+    await play();
   }
 
   Future<void> previous() async {
     _fadeCancel();
-    return _player.previous();
+    await _player.previous();
+    await play();
   }
 
   Future<void> jump(int index) async {
     _fadeCancel();
-    return _player.jump(index);
+    await _player.jump(index);
+    await play();
   }
 
   Future<void> seek(Duration position) async {
-    _fadeCancel();
+    if (!state.playing) {
+      _fadeCancel();
+      await _player.pause();
+      return _player.seek(position);
+    }
     return _player.seek(position);
   }
 
@@ -387,6 +395,7 @@ final class MediaPlayer extends ChangeNotifier {
     _player.stream.pitch.listen((e) => state = state.copyWith(pitch: e));
     _player.stream.volume.listen((e) {
       if (_fadeTarget != null) return;
+      if (!state.playing) return;
       if ((e - _fadeVolume).abs() < 0.01) return;
       _fadeVolume = e;
       state = state.copyWith(volume: e);
