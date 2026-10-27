@@ -17,6 +17,7 @@ import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/media_player_state.dart';
 import 'package:harmonoid/state/lyrics/lyrics_notifier.dart';
+import 'package:harmonoid/state/splash_image_notifier.dart';
 import 'package:harmonoid/features/now_playing/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/features/now_playing/state/now_playing_mobile_notifier.dart';
 import 'package:harmonoid/state/remote_config/models/remote_config_key.dart';
@@ -58,6 +59,7 @@ class HarmonoidAppState extends State<HarmonoidApp> with WidgetsBindingObserver 
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      unawaited(SplashImageNotifier.instance.refresh());
       final hasInaccessibleDirectories = await MediaLibraryInaccessibleDirectoriesScreen.showIfRequired(context);
       if (!hasInaccessibleDirectories && Configuration.instance.mediaLibraryRefreshUponStart) {
         FileSystemMediaLibrary.instance.refresh();

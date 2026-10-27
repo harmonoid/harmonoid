@@ -49,3 +49,14 @@ SubscriptionPurchaseConfigValue _$SubscriptionPurchaseConfigValueFromJson(
 Map<String, dynamic> _$SubscriptionPurchaseConfigValueToJson(
   SubscriptionPurchaseConfigValue instance,
 ) => <String, dynamic>{'value': instance.value, 'runtimeType': instance.$type};
+
+SplashImageValue _$SplashImageValueFromJson(Map<String, dynamic> json) =>
+    SplashImageValue(
+      json['value'] == null
+          ? null
+          : SplashImage.fromJson(json['value'] as Map<String, dynamic>),
+      $type: json['runtimeType'] as String?,
+    );
+
+Map<String, dynamic> _$SplashImageValueToJson(SplashImageValue instance) =>
+    <String, dynamic>{'value': instance.value, 'runtimeType': instance.$type};

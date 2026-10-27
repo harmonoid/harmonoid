@@ -16,6 +16,7 @@ import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/state/in_app_review_notifier.dart';
 import 'package:harmonoid/state/lyrics/lyrics_notifier.dart';
+import 'package:harmonoid/state/splash_image_notifier.dart';
 import 'package:harmonoid/features/now_playing/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/features/now_playing/state/now_playing_visuals_notifier.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
@@ -29,6 +30,8 @@ import 'package:harmonoid/utils/platform_utils.dart';
 import 'package:harmonoid/utils/window_lifecycle.dart';
 
 Future<void> main(List<String> args) async {
+  final processStartTime = DateTime.now();
+
   WidgetsFlutterBinding.ensureInitialized();
   PaintingBinding.instance.imageCache.maximumSize = 1000;
   PaintingBinding.instance.imageCache.maximumSizeBytes = 200 * 1024 * 1024;
@@ -126,6 +129,11 @@ Future<void> main(List<String> args) async {
     await InAppReviewNotifier.ensureInitialized();
     await NowPlayingVisualsNotifier.ensureInitialized();
     await NowPlayingColorPaletteNotifier.ensureInitialized();
+    if ((Platform.isLinux || Platform.isMacOS || Platform.isWindows) && SplashImageNotifier.instance.hasImage) {
+      const delay = Duration(seconds: 5);
+      final elapsed = DateTime.now().difference(processStartTime);
+      if (elapsed < delay) await Future.delayed(delay - elapsed);
+    }
     runApp(const HarmonoidApp());
   } catch (exception, stacktrace) {
     debugPrint(exception.toString());
