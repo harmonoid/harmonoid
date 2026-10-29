@@ -38,7 +38,8 @@ jobs:
             --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }} \
             --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }} \
             --dart-define=SUPABASE_PUBLISHABLE_KEY=${{ secrets.SUPABASE_PUBLISHABLE_KEY }} \
-            --dart-define=REVENUECAT_API_KEY=''
+            --dart-define=REVENUECAT_API_KEY='' \
+            --dart-define=LYRICS_ACCESS_KEY=${{ secrets.LYRICS_ACCESS_KEY }}
       - name: Import Developer ID Application Certificate
         uses: apple-actions/import-codesign-certs@v7
         with:
@@ -198,7 +199,8 @@ jobs:
             --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }} `
             --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }} `
             --dart-define=SUPABASE_PUBLISHABLE_KEY=${{ secrets.SUPABASE_PUBLISHABLE_KEY }} `
-            --dart-define=REVENUECAT_API_KEY=''
+            --dart-define=REVENUECAT_API_KEY='' `
+            --dart-define=LYRICS_ACCESS_KEY=${{ secrets.LYRICS_ACCESS_KEY }}
       - name: Create PFX
         id: create_pfx
         uses: timheuer/base64-to-file@v1
@@ -309,7 +311,8 @@ jobs:
             --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }} `
             --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }} `
             --dart-define=SUPABASE_PUBLISHABLE_KEY=${{ secrets.SUPABASE_PUBLISHABLE_KEY }} `
-            --dart-define=REVENUECAT_API_KEY=''
+            --dart-define=REVENUECAT_API_KEY='' `
+            --dart-define=LYRICS_ACCESS_KEY=${{ secrets.LYRICS_ACCESS_KEY }}
       - name: Create PFX
         id: create_pfx
         uses: timheuer/base64-to-file@v1
@@ -397,6 +400,7 @@ jobs:
             -e LASTFM_SHARED_SECRET="${{ secrets.LASTFM_SHARED_SECRET }}" \
             -e SUPABASE_URL="${{ secrets.SUPABASE_URL }}" \
             -e SUPABASE_PUBLISHABLE_KEY="${{ secrets.SUPABASE_PUBLISHABLE_KEY }}" \
+            -e LYRICS_ACCESS_KEY="${{ secrets.LYRICS_ACCESS_KEY }}" \
             ubuntu:20.04 \
             bash -c '
               set -e
@@ -432,7 +436,8 @@ jobs:
                 --dart-define=LASTFM_SHARED_SECRET=$LASTFM_SHARED_SECRET \
                 --dart-define=SUPABASE_URL=$SUPABASE_URL \
                 --dart-define=SUPABASE_PUBLISHABLE_KEY=$SUPABASE_PUBLISHABLE_KEY \
-                --dart-define=REVENUECAT_API_KEY=''
+                --dart-define=REVENUECAT_API_KEY='' \
+                --dart-define=LYRICS_ACCESS_KEY=$LYRICS_ACCESS_KEY
 
               # Bundle RPM
               cp -fr build/linux/x64/release/bundle linux/debian/usr/share/harmonoid
@@ -506,6 +511,7 @@ jobs:
             -e LASTFM_SHARED_SECRET="${{ secrets.LASTFM_SHARED_SECRET }}" \
             -e SUPABASE_URL="${{ secrets.SUPABASE_URL }}" \
             -e SUPABASE_PUBLISHABLE_KEY="${{ secrets.SUPABASE_PUBLISHABLE_KEY }}" \
+            -e LYRICS_ACCESS_KEY="${{ secrets.LYRICS_ACCESS_KEY }}" \
             ubuntu:20.04 \
             bash -c '
               set -e
@@ -540,7 +546,8 @@ jobs:
                 --dart-define=LASTFM_SHARED_SECRET=$LASTFM_SHARED_SECRET \
                 --dart-define=SUPABASE_URL=$SUPABASE_URL \
                 --dart-define=SUPABASE_PUBLISHABLE_KEY=$SUPABASE_PUBLISHABLE_KEY \
-                --dart-define=REVENUECAT_API_KEY=''
+                --dart-define=REVENUECAT_API_KEY='' \
+                --dart-define=LYRICS_ACCESS_KEY=$LYRICS_ACCESS_KEY
 
               # Bundle RPM
               cp -fr build/linux/arm64/release/bundle linux/debian/usr/share/harmonoid
@@ -646,7 +653,8 @@ jobs:
             --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }} \
             --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }} \
             --dart-define=SUPABASE_PUBLISHABLE_KEY=${{ secrets.SUPABASE_PUBLISHABLE_KEY }} \
-            --dart-define=REVENUECAT_API_KEY=${{ secrets.GOOGLE_REVENUECAT_API_KEY }}
+            --dart-define=REVENUECAT_API_KEY=${{ secrets.GOOGLE_REVENUECAT_API_KEY }} \
+            --dart-define=LYRICS_ACCESS_KEY=${{ secrets.LYRICS_ACCESS_KEY }}
           flutter build appbundle --verbose \
             --dart-define=API_KEY=${{ secrets.API_KEY }} \
             --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }} \
@@ -654,7 +662,8 @@ jobs:
             --dart-define=LASTFM_SHARED_SECRET=${{ secrets.LASTFM_SHARED_SECRET }} \
             --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }} \
             --dart-define=SUPABASE_PUBLISHABLE_KEY=${{ secrets.SUPABASE_PUBLISHABLE_KEY }} \
-            --dart-define=REVENUECAT_API_KEY=${{ secrets.GOOGLE_REVENUECAT_API_KEY }}
+            --dart-define=REVENUECAT_API_KEY=${{ secrets.GOOGLE_REVENUECAT_API_KEY }} \
+            --dart-define=LYRICS_ACCESS_KEY=${{ secrets.LYRICS_ACCESS_KEY }}
           cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk harmonoid-android-arm64-v8a-release.apk
           cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk harmonoid-android-armeabi-v7a-release.apk
           cp build/app/outputs/flutter-apk/app-x86_64-release.apk harmonoid-android-x86_64-release.apk

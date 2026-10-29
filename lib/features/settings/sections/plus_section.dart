@@ -5,8 +5,9 @@ import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
-import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/features/settings/settings_section.dart';
+import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/state/lyrics/lyrics_notifier.dart';
 import 'package:harmonoid/utils/async_file_image.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -150,6 +151,21 @@ class _PlusSectionState extends State<PlusSection> {
                     ),
                     title: Localization.instance.TAG_EDITOR,
                   ),
+                  if (!LyricsNotifier.instance.lyricsAccess)
+                    ListItem(
+                      trailing: Consumer<SubscriptionNotifier>(
+                        builder: (context, notifier, child) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Checkbox(
+                              value: notifier.state is SubscriptionValid,
+                              onChanged: (_) {},
+                            ),
+                          );
+                        },
+                      ),
+                      title: Localization.instance.LYRICS,
+                    ),
                   ListItem(
                     trailing: Consumer<SubscriptionNotifier>(
                       builder: (context, notifier, child) {

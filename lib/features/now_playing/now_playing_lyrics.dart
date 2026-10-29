@@ -1,5 +1,6 @@
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
+import 'package:identity/identity.dart';
 import 'package:provider/provider.dart';
 import 'package:system_fonts/system_fonts.dart';
 
@@ -48,7 +49,7 @@ class _NowPlayingLyricsState extends State<NowPlayingLyrics> {
     };
   }
 
-  Widget _buildDesktopLayout(BuildContext context) {
+  Widget _buildDesktopLayout(BuildContext context, bool access) {
     return AnimatedOpacity(
       curve: Curves.easeInOut,
       opacity: _fontFamily == null ? 0.0 : 1.0,
@@ -78,17 +79,20 @@ class _NowPlayingLyricsState extends State<NowPlayingLyrics> {
             alignment: Alignment.center,
             viewportWidth: 1920.0 * 1.0,
             viewportHeight: 1080.0 * 0.6,
+            lyricsAccess: access,
+            onLyricsAccessRequested: () => SubscriptionDialog.show(context),
+            onLyricsAccessDismissed: () => lyricsNotifier.dismissDesktopLyricsGate(),
           );
         },
       ),
     );
   }
 
-  Widget _buildTabletLayout(BuildContext context) {
+  Widget _buildTabletLayout(BuildContext context, bool access) {
     throw UnimplementedError();
   }
 
-  Widget _buildMobileLayout(BuildContext context) {
+  Widget _buildMobileLayout(BuildContext context, bool access) {
     return AnimatedOpacity(
       curve: Curves.easeInOut,
       opacity: _fontFamily == null ? 0.0 : 1.0,
@@ -122,6 +126,9 @@ class _NowPlayingLyricsState extends State<NowPlayingLyrics> {
             alignment: Alignment.center,
             viewportWidth: MediaQuery.sizeOf(context).width,
             viewportHeight: MediaQuery.sizeOf(context).height,
+            lyricsAccess: access,
+            onLyricsAccessRequested: () => SubscriptionDialog.show(context),
+            onLyricsAccessDismissed: () => Navigator.of(context).pop(),
           );
         },
       ),
@@ -130,15 +137,20 @@ class _NowPlayingLyricsState extends State<NowPlayingLyrics> {
 
   @override
   Widget build(BuildContext context) {
-    if (isDesktop) {
-      return _buildDesktopLayout(context);
-    }
-    if (isTablet) {
-      return _buildTabletLayout(context);
-    }
-    if (isMobile) {
-      return _buildMobileLayout(context);
-    }
-    throw UnimplementedError();
+    return Consumer2<LyricsNotifier, SubscriptionNotifier>(
+      builder: (context, notifier, subscriptionNotifier, _) {
+        final access = notifier.lyricsAccess || subscriptionNotifier.state is SubscriptionValid;
+        if (isDesktop) {
+          return _buildDesktopLayout(context, access);
+        }
+        if (isTablet) {
+          return _buildTabletLayout(context, access);
+        }
+        if (isMobile) {
+          return _buildMobileLayout(context, access);
+        }
+        throw UnimplementedError();
+      },
+    );
   }
 }

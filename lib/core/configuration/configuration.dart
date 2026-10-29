@@ -94,6 +94,7 @@ class Configuration extends ConfigurationBase {
     _desktopNowPlayingBarColorPalette = await read<bool, bool>(kKeyDesktopNowPlayingBarColorPalette, defaults);
     _desktopNowPlayingCarousel = await read<int, int>(kKeyDesktopNowPlayingCarousel, defaults);
     _desktopNowPlayingLyrics = await read<bool, bool>(kKeyDesktopNowPlayingLyrics, defaults);
+    _desktopNowPlayingLyricsGateDismissCount = await read<int, int>(kKeyDesktopNowPlayingLyricsGateDismissCount, defaults);
     _discordTokens = await read<dynamic, DiscordTokens>(kKeyDiscordTokens, defaults, (value) => DiscordTokens.fromJson(value));
     _discordUsername = await read<String, String>(kKeyDiscordUsername, defaults);
     _identifier = await read<String, String>(kKeyIdentifier, defaults);

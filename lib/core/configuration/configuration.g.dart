@@ -17,6 +17,7 @@ class ConfigurationBase {
   bool get desktopNowPlayingBarColorPalette => _desktopNowPlayingBarColorPalette!;
   int get desktopNowPlayingCarousel => _desktopNowPlayingCarousel!;
   bool get desktopNowPlayingLyrics => _desktopNowPlayingLyrics!;
+  int get desktopNowPlayingLyricsGateDismissCount => _desktopNowPlayingLyricsGateDismissCount!;
   DiscordTokens get discordTokens => _discordTokens!;
   String get discordUsername => _discordUsername!;
   String get identifier => _identifier!;
@@ -83,6 +84,7 @@ class ConfigurationBase {
     bool? desktopNowPlayingBarColorPalette,
     int? desktopNowPlayingCarousel,
     bool? desktopNowPlayingLyrics,
+    int? desktopNowPlayingLyricsGateDismissCount,
     DiscordTokens? discordTokens,
     String? discordUsername,
     String? identifier,
@@ -162,6 +164,10 @@ class ConfigurationBase {
     if (desktopNowPlayingLyrics != null) {
       _desktopNowPlayingLyrics = desktopNowPlayingLyrics;
       await db.setValue(kKeyDesktopNowPlayingLyrics, kTypeBoolean, booleanValue: desktopNowPlayingLyrics);
+    }
+    if (desktopNowPlayingLyricsGateDismissCount != null) {
+      _desktopNowPlayingLyricsGateDismissCount = desktopNowPlayingLyricsGateDismissCount;
+      await db.setValue(kKeyDesktopNowPlayingLyricsGateDismissCount, kTypeInteger, integerValue: desktopNowPlayingLyricsGateDismissCount);
     }
     if (discordTokens != null) {
       _discordTokens = discordTokens;
@@ -408,6 +414,7 @@ class ConfigurationBase {
       /* Boolean */ kKeyDesktopNowPlayingBarColorPalette: true,
       /* Integer */ kKeyDesktopNowPlayingCarousel: 2,
       /* Boolean */ kKeyDesktopNowPlayingLyrics: true,
+      /* Integer */ kKeyDesktopNowPlayingLyricsGateDismissCount: 0,
       /* Json    */ kKeyDiscordTokens: const DiscordTokens(accessToken: '', refreshToken: '', tokenType: DiscordTokenType.bearer, expiresIn: Duration.zero, scopes: []),
       /* String  */ kKeyDiscordUsername: '',
       /* String  */ kKeyIdentifier: const Uuid().v4(),
@@ -475,6 +482,7 @@ class ConfigurationBase {
   bool? _desktopNowPlayingBarColorPalette;
   int? _desktopNowPlayingCarousel;
   bool? _desktopNowPlayingLyrics;
+  int? _desktopNowPlayingLyricsGateDismissCount;
   DiscordTokens? _discordTokens;
   String? _discordUsername;
   String? _identifier;
@@ -543,6 +551,7 @@ const kKeyDesktopMediaLibraryTracksScreenColumnWidths = 'DESKTOP_MEDIA_LIBRARY_T
 const kKeyDesktopNowPlayingBarColorPalette = 'DESKTOP_NOW_PLAYING_BAR_COLOR_PALETTE';
 const kKeyDesktopNowPlayingCarousel = 'DESKTOP_NOW_PLAYING_CAROUSEL';
 const kKeyDesktopNowPlayingLyrics = 'DESKTOP_NOW_PLAYING_LYRICS';
+const kKeyDesktopNowPlayingLyricsGateDismissCount = 'DESKTOP_NOW_PLAYING_LYRICS_GATE_DISMISS_COUNT';
 const kKeyDiscordTokens = 'DISCORD_TOKENS';
 const kKeyDiscordUsername = 'DISCORD_USERNAME';
 const kKeyIdentifier = 'IDENTIFIER';

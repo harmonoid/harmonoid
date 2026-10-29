@@ -26,6 +26,12 @@ EnableInAppReview _$EnableInAppReviewFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$EnableInAppReviewToJson(EnableInAppReview instance) =>
     <String, dynamic>{'value': instance.value, 'runtimeType': instance.$type};
 
+LyricsAccess _$LyricsAccessFromJson(Map<String, dynamic> json) =>
+    LyricsAccess(json['value'] as bool, $type: json['runtimeType'] as String?);
+
+Map<String, dynamic> _$LyricsAccessToJson(LyricsAccess instance) =>
+    <String, dynamic>{'value': instance.value, 'runtimeType': instance.$type};
+
 LyricsTranslationLanguages _$LyricsTranslationLanguagesFromJson(
   Map<String, dynamic> json,
 ) => LyricsTranslationLanguages(

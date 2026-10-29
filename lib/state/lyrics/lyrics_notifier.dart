@@ -50,6 +50,7 @@ class LyricsNotifier extends ChangeNotifier {
   static const _kNotificationChannelId = 'com.alexmercerind.harmonoid.lyrics';
   static const _kNotificationCategoryId = 'com.alexmercerind.harmonoid.lyrics.category';
   static const _kNotificationHideActionId = 'com.alexmercerind.harmonoid.lyrics.hide';
+  static const _kDesktopGateDismissCountToCache = 3;
 
   /// Singleton instance.
   static final LyricsNotifier instance = LyricsNotifier._();
@@ -108,6 +109,7 @@ class LyricsNotifier extends ChangeNotifier {
         }
       }),
     );
+    unawaited(_fetchLyricsAccess());
     unawaited(_fetchTranslationLanguages());
   }
 
@@ -120,6 +122,9 @@ class LyricsNotifier extends ChangeNotifier {
 
   /// Index.
   int index = 0;
+
+  /// Whether the lyrics are accessible.
+  bool lyricsAccess = true;
 
   /// Whether the lyrics are loading.
   bool lyricsLoading = false;
@@ -141,6 +146,9 @@ class LyricsNotifier extends ChangeNotifier {
 
   /// Whether lyrics are shown on the desktop now playing screen.
   bool desktopNowPlayingLyrics = Configuration.instance.desktopNowPlayingLyrics;
+
+  /// Number of times the desktop lyrics gate has been dismissed.
+  int desktopNowPlayingLyricsGateDismissCount = Configuration.instance.desktopNowPlayingLyricsGateDismissCount;
 
   /// Database used to cache lyrics and lyrics translations.
   final LyricsDatabase db;
@@ -166,6 +174,18 @@ class LyricsNotifier extends ChangeNotifier {
     desktopNowPlayingLyrics = value;
     notifyListeners();
     await Configuration.instance.set(desktopNowPlayingLyrics: value);
+  }
+
+  /// Dismisses the desktop lyrics gate.
+  Future<void> dismissDesktopLyricsGate() async {
+    desktopNowPlayingLyricsGateDismissCount++;
+    await Configuration.instance.set(desktopNowPlayingLyricsGateDismissCount: desktopNowPlayingLyricsGateDismissCount);
+    if (desktopNowPlayingLyricsGateDismissCount >= _kDesktopGateDismissCountToCache) {
+      await setDesktopNowPlayingLyrics(false);
+    } else {
+      desktopNowPlayingLyrics = false;
+      notifyListeners();
+    }
   }
 
   /// Whether cached lyrics are present for the specified [track].
@@ -302,6 +322,11 @@ class LyricsNotifier extends ChangeNotifier {
           result = response;
           await db.setLyrics(key, response);
         }
+      } on LyricsGetAccessException {
+        if (lyricsAccess) {
+          lyricsAccess = false;
+          notifyListeners();
+        }
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
@@ -386,14 +411,20 @@ class LyricsNotifier extends ChangeNotifier {
     }
   }
 
+  /// Fetches the lyrics access.
+  Future<void> _fetchLyricsAccess() async {
+    final response = await RemoteConfigProvider().get(RemoteConfigKey.lyricsAccess);
+    if (response is! LyricsAccess) return;
+    lyricsAccess = response.value;
+    notifyListeners();
+  }
+
   /// Fetches the translation languages.
   Future<void> _fetchTranslationLanguages() async {
-    final remoteConfigProvider = RemoteConfigProvider();
-    final response = await remoteConfigProvider.get(RemoteConfigKey.lyricsTranslationLanguages);
-    if (response is LyricsTranslationLanguages) {
-      translationLanguages = response.value;
-      notifyListeners();
-    }
+    final response = await RemoteConfigProvider().get(RemoteConfigKey.lyricsTranslationLanguages);
+    if (response is! LyricsTranslationLanguages) return;
+    translationLanguages = response.value;
+    notifyListeners();
   }
 
   Lyrics? _parseLrc(String contents) {

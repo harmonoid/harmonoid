@@ -20,13 +20,23 @@ class LyricsGet {
           'track': track,
           'artist': artist,
           'duration': duration.toString(),
-        }
+        },
       );
       return (response.data as List).map<Lyric>((e) => Lyric.fromJson(e)).toList();
+    } on FunctionException catch (exception, stacktrace) {
+      if (exception.status == 402) {
+        throw const LyricsGetAccessException();
+      }
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
     }
     return null;
   }
+}
+
+class LyricsGetAccessException implements Exception {
+  const LyricsGetAccessException();
 }
