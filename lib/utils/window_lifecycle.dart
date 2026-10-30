@@ -52,6 +52,12 @@ class WindowLifecycle {
     try {
       if (!FileSystemMediaLibrary.instance.refreshing || force) {
         try {
+          await WindowPlus.instance.hide();
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
+        }
+        try {
           await Configuration.instance.set(mediaPlayerPlaybackState: MediaPlayer.instance.state.toPlaybackState());
         } catch (exception, stacktrace) {
           debugPrint(exception.toString());
