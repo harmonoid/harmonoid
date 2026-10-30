@@ -130,7 +130,7 @@ class _NowPlayingLyricsState extends State<NowPlayingLyrics> {
             ),
             focusedBorderColor: Configuration.instance.lyricsViewBorderColor,
             unfocusedBorderColor: Configuration.instance.lyricsViewBorderColor,
-            textAlign: Configuration.instance.lyricsViewTextAlign,
+            textAlign: access ? Configuration.instance.lyricsViewTextAlign : TextAlign.center,
             alignment: Alignment.center,
             viewportWidth: MediaQuery.sizeOf(context).width,
             viewportHeight: MediaQuery.sizeOf(context).height,
