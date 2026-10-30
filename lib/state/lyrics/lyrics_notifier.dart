@@ -81,6 +81,10 @@ class LyricsNotifier extends ChangeNotifier {
 
           _current = current;
           _currentDuration = currentDuration;
+
+          // Refresh trial token if needed.
+          await trialNotifier?.refreshTrialTokenIfNeeded();
+
           await _fetchLyrics();
           await _fetchLyricsTranslation();
 
@@ -109,7 +113,6 @@ class LyricsNotifier extends ChangeNotifier {
         }
       }),
     );
-    unawaited(_fetchLyricsAccess());
     unawaited(_fetchTranslationLanguages());
   }
 
@@ -122,9 +125,6 @@ class LyricsNotifier extends ChangeNotifier {
 
   /// Index.
   int index = 0;
-
-  /// Whether the lyrics are accessible.
-  bool lyricsAccess = true;
 
   /// Whether the lyrics are loading.
   bool lyricsLoading = false;
@@ -156,6 +156,14 @@ class LyricsNotifier extends ChangeNotifier {
   /// HACK: Make LyricsNotifier DI friendly.
   /// Subscription notifier.
   SubscriptionNotifier? get subscriptionNotifier {
+    final context = rootNavigatorKey.currentContext;
+    if (context == null || !context.mounted) return null;
+    return context.read();
+  }
+
+  /// HACK: Make LyricsNotifier DI friendly.
+  /// Trial notifier.
+  TrialNotifier? get trialNotifier {
     final context = rootNavigatorKey.currentContext;
     if (context == null || !context.mounted) return null;
     return context.read();
@@ -323,10 +331,8 @@ class LyricsNotifier extends ChangeNotifier {
           await db.setLyrics(key, response);
         }
       } on LyricsGetAccessException {
-        if (lyricsAccess) {
-          lyricsAccess = false;
-          notifyListeners();
-        }
+        await trialNotifier?.clearTrialToken();
+        notifyListeners();
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
@@ -409,14 +415,6 @@ class LyricsNotifier extends ChangeNotifier {
       translation = _cleanLyrics(result ?? []);
       notifyListeners();
     }
-  }
-
-  /// Fetches the lyrics access.
-  Future<void> _fetchLyricsAccess() async {
-    final response = await RemoteConfigProvider().get(RemoteConfigKey.lyricsAccess);
-    if (response is! LyricsAccess) return;
-    lyricsAccess = response.value;
-    notifyListeners();
   }
 
   /// Fetches the translation languages.

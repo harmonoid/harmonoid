@@ -137,9 +137,9 @@ class _NowPlayingLyricsState extends State<NowPlayingLyrics> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<LyricsNotifier, SubscriptionNotifier>(
-      builder: (context, notifier, subscriptionNotifier, _) {
-        final access = notifier.lyricsAccess || subscriptionNotifier.state is SubscriptionValid;
+    return Consumer2<SubscriptionNotifier, TrialNotifier>(
+      builder: (context, subscriptionNotifier, trialNotifier, _) {
+        final access = hasValidSubscriptionOrTrial(subscriptionNotifier.state, trialNotifier.trialTokenValid);
         if (isDesktop) {
           return _buildDesktopLayout(context, access);
         }

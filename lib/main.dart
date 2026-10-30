@@ -91,10 +91,11 @@ Future<void> main(List<String> args) async {
       getItem: (key) => Configuration.instance.db.getString(key),
       setItem: (key, value) => Configuration.instance.db.setValue(key, kTypeString, stringValue: value),
       removeItem: (key) => Configuration.instance.db.remove(key),
-      deviceId: Configuration.instance.identifier,
+      identifier: Configuration.instance.identifier,
       version: kVersion,
     );
     await SubscriptionNotifier.ensureInitialized();
+    await TrialNotifier.ensureInitialized();
 
     if (Platform.isMacOS || Platform.isIOS) {
       await DarwinStorageController.ensureInitialized(directories: Configuration.instance.mediaLibraryDirectories);

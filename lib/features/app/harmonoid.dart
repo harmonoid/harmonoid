@@ -128,6 +128,10 @@ class HarmonoidAppState extends State<HarmonoidApp> with WidgetsBindingObserver 
         ),
         ChangeNotifierProvider(
           lazy: false,
+          create: (_) => TrialNotifierFactory.create(),
+        ),
+        ChangeNotifierProvider(
+          lazy: false,
           create: (ctx) => SubscriptionNotifierFactory.create(
             version: kVersion,
             userNotifier: ctx.read(),
@@ -154,7 +158,6 @@ class HarmonoidAppState extends State<HarmonoidApp> with WidgetsBindingObserver 
               },
               onLicenseTap: () => launchUrlString(kLicenseUrl),
               onPrivacyTap: () => launchUrlString(kPrivacyUrl),
-              getLyricAccess: () => LyricsNotifier.instance.lyricsAccess,
               showTagEditorDemo: () => showTagEditorDemo(context),
             ),
           ),

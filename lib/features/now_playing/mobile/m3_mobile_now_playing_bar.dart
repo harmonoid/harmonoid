@@ -4,6 +4,7 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart' hide CarouselView;
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:identity/identity.dart';
 import 'package:m3_expressive_shapes/m3_expressive_shapes.dart';
 import 'package:measure_size/measure_size.dart';
 import 'package:media_library/media_library.dart';
@@ -359,9 +360,9 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
             icon: const Icon(Icons.close),
           ),
           const Spacer(),
-          Consumer<LyricsNotifier>(
-            builder: (context, lyricsNotifier, _) {
-              if (lyricsNotifier.lyrics.isEmpty) {
+          Consumer3<LyricsNotifier, SubscriptionNotifier, TrialNotifier>(
+            builder: (context, lyricsNotifier, subscriptionNotifier, trialNotifier, _) {
+              if (lyricsNotifier.lyrics.isEmpty && !hasValidSubscriptionOrTrial(subscriptionNotifier.state, trialNotifier.trialTokenValid)) {
                 return const SizedBox.shrink();
               }
               _showLyricsTooltipIfNeeded(percentage, mediaPlayer.current.uri);
