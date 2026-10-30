@@ -98,11 +98,12 @@ final class DiscordRpcMixin implements MediaPlayerMixin {
       }
 
       if (notify) {
+        final artist = current.subtitle.take(2).join(', ').ellipsis(128).nullIfBlank();
         try {
           await _client.updatePresence(
             DiscordActivity(
-              name: kApplicationName,
-              state: current.subtitle.take(2).join(', ').ellipsis(128).nullIfBlank(),
+              name: artist ?? kApplicationName,
+              state: artist,
               details: current.title.ellipsis(128).nullIfBlank(),
               startTimestamp: state.playing ? DateTime.now().subtract(state.position) : null,
               endTimestamp: state.playing ? DateTime.now().subtract(state.position).add(state.duration) : null,
