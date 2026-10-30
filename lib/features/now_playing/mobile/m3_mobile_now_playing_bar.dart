@@ -362,7 +362,7 @@ class M3MobileNowPlayingBarState extends State<M3MobileNowPlayingBar> {
           const Spacer(),
           Consumer3<LyricsNotifier, SubscriptionNotifier, TrialNotifier>(
             builder: (context, lyricsNotifier, subscriptionNotifier, trialNotifier, _) {
-              if (lyricsNotifier.lyrics.isEmpty && !hasValidSubscriptionOrTrial(subscriptionNotifier.state, trialNotifier.trialTokenValid)) {
+              if (lyricsNotifier.lyrics.isEmpty && hasValidSubscriptionOrTrial(subscriptionNotifier.state, trialNotifier.trialTokenValid)) {
                 return const SizedBox.shrink();
               }
               _showLyricsTooltipIfNeeded(percentage, mediaPlayer.current.uri);

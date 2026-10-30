@@ -102,6 +102,7 @@ class _MobileNowPlayingLyricsScreenState extends State<MobileNowPlayingLyricsScr
                         top: MediaQuery.paddingOf(context).top + 8.0,
                         right: MediaQuery.paddingOf(context).right + 8.0,
                         child: SubscriptionReveal(
+                          blur: false,
                           child: Consumer<LyricsNotifier>(
                             builder: (context, lyricsNotifier, _) {
                               final color = Theme.of(context).extension<IconColors>()?.appBarDark;
