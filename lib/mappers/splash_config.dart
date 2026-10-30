@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:harmonoid/state/remote_config/models/splash_image.dart';
+import 'package:harmonoid/state/remote_config/models/splash_config.dart';
 
-/// Mappers for [SplashImage].
-extension SplashImageMappers on SplashImage {
+/// Mappers for [SplashConfig].
+extension SplashConfigMappers on SplashConfig {
   /// Converts to [BoxFit].
   BoxFit toBoxFit() {
     switch (fit.trim().toLowerCase()) {

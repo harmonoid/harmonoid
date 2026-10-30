@@ -131,7 +131,7 @@ Future<void> main(List<String> args) async {
     await NowPlayingVisualsNotifier.ensureInitialized();
     await NowPlayingColorPaletteNotifier.ensureInitialized();
     if ((Platform.isLinux || Platform.isMacOS || Platform.isWindows) && SplashImageNotifier.instance.hasImage) {
-      const delay = Duration(seconds: 5);
+      final delay = Duration(milliseconds: SplashImageNotifier.instance.config?.delay ?? 0);
       final elapsed = DateTime.now().difference(processStartTime);
       if (elapsed < delay) await Future.delayed(delay - elapsed);
     }

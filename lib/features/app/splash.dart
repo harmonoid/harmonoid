@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:harmonoid/mappers/splash_image.dart';
+import 'package:harmonoid/mappers/splash_config.dart';
 import 'package:harmonoid/state/splash_image_notifier.dart';
 
 const Color kDefaultSplashBackgroundColor = Color(0xFF6200EA);

@@ -31,8 +31,8 @@ RemoteConfigValue _$RemoteConfigValueFromJson(
           return SubscriptionPurchaseConfigValue.fromJson(
             json
           );
-                case 'splashImage':
-          return SplashImageValue.fromJson(
+                case 'splashConfig':
+          return SplashConfigValue.fromJson(
             json
           );
         
@@ -93,15 +93,15 @@ extension RemoteConfigValuePatterns on RemoteConfigValue {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ArtistImageCacheVersion value)?  artistImageCacheVersion,TResult Function( EnableInAppReview value)?  enableInAppReview,TResult Function( LyricsTranslationLanguages value)?  lyricsTranslationLanguages,TResult Function( SubscriptionPurchaseConfigValue value)?  subscriptionPurchaseConfig,TResult Function( SplashImageValue value)?  splashImage,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ArtistImageCacheVersion value)?  artistImageCacheVersion,TResult Function( EnableInAppReview value)?  enableInAppReview,TResult Function( LyricsTranslationLanguages value)?  lyricsTranslationLanguages,TResult Function( SubscriptionPurchaseConfigValue value)?  subscriptionPurchaseConfig,TResult Function( SplashConfigValue value)?  splashConfig,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case ArtistImageCacheVersion() when artistImageCacheVersion != null:
 return artistImageCacheVersion(_that);case EnableInAppReview() when enableInAppReview != null:
 return enableInAppReview(_that);case LyricsTranslationLanguages() when lyricsTranslationLanguages != null:
 return lyricsTranslationLanguages(_that);case SubscriptionPurchaseConfigValue() when subscriptionPurchaseConfig != null:
-return subscriptionPurchaseConfig(_that);case SplashImageValue() when splashImage != null:
-return splashImage(_that);case _:
+return subscriptionPurchaseConfig(_that);case SplashConfigValue() when splashConfig != null:
+return splashConfig(_that);case _:
   return orElse();
 
 }
@@ -119,15 +119,15 @@ return splashImage(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ArtistImageCacheVersion value)  artistImageCacheVersion,required TResult Function( EnableInAppReview value)  enableInAppReview,required TResult Function( LyricsTranslationLanguages value)  lyricsTranslationLanguages,required TResult Function( SubscriptionPurchaseConfigValue value)  subscriptionPurchaseConfig,required TResult Function( SplashImageValue value)  splashImage,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ArtistImageCacheVersion value)  artistImageCacheVersion,required TResult Function( EnableInAppReview value)  enableInAppReview,required TResult Function( LyricsTranslationLanguages value)  lyricsTranslationLanguages,required TResult Function( SubscriptionPurchaseConfigValue value)  subscriptionPurchaseConfig,required TResult Function( SplashConfigValue value)  splashConfig,}){
 final _that = this;
 switch (_that) {
 case ArtistImageCacheVersion():
 return artistImageCacheVersion(_that);case EnableInAppReview():
 return enableInAppReview(_that);case LyricsTranslationLanguages():
 return lyricsTranslationLanguages(_that);case SubscriptionPurchaseConfigValue():
-return subscriptionPurchaseConfig(_that);case SplashImageValue():
-return splashImage(_that);}
+return subscriptionPurchaseConfig(_that);case SplashConfigValue():
+return splashConfig(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -141,15 +141,15 @@ return splashImage(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ArtistImageCacheVersion value)?  artistImageCacheVersion,TResult? Function( EnableInAppReview value)?  enableInAppReview,TResult? Function( LyricsTranslationLanguages value)?  lyricsTranslationLanguages,TResult? Function( SubscriptionPurchaseConfigValue value)?  subscriptionPurchaseConfig,TResult? Function( SplashImageValue value)?  splashImage,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ArtistImageCacheVersion value)?  artistImageCacheVersion,TResult? Function( EnableInAppReview value)?  enableInAppReview,TResult? Function( LyricsTranslationLanguages value)?  lyricsTranslationLanguages,TResult? Function( SubscriptionPurchaseConfigValue value)?  subscriptionPurchaseConfig,TResult? Function( SplashConfigValue value)?  splashConfig,}){
 final _that = this;
 switch (_that) {
 case ArtistImageCacheVersion() when artistImageCacheVersion != null:
 return artistImageCacheVersion(_that);case EnableInAppReview() when enableInAppReview != null:
 return enableInAppReview(_that);case LyricsTranslationLanguages() when lyricsTranslationLanguages != null:
 return lyricsTranslationLanguages(_that);case SubscriptionPurchaseConfigValue() when subscriptionPurchaseConfig != null:
-return subscriptionPurchaseConfig(_that);case SplashImageValue() when splashImage != null:
-return splashImage(_that);case _:
+return subscriptionPurchaseConfig(_that);case SplashConfigValue() when splashConfig != null:
+return splashConfig(_that);case _:
   return null;
 
 }
@@ -166,14 +166,14 @@ return splashImage(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int value)?  artistImageCacheVersion,TResult Function( bool value)?  enableInAppReview,TResult Function( List<Language> value)?  lyricsTranslationLanguages,TResult Function( SubscriptionPurchaseConfig value)?  subscriptionPurchaseConfig,TResult Function( SplashImage? value)?  splashImage,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int value)?  artistImageCacheVersion,TResult Function( bool value)?  enableInAppReview,TResult Function( List<Language> value)?  lyricsTranslationLanguages,TResult Function( SubscriptionPurchaseConfig value)?  subscriptionPurchaseConfig,TResult Function( SplashConfig? value)?  splashConfig,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case ArtistImageCacheVersion() when artistImageCacheVersion != null:
 return artistImageCacheVersion(_that.value);case EnableInAppReview() when enableInAppReview != null:
 return enableInAppReview(_that.value);case LyricsTranslationLanguages() when lyricsTranslationLanguages != null:
 return lyricsTranslationLanguages(_that.value);case SubscriptionPurchaseConfigValue() when subscriptionPurchaseConfig != null:
-return subscriptionPurchaseConfig(_that.value);case SplashImageValue() when splashImage != null:
-return splashImage(_that.value);case _:
+return subscriptionPurchaseConfig(_that.value);case SplashConfigValue() when splashConfig != null:
+return splashConfig(_that.value);case _:
   return orElse();
 
 }
@@ -191,14 +191,14 @@ return splashImage(_that.value);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int value)  artistImageCacheVersion,required TResult Function( bool value)  enableInAppReview,required TResult Function( List<Language> value)  lyricsTranslationLanguages,required TResult Function( SubscriptionPurchaseConfig value)  subscriptionPurchaseConfig,required TResult Function( SplashImage? value)  splashImage,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int value)  artistImageCacheVersion,required TResult Function( bool value)  enableInAppReview,required TResult Function( List<Language> value)  lyricsTranslationLanguages,required TResult Function( SubscriptionPurchaseConfig value)  subscriptionPurchaseConfig,required TResult Function( SplashConfig? value)  splashConfig,}) {final _that = this;
 switch (_that) {
 case ArtistImageCacheVersion():
 return artistImageCacheVersion(_that.value);case EnableInAppReview():
 return enableInAppReview(_that.value);case LyricsTranslationLanguages():
 return lyricsTranslationLanguages(_that.value);case SubscriptionPurchaseConfigValue():
-return subscriptionPurchaseConfig(_that.value);case SplashImageValue():
-return splashImage(_that.value);}
+return subscriptionPurchaseConfig(_that.value);case SplashConfigValue():
+return splashConfig(_that.value);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -212,14 +212,14 @@ return splashImage(_that.value);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int value)?  artistImageCacheVersion,TResult? Function( bool value)?  enableInAppReview,TResult? Function( List<Language> value)?  lyricsTranslationLanguages,TResult? Function( SubscriptionPurchaseConfig value)?  subscriptionPurchaseConfig,TResult? Function( SplashImage? value)?  splashImage,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int value)?  artistImageCacheVersion,TResult? Function( bool value)?  enableInAppReview,TResult? Function( List<Language> value)?  lyricsTranslationLanguages,TResult? Function( SubscriptionPurchaseConfig value)?  subscriptionPurchaseConfig,TResult? Function( SplashConfig? value)?  splashConfig,}) {final _that = this;
 switch (_that) {
 case ArtistImageCacheVersion() when artistImageCacheVersion != null:
 return artistImageCacheVersion(_that.value);case EnableInAppReview() when enableInAppReview != null:
 return enableInAppReview(_that.value);case LyricsTranslationLanguages() when lyricsTranslationLanguages != null:
 return lyricsTranslationLanguages(_that.value);case SubscriptionPurchaseConfigValue() when subscriptionPurchaseConfig != null:
-return subscriptionPurchaseConfig(_that.value);case SplashImageValue() when splashImage != null:
-return splashImage(_that.value);case _:
+return subscriptionPurchaseConfig(_that.value);case SplashConfigValue() when splashConfig != null:
+return splashConfig(_that.value);case _:
   return null;
 
 }
@@ -537,11 +537,11 @@ $SubscriptionPurchaseConfigCopyWith<$Res> get value {
 /// @nodoc
 @JsonSerializable()
 
-class SplashImageValue implements RemoteConfigValue {
-  const SplashImageValue(this.value, {final  String? $type}): $type = $type ?? 'splashImage';
-  factory SplashImageValue.fromJson(Map<String, dynamic> json) => _$SplashImageValueFromJson(json);
+class SplashConfigValue implements RemoteConfigValue {
+  const SplashConfigValue(this.value, {final  String? $type}): $type = $type ?? 'splashConfig';
+  factory SplashConfigValue.fromJson(Map<String, dynamic> json) => _$SplashConfigValueFromJson(json);
 
-@override final  SplashImage? value;
+@override final  SplashConfig? value;
 
 @JsonKey(name: 'runtimeType')
 final String $type;
@@ -551,16 +551,16 @@ final String $type;
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$SplashImageValueCopyWith<SplashImageValue> get copyWith => _$SplashImageValueCopyWithImpl<SplashImageValue>(this, _$identity);
+$SplashConfigValueCopyWith<SplashConfigValue> get copyWith => _$SplashConfigValueCopyWithImpl<SplashConfigValue>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$SplashImageValueToJson(this, );
+  return _$SplashConfigValueToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SplashImageValue&&(identical(other.value, value) || other.value == value));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SplashConfigValue&&(identical(other.value, value) || other.value == value));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -569,38 +569,38 @@ int get hashCode => Object.hash(runtimeType,value);
 
 @override
 String toString() {
-  return 'RemoteConfigValue.splashImage(value: $value)';
+  return 'RemoteConfigValue.splashConfig(value: $value)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $SplashImageValueCopyWith<$Res> implements $RemoteConfigValueCopyWith<$Res> {
-  factory $SplashImageValueCopyWith(SplashImageValue value, $Res Function(SplashImageValue) _then) = _$SplashImageValueCopyWithImpl;
+abstract mixin class $SplashConfigValueCopyWith<$Res> implements $RemoteConfigValueCopyWith<$Res> {
+  factory $SplashConfigValueCopyWith(SplashConfigValue value, $Res Function(SplashConfigValue) _then) = _$SplashConfigValueCopyWithImpl;
 @useResult
 $Res call({
- SplashImage? value
+ SplashConfig? value
 });
 
 
-$SplashImageCopyWith<$Res>? get value;
+$SplashConfigCopyWith<$Res>? get value;
 
 }
 /// @nodoc
-class _$SplashImageValueCopyWithImpl<$Res>
-    implements $SplashImageValueCopyWith<$Res> {
-  _$SplashImageValueCopyWithImpl(this._self, this._then);
+class _$SplashConfigValueCopyWithImpl<$Res>
+    implements $SplashConfigValueCopyWith<$Res> {
+  _$SplashConfigValueCopyWithImpl(this._self, this._then);
 
-  final SplashImageValue _self;
-  final $Res Function(SplashImageValue) _then;
+  final SplashConfigValue _self;
+  final $Res Function(SplashConfigValue) _then;
 
 /// Create a copy of RemoteConfigValue
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? value = freezed,}) {
-  return _then(SplashImageValue(
+  return _then(SplashConfigValue(
 freezed == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
-as SplashImage?,
+as SplashConfig?,
   ));
 }
 
@@ -608,12 +608,12 @@ as SplashImage?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$SplashImageCopyWith<$Res>? get value {
+$SplashConfigCopyWith<$Res>? get value {
     if (_self.value == null) {
     return null;
   }
 
-  return $SplashImageCopyWith<$Res>(_self.value!, (value) {
+  return $SplashConfigCopyWith<$Res>(_self.value!, (value) {
     return _then(_self.copyWith(value: value));
   });
 }

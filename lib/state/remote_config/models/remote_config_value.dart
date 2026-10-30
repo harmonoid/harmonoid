@@ -4,7 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:identity/identity.dart';
 
 import 'package:harmonoid/localization/models/language.dart';
-import 'package:harmonoid/state/remote_config/models/splash_image.dart';
+import 'package:harmonoid/state/remote_config/models/splash_config.dart';
 
 part 'remote_config_value.freezed.dart';
 part 'remote_config_value.g.dart';
@@ -15,7 +15,7 @@ sealed class RemoteConfigValue with _$RemoteConfigValue {
   const factory RemoteConfigValue.enableInAppReview(bool value) = EnableInAppReview;
   const factory RemoteConfigValue.lyricsTranslationLanguages(List<Language> value) = LyricsTranslationLanguages;
   const factory RemoteConfigValue.subscriptionPurchaseConfig(SubscriptionPurchaseConfig value) = SubscriptionPurchaseConfigValue;
-  const factory RemoteConfigValue.splashImage(SplashImage? value) = SplashImageValue;
+  const factory RemoteConfigValue.splashConfig(SplashConfig? value) = SplashConfigValue;
 
   factory RemoteConfigValue.fromJson(Map<String, dynamic> json) => _$RemoteConfigValueFromJson(json);
 }

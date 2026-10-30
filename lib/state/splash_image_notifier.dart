@@ -8,7 +8,7 @@ import 'package:safe_local_storage/safe_local_storage.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/state/remote_config/models/remote_config_key.dart';
 import 'package:harmonoid/state/remote_config/models/remote_config_value.dart';
-import 'package:harmonoid/state/remote_config/models/splash_image.dart';
+import 'package:harmonoid/state/remote_config/models/splash_config.dart';
 import 'package:harmonoid/state/remote_config/remote_config_provider.dart';
 
 class SplashImageNotifier extends ChangeNotifier {
@@ -16,7 +16,7 @@ class SplashImageNotifier extends ChangeNotifier {
 
   SplashImageNotifier._();
 
-  SplashImage? config;
+  SplashConfig? config;
 
   File? file;
 
@@ -25,9 +25,10 @@ class SplashImageNotifier extends ChangeNotifier {
   Future<void> load() async {
     try {
       if (!await _waitForConfiguration()) return;
-      final cached = await RemoteConfigProvider().getCached(RemoteConfigKey.splashImage);
-      if (cached is! SplashImageValue) return;
-      final value = cached.value;
+      // Use cached remote config on subsequent start-ups.
+      final response = await RemoteConfigProvider().getCached(RemoteConfigKey.splashConfig);
+      if (response is! SplashConfigValue) return;
+      final value = response.value;
       if (value == null) return;
       final target = _fileForUrl(value.url);
       if (target == null || !await target.exists_() || await target.length_() == 0) return;
@@ -43,13 +44,12 @@ class SplashImageNotifier extends ChangeNotifier {
 
   Future<void> refresh() async {
     try {
-      final response = await RemoteConfigProvider().get(RemoteConfigKey.splashImage);
-      if (response is! SplashImageValue) return;
+      final response = await RemoteConfigProvider().get(RemoteConfigKey.splashConfig);
+      if (response is! SplashConfigValue) return;
       final value = response.value;
       if (value == null) return;
       final target = _fileForUrl(value.url);
-      if (target == null) return;
-      if (await target.exists_() && await target.length_() > 0) return;
+      if (target == null || await target.exists_() && await target.length_() > 0) return;
       final result = await http.get(Uri.parse(value.url));
       if (result.statusCode != 200 || result.bodyBytes.isEmpty) return;
       await _directory.create_();
