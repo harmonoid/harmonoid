@@ -25,6 +25,8 @@ class ConfigurationBase {
   LocalizationData get localization => _localization!;
   bool get lrcFromDirectory => _lrcFromDirectory!;
   Language get lyricsTranslationLanguage => _lyricsTranslationLanguage!;
+  Color get lyricsViewBorderColor => _lyricsViewBorderColor!;
+  Color get lyricsViewColor => _lyricsViewColor!;
   double get lyricsViewFocusedFontSize => _lyricsViewFocusedFontSize!;
   double get lyricsViewFocusedLineHeight => _lyricsViewFocusedLineHeight!;
   String get lyricsViewFontFamily => _lyricsViewFontFamily!;
@@ -92,6 +94,8 @@ class ConfigurationBase {
     LocalizationData? localization,
     bool? lrcFromDirectory,
     Language? lyricsTranslationLanguage,
+    Color? lyricsViewBorderColor,
+    Color? lyricsViewColor,
     double? lyricsViewFocusedFontSize,
     double? lyricsViewFocusedLineHeight,
     String? lyricsViewFontFamily,
@@ -196,6 +200,14 @@ class ConfigurationBase {
     if (lyricsTranslationLanguage != null) {
       _lyricsTranslationLanguage = lyricsTranslationLanguage;
       await db.setValue(kKeyLyricsTranslationLanguage, kTypeJson, jsonValue: lyricsTranslationLanguage.toJson());
+    }
+    if (lyricsViewBorderColor != null) {
+      _lyricsViewBorderColor = lyricsViewBorderColor;
+      await db.setValue(kKeyLyricsViewBorderColor, kTypeInteger, integerValue: lyricsViewBorderColor.toARGB32());
+    }
+    if (lyricsViewColor != null) {
+      _lyricsViewColor = lyricsViewColor;
+      await db.setValue(kKeyLyricsViewColor, kTypeInteger, integerValue: lyricsViewColor.toARGB32());
     }
     if (lyricsViewFocusedFontSize != null) {
       _lyricsViewFocusedFontSize = lyricsViewFocusedFontSize;
@@ -422,6 +434,8 @@ class ConfigurationBase {
       /* Json    */ kKeyLocalization: await getDefaultLocalization(),
       /* Boolean */ kKeyLrcFromDirectory: false,
       /* Json    */ kKeyLyricsTranslationLanguage: await getDefaultLyricsTranslationLanguage(),
+      /* Integer */ kKeyLyricsViewBorderColor: 0xFFFFFFFF,
+      /* Integer */ kKeyLyricsViewColor: 0xFFFFFFFF,
       /* Double  */ kKeyLyricsViewFocusedFontSize: isDesktop ? 64.0: 48.0,
       /* Double  */ kKeyLyricsViewFocusedLineHeight: 1.2,
       /* String  */ kKeyLyricsViewFontFamily: '',
@@ -490,6 +504,8 @@ class ConfigurationBase {
   LocalizationData? _localization;
   bool? _lrcFromDirectory;
   Language? _lyricsTranslationLanguage;
+  Color? _lyricsViewBorderColor;
+  Color? _lyricsViewColor;
   double? _lyricsViewFocusedFontSize;
   double? _lyricsViewFocusedLineHeight;
   String? _lyricsViewFontFamily;
@@ -559,6 +575,8 @@ const kKeyLastfmSession = 'LASTFM_SESSION';
 const kKeyLocalization = 'LOCALIZATION';
 const kKeyLrcFromDirectory = 'LRC_FROM_DIRECTORY';
 const kKeyLyricsTranslationLanguage = 'LYRICS_TRANSLATION_LANGUAGE';
+const kKeyLyricsViewBorderColor = 'LYRICS_VIEW_BORDER_COLOR';
+const kKeyLyricsViewColor = 'LYRICS_VIEW_COLOR';
 const kKeyLyricsViewFocusedFontSize = 'LYRICS_VIEW_FOCUSED_FONT_SIZE';
 const kKeyLyricsViewFocusedLineHeight = 'LYRICS_VIEW_FOCUSED_LINE_HEIGHT';
 const kKeyLyricsViewFontFamily = 'LYRICS_VIEW_FONT_FAMILY';

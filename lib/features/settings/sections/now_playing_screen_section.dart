@@ -7,6 +7,7 @@ import 'package:system_fonts/system_fonts.dart';
 import 'package:harmonoid/core/configuration/configuration.dart';
 import 'package:harmonoid/core/media_player/media_player.dart';
 import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/mappers/color.dart';
 import 'package:harmonoid/mappers/text_align.dart';
 import 'package:harmonoid/features/now_playing/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/features/now_playing/state/now_playing_visuals_notifier.dart';
@@ -126,6 +127,40 @@ class _NowPlayingScreenSectionState extends State<NowPlayingScreenSection> {
               setState(() {});
             },
           ),
+        ListItem(
+          leading: CircleAvatar(
+            backgroundColor: Configuration.instance.lyricsViewColor,
+          ),
+          title: Localization.instance.LYRICS_COLOR,
+          subtitle: Configuration.instance.lyricsViewColor.toHex(),
+          onTap: () async {
+            final result = await showColorPicker(
+              context,
+              Localization.instance.LYRICS_COLOR,
+              Configuration.instance.lyricsViewColor,
+            );
+            if (result == null) return;
+            await Configuration.instance.set(lyricsViewColor: result);
+            setState(() {});
+          },
+        ),
+        ListItem(
+          leading: CircleAvatar(
+            backgroundColor: Configuration.instance.lyricsViewBorderColor,
+          ),
+          title: Localization.instance.LYRICS_BORDER_COLOR,
+          subtitle: Configuration.instance.lyricsViewBorderColor.toHex(),
+          onTap: () async {
+            final result = await showColorPicker(
+              context,
+              Localization.instance.LYRICS_BORDER_COLOR,
+              Configuration.instance.lyricsViewBorderColor,
+            );
+            if (result == null) return;
+            await Configuration.instance.set(lyricsViewBorderColor: result);
+            setState(() {});
+          },
+        ),
         if ( /* DESKTOP & MATERIAL 2 */ isDesktop)
           ListItem(
             trailing: Switch(

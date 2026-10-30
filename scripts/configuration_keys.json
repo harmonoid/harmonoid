@@ -12,6 +12,8 @@
   {"key": "LOCALIZATION", "serializedType": "Json", "dartType": "LocalizationData", "default": "await getDefaultLocalization()"},
   {"key": "LRC_FROM_DIRECTORY", "serializedType": "Boolean", "dartType": "bool", "default": "false"},
   {"key": "LYRICS_TRANSLATION_LANGUAGE", "serializedType": "Json", "dartType": "Language", "default": "await getDefaultLyricsTranslationLanguage()"},
+  {"key": "LYRICS_VIEW_BORDER_COLOR", "serializedType": "Integer", "dartType": "Color", "default": "0xFFFFFFFF"},
+  {"key": "LYRICS_VIEW_COLOR", "serializedType": "Integer", "dartType": "Color", "default": "0xFFFFFFFF"},
   {"key": "LYRICS_VIEW_FOCUSED_FONT_SIZE", "serializedType": "Double", "dartType": "double", "default": "isDesktop ? 64.0: 48.0"},
   {"key": "LYRICS_VIEW_FOCUSED_LINE_HEIGHT", "serializedType": "Double", "dartType": "double", "default": "1.2"},
   {"key": "LYRICS_VIEW_FONT_FAMILY", "serializedType": "String", "dartType": "String", "default": "''"},

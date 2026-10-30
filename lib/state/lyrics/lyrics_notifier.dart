@@ -107,7 +107,15 @@ class LyricsNotifier extends ChangeNotifier {
             index = currentIndex;
             notifyListeners();
             // --------------------------------------------------
-            await _displayNotification(index);
+            final hasLyricsAccess = hasValidSubscriptionOrTrial(
+              subscriptionNotifier?.state ?? const SubscriptionNone(),
+              trialNotifier?.trialTokenValid ?? false,
+            );
+            if (hasLyricsAccess) {
+              await _displayNotification(index);
+            } else {
+              await _cancelNotification();
+            }
             // --------------------------------------------------
           }
         }

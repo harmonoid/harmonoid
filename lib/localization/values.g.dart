@@ -129,6 +129,8 @@ class Values {
   late String LOOKUP_FOR_LRC_IN_DIRECTORY;
   late String LYRICS;
   late String LYRICS_ALIGNMENT;
+  late String LYRICS_BORDER_COLOR;
+  late String LYRICS_COLOR;
   late String LYRICS_CONTROL_PANEL;
   late String LYRICS_FONT_FAMILY;
   late String LYRICS_NOT_FOUND;

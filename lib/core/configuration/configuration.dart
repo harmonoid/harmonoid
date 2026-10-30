@@ -102,6 +102,8 @@ class Configuration extends ConfigurationBase {
     _localization = await read<dynamic, LocalizationData>(kKeyLocalization, defaults, (value) => LocalizationData.fromJson(value));
     _lrcFromDirectory = await read<bool, bool>(kKeyLrcFromDirectory, defaults);
     _lyricsTranslationLanguage = await read<dynamic, Language>(kKeyLyricsTranslationLanguage, defaults, (value) => Language.fromJson(value));
+    _lyricsViewBorderColor = await read<int, Color>(kKeyLyricsViewBorderColor, defaults, (value) => Color(value));
+    _lyricsViewColor = await read<int, Color>(kKeyLyricsViewColor, defaults, (value) => Color(value));
     _lyricsViewFocusedFontSize = await read<double, double>(kKeyLyricsViewFocusedFontSize, defaults);
     _lyricsViewFocusedLineHeight = await read<double, double>(kKeyLyricsViewFocusedLineHeight, defaults);
     _lyricsViewFontFamily = await read<String, String>(kKeyLyricsViewFontFamily, defaults);

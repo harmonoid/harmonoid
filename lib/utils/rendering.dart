@@ -4,6 +4,7 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_library/media_library.dart' hide FileSystemMediaLibrary;
 import 'package:provider/provider.dart';
@@ -444,6 +445,49 @@ Future<void> showMessage(BuildContext context, String title, String subtitle) as
       ],
     ),
   );
+}
+
+Future<Color?> showColorPicker(
+  BuildContext context,
+  String title,
+  Color initialColor, {
+  bool showAlpha = false,
+  ValueChanged<Color>? onChanged,
+}) async {
+  Color result = initialColor;
+  bool done = false;
+  await showDialog(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: Text(title),
+      content: SingleChildScrollView(
+        child: ColorPicker(
+          pickerColor: initialColor,
+          onColorChanged: (color) {
+            result = color;
+            onChanged?.call(color);
+          },
+          enableAlpha: showAlpha,
+          labelTypes: const [],
+          portraitOnly: true,
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            done = true;
+            ctx.pop();
+          },
+          child: Text(label(Localization.instance.OK)),
+        ),
+        TextButton(
+          onPressed: ctx.pop,
+          child: Text(label(Localization.instance.CANCEL)),
+        ),
+      ],
+    ),
+  );
+  return done ? result : null;
 }
 
 Future<File?> pickFile({Set<String>? extensions}) async {

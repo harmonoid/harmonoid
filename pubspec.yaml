@@ -29,6 +29,7 @@ dependencies:
   # https://github.com/miguelpruivo/flutter_file_picker/pull/1964
   file_picker: ^12.0.0-beta.7
   fluentui_system_icons: ^1.1.136
+  flutter_colorpicker: ^1.1.0
   flutter_displaymode: ^0.7.0
   flutter_local_notifications:
     git:
