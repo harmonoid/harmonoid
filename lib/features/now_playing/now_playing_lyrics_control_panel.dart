@@ -164,10 +164,6 @@ class NowPlayingLyricsControlPanelState extends State<NowPlayingLyricsControlPan
     );
   }
 
-  Widget _buildContent(BuildContext context) {
-    return _buildTranslationLanguage(context);
-  }
-
   Widget _buildDesktopLayout(BuildContext context) {
     return Card(
       margin: EdgeInsets.zero,
@@ -214,6 +210,21 @@ class NowPlayingLyricsControlPanelState extends State<NowPlayingLyricsControlPan
                       ],
                     ),
                   ),
+                  Consumer<LyricsNotifier>(
+                    builder: (context, notifier, _) {
+                      final loading = notifier.lyricsLoading || notifier.translationLoading;
+                      return IconButton(
+                        visualDensity: VisualDensity.compact,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints.tightFor(width: 28.0, height: 28.0),
+                        iconSize: 18.0,
+                        tooltip: Localization.instance.REFRESH,
+                        onPressed: loading ? null : () => notifier.refresh(),
+                        icon: const Icon(Icons.refresh),
+                      );
+                    },
+                  ),
+                  const SizedBox(width: 8.0),
                   IconButton(
                     visualDensity: VisualDensity.compact,
                     padding: EdgeInsets.zero,
@@ -230,7 +241,7 @@ class NowPlayingLyricsControlPanelState extends State<NowPlayingLyricsControlPan
             const Divider(height: 1.0, thickness: 1.0),
             _buildDesktopLyricsVisibility(context),
             const Divider(height: 1.0, thickness: 1.0),
-            _buildContent(context),
+            _buildTranslationLanguage(context),
           ],
         ),
       ),
@@ -242,18 +253,7 @@ class NowPlayingLyricsControlPanelState extends State<NowPlayingLyricsControlPan
   }
 
   Widget _buildMobileLayout(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
-          child: _buildContent(context),
-        ),
-        const Divider(height: 1.0, thickness: 1.0),
-        SizedBox(height: 16.0 + MediaQuery.viewInsetsOf(context).bottom + MediaQuery.paddingOf(context).bottom),
-      ],
-    );
+    throw UnimplementedError();
   }
 
   @override

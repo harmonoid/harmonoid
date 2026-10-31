@@ -101,24 +101,42 @@ class _MobileNowPlayingLyricsScreenState extends State<MobileNowPlayingLyricsScr
                       Positioned(
                         top: MediaQuery.paddingOf(context).top + 8.0,
                         right: MediaQuery.paddingOf(context).right + 8.0,
-                        child: SubscriptionReveal(
-                          blur: false,
-                          child: Consumer<LyricsNotifier>(
-                            builder: (context, lyricsNotifier, _) {
-                              final color = Theme.of(context).extension<IconColors>()?.appBarDark;
-                              return IconButton(
-                                onPressed: () => NowPlayingLyricsControlPanel.showTranslationLanguageSelection(context, subscription: true),
-                                color: color,
-                                tooltip: Localization.instance.TRANSLATION,
-                                icon: lyricsNotifier.translationLoading
-                                    ? SizedBox.square(
-                                        dimension: 18.0,
-                                        child: CircularProgressIndicator(color: color),
-                                      )
-                                    : const Icon(Icons.translate),
-                              );
-                            },
-                          ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Consumer<LyricsNotifier>(
+                              builder: (context, notifier, _) {
+                                final color = Theme.of(context).extension<IconColors>()?.appBarDark;
+                                final loading = notifier.lyricsLoading || notifier.translationLoading;
+                                return IconButton(
+                                  onPressed: loading ? null : () => notifier.refresh(),
+                                  color: color,
+                                  tooltip: Localization.instance.REFRESH,
+                                  icon: const Icon(Icons.refresh),
+                                );
+                              },
+                            ),
+                            const SizedBox(width: 8.0),
+                            SubscriptionReveal(
+                              blur: false,
+                              child: Consumer<LyricsNotifier>(
+                                builder: (context, lyricsNotifier, _) {
+                                  final color = Theme.of(context).extension<IconColors>()?.appBarDark;
+                                  return IconButton(
+                                    onPressed: () => NowPlayingLyricsControlPanel.showTranslationLanguageSelection(context, subscription: true),
+                                    color: color,
+                                    tooltip: Localization.instance.TRANSLATION,
+                                    icon: lyricsNotifier.translationLoading
+                                        ? SizedBox.square(
+                                            dimension: 18.0,
+                                            child: CircularProgressIndicator(color: color),
+                                          )
+                                        : const Icon(Icons.translate),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       Positioned(

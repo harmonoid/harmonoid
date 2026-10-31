@@ -249,8 +249,14 @@ class LyricsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Refreshes lyrics for currently playing [Playable].
+  Future<void> refresh() async {
+    await _fetchLyrics(refresh: true);
+    await _fetchLyricsTranslation();
+  }
+
   /// Fetches lyrics for currently playing [Playable].
-  Future<void> _fetchLyrics() async {
+  Future<void> _fetchLyrics({bool refresh = false}) async {
     final localCurrent = _current;
     final localCurrentDuration = _currentDuration;
     if (localCurrent == null || localCurrentDuration == null) return;
@@ -264,6 +270,22 @@ class LyricsNotifier extends ChangeNotifier {
     Lyrics? result;
 
     final key = localCurrent.toLyricsKey(localCurrentDuration);
+
+    // Discard the local cache so the lookup runs fresh.
+    if (refresh) {
+      try {
+        await db.removeLyrics(key);
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+      try {
+        await _legacyLrcCacheFileForUri(localCurrent.uri).delete();
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+    }
 
     // 1. Drift cache.
 
