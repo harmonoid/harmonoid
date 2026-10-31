@@ -11,10 +11,10 @@ import 'package:harmonoid/state/remote_config/models/remote_config_value.dart';
 import 'package:harmonoid/state/remote_config/models/splash_config.dart';
 import 'package:harmonoid/state/remote_config/remote_config_provider.dart';
 
-class SplashImageNotifier extends ChangeNotifier {
-  static final SplashImageNotifier instance = SplashImageNotifier._();
+class SplashConfigNotifier extends ChangeNotifier {
+  static final SplashConfigNotifier instance = SplashConfigNotifier._();
 
-  SplashImageNotifier._();
+  SplashConfigNotifier._();
 
   SplashConfig? config;
 

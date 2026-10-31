@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:harmonoid/mappers/splash_config.dart';
-import 'package:harmonoid/state/splash_image_notifier.dart';
+import 'package:harmonoid/state/splash_config_notifier.dart';
 
 const Color kDefaultSplashBackgroundColor = Color(0xFF6200EA);
 
@@ -25,7 +25,7 @@ class _SplashAppState extends State<SplashApp> {
   @override
   void initState() {
     super.initState();
-    unawaited(SplashImageNotifier.instance.load());
+    unawaited(SplashConfigNotifier.instance.load());
   }
 
   @override
@@ -34,10 +34,10 @@ class _SplashAppState extends State<SplashApp> {
       themeMode: ThemeMode.dark,
       debugShowCheckedModeBanner: false,
       home: ListenableBuilder(
-        listenable: SplashImageNotifier.instance,
+        listenable: SplashConfigNotifier.instance,
         builder: (context, _) {
-          final file = SplashImageNotifier.instance.file;
-          final config = SplashImageNotifier.instance.config;
+          final file = SplashConfigNotifier.instance.file;
+          final config = SplashConfigNotifier.instance.config;
           final background = config?.toBackgroundColor();
           return Scaffold(
             backgroundColor: kDefaultSplashBackgroundColor,

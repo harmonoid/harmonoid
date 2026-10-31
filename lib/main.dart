@@ -16,7 +16,7 @@ import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/state/in_app_review_notifier.dart';
 import 'package:harmonoid/state/lyrics/lyrics_notifier.dart';
-import 'package:harmonoid/state/splash_image_notifier.dart';
+import 'package:harmonoid/state/splash_config_notifier.dart';
 import 'package:harmonoid/features/now_playing/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/features/now_playing/state/now_playing_visuals_notifier.dart';
 import 'package:harmonoid/state/theme_notifier.dart';
@@ -130,8 +130,8 @@ Future<void> main(List<String> args) async {
     await InAppReviewNotifier.ensureInitialized();
     await NowPlayingVisualsNotifier.ensureInitialized();
     await NowPlayingColorPaletteNotifier.ensureInitialized();
-    if ((Platform.isLinux || Platform.isMacOS || Platform.isWindows) && SplashImageNotifier.instance.hasImage) {
-      final delay = Duration(milliseconds: SplashImageNotifier.instance.config?.delay ?? 0);
+    if ((Platform.isLinux || Platform.isMacOS || Platform.isWindows) && SplashConfigNotifier.instance.hasImage) {
+      final delay = Duration(milliseconds: SplashConfigNotifier.instance.config?.delay ?? 0);
       final elapsed = DateTime.now().difference(processStartTime);
       if (elapsed < delay) await Future.delayed(delay - elapsed);
     }
