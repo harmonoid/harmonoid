@@ -3,7 +3,8 @@ enum RemoteConfigKey {
   enableInAppReview('enable_in_app_review'),
   lyricsTranslationLanguages('lyrics_translation_languages'),
   subscriptionPurchaseConfig('subscription_purchase_config'),
-  splashConfig('splash_config');
+  splashConfig('splash_config'),
+  desktopLyricsGateVersion('desktop_lyrics_gate_version');
 
   const RemoteConfigKey(this.key);
 

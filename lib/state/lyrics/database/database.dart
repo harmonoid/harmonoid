@@ -121,11 +121,6 @@ class LyricsDatabase extends _$LyricsDatabase {
     await query.go();
   }
 
-  /// Removes the per-track lyrics visibility setting for all tracks.
-  Future<void> clearLyricsVisibilityTrackSettings() async {
-    await update(lyricsTrackSettings).write(const LyricsTrackSettingsCompanion(lyricsVisibility: Value(null)));
-  }
-
   static LazyDatabase _openConnection(Directory directory) {
     return LazyDatabase(() async {
       final file = File(path.join(directory.path, 'Lyrics.DB'));

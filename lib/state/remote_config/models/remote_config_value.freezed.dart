@@ -35,6 +35,10 @@ RemoteConfigValue _$RemoteConfigValueFromJson(
           return SplashConfigValue.fromJson(
             json
           );
+                case 'desktopLyricsGateVersion':
+          return DesktopLyricsGateVersion.fromJson(
+            json
+          );
         
           default:
             throw CheckedFromJsonException(
@@ -93,7 +97,7 @@ extension RemoteConfigValuePatterns on RemoteConfigValue {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ArtistImageCacheVersion value)?  artistImageCacheVersion,TResult Function( EnableInAppReview value)?  enableInAppReview,TResult Function( LyricsTranslationLanguages value)?  lyricsTranslationLanguages,TResult Function( SubscriptionPurchaseConfigValue value)?  subscriptionPurchaseConfig,TResult Function( SplashConfigValue value)?  splashConfig,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ArtistImageCacheVersion value)?  artistImageCacheVersion,TResult Function( EnableInAppReview value)?  enableInAppReview,TResult Function( LyricsTranslationLanguages value)?  lyricsTranslationLanguages,TResult Function( SubscriptionPurchaseConfigValue value)?  subscriptionPurchaseConfig,TResult Function( SplashConfigValue value)?  splashConfig,TResult Function( DesktopLyricsGateVersion value)?  desktopLyricsGateVersion,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case ArtistImageCacheVersion() when artistImageCacheVersion != null:
@@ -101,7 +105,8 @@ return artistImageCacheVersion(_that);case EnableInAppReview() when enableInAppR
 return enableInAppReview(_that);case LyricsTranslationLanguages() when lyricsTranslationLanguages != null:
 return lyricsTranslationLanguages(_that);case SubscriptionPurchaseConfigValue() when subscriptionPurchaseConfig != null:
 return subscriptionPurchaseConfig(_that);case SplashConfigValue() when splashConfig != null:
-return splashConfig(_that);case _:
+return splashConfig(_that);case DesktopLyricsGateVersion() when desktopLyricsGateVersion != null:
+return desktopLyricsGateVersion(_that);case _:
   return orElse();
 
 }
@@ -119,7 +124,7 @@ return splashConfig(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ArtistImageCacheVersion value)  artistImageCacheVersion,required TResult Function( EnableInAppReview value)  enableInAppReview,required TResult Function( LyricsTranslationLanguages value)  lyricsTranslationLanguages,required TResult Function( SubscriptionPurchaseConfigValue value)  subscriptionPurchaseConfig,required TResult Function( SplashConfigValue value)  splashConfig,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ArtistImageCacheVersion value)  artistImageCacheVersion,required TResult Function( EnableInAppReview value)  enableInAppReview,required TResult Function( LyricsTranslationLanguages value)  lyricsTranslationLanguages,required TResult Function( SubscriptionPurchaseConfigValue value)  subscriptionPurchaseConfig,required TResult Function( SplashConfigValue value)  splashConfig,required TResult Function( DesktopLyricsGateVersion value)  desktopLyricsGateVersion,}){
 final _that = this;
 switch (_that) {
 case ArtistImageCacheVersion():
@@ -127,7 +132,8 @@ return artistImageCacheVersion(_that);case EnableInAppReview():
 return enableInAppReview(_that);case LyricsTranslationLanguages():
 return lyricsTranslationLanguages(_that);case SubscriptionPurchaseConfigValue():
 return subscriptionPurchaseConfig(_that);case SplashConfigValue():
-return splashConfig(_that);}
+return splashConfig(_that);case DesktopLyricsGateVersion():
+return desktopLyricsGateVersion(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -141,7 +147,7 @@ return splashConfig(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ArtistImageCacheVersion value)?  artistImageCacheVersion,TResult? Function( EnableInAppReview value)?  enableInAppReview,TResult? Function( LyricsTranslationLanguages value)?  lyricsTranslationLanguages,TResult? Function( SubscriptionPurchaseConfigValue value)?  subscriptionPurchaseConfig,TResult? Function( SplashConfigValue value)?  splashConfig,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ArtistImageCacheVersion value)?  artistImageCacheVersion,TResult? Function( EnableInAppReview value)?  enableInAppReview,TResult? Function( LyricsTranslationLanguages value)?  lyricsTranslationLanguages,TResult? Function( SubscriptionPurchaseConfigValue value)?  subscriptionPurchaseConfig,TResult? Function( SplashConfigValue value)?  splashConfig,TResult? Function( DesktopLyricsGateVersion value)?  desktopLyricsGateVersion,}){
 final _that = this;
 switch (_that) {
 case ArtistImageCacheVersion() when artistImageCacheVersion != null:
@@ -149,7 +155,8 @@ return artistImageCacheVersion(_that);case EnableInAppReview() when enableInAppR
 return enableInAppReview(_that);case LyricsTranslationLanguages() when lyricsTranslationLanguages != null:
 return lyricsTranslationLanguages(_that);case SubscriptionPurchaseConfigValue() when subscriptionPurchaseConfig != null:
 return subscriptionPurchaseConfig(_that);case SplashConfigValue() when splashConfig != null:
-return splashConfig(_that);case _:
+return splashConfig(_that);case DesktopLyricsGateVersion() when desktopLyricsGateVersion != null:
+return desktopLyricsGateVersion(_that);case _:
   return null;
 
 }
@@ -166,14 +173,15 @@ return splashConfig(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int value)?  artistImageCacheVersion,TResult Function( bool value)?  enableInAppReview,TResult Function( List<Language> value)?  lyricsTranslationLanguages,TResult Function( SubscriptionPurchaseConfig value)?  subscriptionPurchaseConfig,TResult Function( SplashConfig? value)?  splashConfig,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int value)?  artistImageCacheVersion,TResult Function( bool value)?  enableInAppReview,TResult Function( List<Language> value)?  lyricsTranslationLanguages,TResult Function( SubscriptionPurchaseConfig value)?  subscriptionPurchaseConfig,TResult Function( SplashConfig? value)?  splashConfig,TResult Function( int value)?  desktopLyricsGateVersion,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case ArtistImageCacheVersion() when artistImageCacheVersion != null:
 return artistImageCacheVersion(_that.value);case EnableInAppReview() when enableInAppReview != null:
 return enableInAppReview(_that.value);case LyricsTranslationLanguages() when lyricsTranslationLanguages != null:
 return lyricsTranslationLanguages(_that.value);case SubscriptionPurchaseConfigValue() when subscriptionPurchaseConfig != null:
 return subscriptionPurchaseConfig(_that.value);case SplashConfigValue() when splashConfig != null:
-return splashConfig(_that.value);case _:
+return splashConfig(_that.value);case DesktopLyricsGateVersion() when desktopLyricsGateVersion != null:
+return desktopLyricsGateVersion(_that.value);case _:
   return orElse();
 
 }
@@ -191,14 +199,15 @@ return splashConfig(_that.value);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int value)  artistImageCacheVersion,required TResult Function( bool value)  enableInAppReview,required TResult Function( List<Language> value)  lyricsTranslationLanguages,required TResult Function( SubscriptionPurchaseConfig value)  subscriptionPurchaseConfig,required TResult Function( SplashConfig? value)  splashConfig,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int value)  artistImageCacheVersion,required TResult Function( bool value)  enableInAppReview,required TResult Function( List<Language> value)  lyricsTranslationLanguages,required TResult Function( SubscriptionPurchaseConfig value)  subscriptionPurchaseConfig,required TResult Function( SplashConfig? value)  splashConfig,required TResult Function( int value)  desktopLyricsGateVersion,}) {final _that = this;
 switch (_that) {
 case ArtistImageCacheVersion():
 return artistImageCacheVersion(_that.value);case EnableInAppReview():
 return enableInAppReview(_that.value);case LyricsTranslationLanguages():
 return lyricsTranslationLanguages(_that.value);case SubscriptionPurchaseConfigValue():
 return subscriptionPurchaseConfig(_that.value);case SplashConfigValue():
-return splashConfig(_that.value);}
+return splashConfig(_that.value);case DesktopLyricsGateVersion():
+return desktopLyricsGateVersion(_that.value);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -212,14 +221,15 @@ return splashConfig(_that.value);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int value)?  artistImageCacheVersion,TResult? Function( bool value)?  enableInAppReview,TResult? Function( List<Language> value)?  lyricsTranslationLanguages,TResult? Function( SubscriptionPurchaseConfig value)?  subscriptionPurchaseConfig,TResult? Function( SplashConfig? value)?  splashConfig,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int value)?  artistImageCacheVersion,TResult? Function( bool value)?  enableInAppReview,TResult? Function( List<Language> value)?  lyricsTranslationLanguages,TResult? Function( SubscriptionPurchaseConfig value)?  subscriptionPurchaseConfig,TResult? Function( SplashConfig? value)?  splashConfig,TResult? Function( int value)?  desktopLyricsGateVersion,}) {final _that = this;
 switch (_that) {
 case ArtistImageCacheVersion() when artistImageCacheVersion != null:
 return artistImageCacheVersion(_that.value);case EnableInAppReview() when enableInAppReview != null:
 return enableInAppReview(_that.value);case LyricsTranslationLanguages() when lyricsTranslationLanguages != null:
 return lyricsTranslationLanguages(_that.value);case SubscriptionPurchaseConfigValue() when subscriptionPurchaseConfig != null:
 return subscriptionPurchaseConfig(_that.value);case SplashConfigValue() when splashConfig != null:
-return splashConfig(_that.value);case _:
+return splashConfig(_that.value);case DesktopLyricsGateVersion() when desktopLyricsGateVersion != null:
+return desktopLyricsGateVersion(_that.value);case _:
   return null;
 
 }
@@ -617,6 +627,79 @@ $SplashConfigCopyWith<$Res>? get value {
     return _then(_self.copyWith(value: value));
   });
 }
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class DesktopLyricsGateVersion implements RemoteConfigValue {
+  const DesktopLyricsGateVersion(this.value, {final  String? $type}): $type = $type ?? 'desktopLyricsGateVersion';
+  factory DesktopLyricsGateVersion.fromJson(Map<String, dynamic> json) => _$DesktopLyricsGateVersionFromJson(json);
+
+@override final  int value;
+
+@JsonKey(name: 'runtimeType')
+final String $type;
+
+
+/// Create a copy of RemoteConfigValue
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DesktopLyricsGateVersionCopyWith<DesktopLyricsGateVersion> get copyWith => _$DesktopLyricsGateVersionCopyWithImpl<DesktopLyricsGateVersion>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$DesktopLyricsGateVersionToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DesktopLyricsGateVersion&&(identical(other.value, value) || other.value == value));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,value);
+
+@override
+String toString() {
+  return 'RemoteConfigValue.desktopLyricsGateVersion(value: $value)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $DesktopLyricsGateVersionCopyWith<$Res> implements $RemoteConfigValueCopyWith<$Res> {
+  factory $DesktopLyricsGateVersionCopyWith(DesktopLyricsGateVersion value, $Res Function(DesktopLyricsGateVersion) _then) = _$DesktopLyricsGateVersionCopyWithImpl;
+@useResult
+$Res call({
+ int value
+});
+
+
+
+
+}
+/// @nodoc
+class _$DesktopLyricsGateVersionCopyWithImpl<$Res>
+    implements $DesktopLyricsGateVersionCopyWith<$Res> {
+  _$DesktopLyricsGateVersionCopyWithImpl(this._self, this._then);
+
+  final DesktopLyricsGateVersion _self;
+  final $Res Function(DesktopLyricsGateVersion) _then;
+
+/// Create a copy of RemoteConfigValue
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? value = null,}) {
+  return _then(DesktopLyricsGateVersion(
+null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
 }
 
 // dart format on

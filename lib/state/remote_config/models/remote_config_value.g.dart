@@ -60,3 +60,14 @@ SplashConfigValue _$SplashConfigValueFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$SplashConfigValueToJson(SplashConfigValue instance) =>
     <String, dynamic>{'value': instance.value, 'runtimeType': instance.$type};
+
+DesktopLyricsGateVersion _$DesktopLyricsGateVersionFromJson(
+  Map<String, dynamic> json,
+) => DesktopLyricsGateVersion(
+  (json['value'] as num).toInt(),
+  $type: json['runtimeType'] as String?,
+);
+
+Map<String, dynamic> _$DesktopLyricsGateVersionToJson(
+  DesktopLyricsGateVersion instance,
+) => <String, dynamic>{'value': instance.value, 'runtimeType': instance.$type};

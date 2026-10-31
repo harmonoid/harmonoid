@@ -16,6 +16,7 @@ sealed class RemoteConfigValue with _$RemoteConfigValue {
   const factory RemoteConfigValue.lyricsTranslationLanguages(List<Language> value) = LyricsTranslationLanguages;
   const factory RemoteConfigValue.subscriptionPurchaseConfig(SubscriptionPurchaseConfig value) = SubscriptionPurchaseConfigValue;
   const factory RemoteConfigValue.splashConfig(SplashConfig? value) = SplashConfigValue;
+  const factory RemoteConfigValue.desktopLyricsGateVersion(int value) = DesktopLyricsGateVersion;
 
   factory RemoteConfigValue.fromJson(Map<String, dynamic> json) => _$RemoteConfigValueFromJson(json);
 }

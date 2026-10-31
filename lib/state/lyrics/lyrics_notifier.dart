@@ -51,7 +51,7 @@ class LyricsNotifier extends ChangeNotifier {
   static const _kNotificationChannelId = 'com.alexmercerind.harmonoid.lyrics';
   static const _kNotificationCategoryId = 'com.alexmercerind.harmonoid.lyrics.category';
   static const _kNotificationHideActionId = 'com.alexmercerind.harmonoid.lyrics.hide';
-  static const _kDesktopGateDismissCountToCache = 3;
+  static const _kDesktopGateDismissCountToCache = 2;
 
   /// Singleton instance.
   static final LyricsNotifier instance = LyricsNotifier._();
@@ -122,6 +122,7 @@ class LyricsNotifier extends ChangeNotifier {
       }),
     );
     unawaited(_fetchTranslationLanguages());
+    unawaited(_fetchDesktopLyricsGateVersion());
   }
 
   /// Initializes the [instance].
@@ -167,7 +168,7 @@ class LyricsNotifier extends ChangeNotifier {
   /// Whether lyrics are shown on the desktop now playing screen.
   bool get desktopNowPlayingLyrics => desktopNowPlayingLyricsTrack ?? desktopNowPlayingLyricsGlobal;
 
-  /// Number of times the desktop lyrics gate has been dismissed.
+  /// Number of times the desktop lyrics gate has been dismissed in distinct launches.
   int desktopNowPlayingLyricsGateDismissCount = Configuration.instance.desktopNowPlayingLyricsGateDismissCount;
 
   /// Offset.
@@ -225,20 +226,20 @@ class LyricsNotifier extends ChangeNotifier {
 
   /// Dismisses the desktop lyrics gate.
   Future<void> dismissDesktopLyricsGate() async {
-    desktopNowPlayingLyricsGateDismissCount++;
-    await Configuration.instance.set(desktopNowPlayingLyricsGateDismissCount: desktopNowPlayingLyricsGateDismissCount);
+    desktopNowPlayingLyricsTrack = null;
+    notifyListeners();
+    // Count only once per app open.
+    if (!_desktopNowPlayingLyricsGateDismissCounted) {
+      _desktopNowPlayingLyricsGateDismissCounted = true;
+      desktopNowPlayingLyricsGateDismissCount++;
+      await Configuration.instance.set(desktopNowPlayingLyricsGateDismissCount: desktopNowPlayingLyricsGateDismissCount);
+    }
     if (desktopNowPlayingLyricsGateDismissCount >= _kDesktopGateDismissCountToCache) {
+      // Closed 2 or more times, hide for good.
       await setDesktopNowPlayingLyricsGlobal(false);
-      await setDesktopNowPlayingLyricsTrack(false);
-      try {
-        await db.clearLyricsVisibilityTrackSettings();
-      } catch (exception, stacktrace) {
-        debugPrint(exception.toString());
-        debugPrint(stacktrace.toString());
-      }
     } else {
+      // Closed 1 or fewer times, hide only for now.
       desktopNowPlayingLyricsGlobal = false;
-      desktopNowPlayingLyricsTrack = false;
       notifyListeners();
     }
   }
@@ -321,7 +322,11 @@ class LyricsNotifier extends ChangeNotifier {
 
     if (!_isCurrentGuard(localCurrent, localCurrentDuration)) return;
 
-    desktopNowPlayingLyricsTrack = result?.lyricsVisibility;
+    final subscription = subscriptionNotifier;
+    final trial = trialNotifier;
+    final shouldIgnoreTrackVisibility = subscription != null && trial != null && !hasValidSubscriptionOrTrial(subscription.state, trial.trialTokenValid);
+    // Ignore per-track visibility, if no lyrics access.
+    desktopNowPlayingLyricsTrack = shouldIgnoreTrackVisibility ? null : result?.lyricsVisibility;
 
     translationLanguageTrack = switch (result?.translationLanguage) {
       null => null,
@@ -562,6 +567,22 @@ class LyricsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Re-shows the paywall when the stable remote version advances.
+  Future<void> _fetchDesktopLyricsGateVersion() async {
+    try {
+      final cached = await RemoteConfigProvider().getCached(RemoteConfigKey.desktopLyricsGateVersion);
+      final response = await RemoteConfigProvider().get(RemoteConfigKey.desktopLyricsGateVersion);
+      if (cached is! DesktopLyricsGateVersion || response is! DesktopLyricsGateVersion || response.value <= cached.value) return;
+      // Use _kDesktopGateDismissCountToCache - 1 (instead of 0) as desktopNowPlayingLyricsGateDismissCount. So that the user has to only dismiss once.
+      desktopNowPlayingLyricsGateDismissCount = _kDesktopGateDismissCountToCache - 1;
+      await Configuration.instance.set(desktopNowPlayingLyricsGateDismissCount: desktopNowPlayingLyricsGateDismissCount);
+      await setDesktopNowPlayingLyricsGlobal(true);
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
+  }
+
   bool _isCurrentGuard(Playable? playable, Duration? duration, [Language? language]) {
     try {
       return playable == MediaPlayer.instance.current && duration == MediaPlayer.instance.state.duration && (language == null ? true : language == translationLanguage);
@@ -740,11 +761,13 @@ class LyricsNotifier extends ChangeNotifier {
     return Configuration.instance.read<bool, bool>(kKeyMobileNotificationLyricsHidden, {kKeyMobileNotificationLyricsHidden: false});
   }
 
+  bool _initializeNotificationInvoked = false;
+
   // --------------------------------------------------
 
   Playable? _current;
   Duration? _currentDuration;
-  bool _initializeNotificationInvoked = false;
+  bool _desktopNowPlayingLyricsGateDismissCounted = false;
   final SplayTreeMap<int, int> _timestampsAndIndexes = SplayTreeMap<int, int>();
   final Lock _lock = Lock();
 }
