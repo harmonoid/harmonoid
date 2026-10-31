@@ -100,7 +100,6 @@ extension TrackMappers on Track {
     return LyricsKey(
       track: title,
       artist: artists.firstOrNull ?? '',
-      duration: duration,
     );
   }
 }

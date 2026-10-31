@@ -29,7 +29,8 @@ def localization():
 
             if value is not None:
                 localization[key] = value
-                keys.append(key)
+                if key not in keys:
+                    keys.append(key)
             else:
                 localization.pop(key, None)
                 keys.remove(key)

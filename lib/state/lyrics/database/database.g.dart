@@ -27,17 +27,6 @@ class $LyricssTable extends Lyricss
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _durationMeta = const VerificationMeta(
-    'duration',
-  );
-  @override
-  late final GeneratedColumn<int> duration = GeneratedColumn<int>(
-    'duration',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
   @override
   late final GeneratedColumnWithTypeConverter<Lyrics, String> lyrics =
       GeneratedColumn<String>(
@@ -48,7 +37,7 @@ class $LyricssTable extends Lyricss
         requiredDuringInsert: true,
       ).withConverter<Lyrics>($LyricssTable.$converterlyrics);
   @override
-  List<GeneratedColumn> get $columns => [track, artist, duration, lyrics];
+  List<GeneratedColumn> get $columns => [track, artist, lyrics];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -77,19 +66,11 @@ class $LyricssTable extends Lyricss
     } else if (isInserting) {
       context.missing(_artistMeta);
     }
-    if (data.containsKey('duration')) {
-      context.handle(
-        _durationMeta,
-        duration.isAcceptableOrUnknown(data['duration']!, _durationMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_durationMeta);
-    }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {track, artist, duration};
+  Set<GeneratedColumn> get $primaryKey => {track, artist};
   @override
   LyricsEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -101,10 +82,6 @@ class $LyricssTable extends Lyricss
       artist: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}artist'],
-      )!,
-      duration: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}duration'],
       )!,
       lyrics: $LyricssTable.$converterlyrics.fromSql(
         attachedDatabase.typeMapping.read(
@@ -131,15 +108,11 @@ class LyricsEntity extends DataClass implements Insertable<LyricsEntity> {
   /// Track artist.
   final String artist;
 
-  /// Track duration (in milliseconds).
-  final int duration;
-
   /// Lyrics.
   final Lyrics lyrics;
   const LyricsEntity({
     required this.track,
     required this.artist,
-    required this.duration,
     required this.lyrics,
   });
   @override
@@ -147,7 +120,6 @@ class LyricsEntity extends DataClass implements Insertable<LyricsEntity> {
     final map = <String, Expression>{};
     map['track'] = Variable<String>(track);
     map['artist'] = Variable<String>(artist);
-    map['duration'] = Variable<int>(duration);
     {
       map['lyrics'] = Variable<String>(
         $LyricssTable.$converterlyrics.toSql(lyrics),
@@ -160,7 +132,6 @@ class LyricsEntity extends DataClass implements Insertable<LyricsEntity> {
     return LyricssCompanion(
       track: Value(track),
       artist: Value(artist),
-      duration: Value(duration),
       lyrics: Value(lyrics),
     );
   }
@@ -173,7 +144,6 @@ class LyricsEntity extends DataClass implements Insertable<LyricsEntity> {
     return LyricsEntity(
       track: serializer.fromJson<String>(json['track']),
       artist: serializer.fromJson<String>(json['artist']),
-      duration: serializer.fromJson<int>(json['duration']),
       lyrics: $LyricssTable.$converterlyrics.fromJson(
         serializer.fromJson<String>(json['lyrics']),
       ),
@@ -185,29 +155,22 @@ class LyricsEntity extends DataClass implements Insertable<LyricsEntity> {
     return <String, dynamic>{
       'track': serializer.toJson<String>(track),
       'artist': serializer.toJson<String>(artist),
-      'duration': serializer.toJson<int>(duration),
       'lyrics': serializer.toJson<String>(
         $LyricssTable.$converterlyrics.toJson(lyrics),
       ),
     };
   }
 
-  LyricsEntity copyWith({
-    String? track,
-    String? artist,
-    int? duration,
-    Lyrics? lyrics,
-  }) => LyricsEntity(
-    track: track ?? this.track,
-    artist: artist ?? this.artist,
-    duration: duration ?? this.duration,
-    lyrics: lyrics ?? this.lyrics,
-  );
+  LyricsEntity copyWith({String? track, String? artist, Lyrics? lyrics}) =>
+      LyricsEntity(
+        track: track ?? this.track,
+        artist: artist ?? this.artist,
+        lyrics: lyrics ?? this.lyrics,
+      );
   LyricsEntity copyWithCompanion(LyricssCompanion data) {
     return LyricsEntity(
       track: data.track.present ? data.track.value : this.track,
       artist: data.artist.present ? data.artist.value : this.artist,
-      duration: data.duration.present ? data.duration.value : this.duration,
       lyrics: data.lyrics.present ? data.lyrics.value : this.lyrics,
     );
   }
@@ -217,58 +180,50 @@ class LyricsEntity extends DataClass implements Insertable<LyricsEntity> {
     return (StringBuffer('LyricsEntity(')
           ..write('track: $track, ')
           ..write('artist: $artist, ')
-          ..write('duration: $duration, ')
           ..write('lyrics: $lyrics')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(track, artist, duration, lyrics);
+  int get hashCode => Object.hash(track, artist, lyrics);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is LyricsEntity &&
           other.track == this.track &&
           other.artist == this.artist &&
-          other.duration == this.duration &&
           other.lyrics == this.lyrics);
 }
 
 class LyricssCompanion extends UpdateCompanion<LyricsEntity> {
   final Value<String> track;
   final Value<String> artist;
-  final Value<int> duration;
   final Value<Lyrics> lyrics;
   final Value<int> rowid;
   const LyricssCompanion({
     this.track = const Value.absent(),
     this.artist = const Value.absent(),
-    this.duration = const Value.absent(),
     this.lyrics = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   LyricssCompanion.insert({
     required String track,
     required String artist,
-    required int duration,
     required Lyrics lyrics,
     this.rowid = const Value.absent(),
   }) : track = Value(track),
        artist = Value(artist),
-       duration = Value(duration),
        lyrics = Value(lyrics);
   static Insertable<LyricsEntity> custom({
     Expression<String>? track,
     Expression<String>? artist,
-    Expression<int>? duration,
     Expression<String>? lyrics,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (track != null) 'track': track,
       if (artist != null) 'artist': artist,
-      if (duration != null) 'duration': duration,
       if (lyrics != null) 'lyrics': lyrics,
       if (rowid != null) 'rowid': rowid,
     });
@@ -277,14 +232,12 @@ class LyricssCompanion extends UpdateCompanion<LyricsEntity> {
   LyricssCompanion copyWith({
     Value<String>? track,
     Value<String>? artist,
-    Value<int>? duration,
     Value<Lyrics>? lyrics,
     Value<int>? rowid,
   }) {
     return LyricssCompanion(
       track: track ?? this.track,
       artist: artist ?? this.artist,
-      duration: duration ?? this.duration,
       lyrics: lyrics ?? this.lyrics,
       rowid: rowid ?? this.rowid,
     );
@@ -298,9 +251,6 @@ class LyricssCompanion extends UpdateCompanion<LyricsEntity> {
     }
     if (artist.present) {
       map['artist'] = Variable<String>(artist.value);
-    }
-    if (duration.present) {
-      map['duration'] = Variable<int>(duration.value);
     }
     if (lyrics.present) {
       map['lyrics'] = Variable<String>(
@@ -318,7 +268,6 @@ class LyricssCompanion extends UpdateCompanion<LyricsEntity> {
     return (StringBuffer('LyricssCompanion(')
           ..write('track: $track, ')
           ..write('artist: $artist, ')
-          ..write('duration: $duration, ')
           ..write('lyrics: $lyrics, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -348,17 +297,6 @@ class $LyricsTranslationsTable extends LyricsTranslations
     aliasedName,
     false,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _durationMeta = const VerificationMeta(
-    'duration',
-  );
-  @override
-  late final GeneratedColumn<int> duration = GeneratedColumn<int>(
-    'duration',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
   static const VerificationMeta _languageMeta = const VerificationMeta(
@@ -394,14 +332,7 @@ class $LyricsTranslationsTable extends LyricsTranslations
     ),
   );
   @override
-  List<GeneratedColumn> get $columns => [
-    track,
-    artist,
-    duration,
-    language,
-    lyrics,
-    same,
-  ];
+  List<GeneratedColumn> get $columns => [track, artist, language, lyrics, same];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -430,14 +361,6 @@ class $LyricsTranslationsTable extends LyricsTranslations
     } else if (isInserting) {
       context.missing(_artistMeta);
     }
-    if (data.containsKey('duration')) {
-      context.handle(
-        _durationMeta,
-        duration.isAcceptableOrUnknown(data['duration']!, _durationMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_durationMeta);
-    }
     if (data.containsKey('language')) {
       context.handle(
         _languageMeta,
@@ -458,7 +381,7 @@ class $LyricsTranslationsTable extends LyricsTranslations
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {track, artist, duration, language};
+  Set<GeneratedColumn> get $primaryKey => {track, artist, language};
   @override
   LyricsTranslationEntity map(
     Map<String, dynamic> data, {
@@ -473,10 +396,6 @@ class $LyricsTranslationsTable extends LyricsTranslations
       artist: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}artist'],
-      )!,
-      duration: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}duration'],
       )!,
       language: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -514,9 +433,6 @@ class LyricsTranslationEntity extends DataClass
   /// Track artist.
   final String artist;
 
-  /// Track duration (in milliseconds).
-  final int duration;
-
   /// Target language code.
   final String language;
 
@@ -528,7 +444,6 @@ class LyricsTranslationEntity extends DataClass
   const LyricsTranslationEntity({
     required this.track,
     required this.artist,
-    required this.duration,
     required this.language,
     this.lyrics,
     required this.same,
@@ -538,7 +453,6 @@ class LyricsTranslationEntity extends DataClass
     final map = <String, Expression>{};
     map['track'] = Variable<String>(track);
     map['artist'] = Variable<String>(artist);
-    map['duration'] = Variable<int>(duration);
     map['language'] = Variable<String>(language);
     if (!nullToAbsent || lyrics != null) {
       map['lyrics'] = Variable<String>(
@@ -553,7 +467,6 @@ class LyricsTranslationEntity extends DataClass
     return LyricsTranslationsCompanion(
       track: Value(track),
       artist: Value(artist),
-      duration: Value(duration),
       language: Value(language),
       lyrics: lyrics == null && nullToAbsent
           ? const Value.absent()
@@ -570,7 +483,6 @@ class LyricsTranslationEntity extends DataClass
     return LyricsTranslationEntity(
       track: serializer.fromJson<String>(json['track']),
       artist: serializer.fromJson<String>(json['artist']),
-      duration: serializer.fromJson<int>(json['duration']),
       language: serializer.fromJson<String>(json['language']),
       lyrics: $LyricsTranslationsTable.$converterlyricsn.fromJson(
         serializer.fromJson<String?>(json['lyrics']),
@@ -584,7 +496,6 @@ class LyricsTranslationEntity extends DataClass
     return <String, dynamic>{
       'track': serializer.toJson<String>(track),
       'artist': serializer.toJson<String>(artist),
-      'duration': serializer.toJson<int>(duration),
       'language': serializer.toJson<String>(language),
       'lyrics': serializer.toJson<String?>(
         $LyricsTranslationsTable.$converterlyricsn.toJson(lyrics),
@@ -596,14 +507,12 @@ class LyricsTranslationEntity extends DataClass
   LyricsTranslationEntity copyWith({
     String? track,
     String? artist,
-    int? duration,
     String? language,
     Value<Lyrics?> lyrics = const Value.absent(),
     bool? same,
   }) => LyricsTranslationEntity(
     track: track ?? this.track,
     artist: artist ?? this.artist,
-    duration: duration ?? this.duration,
     language: language ?? this.language,
     lyrics: lyrics.present ? lyrics.value : this.lyrics,
     same: same ?? this.same,
@@ -612,7 +521,6 @@ class LyricsTranslationEntity extends DataClass
     return LyricsTranslationEntity(
       track: data.track.present ? data.track.value : this.track,
       artist: data.artist.present ? data.artist.value : this.artist,
-      duration: data.duration.present ? data.duration.value : this.duration,
       language: data.language.present ? data.language.value : this.language,
       lyrics: data.lyrics.present ? data.lyrics.value : this.lyrics,
       same: data.same.present ? data.same.value : this.same,
@@ -624,7 +532,6 @@ class LyricsTranslationEntity extends DataClass
     return (StringBuffer('LyricsTranslationEntity(')
           ..write('track: $track, ')
           ..write('artist: $artist, ')
-          ..write('duration: $duration, ')
           ..write('language: $language, ')
           ..write('lyrics: $lyrics, ')
           ..write('same: $same')
@@ -633,15 +540,13 @@ class LyricsTranslationEntity extends DataClass
   }
 
   @override
-  int get hashCode =>
-      Object.hash(track, artist, duration, language, lyrics, same);
+  int get hashCode => Object.hash(track, artist, language, lyrics, same);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is LyricsTranslationEntity &&
           other.track == this.track &&
           other.artist == this.artist &&
-          other.duration == this.duration &&
           other.language == this.language &&
           other.lyrics == this.lyrics &&
           other.same == this.same);
@@ -651,7 +556,6 @@ class LyricsTranslationsCompanion
     extends UpdateCompanion<LyricsTranslationEntity> {
   final Value<String> track;
   final Value<String> artist;
-  final Value<int> duration;
   final Value<String> language;
   final Value<Lyrics?> lyrics;
   final Value<bool> same;
@@ -659,7 +563,6 @@ class LyricsTranslationsCompanion
   const LyricsTranslationsCompanion({
     this.track = const Value.absent(),
     this.artist = const Value.absent(),
-    this.duration = const Value.absent(),
     this.language = const Value.absent(),
     this.lyrics = const Value.absent(),
     this.same = const Value.absent(),
@@ -668,20 +571,17 @@ class LyricsTranslationsCompanion
   LyricsTranslationsCompanion.insert({
     required String track,
     required String artist,
-    required int duration,
     required String language,
     this.lyrics = const Value.absent(),
     required bool same,
     this.rowid = const Value.absent(),
   }) : track = Value(track),
        artist = Value(artist),
-       duration = Value(duration),
        language = Value(language),
        same = Value(same);
   static Insertable<LyricsTranslationEntity> custom({
     Expression<String>? track,
     Expression<String>? artist,
-    Expression<int>? duration,
     Expression<String>? language,
     Expression<String>? lyrics,
     Expression<bool>? same,
@@ -690,7 +590,6 @@ class LyricsTranslationsCompanion
     return RawValuesInsertable({
       if (track != null) 'track': track,
       if (artist != null) 'artist': artist,
-      if (duration != null) 'duration': duration,
       if (language != null) 'language': language,
       if (lyrics != null) 'lyrics': lyrics,
       if (same != null) 'same': same,
@@ -701,7 +600,6 @@ class LyricsTranslationsCompanion
   LyricsTranslationsCompanion copyWith({
     Value<String>? track,
     Value<String>? artist,
-    Value<int>? duration,
     Value<String>? language,
     Value<Lyrics?>? lyrics,
     Value<bool>? same,
@@ -710,7 +608,6 @@ class LyricsTranslationsCompanion
     return LyricsTranslationsCompanion(
       track: track ?? this.track,
       artist: artist ?? this.artist,
-      duration: duration ?? this.duration,
       language: language ?? this.language,
       lyrics: lyrics ?? this.lyrics,
       same: same ?? this.same,
@@ -726,9 +623,6 @@ class LyricsTranslationsCompanion
     }
     if (artist.present) {
       map['artist'] = Variable<String>(artist.value);
-    }
-    if (duration.present) {
-      map['duration'] = Variable<int>(duration.value);
     }
     if (language.present) {
       map['language'] = Variable<String>(language.value);
@@ -752,10 +646,413 @@ class LyricsTranslationsCompanion
     return (StringBuffer('LyricsTranslationsCompanion(')
           ..write('track: $track, ')
           ..write('artist: $artist, ')
-          ..write('duration: $duration, ')
           ..write('language: $language, ')
           ..write('lyrics: $lyrics, ')
           ..write('same: $same, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LyricsTrackSettingsTable extends LyricsTrackSettings
+    with TableInfo<$LyricsTrackSettingsTable, LyricsTrackSettingsEntity> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LyricsTrackSettingsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _trackMeta = const VerificationMeta('track');
+  @override
+  late final GeneratedColumn<String> track = GeneratedColumn<String>(
+    'track',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _artistMeta = const VerificationMeta('artist');
+  @override
+  late final GeneratedColumn<String> artist = GeneratedColumn<String>(
+    'artist',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lyricsVisibilityMeta = const VerificationMeta(
+    'lyricsVisibility',
+  );
+  @override
+  late final GeneratedColumn<bool> lyricsVisibility = GeneratedColumn<bool>(
+    'lyrics_visibility',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("lyrics_visibility" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _translationLanguageMeta =
+      const VerificationMeta('translationLanguage');
+  @override
+  late final GeneratedColumn<String> translationLanguage =
+      GeneratedColumn<String>(
+        'translation_language',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _offsetMeta = const VerificationMeta('offset');
+  @override
+  late final GeneratedColumn<int> offset = GeneratedColumn<int>(
+    'offset',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    track,
+    artist,
+    lyricsVisibility,
+    translationLanguage,
+    offset,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'lyrics_track_settings';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LyricsTrackSettingsEntity> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('track')) {
+      context.handle(
+        _trackMeta,
+        track.isAcceptableOrUnknown(data['track']!, _trackMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_trackMeta);
+    }
+    if (data.containsKey('artist')) {
+      context.handle(
+        _artistMeta,
+        artist.isAcceptableOrUnknown(data['artist']!, _artistMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_artistMeta);
+    }
+    if (data.containsKey('lyrics_visibility')) {
+      context.handle(
+        _lyricsVisibilityMeta,
+        lyricsVisibility.isAcceptableOrUnknown(
+          data['lyrics_visibility']!,
+          _lyricsVisibilityMeta,
+        ),
+      );
+    }
+    if (data.containsKey('translation_language')) {
+      context.handle(
+        _translationLanguageMeta,
+        translationLanguage.isAcceptableOrUnknown(
+          data['translation_language']!,
+          _translationLanguageMeta,
+        ),
+      );
+    }
+    if (data.containsKey('offset')) {
+      context.handle(
+        _offsetMeta,
+        offset.isAcceptableOrUnknown(data['offset']!, _offsetMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {track, artist};
+  @override
+  LyricsTrackSettingsEntity map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LyricsTrackSettingsEntity(
+      track: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}track'],
+      )!,
+      artist: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}artist'],
+      )!,
+      lyricsVisibility: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}lyrics_visibility'],
+      ),
+      translationLanguage: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}translation_language'],
+      ),
+      offset: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}offset'],
+      ),
+    );
+  }
+
+  @override
+  $LyricsTrackSettingsTable createAlias(String alias) {
+    return $LyricsTrackSettingsTable(attachedDatabase, alias);
+  }
+}
+
+class LyricsTrackSettingsEntity extends DataClass
+    implements Insertable<LyricsTrackSettingsEntity> {
+  /// Track title.
+  final String track;
+
+  /// Track artist.
+  final String artist;
+
+  /// Whether lyrics are shown for this track.
+  /// Null: use global setting. True: shown. False: hidden.
+  final bool? lyricsVisibility;
+
+  /// Translation language for this track.
+  /// Null: use global setting. Empty string: off. Otherwise, the language code.
+  final String? translationLanguage;
+
+  /// Lyrics offset (in milliseconds) for this track.
+  /// Optional per-track offset. Positive values make the lyrics appear earlier, negative values delay them.
+  final int? offset;
+  const LyricsTrackSettingsEntity({
+    required this.track,
+    required this.artist,
+    this.lyricsVisibility,
+    this.translationLanguage,
+    this.offset,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['track'] = Variable<String>(track);
+    map['artist'] = Variable<String>(artist);
+    if (!nullToAbsent || lyricsVisibility != null) {
+      map['lyrics_visibility'] = Variable<bool>(lyricsVisibility);
+    }
+    if (!nullToAbsent || translationLanguage != null) {
+      map['translation_language'] = Variable<String>(translationLanguage);
+    }
+    if (!nullToAbsent || offset != null) {
+      map['offset'] = Variable<int>(offset);
+    }
+    return map;
+  }
+
+  LyricsTrackSettingsCompanion toCompanion(bool nullToAbsent) {
+    return LyricsTrackSettingsCompanion(
+      track: Value(track),
+      artist: Value(artist),
+      lyricsVisibility: lyricsVisibility == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lyricsVisibility),
+      translationLanguage: translationLanguage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(translationLanguage),
+      offset: offset == null && nullToAbsent
+          ? const Value.absent()
+          : Value(offset),
+    );
+  }
+
+  factory LyricsTrackSettingsEntity.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LyricsTrackSettingsEntity(
+      track: serializer.fromJson<String>(json['track']),
+      artist: serializer.fromJson<String>(json['artist']),
+      lyricsVisibility: serializer.fromJson<bool?>(json['lyricsVisibility']),
+      translationLanguage: serializer.fromJson<String?>(
+        json['translationLanguage'],
+      ),
+      offset: serializer.fromJson<int?>(json['offset']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'track': serializer.toJson<String>(track),
+      'artist': serializer.toJson<String>(artist),
+      'lyricsVisibility': serializer.toJson<bool?>(lyricsVisibility),
+      'translationLanguage': serializer.toJson<String?>(translationLanguage),
+      'offset': serializer.toJson<int?>(offset),
+    };
+  }
+
+  LyricsTrackSettingsEntity copyWith({
+    String? track,
+    String? artist,
+    Value<bool?> lyricsVisibility = const Value.absent(),
+    Value<String?> translationLanguage = const Value.absent(),
+    Value<int?> offset = const Value.absent(),
+  }) => LyricsTrackSettingsEntity(
+    track: track ?? this.track,
+    artist: artist ?? this.artist,
+    lyricsVisibility: lyricsVisibility.present
+        ? lyricsVisibility.value
+        : this.lyricsVisibility,
+    translationLanguage: translationLanguage.present
+        ? translationLanguage.value
+        : this.translationLanguage,
+    offset: offset.present ? offset.value : this.offset,
+  );
+  LyricsTrackSettingsEntity copyWithCompanion(
+    LyricsTrackSettingsCompanion data,
+  ) {
+    return LyricsTrackSettingsEntity(
+      track: data.track.present ? data.track.value : this.track,
+      artist: data.artist.present ? data.artist.value : this.artist,
+      lyricsVisibility: data.lyricsVisibility.present
+          ? data.lyricsVisibility.value
+          : this.lyricsVisibility,
+      translationLanguage: data.translationLanguage.present
+          ? data.translationLanguage.value
+          : this.translationLanguage,
+      offset: data.offset.present ? data.offset.value : this.offset,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LyricsTrackSettingsEntity(')
+          ..write('track: $track, ')
+          ..write('artist: $artist, ')
+          ..write('lyricsVisibility: $lyricsVisibility, ')
+          ..write('translationLanguage: $translationLanguage, ')
+          ..write('offset: $offset')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(track, artist, lyricsVisibility, translationLanguage, offset);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LyricsTrackSettingsEntity &&
+          other.track == this.track &&
+          other.artist == this.artist &&
+          other.lyricsVisibility == this.lyricsVisibility &&
+          other.translationLanguage == this.translationLanguage &&
+          other.offset == this.offset);
+}
+
+class LyricsTrackSettingsCompanion
+    extends UpdateCompanion<LyricsTrackSettingsEntity> {
+  final Value<String> track;
+  final Value<String> artist;
+  final Value<bool?> lyricsVisibility;
+  final Value<String?> translationLanguage;
+  final Value<int?> offset;
+  final Value<int> rowid;
+  const LyricsTrackSettingsCompanion({
+    this.track = const Value.absent(),
+    this.artist = const Value.absent(),
+    this.lyricsVisibility = const Value.absent(),
+    this.translationLanguage = const Value.absent(),
+    this.offset = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LyricsTrackSettingsCompanion.insert({
+    required String track,
+    required String artist,
+    this.lyricsVisibility = const Value.absent(),
+    this.translationLanguage = const Value.absent(),
+    this.offset = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : track = Value(track),
+       artist = Value(artist);
+  static Insertable<LyricsTrackSettingsEntity> custom({
+    Expression<String>? track,
+    Expression<String>? artist,
+    Expression<bool>? lyricsVisibility,
+    Expression<String>? translationLanguage,
+    Expression<int>? offset,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (track != null) 'track': track,
+      if (artist != null) 'artist': artist,
+      if (lyricsVisibility != null) 'lyrics_visibility': lyricsVisibility,
+      if (translationLanguage != null)
+        'translation_language': translationLanguage,
+      if (offset != null) 'offset': offset,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LyricsTrackSettingsCompanion copyWith({
+    Value<String>? track,
+    Value<String>? artist,
+    Value<bool?>? lyricsVisibility,
+    Value<String?>? translationLanguage,
+    Value<int?>? offset,
+    Value<int>? rowid,
+  }) {
+    return LyricsTrackSettingsCompanion(
+      track: track ?? this.track,
+      artist: artist ?? this.artist,
+      lyricsVisibility: lyricsVisibility ?? this.lyricsVisibility,
+      translationLanguage: translationLanguage ?? this.translationLanguage,
+      offset: offset ?? this.offset,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (track.present) {
+      map['track'] = Variable<String>(track.value);
+    }
+    if (artist.present) {
+      map['artist'] = Variable<String>(artist.value);
+    }
+    if (lyricsVisibility.present) {
+      map['lyrics_visibility'] = Variable<bool>(lyricsVisibility.value);
+    }
+    if (translationLanguage.present) {
+      map['translation_language'] = Variable<String>(translationLanguage.value);
+    }
+    if (offset.present) {
+      map['offset'] = Variable<int>(offset.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LyricsTrackSettingsCompanion(')
+          ..write('track: $track, ')
+          ..write('artist: $artist, ')
+          ..write('lyricsVisibility: $lyricsVisibility, ')
+          ..write('translationLanguage: $translationLanguage, ')
+          ..write('offset: $offset, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -768,6 +1065,8 @@ abstract class _$LyricsDatabase extends GeneratedDatabase {
   late final $LyricssTable lyricss = $LyricssTable(this);
   late final $LyricsTranslationsTable lyricsTranslations =
       $LyricsTranslationsTable(this);
+  late final $LyricsTrackSettingsTable lyricsTrackSettings =
+      $LyricsTrackSettingsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -775,6 +1074,7 @@ abstract class _$LyricsDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     lyricss,
     lyricsTranslations,
+    lyricsTrackSettings,
   ];
   @override
   DriftDatabaseOptions get options =>
@@ -785,7 +1085,6 @@ typedef $$LyricssTableCreateCompanionBuilder =
     LyricssCompanion Function({
       required String track,
       required String artist,
-      required int duration,
       required Lyrics lyrics,
       Value<int> rowid,
     });
@@ -793,7 +1092,6 @@ typedef $$LyricssTableUpdateCompanionBuilder =
     LyricssCompanion Function({
       Value<String> track,
       Value<String> artist,
-      Value<int> duration,
       Value<Lyrics> lyrics,
       Value<int> rowid,
     });
@@ -814,11 +1112,6 @@ class $$LyricssTableFilterComposer
 
   ColumnFilters<String> get artist => $composableBuilder(
     column: $table.artist,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get duration => $composableBuilder(
-    column: $table.duration,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -848,11 +1141,6 @@ class $$LyricssTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get duration => $composableBuilder(
-    column: $table.duration,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get lyrics => $composableBuilder(
     column: $table.lyrics,
     builder: (column) => ColumnOrderings(column),
@@ -873,9 +1161,6 @@ class $$LyricssTableAnnotationComposer
 
   GeneratedColumn<String> get artist =>
       $composableBuilder(column: $table.artist, builder: (column) => column);
-
-  GeneratedColumn<int> get duration =>
-      $composableBuilder(column: $table.duration, builder: (column) => column);
 
   GeneratedColumnWithTypeConverter<Lyrics, String> get lyrics =>
       $composableBuilder(column: $table.lyrics, builder: (column) => column);
@@ -914,13 +1199,11 @@ class $$LyricssTableTableManager
               ({
                 Value<String> track = const Value.absent(),
                 Value<String> artist = const Value.absent(),
-                Value<int> duration = const Value.absent(),
                 Value<Lyrics> lyrics = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => LyricssCompanion(
                 track: track,
                 artist: artist,
-                duration: duration,
                 lyrics: lyrics,
                 rowid: rowid,
               ),
@@ -928,13 +1211,11 @@ class $$LyricssTableTableManager
               ({
                 required String track,
                 required String artist,
-                required int duration,
                 required Lyrics lyrics,
                 Value<int> rowid = const Value.absent(),
               }) => LyricssCompanion.insert(
                 track: track,
                 artist: artist,
-                duration: duration,
                 lyrics: lyrics,
                 rowid: rowid,
               ),
@@ -967,7 +1248,6 @@ typedef $$LyricsTranslationsTableCreateCompanionBuilder =
     LyricsTranslationsCompanion Function({
       required String track,
       required String artist,
-      required int duration,
       required String language,
       Value<Lyrics?> lyrics,
       required bool same,
@@ -977,7 +1257,6 @@ typedef $$LyricsTranslationsTableUpdateCompanionBuilder =
     LyricsTranslationsCompanion Function({
       Value<String> track,
       Value<String> artist,
-      Value<int> duration,
       Value<String> language,
       Value<Lyrics?> lyrics,
       Value<bool> same,
@@ -1000,11 +1279,6 @@ class $$LyricsTranslationsTableFilterComposer
 
   ColumnFilters<String> get artist => $composableBuilder(
     column: $table.artist,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get duration => $composableBuilder(
-    column: $table.duration,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1044,11 +1318,6 @@ class $$LyricsTranslationsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get duration => $composableBuilder(
-    column: $table.duration,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get language => $composableBuilder(
     column: $table.language,
     builder: (column) => ColumnOrderings(column),
@@ -1079,9 +1348,6 @@ class $$LyricsTranslationsTableAnnotationComposer
 
   GeneratedColumn<String> get artist =>
       $composableBuilder(column: $table.artist, builder: (column) => column);
-
-  GeneratedColumn<int> get duration =>
-      $composableBuilder(column: $table.duration, builder: (column) => column);
 
   GeneratedColumn<String> get language =>
       $composableBuilder(column: $table.language, builder: (column) => column);
@@ -1135,7 +1401,6 @@ class $$LyricsTranslationsTableTableManager
               ({
                 Value<String> track = const Value.absent(),
                 Value<String> artist = const Value.absent(),
-                Value<int> duration = const Value.absent(),
                 Value<String> language = const Value.absent(),
                 Value<Lyrics?> lyrics = const Value.absent(),
                 Value<bool> same = const Value.absent(),
@@ -1143,7 +1408,6 @@ class $$LyricsTranslationsTableTableManager
               }) => LyricsTranslationsCompanion(
                 track: track,
                 artist: artist,
-                duration: duration,
                 language: language,
                 lyrics: lyrics,
                 same: same,
@@ -1153,7 +1417,6 @@ class $$LyricsTranslationsTableTableManager
               ({
                 required String track,
                 required String artist,
-                required int duration,
                 required String language,
                 Value<Lyrics?> lyrics = const Value.absent(),
                 required bool same,
@@ -1161,7 +1424,6 @@ class $$LyricsTranslationsTableTableManager
               }) => LyricsTranslationsCompanion.insert(
                 track: track,
                 artist: artist,
-                duration: duration,
                 language: language,
                 lyrics: lyrics,
                 same: same,
@@ -1196,6 +1458,226 @@ typedef $$LyricsTranslationsTableProcessedTableManager =
       LyricsTranslationEntity,
       PrefetchHooks Function()
     >;
+typedef $$LyricsTrackSettingsTableCreateCompanionBuilder =
+    LyricsTrackSettingsCompanion Function({
+      required String track,
+      required String artist,
+      Value<bool?> lyricsVisibility,
+      Value<String?> translationLanguage,
+      Value<int?> offset,
+      Value<int> rowid,
+    });
+typedef $$LyricsTrackSettingsTableUpdateCompanionBuilder =
+    LyricsTrackSettingsCompanion Function({
+      Value<String> track,
+      Value<String> artist,
+      Value<bool?> lyricsVisibility,
+      Value<String?> translationLanguage,
+      Value<int?> offset,
+      Value<int> rowid,
+    });
+
+class $$LyricsTrackSettingsTableFilterComposer
+    extends Composer<_$LyricsDatabase, $LyricsTrackSettingsTable> {
+  $$LyricsTrackSettingsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get track => $composableBuilder(
+    column: $table.track,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get artist => $composableBuilder(
+    column: $table.artist,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get lyricsVisibility => $composableBuilder(
+    column: $table.lyricsVisibility,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get translationLanguage => $composableBuilder(
+    column: $table.translationLanguage,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get offset => $composableBuilder(
+    column: $table.offset,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LyricsTrackSettingsTableOrderingComposer
+    extends Composer<_$LyricsDatabase, $LyricsTrackSettingsTable> {
+  $$LyricsTrackSettingsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get track => $composableBuilder(
+    column: $table.track,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get artist => $composableBuilder(
+    column: $table.artist,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get lyricsVisibility => $composableBuilder(
+    column: $table.lyricsVisibility,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get translationLanguage => $composableBuilder(
+    column: $table.translationLanguage,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get offset => $composableBuilder(
+    column: $table.offset,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LyricsTrackSettingsTableAnnotationComposer
+    extends Composer<_$LyricsDatabase, $LyricsTrackSettingsTable> {
+  $$LyricsTrackSettingsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get track =>
+      $composableBuilder(column: $table.track, builder: (column) => column);
+
+  GeneratedColumn<String> get artist =>
+      $composableBuilder(column: $table.artist, builder: (column) => column);
+
+  GeneratedColumn<bool> get lyricsVisibility => $composableBuilder(
+    column: $table.lyricsVisibility,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get translationLanguage => $composableBuilder(
+    column: $table.translationLanguage,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get offset =>
+      $composableBuilder(column: $table.offset, builder: (column) => column);
+}
+
+class $$LyricsTrackSettingsTableTableManager
+    extends
+        RootTableManager<
+          _$LyricsDatabase,
+          $LyricsTrackSettingsTable,
+          LyricsTrackSettingsEntity,
+          $$LyricsTrackSettingsTableFilterComposer,
+          $$LyricsTrackSettingsTableOrderingComposer,
+          $$LyricsTrackSettingsTableAnnotationComposer,
+          $$LyricsTrackSettingsTableCreateCompanionBuilder,
+          $$LyricsTrackSettingsTableUpdateCompanionBuilder,
+          (
+            LyricsTrackSettingsEntity,
+            BaseReferences<
+              _$LyricsDatabase,
+              $LyricsTrackSettingsTable,
+              LyricsTrackSettingsEntity
+            >,
+          ),
+          LyricsTrackSettingsEntity,
+          PrefetchHooks Function()
+        > {
+  $$LyricsTrackSettingsTableTableManager(
+    _$LyricsDatabase db,
+    $LyricsTrackSettingsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LyricsTrackSettingsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LyricsTrackSettingsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$LyricsTrackSettingsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> track = const Value.absent(),
+                Value<String> artist = const Value.absent(),
+                Value<bool?> lyricsVisibility = const Value.absent(),
+                Value<String?> translationLanguage = const Value.absent(),
+                Value<int?> offset = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LyricsTrackSettingsCompanion(
+                track: track,
+                artist: artist,
+                lyricsVisibility: lyricsVisibility,
+                translationLanguage: translationLanguage,
+                offset: offset,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String track,
+                required String artist,
+                Value<bool?> lyricsVisibility = const Value.absent(),
+                Value<String?> translationLanguage = const Value.absent(),
+                Value<int?> offset = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LyricsTrackSettingsCompanion.insert(
+                track: track,
+                artist: artist,
+                lyricsVisibility: lyricsVisibility,
+                translationLanguage: translationLanguage,
+                offset: offset,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LyricsTrackSettingsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$LyricsDatabase,
+      $LyricsTrackSettingsTable,
+      LyricsTrackSettingsEntity,
+      $$LyricsTrackSettingsTableFilterComposer,
+      $$LyricsTrackSettingsTableOrderingComposer,
+      $$LyricsTrackSettingsTableAnnotationComposer,
+      $$LyricsTrackSettingsTableCreateCompanionBuilder,
+      $$LyricsTrackSettingsTableUpdateCompanionBuilder,
+      (
+        LyricsTrackSettingsEntity,
+        BaseReferences<
+          _$LyricsDatabase,
+          $LyricsTrackSettingsTable,
+          LyricsTrackSettingsEntity
+        >,
+      ),
+      LyricsTrackSettingsEntity,
+      PrefetchHooks Function()
+    >;
 
 class $LyricsDatabaseManager {
   final _$LyricsDatabase _db;
@@ -1204,4 +1686,6 @@ class $LyricsDatabaseManager {
       $$LyricssTableTableManager(_db, _db.lyricss);
   $$LyricsTranslationsTableTableManager get lyricsTranslations =>
       $$LyricsTranslationsTableTableManager(_db, _db.lyricsTranslations);
+  $$LyricsTrackSettingsTableTableManager get lyricsTrackSettings =>
+      $$LyricsTrackSettingsTableTableManager(_db, _db.lyricsTrackSettings);
 }

@@ -118,7 +118,7 @@ class NowPlayingAudioControlPanelState extends State<NowPlayingAudioControlPanel
     MediaPlayer.instance.removeListener(listener);
   }
 
-  Widget _buildDesktopLayout(BuildContext context) {
+  Widget _buildDesktopLayout() {
     return Card(
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
@@ -180,28 +180,28 @@ class NowPlayingAudioControlPanelState extends State<NowPlayingAudioControlPanel
             const Divider(height: 1.0, thickness: 1.0),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-              child: _buildContent(context),
+              child: _buildContent(),
             ),
             const Divider(height: 1.0, thickness: 1.0),
-            _buildCrossfadeDuration(context),
+            _buildCrossfadeDuration(),
             const Divider(height: 1.0, thickness: 1.0),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-              child: _buildReplayGain(context),
+              child: _buildReplayGain(),
             ),
             const Divider(height: 1.0, thickness: 1.0),
-            _buildExclusiveAudio(context),
+            _buildExclusiveAudio(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTabletLayout(BuildContext context) {
+  Widget _buildTabletLayout() {
     throw UnimplementedError();
   }
 
-  Widget _buildMobileLayout(BuildContext context) {
+  Widget _buildMobileLayout() {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -211,25 +211,26 @@ class NowPlayingAudioControlPanelState extends State<NowPlayingAudioControlPanel
             top: isMaterial2 ? 16.0 : 0.0,
             bottom: 24.0,
           ),
-          child: _buildContent(context),
+          child: _buildContent(),
         ),
         const Divider(height: 1.0, thickness: 1.0),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 12.0),
-          child: _buildCrossfadeDuration(context),
+          child: _buildCrossfadeDuration(),
         ),
         const Divider(height: 1.0, thickness: 1.0),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 12.0),
-          child: _buildReplayGain(context),
+          child: _buildReplayGain(),
         ),
         SizedBox(height: 16.0 + MediaQuery.viewInsetsOf(context).bottom + MediaQuery.paddingOf(context).bottom),
       ],
     );
   }
 
-  Widget _buildCrossfadeDuration(BuildContext context) {
+  Widget _buildCrossfadeDuration() {
     return SubscriptionReveal(
+      blur: false,
       child: Consumer<MediaPlayer>(
         builder: (context, mediaPlayer, _) {
           return Column(
@@ -282,7 +283,7 @@ class NowPlayingAudioControlPanelState extends State<NowPlayingAudioControlPanel
     );
   }
 
-  Widget _buildExclusiveAudio(BuildContext context) {
+  Widget _buildExclusiveAudio() {
     return Consumer<MediaPlayer>(
       builder: (context, mediaPlayer, _) {
         return InkWell(
@@ -313,7 +314,7 @@ class NowPlayingAudioControlPanelState extends State<NowPlayingAudioControlPanel
     );
   }
 
-  Widget _buildReplayGain(BuildContext context) {
+  Widget _buildReplayGain() {
     return Consumer<MediaPlayer>(
       builder: (context, mediaPlayer, _) {
         return Column(
@@ -375,7 +376,7 @@ class NowPlayingAudioControlPanelState extends State<NowPlayingAudioControlPanel
     );
   }
 
-  Widget _buildContent(BuildContext context) {
+  Widget _buildContent() {
     return Consumer<MediaPlayer>(
       builder: (context, mediaPlayer, _) {
         return Column(
@@ -550,13 +551,13 @@ class NowPlayingAudioControlPanelState extends State<NowPlayingAudioControlPanel
   @override
   Widget build(BuildContext context) {
     if (isDesktop) {
-      return _buildDesktopLayout(context);
+      return _buildDesktopLayout();
     }
     if (isTablet) {
-      return _buildTabletLayout(context);
+      return _buildTabletLayout();
     }
     if (isMobile) {
-      return _buildMobileLayout(context);
+      return _buildMobileLayout();
     }
     throw UnimplementedError();
   }

@@ -8,7 +8,6 @@ abstract class LyricsTranslationKey with _$LyricsTranslationKey {
   const factory LyricsTranslationKey({
     required String track,
     required String artist,
-    required int duration,
     required String language,
   }) = _LyricsTranslationKey;
 

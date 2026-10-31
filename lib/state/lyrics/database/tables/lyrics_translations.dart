@@ -1,6 +1,6 @@
 part of '../database.dart';
 
-/// {@template lyrics_translation_entries}
+/// {@template lyrics_translations}
 ///
 /// LyricsTranslations
 /// ------------------
@@ -15,9 +15,6 @@ class LyricsTranslations extends Table {
   /// Track artist.
   TextColumn get artist => text().named('artist')();
 
-  /// Track duration (in milliseconds).
-  IntColumn get duration => integer().named('duration')();
-
   /// Target language code.
   TextColumn get language => text().named('language')();
 
@@ -28,5 +25,5 @@ class LyricsTranslations extends Table {
   BoolColumn get same => boolean().named('same')();
 
   @override
-  Set<Column> get primaryKey => {track, artist, duration, language};
+  Set<Column> get primaryKey => {track, artist, language};
 }

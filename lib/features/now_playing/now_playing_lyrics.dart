@@ -44,7 +44,7 @@ class _NowPlayingLyricsState extends State<NowPlayingLyrics> {
     return (i) {
       if (i >= 0 && i < lyricsNotifier.lyrics.length) {
         lyricsNotifier.setIndex(i);
-        MediaPlayer.instance.seek(Duration(milliseconds: lyricsNotifier.lyrics[i].timestamp) + const Duration(milliseconds: 100));
+        MediaPlayer.instance.seek(Duration(milliseconds: lyricsNotifier.lyrics[i].timestamp - (lyricsNotifier.offset?.inMilliseconds ?? 0)) + const Duration(milliseconds: 100));
       }
     };
   }

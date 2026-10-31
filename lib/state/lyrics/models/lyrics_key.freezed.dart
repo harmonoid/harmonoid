@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LyricsKey {
 
- String get track; String get artist; int get duration;
+ String get track; String get artist;
 /// Create a copy of LyricsKey
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $LyricsKeyCopyWith<LyricsKey> get copyWith => _$LyricsKeyCopyWithImpl<LyricsKey>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LyricsKey&&(identical(other.track, track) || other.track == track)&&(identical(other.artist, artist) || other.artist == artist)&&(identical(other.duration, duration) || other.duration == duration));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LyricsKey&&(identical(other.track, track) || other.track == track)&&(identical(other.artist, artist) || other.artist == artist));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,track,artist,duration);
+int get hashCode => Object.hash(runtimeType,track,artist);
 
 @override
 String toString() {
-  return 'LyricsKey(track: $track, artist: $artist, duration: $duration)';
+  return 'LyricsKey(track: $track, artist: $artist)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $LyricsKeyCopyWith<$Res>  {
   factory $LyricsKeyCopyWith(LyricsKey value, $Res Function(LyricsKey) _then) = _$LyricsKeyCopyWithImpl;
 @useResult
 $Res call({
- String track, String artist, int duration
+ String track, String artist
 });
 
 
@@ -65,12 +65,11 @@ class _$LyricsKeyCopyWithImpl<$Res>
 
 /// Create a copy of LyricsKey
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? track = null,Object? artist = null,Object? duration = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? track = null,Object? artist = null,}) {
   return _then(_self.copyWith(
 track: null == track ? _self.track : track // ignore: cast_nullable_to_non_nullable
 as String,artist: null == artist ? _self.artist : artist // ignore: cast_nullable_to_non_nullable
-as String,duration: null == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
-as int,
+as String,
   ));
 }
 
@@ -155,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String track,  String artist,  int duration)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String track,  String artist)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LyricsKey() when $default != null:
-return $default(_that.track,_that.artist,_that.duration);case _:
+return $default(_that.track,_that.artist);case _:
   return orElse();
 
 }
@@ -176,10 +175,10 @@ return $default(_that.track,_that.artist,_that.duration);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String track,  String artist,  int duration)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String track,  String artist)  $default,) {final _that = this;
 switch (_that) {
 case _LyricsKey():
-return $default(_that.track,_that.artist,_that.duration);case _:
+return $default(_that.track,_that.artist);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +195,10 @@ return $default(_that.track,_that.artist,_that.duration);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String track,  String artist,  int duration)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String track,  String artist)?  $default,) {final _that = this;
 switch (_that) {
 case _LyricsKey() when $default != null:
-return $default(_that.track,_that.artist,_that.duration);case _:
+return $default(_that.track,_that.artist);case _:
   return null;
 
 }
@@ -211,12 +210,11 @@ return $default(_that.track,_that.artist,_that.duration);case _:
 @JsonSerializable()
 
 class _LyricsKey implements LyricsKey {
-  const _LyricsKey({required this.track, required this.artist, required this.duration});
+  const _LyricsKey({required this.track, required this.artist});
   factory _LyricsKey.fromJson(Map<String, dynamic> json) => _$LyricsKeyFromJson(json);
 
 @override final  String track;
 @override final  String artist;
-@override final  int duration;
 
 /// Create a copy of LyricsKey
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +229,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LyricsKey&&(identical(other.track, track) || other.track == track)&&(identical(other.artist, artist) || other.artist == artist)&&(identical(other.duration, duration) || other.duration == duration));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LyricsKey&&(identical(other.track, track) || other.track == track)&&(identical(other.artist, artist) || other.artist == artist));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,track,artist,duration);
+int get hashCode => Object.hash(runtimeType,track,artist);
 
 @override
 String toString() {
-  return 'LyricsKey(track: $track, artist: $artist, duration: $duration)';
+  return 'LyricsKey(track: $track, artist: $artist)';
 }
 
 
@@ -251,7 +249,7 @@ abstract mixin class _$LyricsKeyCopyWith<$Res> implements $LyricsKeyCopyWith<$Re
   factory _$LyricsKeyCopyWith(_LyricsKey value, $Res Function(_LyricsKey) _then) = __$LyricsKeyCopyWithImpl;
 @override @useResult
 $Res call({
- String track, String artist, int duration
+ String track, String artist
 });
 
 
@@ -268,12 +266,11 @@ class __$LyricsKeyCopyWithImpl<$Res>
 
 /// Create a copy of LyricsKey
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? track = null,Object? artist = null,Object? duration = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? track = null,Object? artist = null,}) {
   return _then(_LyricsKey(
 track: null == track ? _self.track : track // ignore: cast_nullable_to_non_nullable
 as String,artist: null == artist ? _self.artist : artist // ignore: cast_nullable_to_non_nullable
-as String,duration: null == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
-as int,
+as String,
   ));
 }
 

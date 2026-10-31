@@ -105,6 +105,7 @@ class Values {
   late String GENRE;
   late String GENRES;
   late String GITHUB;
+  late String GLOBAL;
   late String GO_TO_SETTINGS;
   late String GRID;
   late String HIDE;
@@ -136,6 +137,9 @@ class Values {
   late String LYRICS_NOT_FOUND;
   late String LYRICS_RETRIEVING;
   late String LYRICS_SIZE;
+  late String LYRICS_TRACK_SETTINGS_HINT;
+  late String LYRICS_TRACK_SETTINGS_PREFIX;
+  late String LYRICS_TRACK_SETTINGS_TARGET;
   late String LYRICS_TRANSLATION;
   late String MATERIAL_DESIGN;
   late String MEDIA_FILES;
@@ -175,7 +179,9 @@ class Values {
   late String N_ITEMS_SELECTED;
   late String N_TRACKS;
   late String OFF;
+  late String OFFSET;
   late String OK;
+  late String ON;
   late String ONE_ALBUM;
   late String ONE_ALBUM_N_TRACKS;
   late String ONE_ALBUM_ONE_TRACK;
@@ -270,6 +276,8 @@ class Values {
   late String SETTINGS_SECTION_LANGUAGE_INFO;
   late String SETTINGS_SECTION_LANGUAGE_SUBTITLE;
   late String SETTINGS_SECTION_LANGUAGE_TITLE;
+  late String SETTINGS_SECTION_LYRICS_SUBTITLE;
+  late String SETTINGS_SECTION_LYRICS_TITLE;
   late String SETTINGS_SECTION_MEDIA_LIBRARY_SUBTITLE;
   late String SETTINGS_SECTION_MEDIA_LIBRARY_TITLE;
   late String SETTINGS_SECTION_MISCELLANEOUS_SUBTITLE;

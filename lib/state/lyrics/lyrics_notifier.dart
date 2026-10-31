@@ -5,6 +5,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:collection/collection.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -85,12 +86,11 @@ class LyricsNotifier extends ChangeNotifier {
           // Refresh trial token if needed.
           await trialNotifier?.refreshTrialTokenIfNeeded();
 
+          await _fetchTrackSettings();
           await _fetchLyrics();
           await _fetchLyricsTranslation();
 
-          for (int i = 0; i < lyrics.length; i++) {
-            _timestampsAndIndexes[lyrics[i].timestamp] = i;
-          }
+          _buildTimestampsAndIndexes();
         }
 
         int? currentTime = _timestampsAndIndexes.lastKeyBefore(state.position.inMilliseconds + 1);
@@ -149,14 +149,29 @@ class LyricsNotifier extends ChangeNotifier {
   /// Translation languages.
   List<Language> translationLanguages = <Language>[];
 
+  /// Translation language (global).
+  Language translationLanguageGlobal = Configuration.instance.lyricsTranslationLanguage;
+
+  /// Translation language (track-specific).
+  Language? translationLanguageTrack;
+
   /// Translation language.
-  Language translationLanguage = Configuration.instance.lyricsTranslationLanguage;
+  Language get translationLanguage => translationLanguageTrack ?? translationLanguageGlobal;
+
+  /// Whether lyrics are shown on the desktop now playing screen (global).
+  bool desktopNowPlayingLyricsGlobal = Configuration.instance.desktopNowPlayingLyrics;
+
+  /// Whether lyrics are shown on the desktop now playing screen (track-specific);
+  bool? desktopNowPlayingLyricsTrack;
 
   /// Whether lyrics are shown on the desktop now playing screen.
-  bool desktopNowPlayingLyrics = Configuration.instance.desktopNowPlayingLyrics;
+  bool get desktopNowPlayingLyrics => desktopNowPlayingLyricsTrack ?? desktopNowPlayingLyricsGlobal;
 
   /// Number of times the desktop lyrics gate has been dismissed.
   int desktopNowPlayingLyricsGateDismissCount = Configuration.instance.desktopNowPlayingLyricsGateDismissCount;
+
+  /// Offset.
+  Duration? offset;
 
   /// Database used to cache lyrics and lyrics translations.
   final LyricsDatabase db;
@@ -177,19 +192,35 @@ class LyricsNotifier extends ChangeNotifier {
     return context.read();
   }
 
-  /// Sets the translation language.
-  Future<void> setTranslationLanguage(Language language) async {
-    translationLanguage = language;
+  /// Sets the global translation language.
+  Future<void> setTranslationLanguageGlobal(Language value) async {
+    if (translationLanguageGlobal == value) return;
+    translationLanguageGlobal = value;
     await _fetchLyricsTranslation();
-    await Configuration.instance.set(lyricsTranslationLanguage: language);
+    await Configuration.instance.set(lyricsTranslationLanguage: value);
   }
 
-  /// Sets whether lyrics are shown on the desktop now playing screen.
-  Future<void> setDesktopNowPlayingLyrics(bool value) async {
-    if (desktopNowPlayingLyrics == value) return;
-    desktopNowPlayingLyrics = value;
+  /// Sets the track-specific translation language.
+  Future<void> setTranslationLanguageTrack(Language? value) async {
+    translationLanguageTrack = value;
+    notifyListeners();
+    await _fetchLyricsTranslation();
+    await _saveTrackSettings();
+  }
+
+  /// Sets the global lyrics visibility for the desktop now playing screen.
+  Future<void> setDesktopNowPlayingLyricsGlobal(bool value) async {
+    if (desktopNowPlayingLyricsGlobal == value) return;
+    desktopNowPlayingLyricsGlobal = value;
     notifyListeners();
     await Configuration.instance.set(desktopNowPlayingLyrics: value);
+  }
+
+  /// Sets the track-specific lyrics visibility for the desktop now playing screen.
+  Future<void> setDesktopNowPlayingLyricsTrack(bool? value) async {
+    desktopNowPlayingLyricsTrack = value;
+    notifyListeners();
+    await _saveTrackSettings();
   }
 
   /// Dismisses the desktop lyrics gate.
@@ -197,11 +228,27 @@ class LyricsNotifier extends ChangeNotifier {
     desktopNowPlayingLyricsGateDismissCount++;
     await Configuration.instance.set(desktopNowPlayingLyricsGateDismissCount: desktopNowPlayingLyricsGateDismissCount);
     if (desktopNowPlayingLyricsGateDismissCount >= _kDesktopGateDismissCountToCache) {
-      await setDesktopNowPlayingLyrics(false);
+      await setDesktopNowPlayingLyricsGlobal(false);
+      await setDesktopNowPlayingLyricsTrack(false);
+      try {
+        await db.clearLyricsVisibilityTrackSettings();
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
     } else {
-      desktopNowPlayingLyrics = false;
+      desktopNowPlayingLyricsGlobal = false;
+      desktopNowPlayingLyricsTrack = false;
       notifyListeners();
     }
+  }
+
+  /// Sets the track-specific offset.
+  Future<void> setOffset(Duration value) async {
+    offset = value == Duration.zero ? null : value;
+    _buildTimestampsAndIndexes();
+    notifyListeners();
+    await _saveTrackSettings();
   }
 
   /// Whether cached lyrics are present for the specified [track].
@@ -253,6 +300,66 @@ class LyricsNotifier extends ChangeNotifier {
   Future<void> refresh() async {
     await _fetchLyrics(refresh: true);
     await _fetchLyricsTranslation();
+    _buildTimestampsAndIndexes();
+  }
+
+  /// Fetches the track-specific lyrics settings.
+  Future<void> _fetchTrackSettings() async {
+    final localCurrent = _current;
+    final localCurrentDuration = _currentDuration;
+    if (localCurrent == null || localCurrentDuration == null) return;
+
+    LyricsTrackSettingsEntity? result;
+
+    try {
+      final key = localCurrent.toLyricsKey();
+      result = await db.getLyricsTrackSettings(key);
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
+
+    if (!_isCurrentGuard(localCurrent, localCurrentDuration)) return;
+
+    desktopNowPlayingLyricsTrack = result?.lyricsVisibility;
+
+    translationLanguageTrack = switch (result?.translationLanguage) {
+      null => null,
+      '' => Language(code: '', name: Localization.instance.OFF),
+      final code => translationLanguages.firstWhereOrNull((language) => language.code == code),
+    };
+
+    offset = switch (result?.offset) {
+      null => null,
+      final milliseconds => Duration(milliseconds: milliseconds),
+    };
+
+    notifyListeners();
+  }
+
+  /// Saves the track-specific lyrics settings.
+  Future<void> _saveTrackSettings() async {
+    final localCurrent = _current;
+    if (localCurrent == null) return;
+
+    final hasTrackSettings = desktopNowPlayingLyricsTrack != null || translationLanguageTrack != null || offset != null;
+
+    try {
+      final key = localCurrent.toLyricsKey();
+      if (hasTrackSettings) {
+        await db.setLyricsTrackSettings(
+          key,
+          lyricsVisibility: desktopNowPlayingLyricsTrack,
+          translationLanguage: translationLanguageTrack?.code,
+          offset: offset?.inMilliseconds,
+        );
+      } else {
+        await db.removeLyricsTrackSettings(key);
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
   }
 
   /// Fetches lyrics for currently playing [Playable].
@@ -269,7 +376,7 @@ class LyricsNotifier extends ChangeNotifier {
 
     Lyrics? result;
 
-    final key = localCurrent.toLyricsKey(localCurrentDuration);
+    final key = localCurrent.toLyricsKey();
 
     // Discard the local cache so the lookup runs fresh.
     if (refresh) {
@@ -399,7 +506,7 @@ class LyricsNotifier extends ChangeNotifier {
 
     Lyrics? result;
 
-    final key = localCurrent.toLyricsKey(localCurrentDuration).toLyricsTranslationKey(localTranslationLanguage.code);
+    final key = localCurrent.toLyricsKey().toLyricsTranslationKey(localTranslationLanguage.code);
 
     // 1. Drift cache.
 
@@ -455,18 +562,26 @@ class LyricsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  Lyrics? _parseLrc(String contents) {
-    if (!LrcParser.isValid(contents)) return null;
-    final lrc = LrcParser.parse(contents);
-    return lrc.lyrics.map((e) => Lyric(timestamp: (lrc.offset ?? 0) + e.timestamp.inMilliseconds, text: e.lyrics.trim())).toList();
-  }
-
   bool _isCurrentGuard(Playable? playable, Duration? duration, [Language? language]) {
     try {
       return playable == MediaPlayer.instance.current && duration == MediaPlayer.instance.state.duration && (language == null ? true : language == translationLanguage);
     } catch (_) {
       return false;
     }
+  }
+
+  /// Builds the timestamps & indexes from the [lyrics], applying [offset].
+  void _buildTimestampsAndIndexes() {
+    _timestampsAndIndexes.clear();
+    for (int i = 0; i < lyrics.length; i++) {
+      _timestampsAndIndexes[lyrics[i].timestamp - (offset?.inMilliseconds ?? 0)] = i;
+    }
+  }
+
+  Lyrics? _parseLrc(String contents) {
+    if (!LrcParser.isValid(contents)) return null;
+    final lrc = LrcParser.parse(contents);
+    return lrc.lyrics.map((e) => Lyric(timestamp: (lrc.offset ?? 0) + e.timestamp.inMilliseconds, text: e.lyrics.trim())).toList();
   }
 
   Future<Lyrics?> _legacyReadLrcCache(Playable playable) async {

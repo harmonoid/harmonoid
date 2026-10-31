@@ -1,0 +1,241 @@
+{
+  "_meta": {
+    "description": "This file contains a serialized version of schema entities for drift.",
+    "version": "1.3.0"
+  },
+  "options": {
+    "store_date_time_values_as_text": true
+  },
+  "entities": [
+    {
+      "id": 0,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "lyricss",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "track",
+            "getter_name": "track",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "artist",
+            "getter_name": "artist",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "lyrics",
+            "getter_name": "lyrics",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const LyricsConverter()",
+              "dart_type_name": "List<Lyric>"
+            }
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "track",
+          "artist"
+        ]
+      }
+    },
+    {
+      "id": 1,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "lyrics_translations",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "track",
+            "getter_name": "track",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "artist",
+            "getter_name": "artist",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "language",
+            "getter_name": "language",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "lyrics",
+            "getter_name": "lyrics",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const LyricsConverter()",
+              "dart_type_name": "List<Lyric>"
+            }
+          },
+          {
+            "name": "same",
+            "getter_name": "same",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"same\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"same\" IN (0, 1))"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "track",
+          "artist",
+          "language"
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "lyrics_track_settings",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "track",
+            "getter_name": "track",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "artist",
+            "getter_name": "artist",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "lyrics_visibility",
+            "getter_name": "lyricsVisibility",
+            "moor_type": "bool",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"lyrics_visibility\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"lyrics_visibility\" IN (0, 1))"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "translation_language",
+            "getter_name": "translationLanguage",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "offset",
+            "getter_name": "offset",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "track",
+          "artist"
+        ]
+      }
+    }
+  ],
+  "fixed_sql": [
+    {
+      "name": "lyricss",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"lyricss\" (\"track\" TEXT NOT NULL, \"artist\" TEXT NOT NULL, \"lyrics\" TEXT NOT NULL, PRIMARY KEY (\"track\", \"artist\"));"
+        }
+      ]
+    },
+    {
+      "name": "lyrics_translations",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"lyrics_translations\" (\"track\" TEXT NOT NULL, \"artist\" TEXT NOT NULL, \"language\" TEXT NOT NULL, \"lyrics\" TEXT NULL, \"same\" INTEGER NOT NULL CHECK (\"same\" IN (0, 1)), PRIMARY KEY (\"track\", \"artist\", \"language\"));"
+        }
+      ]
+    },
+    {
+      "name": "lyrics_track_settings",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"lyrics_track_settings\" (\"track\" TEXT NOT NULL, \"artist\" TEXT NOT NULL, \"lyrics_visibility\" INTEGER NULL CHECK (\"lyrics_visibility\" IN (0, 1)), \"translation_language\" TEXT NULL, \"offset\" INTEGER NULL, PRIMARY KEY (\"track\", \"artist\"));"
+        }
+      ]
+    }
+  ]
+}

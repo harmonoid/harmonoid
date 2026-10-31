@@ -67,11 +67,10 @@ extension PlayableMappers on Playable {
   }
 
   /// Converts to [LyricsKey].
-  LyricsKey toLyricsKey(Duration duration) {
+  LyricsKey toLyricsKey() {
     return LyricsKey(
       track: title,
       artist: subtitle.firstOrNull ?? '',
-      duration: duration.inMilliseconds,
     );
   }
 }

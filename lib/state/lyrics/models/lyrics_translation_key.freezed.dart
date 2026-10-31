@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LyricsTranslationKey {
 
- String get track; String get artist; int get duration; String get language;
+ String get track; String get artist; String get language;
 /// Create a copy of LyricsTranslationKey
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $LyricsTranslationKeyCopyWith<LyricsTranslationKey> get copyWith => _$LyricsTran
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LyricsTranslationKey&&(identical(other.track, track) || other.track == track)&&(identical(other.artist, artist) || other.artist == artist)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.language, language) || other.language == language));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LyricsTranslationKey&&(identical(other.track, track) || other.track == track)&&(identical(other.artist, artist) || other.artist == artist)&&(identical(other.language, language) || other.language == language));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,track,artist,duration,language);
+int get hashCode => Object.hash(runtimeType,track,artist,language);
 
 @override
 String toString() {
-  return 'LyricsTranslationKey(track: $track, artist: $artist, duration: $duration, language: $language)';
+  return 'LyricsTranslationKey(track: $track, artist: $artist, language: $language)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $LyricsTranslationKeyCopyWith<$Res>  {
   factory $LyricsTranslationKeyCopyWith(LyricsTranslationKey value, $Res Function(LyricsTranslationKey) _then) = _$LyricsTranslationKeyCopyWithImpl;
 @useResult
 $Res call({
- String track, String artist, int duration, String language
+ String track, String artist, String language
 });
 
 
@@ -65,12 +65,11 @@ class _$LyricsTranslationKeyCopyWithImpl<$Res>
 
 /// Create a copy of LyricsTranslationKey
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? track = null,Object? artist = null,Object? duration = null,Object? language = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? track = null,Object? artist = null,Object? language = null,}) {
   return _then(_self.copyWith(
 track: null == track ? _self.track : track // ignore: cast_nullable_to_non_nullable
 as String,artist: null == artist ? _self.artist : artist // ignore: cast_nullable_to_non_nullable
-as String,duration: null == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
-as int,language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
+as String,language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -156,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String track,  String artist,  int duration,  String language)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String track,  String artist,  String language)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LyricsTranslationKey() when $default != null:
-return $default(_that.track,_that.artist,_that.duration,_that.language);case _:
+return $default(_that.track,_that.artist,_that.language);case _:
   return orElse();
 
 }
@@ -177,10 +176,10 @@ return $default(_that.track,_that.artist,_that.duration,_that.language);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String track,  String artist,  int duration,  String language)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String track,  String artist,  String language)  $default,) {final _that = this;
 switch (_that) {
 case _LyricsTranslationKey():
-return $default(_that.track,_that.artist,_that.duration,_that.language);case _:
+return $default(_that.track,_that.artist,_that.language);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +196,10 @@ return $default(_that.track,_that.artist,_that.duration,_that.language);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String track,  String artist,  int duration,  String language)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String track,  String artist,  String language)?  $default,) {final _that = this;
 switch (_that) {
 case _LyricsTranslationKey() when $default != null:
-return $default(_that.track,_that.artist,_that.duration,_that.language);case _:
+return $default(_that.track,_that.artist,_that.language);case _:
   return null;
 
 }
@@ -212,12 +211,11 @@ return $default(_that.track,_that.artist,_that.duration,_that.language);case _:
 @JsonSerializable()
 
 class _LyricsTranslationKey implements LyricsTranslationKey {
-  const _LyricsTranslationKey({required this.track, required this.artist, required this.duration, required this.language});
+  const _LyricsTranslationKey({required this.track, required this.artist, required this.language});
   factory _LyricsTranslationKey.fromJson(Map<String, dynamic> json) => _$LyricsTranslationKeyFromJson(json);
 
 @override final  String track;
 @override final  String artist;
-@override final  int duration;
 @override final  String language;
 
 /// Create a copy of LyricsTranslationKey
@@ -233,16 +231,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LyricsTranslationKey&&(identical(other.track, track) || other.track == track)&&(identical(other.artist, artist) || other.artist == artist)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.language, language) || other.language == language));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LyricsTranslationKey&&(identical(other.track, track) || other.track == track)&&(identical(other.artist, artist) || other.artist == artist)&&(identical(other.language, language) || other.language == language));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,track,artist,duration,language);
+int get hashCode => Object.hash(runtimeType,track,artist,language);
 
 @override
 String toString() {
-  return 'LyricsTranslationKey(track: $track, artist: $artist, duration: $duration, language: $language)';
+  return 'LyricsTranslationKey(track: $track, artist: $artist, language: $language)';
 }
 
 
@@ -253,7 +251,7 @@ abstract mixin class _$LyricsTranslationKeyCopyWith<$Res> implements $LyricsTran
   factory _$LyricsTranslationKeyCopyWith(_LyricsTranslationKey value, $Res Function(_LyricsTranslationKey) _then) = __$LyricsTranslationKeyCopyWithImpl;
 @override @useResult
 $Res call({
- String track, String artist, int duration, String language
+ String track, String artist, String language
 });
 
 
@@ -270,12 +268,11 @@ class __$LyricsTranslationKeyCopyWithImpl<$Res>
 
 /// Create a copy of LyricsTranslationKey
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? track = null,Object? artist = null,Object? duration = null,Object? language = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? track = null,Object? artist = null,Object? language = null,}) {
   return _then(_LyricsTranslationKey(
 track: null == track ? _self.track : track // ignore: cast_nullable_to_non_nullable
 as String,artist: null == artist ? _self.artist : artist // ignore: cast_nullable_to_non_nullable
-as String,duration: null == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
-as int,language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
+as String,language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

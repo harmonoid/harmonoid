@@ -4,6 +4,8 @@ targets:
       drift_dev:
         options:
           store_date_time_values_as_text: true
+          databases:
+            lyrics_db: lib/state/lyrics/database/database.dart
       json_serializable:
         options:
           field_rename: snake

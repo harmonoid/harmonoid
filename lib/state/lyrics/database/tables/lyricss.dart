@@ -1,6 +1,6 @@
 part of '../database.dart';
 
-/// {@template lyrics_entries}
+/// {@template lyricss}
 ///
 /// Lyricss
 /// -------
@@ -15,12 +15,9 @@ class Lyricss extends Table {
   /// Track artist.
   TextColumn get artist => text().named('artist')();
 
-  /// Track duration (in milliseconds).
-  IntColumn get duration => integer().named('duration')();
-
   /// Lyrics.
   TextColumn get lyrics => text().named('lyrics').map(const LyricsConverter())();
 
   @override
-  Set<Column> get primaryKey => {track, artist, duration};
+  Set<Column> get primaryKey => {track, artist};
 }

@@ -4,18 +4,17 @@ import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:identity/identity.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
-import 'package:harmonoid/localization/localization.dart';
-import 'package:harmonoid/state/lyrics/lyrics_notifier.dart';
-import 'package:harmonoid/features/now_playing/state/now_playing_color_palette_notifier.dart';
-import 'package:harmonoid/state/theme_notifier.dart';
 import 'package:harmonoid/features/now_playing/now_playing_background.dart';
 import 'package:harmonoid/features/now_playing/now_playing_colors.dart';
-import 'package:harmonoid/features/now_playing/now_playing_lyrics.dart';
 import 'package:harmonoid/features/now_playing/now_playing_lyrics_control_panel.dart';
+import 'package:harmonoid/features/now_playing/now_playing_lyrics.dart';
+import 'package:harmonoid/features/now_playing/state/now_playing_color_palette_notifier.dart';
+import 'package:harmonoid/localization/localization.dart';
+import 'package:harmonoid/state/lyrics/lyrics_notifier.dart';
+import 'package:harmonoid/state/theme_notifier.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
@@ -116,25 +115,11 @@ class _MobileNowPlayingLyricsScreenState extends State<MobileNowPlayingLyricsScr
                                 );
                               },
                             ),
-                            const SizedBox(width: 8.0),
-                            SubscriptionReveal(
-                              blur: false,
-                              child: Consumer<LyricsNotifier>(
-                                builder: (context, lyricsNotifier, _) {
-                                  final color = Theme.of(context).extension<IconColors>()?.appBarDark;
-                                  return IconButton(
-                                    onPressed: () => NowPlayingLyricsControlPanel.showTranslationLanguageSelection(context, subscription: true),
-                                    color: color,
-                                    tooltip: Localization.instance.TRANSLATION,
-                                    icon: lyricsNotifier.translationLoading
-                                        ? SizedBox.square(
-                                            dimension: 18.0,
-                                            child: CircularProgressIndicator(color: color),
-                                          )
-                                        : const Icon(Icons.translate),
-                                  );
-                                },
-                              ),
+                            IconButton(
+                              onPressed: () => NowPlayingLyricsControlPanel.show(context),
+                              color: Theme.of(context).extension<IconColors>()?.appBarDark,
+                              tooltip: Localization.instance.LYRICS_CONTROL_PANEL,
+                              icon: const Icon(Icons.text_format),
                             ),
                           ],
                         ),

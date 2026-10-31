@@ -11,7 +11,6 @@ _LyricsTranslationKey _$LyricsTranslationKeyFromJson(
 ) => _LyricsTranslationKey(
   track: json['track'] as String,
   artist: json['artist'] as String,
-  duration: (json['duration'] as num).toInt(),
   language: json['language'] as String,
 );
 
@@ -20,6 +19,5 @@ Map<String, dynamic> _$LyricsTranslationKeyToJson(
 ) => <String, dynamic>{
   'track': instance.track,
   'artist': instance.artist,
-  'duration': instance.duration,
   'language': instance.language,
 };

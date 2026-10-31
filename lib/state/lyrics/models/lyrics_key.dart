@@ -8,7 +8,6 @@ abstract class LyricsKey with _$LyricsKey {
   const factory LyricsKey({
     required String track,
     required String artist,
-    required int duration,
   }) = _LyricsKey;
 
   factory LyricsKey.fromJson(Map<String, dynamic> json) => _$LyricsKeyFromJson(json);

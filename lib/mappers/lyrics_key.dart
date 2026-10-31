@@ -8,7 +8,6 @@ extension LyricsKeyMappers on LyricsKey {
     return LyricsTranslationKey(
       track: track,
       artist: artist,
-      duration: duration,
       language: language,
     );
   }
