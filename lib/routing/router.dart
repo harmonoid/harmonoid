@@ -236,12 +236,14 @@ final router = GoRouter(
       path: '/$kSettingsPath',
       pageBuilder: (context, state) {
         final highlightMediaLibraryAddFolder = state.uri.queryParameters[kSettingsArgFrom] == kSettingsArgFromMediaLibraryNoItems;
+        final highlightLyricsSection = state.uri.queryParameters[kSettingsArgFrom] == kSettingsArgFromLyricsTrackSettings;
         return buildPageWithDefaultTransition(
           context: context,
           state: state,
           child: ChangeNotifierProvider(
             create: (_) => SettingsNotifier(
               highlightMediaLibraryAddFolder: highlightMediaLibraryAddFolder,
+              highlightLyricsSection: highlightLyricsSection,
             ),
             child: const SettingsScreen(),
           ),

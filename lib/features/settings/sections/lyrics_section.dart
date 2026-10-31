@@ -1,3 +1,4 @@
+import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/extensions/string.dart';
@@ -11,6 +12,7 @@ import 'package:harmonoid/localization/models/language.dart';
 import 'package:harmonoid/mappers/color.dart';
 import 'package:harmonoid/mappers/text_align.dart';
 import 'package:harmonoid/features/settings/settings_section.dart';
+import 'package:harmonoid/features/settings/state/settings_notifier.dart';
 import 'package:harmonoid/state/lyrics/lyrics_notifier.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -23,6 +25,23 @@ class LyricsSection extends StatefulWidget {
 }
 
 class _LyricsSectionState extends State<LyricsSection> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      try {
+        if (context.read<SettingsNotifier>().highlightLyricsSection) {
+          Scrollable.ensureVisible(
+            context,
+            duration: Theme.of(context).extension<AnimationDuration>()?.slow ?? Duration.zero,
+            curve: Curves.easeInOut,
+            alignment: 0.1,
+          );
+        }
+      } catch (_) {}
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SettingsSection(

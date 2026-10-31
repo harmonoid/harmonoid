@@ -316,7 +316,7 @@ class NowPlayingLyricsControlPanelState extends State<NowPlayingLyricsControlPan
             TappableTextData(
               onTap: () {
                 context.pop();
-                router.pushReplacement('/$kSettingsPath');
+                router.pushReplacement(Uri(path: '/$kSettingsPath', queryParameters: {kSettingsArgFrom: kSettingsArgFromLyricsTrackSettings}).toString());
               },
               text: Localization.instance.LYRICS_TRACK_SETTINGS_TARGET,
             ),

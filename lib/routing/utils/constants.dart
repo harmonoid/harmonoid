@@ -34,6 +34,8 @@ const String kSettingsArgFrom = 'from';
 
 const String kSettingsArgFromMediaLibraryNoItems = 'media_library_no_items';
 
+const String kSettingsArgFromLyricsTrackSettings = 'lyrics_track_settings';
+
 const String kAboutPath = 'about';
 
 const String kNowPlayingPath = 'now-playing';
