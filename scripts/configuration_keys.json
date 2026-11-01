@@ -60,6 +60,7 @@
   {"key": "NOW_PLAYING_AUDIO_FORMAT", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
   {"key": "NOW_PLAYING_DISPLAY_UPON_PLAY", "serializedType": "Boolean", "dartType": "bool", "default": "isDesktop"},
   {"key": "NOW_PLAYING_START_MIX_AFTER_ENDING", "serializedType": "Boolean", "dartType": "bool", "default": "true"},
+  {"key": "THEME_ACCENT_COLOR", "serializedType": "Json", "dartType": "ThemeAccentColor", "default": "(isDesktop ? ThemeNotifier.kDefaultAccentColorM2 : ThemeNotifier.kDefaultAccentColorM3)"},
   {"key": "THEME_ANIMATION_DURATION", "serializedType": "Json", "dartType": "AnimationDuration", "default": "const AnimationDuration()"},
   {"key": "THEME_MATERIAL_STANDARD", "serializedType": "Integer", "dartType": "int", "default": "isDesktop ? 2 : 3"},
   {"key": "THEME_MODE", "serializedType": "Integer", "dartType": "ThemeMode", "default": "isDesktop ? ThemeMode.light.index: ThemeMode.system.index"},

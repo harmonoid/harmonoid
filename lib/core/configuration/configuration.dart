@@ -24,6 +24,8 @@ import 'package:harmonoid/features/media_library/tracks/models/track_view_type.d
 import 'package:harmonoid/core/media_player/models/media_player_state.dart';
 import 'package:harmonoid/core/media_player/models/playback_state.dart';
 import 'package:harmonoid/routing/utils/constants.dart';
+import 'package:harmonoid/state/theme/models/theme_accent_color.dart';
+import 'package:harmonoid/state/theme/theme_notifier.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/darwin_storage_controller.dart';
@@ -150,6 +152,7 @@ class Configuration extends ConfigurationBase {
     _nowPlayingAudioFormat = await read<bool, bool>(kKeyNowPlayingAudioFormat, defaults);
     _nowPlayingDisplayUponPlay = await read<bool, bool>(kKeyNowPlayingDisplayUponPlay, defaults);
     _nowPlayingStartMixAfterEnding = await read<bool, bool>(kKeyNowPlayingStartMixAfterEnding, defaults);
+    _themeAccentColor = await read<dynamic, ThemeAccentColor>(kKeyThemeAccentColor, defaults, (value) => ThemeAccentColor.fromJson(value));
     _themeAnimationDuration = await read<dynamic, AnimationDuration>(kKeyThemeAnimationDuration, defaults, (value) => AnimationDuration.fromJson(value));
     _themeMaterialStandard = await read<int, int>(kKeyThemeMaterialStandard, defaults);
     _themeMode = await read<int, ThemeMode>(kKeyThemeMode, defaults, (value) => ThemeMode.values[value]);

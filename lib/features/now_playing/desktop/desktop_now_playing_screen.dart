@@ -18,7 +18,7 @@ import 'package:harmonoid/extensions/string.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/core/media_player/models/loop.dart';
 import 'package:harmonoid/state/lyrics/lyrics_notifier.dart';
-import 'package:harmonoid/state/theme_notifier.dart';
+import 'package:harmonoid/state/theme/theme_notifier.dart';
 import 'package:harmonoid/features/media_library/utils/rendering.dart';
 import 'package:harmonoid/features/media_library/playlists/utils/rendering.dart';
 import 'package:harmonoid/features/media_library/utils/constants.dart';

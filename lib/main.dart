@@ -19,7 +19,7 @@ import 'package:harmonoid/state/lyrics/lyrics_notifier.dart';
 import 'package:harmonoid/state/splash_config_notifier.dart';
 import 'package:harmonoid/features/now_playing/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/features/now_playing/state/now_playing_visuals_notifier.dart';
-import 'package:harmonoid/state/theme_notifier.dart';
+import 'package:harmonoid/state/theme/theme_notifier.dart';
 import 'package:harmonoid/features/app/exception.dart';
 import 'package:harmonoid/features/app/harmonoid.dart';
 import 'package:harmonoid/features/app/splash.dart';
@@ -122,6 +122,7 @@ Future<void> main(List<String> args) async {
     await Intent.ensureInitialized(args: args);
     await ThemeNotifier.ensureInitialized(
       themeMode: Configuration.instance.themeMode,
+      accentColor: Configuration.instance.themeAccentColor,
       materialStandard: Configuration.instance.themeMaterialStandard,
       systemColorScheme: Configuration.instance.themeSystemColorScheme,
       animationDuration: Configuration.instance.themeAnimationDuration,

@@ -23,7 +23,7 @@ import 'package:harmonoid/features/now_playing/state/now_playing_mobile_notifier
 import 'package:harmonoid/state/remote_config/models/remote_config_key.dart';
 import 'package:harmonoid/state/remote_config/models/remote_config_value.dart';
 import 'package:harmonoid/state/remote_config/remote_config_provider.dart';
-import 'package:harmonoid/state/theme_notifier.dart';
+import 'package:harmonoid/state/theme/theme_notifier.dart';
 import 'package:harmonoid/features/media_library/artists/state/artist_image_notifier.dart';
 import 'package:harmonoid/features/media_library/folders/state/file_explorer_notifier.dart';
 import 'package:harmonoid/features/media_library/tracks/state/tracks_notifier.dart';

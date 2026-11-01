@@ -14,7 +14,7 @@ import 'package:harmonoid/features/now_playing/now_playing_lyrics.dart';
 import 'package:harmonoid/features/now_playing/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/state/lyrics/lyrics_notifier.dart';
-import 'package:harmonoid/state/theme_notifier.dart';
+import 'package:harmonoid/state/theme/theme_notifier.dart';
 import 'package:harmonoid/utils/android_storage_controller.dart';
 import 'package:harmonoid/utils/rendering.dart';
 

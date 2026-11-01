@@ -7,7 +7,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'package:harmonoid/localization/localization.dart';
 import 'package:harmonoid/mappers/color.dart';
 import 'package:harmonoid/state/in_app_review_notifier.dart';
-import 'package:harmonoid/state/theme_notifier.dart';
+import 'package:harmonoid/state/theme/theme_notifier.dart';
 import 'package:harmonoid/utils/constants.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -220,7 +220,7 @@ class _AboutScreenState extends State<AboutScreen> {
                       height: 96.0,
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(24.0),
-                      color: ThemeNotifier.kDefaultLightPrimaryColorM2,
+                      color: Color(ThemeNotifier.kDefaultAccentColorM2.light),
                       child: _imagePicture,
                     ),
                   ),

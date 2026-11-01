@@ -12,6 +12,7 @@ class LocalizationBase extends Values {
     current = value;
     ABOUT = map['ABOUT']!;
     ABOUT_HARMONOID = map['ABOUT_HARMONOID']!;
+    ACCENT_COLOR = map['ACCENT_COLOR']!;
     ADD = map['ADD']!;
     ADDED_ENTRY_TO_PLAYLIST = map['ADDED_ENTRY_TO_PLAYLIST']!;
     ADDED_FOLDERS = map['ADDED_FOLDERS']!;

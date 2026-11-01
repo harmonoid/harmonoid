@@ -7,6 +7,7 @@ part of 'localization.dart';
 class Values {
   late String ABOUT;
   late String ABOUT_HARMONOID;
+  late String ACCENT_COLOR;
   late String ADD;
   late String ADDED_ENTRY_TO_PLAYLIST;
   late String ADDED_FOLDERS;

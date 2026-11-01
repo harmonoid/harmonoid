@@ -73,6 +73,7 @@ class ConfigurationBase {
   bool get nowPlayingAudioFormat => _nowPlayingAudioFormat!;
   bool get nowPlayingDisplayUponPlay => _nowPlayingDisplayUponPlay!;
   bool get nowPlayingStartMixAfterEnding => _nowPlayingStartMixAfterEnding!;
+  ThemeAccentColor get themeAccentColor => _themeAccentColor!;
   AnimationDuration get themeAnimationDuration => _themeAnimationDuration!;
   int get themeMaterialStandard => _themeMaterialStandard!;
   ThemeMode get themeMode => _themeMode!;
@@ -142,6 +143,7 @@ class ConfigurationBase {
     bool? nowPlayingAudioFormat,
     bool? nowPlayingDisplayUponPlay,
     bool? nowPlayingStartMixAfterEnding,
+    ThemeAccentColor? themeAccentColor,
     AnimationDuration? themeAnimationDuration,
     int? themeMaterialStandard,
     ThemeMode? themeMode,
@@ -393,6 +395,10 @@ class ConfigurationBase {
       _nowPlayingStartMixAfterEnding = nowPlayingStartMixAfterEnding;
       await db.setValue(kKeyNowPlayingStartMixAfterEnding, kTypeBoolean, booleanValue: nowPlayingStartMixAfterEnding);
     }
+    if (themeAccentColor != null) {
+      _themeAccentColor = themeAccentColor;
+      await db.setValue(kKeyThemeAccentColor, kTypeJson, jsonValue: themeAccentColor.toJson());
+    }
     if (themeAnimationDuration != null) {
       _themeAnimationDuration = themeAnimationDuration;
       await db.setValue(kKeyThemeAnimationDuration, kTypeJson, jsonValue: themeAnimationDuration.toJson());
@@ -482,6 +488,7 @@ class ConfigurationBase {
       /* Boolean */ kKeyNowPlayingAudioFormat: true,
       /* Boolean */ kKeyNowPlayingDisplayUponPlay: isDesktop,
       /* Boolean */ kKeyNowPlayingStartMixAfterEnding: true,
+      /* Json    */ kKeyThemeAccentColor: (isDesktop ? ThemeNotifier.kDefaultAccentColorM2 : ThemeNotifier.kDefaultAccentColorM3),
       /* Json    */ kKeyThemeAnimationDuration: const AnimationDuration(),
       /* Integer */ kKeyThemeMaterialStandard: isDesktop ? 2 : 3,
       /* Integer */ kKeyThemeMode: isDesktop ? ThemeMode.light.index: ThemeMode.system.index,
@@ -552,6 +559,7 @@ class ConfigurationBase {
   bool? _nowPlayingAudioFormat;
   bool? _nowPlayingDisplayUponPlay;
   bool? _nowPlayingStartMixAfterEnding;
+  ThemeAccentColor? _themeAccentColor;
   AnimationDuration? _themeAnimationDuration;
   int? _themeMaterialStandard;
   ThemeMode? _themeMode;
@@ -623,6 +631,7 @@ const kKeyNotificationLyrics = 'NOTIFICATION_LYRICS';
 const kKeyNowPlayingAudioFormat = 'NOW_PLAYING_AUDIO_FORMAT';
 const kKeyNowPlayingDisplayUponPlay = 'NOW_PLAYING_DISPLAY_UPON_PLAY';
 const kKeyNowPlayingStartMixAfterEnding = 'NOW_PLAYING_START_MIX_AFTER_ENDING';
+const kKeyThemeAccentColor = 'THEME_ACCENT_COLOR';
 const kKeyThemeAnimationDuration = 'THEME_ANIMATION_DURATION';
 const kKeyThemeMaterialStandard = 'THEME_MATERIAL_STANDARD';
 const kKeyThemeMode = 'THEME_MODE';
