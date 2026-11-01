@@ -1,7 +1,12 @@
 // DO NOT IMPORT ANYTHING FROM package:harmonoid IN THIS FILE.
 
+import 'dart:io';
+
 import 'package:adaptive_layouts/adaptive_layouts.dart';
 import 'package:flutter/material.dart';
+import 'package:safe_local_storage/file_system.dart';
+
+import 'package:harmonoid/core/configuration/configuration.dart';
 
 class ExceptionApp extends StatelessWidget {
   final Object exception;
@@ -23,45 +28,97 @@ class ExceptionApp extends StatelessWidget {
   }
 }
 
-class ExceptionScreen extends StatelessWidget {
+class ExceptionScreen extends StatefulWidget {
   final Object exception;
   final StackTrace stacktrace;
   const ExceptionScreen({super.key, required this.exception, required this.stacktrace});
 
-  Widget spacer(BuildContext context) {
-    final variant = Theme.of(context).extension<LayoutVariantThemeExtension>()?.value;
-    if (variant == LayoutVariant.desktop) {
-      return const SizedBox(height: 32.0);
+  @override
+  State<ExceptionScreen> createState() => _ExceptionScreenState();
+}
+
+class _ExceptionScreenState extends State<ExceptionScreen> {
+  bool _isClearing = false;
+
+  Future<void> _onClearCachePressed(BuildContext context) async {
+    if (_isClearing) return;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text(kClearCacheConfirmTitle),
+        content: const Text(kClearCacheConfirmContent),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text(kClearCacheConfirmPositiveAction),
+          ),
+          TextButton(
+            onPressed: Navigator.of(ctx).pop,
+            child: const Text(kClearCacheConfirmNegativeAction),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+
+    setState(() => _isClearing = true);
+    try {
+      await getDefaultDirectory().then((directory) => Directory(directory).delete_());
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
     }
-    if (variant == LayoutVariant.tablet) {
-      throw UnimplementedError();
+    try {
+      await getLegacyDefaultDirectory().then((directory) => Directory(directory).delete_());
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    } finally {
+      setState(() => _isClearing = false);
     }
-    if (variant == LayoutVariant.mobile) {
-      return const SizedBox(height: 16.0);
-    }
-    throw UnimplementedError();
+
+    await showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text(kClearCacheDoneTitle),
+        content: const Text(kClearCacheDoneContent),
+        actions: [
+          TextButton(
+            onPressed: Navigator.of(ctx).pop,
+            child: const Text(kClearCacheDoneAction),
+          ),
+        ],
+      ),
+    );
   }
 
-  EdgeInsets padding(BuildContext context) {
+  EdgeInsets _getPadding(BuildContext context) {
     final variant = Theme.of(context).extension<LayoutVariantThemeExtension>()?.value;
-    if (variant == LayoutVariant.desktop) {
-      return const EdgeInsets.symmetric(horizontal: 64.0);
-    }
-    if (variant == LayoutVariant.tablet) {
-      throw UnimplementedError();
-    }
-    if (variant == LayoutVariant.mobile) {
-      return const EdgeInsets.symmetric(horizontal: 16.0);
-    }
-    throw UnimplementedError();
+    return switch (variant) {
+      LayoutVariant.desktop => const EdgeInsets.symmetric(horizontal: 64.0),
+      LayoutVariant.mobile => const EdgeInsets.symmetric(horizontal: 16.0),
+      LayoutVariant.tablet => throw UnimplementedError(),
+      null => throw UnimplementedError(),
+    };
+  }
+
+  Widget _getSpacer(BuildContext context) {
+    final variant = Theme.of(context).extension<LayoutVariantThemeExtension>()?.value;
+    return switch (variant) {
+      LayoutVariant.desktop => const SizedBox(height: 32.0),
+      LayoutVariant.mobile => const SizedBox(height: 16.0),
+      LayoutVariant.tablet => throw UnimplementedError(),
+      null => throw UnimplementedError(),
+    };
   }
 
   @override
   Widget build(BuildContext context) {
     return SliverContentScreen(
       implyBackButton: false,
-      caption: kCaption,
-      title: kError,
+      caption: kExceptionCaption,
+      title: kExceptionTitle,
       slivers: [
         SliverList.list(
           children: [
@@ -69,33 +126,33 @@ class ExceptionScreen extends StatelessWidget {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Container(
-                padding: padding(context),
+                padding: _getPadding(context),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    spacer(context),
+                    _getSpacer(context),
                     Text(
-                      kException,
+                      kExceptionHeading,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 16.0),
                     Text(
-                      exception.toString(),
+                      widget.exception.toString(),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                    spacer(context),
+                    _getSpacer(context),
                     Text(
-                      kStackTrace,
+                      kExceptionStackTraceHeading,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 16.0),
                     Text(
-                      stacktrace.toString(),
+                      widget.stacktrace.toString(),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                    spacer(context),
+                    _getSpacer(context),
                   ],
                 ),
               ),
@@ -103,11 +160,25 @@ class ExceptionScreen extends StatelessWidget {
           ],
         ),
       ],
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _isClearing ? null : () => _onClearCachePressed(context),
+        icon: _isClearing ? const SizedBox.square(dimension: 24.0, child: CircularProgressIndicator(strokeWidth: 2.0)) : const Icon(Icons.delete),
+        label: const Text(kClearCacheButtonLabel),
+        shape: const StadiumBorder(),
+      ),
     );
   }
 }
 
-const String kCaption = 'Harmonoid Music';
-const String kError = 'Error';
-const String kException = 'Exception';
-const String kStackTrace = 'Stack trace';
+const String kExceptionCaption = 'Harmonoid Music';
+const String kExceptionTitle = 'Error';
+const String kExceptionHeading = 'Exception';
+const String kExceptionStackTraceHeading = 'Stack trace';
+const String kClearCacheButtonLabel = 'Clear cache?';
+const String kClearCacheConfirmTitle = 'Clear cache?';
+const String kClearCacheConfirmContent = 'Are you sure you want to clear the cache? You will lose all your settings & cached data.';
+const String kClearCacheConfirmPositiveAction = 'Clear';
+const String kClearCacheConfirmNegativeAction = 'Cancel';
+const String kClearCacheDoneTitle = 'Done';
+const String kClearCacheDoneContent = 'Please restart the app';
+const String kClearCacheDoneAction = 'OK';
