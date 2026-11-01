@@ -547,8 +547,7 @@ Future<String?> pickResource(BuildContext context, String title) async {
         ),
         ListTile(
           onTap: () async {
-            ctx.pop();
-            final resultValue = await showInput(
+            final url = await showInput(
               context,
               title,
               Localization.instance.URL,
@@ -564,8 +563,8 @@ Future<String?> pickResource(BuildContext context, String title) async {
               textCapitalization: TextCapitalization.none,
             );
 
-            if (resultValue.isNotEmpty) {
-              result = resultValue;
+            if (url.isNotEmpty) {
+              result = url;
               ctx.pop();
             }
           },
