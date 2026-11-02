@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter/foundation.dart';
@@ -465,6 +466,25 @@ final class MediaPlayer extends ChangeNotifier {
     for (final MapEntry(key: property, value: value) in Configuration.instance.mpvOptions.entries) {
       await platform.setProperty(property, value);
     }
+    await platform.observeProperty('metadata', (data) async {
+      try {
+        Playable? current = _current;
+        if (current == null || !current.uri.startsWith('http')) return;
+        final metadata = Map<String, String>.from(json.decode(data));
+        final icyTitle = metadata['icy-title'];
+        final icyName = metadata['icy-name'];
+        if (icyTitle != null && icyTitle.isNotEmpty) {
+          current = current.copyWith(title: icyTitle);
+        }
+        if (icyName != null && icyName.isNotEmpty) {
+          current = current.copyWith(subtitle: [icyName]);
+        }
+        _current = current;
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+    });
   }
 
   @override
