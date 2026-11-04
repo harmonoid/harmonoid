@@ -13,6 +13,7 @@ dependencies:
   adaptive_layouts:
     path: external/adaptive_layouts
   animations: ^2.0.0
+  archive: ^4.2.0
   audio_service: ^0.18.18
   audio_session: ^0.2.3
   auto_size_text: ^3.0.0

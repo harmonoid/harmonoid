@@ -40,6 +40,9 @@ part 'configuration.g.dart';
 ///
 /// {@endtemplate}
 class Configuration extends ConfigurationBase {
+  /// Name of the cache directory created inside [getDefaultDirectory], [getLegacyDefaultDirectory] or `HARMONOID_CACHE_DIRECTORY`.
+  static const kCacheDirectoryName = '.Harmonoid';
+
   /// Singleton instance.
   static late final Configuration instance;
 
@@ -53,22 +56,25 @@ class Configuration extends ConfigurationBase {
   static Future<void> ensureInitialized() async {
     if (initialized) return;
     initialized = true;
-    final Directory directory;
-    if (Platform.environment['HARMONOID_CACHE_DIRECTORY'] == null) {
-      // Default directory.
-      const directoryName = '.Harmonoid';
-      final defaultDirectory = Directory(path.join(await getDefaultDirectory(), directoryName));
-      final legacyDefaultDirectory = Directory(path.join(await getLegacyDefaultDirectory(), directoryName));
-      directory = await legacyDefaultDirectory.exists_() ? legacyDefaultDirectory : defaultDirectory;
-    } else {
-      // HARMONOID_CACHE_DIRECTORY
-      directory = Directory(Platform.environment['HARMONOID_CACHE_DIRECTORY']!);
-    }
+
+    final directory = await getCacheDirectory();
     if (!await directory.exists_()) {
       await directory.create_();
     }
     instance = Configuration._(directory);
     await instance.refresh();
+  }
+
+  static Future<Directory> getCacheDirectory() async {
+    if (Platform.environment['HARMONOID_CACHE_DIRECTORY'] == null) {
+      // Default directory.
+      final defaultDirectory = Directory(path.join(await getDefaultDirectory(), Configuration.kCacheDirectoryName));
+      final legacyDefaultDirectory = Directory(path.join(await getLegacyDefaultDirectory(), Configuration.kCacheDirectoryName));
+      return await legacyDefaultDirectory.exists_() ? legacyDefaultDirectory : defaultDirectory;
+    } else {
+      // HARMONOID_CACHE_DIRECTORY
+      return Directory(Platform.environment['HARMONOID_CACHE_DIRECTORY']!);
+    }
   }
 
   /// Refreshes the loaded values.
@@ -321,8 +327,6 @@ Future<List<String>> getDefaultMediaLibraryDirectories() async {
     final result = await AndroidStorageController.instance.getDefaultMediaLibraryDirectory();
     return [path.normalize(result.path)];
   } else if (Platform.isIOS) {
-    // final result = await DarwinStorageController.instance.getDefaultMediaLibraryDirectory();
-    // return [if (result != null) result.path];
     // I just don't want to deal with this bullshit right now. iOS doesn't have a default music directory anyway.
     // https://stackoverflow.com/a/47864262
     return [];

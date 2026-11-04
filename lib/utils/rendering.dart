@@ -584,3 +584,19 @@ Future<String?> pickResource(BuildContext context, String title) async {
 
   return result;
 }
+
+Future<File?> saveFile({
+  required String fileName,
+  required Uint8List bytes,
+  FileType type = FileType.any,
+  List<String>? allowedExtensions,
+}) async {
+  final path = await FilePicker.saveFile(
+    fileName: fileName,
+    bytes: bytes,
+    type: type,
+    allowedExtensions: allowedExtensions,
+  );
+  if (path == null) return null;
+  return File(path);
+}
