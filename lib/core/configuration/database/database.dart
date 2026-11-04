@@ -147,7 +147,12 @@ class Database extends _$Database {
       sqlite3.tempDirectory = cachebase;
 
       final file = File(path.join(directory.path, 'Configuration.DB'));
-      return NativeDatabase(file);
+      return NativeDatabase(
+        file,
+        setup: (db) {
+          db.execute('PRAGMA busy_timeout = 1000;');
+        },
+      );
     });
   }
 }
