@@ -8,4 +8,4 @@ Depends: mpv, libmpv-dev, xdg-desktop-portal
 Recommends: xdg-desktop-portal-gtk
 Maintainer: Hitesh Kumar Saini <saini123hitesh@gmail.com>
 Description: Harmonoid
-  Plays & manages your music library. Looks beautiful & juicy.
+  Beautiful music player for desktop & mobile

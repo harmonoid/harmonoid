@@ -2,9 +2,9 @@
 
 <h1 align="left">Harmonoid</h1>
 
-**🎵 Plays & manages your music library. Looks beautiful & juicy.**
+**🎵 Beautiful music player for desktop & mobile**
 
-[Website](https://harmonoid.com) • [Download](https://harmonoid.com/downloads) • [Discord](https://discord.gg/2Rc3edFWd8) • Available for Windows, GNU/Linux, macOS, Android & iOS!
+[Download](https://harmonoid.com/downloads) • Available for Windows, GNU/Linux, macOS, Android & iOS!
 
 ![](https://github.com/harmonoid/harmonoid/blob/screenshots/macos/light-2/0.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/screenshots/macos/light-2/1.webp?raw=true)
