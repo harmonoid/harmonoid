@@ -441,6 +441,15 @@ final class MediaPlayer extends ChangeNotifier {
     mapPlayerToState();
 
     final platform = _player.platform as dynamic;
+
+    await platform.setProperty('cache', 'no');
+    await platform.setProperty('cache-on-disk', 'no');
+    await platform.setProperty('cache-secs', '0');
+    await platform.setProperty('demuxer-seekable-cache', 'no');
+    await platform.setProperty('demuxer-donate-buffer', 'no');
+    await platform.setProperty('demuxer-max-bytes', '32MiB');
+    await platform.setProperty('demuxer-max-back-bytes', '0');
+
     if (Platform.isAndroid) {
       await platform.setProperty('ao', 'audiotrack,opensles');
     }
