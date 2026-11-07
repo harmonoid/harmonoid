@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.SystemClock
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin
 import com.ryanheise.audioservice.AudioServiceActivity
@@ -21,6 +22,7 @@ class MainActivity : AudioServiceActivity() {
         private const val UTILS_CHANNEL_NAME: String = "com.alexmercerind.harmonoid/utils"
 
         private const val NOTIFY_INTENT_METHOD_NAME = "notifyIntent"
+        private const val NOTIFY_ACTIVITY_DESTROYED_METHOD_NAME = "notifyActivityDestroyed"
 
         private const val SCHEME_CONTENT = "content"
         private const val SCHEME_FILE = "file"
@@ -69,6 +71,18 @@ class MainActivity : AudioServiceActivity() {
         FlutterLocalNotificationsPlugin.setConfigureFlutterEngineCallback { configureFlutterEngine(it) }
         installSplashScreen()
         handleIntent(intent)
+    }
+
+    override fun onDestroy() {
+        if (!isChangingConfigurations) {
+            try {
+                utilsMethodChannel?.invokeMethod(NOTIFY_ACTIVITY_DESTROYED_METHOD_NAME, null)
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+            }
+            SystemClock.sleep(3000)
+        }
+        super.onDestroy()
     }
 
     override fun onResume() {

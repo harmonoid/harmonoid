@@ -20,6 +20,7 @@ class PlatformUtils {
   static const String kShowToastArgText = 'text';
   static const String kGetSystemAccentColorMethodName = 'getSystemAccentColor';
   static const String kNotifySceneDidDisconnectMethodName = 'notifySceneDidDisconnect';
+  static const String kNotifyActivityDestroyedMethodName = 'notifyActivityDestroyed';
 
   /// Singleton instance.
   static final PlatformUtils instance = PlatformUtils._();
@@ -34,12 +35,15 @@ class PlatformUtils {
   static void ensureInitialized() {
     if (initialized) return;
     initialized = true;
-    if (Platform.isIOS) {
+    if (Platform.isAndroid || Platform.isIOS) {
       instance._channel.setMethodCallHandler((call) async {
-        if (call.method == kNotifySceneDidDisconnectMethodName) {
-          return WindowLifecycle.windowCloseHandler(force: true);
+        switch (call.method) {
+          case kNotifySceneDidDisconnectMethodName:
+          case kNotifyActivityDestroyedMethodName:
+            return WindowLifecycle.windowCloseHandler(force: true);
+          default:
+            throw MissingPluginException();
         }
-        throw MissingPluginException();
       });
     }
   }
