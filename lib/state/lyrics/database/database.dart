@@ -127,7 +127,7 @@ class LyricsDatabase extends _$LyricsDatabase {
       return NativeDatabase(
         file,
         setup: (db) {
-          db.execute('PRAGMA busy_timeout = 1000;');
+          db.execute('PRAGMA busy_timeout = 100;');
         },
       );
     });
