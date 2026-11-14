@@ -41,11 +41,7 @@ final class DiscordRpcMixin implements MediaPlayerMixin {
 
   @override
   Future<void> ensureInitialized() async {
-    // unawaited
-    _connect().catchError((exception, stacktrace) {
-      debugPrint(exception.toString());
-      debugPrint(stacktrace.toString());
-    });
+    // NO/OP
   }
 
   DiscordSocialClient get client => _client;
@@ -65,11 +61,9 @@ final class DiscordRpcMixin implements MediaPlayerMixin {
 
   @override
   Future<void> notifyState(MediaPlayerState state) {
-    if (Configuration.instance.discordTokens.accessToken.isEmpty) {
-      return Future.value();
-    }
-
     return _lock.synchronized(() async {
+      if (Configuration.instance.discordTokens.accessToken.isEmpty) return;
+
       final current = _player.current;
       bool notify = false;
 
@@ -100,6 +94,10 @@ final class DiscordRpcMixin implements MediaPlayerMixin {
       if (notify) {
         final artist = current.subtitle.take(2).join(', ').ellipsis(128).nullIfBlank();
         try {
+          if (!client.connected) {
+            await _connect();
+          }
+
           await _client.updatePresence(
             DiscordActivity(
               name: artist ?? kApplicationName,
@@ -132,17 +130,40 @@ final class DiscordRpcMixin implements MediaPlayerMixin {
     if (Configuration.instance.discordTokens.accessToken.isEmpty) return;
     try {
       if (retryWithRefresh) {
+        debugPrint('DiscordRpcMixin: _connect: Refresh token: start');
         final tokens = await _client.refreshToken(refreshToken: Configuration.instance.discordTokens.refreshToken);
         await Configuration.instance.set(discordTokens: tokens);
+        debugPrint('DiscordRpcMixin: _connect: Refresh token: ok');
       }
+      debugPrint('DiscordRpcMixin: _connect: Update token: start');
       await _client.updateToken(tokenType: Configuration.instance.discordTokens.tokenType, token: Configuration.instance.discordTokens.accessToken);
       await _client.connect();
-    } catch (_) {
+      debugPrint('DiscordRpcMixin: _connect: Update token: ok');
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+      // Call disconnect to clear any stale state.
       try {
-        _client.disconnect();
+        await _client.disconnect();
       } catch (_) {}
-      if (!retryWithRefresh) {
+      // Refresh token.
+      if (!retryWithRefresh && exception is DiscordConnectionException && exception.message.contains('error=2') && exception.message.contains('errorDetail=4004')) {
+        debugPrint('DiscordRpcMixin: _connect: Update token: fail');
         return _connect(true);
+      }
+      // Logout.
+      if (retryWithRefresh && exception is DiscordAuthorizationException && exception.message.contains('HttpStatusCode: 400') && exception.message.contains('"error": "invalid_grant"')) {
+        debugPrint('DiscordRpcMixin: _connect: Refresh token: fail => logout');
+        return Configuration.instance.set(
+          discordTokens: const DiscordTokens(
+            accessToken: '',
+            refreshToken: '',
+            tokenType: DiscordTokenType.bearer,
+            expiresIn: Duration.zero,
+            scopes: [],
+          ),
+          discordUsername: '',
+        );
       }
       rethrow;
     }
