@@ -1,7 +1,7 @@
 name: harmonoid
 description: Beautiful music player for desktop & mobile
 publish_to: "none"
-version: 0.3.39+9050
+version: 0.3.40+9051
 
 environment:
   sdk: ">=3.9.2 <4.0.0"

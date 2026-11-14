@@ -1,5 +1,5 @@
 Name:       harmonoid
-Version:    0.3.39
+Version:    0.3.40
 Release:    1
 Summary:    Beautiful music player for desktop & mobile
 License:    EULA
