@@ -9,6 +9,7 @@
   {"key": "DISCORD_USERNAME", "serializedType": "String", "dartType": "String", "default": "''"},
   {"key": "IDENTIFIER", "serializedType": "String", "dartType": "String", "default": "const Uuid().v4()"},
   {"key": "LASTFM_SESSION", "serializedType": "Json", "dartType": "Session", "default": "const Session(name: '', key: '')"},
+  {"key": "LISTENBRAINZ_SESSION", "serializedType": "Json", "dartType": "ListenBrainzSession", "default": "const ListenBrainzSession(name: '', token: '')"},
   {"key": "LOCALIZATION", "serializedType": "Json", "dartType": "LocalizationData", "default": "await getDefaultLocalization()"},
   {"key": "LRC_FROM_DIRECTORY", "serializedType": "Boolean", "dartType": "bool", "default": "false"},
   {"key": "LYRICS_TRANSLATION_LANGUAGE", "serializedType": "Json", "dartType": "Language", "default": "await getDefaultLyricsTranslationLanguage()"},

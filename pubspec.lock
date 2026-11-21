@@ -256,6 +256,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
+  connections:
+    dependency: "direct main"
+    description:
+      path: "external/connections"
+      relative: true
+    source: path
+    version: "1.0.0"
   convert:
     dependency: transitive
     description:
@@ -735,13 +742,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.1"
-  lastfm:
-    dependency: "direct main"
-    description:
-      path: "external/lastfm"
-      relative: true
-    source: path
-    version: "1.0.0"
   leak_tracker:
     dependency: transitive
     description:

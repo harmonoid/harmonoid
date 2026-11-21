@@ -13,9 +13,6 @@
 [submodule "external/media_library"]
 	path = external/media_library
 	url = https://github.com/harmonoid/media_library.git
-[submodule "external/lastfm"]
-	path = external/lastfm
-	url = https://github.com/alexmercerind/lastfm.git
 [submodule "external/identity"]
 	path = external/identity
 	url = https://github.com/harmonoid/identity.git
@@ -29,3 +26,6 @@
 [submodule "external/discord_social_sdk"]
 	path = external/discord_social_sdk
 	url = https://github.com/harmonoid/discord_social_sdk.git
+[submodule "external/connections"]
+	path = external/connections
+	url = https://github.com/harmonoid/connections.git

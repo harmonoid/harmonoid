@@ -185,6 +185,7 @@ Future<String> showInput(
   String subtitle,
   String action,
   String? Function(String? value) validator, {
+  Widget? content,
   TextInputType keyboardType = TextInputType.text,
   TextCapitalization textCapitalization = TextCapitalization.none,
 }) async {
@@ -195,6 +196,7 @@ Future<String> showInput(
     await showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
+        constraints: const BoxConstraints(minWidth: 400.0),
         title: Text(title),
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -222,6 +224,11 @@ Future<String> showInput(
                 ),
               ),
             ),
+            if (content != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: content,
+              ),
           ],
         ),
         actions: [

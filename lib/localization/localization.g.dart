@@ -346,6 +346,7 @@ class LocalizationBase extends Values {
     UNSELECT = map['UNSELECT']!;
     UPDATE_AVAILABLE = map['UPDATE_AVAILABLE']!;
     URL = map['URL']!;
+    USER_TOKEN = map['USER_TOKEN']!;
     USE_COLOR_PALETTE = map['USE_COLOR_PALETTE']!;
     USE_SYSTEM_COLOR_SCHEME = map['USE_SYSTEM_COLOR_SCHEME']!;
     VALUE = map['VALUE']!;
