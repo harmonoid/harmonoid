@@ -4,8 +4,8 @@ import 'package:collection/collection.dart';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:connections/connections.dart';
 import 'package:discord_social_sdk/discord_social_sdk.dart';
-import 'package:lastfm/lastfm.dart';
 import 'package:media_library/media_library.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path;
@@ -101,6 +101,7 @@ class Configuration extends ConfigurationBase {
     _discordUsername = await read<String, String>(kKeyDiscordUsername, defaults);
     _identifier = await read<String, String>(kKeyIdentifier, defaults);
     _lastfmSession = await read<dynamic, Session>(kKeyLastfmSession, defaults, (value) => Session.fromJson(value));
+    _listenbrainzSession = await read<dynamic, ListenBrainzSession>(kKeyListenbrainzSession, defaults, (value) => ListenBrainzSession.fromJson(value));
     _localization = await read<dynamic, LocalizationData>(kKeyLocalization, defaults, (value) => LocalizationData.fromJson(value));
     _lrcFromDirectory = await read<bool, bool>(kKeyLrcFromDirectory, defaults);
     _lyricsTranslationLanguage = await read<dynamic, Language>(kKeyLyricsTranslationLanguage, defaults, (value) => Language.fromJson(value));

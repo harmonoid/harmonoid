@@ -46,8 +46,8 @@ dependencies:
   image: ^4.5.4
   in_app_review: ^2.0.12
   json_annotation: ^4.9.0
-  lastfm:
-    path: external/lastfm
+  connections:
+    path: external/connections
   lrc:
     git: https://github.com/alexmercerind/dart_lrc.git
   m3_expressive_shapes:

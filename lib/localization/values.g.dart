@@ -341,6 +341,7 @@ class Values {
   late String UNSELECT;
   late String UPDATE_AVAILABLE;
   late String URL;
+  late String USER_TOKEN;
   late String USE_COLOR_PALETTE;
   late String USE_SYSTEM_COLOR_SCHEME;
   late String VALUE;

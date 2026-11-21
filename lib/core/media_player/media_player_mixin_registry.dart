@@ -6,6 +6,7 @@ import 'package:harmonoid/core/media_player/mixin/audio_session_mixin.dart';
 import 'package:harmonoid/core/media_player/mixin/discord_rpc_mixin.dart';
 import 'package:harmonoid/core/media_player/mixin/history_playlist_mixin.dart';
 import 'package:harmonoid/core/media_player/mixin/lastfm_mixin.dart';
+import 'package:harmonoid/core/media_player/mixin/listenbrainz_mixin.dart';
 import 'package:harmonoid/core/media_player/mixin/media_player_mixin.dart';
 import 'package:harmonoid/core/media_player/mixin/mpris_mixin.dart';
 import 'package:harmonoid/core/media_player/mixin/system_media_transport_controls_mixin.dart';
@@ -28,6 +29,7 @@ final class MediaPlayerMixinRegistry {
         if (DiscordRpcMixin.supported) DiscordRpcMixin(player),
         if (HistoryPlaylistMixin.supported) HistoryPlaylistMixin(player),
         if (LastFmMixin.supported) LastFmMixin(player),
+        if (ListenBrainzMixin.supported) ListenBrainzMixin(player),
         if (MprisMixin.supported) MprisMixin(player),
         if (SystemMediaTransportControlsMixin.supported) SystemMediaTransportControlsMixin(player),
         if (WindowsTaskbarMixin.supported) WindowsTaskbarMixin(player),

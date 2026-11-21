@@ -1,5 +1,5 @@
+import 'package:connections/connections.dart';
 import 'package:flutter/foundation.dart';
-import 'package:lastfm/lastfm.dart';
 import 'package:synchronized/synchronized.dart';
 
 import 'package:harmonoid/core/configuration/configuration.dart';
@@ -95,7 +95,7 @@ final class LastFmMixin implements MediaPlayerMixin {
       if (state.playing && _lastUpdateNowPlaying != _flagPlayable) {
         _lastUpdateNowPlaying = _flagPlayable;
 
-        final updateNowPlayingRequest = _lastUpdateNowPlaying?.toUpdateNowPlayingRequest(state.duration);
+        final updateNowPlayingRequest = _lastUpdateNowPlaying?.toLastfmUpdateNowPlayingRequest(state.duration);
         if (updateNowPlayingRequest != null) {
           try {
             await _instance.updateNowPlaying(updateNowPlayingRequest);
@@ -109,7 +109,7 @@ final class LastFmMixin implements MediaPlayerMixin {
       if ((state.position > state.duration ~/ 2 || state.position > const Duration(minutes: 4)) && _lastScrobbled != _flagPlayable) {
         _lastScrobbled = _flagPlayable;
 
-        final scrobbleRequest = _flagPlayable?.toScrobbleRequest(_lastTimestamp, state.duration);
+        final scrobbleRequest = _flagPlayable?.toLastfmScrobbleRequest(_lastTimestamp, state.duration);
         if (scrobbleRequest != null) {
           try {
             await _instance.scrobble(scrobbleRequest);

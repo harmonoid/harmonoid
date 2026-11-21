@@ -22,6 +22,7 @@ class ConfigurationBase {
   String get discordUsername => _discordUsername!;
   String get identifier => _identifier!;
   Session get lastfmSession => _lastfmSession!;
+  ListenBrainzSession get listenbrainzSession => _listenbrainzSession!;
   LocalizationData get localization => _localization!;
   bool get lrcFromDirectory => _lrcFromDirectory!;
   Language get lyricsTranslationLanguage => _lyricsTranslationLanguage!;
@@ -92,6 +93,7 @@ class ConfigurationBase {
     String? discordUsername,
     String? identifier,
     Session? lastfmSession,
+    ListenBrainzSession? listenbrainzSession,
     LocalizationData? localization,
     bool? lrcFromDirectory,
     Language? lyricsTranslationLanguage,
@@ -190,6 +192,10 @@ class ConfigurationBase {
     if (lastfmSession != null) {
       _lastfmSession = lastfmSession;
       await db.setValue(kKeyLastfmSession, kTypeJson, jsonValue: lastfmSession.toJson());
+    }
+    if (listenbrainzSession != null) {
+      _listenbrainzSession = listenbrainzSession;
+      await db.setValue(kKeyListenbrainzSession, kTypeJson, jsonValue: listenbrainzSession.toJson());
     }
     if (localization != null) {
       _localization = localization;
@@ -437,6 +443,7 @@ class ConfigurationBase {
       /* String  */ kKeyDiscordUsername: '',
       /* String  */ kKeyIdentifier: const Uuid().v4(),
       /* Json    */ kKeyLastfmSession: const Session(name: '', key: ''),
+      /* Json    */ kKeyListenbrainzSession: const ListenBrainzSession(name: '', token: ''),
       /* Json    */ kKeyLocalization: await getDefaultLocalization(),
       /* Boolean */ kKeyLrcFromDirectory: false,
       /* Json    */ kKeyLyricsTranslationLanguage: await getDefaultLyricsTranslationLanguage(),
@@ -508,6 +515,7 @@ class ConfigurationBase {
   String? _discordUsername;
   String? _identifier;
   Session? _lastfmSession;
+  ListenBrainzSession? _listenbrainzSession;
   LocalizationData? _localization;
   bool? _lrcFromDirectory;
   Language? _lyricsTranslationLanguage;
@@ -580,6 +588,7 @@ const kKeyDiscordTokens = 'DISCORD_TOKENS';
 const kKeyDiscordUsername = 'DISCORD_USERNAME';
 const kKeyIdentifier = 'IDENTIFIER';
 const kKeyLastfmSession = 'LASTFM_SESSION';
+const kKeyListenbrainzSession = 'LISTENBRAINZ_SESSION';
 const kKeyLocalization = 'LOCALIZATION';
 const kKeyLrcFromDirectory = 'LRC_FROM_DIRECTORY';
 const kKeyLyricsTranslationLanguage = 'LYRICS_TRANSLATION_LANGUAGE';
