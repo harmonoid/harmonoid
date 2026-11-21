@@ -69,6 +69,7 @@
 - Exclusive audio.
 - Tag editor.
 - Last.fm integration.
+- ListenBrainz integration.
 - Discord RPC integration.
 - mpv/FFmpeg backend. Supports all file formats.
 - Multiple artist & genre support.
