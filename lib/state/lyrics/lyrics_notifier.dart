@@ -676,7 +676,7 @@ class LyricsNotifier extends ChangeNotifier {
       ),
     );
     await FlutterLocalNotificationsPlugin().initialize(
-      initializationSettings,
+      settings: initializationSettings,
       onDidReceiveNotificationResponse: _onDidReceiveNotificationResponse,
       onDidReceiveBackgroundNotificationResponse: _onDidReceiveNotificationResponse,
     );
@@ -689,10 +689,10 @@ class LyricsNotifier extends ChangeNotifier {
     final to = min(lyrics.length - 1, index + diff);
     return _ensureNotification(() {
       FlutterLocalNotificationsPlugin().show(
-        _kNotificationId,
-        _current?.title,
-        lyrics[index].text,
-        NotificationDetails(
+        id: _kNotificationId,
+        title: _current?.title,
+        body: lyrics[index].text,
+        notificationDetails: NotificationDetails(
           android: AndroidNotificationDetails(
             _kNotificationChannelId,
             _kNotificationChannelName,
@@ -742,7 +742,7 @@ class LyricsNotifier extends ChangeNotifier {
   /// Cancels the notification.
   Future<void> _cancelNotification() async {
     return _ensureNotification(() {
-      FlutterLocalNotificationsPlugin().cancel(_kNotificationId);
+      FlutterLocalNotificationsPlugin().cancel(id: _kNotificationId);
     });
   }
 

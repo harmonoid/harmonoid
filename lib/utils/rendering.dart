@@ -605,5 +605,5 @@ Future<File?> saveFile({
     allowedExtensions: allowedExtensions,
   );
   if (path == null) return null;
-  return File(path);
+  return File.fromUri(path);
 }
