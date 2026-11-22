@@ -373,7 +373,7 @@ class FileParser {
     });
   }
 
-  Future<Map<String, List<String>>> getProperties() async {
+  Future<Map<String, List<String>>> getProperties() {
     return _lock.synchronized(() async {
       _ensureNotDisposed();
       // TODO
