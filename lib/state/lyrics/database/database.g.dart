@@ -822,16 +822,15 @@ class LyricsTrackSettingsEntity extends DataClass
   /// Track artist.
   final String artist;
 
-  /// Whether lyrics are shown for this track.
-  /// Null: use global setting. True: shown. False: hidden.
+  /// Whether the lyrics are visible.
+  /// NULL: Use global setting.
   final bool? lyricsVisibility;
 
-  /// Translation language for this track.
-  /// Null: use global setting. Empty string: off. Otherwise, the language code.
+  /// Translation language.
+  /// NULL: Use global setting.
   final String? translationLanguage;
 
-  /// Lyrics offset (in milliseconds) for this track.
-  /// Optional per-track offset. Positive values make the lyrics appear earlier, negative values delay them.
+  /// Offset (in milliseconds).
   final int? offset;
   const LyricsTrackSettingsEntity({
     required this.track,

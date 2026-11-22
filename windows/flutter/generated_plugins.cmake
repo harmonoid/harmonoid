@@ -7,9 +7,9 @@ list(APPEND FLUTTER_PLUGIN_LIST
   dynamic_color
   media_kit_libs_windows_audio
   permission_handler_windows
-  share_plus
   sqlite3_flutter_libs
   url_launcher_windows
+  share_plus
   window_plus
   windows_taskbar
 )
@@ -17,6 +17,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
   discord_social_sdk_libs
   flutter_local_notifications_windows
+  jni
   taglib_libs
 )
 
