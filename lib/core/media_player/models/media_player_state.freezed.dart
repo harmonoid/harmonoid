@@ -224,7 +224,7 @@ return $default(_that.index,_that.playables,_that.rate,_that.pitch,_that.volume,
 
 
 class _MediaPlayerState implements MediaPlayerState {
-  const _MediaPlayerState({required this.index, required final  List<Playable> playables, required this.rate, required this.pitch, required this.volume, required this.shuffle, required this.loop, required this.exclusiveAudio, required this.replayGain, required this.replayGainPreamp, required this.crossfadeDuration, required this.position, required this.duration, required this.playing, required this.buffering, required this.completed, required this.audioBitrate, required this.audioParams, required this.mixOffset}): _playables = playables;
+  const _MediaPlayerState({required this.index, required List<Playable> playables, required this.rate, required this.pitch, required this.volume, required this.shuffle, required this.loop, required this.exclusiveAudio, required this.replayGain, required this.replayGainPreamp, required this.crossfadeDuration, required this.position, required this.duration, required this.playing, required this.buffering, required this.completed, required this.audioBitrate, required this.audioParams, required this.mixOffset}): _playables = playables;
   
 
 @override final  int index;

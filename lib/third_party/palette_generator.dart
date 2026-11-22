@@ -981,7 +981,7 @@ class _ColorCutQuantizer {
     return _generateAverageColors(priorityQueue);
   }
 
-  void _splitBoxes(PriorityQueue<_ColorVolumeBox> queue, final int maxSize) {
+  void _splitBoxes(PriorityQueue<_ColorVolumeBox> queue, int maxSize) {
     while (queue.length < maxSize) {
       final _ColorVolumeBox colorVolumeBox = queue.removeFirst();
       if (colorVolumeBox.canSplit()) {

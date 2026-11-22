@@ -252,7 +252,7 @@ class MiniPlayerState extends State<MiniPlayer> with TickerProviderStateMixin {
     }
   }
 
-  void _animateToHeight(final double h, {Duration? duration}) {
+  void _animateToHeight(double h, {Duration? duration}) {
     if (_animationController == null) return;
     final startHeight = _dragHeight;
     if (duration != null) {

@@ -212,7 +212,7 @@ return $default(_that.uri,_that.title,_that.subtitle,_that.description);case _:
 @JsonSerializable()
 
 class _Playable implements Playable {
-  const _Playable({required this.uri, required this.title, required final  List<String> subtitle, required final  List<String> description}): _subtitle = subtitle,_description = description;
+  const _Playable({required this.uri, required this.title, required List<String> subtitle, required List<String> description}): _subtitle = subtitle,_description = description;
   factory _Playable.fromJson(Map<String, dynamic> json) => _$PlayableFromJson(json);
 
 @override final  String uri;

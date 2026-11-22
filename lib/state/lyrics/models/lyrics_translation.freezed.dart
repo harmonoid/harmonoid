@@ -210,7 +210,7 @@ return $default(_that.same,_that.lyrics);case _:
 @JsonSerializable()
 
 class _LyricsTranslation implements LyricsTranslation {
-  const _LyricsTranslation({required this.same, required final  Lyrics? lyrics}): _lyrics = lyrics;
+  const _LyricsTranslation({required this.same, required Lyrics? lyrics}): _lyrics = lyrics;
   factory _LyricsTranslation.fromJson(Map<String, dynamic> json) => _$LyricsTranslationFromJson(json);
 
 @override final  bool same;

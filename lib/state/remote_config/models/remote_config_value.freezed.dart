@@ -241,7 +241,7 @@ return desktopLyricsGateVersion(_that.value);case _:
 @JsonSerializable()
 
 class ArtistImageCacheVersion implements RemoteConfigValue {
-  const ArtistImageCacheVersion(this.value, {final  String? $type}): $type = $type ?? 'artistImageCacheVersion';
+  const ArtistImageCacheVersion(this.value, {String? $type}): $type = $type ?? 'artistImageCacheVersion';
   factory ArtistImageCacheVersion.fromJson(Map<String, dynamic> json) => _$ArtistImageCacheVersionFromJson(json);
 
 @override final  int value;
@@ -314,7 +314,7 @@ as int,
 @JsonSerializable()
 
 class EnableInAppReview implements RemoteConfigValue {
-  const EnableInAppReview(this.value, {final  String? $type}): $type = $type ?? 'enableInAppReview';
+  const EnableInAppReview(this.value, {String? $type}): $type = $type ?? 'enableInAppReview';
   factory EnableInAppReview.fromJson(Map<String, dynamic> json) => _$EnableInAppReviewFromJson(json);
 
 @override final  bool value;
@@ -387,7 +387,7 @@ as bool,
 @JsonSerializable()
 
 class LyricsTranslationLanguages implements RemoteConfigValue {
-  const LyricsTranslationLanguages(final  List<Language> value, {final  String? $type}): _value = value,$type = $type ?? 'lyricsTranslationLanguages';
+  const LyricsTranslationLanguages(List<Language> value, {String? $type}): _value = value,$type = $type ?? 'lyricsTranslationLanguages';
   factory LyricsTranslationLanguages.fromJson(Map<String, dynamic> json) => _$LyricsTranslationLanguagesFromJson(json);
 
  final  List<Language> _value;
@@ -466,7 +466,7 @@ as List<Language>,
 @JsonSerializable()
 
 class SubscriptionPurchaseConfigValue implements RemoteConfigValue {
-  const SubscriptionPurchaseConfigValue(this.value, {final  String? $type}): $type = $type ?? 'subscriptionPurchaseConfig';
+  const SubscriptionPurchaseConfigValue(this.value, {String? $type}): $type = $type ?? 'subscriptionPurchaseConfig';
   factory SubscriptionPurchaseConfigValue.fromJson(Map<String, dynamic> json) => _$SubscriptionPurchaseConfigValueFromJson(json);
 
 @override final  SubscriptionPurchaseConfig value;
@@ -548,7 +548,7 @@ $SubscriptionPurchaseConfigCopyWith<$Res> get value {
 @JsonSerializable()
 
 class SplashConfigValue implements RemoteConfigValue {
-  const SplashConfigValue(this.value, {final  String? $type}): $type = $type ?? 'splashConfig';
+  const SplashConfigValue(this.value, {String? $type}): $type = $type ?? 'splashConfig';
   factory SplashConfigValue.fromJson(Map<String, dynamic> json) => _$SplashConfigValueFromJson(json);
 
 @override final  SplashConfig? value;
@@ -633,7 +633,7 @@ $SplashConfigCopyWith<$Res>? get value {
 @JsonSerializable()
 
 class DesktopLyricsGateVersion implements RemoteConfigValue {
-  const DesktopLyricsGateVersion(this.value, {final  String? $type}): $type = $type ?? 'desktopLyricsGateVersion';
+  const DesktopLyricsGateVersion(this.value, {String? $type}): $type = $type ?? 'desktopLyricsGateVersion';
   factory DesktopLyricsGateVersion.fromJson(Map<String, dynamic> json) => _$DesktopLyricsGateVersionFromJson(json);
 
 @override final  int value;
