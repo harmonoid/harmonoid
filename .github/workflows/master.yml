@@ -395,7 +395,7 @@ jobs:
             -e LASTFM_SHARED_SECRET="${{ secrets.LASTFM_SHARED_SECRET }}" \
             -e SUPABASE_URL="${{ secrets.SUPABASE_URL }}" \
             -e SUPABASE_PUBLISHABLE_KEY="${{ secrets.SUPABASE_PUBLISHABLE_KEY }}" \
-            ubuntu:20.04 \
+            ubuntu:22.04 \
             bash -c '
               set -e
               export DEBIAN_FRONTEND=noninteractive
@@ -503,7 +503,7 @@ jobs:
             -e LASTFM_SHARED_SECRET="${{ secrets.LASTFM_SHARED_SECRET }}" \
             -e SUPABASE_URL="${{ secrets.SUPABASE_URL }}" \
             -e SUPABASE_PUBLISHABLE_KEY="${{ secrets.SUPABASE_PUBLISHABLE_KEY }}" \
-            ubuntu:20.04 \
+            ubuntu:22.04 \
             bash -c '
               set -e
               export DEBIAN_FRONTEND=noninteractive
