@@ -1,4 +1,4 @@
-# These rules are mandatory & followed always.
+# These rules are mandatory and always apply
 
 ## All
 
