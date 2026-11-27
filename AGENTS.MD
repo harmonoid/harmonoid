@@ -1,3 +1,5 @@
+# These rules are mandatory and always apply
+
 ## All
 
 ### Miscellaneous
@@ -11,11 +13,11 @@
 - Trailing period only if multi-sentence comment.
 - Avoid comments. If one is absolutely necessary, it should be a single line explaining **"why"** rather than **"what"**.
 - Whenever an example is provided for some new implementation, do not mention it in the new implementation's comments. That example (in most cases) is completely unrelated to the new implementation & that information is trivial.
-- Consistent commenting should be used.
+- Consistent commenting should be used (same for docstrings).
   - Pick existing comment conventions from the codebase.
-  - If an existing comment reads `// Refresh the list.`, a new comment for the same action should use the same wording.
+  - If an existing comment reads `// Refresh the list`, a new comment should use the same wording.
     - Bad examples:
-      - `// Reload the list.`: Different verb for the same action.
+      - `// Reload the list`: Different verb for the same action.
     - If you feel that the existing wording does not fit the new comment, you must choose a more universal wording for both (existing & new) comments.
 
 ### Docstrings
@@ -34,18 +36,13 @@
     - `...this method does foo because bar uses this method which needs baz...`
     - `...we have used foo for achieving bar...`
 - Use "Whether" when writing docstrings for boolean attributes or getters.
-- Consistent docstrings should be used.
-  - Pick existing docstring conventions from the codebase.
-  - If a declaration documents with `{@template name}`, references should reuse it with `{@macro name}`.
-    - Bad examples:
-      - Rewriting the documentation at the reference: Duplicated documentation.
-      - `{@macro other}`: Different template name.
-    - If you feel that the existing convention does not fit the new declaration, you must choose a more universal convention for both (existing & new) declarations.
 
 ### Nomenclature
 
 - Class names should start with a noun e.g. `Configuration`, `MediaLibrary`, `MediaPlayer`, `ThemeNotifier`, `LyricsNotifier` etc.
-- Method names should start with a verb e.g. `get`, `set`, `build`, `create`, `run`, `show` etc.
+- Method names should start with a verb e.g. `get`, `fetch`, `set`, `build`, `create`, `run`, `show` etc.
+  - `get` should be used when the result is returned directly.
+  - `fetch` should be used when the result is used to modify `this`.
 - Common prefixes should be used. This makes ownership easy to identify. For example:
   - File paths/names:
     - `feature/media_library/albums/album_item.foo`, `feature/media_library/albums/album_screen.foo`, `feature/media_library/albums/albums_screen.foo`, `feature/media_library/albums/notifier/album_notifier.foo`, `feature/media_library/albums/models/album.foo`, `feature/media_library/albums/models/album_info.foo` where `album` is the common prefix.
@@ -163,28 +160,7 @@ Feature-based folder structure. A feature may use any other feature or may conta
   - feature_a
     - feature_b
       - ...
-    - api
-      - ...
-    - db
-      - ...
-    - models
-      - feature_a_p.foo
-      - feature_a_q.foo
-      - ...
-    - state
-      - feature_a_notifier.foo
-      - feature_a_dialog_notifier.foo
-      - ...
-    - ui
-      - feature_a_screen.foo
-      - feature_a_item.foo
-      - feature_a_dialog.foo
-      - feature_a_panel.foo
-      - ...
-    - utils
-      - constants.foo
-      - rendering.foo
-      - ...
+    - ...
   - feature_c
     - ...
 ```
@@ -215,9 +191,9 @@ Note that "apiKey" & "sharedSecret" "belong" inside "XyzClient". Outside code ca
 
 ##### Methods
 
-A method keeps a certain logic for a class. It is best kept within that class only. Refer **'Avoid "Utils" & "Helpers"'** for more details.
+A method keeps a certain logic for a class. It is best kept within that class only. Refer **'Avoiding "Utils" & "Helpers"'** for more details.
 
-Avoid creating standalone global functions in separate files or static functions in classes. However, it may be done when the function is intended to be widely reused or accessed across different parts of the codebase (HIGHLIGHT WHEN DONE).
+Avoid creating standalone global functions or static functions. However, it may be done when the function is intended to be widely reused or accessed across different parts of the codebase (HIGHLIGHT WHEN DONE).
 
 #### Using Mappers & Extensions
 
@@ -277,6 +253,8 @@ Classes often require asynchronous initialization, whereas constructors are inhe
 
 ### Miscellaneous
 
+- Use explicit types instead of `var`.
+- Omit the type for `final` locals.
 - Use pattern matching wherever it makes the code better.
 - Exceptions & stacktraces are logged with `debugPrint` inside `catch` blocks:
 
@@ -312,7 +290,13 @@ abstract class Foo with _$Foo {
 
 #### Using Mappers & Extensions
 
-1. Mappers are solely for converting one type into another (mind the `to` prefix). They should be created as follows:
+Scan existing mappers & extensions before writing new logic.
+
+1. Mappers are solely for converting one type into another (mind the `to` prefix).
+
+- One file & one extension per type.
+- e.g. `mappers/track.dart` holds `TrackMappers on Track`.
+- Created as follows:
 
 ```dart
 /// Mappers for [Foo].
@@ -328,7 +312,11 @@ extension FooMappers on Foo {
 }
 ```
 
-2. Extensions are solely for declaring some easy-to-access getters, for simplifying code elsewhere. They should be created as follows:
+2. Extensions are solely for easy-to-access members, getters or small methods, simplifying code elsewhere.
+
+- One file & one extension per type.
+- e.g. `extensions/track.dart` holds `TrackExtensions on Track`.
+- Created as follows:
 
 ```dart
 /// Extensions for [Foo].
@@ -403,30 +391,35 @@ class FileParser {
 
 #### Writing Notifiers
 
-Notifiers own mutable UI state, normal classes own logic or data.
-
-Notifiers extend `ChangeNotifier`, live in `state` folders & are named `FooNotifier`. Operations are async methods that mutate, persist & end with `notifyListeners`. Widely shared notifiers need async setup during launch, so they use a private constructor with `instance`, `initialized` & `ensureInitialized`:
+Mutable UI state lives in `FooNotifier` classes under `state` folders. They extend `ChangeNotifier`, are documented with `{@template}` & `{@macro}`, & app-wide ones are singletons set up once via `instance`, `initialized` & `ensureInitialized`. Callbacks are exposed as `onXyz` matching widget slots, e.g. `onPressed`.
 
 ```dart
+/// {@template foo_notifier}
+///
+/// FooNotifier
+/// -----------
+/// ...
+///
+/// {@endtemplate}
 class FooNotifier extends ChangeNotifier {
-  static const kDefaultFoo = ...;
-  static const kPossibleFoos = [...];
+  /// Singleton instance.
+  static final FooNotifier instance = FooNotifier._();
 
-  static late final FooNotifier instance;
-
+  /// Whether the [instance] is initialized.
   static bool initialized = false;
 
+  /// {@macro foo_notifier}
   FooNotifier._();
 
+  /// Initializes the [instance].
   static Future<void> ensureInitialized() async {
     if (initialized) return;
     initialized = true;
-    instance = FooNotifier._();
   }
 
   Foo foo = ...;
-  Bar bar = ...;
 
+  /// Sets [foo].
   Future<void> setFoo(Foo value) async {
     if (foo == value) return;
     foo = value;
@@ -437,6 +430,8 @@ class FooNotifier extends ChangeNotifier {
   Future<void> _fetchBar() async {
     ...
   }
+
+  Bar _bar = ...;
 }
 ```
 
@@ -444,7 +439,9 @@ class FooNotifier extends ChangeNotifier {
 
 Screens are stateful `FooScreen` widgets. They own the `Scaffold`, consume notifiers through `Consumer` & split into `_buildDesktopLayout`, `_buildTabletLayout` & `_buildMobileLayout`, dispatched on `isDesktop`/`isTablet`/`isMobile`.
 
-Screens are split into smaller widgets to limit rebuilds & enable reuse. A widget holding frequently changing state subscribes itself through `ListenableBuilder` or `ValueListenableBuilder`, so the screen above never rebuilds for its changes.
+Screens are split into smaller widgets to reduce complexity, limit rebuilds & enable reuse.
+
+Child widgets are named `ModuleRole`, e.g. `LoginForm`, & live next to their screen. Promote one to `widgets.dart` once reused & free of module state. Wire `notifier.onXyz` straight into matching slots, keeping widgets dumb whenever possible.
 
 ```dart
 class FooScreen extends StatefulWidget {
@@ -455,22 +452,6 @@ class FooScreen extends StatefulWidget {
 }
 
 class FooScreenState extends State<FooScreen> {
-  final TextEditingController _searchQueryController = TextEditingController();
-  final ValueNotifier<bool> _elevatedNotifier = ValueNotifier(false);
-
-  @override
-  void initState() {
-    super.initState();
-    ...
-  }
-
-  @override
-  void dispose() {
-    _searchQueryController.dispose();
-    _elevatedNotifier.dispose();
-    super.dispose();
-  }
-
   Widget _buildDesktopLayout(BuildContext context) {
     ...
   }
@@ -513,7 +494,7 @@ return MultiProvider(
 );
 ```
 
-State is read through `Consumer<FooNotifier>`, one-off calls through `context.read<FooNotifier>()`.
+State is subscribed through `Consumer<FooNotifier>` & read once through `context.read<FooNotifier>()`.
 
 #### Organizing Various Units
 
@@ -551,8 +532,8 @@ Each feature lives in `lib/features/<feature>/` & mirrors this layout. Files car
 - `api/` holds remote access.
 - `database/` holds local access.
 - `desktop/` holds desktop widgets.
-- `extensions/` adds getters; may also live top-level in `lib/`.
-- `mappers/` converts types; may also live top-level in `lib/`.
+- `extensions/` adds easy-to-access members, getters or small methods; shared ones live top-level in `lib/`.
+- `mappers/` converts types; shared ones live top-level in `lib/`.
 - `mobile/` holds mobile widgets.
 - `models/` holds value types & enums.
 - `state/` holds one or more notifiers.
@@ -586,6 +567,42 @@ class FooGetAccessException implements Exception {
 }
 ```
 
+- Call through Supabase, body for `...` above:
+
+```dart
+final response = await Supabase.instance.client.functions.invoke(
+  'foo-get',
+  method: HttpMethod.get,
+  queryParameters: {...},
+);
+if (response.status != 200) return null;
+return Foo.fromJson(response.data);
+```
+
+- Use plain fetch where Supabase cannot e.g. streaming a response into a file, body for `...` above:
+
+```dart
+final client = http.Client();
+try {
+  final request = http.Request(
+    'GET',
+    Supabase.instance.client.functionUri('foo-get', {...}),
+  );
+  request.headers.addAll(Supabase.instance.client.functions.headers);
+  final response = await client.send(request);
+  if (response.statusCode != 200) return false;
+  final sink = file.openWrite();
+  try {
+    await response.stream.pipe(sink);
+  } finally {
+    await sink.close();
+  }
+  return true;
+} finally {
+  client.close();
+}
+```
+
 ### External Packages
 
 - `external/` holds first-party package sources, consumed through path dependencies instead of pub.dev.
@@ -599,14 +616,16 @@ class FooGetAccessException implements Exception {
 
 ### Generated Code
 
-- `scripts/` holds codegen, run manually when keys or strings change.
-- `configuration_gen.py` builds `configuration.g.dart` from `configuration_keys.json`.
-- `localization_gen.py` builds `values.g.dart` & `localization.g.dart` from `assets/localizations` JSON.
+- Primary codegen is `build_runner` (`freezed`, `json_serializable`, `drift` etc.).
+  - Run via `dart run build_runner build`.
+- Secondary codegen is scripts in `scripts/`:
+  - `configuration_gen.py` adds/removes configuration.
+  - `localization_gen.py` adds/removes localization.
 
 ### Shared Utils
 
-- `lib/utils/` holds helpers shared across features; files are added, changed & removed as needs evolve.
-- Dialogs, file pickers, cover images & platform checks belong in `rendering.dart`.
-- Reusable interaction widgets belong in `widgets.dart`.
-- Heights, margins & tile sizes belong in `dimensions.dart`.
-- App ID, version & URLs belong in `constants.dart`.
+- `lib/utils/` holds shared code used across features & shrinks over time.
+  - Pieces are moved into features or packages, per **'Avoiding "Utils" & "Helpers"'**.
+  - Reusable rendering methods in `rendering.dart`.
+  - Reusable widgets belong in `widgets.dart`.
+  - Reusable dimensions belong in `dimensions.dart`.
