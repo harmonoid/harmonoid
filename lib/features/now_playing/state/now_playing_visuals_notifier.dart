@@ -69,6 +69,7 @@ class NowPlayingVisualsNotifier {
     if (await directory.exists_()) {
       final entries = await directory.list_();
       final files = entries
+          .whereType<File>()
           .map((e) => e.path)
           .where((path) => path.isVideoVisual || path.isImageVisual)
           .toList();

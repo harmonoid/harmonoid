@@ -77,6 +77,7 @@ class DesktopNowPlayingScreenCarousel extends StatelessWidget {
           final path = NowPlayingVisualsNotifier.instance.external[visualIndex];
           if (path.isVideoVisual) {
             return DesktopNowPlayingVideoVisual(
+              key: ValueKey(path),
               path: path,
               active: i == value,
             );

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
@@ -30,26 +32,26 @@ class DesktopNowPlayingVideoVisual extends StatefulWidget {
 class _DesktopNowPlayingVideoVisualState extends State<DesktopNowPlayingVideoVisual> with WidgetsBindingObserver {
   late final Player _player;
   late final VideoController _controller;
+  bool _disposed = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _initPlayer();
+    unawaited(_initPlayer());
   }
 
   @override
   void didUpdateWidget(covariant DesktopNowPlayingVideoVisual oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.active != widget.active) {
+    if (oldWidget.path != widget.path) {
+      _player.open(Media(widget.path), play: widget.active);
+    } else if (oldWidget.active != widget.active) {
       if (widget.active) {
         _player.play();
       } else {
         _player.pause();
       }
-    }
-    if (oldWidget.path != widget.path) {
-      _player.open(Media(widget.path), play: widget.active);
     }
   }
 
@@ -57,19 +59,22 @@ class _DesktopNowPlayingVideoVisualState extends State<DesktopNowPlayingVideoVis
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed && widget.active) {
       _player.play();
-    } else {
+    } else if (state == AppLifecycleState.hidden ||
+        state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
       _player.pause();
     }
   }
 
   @override
   void dispose() {
+    _disposed = true;
     WidgetsBinding.instance.removeObserver(this);
     _player.dispose();
     super.dispose();
   }
 
-  void _initPlayer() {
+  Future<void> _initPlayer() async {
     _player = Player(
       configuration: const PlayerConfiguration(
         bufferSize: 16 * 1024 * 1024,
@@ -81,11 +86,18 @@ class _DesktopNowPlayingVideoVisualState extends State<DesktopNowPlayingVideoVis
         enableHardwareAcceleration: true,
       ),
     );
-    // Background visuals must be silent to avoid clashing with music playback
-    _player.setVolume(0.0);
-    _player.setAudioTrack(AudioTrack.no());
-    _player.setPlaylistMode(PlaylistMode.loop);
-    _player.open(Media(widget.path), play: widget.active);
+    // Background visuals must be silent to avoid clashing with music playback.
+    if (_player.platform is NativePlayer) {
+      await (_player.platform as NativePlayer).setProperty('aid', 'no');
+    }
+    if (_disposed) return;
+    await _player.setVolume(0.0);
+    if (_disposed) return;
+    await _player.setAudioTrack(AudioTrack.no());
+    if (_disposed) return;
+    await _player.setPlaylistMode(PlaylistMode.loop);
+    if (_disposed) return;
+    await _player.open(Media(widget.path), play: widget.active);
   }
 
   @override
@@ -94,6 +106,8 @@ class _DesktopNowPlayingVideoVisualState extends State<DesktopNowPlayingVideoVis
       controller: _controller,
       fit: BoxFit.cover,
       controls: NoVideoControls,
+      wakelock: false,
+      pauseUponEnteringBackgroundMode: false,
     );
   }
 }
