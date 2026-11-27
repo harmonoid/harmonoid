@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:connections/connections.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:synchronized/synchronized.dart';
@@ -47,6 +48,13 @@ final class ListenBrainzMixin implements MediaPlayerMixin {
         _instance.setSession(session);
         await _lock.synchronized(_flushQueue);
       }
+      _lifecycleListener ??= AppLifecycleListener(
+        onResume: () {
+          if (_queue.isNotEmpty && _canRetryFlush()) {
+            _lock.synchronized(_flushQueue);
+          }
+        },
+      );
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
@@ -57,6 +65,8 @@ final class ListenBrainzMixin implements MediaPlayerMixin {
 
   @override
   Future<void> dispose() async {
+    _lifecycleListener?.dispose();
+    _lifecycleListener = null;
     _instance.clearSession();
   }
 
@@ -264,6 +274,7 @@ final class ListenBrainzMixin implements MediaPlayerMixin {
   final Lock _lock = Lock();
   final List<_QueuedListen> _queue = [];
 
+  AppLifecycleListener? _lifecycleListener;
   DateTime? _lastRequestAt;
   DateTime? _lastFlushAttemptAt;
 
