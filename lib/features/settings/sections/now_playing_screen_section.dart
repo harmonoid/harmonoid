@@ -35,10 +35,12 @@ class _NowPlayingScreenSectionState extends State<NowPlayingScreenSection> {
             child: TextButton(
               onPressed: () async {
                 final directory = NowPlayingVisualsNotifier.instance.directory;
-                if (await directory.exists_()) {
+                if (!await directory.exists_()) {
                   await directory.create_();
                 }
                 directory.explore_();
+                await NowPlayingVisualsNotifier.instance.refresh();
+                setState(() {});
               },
               child: Text(label(Localization.instance.MODIFY_BACKGROUND_IMAGES)),
             ),

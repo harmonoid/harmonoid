@@ -24,6 +24,7 @@ import 'package:harmonoid/features/media_library/playlists/utils/rendering.dart'
 import 'package:harmonoid/features/media_library/utils/constants.dart';
 import 'package:harmonoid/features/now_playing/desktop/desktop_now_playing_playlist.dart';
 import 'package:harmonoid/features/now_playing/desktop/desktop_now_playing_screen_carousel.dart';
+import 'package:harmonoid/features/now_playing/state/now_playing_visuals_notifier.dart';
 import 'package:harmonoid/features/now_playing/now_playing_colors.dart';
 import 'package:harmonoid/features/now_playing/now_playing_audio_control_panel.dart';
 import 'package:harmonoid/features/now_playing/now_playing_lyrics_control_panel.dart';
@@ -48,6 +49,17 @@ class DesktopNowPlayingScreenState extends State<DesktopNowPlayingScreen> {
   void initState() {
     super.initState();
     unawaited(WakelockPlus.enable());
+    unawaited(
+      NowPlayingVisualsNotifier.instance.refresh().then((_) {
+        if (!mounted) return;
+        final maxIndex = DesktopNowPlayingScreenCarousel.itemCount - 1;
+        if (_desktopNowPlayingScreenCarousel > maxIndex) {
+          setDesktopNowPlayingCarousel(maxIndex < 0 ? 0 : maxIndex);
+        } else {
+          setState(() {});
+        }
+      }),
+    );
   }
 
   void setDesktopNowPlayingCarousel(int value) {

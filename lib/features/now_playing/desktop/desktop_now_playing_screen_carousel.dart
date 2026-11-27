@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:harmonoid/features/now_playing/desktop/desktop_now_playing_video_visual.dart';
 import 'package:harmonoid/features/now_playing/state/now_playing_color_palette_notifier.dart';
 import 'package:harmonoid/features/now_playing/state/now_playing_visuals_notifier.dart';
 import 'package:harmonoid/features/now_playing/now_playing_background.dart';
@@ -72,9 +73,17 @@ class DesktopNowPlayingScreenCarousel extends StatelessWidget {
           );
         }
         if (i >= kBuiltInCount + NowPlayingVisualsNotifier.instance.bundled.length && i < itemCount) {
-          i -= kBuiltInCount + NowPlayingVisualsNotifier.instance.bundled.length;
+          final visualIndex = i - (kBuiltInCount + NowPlayingVisualsNotifier.instance.bundled.length);
+          final path = NowPlayingVisualsNotifier.instance.external[visualIndex];
+          if (path.isVideoVisual) {
+            return DesktopNowPlayingVideoVisual(
+              key: ValueKey(path),
+              path: path,
+              active: i == value,
+            );
+          }
           return Image.file(
-            File(NowPlayingVisualsNotifier.instance.external[i]),
+            File(path),
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,
